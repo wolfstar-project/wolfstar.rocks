@@ -20,16 +20,16 @@ useAuthIdentity();
 
 const router = useRouter();
 const appName = ref<"wolfstar" | "staryl">("wolfstar");
-const { locale, locales } = useI18n();
+const { locale, locales } = useAppLocale();
 
-const localeMap = Object.fromEntries(
-	locales.value.map((entry) => [entry.code, entry.dir ?? "ltr"]),
+const localeMap = computed(() =>
+	Object.fromEntries(locales.value.map((entry) => [entry.code, entry.dir ?? "ltr"])),
 );
 
 useHead({
 	htmlAttrs: {
 		lang: () => locale.value,
-		dir: () => localeMap[locale.value] ?? "ltr",
+		dir: () => localeMap.value[locale.value] ?? "ltr",
 	},
 });
 

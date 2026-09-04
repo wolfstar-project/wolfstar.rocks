@@ -14,100 +14,100 @@ import type { LoggingEventDetail, ShowcaseCommand, ShowcaseCommandPart } from "~
 
 /** Free-text values inside logging-event details, keyed by their English source. */
 function useLoggingDetailText() {
-	const { t } = useI18n();
+	const { ts } = useI18n();
 
 	const labels = computed<Record<string, string>>(() => ({
-		"Account Created": t("marketing.wolfstar.fixtures.label_account_created"),
-		"After": t("marketing.wolfstar.fixtures.label_after"),
-		"Before": t("marketing.wolfstar.fixtures.label_before"),
-		"Changes": t("marketing.wolfstar.fixtures.label_changes"),
-		"Channel": t("marketing.wolfstar.fixtures.label_channel"),
-		"Color": t("marketing.wolfstar.fixtures.label_color"),
-		"Content": t("marketing.wolfstar.fixtures.label_content"),
-		"Created By": t("marketing.wolfstar.fixtures.label_created_by"),
-		"Deleted By": t("marketing.wolfstar.fixtures.label_deleted_by"),
-		"Joined At": t("marketing.wolfstar.fixtures.label_joined_at"),
-		"Moderator": t("marketing.wolfstar.fixtures.label_moderator"),
-		"Reason": t("marketing.wolfstar.fixtures.label_reason"),
-		"Role": t("marketing.wolfstar.fixtures.label_role"),
-		"Roles": t("marketing.wolfstar.fixtures.label_roles"),
-		"Type": t("marketing.wolfstar.fixtures.label_type"),
-		"Updated By": t("marketing.wolfstar.fixtures.label_updated_by"),
-		"User": t("marketing.wolfstar.fixtures.label_user"),
+		"Account Created": ts("marketing.wolfstar.fixtures.label_account_created"),
+		"After": ts("marketing.wolfstar.fixtures.label_after"),
+		"Before": ts("marketing.wolfstar.fixtures.label_before"),
+		"Changes": ts("marketing.wolfstar.fixtures.label_changes"),
+		"Channel": ts("marketing.wolfstar.fixtures.label_channel"),
+		"Color": ts("marketing.wolfstar.fixtures.label_color"),
+		"Content": ts("marketing.wolfstar.fixtures.label_content"),
+		"Created By": ts("marketing.wolfstar.fixtures.label_created_by"),
+		"Deleted By": ts("marketing.wolfstar.fixtures.label_deleted_by"),
+		"Joined At": ts("marketing.wolfstar.fixtures.label_joined_at"),
+		"Moderator": ts("marketing.wolfstar.fixtures.label_moderator"),
+		"Reason": ts("marketing.wolfstar.fixtures.label_reason"),
+		"Role": ts("marketing.wolfstar.fixtures.label_role"),
+		"Roles": ts("marketing.wolfstar.fixtures.label_roles"),
+		"Type": ts("marketing.wolfstar.fixtures.label_type"),
+		"Updated By": ts("marketing.wolfstar.fixtures.label_updated_by"),
+		"User": ts("marketing.wolfstar.fixtures.label_user"),
 	}));
 
 	/** Only prose is listed — ids, timestamps and channel names stay verbatim. */
 	const contents = computed<Record<string, string>>(() => ({
-		"Edited message": t("marketing.wolfstar.fixtures.text_edited_message"),
-		"Name changed from #old-general to #general": t(
+		"Edited message": ts("marketing.wolfstar.fixtures.text_edited_message"),
+		"Name changed from #old-general to #general": ts(
 			"marketing.wolfstar.fixtures.text_name_changed",
 		),
-		"Original message": t("marketing.wolfstar.fixtures.text_original_message"),
-		"Permissions updated": t("marketing.wolfstar.fixtures.text_permissions_updated"),
-		"Text Channel": t("marketing.wolfstar.fixtures.text_text_channel"),
-		"This message has been deleted": t("marketing.wolfstar.fixtures.text_message_deleted"),
-		"Warning": t("marketing.wolfstar.fixtures.text_warning"),
-		"spam": t("marketing.wolfstar.fixtures.text_spam"),
+		"Original message": ts("marketing.wolfstar.fixtures.text_original_message"),
+		"Permissions updated": ts("marketing.wolfstar.fixtures.text_permissions_updated"),
+		"Text Channel": ts("marketing.wolfstar.fixtures.text_text_channel"),
+		"This message has been deleted": ts("marketing.wolfstar.fixtures.text_message_deleted"),
+		"Warning": ts("marketing.wolfstar.fixtures.text_warning"),
+		"spam": ts("marketing.wolfstar.fixtures.text_spam"),
 	}));
 
 	return { contents, labels };
 }
 
 export function useLoggingEvents() {
-	const { t } = useI18n();
+	const { ts } = useI18n();
 	const { contents, labels } = useLoggingDetailText();
 
 	const copy = computed<Record<string, { action: string; title: string; tooltip: string }>>(
 		() => ({
 			channel_create: {
-				action: t("marketing.wolfstar.fixtures.channel_create_action"),
-				title: t("marketing.wolfstar.fixtures.channel_create_title"),
-				tooltip: t("marketing.wolfstar.fixtures.channel_create_tooltip"),
+				action: ts("marketing.wolfstar.fixtures.channel_create_action"),
+				title: ts("marketing.wolfstar.fixtures.channel_create_title"),
+				tooltip: ts("marketing.wolfstar.fixtures.channel_create_tooltip"),
 			},
 			channel_delete: {
-				action: t("marketing.wolfstar.fixtures.channel_delete_action"),
-				title: t("marketing.wolfstar.fixtures.channel_delete_title"),
-				tooltip: t("marketing.wolfstar.fixtures.channel_delete_tooltip"),
+				action: ts("marketing.wolfstar.fixtures.channel_delete_action"),
+				title: ts("marketing.wolfstar.fixtures.channel_delete_title"),
+				tooltip: ts("marketing.wolfstar.fixtures.channel_delete_tooltip"),
 			},
 			channel_update: {
-				action: t("marketing.wolfstar.fixtures.channel_update_action"),
-				title: t("marketing.wolfstar.fixtures.channel_update_title"),
-				tooltip: t("marketing.wolfstar.fixtures.channel_update_tooltip"),
+				action: ts("marketing.wolfstar.fixtures.channel_update_action"),
+				title: ts("marketing.wolfstar.fixtures.channel_update_title"),
+				tooltip: ts("marketing.wolfstar.fixtures.channel_update_tooltip"),
 			},
 			member_join: {
-				action: t("marketing.wolfstar.fixtures.member_join_action"),
-				title: t("marketing.wolfstar.fixtures.member_join_title"),
-				tooltip: t("marketing.wolfstar.fixtures.member_join_tooltip"),
+				action: ts("marketing.wolfstar.fixtures.member_join_action"),
+				title: ts("marketing.wolfstar.fixtures.member_join_title"),
+				tooltip: ts("marketing.wolfstar.fixtures.member_join_tooltip"),
 			},
 			member_leave: {
-				action: t("marketing.wolfstar.fixtures.member_leave_action"),
-				title: t("marketing.wolfstar.fixtures.member_leave_title"),
-				tooltip: t("marketing.wolfstar.fixtures.member_leave_tooltip"),
+				action: ts("marketing.wolfstar.fixtures.member_leave_action"),
+				title: ts("marketing.wolfstar.fixtures.member_leave_title"),
+				tooltip: ts("marketing.wolfstar.fixtures.member_leave_tooltip"),
 			},
 			message_delete: {
-				action: t("marketing.wolfstar.fixtures.message_delete_action"),
-				title: t("marketing.wolfstar.fixtures.message_delete_title"),
-				tooltip: t("marketing.wolfstar.fixtures.message_delete_tooltip"),
+				action: ts("marketing.wolfstar.fixtures.message_delete_action"),
+				title: ts("marketing.wolfstar.fixtures.message_delete_title"),
+				tooltip: ts("marketing.wolfstar.fixtures.message_delete_tooltip"),
 			},
 			message_edit: {
-				action: t("marketing.wolfstar.fixtures.message_edit_action"),
-				title: t("marketing.wolfstar.fixtures.message_edit_title"),
-				tooltip: t("marketing.wolfstar.fixtures.message_edit_tooltip"),
+				action: ts("marketing.wolfstar.fixtures.message_edit_action"),
+				title: ts("marketing.wolfstar.fixtures.message_edit_title"),
+				tooltip: ts("marketing.wolfstar.fixtures.message_edit_tooltip"),
 			},
 			role_create: {
-				action: t("marketing.wolfstar.fixtures.role_create_action"),
-				title: t("marketing.wolfstar.fixtures.role_create_title"),
-				tooltip: t("marketing.wolfstar.fixtures.role_create_tooltip"),
+				action: ts("marketing.wolfstar.fixtures.role_create_action"),
+				title: ts("marketing.wolfstar.fixtures.role_create_title"),
+				tooltip: ts("marketing.wolfstar.fixtures.role_create_tooltip"),
 			},
 			role_delete: {
-				action: t("marketing.wolfstar.fixtures.role_delete_action"),
-				title: t("marketing.wolfstar.fixtures.role_delete_title"),
-				tooltip: t("marketing.wolfstar.fixtures.role_delete_tooltip"),
+				action: ts("marketing.wolfstar.fixtures.role_delete_action"),
+				title: ts("marketing.wolfstar.fixtures.role_delete_title"),
+				tooltip: ts("marketing.wolfstar.fixtures.role_delete_tooltip"),
 			},
 			role_update: {
-				action: t("marketing.wolfstar.fixtures.role_update_action"),
-				title: t("marketing.wolfstar.fixtures.role_update_title"),
-				tooltip: t("marketing.wolfstar.fixtures.role_update_tooltip"),
+				action: ts("marketing.wolfstar.fixtures.role_update_action"),
+				title: ts("marketing.wolfstar.fixtures.role_update_title"),
+				tooltip: ts("marketing.wolfstar.fixtures.role_update_tooltip"),
 			},
 		}),
 	);
@@ -139,17 +139,17 @@ export function useLoggingEvents() {
 }
 
 export function useModerationActions() {
-	const { t } = useI18n();
+	const { ts } = useI18n();
 
 	const names = computed<Record<string, string>>(() => ({
-		"Ban": t("marketing.wolfstar.fixtures.action_ban"),
-		"Kick": t("marketing.wolfstar.fixtures.action_kick"),
-		"Mute": t("marketing.wolfstar.fixtures.action_mute"),
-		"Softban": t("marketing.wolfstar.fixtures.action_softban"),
-		"Timeout": t("marketing.wolfstar.fixtures.action_timeout"),
-		"Voice Kick": t("marketing.wolfstar.fixtures.action_voice_kick"),
-		"Voice Mute": t("marketing.wolfstar.fixtures.action_voice_mute"),
-		"Warning": t("marketing.wolfstar.fixtures.action_warning"),
+		"Ban": ts("marketing.wolfstar.fixtures.action_ban"),
+		"Kick": ts("marketing.wolfstar.fixtures.action_kick"),
+		"Mute": ts("marketing.wolfstar.fixtures.action_mute"),
+		"Softban": ts("marketing.wolfstar.fixtures.action_softban"),
+		"Timeout": ts("marketing.wolfstar.fixtures.action_timeout"),
+		"Voice Kick": ts("marketing.wolfstar.fixtures.action_voice_kick"),
+		"Voice Mute": ts("marketing.wolfstar.fixtures.action_voice_mute"),
+		"Warning": ts("marketing.wolfstar.fixtures.action_warning"),
 	}));
 
 	return computed(() =>
@@ -163,105 +163,105 @@ export function useModerationActions() {
 }
 
 export function useShowcaseCommands() {
-	const { t } = useI18n();
+	const { ts } = useI18n();
 	const { contents, labels } = useLoggingDetailText();
 
 	const copy = computed<Record<string, { description: string; tooltip: string }>>(() => ({
 		ban: {
-			description: t("marketing.wolfstar.fixtures.cmd_ban_description"),
-			tooltip: t("marketing.wolfstar.fixtures.cmd_ban_tooltip"),
+			description: ts("marketing.wolfstar.fixtures.cmd_ban_description"),
+			tooltip: ts("marketing.wolfstar.fixtures.cmd_ban_tooltip"),
 		},
 		case: {
-			description: t("marketing.wolfstar.fixtures.cmd_case_description"),
-			tooltip: t("marketing.wolfstar.fixtures.cmd_case_tooltip"),
+			description: ts("marketing.wolfstar.fixtures.cmd_case_description"),
+			tooltip: ts("marketing.wolfstar.fixtures.cmd_case_tooltip"),
 		},
 		case_archive: {
-			description: t("marketing.wolfstar.fixtures.cmd_case_archive_description"),
-			tooltip: t("marketing.wolfstar.fixtures.cmd_case_archive_tooltip"),
+			description: ts("marketing.wolfstar.fixtures.cmd_case_archive_description"),
+			tooltip: ts("marketing.wolfstar.fixtures.cmd_case_archive_tooltip"),
 		},
 		case_delete: {
-			description: t("marketing.wolfstar.fixtures.cmd_case_delete_description"),
-			tooltip: t("marketing.wolfstar.fixtures.cmd_case_delete_tooltip"),
+			description: ts("marketing.wolfstar.fixtures.cmd_case_delete_description"),
+			tooltip: ts("marketing.wolfstar.fixtures.cmd_case_delete_tooltip"),
 		},
 		case_edit: {
-			description: t("marketing.wolfstar.fixtures.cmd_case_edit_description"),
-			tooltip: t("marketing.wolfstar.fixtures.cmd_case_edit_tooltip"),
+			description: ts("marketing.wolfstar.fixtures.cmd_case_edit_description"),
+			tooltip: ts("marketing.wolfstar.fixtures.cmd_case_edit_tooltip"),
 		},
 		case_list: {
-			description: t("marketing.wolfstar.fixtures.cmd_case_list_description"),
-			tooltip: t("marketing.wolfstar.fixtures.cmd_case_list_tooltip"),
+			description: ts("marketing.wolfstar.fixtures.cmd_case_list_description"),
+			tooltip: ts("marketing.wolfstar.fixtures.cmd_case_list_tooltip"),
 		},
 		case_view: {
-			description: t("marketing.wolfstar.fixtures.cmd_case_view_description"),
-			tooltip: t("marketing.wolfstar.fixtures.cmd_case_view_tooltip"),
+			description: ts("marketing.wolfstar.fixtures.cmd_case_view_description"),
+			tooltip: ts("marketing.wolfstar.fixtures.cmd_case_view_tooltip"),
 		},
 		conf_menu: {
-			description: t("marketing.wolfstar.fixtures.cmd_conf_menu_description"),
-			tooltip: t("marketing.wolfstar.fixtures.cmd_conf_menu_tooltip"),
+			description: ts("marketing.wolfstar.fixtures.cmd_conf_menu_description"),
+			tooltip: ts("marketing.wolfstar.fixtures.cmd_conf_menu_tooltip"),
 		},
 		conf_remove: {
-			description: t("marketing.wolfstar.fixtures.cmd_conf_remove_description"),
-			tooltip: t("marketing.wolfstar.fixtures.cmd_conf_remove_tooltip"),
+			description: ts("marketing.wolfstar.fixtures.cmd_conf_remove_description"),
+			tooltip: ts("marketing.wolfstar.fixtures.cmd_conf_remove_tooltip"),
 		},
 		conf_reset: {
-			description: t("marketing.wolfstar.fixtures.cmd_conf_reset_description"),
-			tooltip: t("marketing.wolfstar.fixtures.cmd_conf_reset_tooltip"),
+			description: ts("marketing.wolfstar.fixtures.cmd_conf_reset_description"),
+			tooltip: ts("marketing.wolfstar.fixtures.cmd_conf_reset_tooltip"),
 		},
 		conf_set: {
-			description: t("marketing.wolfstar.fixtures.cmd_conf_set_description"),
-			tooltip: t("marketing.wolfstar.fixtures.cmd_conf_set_tooltip"),
+			description: ts("marketing.wolfstar.fixtures.cmd_conf_set_description"),
+			tooltip: ts("marketing.wolfstar.fixtures.cmd_conf_set_tooltip"),
 		},
 		conf_show: {
-			description: t("marketing.wolfstar.fixtures.cmd_conf_show_description"),
-			tooltip: t("marketing.wolfstar.fixtures.cmd_conf_show_tooltip"),
+			description: ts("marketing.wolfstar.fixtures.cmd_conf_show_description"),
+			tooltip: ts("marketing.wolfstar.fixtures.cmd_conf_show_tooltip"),
 		},
 		kick: {
-			description: t("marketing.wolfstar.fixtures.cmd_kick_description"),
-			tooltip: t("marketing.wolfstar.fixtures.cmd_kick_tooltip"),
+			description: ts("marketing.wolfstar.fixtures.cmd_kick_description"),
+			tooltip: ts("marketing.wolfstar.fixtures.cmd_kick_tooltip"),
 		},
 		mute: {
-			description: t("marketing.wolfstar.fixtures.cmd_mute_description"),
-			tooltip: t("marketing.wolfstar.fixtures.cmd_mute_tooltip"),
+			description: ts("marketing.wolfstar.fixtures.cmd_mute_description"),
+			tooltip: ts("marketing.wolfstar.fixtures.cmd_mute_tooltip"),
 		},
 		warn: {
-			description: t("marketing.wolfstar.fixtures.cmd_warn_description"),
-			tooltip: t("marketing.wolfstar.fixtures.cmd_warn_tooltip"),
+			description: ts("marketing.wolfstar.fixtures.cmd_warn_description"),
+			tooltip: ts("marketing.wolfstar.fixtures.cmd_warn_tooltip"),
 		},
 	}));
 
 	/** Bot replies, keyed by fixture id so `{case}` placeholders stay translatable. */
 	const responses = computed<Record<string, string>>(() => ({
-		ban: t("marketing.wolfstar.fixtures.reply_case_created", { id: 4 }),
-		case_archive: t("marketing.wolfstar.fixtures.reply_case_archived", { id: 3 }),
-		case_delete: t("marketing.wolfstar.fixtures.reply_case_deleted", { id: 3 }),
-		case_edit: t("marketing.wolfstar.fixtures.reply_case_edited", { id: 3 }),
-		case_list: t("marketing.wolfstar.fixtures.reply_no_cases"),
-		conf_remove: t("marketing.wolfstar.fixtures.reply_key_updated", {
+		ban: ts("marketing.wolfstar.fixtures.reply_case_created", { id: 4 }),
+		case_archive: ts("marketing.wolfstar.fixtures.reply_case_archived", { id: 3 }),
+		case_delete: ts("marketing.wolfstar.fixtures.reply_case_deleted", { id: 3 }),
+		case_edit: ts("marketing.wolfstar.fixtures.reply_case_edited", { id: 3 }),
+		case_list: ts("marketing.wolfstar.fixtures.reply_no_cases"),
+		conf_remove: ts("marketing.wolfstar.fixtures.reply_key_updated", {
 			key: "disabled-commands",
-			value: t("marketing.wolfstar.fixtures.value_not_set"),
+			value: ts("marketing.wolfstar.fixtures.value_not_set"),
 		}),
-		conf_reset: t("marketing.wolfstar.fixtures.reply_key_reset", {
+		conf_reset: ts("marketing.wolfstar.fixtures.reply_key_reset", {
 			key: "prefix",
 			value: "w!",
 		}),
-		conf_set: t("marketing.wolfstar.fixtures.reply_key_updated", {
+		conf_set: ts("marketing.wolfstar.fixtures.reply_key_updated", {
 			key: "language",
 			value: "en-GB",
 		}),
-		conf_show: t("marketing.wolfstar.fixtures.reply_key_value", {
+		conf_show: ts("marketing.wolfstar.fixtures.reply_key_value", {
 			key: "channels.logs.moderation",
 			value: "#mod-logs",
 		}),
-		kick: t("marketing.wolfstar.fixtures.reply_case_created", { id: 5 }),
-		mute: t("marketing.wolfstar.fixtures.reply_case_created", { id: 6 }),
-		warn: t("marketing.wolfstar.fixtures.reply_case_created", { id: 3 }),
+		kick: ts("marketing.wolfstar.fixtures.reply_case_created", { id: 5 }),
+		mute: ts("marketing.wolfstar.fixtures.reply_case_created", { id: 6 }),
+		warn: ts("marketing.wolfstar.fixtures.reply_case_created", { id: 3 }),
 	}));
 
 	const menuLines = computed<Record<string, string>>(() => ({
-		"Currently at: 📁 Root": t("marketing.wolfstar.fixtures.menu_currently_at", {
+		"Currently at: 📁 Root": ts("marketing.wolfstar.fixtures.menu_currently_at", {
 			path: "📁 Root",
 		}),
-		"Use the menu below to navigate:": t("marketing.wolfstar.fixtures.menu_navigate"),
+		"Use the menu below to navigate:": ts("marketing.wolfstar.fixtures.menu_navigate"),
 	}));
 
 	/** Text and embed parts share the same shape; translated in one place. */
@@ -289,7 +289,7 @@ export function useShowcaseCommands() {
 
 			if (base.responseType === "embed") {
 				return Object.assign({}, base, {
-					embedFooter: t("marketing.wolfstar.fixtures.embed_case", { id: 3 }),
+					embedFooter: ts("marketing.wolfstar.fixtures.embed_case", { id: 3 }),
 					embedLines: base.embedLines.map((line) => ({
 						label: labels.value[line.label] ?? line.label,
 						parts: translateParts(line.parts),
@@ -298,16 +298,16 @@ export function useShowcaseCommands() {
 			}
 
 			return Object.assign({}, base, {
-				buttonLabel: t("marketing.wolfstar.fixtures.button_stop"),
+				buttonLabel: ts("marketing.wolfstar.fixtures.button_stop"),
 				lines: base.lines.map((line) => menuLines.value[line] ?? line),
 				selectOptions: base.selectOptions.map((option) =>
 					Object.assign({}, option, {
-						description: t("marketing.wolfstar.fixtures.menu_currently_at", {
+						description: ts("marketing.wolfstar.fixtures.menu_currently_at", {
 							path: option.label,
 						}),
 					}),
 				),
-				selectPlaceholder: t("marketing.wolfstar.fixtures.select_placeholder"),
+				selectPlaceholder: ts("marketing.wolfstar.fixtures.select_placeholder"),
 			});
 		}),
 	);

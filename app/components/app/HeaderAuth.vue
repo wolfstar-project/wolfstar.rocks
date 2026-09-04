@@ -18,7 +18,7 @@
 						class="flex cursor-pointer items-center gap-2"
 						:class="mobile ? 'w-full' : undefined"
 						role="button"
-						:aria-label="t('header.user_menu')"
+						:aria-label="ts('header.user_menu')"
 						aria-haspopup="menu"
 						tabindex="0"
 					>
@@ -38,24 +38,24 @@
 			</div>
 			<div v-else :class="mobile ? 'flex justify-center gap-2' : 'flex items-center gap-2'">
 				<UButton
-					:label="t('header.settings')"
+					:label="ts('header.settings')"
 					size="md"
 					color="neutral"
 					variant="ghost"
 					to="/profile"
 					:class="mobile ? 'rounded-lg' : 'hidden rounded-lg md:inline-flex'"
 					icon="lucide:sliders-horizontal"
-					:aria-label="t('header.settings')"
+					:aria-label="ts('header.settings')"
 				/>
 				<UButton
-					:label="t('header.sign_in')"
+					:label="ts('header.sign_in')"
 					size="md"
 					color="primary"
 					variant="subtle"
 					to="/login"
 					:class="mobile ? 'rounded-lg' : 'hidden rounded-lg md:inline-flex'"
 					icon="ic:round-discord"
-					:aria-label="t('header.sign_in_discord')"
+					:aria-label="ts('header.sign_in_discord')"
 				/>
 			</div>
 		</template>
@@ -81,18 +81,18 @@ const { mobile = false } = defineProps<{
 	mobile?: boolean;
 }>();
 
-const { t } = useI18n();
+const { ts } = useI18n();
 const { signOut } = useUserSession();
 
 const items = computed<DropdownMenuItem[]>(() => [
 	{
 		icon: "lucide:user",
-		label: t("header.profile"),
+		label: ts("header.profile"),
 		to: "/profile",
 	},
 	{
 		icon: "lucide:log-out",
-		label: t("header.sign_out"),
+		label: ts("header.sign_out"),
 		// `auth.redirects.logout` in nuxt.config sends the user home afterwards.
 		onSelect: () => signOut(),
 		ui: {

@@ -1018,6 +1018,10 @@ describe("component SSR rendering", () => {
 
 			expect(hero.text()).toContain("Moderation, with a paper trail.");
 			expect(hero.text()).toContain("Invite WolfStar");
+			// Bare fragments, not `/#features`: Nuxt UI's ULink pipes every internal
+			// `to` through the i18n module's `$localePath`, which rewrites a
+			// hash-only target into an absolute path and sends the click to another
+			// page. `:locale="false"` on each in-page anchor is what prevents that.
 			expect(hero.find("a[href='#features']").exists()).toBe(true);
 			expect(proof.text()).toContain("One system from first warning to final review.");
 			expect(proof.find("a[href='#moderation-tools']").exists()).toBe(true);

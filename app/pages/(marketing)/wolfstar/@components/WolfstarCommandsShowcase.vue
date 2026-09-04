@@ -9,7 +9,7 @@
 						type="text"
 						:topic="channelTopic"
 						:search-placeholder="
-							t('marketing.wolfstar.commands_showcase.search_placeholder')
+							ts('marketing.wolfstar.commands_showcase.search_placeholder')
 						"
 						:online-count="onlineMembers.length"
 						:notification-count="48"
@@ -124,7 +124,7 @@
 															activeDisplayCommand.selectPlaceholder
 														"
 														:aria-label="
-															t(
+															ts(
 																'marketing.wolfstar.commands_showcase.select_aria',
 															)
 														"
@@ -322,16 +322,16 @@ import type {
 } from "~/types/discord";
 import ShowcaseTwemojiText from "./WolfstarShowcaseTwemojiText.vue";
 
-const { t } = useI18n();
+const { ts } = useI18n();
 
 const CHANNEL_NAME = "mod-commands";
 
 const commands = useShowcaseCommands();
 
 /** Shared channel topic for header chrome and welcome start copy. */
-const channelTopic = computed(() => t("marketing.wolfstar.commands_showcase.channel_topic"));
+const channelTopic = computed(() => ts("marketing.wolfstar.commands_showcase.channel_topic"));
 const composerLabel = computed(() =>
-	t("marketing.wolfstar.commands_showcase.composer_placeholder", { channel: CHANNEL_NAME }),
+	ts("marketing.wolfstar.commands_showcase.composer_placeholder", { channel: CHANNEL_NAME }),
 );
 
 const selectedCommandIndex = ref(0);
@@ -391,7 +391,7 @@ const chatMessages = computed<DiscordChatMessage[]>(() => {
 		{
 			id: `response-${command.name}-${command.subcommand ?? ""}`,
 			author: "wolfstar",
-			timestamp: t("marketing.wolfstar.commands_showcase.timestamp"),
+			timestamp: ts("marketing.wolfstar.commands_showcase.timestamp"),
 		},
 	];
 });
@@ -813,35 +813,40 @@ const mockAppCommands = computed<
 	Record<Exclude<SlashCommandAppName, "wolfstar">, MockAppCommand[]>
 >(() => ({
 	catbot: [
-		{ name: "cat", description: t("marketing.wolfstar.commands_showcase.mock_catbot_cat") },
+		{ name: "cat", description: ts("marketing.wolfstar.commands_showcase.mock_catbot_cat") },
 	],
 	dyno: [
 		{
 			name: "modlogs",
-			description: t("marketing.wolfstar.commands_showcase.mock_dyno_modlogs"),
+			description: ts("marketing.wolfstar.commands_showcase.mock_dyno_modlogs"),
 		},
 	],
 	fmbot: [
-		{ name: "fm", description: t("marketing.wolfstar.commands_showcase.mock_fmbot_fm") },
+		{ name: "fm", description: ts("marketing.wolfstar.commands_showcase.mock_fmbot_fm") },
 		{
 			name: "addfriend",
-			description: t("marketing.wolfstar.commands_showcase.mock_fmbot_addfriend"),
+			description: ts("marketing.wolfstar.commands_showcase.mock_fmbot_addfriend"),
 		},
 	],
 	utilsbot: [
-		{ name: "poll", description: t("marketing.wolfstar.commands_showcase.mock_utilsbot_poll") },
+		{
+			name: "poll",
+			description: ts("marketing.wolfstar.commands_showcase.mock_utilsbot_poll"),
+		},
 	],
 	staryl: [
 		{
 			name: "subscriptions twitch show",
-			description: t("marketing.staryl.showcase.show_description"),
+			description: ts("marketing.staryl.showcase.show_description"),
 		},
 		{
 			name: "subscriptions twitch add",
-			description: t("marketing.staryl.showcase.add_description"),
+			description: ts("marketing.staryl.showcase.add_description"),
 		},
 	],
-	ring: [{ name: "info", description: t("marketing.wolfstar.commands_showcase.mock_ring_info") }],
+	ring: [
+		{ name: "info", description: ts("marketing.wolfstar.commands_showcase.mock_ring_info") },
+	],
 }));
 
 /** Rail order for the bot-grouped pane under Frequently Used (WolfStar lives in FU). */

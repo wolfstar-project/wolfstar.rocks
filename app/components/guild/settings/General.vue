@@ -1,13 +1,13 @@
 <template>
 	<GuildSettingsSection
 		headingLevel="h1"
-		:title="t('guild_settings.general.server_info')"
-		:description="t('guild_settings.general.server_info_description')"
+		:title="ts('guild_settings.general.server_info')"
+		:description="ts('guild_settings.general.server_info_description')"
 		:ui="{ heading: 'text-xl font-bold tracking-wide' }"
 	>
 		<dl
 			class="grid grid-cols-2 gap-x-4 gap-y-3 md:grid-cols-3 md:gap-x-8 md:gap-y-4"
-			:aria-label="t('guild_settings.general.server_stats_aria')"
+			:aria-label="ts('guild_settings.general.server_stats_aria')"
 		>
 			<div
 				v-for="stat in serverStats"
@@ -30,7 +30,7 @@
 				:icon="copied ? 'heroicons:check' : 'heroicons:clipboard-document'"
 				@click="copyServerId"
 			>
-				{{ copied ? t("common.copied") : t("guild_settings.general.copy_server_id") }}
+				{{ copied ? ts("common.copied") : ts("guild_settings.general.copy_server_id") }}
 			</UButton>
 			<UButton
 				color="neutral"
@@ -40,13 +40,13 @@
 				target="_blank"
 				rel="noopener noreferrer"
 			>
-				{{ t("guild_settings.general.need_help") }}
+				{{ ts("guild_settings.general.need_help") }}
 			</UButton>
 		</div>
 	</GuildSettingsSection>
 
 	<GuildSettingsSection
-		:title="t('guild_settings.general.title')"
+		:title="ts('guild_settings.general.title')"
 		class="rounded-md border border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6"
 		:ui="{ heading: 'text-xl font-bold tracking-wide' }"
 	>
@@ -55,19 +55,19 @@
 			:state="state"
 			:map-to-guild-data="mapToGuildData"
 			class="grid grid-cols-1 gap-6 md:grid-cols-2"
-			:aria-label="t('guild_settings.general.form_aria')"
+			:aria-label="ts('guild_settings.general.form_aria')"
 			@error="onError"
 		>
 			<div>
-				<UFormField :label="t('guild_settings.general.prefix')" name="prefix">
+				<UFormField :label="ts('guild_settings.general.prefix')" name="prefix">
 					<UInput
 						id="prefix"
 						v-model="state.prefix"
-						:placeholder="t('guild_settings.general.prefix_placeholder')"
+						:placeholder="ts('guild_settings.general.prefix_placeholder')"
 						color="primary"
 						class="w-full"
 						aria-describedby="prefix-description character-count"
-						:aria-label="t('guild_settings.general.prefix_aria')"
+						:aria-label="ts('guild_settings.general.prefix_aria')"
 					>
 						<template #trailing>
 							<div
@@ -85,28 +85,28 @@
 					</template>
 					<template #description>
 						<p id="prefix-description" class="text-sm text-base-content/70">
-							{{ t("guild_settings.general.prefix_description") }}
+							{{ ts("guild_settings.general.prefix_description") }}
 						</p>
 					</template>
 				</UFormField>
 			</div>
 
 			<div>
-				<UFormField :label="t('guild_settings.general.language')" name="language">
+				<UFormField :label="ts('guild_settings.general.language')" name="language">
 					<template #description>
 						<p id="language-description" class="text-sm text-base-content/70">
-							{{ t("guild_settings.general.language_description") }}
+							{{ ts("guild_settings.general.language_description") }}
 						</p>
 					</template>
 					<USelectMenu
 						id="language"
 						v-model="state.language"
 						color="primary"
-						:placeholder="t('guild_settings.general.language_placeholder')"
+						:placeholder="ts('guild_settings.general.language_placeholder')"
 						class="w-full"
 						:items="items"
 						value-attribute="value"
-						:aria-label="t('guild_settings.general.language_aria')"
+						:aria-label="ts('guild_settings.general.language_aria')"
 						aria-describedby="language-description"
 					/>
 					<template #error="{ error }">
@@ -118,15 +118,15 @@
 	</GuildSettingsSection>
 
 	<ActivitySection
-		:title="t('guild_settings.general.recent_activity')"
+		:title="ts('guild_settings.general.recent_activity')"
 		:total="auditLogTotal"
 		:status="auditLogStatus"
 		:item-count="auditEntries.length"
 		:max-visible="0"
 		empty-icon="heroicons:clipboard-document-list"
-		:empty-title="t('guild_settings.general.no_activity')"
-		:empty-description="t('guild_settings.general.no_activity_description')"
-		:refresh-label="t('guild_logs.refresh_audit')"
+		:empty-title="ts('guild_settings.general.no_activity')"
+		:empty-description="ts('guild_settings.general.no_activity_description')"
+		:refresh-label="ts('guild_logs.refresh_audit')"
 		class="rounded-md border border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6"
 		@refresh="refreshAuditLog()"
 	>
@@ -166,7 +166,7 @@ const { languages } = defineProps<{
 	languages: string[];
 }>();
 
-const { t } = useI18n();
+const { ts } = useI18n();
 const { guildSettings } = useGuildSettings();
 const { guildData } = useGuildData();
 
@@ -194,7 +194,7 @@ const {
 const auditLogColumns = computed<TableColumn<(typeof auditEntries.value)[number]>[]>(() => [
 	{
 		accessorKey: "timestamp",
-		header: t("guild_logs.columns.date"),
+		header: ts("guild_logs.columns.date"),
 		cell: ({ row }) => {
 			return h(
 				"time",
@@ -208,7 +208,7 @@ const auditLogColumns = computed<TableColumn<(typeof auditEntries.value)[number]
 	},
 	{
 		accessorKey: "member",
-		header: t("guild_logs.columns.user"),
+		header: ts("guild_logs.columns.user"),
 		cell: ({ row }) => {
 			return h("div", { class: "flex items-center gap-3" }, [
 				h(UAvatar, {
@@ -228,7 +228,7 @@ const auditLogColumns = computed<TableColumn<(typeof auditEntries.value)[number]
 	},
 	{
 		id: "description",
-		header: t("guild_logs.columns.action"),
+		header: ts("guild_logs.columns.action"),
 		cell: ({ row }) => auditLogActionDescription(row.original),
 	},
 ]);
@@ -238,26 +238,26 @@ const serverStats = computed(() => {
 	const channels = guild?.channels ?? [];
 	return [
 		{
-			label: t("guild_settings.general.stat_members"),
+			label: ts("guild_settings.general.stat_members"),
 			value: guild?.approximateMemberCount ?? 0,
 		},
 		{
-			label: t("guild_settings.general.stat_categories"),
+			label: ts("guild_settings.general.stat_categories"),
 			value: channels.filter((c) => c.type === ChannelType.GuildCategory).length,
 		},
 		{
-			label: t("guild_settings.general.stat_text_channels"),
+			label: ts("guild_settings.general.stat_text_channels"),
 			value: channels.filter(
 				(c) => c.type === ChannelType.GuildText || c.type === ChannelType.GuildAnnouncement,
 			).length,
 		},
 		{
-			label: t("guild_settings.general.stat_voice_channels"),
+			label: ts("guild_settings.general.stat_voice_channels"),
 			value: channels.filter(
 				(c) => c.type === ChannelType.GuildVoice || c.type === ChannelType.GuildStageVoice,
 			).length,
 		},
-		{ label: t("guild_settings.general.stat_roles"), value: guild?.roles.length ?? 0 },
+		{ label: ts("guild_settings.general.stat_roles"), value: guild?.roles.length ?? 0 },
 	];
 });
 
@@ -265,8 +265,8 @@ function copyServerId() {
 	const id = guildData.value?.id;
 	if (id) {
 		copy(id, {
-			title: t("guild_settings.general.server_id_copied_title"),
-			description: t("guild_settings.general.server_id_copied_description"),
+			title: ts("guild_settings.general.server_id_copied_title"),
+			description: ts("guild_settings.general.server_id_copied_description"),
 			icon: "heroicons:check",
 			color: "success",
 		});
@@ -343,11 +343,11 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: t("guild_settings.general.save_failed_message", {
-			message: errorMessage ?? t("guild_settings.please_try_again"),
+		description: ts("guild_settings.general.save_failed_message", {
+			message: errorMessage ?? ts("guild_settings.please_try_again"),
 		}),
 		icon: "heroicons:x-circle",
-		title: t("guild_settings.save_failed"),
+		title: ts("guild_settings.save_failed"),
 	});
 }
 </script>

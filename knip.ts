@@ -11,11 +11,13 @@ const config: KnipConfig = {
 				".lighthouserc.cjs",
 				"lighthouse-setup.cjs",
 				"scripts/**/*.ts",
-				/** i18n / Lunaria entrypoints (not statically imported by the app).
-				 * lunaria/lunaria.ts is already discovered via vite.config.ts build:lunaria.
-				 * lunaria.config.ts is also read externally by the lunariajs/action GitHub Action. */
-				"i18n/**/*.ts",
+				/** Lunaria entrypoint: lunaria/lunaria.ts is already discovered via
+				 * vite.config.ts build:lunaria, and lunaria.config.ts is also read
+				 * externally by the lunariajs/action GitHub Action. */
 				"lunaria.config.ts",
+				/** Vitest setupFiles for the nuxt project; knip cannot see through the
+				 * defineVitestProject() factory in vite.config.ts. */
+				"test/nuxt/setup.ts",
 				/** Loaded by @nuxt/content at build time, not imported directly */
 				"content.config.ts",
 				/** MDC components rendered from Markdown (e.g. ::card, ::note), so usage isn't statically visible */
@@ -63,10 +65,6 @@ const config: KnipConfig = {
 				"nuxt-site-config",
 				"workbox-*",
 				"rolldown",
-				"vue-i18n" /* Provided by @nuxtjs/i18n; imported directly in test/unit/i18n/empty-placeholders.test.ts */,
-
-				/** Peer-style dep resolved by @nuxtjs/i18n at prepare time (not imported directly) */
-				"@intlify/shared",
 
 				/** Provides the tsgolint binary for oxlint's opt-in type-aware pass (`vp lint --type-aware`), not imported directly */
 				"oxlint-tsgolint",

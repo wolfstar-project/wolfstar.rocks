@@ -43,11 +43,16 @@ describe("createLocaleSelector", () => {
 	});
 
 	it("persists the preference only once the switch resolves", async () => {
+		let currentLocale = "en-US";
 		const { resolve, promise } = deferred();
-		const switchLocale = vi.fn().mockReturnValue(promise);
+		const switchLocale = vi.fn().mockImplementation((code: string) =>
+			promise.then(() => {
+				currentLocale = code;
+			}),
+		);
 		const setPreferredLocale = vi.fn();
 		const selectLocale = createLocaleSelector({
-			getLocale: () => "en-US",
+			getLocale: () => currentLocale,
 			switchLocale,
 			setPreferredLocale,
 		});
@@ -79,14 +84,18 @@ describe("createLocaleSelector", () => {
 	});
 
 	it("keeps the most recently requested locale even if an older switch resolves later", async () => {
+		let currentLocale = "en-US";
 		const older = deferred();
 		const newer = deferred();
-		const switchLocale = vi.fn((code: string) =>
-			code === "de-DE" ? older.promise : newer.promise,
-		);
+		const switchLocale = vi.fn((code: string) => {
+			const settle = code === "de-DE" ? older.promise : newer.promise;
+			return settle.then(() => {
+				currentLocale = code;
+			});
+		});
 		const setPreferredLocale = vi.fn();
 		const selectLocale = createLocaleSelector({
-			getLocale: () => "en-US",
+			getLocale: () => currentLocale,
 			switchLocale,
 			setPreferredLocale,
 		});
@@ -141,14 +150,19 @@ describe("createLocaleSelector", () => {
 	});
 
 	it("persists an older request's success once a newer request that failed first is out of the running", async () => {
+		let currentLocale = "en-US";
 		const older = deferred(); // de-DE, resolves last
-		const newer = deferred(); // fr-FR, rejects first
+		const newer = deferred(); // fr-FR, rejects first, never applied
 		const switchLocale = vi.fn((code: string) =>
-			code === "de-DE" ? older.promise : newer.promise,
+			code === "de-DE"
+				? older.promise.then(() => {
+						currentLocale = code;
+					})
+				: newer.promise,
 		);
 		const setPreferredLocale = vi.fn();
 		const selectLocale = createLocaleSelector({
-			getLocale: () => "en-US",
+			getLocale: () => currentLocale,
 			switchLocale,
 			setPreferredLocale,
 		});
@@ -169,5 +183,25 @@ describe("createLocaleSelector", () => {
 		older.resolve();
 		await olderSelection;
 		expect(setPreferredLocale).toHaveBeenCalledExactlyOnceWith("de-DE");
+	});
+
+	it("persists the locale a switch actually applied even when it rejects afterward", async () => {
+		let currentLocale = "en-US";
+		const switchLocale = vi.fn(async (code: string) => {
+			// The locale is applied first; a later step in the same call (e.g.
+			// persisting the choice remotely) fails afterward.
+			currentLocale = code;
+			throw new Error("failed to sync locale preference");
+		});
+		const setPreferredLocale = vi.fn();
+		const selectLocale = createLocaleSelector({
+			getLocale: () => currentLocale,
+			switchLocale,
+			setPreferredLocale,
+		});
+
+		await expect(selectLocale("fr-FR")).rejects.toThrow("failed to sync locale preference");
+
+		expect(setPreferredLocale).toHaveBeenCalledExactlyOnceWith("fr-FR");
 	});
 });

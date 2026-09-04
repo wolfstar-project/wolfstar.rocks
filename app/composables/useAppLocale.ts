@@ -36,6 +36,14 @@ export interface LocaleSelectorDeps {
  * and gets persisted, at most once. This naturally covers a newer request
  * failing either before or after an older one resolves, without special-
  * casing either order.
+ *
+ * A settled call's outcome is decided by comparing `getLocale()` to its own
+ * attempted code, not by whether its promise resolved or rejected: a switch
+ * can apply the new locale and only then have a later step in the same async
+ * chain throw (e.g. a follow-up persistence call), in which case the page is
+ * genuinely showing the new locale even though `switchLocale()` rejected.
+ * Trusting the promise alone there would persist a stale, previously-applied
+ * locale instead of the one actually on screen.
  */
 export function createLocaleSelector({
 	getLocale,
@@ -66,15 +74,15 @@ export function createLocaleSelector({
 		if (!isAppLocaleCode(code) || code === getLocale()) return;
 		const requestId = ++latestRequestId;
 		attemptedCode.set(requestId, code);
+		let caughtError: { value: unknown } | undefined;
 		try {
 			await switchLocale(code);
-			outcome.set(requestId, "success");
 		} catch (error) {
-			outcome.set(requestId, "failure");
-			reconcile();
-			throw error;
+			caughtError = { value: error };
 		}
+		outcome.set(requestId, getLocale() === code ? "success" : "failure");
 		reconcile();
+		if (caughtError) throw caughtError.value;
 	};
 }
 

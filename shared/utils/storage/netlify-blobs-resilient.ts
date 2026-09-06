@@ -14,6 +14,39 @@ function isFailOpenError(error: unknown): boolean {
 	return isTransientNetworkError(error) || isTransientBlobsTokenError(error);
 }
 
+// Mirrors resilient-fetch's 3-attempt/short-backoff shape so a token-expiry
+// blip has a couple of chances to land before the mutation is dropped.
+const RETRY_DELAYS_MS = [50, 100];
+
+function sleep(ms: number): Promise<void> {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Retries a cache mutation (`setItem`/`removeItem`) through fail-open-eligible
+ * errors before giving up. A dropped `removeItem` leaves stale data behind
+ * until the cache entry's TTL expires, and a dropped `setItem` leaves a stale
+ * value in place — retrying first makes that far less likely without turning
+ * a transient Blobs error into a failed request.
+ */
+async function withFailOpenRetry(operation: () => Promise<void>): Promise<void> {
+	for (let attempt = 0; ; attempt++) {
+		try {
+			await operation();
+			return;
+		} catch (error) {
+			if (!isFailOpenError(error)) {
+				throw error;
+			}
+			const delay = RETRY_DELAYS_MS[attempt];
+			if (delay === undefined) {
+				return;
+			}
+			await sleep(delay);
+		}
+	}
+}
+
 /**
  * Netlify Blobs unstorage driver with:
  * 1. Body-buffering fetch + short retries for transient TCP resets (socket hang up)
@@ -64,26 +97,14 @@ export default defineDriver((options: ResilientNetlifyBlobsOptions = {}) => {
 			}
 		},
 		async setItem(key, value, opts) {
-			try {
+			await withFailOpenRetry(async () => {
 				await setItem?.(key, value, opts);
-			} catch (error) {
-				// A cache write that never lands just means the next read is a miss;
-				// failing the request over it would be worse than a cold cache.
-				if (!isFailOpenError(error)) {
-					throw error;
-				}
-			}
+			});
 		},
 		async removeItem(key, opts) {
-			try {
+			await withFailOpenRetry(async () => {
 				await removeItem?.(key, opts);
-			} catch (error) {
-				// A cache invalidation that never lands leaves stale data behind, but
-				// failing the whole request (e.g. GET /api/users) is worse than that.
-				if (!isFailOpenError(error)) {
-					throw error;
-				}
-			}
+			});
 		},
 	};
 });

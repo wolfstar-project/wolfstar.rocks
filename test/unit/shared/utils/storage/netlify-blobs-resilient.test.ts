@@ -106,4 +106,32 @@ describe("netlify-blobs-resilient driver", () => {
 		await expect(driver.setItem?.("key", "value", {})).rejects.toThrow("unauthorized");
 		await expect(driver.removeItem?.("key", {})).rejects.toThrow("unauthorized");
 	});
+
+	it("retries setItem/removeItem through a transient error instead of dropping the mutation", async () => {
+		setItemMock.mockRejectedValueOnce(tokenExpiredError()).mockResolvedValueOnce(undefined);
+		removeItemMock.mockRejectedValueOnce(tokenExpiredError()).mockResolvedValueOnce(undefined);
+
+		const { default: createDriver } =
+			await import("#shared/utils/storage/netlify-blobs-resilient");
+		const driver = createDriver({ name: "cache" });
+
+		await expect(driver.setItem?.("key", "value", {})).resolves.toBeUndefined();
+		await expect(driver.removeItem?.("key", {})).resolves.toBeUndefined();
+		expect(setItemMock).toHaveBeenCalledTimes(2);
+		expect(removeItemMock).toHaveBeenCalledTimes(2);
+	});
+
+	it("fail-opens setItem/removeItem after exhausting retries on a persistent transient error", async () => {
+		setItemMock.mockRejectedValue(tokenExpiredError());
+		removeItemMock.mockRejectedValue(tokenExpiredError());
+
+		const { default: createDriver } =
+			await import("#shared/utils/storage/netlify-blobs-resilient");
+		const driver = createDriver({ name: "cache" });
+
+		await expect(driver.setItem?.("key", "value", {})).resolves.toBeUndefined();
+		await expect(driver.removeItem?.("key", {})).resolves.toBeUndefined();
+		expect(setItemMock).toHaveBeenCalledTimes(3);
+		expect(removeItemMock).toHaveBeenCalledTimes(3);
+	});
 });

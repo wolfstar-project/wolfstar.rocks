@@ -3,9 +3,9 @@
 	<div class="w-full">
 		<div class="relative mx-auto min-h-100 w-full max-w-7xl">
 			<SectionHeader
-				:eyebrow="t('marketing.wolfstar.showcase.header_eyebrow')"
-				:title="t('marketing.wolfstar.showcase.header_title')"
-				:description="t('marketing.wolfstar.showcase.header_description')"
+				:eyebrow="ts('marketing.wolfstar.showcase.header_eyebrow')"
+				:title="ts('marketing.wolfstar.showcase.header_title')"
+				:description="ts('marketing.wolfstar.showcase.header_description')"
 				heading-id="home-showcase-heading"
 				align="start"
 				class="mb-12"
@@ -50,10 +50,10 @@
 											aria-hidden="true"
 										/>
 										<span class="text-[15px] font-semibold text-base-content">{{
-											t("marketing.wolfstar.showcase.channel_automod")
+											ts("marketing.wolfstar.showcase.channel_automod")
 										}}</span>
 										<span class="text-xs text-muted">{{
-											t("marketing.wolfstar.showcase.server_suffix")
+											ts("marketing.wolfstar.showcase.server_suffix")
 										}}</span>
 									</div>
 									<div class="showcase-card-body p-5">
@@ -66,7 +66,7 @@
 													:key="n"
 													name="baddie"
 												>
-													{{ t("marketing.wolfstar.showcase.msg_spam") }}
+													{{ ts("marketing.wolfstar.showcase.msg_spam") }}
 												</DiscordMessage>
 											</template>
 											<DiscordMessage
@@ -86,7 +86,7 @@
 													"
 												>
 													{{
-														t(
+														ts(
 															"marketing.wolfstar.showcase.msg_attachments",
 														)
 													}}
@@ -110,12 +110,12 @@
 													"
 												>
 													{{
-														t(
+														ts(
 															"marketing.wolfstar.showcase.msg_capitals",
 														)
 													}}
 													<strong>{{
-														t(
+														ts(
 															"marketing.wolfstar.showcase.msg_capitals_strong",
 														)
 													}}</strong>
@@ -126,7 +126,9 @@
 													"
 												>
 													{{
-														t("marketing.wolfstar.showcase.msg_invites")
+														ts(
+															"marketing.wolfstar.showcase.msg_invites",
+														)
 													}}
 													<NuxtLink
 														to="https://discord.gg/gqAnRyUXG8"
@@ -143,7 +145,9 @@
 														featureIndex === AutomodFeature.Links
 													"
 												>
-													{{ t("marketing.wolfstar.showcase.msg_links") }}
+													{{
+														ts("marketing.wolfstar.showcase.msg_links")
+													}}
 													<ul class="ml-5 list-disc">
 														<li>
 															<span class="text-info"
@@ -178,7 +182,7 @@
 													"
 												>
 													{{
-														t(
+														ts(
 															"marketing.wolfstar.showcase.msg_mentions",
 														)
 													}}
@@ -196,7 +200,7 @@
 													"
 												>
 													{{
-														t(
+														ts(
 															"marketing.wolfstar.showcase.msg_newlines",
 														)
 													}}
@@ -208,7 +212,7 @@
 													<br />
 													<br />
 													{{
-														t(
+														ts(
 															"marketing.wolfstar.showcase.msg_newlines_end",
 														)
 													}}
@@ -219,7 +223,7 @@
 													"
 												>
 													{{
-														t(
+														ts(
 															"marketing.wolfstar.showcase.msg_reactions",
 														)
 													}}
@@ -245,7 +249,7 @@
 												<template
 													v-else-if="featureIndex === AutomodFeature.Spam"
 												>
-													{{ t("marketing.wolfstar.showcase.msg_spam") }}
+													{{ ts("marketing.wolfstar.showcase.msg_spam") }}
 												</template>
 												<template
 													v-else-if="
@@ -258,7 +262,7 @@
 													>
 														<template #word>
 															<strong>{{
-																t(
+																ts(
 																	"marketing.wolfstar.showcase.msg_words_strong",
 																)
 															}}</strong>
@@ -291,7 +295,7 @@
 									<button
 										type="button"
 										class="radio-feature-arrow rotate-90 lg:rotate-180"
-										:aria-label="t('marketing.wolfstar.showcase.prev_automod')"
+										:aria-label="ts('marketing.wolfstar.showcase.prev_automod')"
 										@click="advanceFeatureIndex(-1)"
 									>
 										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
@@ -315,7 +319,7 @@
 									<button
 										type="button"
 										class="radio-feature-arrow -rotate-90 lg:rotate-0"
-										:aria-label="t('marketing.wolfstar.showcase.next_automod')"
+										:aria-label="ts('marketing.wolfstar.showcase.next_automod')"
 										@click="advanceFeatureIndex(1)"
 									>
 										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
@@ -347,11 +351,11 @@
 								</h3>
 
 								<p class="text-base leading-relaxed text-base-content/70">
-									{{ t("marketing.wolfstar.showcase.automod_intro") }}
+									{{ ts("marketing.wolfstar.showcase.automod_intro") }}
 								</p>
 
 								<p class="mt-4 text-base leading-relaxed text-base-content/70">
-									{{ t("marketing.wolfstar.showcase.automod_actions_intro") }}
+									{{ ts("marketing.wolfstar.showcase.automod_actions_intro") }}
 								</p>
 								<ul class="mt-3 space-y-2 text-base text-base-content/70">
 									<li class="flex items-start gap-2">
@@ -362,10 +366,10 @@
 										/>
 										<span
 											><strong class="text-base-content">{{
-												t("marketing.wolfstar.showcase.action_alert_label")
+												ts("marketing.wolfstar.showcase.action_alert_label")
 											}}</strong>
 											{{
-												t("marketing.wolfstar.showcase.action_alert_body")
+												ts("marketing.wolfstar.showcase.action_alert_body")
 											}}</span
 										>
 									</li>
@@ -377,10 +381,10 @@
 										/>
 										<span
 											><strong class="text-base-content">{{
-												t("marketing.wolfstar.showcase.action_log_label")
+												ts("marketing.wolfstar.showcase.action_log_label")
 											}}</strong>
 											{{
-												t("marketing.wolfstar.showcase.action_log_body")
+												ts("marketing.wolfstar.showcase.action_log_body")
 											}}</span
 										>
 									</li>
@@ -392,17 +396,19 @@
 										/>
 										<span
 											><strong class="text-base-content">{{
-												t("marketing.wolfstar.showcase.action_delete_label")
+												ts(
+													"marketing.wolfstar.showcase.action_delete_label",
+												)
 											}}</strong>
 											{{
-												t("marketing.wolfstar.showcase.action_delete_body")
+												ts("marketing.wolfstar.showcase.action_delete_body")
 											}}</span
 										>
 									</li>
 								</ul>
 
 								<p class="mt-4 text-base leading-relaxed text-base-content/70">
-									{{ t("marketing.wolfstar.showcase.escalation_intro") }}
+									{{ ts("marketing.wolfstar.showcase.escalation_intro") }}
 								</p>
 								<ul class="mt-3 space-y-2 text-base text-base-content/70">
 									<li class="flex items-start gap-2">
@@ -413,12 +419,12 @@
 										/>
 										<span>
 											<strong class="text-base-content">{{
-												t(
+												ts(
 													"marketing.wolfstar.showcase.escalation_action_label",
 												)
 											}}</strong>
 											{{
-												t(
+												ts(
 													"marketing.wolfstar.showcase.escalation_action_body",
 												)
 											}}
@@ -432,12 +438,12 @@
 										/>
 										<span>
 											<strong class="text-base-content">{{
-												t(
+												ts(
 													"marketing.wolfstar.showcase.escalation_threshold_label",
 												)
 											}}</strong>
 											{{
-												t(
+												ts(
 													"marketing.wolfstar.showcase.escalation_threshold_body",
 												)
 											}}
@@ -462,10 +468,10 @@
 											aria-hidden="true"
 										/>
 										<span class="text-[15px] font-semibold text-base-content">{{
-											t("marketing.wolfstar.showcase.channel_logs")
+											ts("marketing.wolfstar.showcase.channel_logs")
 										}}</span>
 										<span class="text-xs text-muted">{{
-											t("marketing.wolfstar.showcase.server_suffix")
+											ts("marketing.wolfstar.showcase.server_suffix")
 										}}</span>
 									</div>
 									<div class="showcase-card-body p-5">
@@ -481,7 +487,7 @@
 													}"
 													:footer="{
 														icon: '/avatars/wolfstar.png',
-														text: t(
+														text: ts(
 															'marketing.wolfstar.showcase.embed_log',
 															{ id: 123456 + loggingIndex },
 														),
@@ -492,7 +498,7 @@
 														><strong
 															>❯
 															{{
-																t(
+																ts(
 																	"marketing.wolfstar.showcase.embed_action",
 																)
 															}}:</strong
@@ -552,7 +558,7 @@
 									<button
 										type="button"
 										class="radio-feature-arrow rotate-90 lg:rotate-180"
-										:aria-label="t('marketing.wolfstar.showcase.prev_logging')"
+										:aria-label="ts('marketing.wolfstar.showcase.prev_logging')"
 										@click="advanceLoggingIndex(-1)"
 									>
 										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
@@ -576,7 +582,7 @@
 									<button
 										type="button"
 										class="radio-feature-arrow -rotate-90 lg:rotate-0"
-										:aria-label="t('marketing.wolfstar.showcase.next_logging')"
+										:aria-label="ts('marketing.wolfstar.showcase.next_logging')"
 										@click="advanceLoggingIndex(1)"
 									>
 										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
@@ -611,11 +617,11 @@
 								</h3>
 
 								<p class="text-base leading-relaxed text-base-content/70">
-									{{ t("marketing.wolfstar.showcase.logging_intro") }}
+									{{ ts("marketing.wolfstar.showcase.logging_intro") }}
 								</p>
 
 								<p class="mt-4 text-base leading-relaxed text-base-content/70">
-									{{ t("marketing.wolfstar.showcase.logging_dashboard_intro") }}
+									{{ ts("marketing.wolfstar.showcase.logging_dashboard_intro") }}
 								</p>
 								<ul class="mt-3 space-y-2 text-base text-base-content/70">
 									<li class="flex items-start gap-2">
@@ -626,7 +632,9 @@
 										/>
 										<span>
 											{{
-												t("marketing.wolfstar.showcase.logging_item_filter")
+												ts(
+													"marketing.wolfstar.showcase.logging_item_filter",
+												)
 											}}
 										</span>
 									</li>
@@ -638,7 +646,7 @@
 										/>
 										<span>
 											{{
-												t("marketing.wolfstar.showcase.logging_item_views")
+												ts("marketing.wolfstar.showcase.logging_item_views")
 											}}
 										</span>
 									</li>
@@ -666,11 +674,11 @@
 											<span
 												class="text-[15px] font-semibold text-base-content"
 												>{{
-													t("marketing.wolfstar.showcase.channel_modlog")
+													ts("marketing.wolfstar.showcase.channel_modlog")
 												}}</span
 											>
 											<span class="text-xs text-muted">{{
-												t("marketing.wolfstar.showcase.server_suffix")
+												ts("marketing.wolfstar.showcase.server_suffix")
 											}}</span>
 										</div>
 										<div class="showcase-card-body p-5">
@@ -685,7 +693,7 @@
 														:color="moderationActionRender.color"
 														:footer="{
 															icon: '/avatars/wolfstar.png',
-															text: t(
+															text: ts(
 																'marketing.wolfstar.showcase.embed_case',
 																{
 																	id: 3,
@@ -698,7 +706,7 @@
 															><strong
 																>❯
 																{{
-																	t(
+																	ts(
 																		"marketing.wolfstar.showcase.embed_type",
 																	)
 																}}:</strong
@@ -711,7 +719,7 @@
 															<strong
 																>❯
 																{{
-																	t(
+																	ts(
 																		"marketing.wolfstar.showcase.embed_user",
 																	)
 																}}:</strong
@@ -726,13 +734,13 @@
 															><strong
 																>❯
 																{{
-																	t(
+																	ts(
 																		"marketing.wolfstar.showcase.embed_reason",
 																	)
 																}}:</strong
 															>{{ " "
 															}}{{
-																t(
+																ts(
 																	"marketing.wolfstar.showcase.embed_reason_value",
 																)
 															}}</span
@@ -755,7 +763,7 @@
 												(moderationUndo = false))
 											"
 										>
-											{{ t("marketing.wolfstar.showcase.btn_temporary") }}
+											{{ ts("marketing.wolfstar.showcase.btn_temporary") }}
 										</UButton>
 										<UButton
 											class="justify-center"
@@ -768,7 +776,7 @@
 												(moderationTemporary = false))
 											"
 										>
-											{{ t("marketing.wolfstar.showcase.btn_undo") }}
+											{{ ts("marketing.wolfstar.showcase.btn_undo") }}
 										</UButton>
 									</UFieldGroup>
 								</div>
@@ -778,7 +786,7 @@
 										type="button"
 										class="radio-feature-arrow rotate-90 lg:rotate-180"
 										:aria-label="
-											t('marketing.wolfstar.showcase.prev_moderation')
+											ts('marketing.wolfstar.showcase.prev_moderation')
 										"
 										@click="advanceModerationIndex(-1)"
 									>
@@ -804,7 +812,7 @@
 										type="button"
 										class="radio-feature-arrow -rotate-90 lg:rotate-0"
 										:aria-label="
-											t('marketing.wolfstar.showcase.next_moderation')
+											ts('marketing.wolfstar.showcase.next_moderation')
 										"
 										@click="advanceModerationIndex(1)"
 									>
@@ -831,7 +839,7 @@
 											<span
 												class="text-primary underline decoration-primary/30 underline-offset-4"
 												>{{
-													t("marketing.wolfstar.showcase.suite_subject")
+													ts("marketing.wolfstar.showcase.suite_subject")
 												}}</span
 											>
 										</template>
@@ -839,7 +847,7 @@
 								</h3>
 
 								<p class="text-base leading-relaxed text-base-content/70">
-									{{ t("marketing.wolfstar.showcase.mod_copy_search") }}
+									{{ ts("marketing.wolfstar.showcase.mod_copy_search") }}
 								</p>
 
 								<p class="mt-4 text-base leading-relaxed text-base-content/70">
@@ -848,7 +856,7 @@
 										class="mr-1 inline size-4 text-primary"
 										aria-hidden="true"
 									/>
-									{{ t("marketing.wolfstar.showcase.mod_copy_audit") }}
+									{{ ts("marketing.wolfstar.showcase.mod_copy_audit") }}
 								</p>
 							</div>
 						</div>
@@ -874,74 +882,74 @@ enum AutomodFeature {
 	Words,
 }
 
-const { t } = useI18n();
+const { ts } = useI18n();
 
 const features = computed(() => [
 	{
-		description: t("marketing.wolfstar.showcase.feature_automod_description"),
+		description: ts("marketing.wolfstar.showcase.feature_automod_description"),
 		icon: "ph:shield-fill",
 		id: "moderation-tools",
-		title: t("marketing.wolfstar.showcase.feature_automod_title"),
+		title: ts("marketing.wolfstar.showcase.feature_automod_title"),
 	},
 	{
-		description: t("marketing.wolfstar.showcase.feature_logging_description"),
+		description: ts("marketing.wolfstar.showcase.feature_logging_description"),
 		icon: "ph:binoculars-duotone",
 		id: "advanced-logging",
-		title: t("marketing.wolfstar.showcase.feature_logging_title"),
+		title: ts("marketing.wolfstar.showcase.feature_logging_title"),
 	},
 	{
-		description: t("marketing.wolfstar.showcase.feature_moderation_description"),
+		description: ts("marketing.wolfstar.showcase.feature_moderation_description"),
 		icon: "ph:shield-fill",
 		id: "moderation-logs",
-		title: t("marketing.wolfstar.showcase.feature_moderation_title"),
+		title: ts("marketing.wolfstar.showcase.feature_moderation_title"),
 	},
 ]);
 
 const texts = computed(() => [
 	{
-		alert: t("marketing.wolfstar.showcase.automod_attachments_alert"),
-		title: t("marketing.wolfstar.showcase.automod_attachments_title"),
-		tooltip: t("marketing.wolfstar.showcase.automod_attachments_tooltip"),
+		alert: ts("marketing.wolfstar.showcase.automod_attachments_alert"),
+		title: ts("marketing.wolfstar.showcase.automod_attachments_title"),
+		tooltip: ts("marketing.wolfstar.showcase.automod_attachments_tooltip"),
 	},
 	{
-		alert: t("marketing.wolfstar.showcase.automod_capitals_alert"),
-		title: t("marketing.wolfstar.showcase.automod_capitals_title"),
-		tooltip: t("marketing.wolfstar.showcase.automod_capitals_tooltip"),
+		alert: ts("marketing.wolfstar.showcase.automod_capitals_alert"),
+		title: ts("marketing.wolfstar.showcase.automod_capitals_title"),
+		tooltip: ts("marketing.wolfstar.showcase.automod_capitals_tooltip"),
 	},
 	{
-		alert: t("marketing.wolfstar.showcase.automod_invites_alert"),
-		title: t("marketing.wolfstar.showcase.automod_invites_title"),
-		tooltip: t("marketing.wolfstar.showcase.automod_invites_tooltip"),
+		alert: ts("marketing.wolfstar.showcase.automod_invites_alert"),
+		title: ts("marketing.wolfstar.showcase.automod_invites_title"),
+		tooltip: ts("marketing.wolfstar.showcase.automod_invites_tooltip"),
 	},
 	{
-		alert: t("marketing.wolfstar.showcase.automod_links_alert"),
-		title: t("marketing.wolfstar.showcase.automod_links_title"),
-		tooltip: t("marketing.wolfstar.showcase.automod_links_tooltip"),
+		alert: ts("marketing.wolfstar.showcase.automod_links_alert"),
+		title: ts("marketing.wolfstar.showcase.automod_links_title"),
+		tooltip: ts("marketing.wolfstar.showcase.automod_links_tooltip"),
 	},
 	{
-		alert: t("marketing.wolfstar.showcase.automod_mentions_alert"),
-		title: t("marketing.wolfstar.showcase.automod_mentions_title"),
-		tooltip: t("marketing.wolfstar.showcase.automod_mentions_tooltip"),
+		alert: ts("marketing.wolfstar.showcase.automod_mentions_alert"),
+		title: ts("marketing.wolfstar.showcase.automod_mentions_title"),
+		tooltip: ts("marketing.wolfstar.showcase.automod_mentions_tooltip"),
 	},
 	{
-		alert: t("marketing.wolfstar.showcase.automod_newlines_alert"),
-		title: t("marketing.wolfstar.showcase.automod_newlines_title"),
-		tooltip: t("marketing.wolfstar.showcase.automod_newlines_tooltip"),
+		alert: ts("marketing.wolfstar.showcase.automod_newlines_alert"),
+		title: ts("marketing.wolfstar.showcase.automod_newlines_title"),
+		tooltip: ts("marketing.wolfstar.showcase.automod_newlines_tooltip"),
 	},
 	{
-		alert: t("marketing.wolfstar.showcase.automod_reactions_alert"),
-		title: t("marketing.wolfstar.showcase.automod_reactions_title"),
-		tooltip: t("marketing.wolfstar.showcase.automod_reactions_tooltip"),
+		alert: ts("marketing.wolfstar.showcase.automod_reactions_alert"),
+		title: ts("marketing.wolfstar.showcase.automod_reactions_title"),
+		tooltip: ts("marketing.wolfstar.showcase.automod_reactions_tooltip"),
 	},
 	{
-		alert: t("marketing.wolfstar.showcase.automod_spam_alert"),
-		title: t("marketing.wolfstar.showcase.automod_spam_title"),
-		tooltip: t("marketing.wolfstar.showcase.automod_spam_tooltip"),
+		alert: ts("marketing.wolfstar.showcase.automod_spam_alert"),
+		title: ts("marketing.wolfstar.showcase.automod_spam_title"),
+		tooltip: ts("marketing.wolfstar.showcase.automod_spam_tooltip"),
 	},
 	{
-		alert: t("marketing.wolfstar.showcase.automod_words_alert"),
-		title: t("marketing.wolfstar.showcase.automod_words_title"),
-		tooltip: t("marketing.wolfstar.showcase.automod_words_tooltip"),
+		alert: ts("marketing.wolfstar.showcase.automod_words_alert"),
+		title: ts("marketing.wolfstar.showcase.automod_words_title"),
+		tooltip: ts("marketing.wolfstar.showcase.automod_words_tooltip"),
 	},
 ]);
 

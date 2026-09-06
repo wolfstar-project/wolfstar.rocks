@@ -8,7 +8,7 @@ export const FEATURE_FILES = localeFeatures.features as readonly string[];
 
 type NestedObject = Record<string, unknown>;
 
-/** Feature JSON paths for a locale, relative to langDir (`locales/`). */
+/** Feature JSON paths for a locale, relative to `i18n/locales/`. */
 export function localeFeaturePaths(localeCode: string): string[] {
 	return FEATURE_FILES.map((feature) => `${localeCode}/${feature}`);
 }

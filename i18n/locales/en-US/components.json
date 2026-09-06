@@ -3,7 +3,7 @@
 	"feedback": {
 		"description": "Report a bug or share your thoughts with the WolfStar team.",
 		"email": "Email",
-		"email_placeholder": "your{'@'}email.com",
+		"email_placeholder": "your@email.com",
 		"message": "Message",
 		"message_placeholder": "What happened? What did you expect to happen?",
 		"name": "Name",

@@ -3,7 +3,7 @@
 	"feedback": {
 		"description": "Informa de un error o comparte tus opiniones con el equipo de WolfStar.",
 		"email": "Correo electrónico",
-		"email_placeholder": "tu{'@'}email.com",
+		"email_placeholder": "tu@email.com",
 		"message": "Mensaje",
 		"message_placeholder": "Cuéntanos qué piensas...",
 		"name": "Nombre",

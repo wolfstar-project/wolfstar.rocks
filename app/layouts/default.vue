@@ -4,7 +4,7 @@
 			href="#maincontent"
 			class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-content focus:shadow-lg focus:outline focus:outline-2 focus:outline-transparent"
 		>
-			{{ t("a11y.skip_to_content") }}
+			{{ ts("a11y.skip_to_content") }}
 		</a>
 		<AppHeader />
 
@@ -12,7 +12,7 @@
 			id="maincontent"
 			tabindex="-1"
 			class="focus:outline-none"
-			:aria-label="t('a11y.main_content')"
+			:aria-label="ts('a11y.main_content')"
 		>
 			<slot></slot>
 		</UMain>
@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n();
+const { ts } = useI18n();
 const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"));
 </script>
 

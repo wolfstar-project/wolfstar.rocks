@@ -1,13 +1,13 @@
 <template>
 	<GuildSettingsSection
-		:title="t('guild_settings.moderation.title')"
-		:description="t('guild_settings.moderation.subtitle')"
+		:title="ts('guild_settings.moderation.title')"
+		:description="ts('guild_settings.moderation.subtitle')"
 	>
 		<GuildSettingsForm
 			:schema="ModerationSettingsSchema"
 			:state="state"
 			:map-to-guild-data="mapToGuildData"
-			:aria-label="t('guild_settings.moderation.form_aria')"
+			:aria-label="ts('guild_settings.moderation.form_aria')"
 			class="space-y-4"
 			@error="onError"
 		>
@@ -26,7 +26,7 @@
 					<USwitch
 						v-model="state[setting.key]"
 						:aria-label="
-							t('guild_settings.events.toggle_aria', {
+							ts('guild_settings.events.toggle_aria', {
 								title: translateEntry(setting, 'name'),
 							})
 						"
@@ -44,7 +44,7 @@ import { ModerationSettingsSchema, type ModerationSettingsSchemaType } from "#sh
 import { setGuildDataChange } from "#shared/utils/guild-settings-map";
 import { ConfigurableModerationKeys } from "#shared/utils/settingsDataEntries";
 
-const { t } = useI18n();
+const { ts } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
 
 const { guildSettings } = useGuildSettings();
@@ -75,9 +75,9 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: errorMessage ?? t("guild_settings.please_try_again"),
+		description: errorMessage ?? ts("guild_settings.please_try_again"),
 		icon: "heroicons:x-circle",
-		title: t("guild_settings.save_failed"),
+		title: ts("guild_settings.save_failed"),
 	});
 }
 

@@ -1,7 +1,7 @@
 <template>
 	<GuildSettingsSection
-		:title="t('guild_settings.roles.title')"
-		:description="t('guild_settings.roles.subtitle')"
+		:title="ts('guild_settings.roles.title')"
+		:description="ts('guild_settings.roles.subtitle')"
 	>
 		<!-- Loading Skeleton -->
 		<div v-if="loading" class="space-y-8">
@@ -29,7 +29,7 @@
 			:state="state"
 			:schema="schema"
 			:map-to-guild-data="mapToGuildData"
-			:aria-label="t('guild_settings.roles.form_aria')"
+			:aria-label="ts('guild_settings.roles.form_aria')"
 			class="space-y-8"
 			@error="onError"
 		>
@@ -38,7 +38,7 @@
 				<div class="flex items-center gap-2">
 					<UIcon name="heroicons:adjustments-horizontal" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">
-						{{ t("guild_settings.roles.general_options") }}
+						{{ ts("guild_settings.roles.general_options") }}
 					</h3>
 				</div>
 
@@ -60,11 +60,11 @@
 				<div class="flex items-center gap-2">
 					<UIcon name="heroicons:user-group" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">
-						{{ t("guild_settings.roles.configurable") }}
+						{{ ts("guild_settings.roles.configurable") }}
 					</h3>
 				</div>
 				<p class="text-sm text-base-content/70">
-					{{ t("guild_settings.roles.configurable_help") }}
+					{{ ts("guild_settings.roles.configurable_help") }}
 				</p>
 
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -97,11 +97,11 @@
 				<div class="flex items-center gap-2">
 					<UIcon name="heroicons:shield-check" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">
-						{{ t("guild_settings.roles.restricted") }}
+						{{ ts("guild_settings.roles.restricted") }}
 					</h3>
 				</div>
 				<p class="text-sm text-base-content/70">
-					{{ t("guild_settings.roles.restricted_help") }}
+					{{ ts("guild_settings.roles.restricted_help") }}
 				</p>
 
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -145,7 +145,7 @@ import {
 	ConfigurableRoles,
 } from "~~/shared/utils/settingsDataEntries";
 
-const { t } = useI18n();
+const { ts } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
 
 const { guildData } = useGuildData();
@@ -248,9 +248,9 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: errorMessage ?? t("guild_settings.please_try_again"),
+		description: errorMessage ?? ts("guild_settings.please_try_again"),
 		icon: "heroicons:x-circle",
-		title: t("guild_settings.save_failed"),
+		title: ts("guild_settings.save_failed"),
 	});
 }
 </script>

@@ -1,10 +1,10 @@
 <template>
 	<div>
-		<h1 class="sr-only">{{ t("auth.oauth.login_seo_title") }}</h1>
+		<h1 class="sr-only">{{ ts("auth.oauth.login_seo_title") }}</h1>
 		<OauthStatusPanel
 			v-if="signInDiscord.status.value === 'error'"
 			tone="error"
-			:title="t('auth.oauth.sign_in_failed_title')"
+			:title="ts('auth.oauth.sign_in_failed_title')"
 			icon="heroicons:x-circle"
 		>
 			<template #description>
@@ -12,7 +12,7 @@
 			</template>
 			<template #actions>
 				<UButton color="primary" size="sm" class="w-full sm:w-auto" @click="startSignIn">
-					{{ t("auth.oauth.try_again") }}
+					{{ ts("auth.oauth.try_again") }}
 				</UButton>
 			</template>
 		</OauthStatusPanel>
@@ -20,18 +20,18 @@
 			v-else
 			tone="info"
 			loading
-			:title="t('auth.oauth.login_redirecting')"
+			:title="ts('auth.oauth.login_redirecting')"
 			icon="ph:discord-logo-fill"
 		>
 			<template #description>
-				{{ t("auth.oauth.redirecting_discord_description") }}
+				{{ ts("auth.oauth.redirecting_discord_description") }}
 			</template>
 		</OauthStatusPanel>
 	</div>
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n();
+const { ts } = useI18n();
 const { localizeAuthError } = useAuthErrorMessage();
 
 definePageMeta({
@@ -67,11 +67,11 @@ async function startSignIn() {
 }
 
 useSeoMetadata({
-	description: t("auth.oauth.login_seo_og_description"),
+	description: ts("auth.oauth.login_seo_og_description"),
 	ogImage: {
 		theme: Colors.Red,
 	},
 	shouldOgImage: true,
-	title: t("auth.oauth.login_seo_title"),
+	title: ts("auth.oauth.login_seo_title"),
 });
 </script>

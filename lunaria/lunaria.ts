@@ -80,7 +80,7 @@ function buildJsonStatus(): I18nStatus {
 			: "main";
 	const githubBase = `https://github.com/${repoName}`;
 
-	const appLocales = currentLocales.filter((l) => l.code !== sourceLocale.lang && l.name);
+	const appLocales = currentLocales.filter((l) => l.code !== sourceLocale.lang && l.displayName);
 
 	return {
 		generatedAt: new Date().toISOString(),
@@ -97,7 +97,7 @@ function buildJsonStatus(): I18nStatus {
 
 			return {
 				lang: locale.code,
-				label: locale.name!,
+				label: locale.displayName!,
 				dir: locale.dir ?? "ltr",
 				totalKeys,
 				completedKeys,

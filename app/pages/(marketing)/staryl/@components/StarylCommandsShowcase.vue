@@ -6,7 +6,7 @@
 					:name="CHANNEL_NAME"
 					type="text"
 					:topic="channelTopic"
-					:search-placeholder="t('marketing.staryl.showcase.search_placeholder')"
+					:search-placeholder="ts('marketing.staryl.showcase.search_placeholder')"
 					:online-count="0"
 				/>
 
@@ -155,13 +155,13 @@ interface StarylShowcaseCommand {
 	response: { type: "embed"; title: string; lines: string[] } | { type: "text"; content: string };
 }
 
-const { t } = useI18n();
+const { ts } = useI18n();
 
 const CHANNEL_NAME = "staryl-notifications";
 
-const channelTopic = computed(() => t("marketing.staryl.showcase.channel_topic"));
+const channelTopic = computed(() => ts("marketing.staryl.showcase.channel_topic"));
 const composerLabel = computed(() =>
-	t("marketing.staryl.showcase.composer_placeholder", { channel: CHANNEL_NAME }),
+	ts("marketing.staryl.showcase.composer_placeholder", { channel: CHANNEL_NAME }),
 );
 
 const twitchOptions = computed<SlashCommandOption[]>(() => [
@@ -175,51 +175,51 @@ const starylCommands = computed<StarylShowcaseCommand[]>(() => [
 		name: "subscriptions",
 		subcommandGroup: "twitch",
 		subcommand: "add",
-		description: t("marketing.staryl.showcase.add_description"),
+		description: ts("marketing.staryl.showcase.add_description"),
 		invoker: "redstar",
 		options: twitchOptions.value,
 		response: {
 			type: "text",
-			content: t("marketing.staryl.showcase.add_response"),
+			content: ts("marketing.staryl.showcase.add_response"),
 		},
 	},
 	{
 		name: "subscriptions",
 		subcommandGroup: "twitch",
 		subcommand: "remove",
-		description: t("marketing.staryl.showcase.remove_description"),
+		description: ts("marketing.staryl.showcase.remove_description"),
 		invoker: "redstar",
 		options: twitchOptions.value,
 		response: {
 			type: "text",
-			content: t("marketing.staryl.showcase.remove_response"),
+			content: ts("marketing.staryl.showcase.remove_response"),
 		},
 	},
 	{
 		name: "subscriptions",
 		subcommandGroup: "twitch",
 		subcommand: "reset",
-		description: t("marketing.staryl.showcase.reset_description"),
+		description: ts("marketing.staryl.showcase.reset_description"),
 		invoker: "redstar",
 		options: [],
 		response: {
 			type: "text",
-			content: t("marketing.staryl.showcase.reset_response"),
+			content: ts("marketing.staryl.showcase.reset_response"),
 		},
 	},
 	{
 		name: "subscriptions",
 		subcommandGroup: "twitch",
 		subcommand: "show",
-		description: t("marketing.staryl.showcase.show_description"),
+		description: ts("marketing.staryl.showcase.show_description"),
 		invoker: "redstar",
 		options: [],
 		response: {
 			type: "embed",
-			title: t("marketing.staryl.showcase.show_embed_title"),
+			title: ts("marketing.staryl.showcase.show_embed_title"),
 			lines: [
-				t("marketing.staryl.showcase.show_embed_online"),
-				t("marketing.staryl.showcase.show_embed_offline"),
+				ts("marketing.staryl.showcase.show_embed_online"),
+				ts("marketing.staryl.showcase.show_embed_offline"),
 			],
 		},
 	},
@@ -227,12 +227,12 @@ const starylCommands = computed<StarylShowcaseCommand[]>(() => [
 		name: "subscriptions",
 		subcommandGroup: "twitch",
 		subcommand: "test",
-		description: t("marketing.staryl.showcase.test_description"),
+		description: ts("marketing.staryl.showcase.test_description"),
 		invoker: "redstar",
 		options: twitchOptions.value,
 		response: {
 			type: "text",
-			content: t("marketing.staryl.showcase.test_response"),
+			content: ts("marketing.staryl.showcase.test_response"),
 		},
 	},
 ]);
@@ -274,7 +274,7 @@ const chatMessages = computed<DiscordChatMessage[]>(() => {
 		{
 			id: `response-${commandDisplayName(command).replaceAll(" ", "-")}`,
 			author: "staryl",
-			timestamp: t("marketing.staryl.showcase.timestamp"),
+			timestamp: ts("marketing.staryl.showcase.timestamp"),
 		},
 	];
 });

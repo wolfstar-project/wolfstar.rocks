@@ -1,29 +1,9 @@
-import { describe, expect, it, vi } from "vitest";
-import { createI18n } from "vue-i18n";
+import { describe, expect, it } from "vitest";
 import {
-	prioritizeVueI18nResourceTransform,
-	stripEmptyI18nMessagesPlugin,
+	mergeLocaleMessages,
+	parseLocaleMessages,
 	stripEmptyMessages,
 } from "../../../config/i18n-empty-placeholders";
-
-type TransformResult = { code: string; map: EncodedSourceMap | null };
-type TransformHook = (this: unknown, code: string, id: string) => TransformResult | null;
-
-interface EncodedSourceMap {
-	version: number;
-	mappings: string;
-	sources: (string | null)[];
-	sourcesContent?: (string | null)[];
-}
-
-function transform(code: string, id: string): TransformResult | null {
-	const plugin = stripEmptyI18nMessagesPlugin();
-	const transform = plugin.transform;
-	const hook = (typeof transform === "function"
-		? transform
-		: transform?.handler) as unknown as TransformHook;
-	return hook.call({}, code, id);
-}
 
 describe("stripEmptyMessages", () => {
 	it("drops empty-string leaves and keeps translated ones", () => {
@@ -52,200 +32,70 @@ describe("stripEmptyMessages", () => {
 	});
 });
 
-describe("stripEmptyI18nMessagesPlugin", () => {
-	it("runs before Vite's JSON transform", () => {
-		const plugin = stripEmptyI18nMessagesPlugin();
-		expect(plugin.enforce).toBe("pre");
-		expect(plugin.transform).toMatchObject({ order: "pre" });
+describe("parseLocaleMessages", () => {
+	it("strips empty placeholders and the $schema pointer", () => {
+		expect(
+			parseLocaleMessages(
+				JSON.stringify({
+					$schema: "../../schemas/common.schema.json",
+					nav: { blog: "", commands: "Befehle" },
+				}),
+				"i18n/locales/de-DE/common.json",
+				"test",
+			),
+		).toEqual({ nav: { commands: "Befehle" } });
 	});
 
-	it("prioritizes and deduplicates wrapped vue-i18n resource transforms", async () => {
-		const resourceTransform = vi.fn((code: string) => ({ code, map: null }));
-		const resourcePlugin = {
-			name: "unplugin-vue-i18n:resource",
-			transform: resourceTransform,
-		};
-		const wrapperPlugin = {
-			name: "unplugin-vue-i18n:resource:wrapper",
-			applyToEnvironment: vi.fn(() => [resourcePlugin]),
-		};
-
-		prioritizeVueI18nResourceTransform([wrapperPlugin]);
-		await wrapperPlugin.applyToEnvironment();
-
-		expect(resourcePlugin.transform).toMatchObject({ order: "pre" });
-		const hook = resourcePlugin.transform as unknown as {
-			handler: TransformHook;
-		};
-		const id = "/repo/i18n/locales/en/common.json";
-
-		expect(await hook.handler.call({}, "{}", id)).toEqual({ code: "{}", map: null });
-		await expect(hook.handler.call({}, "export default {}", id)).rejects.toThrow(id);
-		expect(resourceTransform).toHaveBeenCalledTimes(1);
-	});
-
-	it("matches a wrapper whose name joins the tree-shaking plugin first", async () => {
-		const resourcePlugin = {
-			name: "unplugin-vue-i18n:resource",
-			transform: vi.fn((code: string) => ({ code, map: null })),
-		};
-		const wrapperPlugin = {
-			name: "unplugin-vue-i18n:tree-shaking|unplugin-vue-i18n:resource:wrapper",
-			applyToEnvironment: vi.fn(() => [resourcePlugin]),
-		};
-
-		prioritizeVueI18nResourceTransform([wrapperPlugin]);
-		await wrapperPlugin.applyToEnvironment();
-
-		expect(resourcePlugin.transform).toMatchObject({ order: "pre" });
-	});
-
-	it("prioritizes plugins injected after the nuxt hook via the config hook", async () => {
-		const resourcePlugin = {
-			name: "unplugin-vue-i18n:resource",
-			transform: vi.fn((code: string) => ({ code, map: null })),
-		};
-		const plugin = stripEmptyI18nMessagesPlugin();
-		const config = plugin.config;
-		const hook = typeof config === "function" ? config : config?.handler;
-
-		await hook?.call(
-			{} as never,
-			{ plugins: [resourcePlugin] },
-			{
-				command: "build",
-				mode: "production",
-			},
-		);
-
-		expect(resourcePlugin.transform).toMatchObject({ order: "pre" });
-	});
-
-	it("prioritizes plugins returned from an async applyToEnvironment wrapper", async () => {
-		const resourcePlugin = {
-			name: "unplugin-vue-i18n:resource",
-			transform: vi.fn((code: string) => ({ code, map: null })),
-		};
-		const wrapperPlugin = {
-			name: "unplugin-vue-i18n:resource:wrapper",
-			applyToEnvironment: vi.fn(() => Promise.resolve(resourcePlugin)),
-		};
-
-		prioritizeVueI18nResourceTransform([wrapperPlugin]);
-		await wrapperPlugin.applyToEnvironment();
-
-		expect(resourcePlugin.transform).toMatchObject({ order: "pre" });
-	});
-
-	it("still prioritizes the transform of a gating applyToEnvironment plugin", async () => {
-		const resourceTransform = vi.fn((code: string) => ({ code, map: null }));
-		const resourcePlugin = {
-			name: "unplugin-vue-i18n:resource",
-			applyToEnvironment: vi.fn(() => true),
-			transform: resourceTransform,
-		};
-
-		prioritizeVueI18nResourceTransform([[resourcePlugin]]);
-
-		expect(resourcePlugin.applyToEnvironment()).toBe(true);
-		expect(resourcePlugin.transform).toMatchObject({ order: "pre" });
-		const hook = resourcePlugin.transform as unknown as { handler: TransformHook };
-		const id = "/repo/i18n/locales/en/common.json";
-
-		await expect(hook.handler.call({}, "export default {}", id)).rejects.toThrow(id);
-		expect(await hook.handler.call({}, "{}", id)).toEqual({ code: "{}", map: null });
-		expect(resourceTransform).toHaveBeenCalledTimes(1);
-	});
-
-	it("strips empty placeholders and the $schema pointer from locale files", () => {
-		const result = transform(
-			JSON.stringify({
-				$schema: "../../schemas/common.schema.json",
-				nav: { blog: "", commands: "Befehle" },
-			}),
-			"/repo/i18n/locales/de-DE/common.json",
-		);
-
-		expect(result?.code).toBe(JSON.stringify({ nav: { commands: "Befehle" } }));
-	});
-
-	it("emits an empty object for a fully untranslated file", () => {
-		const result = transform(
-			JSON.stringify({ nav: { blog: "" } }),
-			"/repo/i18n/locales/uk-UA/common.json",
-		);
-
-		expect(result?.code).toBe("{}");
-	});
-
-	it("handles ids carrying a query string", () => {
-		const result = transform(
-			JSON.stringify({ nav: { blog: "", commands: "Команди" } }),
-			"/repo/i18n/locales/uk-UA/common.json?import",
-		);
-
-		expect(result?.code).toBe(JSON.stringify({ nav: { commands: "Команди" } }));
-	});
-
-	it("returns a source map that points back at the locale file", () => {
-		const source = JSON.stringify({ nav: { blog: "", commands: "Befehle" } });
-		const id = "/repo/i18n/locales/de-DE/common.json";
-		const result = transform(source, id);
-
-		expect(result?.map).not.toBeNull();
-		expect(result?.map?.version).toBe(3);
-		expect(result?.map?.sources).toEqual([id]);
-		expect(result?.map?.sourcesContent).toEqual([source]);
-		expect(result?.map?.mappings.length).toBeGreaterThan(0);
-	});
-
-	it("fails loudly when the locale file was already transformed into an ES module", () => {
-		expect(() =>
-			transform("export default {}", "/repo/i18n/locales/en/common.json"),
-		).toThrowError(/\/repo\/i18n\/locales\/en\/common\.json/);
+	it("returns an empty object for a fully untranslated file", () => {
+		expect(
+			parseLocaleMessages(
+				JSON.stringify({ nav: { blog: "" } }),
+				"i18n/locales/uk-UA/common.json",
+				"test",
+			),
+		).toEqual({});
 	});
 
 	it("reports the locale path when the file is not valid JSON", () => {
-		expect(() => transform("{invalid", "/repo/i18n/locales/en/common.json")).toThrowError(
-			/failed to parse locale JSON \/repo\/i18n\/locales\/en\/common\.json/,
-		);
-	});
-
-	it("ignores JSON outside i18n/locales and non-JSON files", () => {
-		expect(transform(JSON.stringify({ a: "" }), "/repo/package.json")).toBeNull();
-		expect(transform("export default {}", "/repo/i18n/locales/de-DE/common.ts")).toBeNull();
+		expect(() =>
+			parseLocaleMessages("{invalid", "i18n/locales/en/common.json", "test"),
+		).toThrowError(/failed to parse locale JSON i18n\/locales\/en\/common\.json/);
 	});
 });
 
-describe("vue-i18n fallback for stripped placeholders", () => {
-	const messages = {
-		"en-US": { nav: { blog: "Blog", commands: "Commands" } },
-		"de-DE": { nav: { blog: "", commands: "Befehle" } },
-	};
-
-	it("renders the empty placeholder verbatim when it is not stripped", () => {
-		const { t } = createI18n({
-			legacy: false,
-			locale: "de-DE",
-			fallbackLocale: "en-US",
-			messages,
-		}).global;
-
-		expect(t("nav.blog")).toBe("");
+describe("mergeLocaleMessages", () => {
+	it("merges nested objects with later sources winning", () => {
+		expect(
+			mergeLocaleMessages(
+				{ nav: { blog: "Blog", commands: "Comandos" } },
+				{ nav: { blog: "Bitácora" }, footer: { legal: "Legal" } },
+			),
+		).toEqual({
+			nav: { blog: "Bitácora", commands: "Comandos" },
+			footer: { legal: "Legal" },
+		});
 	});
 
-	it("falls back to English once the placeholder is stripped", () => {
-		const { t } = createI18n({
-			legacy: false,
-			locale: "de-DE",
-			fallbackLocale: "en-US",
-			messages: {
-				"en-US": messages["en-US"],
-				"de-DE": stripEmptyMessages(messages["de-DE"]) as (typeof messages)["en-US"],
-			},
-		}).global;
+	it("keeps a base translation where the variant only had a placeholder", () => {
+		// The placeholder is already gone by the time the layers are merged, so
+		// the regional variant inherits the base value instead of blanking it.
+		const base = parseLocaleMessages(
+			JSON.stringify({ nav: { blog: "Bitácora", commands: "Comandos" } }),
+			"i18n/locales/es/common.json",
+			"test",
+		);
+		const variant = parseLocaleMessages(
+			JSON.stringify({ nav: { blog: "", commands: "Comandos (LatAm)" } }),
+			"i18n/locales/es-419/common.json",
+			"test",
+		);
 
-		expect(t("nav.blog")).toBe("Blog");
-		expect(t("nav.commands")).toBe("Befehle");
+		expect(mergeLocaleMessages(base, variant)).toEqual({
+			nav: { blog: "Bitácora", commands: "Comandos (LatAm)" },
+		});
+	});
+
+	it("replaces arrays wholesale rather than merging them", () => {
+		expect(mergeLocaleMessages({ list: ["a", "b"] }, { list: ["c"] })).toEqual({ list: ["c"] });
 	});
 });

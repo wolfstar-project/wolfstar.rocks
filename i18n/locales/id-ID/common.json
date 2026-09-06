@@ -89,6 +89,10 @@
 		"moderation_tools": "",
 		"moderation_tools_description": ""
 	},
+	"nuxtSiteConfig": {
+		"description": "",
+		"name": ""
+	},
 	"translation_status": {
 		"description": "",
 		"generated_at": "",

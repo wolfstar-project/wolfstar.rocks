@@ -13,7 +13,7 @@ type ResilientNetlifyBlobsOptions = {
 /**
  * Netlify Blobs unstorage driver with:
  * 1. Body-buffering fetch + short retries for transient TCP resets (socket hang up)
- * 2. Fail-open `getKeys` so `@nuxtjs/i18n` bootstrap cache clears never crash cold starts
+ * 2. Fail-open `getKeys` so bootstrap cache clears never crash cold starts
  *    or get reported as unhandled by Sentry's storage instrumentation
  */
 export default defineDriver((options: ResilientNetlifyBlobsOptions = {}) => {

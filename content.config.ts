@@ -24,6 +24,13 @@ const PageHero = z.object({
 		.optional(),
 });
 
+const ChangelogBadge = z.object({
+	label: z.string(),
+	color: z
+		.enum(["primary", "secondary", "neutral", "error", "warning", "success", "info"])
+		.optional(),
+});
+
 export default defineContentConfig({
 	collections: {
 		blog: defineCollection({
@@ -42,6 +49,22 @@ export default defineContentConfig({
 			type: "page",
 			source: [{ include: "blog.yml" }],
 			schema: PageHero,
+		}),
+		changelogHero: defineCollection({
+			type: "page",
+			source: [{ include: "changelog.yml" }],
+			schema: PageHero,
+		}),
+		changelogVersions: defineCollection({
+			type: "page",
+			source: "changelog/*",
+			schema: z.object({
+				description: z.string(),
+				date: z.string(),
+				image: z.string().optional(),
+				badge: ChangelogBadge.optional(),
+				authors: z.array(Author).default([]),
+			}),
 		}),
 	},
 });

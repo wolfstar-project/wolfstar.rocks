@@ -235,8 +235,12 @@ export default {
 		list: "isolate min-w-0",
 		root: "relative flex gap-1.5 [&>div]:min-w-0",
 		separator: "px-2 h-px bg-border",
+		// `content` (below) already paints its own `bg-base-200/60 backdrop-blur-sm` at the
+		// same bounds; duplicating the blur here stacks two backdrop-filter layers on the
+		// box whose height/width animate every frame, which is what produces the rasterization
+		// noise Chromium shows along the rounded edges during the resize transition.
 		viewport:
-			"relative overflow-hidden bg-base-200/60 backdrop-blur-sm shadow-lg rounded-md ring ring-base-300 h-(--reka-navigation-menu-viewport-height) w-full transition-[width,height,left] duration-200 origin-[top_center] data-[state=open]:animate-[scale-in_100ms_ease-out] data-[state=closed]:animate-[scale-out_100ms_ease-in] z-[1]",
+			"relative overflow-hidden shadow-lg rounded-md ring ring-base-300 h-(--reka-navigation-menu-viewport-height) w-full transition-[width,height,left] duration-200 origin-[top_center] data-[state=open]:animate-[scale-in_100ms_ease-out] data-[state=closed]:animate-[scale-out_100ms_ease-in] z-[1]",
 		viewportWrapper: "absolute top-full left-0 flex w-full",
 	},
 	variants: {

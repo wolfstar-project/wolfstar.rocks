@@ -42,7 +42,9 @@ export function createResilientNetlifyBlobsFetch(
 				// Materialize the body so incomplete transfers throw here (retryable)
 				// instead of later inside @netlify/blobs after fetchAndRetry returned.
 				// Skip buffering for null-body statuses (e.g. 204 No Content).
-				const body = NULL_BODY_STATUSES.has(response.status) ? null : await response.arrayBuffer();
+				const body = NULL_BODY_STATUSES.has(response.status)
+					? null
+					: await response.arrayBuffer();
 				return new Response(body, {
 					status: response.status,
 					statusText: response.statusText,

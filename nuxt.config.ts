@@ -324,9 +324,8 @@ export default defineNuxtConfig({
 				"Cache-Control": "public, max-age=0, must-revalidate",
 			},
 		},
-		// Changelog pulls live GitHub releases from ungh.cc, so it revalidates via
-		// ISR (1 hour) rather than prerendering against the external API at build time.
-		"/changelog": { appLayout: "default", robots: true, ...getISRConfig(60 * 60) },
+		"/changelog": { appLayout: "default", prerender: true, robots: true },
+		"/changelog/**": { appLayout: "default", prerender: true, robots: true },
 		// Nuxt Studio admin UI + auth callbacks — SSR-only, never index or prerender.
 		"/_studio": { prerender: false, robots: false },
 		"/_studio/**": { prerender: false, robots: false },

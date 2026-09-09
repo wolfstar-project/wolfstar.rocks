@@ -1,7 +1,7 @@
 import { defineDriver } from "unstorage";
 import netlifyBlobsDriver from "unstorage/drivers/netlify-blobs";
 import { createResilientNetlifyBlobsFetch } from "./resilient-fetch.ts";
-import { isTransientNetworkError } from "./transient-network-error.ts";
+import { isTransientBlobsTokenError, isTransientNetworkError } from "./transient-network-error.ts";
 
 type ResilientNetlifyBlobsOptions = {
 	/** Present when Nitro JSON-serializes the mount config into the driver factory. */
@@ -10,32 +10,50 @@ type ResilientNetlifyBlobsOptions = {
 	name?: string;
 };
 
+function isFailOpenError(error: unknown): boolean {
+	return isTransientNetworkError(error) || isTransientBlobsTokenError(error);
+}
+
+// Mirrors resilient-fetch's 3-attempt/short-backoff shape so a token-expiry
+// blip has a couple of chances to land before the mutation is dropped.
+const RETRY_DELAYS_MS = [50, 100];
+
+function sleep(ms: number): Promise<void> {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 /**
- * Returns true when the error is a Netlify Blobs authentication failure caused
- * by the short-lived JWT that Netlify injects into each Lambda container at
- * cold start. The token has a ~15-minute TTL; warm containers that outlive it
- * receive a 401 from edge.netlifyblobs.com which the SDK surfaces as a
- * BlobsInternalError with "Token expired" in its message.
+ * Retries a cache mutation (`setItem`/`removeItem`) through fail-open-eligible
+ * errors before giving up. A dropped `removeItem` leaves stale data behind
+ * until the cache entry's TTL expires, and a dropped `setItem` leaves a stale
+ * value in place — retrying first makes that far less likely without turning
+ * a transient Blobs error into a failed request.
  */
-function isBlobsTokenExpiredError(error: unknown): boolean {
-	if (!error || typeof error !== "object") return false;
-	const name = "name" in error ? (error as { name: unknown }).name : undefined;
-	const message = "message" in error ? (error as { message: unknown }).message : undefined;
-	return (
-		name === "BlobsInternalError" &&
-		typeof message === "string" &&
-		message.toLowerCase().includes("token expired")
-	);
+async function withFailOpenRetry(operation: () => Promise<void>): Promise<void> {
+	for (let attempt = 0; ; attempt++) {
+		try {
+			await operation();
+			return;
+		} catch (error) {
+			if (!isFailOpenError(error)) {
+				throw error;
+			}
+			const delay = RETRY_DELAYS_MS[attempt];
+			if (delay === undefined) {
+				return;
+			}
+			await sleep(delay);
+		}
+	}
 }
 
 /**
  * Netlify Blobs unstorage driver with:
  * 1. Body-buffering fetch + short retries for transient TCP resets (socket hang up)
- * 2. Fail-open `getKeys` so `@nuxtjs/i18n` bootstrap cache clears never crash cold starts
- *    or get reported as unhandled by Sentry's storage instrumentation
- * 3. Fail-open `getItem` / `setItem` / `removeItem` on token-expiry errors so that
- *    warm Lambda containers that outlive the injected JWT degrade gracefully to a
- *    cache miss instead of throwing an unhandled BlobsInternalError.
+ * 2. Fail-open `getKeys`/`getItem`/`setItem`/`removeItem` so transient Blobs failures
+ *    (dropped connections, the short-lived edge token expiring mid-request) never crash
+ *    a request or cold start, or get reported as unhandled by Sentry's storage
+ *    instrumentation — see WOLFSTAR-ROCKS-4Q and WOLFSTAR-ROCKS-4M
  */
 export default defineDriver((options: ResilientNetlifyBlobsOptions = {}) => {
 	// Omit Nitro's serialized `driver` path key before forwarding store options.
@@ -62,7 +80,7 @@ export default defineDriver((options: ResilientNetlifyBlobsOptions = {}) => {
 				// useStorage("cache").getKeys(...). Transient Blobs failures must not
 				// abort startup; Sentry instruments drivers and would otherwise report
 				// the throw as unhandled before the plugin's empty catch runs.
-				if (isTransientNetworkError(error)) {
+				if (isFailOpenError(error)) {
 					return [];
 				}
 				throw error;
@@ -72,36 +90,21 @@ export default defineDriver((options: ResilientNetlifyBlobsOptions = {}) => {
 			try {
 				return (await getItem?.(key, opts)) ?? null;
 			} catch (error) {
-				// Warm Lambda containers that outlive the ~15-minute injected JWT will
-				// receive a 401 from Netlify Blobs. Treat this as a cache miss so the
-				// request falls through to the real handler instead of crashing.
-				if (isBlobsTokenExpiredError(error)) {
+				if (isFailOpenError(error)) {
 					return null;
 				}
 				throw error;
 			}
 		},
 		async setItem(key, value, opts) {
-			try {
+			await withFailOpenRetry(async () => {
 				await setItem?.(key, value, opts);
-			} catch (error) {
-				// Silently skip cache writes when the token is expired; the next cold
-				// start will have a fresh token and can re-populate the cache.
-				if (isBlobsTokenExpiredError(error)) {
-					return;
-				}
-				throw error;
-			}
+			});
 		},
 		async removeItem(key, opts) {
-			try {
+			await withFailOpenRetry(async () => {
 				await removeItem?.(key, opts);
-			} catch (error) {
-				if (isBlobsTokenExpiredError(error)) {
-					return;
-				}
-				throw error;
-			}
+			});
 		},
 	};
 });

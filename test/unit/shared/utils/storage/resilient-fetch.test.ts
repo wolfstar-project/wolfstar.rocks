@@ -56,6 +56,19 @@ describe("createResilientNetlifyBlobsFetch", () => {
 		expect(fetchImpl).toHaveBeenCalledOnce();
 	});
 
+	it("reconstructs null-body statuses (e.g. 204) without buffering the body", async () => {
+		const fetchImpl = vi.fn(async () => new Response(null, { status: 204 }));
+		const resilient = createResilientNetlifyBlobsFetch({
+			fetch: fetchImpl as unknown as typeof fetch,
+			sleep: async () => {},
+		});
+
+		const response = await resilient("https://edge.netlifyblobs.com/example");
+		expect(response.status).toBe(204);
+		expect(await response.text()).toBe("");
+		expect(fetchImpl).toHaveBeenCalledOnce();
+	});
+
 	it("throws after exhausting retries", async () => {
 		const hangUp = Object.assign(new Error("socket hang up"), { code: "ECONNRESET" });
 		const fetchImpl = vi.fn(async () => {

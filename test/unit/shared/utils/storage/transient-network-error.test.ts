@@ -1,4 +1,7 @@
-import { isTransientNetworkError } from "#shared/utils/storage/transient-network-error";
+import {
+	isTransientBlobsTokenError,
+	isTransientNetworkError,
+} from "#shared/utils/storage/transient-network-error";
 import { describe, expect, it } from "vitest";
 
 describe("isTransientNetworkError", () => {
@@ -22,5 +25,32 @@ describe("isTransientNetworkError", () => {
 		expect(isTransientNetworkError(new Error("validation failed"))).toBe(false);
 		expect(isTransientNetworkError(null)).toBe(false);
 		expect(isTransientNetworkError({ code: "ENOENT" })).toBe(false);
+	});
+});
+
+describe("isTransientBlobsTokenError", () => {
+	it("detects BlobsInternalError token expiry by name and message", () => {
+		const error = Object.assign(
+			new Error(
+				"Netlify Blobs has generated an internal error (Failed to decode token: Token expired)",
+			),
+			{ name: "BlobsInternalError" },
+		);
+		expect(isTransientBlobsTokenError(error)).toBe(true);
+	});
+
+	it("rejects other BlobsInternalError messages", () => {
+		const error = Object.assign(
+			new Error("Netlify Blobs has generated an internal error (500 status code)"),
+			{
+				name: "BlobsInternalError",
+			},
+		);
+		expect(isTransientBlobsTokenError(error)).toBe(false);
+	});
+
+	it("rejects token-expired messages from unrelated error types", () => {
+		expect(isTransientBlobsTokenError(new Error("Token expired"))).toBe(false);
+		expect(isTransientBlobsTokenError(null)).toBe(false);
 	});
 });

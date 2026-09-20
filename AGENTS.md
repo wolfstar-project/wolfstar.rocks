@@ -173,6 +173,12 @@ pnpm test:browser:prebuilt --update-snapshots  # Update Playwright snapshots
 - Do not add Prisma `@@index` entries for the manually-managed partial indexes on `Moderation.createdAt`; see migration `20260515000000_command_log_and_moderation_indexes`
 - `AuditEvent` is hash-chained and tamper-evident; `CommandLog` is not hash-chained and is written directly by the bot/shared PostgreSQL producer
 
+## Storage and Caching
+
+- Netlify's production Nitro storage (`cache`, `fetch-cache`, `skew-protection`) mounts a resilient unstorage driver at `shared/utils/storage/netlify-blobs-resilient.ts` (registered from `modules/cache.ts`, which only activates when `std-env`'s `provider === "netlify"`) instead of the stock `unstorage/drivers/netlify-blobs`. It fails open on transient failures instead of surfacing a 500 or an unhandled Sentry error: `getKeys`/`getItem` swallow both mid-body TCP resets (`isTransientNetworkError()`) and Netlify's short-lived edge token expiring mid-request (`isTransientBlobsTokenError()`, a `BlobsInternalError: Token expired` that self-heals on the next call) — see `shared/utils/storage/transient-network-error.ts`. `setItem`/`removeItem` get a couple of short retries first via `withFailOpenRetry()` (mirroring `resilient-fetch.ts`'s 3-attempt/short-backoff shape), since a dropped mutation leaves stale data behind rather than just missing a read
+- `createResilientNetlifyBlobsFetch()` (`shared/utils/storage/resilient-fetch.ts`) wraps `fetch` for that driver: it fully buffers each response body before returning, because `@netlify/blobs` only retries when `fetch()` itself throws, and a 200 with a truncated body would otherwise fail later inside `res.json()`/`res.arrayBuffer()`, past that retry loop. It skips buffering for null-body statuses (101/103/204/205/304) — constructing a `Response` with a non-null body for those throws a `TypeError` under Node 24's undici
+- The app's own rate limiter (`wolfstar:ratelimiter`, `wolfstar:auth-ratelimiter` in `modules/cache.ts`) mounts straight to `cloudflareKVHttp`, not the resilient Blobs driver — the fail-open behavior above only covers Netlify Blobs-backed storage (`defineCachedFunction`, the i18n handler cache, SWR fetch caching, skew-protection cookies)
+
 ## Guild Logs and Activity Patterns
 
 - Guild log routes live under `server/api/guilds/[guild]/logs/`

@@ -22,11 +22,7 @@ datasource db {
 model Guild {
   id BigInt @id
 
-  autoModeration GuildAutoModeration?
-  logs           GuildLogs?
-  moderation     GuildModeration?
-  modules        Modules?
-  roles          GuildRoles?
+  modules Modules?
 
   cases       ModerationAction[]
   stickyRoles StickyRole[]
@@ -35,8 +31,9 @@ model Guild {
 /// Per-guild feature toggles, in the spirit of Dyno's module switches: the
 /// dashboard flips them, the bot reads them before running a subsystem.
 ///
-/// The first group maps to subsystems the bot ships today; the second group is
-/// reserved for planned ones and stays off until they exist.
+/// Every dashboard-managed settings table hangs off this one, so a module row
+/// is the parent record for its subsystem's configuration: deleting it takes
+/// the subsystem's settings with it.
 model Modules {
   id    BigInt @id
   /// The guild entry is from.
@@ -53,22 +50,37 @@ model Modules {
   /// Role automation: initial roles and sticky roles.
   roles      Boolean @default(true)
 
-  /// Welcome and farewell messages.
-  welcome     Boolean @default(false)
-  /// Activity-based levels and rank cards.
-  leveling    Boolean @default(false)
-  /// Starboard highlights.
-  starboard   Boolean @default(false)
-  /// Voice music playback.
-  music       Boolean @default(false)
-  /// Member suggestions and voting.
-  suggestions Boolean @default(false)
+  autoModerationSettings GuildAutoModeration?
+  logSettings            GuildLogs?
+  moderationSettings     GuildModeration?
+  permissions            GuildPermissions?
+  roleSettings           GuildRoles?
+}
+
+/// Permission nodes: per-command allow and deny lists that grant or withhold
+/// access beyond a member's Discord permissions.
+///
+/// The V7 contract dropped the V6 `permissions.users` / `permissions.roles`
+/// columns, but `canManage()` still honours them, so the dashboard keeps them
+/// in a table of its own. The bot has to read this table for the nodes to
+/// affect command execution too.
+model GuildPermissions {
+  id      BigInt  @id
+  /// The module entry is from.
+  modules Modules @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  /// The per-user permission nodes.
+  /// [PermissionNodeEntries]
+  users Json @default("[]")
+  /// The per-role permission nodes.
+  /// [PermissionNodeEntries]
+  roles Json @default("[]")
 }
 
 model GuildModeration {
-  id    BigInt @id
-  /// The guild entry is from.
-  guild Guild  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id      BigInt  @id
+  /// The module entry is from.
+  modules Modules @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   /// The moderation logs channel.
   channelId     BigInt? @map("channel_id")
@@ -79,9 +91,9 @@ model GuildModeration {
 }
 
 model GuildAutoModeration {
-  id    BigInt @id
-  /// The guild entry is from.
-  guild Guild  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id      BigInt  @id
+  /// The module entry is from.
+  modules Modules @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   /// The moderation logs channel.
   channelId   BigInt? @map("channel_id")
@@ -336,9 +348,9 @@ model GuildAutoModerationMentionsOverrides {
 }
 
 model GuildLogs {
-  id    BigInt @id
-  /// The guild entry is from.
-  guild Guild  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id      BigInt  @id
+  /// The module entry is from.
+  modules Modules @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   /// The member add logs channel.
   memberAdd            BigInt? @map("member_add")
@@ -405,9 +417,9 @@ model GuildLogs {
 }
 
 model GuildRoles {
-  id    BigInt @id
-  /// The guild entry is from.
-  guild Guild  @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id      BigInt  @id
+  /// The module entry is from.
+  modules Modules @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   /// The roles to be given to any new user.
   initial       BigInt[] @default([])

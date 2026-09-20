@@ -44,13 +44,17 @@ CREATE TABLE IF NOT EXISTS "Modules" (
     "logs" BOOLEAN NOT NULL DEFAULT true,
     "commands" BOOLEAN NOT NULL DEFAULT true,
     "roles" BOOLEAN NOT NULL DEFAULT true,
-    "welcome" BOOLEAN NOT NULL DEFAULT false,
-    "leveling" BOOLEAN NOT NULL DEFAULT false,
-    "starboard" BOOLEAN NOT NULL DEFAULT false,
-    "music" BOOLEAN NOT NULL DEFAULT false,
-    "suggestions" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Modules_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE IF NOT EXISTS "GuildPermissions" (
+    "id" BIGINT NOT NULL,
+    "users" JSONB NOT NULL DEFAULT '[]',
+    "roles" JSONB NOT NULL DEFAULT '[]',
+
+    CONSTRAINT "GuildPermissions_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -352,8 +356,16 @@ END $$;
 -- AddForeignKey
 DO $$
 BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'GuildPermissions_id_fkey') THEN
+        ALTER TABLE "GuildPermissions" ADD CONSTRAINT "GuildPermissions_id_fkey" FOREIGN KEY ("id") REFERENCES "Modules"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+    END IF;
+END $$;
+
+-- AddForeignKey
+DO $$
+BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'GuildModeration_id_fkey') THEN
-        ALTER TABLE "GuildModeration" ADD CONSTRAINT "GuildModeration_id_fkey" FOREIGN KEY ("id") REFERENCES "Guild"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+        ALTER TABLE "GuildModeration" ADD CONSTRAINT "GuildModeration_id_fkey" FOREIGN KEY ("id") REFERENCES "Modules"("id") ON DELETE CASCADE ON UPDATE CASCADE;
     END IF;
 END $$;
 
@@ -361,7 +373,7 @@ END $$;
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'GuildAutoModeration_id_fkey') THEN
-        ALTER TABLE "GuildAutoModeration" ADD CONSTRAINT "GuildAutoModeration_id_fkey" FOREIGN KEY ("id") REFERENCES "Guild"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+        ALTER TABLE "GuildAutoModeration" ADD CONSTRAINT "GuildAutoModeration_id_fkey" FOREIGN KEY ("id") REFERENCES "Modules"("id") ON DELETE CASCADE ON UPDATE CASCADE;
     END IF;
 END $$;
 
@@ -433,7 +445,7 @@ END $$;
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'GuildLogs_id_fkey') THEN
-        ALTER TABLE "GuildLogs" ADD CONSTRAINT "GuildLogs_id_fkey" FOREIGN KEY ("id") REFERENCES "Guild"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+        ALTER TABLE "GuildLogs" ADD CONSTRAINT "GuildLogs_id_fkey" FOREIGN KEY ("id") REFERENCES "Modules"("id") ON DELETE CASCADE ON UPDATE CASCADE;
     END IF;
 END $$;
 
@@ -441,7 +453,7 @@ END $$;
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'GuildRoles_id_fkey') THEN
-        ALTER TABLE "GuildRoles" ADD CONSTRAINT "GuildRoles_id_fkey" FOREIGN KEY ("id") REFERENCES "Guild"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+        ALTER TABLE "GuildRoles" ADD CONSTRAINT "GuildRoles_id_fkey" FOREIGN KEY ("id") REFERENCES "Modules"("id") ON DELETE CASCADE ON UPDATE CASCADE;
     END IF;
 END $$;
 

@@ -142,10 +142,12 @@ describe("BuildEnvironment", () => {
 			},
 		});
 
+		// The footer variant renders as a bordered status pill (redesign canvas).
 		const container = component.find("div");
-		expect(container.classes()).toContain("mt-4");
-		expect(container.classes()).toContain("items-end");
-		expect(container.classes()).toContain("gap-4");
+		expect(container.classes()).toContain("items-center");
+		expect(container.classes()).toContain("gap-2");
+		expect(container.classes()).toContain("rounded-full");
+		expect(container.classes()).toContain("border-default");
 	});
 
 	it("applies default classes when footer prop is false", async () => {

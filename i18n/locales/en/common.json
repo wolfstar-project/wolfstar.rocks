@@ -87,7 +87,9 @@
 		"moderation_logs": "Moderation Logs",
 		"moderation_logs_description": "Searchable moderation history for every action",
 		"moderation_tools": "Moderation Tools",
-		"moderation_tools_description": "Tools to help you moderate your server"
+		"moderation_tools_description": "Tools to help you moderate your server",
+		"staryl_description": "Social updates for Discord",
+		"wolfstar_description": "Moderation, with a paper trail"
 	},
 	"translation_status": {
 		"description": "Track how complete each locale is and contribute missing strings.",

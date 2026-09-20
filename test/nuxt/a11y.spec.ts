@@ -621,13 +621,15 @@ describe("component accessibility audits", () => {
 			expect(wrapper.find("[aria-label='Main navigation']").exists()).toBe(true);
 		});
 
-		it("renders the WolfStar logo mark with the resized svg hidden from AT", async () => {
+		it("names the brand link and keeps its logo decorative", async () => {
 			const wrapper = await mountAppHeader();
-			const svg = wrapper.find("svg");
-			expect(svg.exists()).toBe(true);
-			expect(svg.attributes("aria-hidden")).toBe("true");
-			expect(svg.classes()).toContain("h-20");
-			expect(svg.classes()).toContain("w-45");
+			const brandLink = wrapper.find("a[aria-label='WolfStar home']");
+			expect(brandLink.exists()).toBe(true);
+			expect(brandLink.text()).toContain("WolfStar");
+
+			const logo = brandLink.find("img");
+			expect(logo.exists()).toBe(true);
+			expect(logo.attributes("alt")).toBe("");
 		});
 	});
 

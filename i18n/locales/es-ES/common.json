@@ -87,7 +87,9 @@
 		"moderation_logs": "Registros de moderación",
 		"moderation_logs_description": "Historial de moderación con búsqueda para cada acción",
 		"moderation_tools": "Herramientas de moderación",
-		"moderation_tools_description": "Herramientas para ayudarte a moderar tu servidor"
+		"moderation_tools_description": "Herramientas para ayudarte a moderar tu servidor",
+		"staryl_description": "",
+		"wolfstar_description": ""
 	},
 	"translation_status": {
 		"description": "Consulta qué tan completa está cada lengua y contribuye con las cadenas que falten.",

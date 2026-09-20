@@ -6,20 +6,30 @@
 				:to="currentApp.explore"
 				:aria-label="t('header.home', { name: currentApp.name })"
 			>
-				<AppLogoMark v-if="currentApp.name === 'WolfStar'" class="h-20 w-45" />
-				<span v-else class="text-base font-bold text-base-content">{{
-					currentApp.name
-				}}</span>
+				<NuxtImg
+					:src="currentApp.avatar"
+					width="36"
+					height="36"
+					alt=""
+					class="size-9 rounded-lg"
+				/>
+				<span class="text-lg font-bold tracking-(--home-ls-tight) text-base-content">
+					{{ currentApp.name }}
+				</span>
 			</NuxtLink>
 		</template>
 
-		<div class="hidden gap-1 rounded-full bg-base-200 p-1 lg:inline-flex">
+		<div
+			class="hidden gap-1 rounded-full border border-(--home-border-subtle) bg-base-200 p-1 lg:inline-flex"
+		>
 			<UNavigationMenu
 				:items="desktopLinks"
 				variant="link"
 				:aria-label="t('nav.main_navigation')"
 				:ui="{
-					link: 'rounded-full px-4 py-2 text-sm font-medium text-muted hover:text-base-content',
+					link: 'h-9 rounded-full px-4 text-sm font-medium text-muted hover:text-base-content data-[state=open]:bg-base-300 data-[state=open]:text-base-content',
+					childLinkIcon: 'size-5 shrink-0 text-primary',
+					list: 'gap-0.5',
 					root: 'gap-0',
 				}"
 			/>
@@ -42,7 +52,7 @@
 							:label="t('header.sign_in')"
 							size="md"
 							color="primary"
-							variant="subtle"
+							variant="soft"
 							class="invisible rounded-lg"
 							icon="ic:round-discord"
 							tabindex="-1"
@@ -61,6 +71,7 @@
 					:ui="{
 						link: 'rounded-lg px-3 py-3 text-base font-medium',
 						childLink: 'rounded-lg px-3 py-2.5 text-sm',
+						childLinkIcon: 'size-5 shrink-0 text-primary',
 						childList: 'ms-2 border-s border-default ps-2',
 					}"
 				/>
@@ -82,7 +93,7 @@
 									:label="t('header.sign_in')"
 									size="md"
 									color="primary"
-									variant="subtle"
+									variant="soft"
 									class="invisible rounded-lg"
 									icon="ic:round-discord"
 									tabindex="-1"
@@ -109,5 +120,8 @@ const { desktopLinks, mobileLinks, currentApp } = useHeader();
 	width: 100%;
 	border-radius: 0;
 	border-bottom: 1px solid var(--home-border-subtle);
+	/* Translucent bar so page content scrolls under it, per the redesign canvas. */
+	background: color-mix(in srgb, var(--ui-bg) 88%, transparent);
+	backdrop-filter: blur(12px);
 }
 </style>

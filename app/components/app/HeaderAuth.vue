@@ -51,7 +51,7 @@
 					:label="t('header.sign_in')"
 					size="md"
 					color="primary"
-					variant="subtle"
+					variant="soft"
 					to="/login"
 					:class="mobile ? 'rounded-lg' : 'hidden rounded-lg md:inline-flex'"
 					icon="ic:round-discord"

@@ -1,3 +1,5 @@
+import type { NavigationMenuItem } from "@nuxt/ui";
+
 export function useHeader() {
 	const { t } = useI18n();
 
@@ -13,88 +15,63 @@ export function useHeader() {
 		return apps[appKey] || apps.WolfStar;
 	});
 
-	const desktopLinks = computed(() => [
-		{
-			children: [
-				{
-					description: t("nav.moderation_tools_description"),
-					label: t("nav.moderation_tools"),
-					to: "/wolfstar#moderation-tools",
-				},
-				{
-					description: t("nav.advanced_logging_description"),
-					label: t("nav.advanced_logging"),
-					to: "/wolfstar#advanced-logging",
-				},
-				{
-					description: t("nav.moderation_logs_description"),
-					label: t("nav.moderation_logs"),
-					to: "/wolfstar#moderation-logs",
-				},
-			],
-			label: t("nav.features"),
-		},
-		{
-			children: [
-				{
-					icon: "ph:shield-duotone",
-					label: "WolfStar",
-					to: "/",
-				},
-				{
-					icon: "lucide:twitch",
-					label: "Staryl",
-					to: "/staryl",
-				},
-			],
-			label: t("nav.applications"),
-		},
-		{
-			label: t("nav.commands"),
-			to: "/commands",
-		},
+	const featuresGroup = computed<NavigationMenuItem>(() => ({
+		children: [
+			{
+				description: t("nav.moderation_tools_description"),
+				icon: "lucide:shield-check",
+				label: t("nav.moderation_tools"),
+				to: "/wolfstar#moderation-tools",
+			},
+			{
+				description: t("nav.advanced_logging_description"),
+				icon: "lucide:file-text",
+				label: t("nav.advanced_logging"),
+				to: "/wolfstar#advanced-logging",
+			},
+			{
+				description: t("nav.moderation_logs_description"),
+				icon: "lucide:search",
+				label: t("nav.moderation_logs"),
+				to: "/wolfstar#moderation-logs",
+			},
+		],
+		label: t("nav.features"),
+	}));
+
+	const applicationsGroup = computed<NavigationMenuItem>(() => ({
+		children: [
+			{
+				description: t("nav.wolfstar_description"),
+				icon: "ph:shield-duotone",
+				label: apps.WolfStar.name,
+				to: apps.WolfStar.explore,
+			},
+			{
+				description: t("nav.staryl_description"),
+				icon: "lucide:twitch",
+				label: apps.Staryl.name,
+				to: apps.Staryl.explore,
+			},
+		],
+		label: t("nav.applications"),
+	}));
+
+	const commandsLink = computed<NavigationMenuItem>(() => ({
+		label: t("nav.commands"),
+		to: "/commands",
+	}));
+
+	const desktopLinks = computed<NavigationMenuItem[]>(() => [
+		featuresGroup.value,
+		applicationsGroup.value,
+		commandsLink.value,
 	]);
 
-	const mobileLinks = computed(() => [
-		{
-			children: [
-				{
-					description: t("nav.moderation_tools_description"),
-					label: t("nav.moderation_tools"),
-					to: "/wolfstar#moderation-tools",
-				},
-				{
-					description: t("nav.advanced_logging_description"),
-					label: t("nav.advanced_logging"),
-					to: "/wolfstar#advanced-logging",
-				},
-				{
-					description: t("nav.moderation_logs_description"),
-					label: t("nav.moderation_logs"),
-					to: "/wolfstar#moderation-logs",
-				},
-			],
-			label: t("nav.features"),
-		},
-		{
-			children: [
-				{
-					icon: "ph:shield-duotone",
-					label: "WolfStar",
-					to: "/",
-				},
-				{
-					icon: "lucide:twitch",
-					label: "Staryl",
-					to: "/staryl",
-				},
-			],
-			label: t("nav.applications"),
-		},
-		{
-			label: t("nav.commands"),
-			to: "/commands",
-		},
+	const mobileLinks = computed<NavigationMenuItem[]>(() => [
+		featuresGroup.value,
+		applicationsGroup.value,
+		commandsLink.value,
 		{
 			icon: "lucide:github",
 			label: t("nav.github"),

@@ -101,29 +101,20 @@
 				</div>
 			</div>
 		</div>
-		<Transition
-			enter-active-class="transition-[opacity,transform] duration-300 ease-out"
-			enter-from-class="opacity-0 translate-y-2"
-			enter-to-class="opacity-100 translate-y-0"
-			leave-active-class="transition-[opacity,transform] duration-200 ease-in"
-			leave-from-class="opacity-100 translate-y-0"
-			leave-to-class="opacity-0 translate-y-2"
+		<div
+			v-if="showSaveChangesBar"
+			style="view-transition-name: save-changes-bar"
+			class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2"
 		>
-			<div
-				v-if="isReadyToSubmit"
-				style="view-transition-name: save-changes-bar"
-				class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2"
-			>
-				<UFieldGroup>
-					<UButton color="primary" icon="heroicons:check" @click="submitChanges">
-						{{ t("dashboard.save_changes") }}
-					</UButton>
-					<UButton color="error" icon="heroicons:arrow-path" @click="resetChanges">
-						{{ t("dashboard.reset_changes") }}
-					</UButton>
-				</UFieldGroup>
-			</div>
-		</Transition>
+			<UFieldGroup>
+				<UButton color="primary" icon="heroicons:check" @click="submitChanges">
+					{{ t("dashboard.save_changes") }}
+				</UButton>
+				<UButton color="error" icon="heroicons:arrow-path" @click="resetChanges">
+					{{ t("dashboard.reset_changes") }}
+				</UButton>
+			</UFieldGroup>
+		</div>
 
 		<UModal
 			v-model:open="showDialog"
@@ -469,6 +460,15 @@ const isReadyToSubmit = computed(
 		objectValues(guildSettingsChanges.value).length > 0,
 );
 
+// The bar's own view transition (see `view-transitions.css`) animates it in and
+// out, so its visibility is committed inside one instead of a Vue transition.
+const showSaveChangesBar = ref(isReadyToSubmit.value);
+watch(isReadyToSubmit, (ready) => {
+	startViewTransition(() => (showSaveChangesBar.value = ready), {
+		reduceMotion: effectiveReduceMotion.value,
+	});
+});
+
 const { showDialog, confirmLeave, cancelLeave } = useUnsavedChanges(isReadyToSubmit);
 
 const guildIconSrc = computed(() => resolveGuildIconSrc(guildData.value, { size: 64 }));
@@ -507,19 +507,13 @@ async function submitChanges() {
 	}
 
 	const savedSettings = data;
-	if (!document.startViewTransition || effectiveReduceMotion.value) {
-		setGuildSettings(savedSettings);
-		setGuildSettingsChanges(undefined);
-	} else {
-		if (document.activeViewTransition) {
-			document.activeViewTransition.skipTransition();
-		}
-		document.startViewTransition(async () => {
+	startViewTransition(
+		() => {
 			setGuildSettings(savedSettings);
 			setGuildSettingsChanges(undefined);
-			await nextTick();
-		});
-	}
+		},
+		{ reduceMotion: effectiveReduceMotion.value },
+	);
 
 	log.info(
 		"wolfstar:dashboard",
@@ -535,17 +529,7 @@ async function submitChanges() {
 }
 
 function resetChanges() {
-	if (!document.startViewTransition || effectiveReduceMotion.value) {
-		resetGuildSettingsChanges();
-	} else {
-		if (document.activeViewTransition) {
-			document.activeViewTransition.skipTransition();
-		}
-		document.startViewTransition(async () => {
-			resetGuildSettingsChanges();
-			await nextTick();
-		});
-	}
+	startViewTransition(resetGuildSettingsChanges, { reduceMotion: effectiveReduceMotion.value });
 
 	log.info("wolfstar:dashboard", `Guild settings changes reset for guild Id: ${guildId.value}`);
 

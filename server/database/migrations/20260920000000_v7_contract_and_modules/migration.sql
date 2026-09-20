@@ -32,9 +32,14 @@ END $$;
 -- CreateTable
 CREATE TABLE IF NOT EXISTS "Guild" (
     "id" BIGINT NOT NULL,
+    "language" TEXT NOT NULL DEFAULT 'en-US',
 
     CONSTRAINT "Guild_pkey" PRIMARY KEY ("id")
 );
+
+-- The bot's V7 Guild table has no locale column yet, so add it when this runs
+-- against a database it already created.
+ALTER TABLE "Guild" ADD COLUMN IF NOT EXISTS "language" TEXT NOT NULL DEFAULT 'en-US';
 
 -- CreateTable
 CREATE TABLE IF NOT EXISTS "Modules" (
@@ -46,6 +51,16 @@ CREATE TABLE IF NOT EXISTS "Modules" (
     "roles" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "Modules_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE IF NOT EXISTS "GuildCommands" (
+    "id" BIGINT NOT NULL,
+    "disabled" TEXT[] DEFAULT ARRAY[]::TEXT[],
+    "disabled_channels" BIGINT[] DEFAULT ARRAY[]::BIGINT[],
+    "disabled_in_channels" JSONB NOT NULL DEFAULT '[]',
+
+    CONSTRAINT "GuildCommands_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -174,6 +189,24 @@ CREATE TABLE IF NOT EXISTS "GuildAutoModerationWords" (
 );
 
 -- CreateTable
+CREATE TABLE IF NOT EXISTS "GuildAutoModerationNoMentionSpam" (
+    "id" BIGINT NOT NULL,
+    "enabled" BOOLEAN,
+    "soft_action" INTEGER NOT NULL,
+    "hard_action" "GuildAutoModerationHardAction" NOT NULL,
+    "hard_action_duration" INTEGER,
+    "threshold_maximum" INTEGER NOT NULL,
+    "threshold_duration" INTEGER NOT NULL,
+    "alerts" BOOLEAN NOT NULL DEFAULT false,
+    "mentions_allowed" INTEGER NOT NULL,
+    "time_period" INTEGER NOT NULL,
+    "ignored_roles" BIGINT[] DEFAULT ARRAY[]::BIGINT[],
+    "ignored_channels" BIGINT[] DEFAULT ARRAY[]::BIGINT[],
+
+    CONSTRAINT "GuildAutoModerationNoMentionSpam_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE IF NOT EXISTS "GuildAutoModerationMentions" (
     "id" BIGINT NOT NULL,
     "enabled" BOOLEAN,
@@ -239,9 +272,28 @@ CREATE TABLE IF NOT EXISTS "GuildRoles" (
     "initial" BIGINT[] DEFAULT ARRAY[]::BIGINT[],
     "initial_humans" BIGINT[] DEFAULT ARRAY[]::BIGINT[],
     "initial_robots" BIGINT[] DEFAULT ARRAY[]::BIGINT[],
+    "admin" BIGINT[] DEFAULT ARRAY[]::BIGINT[],
+    "moderator" BIGINT[] DEFAULT ARRAY[]::BIGINT[],
+    "muted" BIGINT,
+    "restricted_reaction" BIGINT,
+    "restricted_embed" BIGINT,
+    "restricted_emoji" BIGINT,
+    "restricted_attachment" BIGINT,
+    "restricted_voice" BIGINT,
 
     CONSTRAINT "GuildRoles_pkey" PRIMARY KEY ("id")
 );
+
+-- The bot's V7 GuildRoles only carries the initial roles, so add the ones the
+-- dashboard configures when this runs against a database it already created.
+ALTER TABLE "GuildRoles" ADD COLUMN IF NOT EXISTS "admin" BIGINT[] DEFAULT ARRAY[]::BIGINT[];
+ALTER TABLE "GuildRoles" ADD COLUMN IF NOT EXISTS "moderator" BIGINT[] DEFAULT ARRAY[]::BIGINT[];
+ALTER TABLE "GuildRoles" ADD COLUMN IF NOT EXISTS "muted" BIGINT;
+ALTER TABLE "GuildRoles" ADD COLUMN IF NOT EXISTS "restricted_reaction" BIGINT;
+ALTER TABLE "GuildRoles" ADD COLUMN IF NOT EXISTS "restricted_embed" BIGINT;
+ALTER TABLE "GuildRoles" ADD COLUMN IF NOT EXISTS "restricted_emoji" BIGINT;
+ALTER TABLE "GuildRoles" ADD COLUMN IF NOT EXISTS "restricted_attachment" BIGINT;
+ALTER TABLE "GuildRoles" ADD COLUMN IF NOT EXISTS "restricted_voice" BIGINT;
 
 -- CreateTable
 CREATE TABLE IF NOT EXISTS "StickyRole" (
@@ -356,6 +408,14 @@ END $$;
 -- AddForeignKey
 DO $$
 BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'GuildCommands_id_fkey') THEN
+        ALTER TABLE "GuildCommands" ADD CONSTRAINT "GuildCommands_id_fkey" FOREIGN KEY ("id") REFERENCES "Modules"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+    END IF;
+END $$;
+
+-- AddForeignKey
+DO $$
+BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'GuildPermissions_id_fkey') THEN
         ALTER TABLE "GuildPermissions" ADD CONSTRAINT "GuildPermissions_id_fkey" FOREIGN KEY ("id") REFERENCES "Modules"("id") ON DELETE CASCADE ON UPDATE CASCADE;
     END IF;
@@ -422,6 +482,14 @@ DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'GuildAutoModerationWords_id_fkey') THEN
         ALTER TABLE "GuildAutoModerationWords" ADD CONSTRAINT "GuildAutoModerationWords_id_fkey" FOREIGN KEY ("id") REFERENCES "GuildAutoModeration"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+    END IF;
+END $$;
+
+-- AddForeignKey
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'GuildAutoModerationNoMentionSpam_id_fkey') THEN
+        ALTER TABLE "GuildAutoModerationNoMentionSpam" ADD CONSTRAINT "GuildAutoModerationNoMentionSpam_id_fkey" FOREIGN KEY ("id") REFERENCES "GuildAutoModeration"("id") ON DELETE CASCADE ON UPDATE CASCADE;
     END IF;
 END $$;
 

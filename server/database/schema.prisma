@@ -22,6 +22,9 @@ datasource db {
 model Guild {
   id BigInt @id
 
+  /// The locale the bot answers in for this guild.
+  language String @default("en-US")
+
   modules Modules?
 
   cases       ModerationAction[]
@@ -51,10 +54,26 @@ model Modules {
   roles      Boolean @default(true)
 
   autoModerationSettings GuildAutoModeration?
+  commandSettings        GuildCommands?
   logSettings            GuildLogs?
   moderationSettings     GuildModeration?
   permissions            GuildPermissions?
   roleSettings           GuildRoles?
+}
+
+/// Command availability: which commands the guild has switched off, and where.
+model GuildCommands {
+  id      BigInt  @id
+  /// The module entry is from.
+  modules Modules @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  /// The commands that are disabled across the whole guild.
+  disabled           String[] @default([])
+  /// The channels where every command is disabled.
+  disabledChannels   BigInt[] @default([]) @map("disabled_channels")
+  /// The commands that are disabled in specific channels only.
+  /// [DisabledCommandChannelEntries]
+  disabledInChannels Json     @default("[]") @map("disabled_in_channels")
 }
 
 /// Permission nodes: per-command allow and deny lists that grant or withhold
@@ -100,13 +119,14 @@ model GuildAutoModeration {
   /// Whether or not to track Discord's native automod actions.
   trackNative Boolean @default(false) @map("track_native")
 
-  attachments GuildAutoModerationAttachments?
-  capitals    GuildAutoModerationCapitals?
-  invites     GuildAutoModerationInvites?
-  links       GuildAutoModerationLinks?
-  mentions    GuildAutoModerationMentions?
-  newlines    GuildAutoModerationNewlines?
-  words       GuildAutoModerationWords?
+  attachments   GuildAutoModerationAttachments?
+  capitals      GuildAutoModerationCapitals?
+  invites       GuildAutoModerationInvites?
+  links         GuildAutoModerationLinks?
+  mentions      GuildAutoModerationMentions?
+  newlines      GuildAutoModerationNewlines?
+  noMentionSpam GuildAutoModerationNoMentionSpam?
+  words         GuildAutoModerationWords?
 }
 
 enum GuildAutoModerationHardAction {
@@ -303,6 +323,42 @@ model GuildAutoModerationWords {
   ignoredChannels BigInt[] @default([]) @map("ignored_channels")
 }
 
+/// Mention-spam protection: the same escalation shape as the other filters,
+/// scored over a rolling window instead of a single message.
+model GuildAutoModerationNoMentionSpam {
+  id     BigInt              @id
+  /// The parent where all automod information is at.
+  parent GuildAutoModeration @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  /// Whether or not the subsystem is enabled.
+  enabled Boolean?
+
+  /// The action to do in each infraction. Holds a bitfield value.
+  softAction Int @map("soft_action")
+
+  /// The action to do once the threshold is exceeded.
+  hardAction         GuildAutoModerationHardAction @map("hard_action")
+  /// The duration in seconds of the hard action.
+  hardActionDuration Int?                          @map("hard_action_duration")
+
+  /// The amount of infractions a user can do before triggering the hard action.
+  thresholdMaximum  Int @map("threshold_maximum")
+  /// The amount of time in seconds to pool the amount of infractions.
+  thresholdDuration Int @map("threshold_duration")
+
+  /// Whether or not to warn the channel when a member is about to be punished.
+  alerts          Boolean @default(false)
+  /// The amount of mention points a member may accumulate before being punished.
+  mentionsAllowed Int     @map("mentions_allowed")
+  /// The amount of time in seconds after which accumulated points decay.
+  timePeriod      Int     @map("time_period")
+
+  /// The roles that are ignored by this subsystem.
+  ignoredRoles    BigInt[] @default([]) @map("ignored_roles")
+  /// The channels that are ignored by this subsystem.
+  ignoredChannels BigInt[] @default([]) @map("ignored_channels")
+}
+
 model GuildAutoModerationMentions {
   id     BigInt              @id
   /// The parent where all automod information is at.
@@ -427,6 +483,24 @@ model GuildRoles {
   initialHumans BigInt[] @default([]) @map("initial_humans")
   /// The roles to be given to any new bot user.
   initialRobots BigInt[] @default([]) @map("initial_robots")
+
+  /// The roles whose members administer the bot's settings.
+  admin     BigInt[] @default([])
+  /// The roles whose members may run moderation commands.
+  moderator BigInt[] @default([])
+  /// The role given to muted members.
+  muted     BigInt?
+
+  /// The role given to members whose reactions are restricted.
+  restrictedReaction   BigInt? @map("restricted_reaction")
+  /// The role given to members who may not embed links.
+  restrictedEmbed      BigInt? @map("restricted_embed")
+  /// The role given to members who may not use external emojis.
+  restrictedEmoji      BigInt? @map("restricted_emoji")
+  /// The role given to members who may not upload attachments.
+  restrictedAttachment BigInt? @map("restricted_attachment")
+  /// The role given to members who may not join voice channels.
+  restrictedVoice      BigInt? @map("restricted_voice")
 }
 
 model StickyRole {

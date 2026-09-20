@@ -320,10 +320,15 @@ CREATE TABLE IF NOT EXISTS "ModerationAction" (
     "duration" INTEGER NOT NULL,
     "target_id" BIGINT NOT NULL,
     "moderator_id" BIGINT NOT NULL,
+    "reason" TEXT,
     "reference_id" INTEGER,
 
     CONSTRAINT "ModerationAction_pkey" PRIMARY KEY ("id","guild_id")
 );
+
+-- The bot's V7 ModerationAction has no reason column, so add it when this runs
+-- against a database it already created.
+ALTER TABLE "ModerationAction" ADD COLUMN IF NOT EXISTS "reason" TEXT;
 
 -- CreateTable
 CREATE TABLE IF NOT EXISTS "User" (

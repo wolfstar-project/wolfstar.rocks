@@ -560,7 +560,10 @@ model ModerationAction {
   targetId    BigInt               @map("target_id")
   /// The moderator who issued this action.
   moderatorId BigInt               @map("moderator_id")
-  /// The moderation log this entry refers to, if any.
+  /// The reason the moderator gave for this action, if any.
+  reason      String?
+  /// The moderation log this entry refers to, if any. The dashboard shows this
+  /// in place of the V6 `image_url` column, which V7 does not carry.
   referenceId Int?                 @map("reference_id")
 
   @@id([id, guildId])

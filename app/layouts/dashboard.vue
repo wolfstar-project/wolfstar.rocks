@@ -1,5 +1,7 @@
 <template>
 	<UDashboardGroup unit="rem">
+		<GuildServerRail :current-guild-id="guildId ?? undefined" :guilds="userGuilds" />
+
 		<UDashboardSidebar
 			id="default"
 			collapsible

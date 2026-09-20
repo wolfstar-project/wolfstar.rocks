@@ -34,6 +34,8 @@
 		},
 		"reset_changes": "Deshacer cambios",
 		"save_changes": "Guardar cambios",
+		"server_rail_all": "",
+		"server_rail_aria": "",
 		"settings_saved_description": "La configuración del servidor se ha guardado.",
 		"settings_saved_title": "Configuración guardada",
 		"stay_on_page": "Permanecer en la página",

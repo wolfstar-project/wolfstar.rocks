@@ -34,6 +34,8 @@
 		},
 		"reset_changes": "Reset Changes",
 		"save_changes": "Save Changes",
+		"server_rail_all": "All your servers",
+		"server_rail_aria": "Your servers",
 		"settings_saved_description": "Your server settings have been saved.",
 		"settings_saved_title": "Settings Saved",
 		"stay_on_page": "Stay on Page",

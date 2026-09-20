@@ -42,6 +42,7 @@ import {
 
 	ErrorPage,
 	OauthStatusPanel,
+	GuildServerRail,
 	GuildSettingsSection,
 	IconsApp,
 	IconsWolfstar,
@@ -59,6 +60,7 @@ import {
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { createError } from "h3";
 import { describe, expect, it } from "vitest";
+import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 import { runAxe } from "./utils/axe";
 
 const inviteUrl =
@@ -544,6 +546,22 @@ describe("component accessibility audits", () => {
 			const component = await mountSuspended(GuildSettingsSection, {
 				props: { title: "Sub Section", headingLevel: "h3" },
 				slots: { default: "<p>Sub section content</p>" },
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildServerRail", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildServerRail, {
+				props: {
+					currentGuildId: "222222222222222222",
+					guilds: [
+						createMockOauthFlattenedGuild({ id: "111111111111111111", name: "Alpha" }),
+						createMockOauthFlattenedGuild({ id: "222222222222222222", name: "Beta" }),
+					],
+				},
 			});
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);

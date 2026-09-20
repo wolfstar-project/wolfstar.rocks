@@ -6,16 +6,12 @@
 				:to="currentApp.explore"
 				:aria-label="t('header.home', { name: currentApp.name })"
 			>
-				<NuxtImg
-					:src="currentApp.avatar"
-					width="36"
-					height="36"
-					alt=""
-					class="size-9 rounded-lg"
-				/>
-				<span class="text-lg font-bold tracking-(--home-ls-tight) text-base-content">
-					{{ currentApp.name }}
-				</span>
+				<AppLogoMark v-if="currentApp.name === 'WolfStar'" class="h-20 w-45" />
+				<span
+					v-else
+					class="text-lg font-bold tracking-(--home-ls-tight) text-base-content"
+					>{{ currentApp.name }}</span
+				>
 			</NuxtLink>
 		</template>
 

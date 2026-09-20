@@ -275,6 +275,9 @@ CREATE TABLE IF NOT EXISTS "GuildRoles" (
     "admin" BIGINT[] DEFAULT ARRAY[]::BIGINT[],
     "moderator" BIGINT[] DEFAULT ARRAY[]::BIGINT[],
     "muted" BIGINT,
+    "public" BIGINT[] DEFAULT ARRAY[]::BIGINT[],
+    "remove_initial" BOOLEAN NOT NULL DEFAULT false,
+    "unique_role_sets" JSONB NOT NULL DEFAULT '[]',
     "restricted_reaction" BIGINT,
     "restricted_embed" BIGINT,
     "restricted_emoji" BIGINT,
@@ -289,6 +292,9 @@ CREATE TABLE IF NOT EXISTS "GuildRoles" (
 ALTER TABLE "GuildRoles" ADD COLUMN IF NOT EXISTS "admin" BIGINT[] DEFAULT ARRAY[]::BIGINT[];
 ALTER TABLE "GuildRoles" ADD COLUMN IF NOT EXISTS "moderator" BIGINT[] DEFAULT ARRAY[]::BIGINT[];
 ALTER TABLE "GuildRoles" ADD COLUMN IF NOT EXISTS "muted" BIGINT;
+ALTER TABLE "GuildRoles" ADD COLUMN IF NOT EXISTS "public" BIGINT[] DEFAULT ARRAY[]::BIGINT[];
+ALTER TABLE "GuildRoles" ADD COLUMN IF NOT EXISTS "remove_initial" BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE "GuildRoles" ADD COLUMN IF NOT EXISTS "unique_role_sets" JSONB NOT NULL DEFAULT '[]';
 ALTER TABLE "GuildRoles" ADD COLUMN IF NOT EXISTS "restricted_reaction" BIGINT;
 ALTER TABLE "GuildRoles" ADD COLUMN IF NOT EXISTS "restricted_embed" BIGINT;
 ALTER TABLE "GuildRoles" ADD COLUMN IF NOT EXISTS "restricted_emoji" BIGINT;

@@ -491,6 +491,14 @@ model GuildRoles {
   /// The role given to muted members.
   muted     BigInt?
 
+  /// The roles members may claim for themselves.
+  public         BigInt[] @default([])
+  /// Whether or not claiming a public role removes the initial role.
+  removeInitial  Boolean  @default(false) @map("remove_initial")
+  /// Groups of roles a member may only hold one of at a time.
+  /// [UniqueRoleSetEntries]
+  uniqueRoleSets Json     @default("[]") @map("unique_role_sets")
+
   /// The role given to members whose reactions are restricted.
   restrictedReaction   BigInt? @map("restricted_reaction")
   /// The role given to members who may not embed links.

@@ -106,6 +106,12 @@
 				"save_changes": {
 					"type": "string"
 				},
+				"server_rail_all": {
+					"type": "string"
+				},
+				"server_rail_aria": {
+					"type": "string"
+				},
 				"settings_saved_description": {
 					"type": "string"
 				},

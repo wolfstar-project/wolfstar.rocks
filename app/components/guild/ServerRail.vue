@@ -1,9 +1,5 @@
 <template>
-	<nav
-		v-if="servers.length > 0"
-		class="guild-rail hidden lg:flex"
-		:aria-label="t('dashboard.server_rail_aria')"
-	>
+	<nav class="guild-rail hidden lg:flex" :aria-label="t('dashboard.server_rail_aria')">
 		<NuxtLink
 			to="/"
 			class="guild-rail-home"
@@ -33,6 +29,12 @@
 			/>
 		</NuxtLink>
 
+		<USkeleton
+			v-for="n of pending && servers.length === 0 ? 3 : 0"
+			:key="n"
+			class="size-12 rounded-2xl"
+		/>
+
 		<span class="guild-rail-divider" aria-hidden="true" />
 
 		<NuxtLink
@@ -54,6 +56,8 @@ const { currentGuildId, guilds } = defineProps<{
 	currentGuildId?: string;
 	/** The viewer's guilds, as loaded once by the dashboard layout. */
 	guilds: readonly OauthFlattenedGuild[];
+	/** Whether those guilds are still loading, so the rail shows placeholders. */
+	pending?: boolean;
 }>();
 
 const { t } = useI18n();

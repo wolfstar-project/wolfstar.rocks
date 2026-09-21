@@ -45,13 +45,24 @@ describe("GuildServerRail", () => {
 		expect(current[0]!.attributes("href")).toBe("/guilds/222222222222222222/manage");
 	});
 
-	it("renders nothing when the viewer manages no WolfStar guild", async () => {
+	it("keeps its place when the viewer manages no WolfStar guild", async () => {
 		const wrapper = await mountSuspended(GuildServerRail, {
 			props: {
 				guilds: [createMockOauthFlattenedGuild({ wolfstarIsIn: false })],
 			},
 		});
 
-		expect(wrapper.find("nav").exists()).toBe(false);
+		expect(wrapper.find("nav").exists()).toBe(true);
+		expect(wrapper.findAll('a[href^="/guilds/"]')).toHaveLength(0);
+	});
+
+	it("holds the rail open with placeholders while the guilds load", async () => {
+		const wrapper = await mountSuspended(GuildServerRail, {
+			props: { guilds: [], pending: true },
+		});
+
+		const rail = wrapper.get("nav");
+		expect(rail.findAll('a[href^="/guilds/"]')).toHaveLength(0);
+		expect(rail.findAll(".size-12.rounded-2xl").length).toBeGreaterThan(0);
 	});
 });

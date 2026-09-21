@@ -116,7 +116,6 @@ const { desktopLinks, mobileLinks, currentApp } = useHeader();
 	width: 100%;
 	border-radius: 0;
 	border-bottom: 1px solid var(--home-border-subtle);
-	/* Translucent bar so page content scrolls under it, per the redesign canvas. */
 	background: color-mix(in srgb, var(--ui-bg) 88%, transparent);
 	backdrop-filter: blur(12px);
 }

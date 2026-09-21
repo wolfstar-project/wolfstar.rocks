@@ -63,7 +63,6 @@
 								:aria-label="t('footer.powered_by_netlify_aria')"
 							>
 								<template #leading>
-									<!-- Deploy status dot, per the redesign canvas -->
 									<span
 										class="size-2 rounded-full bg-success"
 										aria-hidden="true"

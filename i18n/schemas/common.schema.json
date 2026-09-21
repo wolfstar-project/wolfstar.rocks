@@ -267,6 +267,12 @@
 				},
 				"moderation_tools_description": {
 					"type": "string"
+				},
+				"staryl_description": {
+					"type": "string"
+				},
+				"wolfstar_description": {
+					"type": "string"
 				}
 			},
 			"additionalProperties": false

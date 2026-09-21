@@ -19,7 +19,6 @@ const buildTime = computed(() => new Date(buildInfo.value.time));
 		"
 		style="animation-delay: 0.05s"
 	>
-		<!-- Deploy status dot, per the redesign canvas -->
 		<span v-if="footer" class="size-1.5 shrink-0 rounded-full bg-success" aria-hidden="true" />
 		<NuxtTime
 			:class="footer ? 'text-xs text-toned' : 'text-md text-default'"

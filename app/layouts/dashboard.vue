@@ -1,6 +1,10 @@
 <template>
 	<UDashboardGroup unit="rem">
-		<GuildServerRail :current-guild-id="guildId ?? undefined" :guilds="userGuilds" />
+		<GuildServerRail
+			:current-guild-id="guildId ?? undefined"
+			:guilds="userGuilds"
+			:pending="userGuildsPending"
+		/>
 
 		<UDashboardSidebar
 			id="default"
@@ -184,7 +188,12 @@ const { setGuildSettingsChanges, guildSettingsChanges, resetGuildSettingsChanges
 	useGuildSettingsChanges();
 
 const { user } = useUserSession();
-const { guilds: userGuilds } = useUser(user);
+const { guilds: userGuilds, status: userGuildsStatus } = useUser(user);
+// `useUser()` only fetches on the client, so the rail renders placeholders until
+// the guild list lands rather than appearing late and shifting the page.
+const userGuildsPending = computed(
+	() => userGuildsStatus.value === "idle" || userGuildsStatus.value === "pending",
+);
 watch(
 	[guildId, userGuilds],
 	([newGuildId, newUserGuilds]) => {

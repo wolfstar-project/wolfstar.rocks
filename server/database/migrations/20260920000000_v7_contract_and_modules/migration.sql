@@ -416,36 +416,42 @@ BEGIN
     END IF;
 END $$;
 
--- AddForeignKey
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'GuildCommands_id_fkey') THEN
-        ALTER TABLE "GuildCommands" ADD CONSTRAINT "GuildCommands_id_fkey" FOREIGN KEY ("id") REFERENCES "Modules"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-    END IF;
-END $$;
+-- ReparentSettingsTables
+-- Every guild needs its module row before the settings tables can point at it.
+-- The defaults are all-on, which is how the bot behaves today, so backfilling
+-- changes no behaviour.
+INSERT INTO "Modules" ("id")
+SELECT "id" FROM "Guild"
+ON CONFLICT ("id") DO NOTHING;
 
--- AddForeignKey
+-- The bot's V7 parents these tables on "Guild". A guard on the constraint name
+-- alone would skip such a constraint and leave the wrong parent in place, so
+-- each one is inspected and repointed when it references anything but "Modules".
 DO $$
+DECLARE
+    settings_table TEXT;
+    constraint_name TEXT;
+    existing_target OID;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'GuildPermissions_id_fkey') THEN
-        ALTER TABLE "GuildPermissions" ADD CONSTRAINT "GuildPermissions_id_fkey" FOREIGN KEY ("id") REFERENCES "Modules"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-    END IF;
-END $$;
+    FOREACH settings_table IN ARRAY ARRAY['GuildAutoModeration', 'GuildCommands', 'GuildLogs', 'GuildModeration', 'GuildPermissions', 'GuildRoles']
+    LOOP
+        constraint_name := settings_table || '_id_fkey';
 
--- AddForeignKey
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'GuildModeration_id_fkey') THEN
-        ALTER TABLE "GuildModeration" ADD CONSTRAINT "GuildModeration_id_fkey" FOREIGN KEY ("id") REFERENCES "Modules"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-    END IF;
-END $$;
+        SELECT confrelid INTO existing_target FROM pg_constraint WHERE conname = constraint_name;
 
--- AddForeignKey
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'GuildAutoModeration_id_fkey') THEN
-        ALTER TABLE "GuildAutoModeration" ADD CONSTRAINT "GuildAutoModeration_id_fkey" FOREIGN KEY ("id") REFERENCES "Modules"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-    END IF;
+        IF existing_target IS NOT NULL AND existing_target <> to_regclass('public."Modules"')::OID THEN
+            EXECUTE format('ALTER TABLE %I DROP CONSTRAINT %I', settings_table, constraint_name);
+            existing_target := NULL;
+        END IF;
+
+        IF existing_target IS NULL THEN
+            EXECUTE format(
+                'ALTER TABLE %I ADD CONSTRAINT %I FOREIGN KEY ("id") REFERENCES "Modules"("id") ON DELETE CASCADE ON UPDATE CASCADE',
+                settings_table,
+                constraint_name
+            );
+        END IF;
+    END LOOP;
 END $$;
 
 -- AddForeignKey
@@ -517,22 +523,6 @@ DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'GuildAutoModerationMentionsOverrides_parent_id_fkey') THEN
         ALTER TABLE "GuildAutoModerationMentionsOverrides" ADD CONSTRAINT "GuildAutoModerationMentionsOverrides_parent_id_fkey" FOREIGN KEY ("parent_id") REFERENCES "GuildAutoModerationMentions"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-    END IF;
-END $$;
-
--- AddForeignKey
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'GuildLogs_id_fkey') THEN
-        ALTER TABLE "GuildLogs" ADD CONSTRAINT "GuildLogs_id_fkey" FOREIGN KEY ("id") REFERENCES "Modules"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-    END IF;
-END $$;
-
--- AddForeignKey
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'GuildRoles_id_fkey') THEN
-        ALTER TABLE "GuildRoles" ADD CONSTRAINT "GuildRoles_id_fkey" FOREIGN KEY ("id") REFERENCES "Modules"("id") ON DELETE CASCADE ON UPDATE CASCADE;
     END IF;
 END $$;
 

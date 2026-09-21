@@ -70,7 +70,6 @@ const { t } = useI18n();
 .staryl-cta {
 	background-color: var(--color-base-300);
 	border: 1px solid var(--home-border-subtle);
-	/* Brand rule along the top edge, per the redesign canvas. */
 	border-top: 3px solid var(--color-primary);
 }
 

@@ -572,9 +572,13 @@ END $$;
 -- A populated V6 table is only archived once "Guild" holds rows, which means
 -- the bot has migrated the shared database to V7 and no longer reads the V6
 -- names. Renaming it earlier would point the bot's own queries at relations
--- that no longer exist, so on a still-V6 database the rename is skipped and
--- picked up by a later run. Empty V6 tables (a fresh database replaying the
--- full migration history) have no reader to strand and are archived either way.
+-- that no longer exist, so on a still-V6 database the rename is skipped and the
+-- table keeps its name. Prisma records a migration as applied and never runs it
+-- again, so that skip is final: retiring those tables on such a database is the
+-- bot's V7 migration's job, or a follow-up migration added once it has landed.
+-- Nothing depends on the archived names, so leaving them costs only tidiness.
+-- Empty V6 tables (a fresh database replaying the full migration history) have
+-- no reader to strand and are archived either way.
 DO $$
 DECLARE
     legacy TEXT;

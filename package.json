@@ -66,7 +66,7 @@
 		"@iconify-json/ph": "^1.2.2",
 		"@intlify/core-base": "11.4.8",
 		"@intlify/shared": "11.4.8",
-		"@lunariajs/core": "https://pkg.pr.new/lunariajs/lunaria/@lunariajs/core@904b935",
+		"@lunariajs/core": "^0.2.0",
 		"@nuxt/a11y": "^1.0.0-alpha.1",
 		"@nuxt/content": "^3.15.2",
 		"@nuxt/fonts": "^0.14.0",

@@ -16,7 +16,7 @@
 		</template>
 
 		<template #statusCode>
-			<span class="sr-only">{{ t("common.error") }}&nbsp;</span>{{ status }}
+			<span class="sr-only">{{ ts("common.error") }}&nbsp;</span>{{ status }}
 		</template>
 
 		<template #statusMessage>
@@ -46,7 +46,7 @@
 				color="primary"
 				icon="ph:house-fill"
 				class="btn-glow justify-center sm:min-w-45"
-				:label="t('errors.back_to_home')"
+				:label="ts('errors.back_to_home')"
 				@click="goHome"
 			/>
 			<template v-else>
@@ -55,7 +55,7 @@
 					color="primary"
 					icon="ph:arrow-counter-clockwise-bold"
 					class="btn-glow justify-center sm:min-w-45"
-					:label="t('common.retry')"
+					:label="ts('common.retry')"
 					loading-auto
 					@click="retry"
 				/>
@@ -65,7 +65,7 @@
 					variant="outline"
 					icon="ph:house-fill"
 					class="justify-center sm:min-w-45"
-					:label="t('errors.back_to_home')"
+					:label="ts('errors.back_to_home')"
 					@click="goHome"
 				/>
 			</template>
@@ -85,7 +85,7 @@ const { error: errorRaw } = defineProps<{
 	error: NuxtError;
 }>();
 
-const { t } = useI18n({ useScope: "global" });
+const { ts } = useI18n();
 
 const status = computed(() => resolveErrorStatus(errorRaw));
 const isNotFound = computed(() => isNotFoundStatus(status.value));
@@ -93,22 +93,22 @@ const isServerError = computed(() => isServerErrorStatus(status.value));
 
 const title = computed(() => {
 	if (isNotFound.value) {
-		return t("errors.not_found_title");
+		return ts("errors.not_found_title");
 	}
 	if (isServerError.value) {
-		return t("errors.server_error_title");
+		return ts("errors.server_error_title");
 	}
-	return errorRaw.statusText || errorRaw.statusMessage || t("errors.generic_title");
+	return errorRaw.statusText || errorRaw.statusMessage || ts("errors.generic_title");
 });
 
 const description = computed(() => {
 	if (isNotFound.value) {
-		return t("errors.not_found_description");
+		return ts("errors.not_found_description");
 	}
 	if (isServerError.value) {
-		return t("errors.server_error");
+		return ts("errors.server_error");
 	}
-	return t("errors.generic_description");
+	return ts("errors.generic_description");
 });
 
 const detail = computed(() => {

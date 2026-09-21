@@ -271,6 +271,18 @@
 			},
 			"additionalProperties": false
 		},
+		"nuxtSiteConfig": {
+			"type": "object",
+			"properties": {
+				"description": {
+					"type": "string"
+				},
+				"name": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
 		"translation_status": {
 			"type": "object",
 			"properties": {

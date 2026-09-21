@@ -15,10 +15,10 @@ const localeSet = new Set<string>();
 const locales: Locale[] = [];
 
 for (const l of currentLocales) {
-	if (l.code === sourceLocale.lang || !l.name) continue;
+	if (l.code === sourceLocale.lang || !l.displayName) continue;
 	if (!localeSet.has(l.code)) {
 		localeSet.add(l.code);
-		locales.push({ label: l.name, lang: l.code });
+		locales.push({ label: l.displayName, lang: l.code });
 	}
 }
 
@@ -29,7 +29,7 @@ for (const baseLang of Object.keys(countryLocaleVariants)) {
 	if (!localeSet.has(baseLang)) {
 		// Use the first variant's name or the base code as label
 		const variants = countryLocaleVariants[baseLang]!;
-		const label = variants[0]?.name ?? baseLang;
+		const label = variants[0]?.displayName ?? baseLang;
 		localeSet.add(baseLang);
 		locales.push({ label, lang: baseLang });
 	}

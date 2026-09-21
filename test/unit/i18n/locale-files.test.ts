@@ -1,7 +1,7 @@
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { currentLocales } from "../../../config/i18n";
+import { localeSourceDirs } from "../../../config/i18n";
 import {
 	FEATURE_FILES,
 	LOCALES_DIRECTORY,
@@ -52,15 +52,17 @@ describe("i18n locale files", () => {
 		}
 	});
 
-	it("registers feature files for every currentLocales entry", () => {
-		for (const locale of currentLocales) {
-			const files = locale.files ?? (locale.file ? [locale.file] : []);
-			expect(files.length).toBeGreaterThan(0);
-			for (const file of files) {
-				const fileName = typeof file === "string" ? file : file.path;
-				expect(existsSync(join(LOCALES_DIRECTORY, fileName)), `missing ${fileName}`).toBe(
-					true,
-				);
+	it("resolves every configured locale to existing source directories", () => {
+		for (const [code, dirs] of Object.entries(localeSourceDirs)) {
+			expect(dirs.length, `${code} has no source directories`).toBeGreaterThan(0);
+			for (const dir of dirs) {
+				for (const feature of FEATURE_FILES) {
+					const path = join(dir, feature);
+					expect(
+						existsSync(localeFeatureAbsolutePath(dir, feature)),
+						`missing ${path}`,
+					).toBe(true);
+				}
 			}
 		}
 	});

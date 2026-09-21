@@ -13,16 +13,16 @@
 				<p
 					class="mb-4 font-mono text-xs font-semibold tracking-(--home-ls-label) text-primary uppercase"
 				>
-					{{ t("marketing.wolfstar.dashboard.eyebrow") }}
+					{{ ts("marketing.wolfstar.dashboard.eyebrow") }}
 				</p>
 				<h2
 					id="home-dashboard-heading"
 					class="text-4xl leading-[1.05] font-bold tracking-(--home-ls-tight) text-base-content md:text-5xl"
 				>
-					{{ t("marketing.wolfstar.dashboard.title") }}
+					{{ ts("marketing.wolfstar.dashboard.title") }}
 				</h2>
 				<p class="mt-5 max-w-135 text-base leading-relaxed text-base-content/65">
-					{{ t("marketing.wolfstar.dashboard.subtitle") }}
+					{{ ts("marketing.wolfstar.dashboard.subtitle") }}
 				</p>
 				<div class="mt-7 flex flex-col gap-3 sm:flex-row">
 					<UButton
@@ -32,7 +32,7 @@
 						class="justify-center"
 						icon="ic:round-discord"
 					>
-						{{ t("marketing.wolfstar.dashboard.sign_in") }}
+						{{ ts("marketing.wolfstar.dashboard.sign_in") }}
 					</UButton>
 					<UButton
 						to="/commands"
@@ -41,7 +41,7 @@
 						size="lg"
 						class="justify-center"
 					>
-						{{ t("marketing.wolfstar.dashboard.browse_commands") }}
+						{{ ts("marketing.wolfstar.dashboard.browse_commands") }}
 					</UButton>
 				</div>
 			</div>
@@ -49,39 +49,39 @@
 			<div class="dashboard-index border-t">
 				<div class="dashboard-index-header">
 					<span class="font-mono text-xs tracking-(--home-ls-label) text-muted uppercase">
-						{{ t("marketing.wolfstar.dashboard.index_label") }}
+						{{ ts("marketing.wolfstar.dashboard.index_label") }}
 					</span>
 					<span class="font-mono text-xs text-muted">{{
-						t("marketing.wolfstar.dashboard.views_count")
+						ts("marketing.wolfstar.dashboard.views_count")
 					}}</span>
 				</div>
 				<ol>
 					<li class="dashboard-index-row">
 						<span class="dashboard-index-number">01</span>
 						<div>
-							<h3>{{ t("marketing.wolfstar.dashboard.row_1_title") }}</h3>
-							<p>{{ t("marketing.wolfstar.dashboard.row_1_body") }}</p>
+							<h3>{{ ts("marketing.wolfstar.dashboard.row_1_title") }}</h3>
+							<p>{{ ts("marketing.wolfstar.dashboard.row_1_body") }}</p>
 						</div>
 					</li>
 					<li class="dashboard-index-row">
 						<span class="dashboard-index-number">02</span>
 						<div>
-							<h3>{{ t("marketing.wolfstar.dashboard.row_2_title") }}</h3>
-							<p>{{ t("marketing.wolfstar.dashboard.row_2_body") }}</p>
+							<h3>{{ ts("marketing.wolfstar.dashboard.row_2_title") }}</h3>
+							<p>{{ ts("marketing.wolfstar.dashboard.row_2_body") }}</p>
 						</div>
 					</li>
 					<li class="dashboard-index-row">
 						<span class="dashboard-index-number">03</span>
 						<div>
-							<h3>{{ t("marketing.wolfstar.dashboard.row_3_title") }}</h3>
-							<p>{{ t("marketing.wolfstar.dashboard.row_3_body") }}</p>
+							<h3>{{ ts("marketing.wolfstar.dashboard.row_3_title") }}</h3>
+							<p>{{ ts("marketing.wolfstar.dashboard.row_3_body") }}</p>
 						</div>
 					</li>
 					<li class="dashboard-index-row">
 						<span class="dashboard-index-number">04</span>
 						<div>
-							<h3>{{ t("marketing.wolfstar.dashboard.row_4_title") }}</h3>
-							<p>{{ t("marketing.wolfstar.dashboard.row_4_body") }}</p>
+							<h3>{{ ts("marketing.wolfstar.dashboard.row_4_title") }}</h3>
+							<p>{{ ts("marketing.wolfstar.dashboard.row_4_body") }}</p>
 						</div>
 					</li>
 				</ol>
@@ -91,7 +91,7 @@
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n();
+const { ts } = useI18n();
 </script>
 
 <style scoped>

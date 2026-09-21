@@ -1,13 +1,13 @@
 <template>
 	<GuildSettingsSection
-		:title="t('guild_settings.events.title')"
-		:description="t('guild_settings.events.subtitle')"
+		:title="ts('guild_settings.events.title')"
+		:description="ts('guild_settings.events.subtitle')"
 	>
 		<GuildSettingsForm
 			:schema="schema"
 			:state="state"
 			:map-to-guild-data="mapToGuildData"
-			:aria-label="t('guild_settings.events.form_aria')"
+			:aria-label="ts('guild_settings.events.form_aria')"
 			class="space-y-8"
 			@error="onError"
 		>
@@ -15,7 +15,7 @@
 				<div class="flex items-center gap-2">
 					<UIcon name="heroicons:shield-check" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">
-						{{ t("guild_settings.events.moderation_events") }}
+						{{ ts("guild_settings.events.moderation_events") }}
 					</h3>
 				</div>
 				<p class="text-sm text-base-content/70">
@@ -25,7 +25,7 @@
 								:to="channelsPageLink"
 								class="text-primary underline hover:no-underline"
 							>
-								{{ t("guild_settings.events.channels_page_link") }}
+								{{ ts("guild_settings.events.channels_page_link") }}
 							</NuxtLink>
 						</template>
 					</i18n-t>
@@ -47,7 +47,7 @@
 					<USwitch
 						v-model="state[event.key]"
 						:aria-label="
-							t('guild_settings.events.toggle_aria', {
+							ts('guild_settings.events.toggle_aria', {
 								title: translateEntry(event, 'title'),
 							})
 						"
@@ -61,7 +61,7 @@
 				<div class="flex items-center gap-2">
 					<UIcon name="heroicons:chat-bubble-left-right" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">
-						{{ t("guild_settings.events.message_events") }}
+						{{ ts("guild_settings.events.message_events") }}
 					</h3>
 				</div>
 				<p class="text-sm text-base-content/70">
@@ -71,7 +71,7 @@
 								:to="channelsPageLink"
 								class="text-primary underline hover:no-underline"
 							>
-								{{ t("guild_settings.events.channels_page_link") }}
+								{{ ts("guild_settings.events.channels_page_link") }}
 							</NuxtLink>
 						</template>
 					</i18n-t>
@@ -93,7 +93,7 @@
 					<USwitch
 						v-model="state[event.key]"
 						:aria-label="
-							t('guild_settings.events.toggle_aria', {
+							ts('guild_settings.events.toggle_aria', {
 								title: translateEntry(event, 'title'),
 							})
 						"
@@ -110,7 +110,7 @@ import type { FormErrorEvent } from "@nuxt/ui";
 import { EventsSettingsSchema, type EventsSettingsSchemaType } from "#shared/schemas";
 import { setGuildDataChange } from "#shared/utils/guild-settings-map";
 
-const { t } = useI18n();
+const { ts } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
 
 const { guildData } = useGuildData();
@@ -146,9 +146,9 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: errorMessage ?? t("guild_settings.please_try_again"),
+		description: errorMessage ?? ts("guild_settings.please_try_again"),
 		icon: "heroicons:x-circle",
-		title: t("guild_settings.save_failed"),
+		title: ts("guild_settings.save_failed"),
 	});
 }
 

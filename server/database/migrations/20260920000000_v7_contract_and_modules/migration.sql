@@ -456,6 +456,26 @@ BEGIN
     END LOOP;
 END $$;
 
+-- EnsureModulesForNewGuilds
+-- The backfill above only covers the guilds that exist when this runs, but the
+-- settings tables are parented on "Modules" from here on. A guild inserted
+-- later (by the bot, or by its own V6 data migration if that follows this one)
+-- would have no module row, and its first settings write would fail the foreign
+-- key. Doing this in the database rather than in a producer keeps it true for
+-- every service that writes to the shared schema.
+CREATE OR REPLACE FUNCTION "ensure_guild_modules"() RETURNS TRIGGER AS $ensure_guild_modules$
+BEGIN
+    INSERT INTO "Modules" ("id") VALUES (NEW."id") ON CONFLICT ("id") DO NOTHING;
+    RETURN NULL;
+END;
+$ensure_guild_modules$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS "Guild_ensure_modules" ON "Guild";
+CREATE TRIGGER "Guild_ensure_modules"
+    AFTER INSERT ON "Guild"
+    FOR EACH ROW
+    EXECUTE FUNCTION "ensure_guild_modules"();
+
 -- AddForeignKey
 DO $$
 BEGIN

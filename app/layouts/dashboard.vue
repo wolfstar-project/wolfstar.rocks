@@ -471,10 +471,14 @@ const isReadyToSubmit = computed(
 
 // The bar's own view transition (see `view-transitions.css`) animates it in and
 // out, so its visibility is committed inside one instead of a Vue transition.
+// Leaving a guild with staged changes hides the bar from the `guildId` watcher
+// below, mid-navigation: a navigation transition owns the screen, so the bar
+// rides along with it rather than interrupting it for one of its own.
 const showSaveChangesBar = ref(isReadyToSubmit.value);
 watch(isReadyToSubmit, (ready) => {
 	startViewTransition(() => (showSaveChangesBar.value = ready), {
 		reduceMotion: effectiveReduceMotion.value,
+		whenActive: "bypass",
 	});
 });
 

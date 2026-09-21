@@ -44,5 +44,4 @@ const prisma = getDb({ connectionString });
 // unused one fails the build, so it cannot outlive the fix.
 export const db = postgres<Contract>({ url: connectionString, contractJson });
 
-export { prisma };
 export default prisma;

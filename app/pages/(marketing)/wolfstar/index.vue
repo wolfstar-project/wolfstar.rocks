@@ -35,6 +35,15 @@ useSeoMetadata({
 
 const otherApps = useApp();
 const Invites = useInvites();
+const site = useSiteConfig();
+
+useDiscordLinkCard(() => ({
+	buttons: [{ label: ts("marketing.wolfstar.cta.invite"), url: Invites.WolfStar }],
+	description: ts("marketing.wolfstar.seo.description"),
+	thumbnailDescription: site.name,
+	thumbnailUrl: `${site.url}/avatars/wolfstar.png`,
+	title: site.name,
+}));
 const { buildInfo } = useAppConfig();
 const buildTime = computed(() => new Date(buildInfo.time));
 </script>

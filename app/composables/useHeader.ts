@@ -15,51 +15,65 @@ export function useHeader() {
 		return apps[appKey] || apps.WolfStar;
 	});
 
+	const featureLinks = computed(() => [
+		{
+			description: t("nav.moderation_tools_description"),
+			icon: "lucide:shield-check",
+			label: t("nav.moderation_tools"),
+			to: "/wolfstar#moderation-tools",
+		},
+		{
+			description: t("nav.advanced_logging_description"),
+			icon: "lucide:file-text",
+			label: t("nav.advanced_logging"),
+			to: "/wolfstar#advanced-logging",
+		},
+		{
+			description: t("nav.moderation_logs_description"),
+			icon: "lucide:search",
+			label: t("nav.moderation_logs"),
+			to: "/wolfstar#moderation-logs",
+		},
+	]);
+
 	const featuresGroup = computed<NavigationMenuItem>(() => ({
-		children: [
-			{
-				description: t("nav.moderation_tools_description"),
-				icon: "lucide:shield-check",
-				label: t("nav.moderation_tools"),
-				to: "/wolfstar#moderation-tools",
-			},
-			{
-				description: t("nav.advanced_logging_description"),
-				icon: "lucide:file-text",
-				label: t("nav.advanced_logging"),
-				to: "/wolfstar#advanced-logging",
-			},
-			{
-				description: t("nav.moderation_logs_description"),
-				icon: "lucide:search",
-				label: t("nav.moderation_logs"),
-				to: "/wolfstar#moderation-logs",
-			},
-		],
+		children: featureLinks.value,
 		label: t("nav.features"),
+		// The desktop panel is rendered by `AppHeader`'s `#features-content` slot.
+		slot: "features",
 	}));
 
+	const applicationLinks = computed(() => [
+		{
+			// `avatar` feeds the desktop panel, `icon` the vertical mobile menu,
+			// which renders no avatar of its own.
+			avatar: { alt: apps.WolfStar.name, src: apps.WolfStar.avatar },
+			description: t("nav.wolfstar_description"),
+			icon: "ph:shield-duotone",
+			label: apps.WolfStar.name,
+			to: apps.WolfStar.explore,
+		},
+		{
+			avatar: { alt: apps.Staryl.name, src: apps.Staryl.avatar },
+			description: t("nav.staryl_description"),
+			icon: "lucide:twitch",
+			label: apps.Staryl.name,
+			to: apps.Staryl.explore,
+		},
+	]);
+
 	const applicationsGroup = computed<NavigationMenuItem>(() => ({
-		children: [
-			{
-				description: t("nav.wolfstar_description"),
-				icon: "ph:shield-duotone",
-				label: apps.WolfStar.name,
-				to: apps.WolfStar.explore,
-			},
-			{
-				description: t("nav.staryl_description"),
-				icon: "lucide:twitch",
-				label: apps.Staryl.name,
-				to: apps.Staryl.explore,
-			},
-		],
+		children: applicationLinks.value,
 		label: t("nav.applications"),
+		// The desktop panel is rendered by `AppHeader`'s `#applications-content` slot.
+		slot: "applications",
 	}));
 
 	const commandsLink = computed<NavigationMenuItem>(() => ({
 		label: t("nav.commands"),
 		to: "/commands",
+		// No dropdown caret, so it keeps even padding where the groups leave room for one.
+		ui: { link: "px-4" },
 	}));
 
 	const desktopLinks = computed<NavigationMenuItem[]>(() => [
@@ -82,8 +96,10 @@ export function useHeader() {
 	]);
 
 	return {
+		applicationLinks,
 		currentApp,
 		desktopLinks,
+		featureLinks,
 		mobileLinks,
 	};
 }

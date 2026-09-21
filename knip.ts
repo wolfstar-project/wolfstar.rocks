@@ -69,7 +69,6 @@ const config: KnipConfig = {
 				"@codspeed/core",
 				"nuxt-site-config",
 				"workbox-*",
-				"rolldown",
 
 				/** Provides the tsgolint binary for oxlint's opt-in type-aware pass (`vp lint --type-aware`), not imported directly */
 				"oxlint-tsgolint",

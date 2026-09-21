@@ -9,70 +9,64 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
  * with a deterministic fake `cachedEventHandler` that mimics Nitro's cache:
  * a warm key returns the stored response WITHOUT invoking the resolver.
  *
- * Invariant: authentication, rate limiting, and the `authorize` hook execute
- * on EVERY request — the cache stores data only, so a warm hit must never
- * bypass request-specific security checks.
+ * Invariant: rate limiting and the `authorize` hook execute on EVERY request —
+ * the cache stores data only, so a warm hit must never bypass request-specific
+ * security checks. Session auth is clientOnly (bot Better Auth); `auth: true`
+ * always 401s on this Nuxt server.
  */
 
-const {
-	cacheStore,
-	rateLimitState,
-	mockRequireUserSession,
-	mockCachedEventHandler,
-	capturedCachedOptions,
-} = vi.hoisted(() => {
-	const cacheStore = new Map<string, unknown>();
-	const rateLimitState = new Map<string, unknown>();
-	const mockRequireUserSession = vi.fn();
-	const capturedCachedOptions: Record<string, unknown>[] = [];
+const { cacheStore, rateLimitState, mockCachedEventHandler, capturedCachedOptions } = vi.hoisted(
+	() => {
+		const cacheStore = new Map<string, unknown>();
+		const rateLimitState = new Map<string, unknown>();
+		const capturedCachedOptions: Record<string, unknown>[] = [];
 
-	// Deterministic stand-in for Nitro's cachedEventHandler: same key → cached
-	// value, resolver NOT re-invoked. This mirrors a warm production cache.
-	const mockCachedEventHandler = vi.fn(
-		(resolver: (event: unknown) => Promise<unknown>, opts: Record<string, unknown>) => {
-			capturedCachedOptions.push(opts);
-			const getKey =
-				(opts["getKey"] as ((event: unknown) => string) | undefined) ??
-				(() => "default-key");
-			return async (event: unknown) => {
-				const key = getKey(event);
-				if (cacheStore.has(key)) {
-					return cacheStore.get(key);
-				}
-				const value = await resolver(event);
-				cacheStore.set(key, value);
-				return value;
-			};
-		},
-	);
+		// Deterministic stand-in for Nitro's cachedEventHandler: same key → cached
+		// value, resolver NOT re-invoked. This mirrors a warm production cache.
+		const mockCachedEventHandler = vi.fn(
+			(resolver: (event: unknown) => Promise<unknown>, opts: Record<string, unknown>) => {
+				capturedCachedOptions.push(opts);
+				const getKey =
+					(opts["getKey"] as ((event: unknown) => string) | undefined) ??
+					(() => "default-key");
+				return async (event: unknown) => {
+					const key = getKey(event);
+					if (cacheStore.has(key)) {
+						return cacheStore.get(key);
+					}
+					const value = await resolver(event);
+					cacheStore.set(key, value);
+					return value;
+				};
+			},
+		);
 
-	const g = globalThis as Record<string, unknown>;
-	g.useStorage = () => ({
-		getItem: async (key: string) => rateLimitState.get(key) ?? null,
-		setItem: async (key: string, value: unknown) => void rateLimitState.set(key, value),
-	});
-	g.requireUserSession = mockRequireUserSession;
-	g.getRequestIP = () => "203.0.113.10";
-	g.getRequestURL = () => new URL("http://localhost/api/guilds/guild-1/logs");
-	g.setResponseHeader = vi.fn();
-	g.defineEventHandler = (fn: unknown) => fn;
-	g.cachedEventHandler = mockCachedEventHandler;
-	g.omit = <T extends object>(keys: (keyof T)[], obj: T) => {
-		const clone = { ...obj };
-		for (const key of keys) {
-			delete clone[key];
-		}
-		return clone;
-	};
+		const g = globalThis as Record<string, unknown>;
+		g.useStorage = () => ({
+			getItem: async (key: string) => rateLimitState.get(key) ?? null,
+			setItem: async (key: string, value: unknown) => void rateLimitState.set(key, value),
+		});
+		g.getRequestIP = () => "203.0.113.10";
+		g.getRequestURL = () => new URL("http://localhost/api/guilds/guild-1/logs");
+		g.setResponseHeader = vi.fn();
+		g.defineEventHandler = (fn: unknown) => fn;
+		g.cachedEventHandler = mockCachedEventHandler;
+		g.omit = <T extends object>(keys: (keyof T)[], obj: T) => {
+			const clone = { ...obj };
+			for (const key of keys) {
+				delete clone[key];
+			}
+			return clone;
+		};
 
-	return {
-		cacheStore,
-		rateLimitState,
-		mockRequireUserSession,
-		mockCachedEventHandler,
-		capturedCachedOptions,
-	};
-});
+		return {
+			cacheStore,
+			rateLimitState,
+			mockCachedEventHandler,
+			capturedCachedOptions,
+		};
+	},
+);
 
 vi.mock("evlog", () => ({
 	useLogger: vi.fn().mockReturnValue({
@@ -114,21 +108,18 @@ function makeEvent(guildId: string): H3Event {
 	} as unknown as H3Event;
 }
 
-const managerSession = { user: { id: "manager-user" } };
-
 describe("defineWrappedCachedResponseHandler cache/auth ordering", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		cacheStore.clear();
 		rateLimitState.clear();
-		mockRequireUserSession.mockResolvedValue(managerSession);
 	});
 
 	function buildHandler() {
 		const resolvedBody = { rows: ["log-entry"], total: 1 };
 		const innerHandler = vi.fn().mockResolvedValue(resolvedBody);
 		const handler = defineWrappedCachedResponseHandler(innerHandler, {
-			auth: true,
+			auth: false,
 			maxAge: 30,
 			swr: false,
 			rateLimit: { enabled: false },
@@ -138,12 +129,25 @@ describe("defineWrappedCachedResponseHandler cache/auth ordering", () => {
 		return { handler, innerHandler, resolvedBody };
 	}
 
-	it("runs authentication on a cold cache miss", async () => {
+	it("rejects auth:true requests with 401 in clientOnly mode", async () => {
+		const innerHandler = vi.fn().mockResolvedValue({ ok: true });
+		const handler = defineWrappedCachedResponseHandler(innerHandler, {
+			auth: true,
+			maxAge: 30,
+			swr: false,
+			rateLimit: { enabled: false },
+			getKey: () => "guild:1",
+		});
+
+		await expect(handler(makeEvent("guild-1"))).rejects.toMatchObject({ status: 401 });
+		expect(innerHandler).not.toHaveBeenCalled();
+	});
+
+	it("runs the data resolver on a cold cache miss", async () => {
 		const { handler, innerHandler } = buildHandler();
 
 		await handler(makeEvent("guild-1"));
 
-		expect(mockRequireUserSession).toHaveBeenCalledTimes(1);
 		expect(innerHandler).toHaveBeenCalledTimes(1);
 	});
 
@@ -157,33 +161,12 @@ describe("defineWrappedCachedResponseHandler cache/auth ordering", () => {
 		expect(innerHandler).toHaveBeenCalledTimes(1);
 	});
 
-	it("runs authentication on every request, including warm cache hits", async () => {
-		const { handler } = buildHandler();
-
-		await handler(makeEvent("guild-1"));
-		await handler(makeEvent("guild-1"));
-
-		expect(mockRequireUserSession).toHaveBeenCalledTimes(2);
-	});
-
-	it("rejects unauthenticated requests on a warm cache", async () => {
-		const { handler, innerHandler } = buildHandler();
-
-		await handler(makeEvent("guild-1"));
-		mockRequireUserSession.mockRejectedValue(
-			Object.assign(new Error("Unauthorized"), { status: 401 }),
-		);
-
-		await expect(handler(makeEvent("guild-1"))).rejects.toThrow("Unauthorized");
-		expect(innerHandler).toHaveBeenCalledTimes(1);
-	});
-
 	it("runs the authorize hook on every request and blocks revoked users from warm hits", async () => {
 		const resolvedBody = { rows: ["log-entry"], total: 1 };
 		const innerHandler = vi.fn().mockResolvedValue(resolvedBody);
 		const authorize = vi.fn().mockResolvedValue(undefined);
 		const handler = defineWrappedCachedResponseHandler(innerHandler, {
-			auth: true,
+			auth: false,
 			maxAge: 30,
 			swr: false,
 			rateLimit: { enabled: false },
@@ -192,18 +175,14 @@ describe("defineWrappedCachedResponseHandler cache/auth ordering", () => {
 				`guild:${(event as unknown as { context: { params: { guild: string } } }).context.params.guild}`,
 		});
 
-		// Warm the cache as a manager
 		await expect(handler(makeEvent("guild-1"))).resolves.toEqual(resolvedBody);
 		expect(authorize).toHaveBeenCalledTimes(1);
-		expect(authorize).toHaveBeenCalledWith(expect.anything(), managerSession);
+		expect(authorize).toHaveBeenCalledWith(expect.anything(), null);
 
-		// Same user loses guild permissions between requests
 		authorize.mockRejectedValue(Object.assign(new Error("Forbidden"), { status: 403 }));
 
 		await expect(handler(makeEvent("guild-1"))).rejects.toThrow("Forbidden");
 		expect(authorize).toHaveBeenCalledTimes(2);
-		// The cached body was resolved exactly once and never leaked to the
-		// forbidden request
 		expect(innerHandler).toHaveBeenCalledTimes(1);
 	});
 
@@ -212,7 +191,7 @@ describe("defineWrappedCachedResponseHandler cache/auth ordering", () => {
 		const innerHandler = vi.fn().mockResolvedValue(resolvedBody);
 		const authorize = vi.fn().mockResolvedValue(undefined);
 		const handler = defineWrappedCachedResponseHandler(innerHandler, {
-			auth: true,
+			auth: false,
 			maxAge: 30,
 			swr: false,
 			rateLimit: { enabled: true, limit: 1, type: "fixed", window: 60_000 },
@@ -222,21 +201,18 @@ describe("defineWrappedCachedResponseHandler cache/auth ordering", () => {
 		});
 
 		await expect(handler(makeEvent("guild-1"))).resolves.toEqual(resolvedBody);
-		expect(rateLimitState.get("rate-limiter-state:manager-user")).toMatchObject({ count: 1 });
+		expect(rateLimitState.get("rate-limiter-state:203.0.113.10")).toMatchObject({ count: 1 });
 
 		authorize.mockRejectedValue(Object.assign(new Error("Forbidden"), { status: 403 }));
 
 		await expect(handler(makeEvent("guild-1"))).rejects.toThrow("Forbidden");
-		expect(rateLimitState.get("rate-limiter-state:manager-user")).toMatchObject({ count: 1 });
+		expect(rateLimitState.get("rate-limiter-state:203.0.113.10")).toMatchObject({ count: 1 });
 	});
 
-	it("lets two authorized managers share the same cached result", async () => {
+	it("lets two requests share the same cached result", async () => {
 		const { handler, innerHandler, resolvedBody } = buildHandler();
 
-		mockRequireUserSession.mockResolvedValueOnce({ user: { id: "manager-a" } });
 		await expect(handler(makeEvent("guild-1"))).resolves.toEqual(resolvedBody);
-
-		mockRequireUserSession.mockResolvedValueOnce({ user: { id: "manager-b" } });
 		await expect(handler(makeEvent("guild-1"))).resolves.toEqual(resolvedBody);
 
 		expect(innerHandler).toHaveBeenCalledTimes(1);
@@ -261,9 +237,6 @@ describe("defineWrappedCachedResponseHandler cache/auth ordering", () => {
 
 		const opts = capturedCachedOptions.at(-1)!;
 		const getKey = opts["getKey"] as (event: H3Event) => string;
-		// Same guild, different (hypothetical) sessions → same key: the data
-		// cache is shared across users, which is why per-request authorization
-		// is mandatory before cache access.
 		expect(getKey(makeEvent("guild-1"))).toBe(getKey(makeEvent("guild-1")));
 		expect(getKey(makeEvent("guild-1"))).not.toBe(getKey(makeEvent("guild-2")));
 	});

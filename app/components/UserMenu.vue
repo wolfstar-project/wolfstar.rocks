@@ -175,8 +175,9 @@ const items = computed<DropdownMenuItem[][]>(() => [
 			label: t("user_menu.sign_out"),
 			async onSelect(e: Event) {
 				e.preventDefault();
-				// `auth.redirects.logout` in nuxt.config sends the user home afterwards.
+				await logoutBotOauth();
 				await signOut();
+				await navigateTo("/");
 			},
 		},
 	],

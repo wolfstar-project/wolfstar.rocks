@@ -1,18 +1,10 @@
-import { refreshSessionTokens } from "#server/utils/oauth-tokens";
-
 export default defineNitroPlugin((nitroApp) => {
-	nitroApp.hooks.hook("request", async (event) => {
+	nitroApp.hooks.hook("request", (event) => {
+		// Auth is client-only against the bot Better Auth server — Nuxt has no
+		// local session to resolve during SSR.
 		event.context.$authorization = {
-			resolveServerTokens: async () => {
-				return refreshSessionTokens(event);
-			},
-			resolveServerUser: async () => {
-				// `getRequestSession` memoizes on `event.context` for the lifetime of
-				// the request; `getUserSession` re-runs `auth.api.getSession()` on
-				// every call, and several handlers resolve the user per request.
-				const session = await getRequestSession(event);
-				return session?.user ?? null;
-			},
+			resolveServerTokens: async () => null,
+			resolveServerUser: async () => null,
 		};
 	});
 });

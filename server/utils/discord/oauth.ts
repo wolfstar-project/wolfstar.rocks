@@ -1,7 +1,5 @@
 import type { DiscordAPIError } from "@discordjs/rest";
 import type { APIUser, RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
-import type { H3Event } from "h3";
-import { type DiscordAccessToken, refreshSessionTokens } from "#server/utils/oauth-tokens";
 import { REST } from "@discordjs/rest";
 import { createError } from "evlog";
 
@@ -46,72 +44,39 @@ export async function fetchCurrentUserAndGuilds(accessToken: string): Promise<{
 	return { guilds, user };
 }
 
-async function resolveAccessTokenAfterUnauthorized(
-	event: H3Event,
-	tokens: DiscordAccessToken,
-): Promise<string> {
-	const refreshed = await refreshSessionTokens(event, { force: true });
-
-	if (!refreshed?.access_token || refreshed.access_token === tokens.access_token) {
-		throw errors.unauthorized();
-	}
-
-	return refreshed.access_token;
-}
-
 export async function fetchCurrentUserAndGuildsWithRetry(
-	event: H3Event,
-	tokens: DiscordAccessToken,
+	_event: unknown,
+	tokens: { access_token: string },
 ): Promise<{
 	user: APIUser;
 	guilds: RESTAPIPartialCurrentUserGuild[];
 }> {
+	// Auth tokens live on the external bot Better Auth server (clientOnly).
+	// Nuxt cannot refresh Discord OAuth tokens locally — retry is a single attempt.
 	try {
 		return await fetchCurrentUserAndGuilds(tokens.access_token);
 	} catch (error) {
-		if (!isDiscordUnauthorized(error)) {
-			throw error;
+		if (isDiscordUnauthorized(error)) {
+			throw errors.unauthorized();
 		}
-
-		const accessToken = await resolveAccessTokenAfterUnauthorized(event, tokens);
-		try {
-			return await fetchCurrentUserAndGuilds(accessToken);
-		} catch (retryError) {
-			if (isDiscordUnauthorized(retryError)) {
-				throw errors.unauthorized();
-			}
-			throw retryError;
-		}
+		throw error;
 	}
 }
 
 export async function fetchGuildMemberWithRetry(
-	event: H3Event,
-	tokens: DiscordAccessToken,
+	_event: unknown,
+	tokens: { access_token: string },
 	guildId: string,
 ) {
-	const call = (accessToken: string) => {
-		const api = createApiWithToken(accessToken);
-		return instrumentDiscordApiCall(
+	const api = createApiWithToken(tokens.access_token);
+	try {
+		return await instrumentDiscordApiCall(
 			"users.getGuildMember",
 			() => api.users.getGuildMember(guildId),
 			{ guild_id: guildId },
 		);
-	};
-
-	try {
-		return await call(tokens.access_token);
 	} catch (error) {
-		if (!isDiscordUnauthorized(error)) {
-			toDiscordFetchError(error, "guild-member");
-		}
-
-		const accessToken = await resolveAccessTokenAfterUnauthorized(event, tokens);
-		try {
-			return await call(accessToken);
-		} catch (retryError) {
-			toDiscordFetchError(retryError, "guild-member");
-		}
+		toDiscordFetchError(error, "guild-member");
 	}
 }
 

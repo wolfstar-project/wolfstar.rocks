@@ -93,11 +93,19 @@ const items = computed<DropdownMenuItem[]>(() => [
 	{
 		icon: "lucide:log-out",
 		label: t("header.sign_out"),
-		// `auth.redirects.logout` in nuxt.config sends the user home afterwards.
-		onSelect: () => signOut(),
+		onSelect: logout,
 		ui: {
 			itemLeadingIcon: "text-error",
 		},
 	},
 ]);
+
+async function logout() {
+	await logoutBotOauth();
+	await signOut({
+		onSuccess: () => {
+			void navigateTo("/");
+		},
+	});
+}
 </script>

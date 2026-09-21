@@ -1,4 +1,4 @@
-import type { GuildData } from "#server/database";
+import type { GuildData } from "#shared/types";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
@@ -10,7 +10,7 @@ const mockGuildSettings = ref<GuildData | undefined>(
 		selfmodNewlinesEnabled: true,
 		selfmodNewlinesSoftAction: 0b100,
 		selfmodNewlinesHardAction: 4,
-		selfmodNewlinesHardActionDuration: 180000n,
+		selfmodNewlinesHardActionDuration: 180000,
 		selfmodNewlinesMaximum: 50,
 		selfmodNewlinesThresholdMaximum: 12,
 		selfmodNewlinesThresholdDuration: 20_000,
@@ -66,7 +66,7 @@ describe("new line filter guild settings", () => {
 			selfmodNewlinesEnabled: true,
 			selfmodNewlinesSoftAction: 0b100,
 			selfmodNewlinesHardAction: 4,
-			selfmodNewlinesHardActionDuration: 180000n,
+			selfmodNewlinesHardActionDuration: 180000,
 			selfmodNewlinesMaximum: 50,
 			selfmodNewlinesThresholdMaximum: 12,
 			selfmodNewlinesThresholdDuration: 20_000,

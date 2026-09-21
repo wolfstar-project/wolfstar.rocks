@@ -7,10 +7,10 @@ import { isCI, isTest } from "std-env";
 /**
  * Auto-generates ephemeral secrets required for test and CI builds.
  *
- * @nuxtjs/better-auth requires a non-empty, 32+ character secret; nuxt-og-image
- * requires an HMAC secret when strict mode is enabled. In production both are
- * supplied via environment variables. In CI the prebuilt server runs without those
- * env vars, so this module bakes random values into the build output at build time.
+ * nuxt-og-image requires an HMAC secret when strict mode is enabled. In production
+ * it is supplied via an environment variable. In CI the prebuilt server runs without
+ * that env var, so this module bakes a random value into the build output at build
+ * time. Better Auth needs no secret here: auth is clientOnly against the bot server.
  *
  * Guards preserve any value already present (e.g. from a local .env file) so
  * local development is unaffected.
@@ -33,16 +33,10 @@ export default defineNuxtModule({
 			return value;
 		}
 
-		const betterAuthSecret = resolveSecret("NUXT_BETTER_AUTH_SECRET");
 		const imageProxySecret = resolveSecret("NUXT_IMAGE_PROXY_SECRET");
 
-		// @nuxtjs/better-auth reads nuxt.options.runtimeConfig.betterAuthSecret
-		// first, falling back to process.env.NUXT_BETTER_AUTH_SECRET. Baking it here
-		// ensures the prebuilt server starts without the env var in the test process.
-		const rc = nuxt.options.runtimeConfig as Record<string, unknown>;
-		if (!rc.betterAuthSecret) {
-			rc.betterAuthSecret = betterAuthSecret;
-		}
+		// Auth is clientOnly against the bot Better Auth server — Nuxt does not
+		// need NUXT_BETTER_AUTH_SECRET for builds or tests.
 
 		// nuxt.config.ts evaluated process.env.NUXT_IMAGE_PROXY_SECRET at config-eval
 		// time, so nuxt.options.ogImage.security.strict is false when the env var was

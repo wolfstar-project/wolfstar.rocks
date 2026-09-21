@@ -70,7 +70,8 @@ export const mockUser = {
 export const mockCommands: WolfCommand[] = [
 	{
 		category: "Admin",
-		alias: ["rs"],
+		aliases: ["rs"],
+		subCategory: "",
 		description: "Manage unique role sets.",
 		extendedHelp: {
 			usages: [

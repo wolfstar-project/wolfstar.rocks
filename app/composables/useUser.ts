@@ -1,4 +1,5 @@
 import type { AuthUser } from "#nuxt-better-auth";
+import type { DiscordProfileUser, OauthFlattenedGuild, TransformedLoginData } from "#shared/types";
 import { useFuse } from "@vueuse/integrations/useFuse";
 
 export interface UseUserSearchOptions {
@@ -14,8 +15,12 @@ export interface UseUserOptions {
 	search?: UseUserSearchOptions;
 }
 
+/**
+ * Profile / guild-list data from the WolfStar bot API (`GET /users/@me`),
+ * matching legacy dashboard behavior via `$api`.
+ */
 export function useUser(authUser: MaybeRefOrGetter<AuthUser | null>, options?: UseUserOptions) {
-	const cachedFetch = useCachedFetch();
+	const { $api } = useNuxtApp();
 	const forceGuildRefresh = ref(false);
 
 	const searchQuery = computed(() => options?.search?.query?.value ?? null);
@@ -37,11 +42,11 @@ export function useUser(authUser: MaybeRefOrGetter<AuthUser | null>, options?: U
 				};
 			}
 
-			const { search, ...fetchOptions } = options ?? {};
+			const { search: _search, ...fetchOptions } = options ?? {};
 			const refreshGuilds = forceGuildRefresh.value;
 			forceGuildRefresh.value = false;
 
-			const { data, isStale } = await cachedFetch<TransformedLoginData>("/api/users", {
+			const { data, isStale } = await $api<TransformedLoginData>("/users/@me", {
 				...fetchOptions,
 				query: refreshGuilds ? { refresh: "true" } : undefined,
 				signal,

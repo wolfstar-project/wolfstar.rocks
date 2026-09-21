@@ -1,18 +1,25 @@
 import { defineClientAuth } from "@nuxtjs/better-auth/config";
 
-// The client must target the same origin the app is actually served from, not
-// the configured `runtimeConfig.public.siteUrl`: the module's default client
-// factory prefers that configured siteUrl unconditionally, even in the
-// browser. That breaks any build served from a different origin than the
-// configured production domain — e.g. CI's Playwright preview, which builds
-// with NUXT_PUBLIC_SITE_URL=https://wolfstar.rocks (for correct SEO/OG output)
-// but serves the result on http://localhost:5678, so a same-origin client
-// would otherwise call the real production API and get blocked by CORS.
-// Read window.location.origin only on the client; fall back to the
-// module-injected site URL on the server so this never touches a browser
-// global during SSR/server setup (import.meta.client is compiled out of the
-// server bundle). Any plugin added to `server/auth.config.ts` needs its
-// client counterpart here.
-export default defineClientAuth((ctx) => ({
-	baseURL: import.meta.client ? window.location.origin : ctx.siteUrl,
-}));
+/**
+ * Client-only Better Auth: the WolfStar bot hosts the auth server.
+ * `baseURL` must be the bot API origin so `/api/auth/**` calls go there
+ * (see https://better-auth.nuxt.dev/guides/external-auth-backend).
+ *
+ * `NUXT_PUBLIC_SITE_URL` remains the frontend origin for SEO / redirects;
+ * do not point it at the auth backend.
+ *
+ * `import.meta.test` is true for both Vitest and `build:test` (NODE_ENV=test).
+ * Returning `{}` would fall back to `siteUrl` (often production in CI) and break
+ * Playwright with CORS. An empty `baseURL` lets Better Auth use
+ * `window.location.origin` so Vitest/`registerEndpoint` and Playwright hit the
+ * Nuxt origin instead.
+ */
+export default defineClientAuth(() => {
+	if (import.meta.test) {
+		return { baseURL: "" };
+	}
+	const apiBaseUrl = useRuntimeConfig().public.apiBaseUrl;
+	return {
+		baseURL: String(apiBaseUrl || "").replace(/\/$/, ""),
+	};
+});

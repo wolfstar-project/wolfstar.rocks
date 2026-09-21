@@ -79,20 +79,13 @@ vi.mock("@sentry/nuxt", () => ({
 	startSpan: vi.fn(),
 }));
 
-vi.mock("#server/database", () => ({
-	readSettings: vi.fn().mockResolvedValue({ rolesAdmin: [] }),
-	readSettingsPermissionNodes: vi.fn().mockReturnValue({
-		run: vi.fn().mockResolvedValue(null),
-	}),
-}));
-
 import type { RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
 import { transformGuild } from "#server/utils/discord";
 
 const userId = "user-123";
 
 // oauthGuild.owner: true ensures getManageable short-circuits to true
-// without calling manage/getMember/readSettings — isolating includeChannels behaviour.
+// without calling manage/getMember — isolating includeChannels behaviour.
 const oauthGuild: RESTAPIPartialCurrentUserGuild = {
 	id: "guild-456",
 	name: "Test Guild",

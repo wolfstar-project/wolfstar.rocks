@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts" generic="T extends Record<string, unknown>">
-import type { GuildData } from "#server/database";
+import type { GuildData } from "#shared/types";
 import type { FormError, FormErrorEvent, FormSubmitEvent } from "@nuxt/ui";
 import type { GenericSchema } from "valibot";
 import { setGuildDataChange } from "#shared/utils/guild-settings-map";

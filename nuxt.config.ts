@@ -55,6 +55,9 @@ export default defineNuxtConfig({
 	// page meta, `useSignIn('social')` and `signOut()` all agree on where users
 	// land, instead of each call site hardcoding its own path.
 	auth: {
+		// Better Auth runs on the WolfStar bot API; Nuxt hosts no auth server.
+		// See https://better-auth.nuxt.dev/guides/external-auth-backend
+		clientOnly: true,
 		redirects: {
 			// Aliased to /oauth/login, which immediately hands off to Discord.
 			login: "/login",
@@ -247,19 +250,20 @@ export default defineNuxtConfig({
 	routeRules: {
 		// API routes — only cache public, non-authenticated proxy routes.
 		// Broad ISR on /api/** is intentionally omitted: authenticated routes
-		// (e.g. /api/users, /api/guilds/:id/settings) must never be cached
-		// Globally, as that would serve one user's data to another.
+		// must never be cached globally, as that would serve one user's data to another.
 		"/sitemap.xml": { prerender: true },
 		"/": { appLayout: "default", prerender: true, robots: true },
 		"/_og/d/**": getISRConfig(60 * 60 * 24), // 1 day
 		"/api/auth/**": { isr: false, cache: false },
-		"/api/users": {
+		// Bot API BFF used by `$api` on the client — never CDN-cache (may carry auth).
+		// More-specific `/api/auth/**` rules above keep auth routes unproxied.
+		"/api/**": {
+			isr: false,
+			cache: false,
 			headers: {
-				"Cache-Control": "private, max-age=30, stale-while-revalidate=300",
-				"Vary": "Cookie, Authorization",
+				"Cache-Control": "private, no-store",
 			},
 		},
-
 		"/oauth/**": {
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 			security: {
@@ -272,9 +276,9 @@ export default defineNuxtConfig({
 			},
 		},
 		"/oauth/callback": {
-			// Discord returns through this route before the server middleware forwards
-			// the OAuth response to Better Auth. A prerendered copy bypasses that
-			// middleware and leaves the browser on the callback status page.
+			// Better Auth (on the bot API) redirects the browser back to this route
+			// after the Discord code exchange; the page then reads the fresh session
+			// client-side. A prerendered copy would ship a stale status page.
 			prerender: false,
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 		},
@@ -284,16 +288,12 @@ export default defineNuxtConfig({
 		"/oauth/login": {
 			prerender: false,
 			robots: true,
-			auth: { only: "guest", redirectTo: "/profile" },
 		},
-		// `/login` is an alias of `/oauth/login`, but route rules match on the
-		// requested path, so the guest rule has to be repeated here or signed-in
-		// users hitting /login get bounced back to Discord.
-		"/login": {
-			prerender: false,
-			auth: { only: "guest", redirectTo: "/profile" },
-		},
-		"/guilds/**": { auth: { only: "user", redirectTo: "/login" } },
+		// `/login` is an alias of `/oauth/login` and shares its route record, so the
+		// page's own `definePageMeta({ auth })` guard covers both paths. Route-rule
+		// `auth` keys are untyped in clientOnly mode, so protection for the guilds
+		// pages lives in their page meta too (`auth: "user"`).
+		"/login": { prerender: false },
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
 		// /profile hosts local UI settings (theme/locale/motion) for guests and the
 		// Discord account/servers view for signed-in users. Never statically prerender
@@ -400,6 +400,10 @@ export default defineNuxtConfig({
 		storage: {
 			"fetch-cache": {
 				base: "./.cache/fetch",
+				driver: "fsLite",
+			},
+			"payload-cache": {
+				base: "./.cache/payload",
 				driver: "fsLite",
 			},
 			"wolfstar:ratelimiter": {
@@ -624,6 +628,11 @@ export default defineNuxtConfig({
 					"https://cdn.discordapp.com",
 					"https://media.discordapp.net",
 					"https://discord.com",
+					// WolfStar bot API (`$api` + sapphire `POST /oauth/callback`)
+					"http://localhost:8282",
+					"http://127.0.0.1:8282",
+					"https://api.wolfstar.rocks",
+					"https://api.beta.wolfstar.rocks",
 					"https://api.iconify.design",
 					"https://ungh.cc", // Changelog page fetches GitHub releases from ungh.cc on client-side navigation
 					"https://*.netlify.com",

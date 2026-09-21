@@ -45,7 +45,17 @@ export function generateRuntimeConfig() {
 			clientSecret: process.env.NUXT_OAUTH_DISCORD_CLIENT_SECRET,
 		},
 		public: {
-			apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
+			// Internal WolfStar bot API. Production default is api.wolfstar.rocks;
+			// local/dev bot and Storybook/test mockups use http://localhost:8282.
+			// Storybook always pins the mock origin so MSW handlers match even when
+			// NUXT_PUBLIC_API_BASE_URL is set to production in the environment.
+			apiBaseUrl:
+				process.env.STORYBOOK === "true" || process.env.VITEST_STORYBOOK === "true"
+					? "http://localhost:8282"
+					: process.env.NUXT_PUBLIC_API_BASE_URL ||
+						(process.env.NODE_ENV === "test"
+							? "http://localhost:8282"
+							: "https://api.wolfstar.rocks"),
 			clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,
 			environment: process.env.NODE_ENV ?? "production",
 			// Declared so `NUXT_PUBLIC_SITE_URL` can override it at runtime: Nuxt only

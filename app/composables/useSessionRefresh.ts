@@ -3,7 +3,9 @@ export function useSessionRefresh() {
 	const documentVisibility = useDocumentVisibility();
 
 	async function refreshAndSync(): Promise<void> {
-		await $fetch("/api/auth/refresh").catch(() => {});
+		// Auth runs on the external bot Better Auth server (clientOnly mode).
+		// Refresh the local session cache from that backend — there is no
+		// Nuxt `/api/auth/refresh` route anymore.
 		await refetchSession();
 	}
 

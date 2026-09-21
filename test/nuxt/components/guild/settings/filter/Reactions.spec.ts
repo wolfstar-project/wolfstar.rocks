@@ -1,4 +1,4 @@
-import type { GuildData } from "#server/database";
+import type { GuildData } from "#shared/types";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
@@ -10,7 +10,7 @@ const mockGuildSettings = ref<GuildData | undefined>(
 		selfmodReactionsEnabled: true,
 		selfmodReactionsSoftAction: 0b010,
 		selfmodReactionsHardAction: 5,
-		selfmodReactionsHardActionDuration: 86400000n,
+		selfmodReactionsHardActionDuration: 86400000,
 		selfmodReactionsThresholdMaximum: 8,
 		selfmodReactionsThresholdDuration: 15_000,
 	}),
@@ -64,7 +64,7 @@ describe("reaction filter guild settings", () => {
 			selfmodReactionsEnabled: true,
 			selfmodReactionsSoftAction: 0b010,
 			selfmodReactionsHardAction: 5,
-			selfmodReactionsHardActionDuration: 86400000n,
+			selfmodReactionsHardActionDuration: 86400000,
 			selfmodReactionsThresholdMaximum: 8,
 			selfmodReactionsThresholdDuration: 15_000,
 		});

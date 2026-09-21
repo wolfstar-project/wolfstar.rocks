@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 let fetchCount = 0;
 
-registerEndpoint("/api/guilds/123/logs/moderation", {
+registerEndpoint("/guilds/123/moderation-logs", {
 	method: "GET",
 	handler: () => {
 		fetchCount += 1;

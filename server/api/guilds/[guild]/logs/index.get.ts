@@ -1,5 +1,5 @@
 import type { DashboardAuditEntry } from "#shared/types/audit-log";
-import prisma from "#server/database/prisma";
+import { db } from "#server/database/prisma";
 import { patchToChanges } from "#server/utils/audit/patch-to-changes";
 import { fallbackMember, resolveGuildMembers } from "#server/utils/audit/resolve-members";
 import { DASHBOARD_AUDIT_ACTIONS } from "#shared/audit/actions";
@@ -25,45 +25,47 @@ export default defineWrappedCachedResponseHandler(
 			parse(DashboardActivityQuerySchema, body),
 		);
 
-		const where = {
-			tenantId: guild.id,
-			action: { in: [...DASHBOARD_AUDIT_ACTIONS] },
-			...(actorId && { actorId }),
-			...(from || to
-				? {
-						timestamp: {
-							...(from && { gte: new Date(from) }),
-							...(to && { lte: new Date(to) }),
-						},
-					}
-				: {}),
-			...(q && { reason: { contains: q, mode: "insensitive" as const } }),
-		};
+		// One filtered collection, reused by the page query and the count: chaining
+		// returns a new collection each time, so neither terminal disturbs the other.
+		let filtered = db.orm.public.AuditEvent.where((row) =>
+			row.tenantId.eq(BigInt(guild.id)),
+		).where((row) => row.action.in([...DASHBOARD_AUDIT_ACTIONS]));
+		if (actorId) filtered = filtered.where((row) => row.actorId.eq(BigInt(actorId)));
+		if (from) filtered = filtered.where((row) => row.timestamp.gte(asTimestampString(from)));
+		if (to) filtered = filtered.where((row) => row.timestamp.lte(asTimestampString(to)));
+		if (q) filtered = filtered.where((row) => row.reason.ilike(`%${q}%`));
 
-		const [rows, total] = await Promise.all([
-			prisma.auditEvent.findMany({
-				where,
-				orderBy: { timestamp: "desc" },
-				take: limit,
-				skip: offset,
-			}),
-			prisma.auditEvent.count({ where }),
+		const [rows, { total }] = await Promise.all([
+			filtered
+				.orderBy((row) => row.timestamp.desc())
+				.limit(limit)
+				.offset(offset)
+				.all(),
+			filtered.aggregate((aggregate) => ({ total: aggregate.count() })),
 		]);
 
 		const memberMap = await resolveGuildMembers(
 			guild.id,
-			rows.map((r) => r.actorId),
+			rows.map((row) => String(row.actorId)),
 		);
 
 		const entries: DashboardAuditEntry[] = rows.map((row) => ({
 			id: row.hash,
-			guildId: row.tenantId ?? guild.id,
+			guildId: row.tenantId === null ? guild.id : String(row.tenantId),
 			action: row.action as DashboardAuditEntry["action"],
 			outcome: row.outcome as DashboardAuditEntry["outcome"],
-			member: memberMap.get(row.actorId) ?? fallbackMember(row.actorId),
-			changes: patchToChanges(row.changes ?? {}),
+			member: memberMap.get(String(row.actorId)) ?? fallbackMember(String(row.actorId)),
+			changes: patchToChanges(
+				// `changes` is a JSON column, so its type admits scalars and arrays;
+				// the drain only ever writes the patch object this expects.
+				typeof row.changes === "object" &&
+					row.changes !== null &&
+					!Array.isArray(row.changes)
+					? (row.changes as Record<string, unknown>)
+					: {},
+			),
 			reason: row.reason,
-			timestamp: row.timestamp.toISOString(),
+			timestamp: row.timestamp,
 		}));
 
 		return { entries, total };

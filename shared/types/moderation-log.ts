@@ -11,7 +11,7 @@ export interface ModerationLogEntry {
 	typeCode: number;
 	typeName: ModerationTypeName | "Unknown";
 	reason: string | null;
-	imageURL: string | null;
+	referenceId: number | null;
 	duration: bigint | null;
 	metadata: ModerationMetadata;
 	createdAt: string | null;

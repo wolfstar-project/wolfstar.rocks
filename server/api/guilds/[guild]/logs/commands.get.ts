@@ -1,7 +1,8 @@
 import type { CommandLogData } from "#server/database";
-import prisma from "#server/database/prisma";
+import { db } from "#server/database/prisma";
 import { fallbackMember, resolveGuildMembers } from "#server/utils/audit/resolve-members";
 import { CommandLogQuerySchema } from "#shared/schemas";
+import { or } from "@prisma/orm-postgres/orm-client";
 import { useLogger } from "evlog";
 import { parse } from "valibot";
 
@@ -20,43 +21,39 @@ export default defineWrappedCachedResponseHandler(
 		const { limit, offset, userId, commandName, success, from, to, q } =
 			await getValidatedQuery(event, (body) => parse(CommandLogQuerySchema, body));
 
-		const where = {
-			guildId,
-			...(userId && { userId }),
-			...(commandName && { commandName }),
-			...(success !== "all" && { success: success === "success" }),
-			...(from || to
-				? {
-						executedAt: {
-							...(from && { gte: new Date(from) }),
-							...(to && { lte: new Date(to) }),
-						},
-					}
-				: {}),
-			...(q && {
-				OR: [
-					{ commandName: { contains: q, mode: "insensitive" as const } },
-					{ errorReason: { contains: q, mode: "insensitive" as const } },
-				],
-			}),
-		};
+		// One filtered collection, reused by the page query and the count: chaining
+		// returns a new collection each time, so neither terminal disturbs the other.
+		let filtered = db.orm.public.CommandLog.where((row) => row.guildId.eq(BigInt(guildId)));
+		if (userId) filtered = filtered.where((row) => row.userId.eq(BigInt(userId)));
+		if (commandName) filtered = filtered.where((row) => row.commandName.eq(commandName));
+		if (success !== "all") {
+			filtered = filtered.where((row) => row.success.eq(success === "success"));
+		}
+		if (from) filtered = filtered.where((row) => row.executedAt.gte(asTimestampString(from)));
+		if (to) filtered = filtered.where((row) => row.executedAt.lte(asTimestampString(to)));
+		if (q) {
+			const pattern = `%${q}%`;
+			filtered = filtered.where((row) =>
+				or(row.commandName.ilike(pattern), row.errorReason.ilike(pattern)),
+			);
+		}
 
-		const [rows, total] = await Promise.all([
-			prisma.commandLog.findMany({
-				where,
-				orderBy: { executedAt: "desc" },
-				take: limit,
-				skip: offset,
-			}),
-			prisma.commandLog.count({ where }),
+		const [rows, { total }] = await Promise.all([
+			filtered
+				.orderBy((row) => row.executedAt.desc())
+				.limit(limit)
+				.offset(offset)
+				.all(),
+			filtered.aggregate((aggregate) => ({ total: aggregate.count() })),
 		]);
 
 		const memberMap = await resolveGuildMembers(guildId, [
-			...new Set(rows.map((r) => r.userId)),
+			...new Set(rows.map((row) => String(row.userId))),
 		]);
 
 		const entries: CommandLogData[] = rows.map((row) => {
-			const member = memberMap.get(row.userId) ?? fallbackMember(row.userId);
+			const userId = String(row.userId);
+			const member = memberMap.get(userId) ?? fallbackMember(userId);
 			return {
 				id: row.id,
 				guildId: row.guildId,
@@ -68,7 +65,7 @@ export default defineWrappedCachedResponseHandler(
 				channelId: row.channelId ?? null,
 				success: row.success,
 				errorReason: row.errorReason ?? null,
-				executedAt: row.executedAt,
+				executedAt: new Date(row.executedAt),
 				latencyMs: row.latencyMs ?? null,
 				metadata: { member },
 			};

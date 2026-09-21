@@ -202,7 +202,7 @@
 				"message_edit_title": "message edits",
 				"message_edit_tooltip": "Message Edit",
 				"reply_case_archived": "Successfully archived case {id}.",
-				"reply_case_created": "✅ Created case {id} {'|'} ",
+				"reply_case_created": "✅ Created case {id} | ",
 				"reply_case_deleted": "Successfully deleted case {id}.",
 				"reply_case_edited": "Successfully edited case {id}.",
 				"reply_key_reset": "The key {key} has been reset to: {value}",

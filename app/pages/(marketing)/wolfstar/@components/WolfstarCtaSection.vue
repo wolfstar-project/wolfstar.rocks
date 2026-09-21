@@ -4,16 +4,16 @@
 			<IconsWolfstar class="home-cta-watermark" aria-hidden="true" />
 			<div class="relative flex flex-col items-center text-center">
 				<p class="mb-4 font-mono text-sm font-medium text-primary">
-					{{ t("marketing.wolfstar.cta.eyebrow") }}
+					{{ ts("marketing.wolfstar.cta.eyebrow") }}
 				</p>
 				<h2
 					id="home-cta-heading"
 					class="max-w-190 text-4xl leading-[1.05] font-bold tracking-(--home-ls-tight) text-base-content md:text-5xl"
 				>
-					{{ t("marketing.wolfstar.cta.title") }}
+					{{ ts("marketing.wolfstar.cta.title") }}
 				</h2>
 				<p class="mt-5 max-w-140 text-base leading-relaxed text-base-content/65">
-					{{ t("marketing.wolfstar.cta.subtitle") }}
+					{{ ts("marketing.wolfstar.cta.subtitle") }}
 				</p>
 				<div class="mt-7 flex flex-col gap-3 sm:flex-row">
 					<UButton
@@ -23,7 +23,7 @@
 						class="justify-center sm:min-w-48"
 						icon="ph:plus-circle-fill"
 					>
-						{{ t("marketing.wolfstar.cta.invite") }}
+						{{ ts("marketing.wolfstar.cta.invite") }}
 					</UButton>
 					<UButton
 						to="https://join.wolfstar.rocks"
@@ -32,7 +32,7 @@
 						size="lg"
 						class="home-cta-outline justify-center sm:min-w-48"
 					>
-						{{ t("marketing.wolfstar.cta.ask_in_support") }}
+						{{ ts("marketing.wolfstar.cta.ask_in_support") }}
 					</UButton>
 				</div>
 			</div>
@@ -45,7 +45,7 @@ defineProps<{
 	inviteUrl: string;
 }>();
 
-const { t } = useI18n();
+const { ts } = useI18n();
 </script>
 
 <style scoped>

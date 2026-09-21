@@ -91,6 +91,10 @@
 		"staryl_description": "",
 		"wolfstar_description": ""
 	},
+	"nuxtSiteConfig": {
+		"description": "",
+		"name": ""
+	},
 	"translation_status": {
 		"description": "Controlla quanto è completa ogni lingua e contribuisci con le stringhe mancanti.",
 		"generated_at": "Ultima generazione {date}",

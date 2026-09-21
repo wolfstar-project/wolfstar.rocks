@@ -1,330 +1,168 @@
-import type {
-	DateTimeFormats,
-	NumberFormats,
-	PluralizationRule,
-	PluralizationRules,
-} from "@intlify/core-base";
-import type { LocaleObject } from "@nuxtjs/i18n";
+import type { Locale } from "nuxt-i18n-micro";
 import localeFeatures from "../i18n/locale-features.json" with { type: "json" };
 
-interface LocaleObjectData extends LocaleObject {
-	numberFormats?: NumberFormats;
-	dateTimeFormats?: DateTimeFormats;
-	pluralRule?: PluralizationRule;
-}
-
 /**
- * Feature message files loaded (and deep-merged) per locale via `files`.
- * Layout: `i18n/locales/{locale}/{feature}.json`
- * Lazy-loading is always on in @nuxtjs/i18n v10 when using `file`/`files`.
+ * Feature message files that make up one locale.
+ * Layout: `i18n/locales/{sourceDir}/{feature}.json`
+ *
+ * Nuxt I18n Micro loads a single `{locale}.json` per locale, so
+ * `modules/i18n-locale-bundles.ts` merges these feature files (and the base
+ * directory of a regional variant) into that one file at build time.
  */
-const localeFeatureFiles = localeFeatures.features as readonly string[];
+export const localeFeatureFiles = localeFeatures.features as readonly string[];
 
-function localeFilesFor(localeCode: string): string[] {
-	return localeFeatureFiles.map((feature) => `${localeCode}/${feature}`);
+interface BaseLocaleDefinition {
+	/** Directory under `i18n/locales/` holding this locale's feature files. */
+	sourceDir: string;
+	displayName: string;
+	iso: string;
+	dir?: Locale["dir"];
 }
 
 /**
  * Country / regional variants that inherit from a base language directory.
- * Each variant loads `locales/{base}/*.json` then `locales/{variant}/*.json`.
+ * Each variant merges `locales/{base}/*.json` then `locales/{variant}/*.json`,
+ * so an untranslated key in the variant keeps the base translation.
  *
  * e.g. `en` (US copy) → `en-US` / `en-GB`; `es` (Spain copy) → `es-ES` / `es-419`.
  */
-export const countryLocaleVariants: Record<string, (LocaleObjectData & { country?: boolean })[]> = {
+export const countryLocaleVariants: Record<string, { code: string; displayName: string }[]> = {
 	es: [
 		// es/ contains es-ES translations
-		{ country: true, code: "es-ES", name: "Español (España)" },
+		{ code: "es-ES", displayName: "Español (España)" },
 		// TODO: Support es-419, if we include spanish country variants remove also fix on utils/language.ts module
-		{ code: "es-419", name: "Español (Latinoamérica)" },
+		{ code: "es-419", displayName: "Español (Latinoamérica)" },
 	],
 	en: [
 		// en/ contains en-US translations
-		{ country: true, code: "en-US", name: "English (US)" },
-		{ code: "en-GB", name: "English (UK)" },
+		{ code: "en-US", displayName: "English (US)" },
+		{ code: "en-GB", displayName: "English (UK)" },
 	],
 };
 
-function createPluralRule(locale: string, mapping: Record<string, number>) {
-	return (choice: number, choicesLength: number) => {
-		const name = new Intl.PluralRules(locale).select(choice);
-		const plural = mapping[name] || 0;
+/**
+ * Base locales. Codes that appear in `countryLocaleVariants` expand into
+ * regional variants and are not themselves selectable.
+ */
+const baseLocales: BaseLocaleDefinition[] = [
+	{ sourceDir: "en", displayName: "English", iso: "en-US" },
+	{ sourceDir: "es", displayName: "Español", iso: "es-ES" },
+	{ sourceDir: "it-IT", displayName: "Italiano", iso: "it-IT" },
+	{ sourceDir: "cs-CZ", displayName: "Čeština", iso: "cs-CZ" },
+	{ sourceDir: "da-DK", displayName: "Dansk", iso: "da-DK" },
+	{ sourceDir: "de-DE", displayName: "Deutsch", iso: "de-DE" },
+	{ sourceDir: "el-GR", displayName: "Ελληνικά", iso: "el-GR" },
+	{ sourceDir: "fi-FI", displayName: "Suomi", iso: "fi-FI" },
+	{ sourceDir: "fr-FR", displayName: "Français", iso: "fr-FR" },
+	{ sourceDir: "hi-IN", displayName: "हिंदी", iso: "hi-IN" },
+	{ sourceDir: "hr-HR", displayName: "Hrvatski", iso: "hr-HR" },
+	{ sourceDir: "hu-HU", displayName: "Magyar", iso: "hu-HU" },
+	{ sourceDir: "id-ID", displayName: "Indonesia", iso: "id-ID" },
+	{ sourceDir: "ko-KR", displayName: "한국어", iso: "ko-KR" },
+	{ sourceDir: "lt-LT", displayName: "Lietuvių", iso: "lt-LT" },
+	{ sourceDir: "nl-NL", displayName: "Nederlands", iso: "nl-NL" },
+	{ sourceDir: "pt-PT", displayName: "Português (Portugal)", iso: "pt-PT" },
+	{ sourceDir: "ro-RO", displayName: "Română", iso: "ro-RO" },
+	{ sourceDir: "ru-RU", displayName: "Русский", iso: "ru-RU" },
+	{ sourceDir: "tr-TR", displayName: "Türkçe", iso: "tr-TR" },
+	{ sourceDir: "uk-UA", displayName: "Українська", iso: "uk-UA" },
+];
 
-		// In case translation doesn't have all plural forms, use the last available form
-		if (plural > choicesLength - 1) {
-			if (import.meta.dev) {
-				// oxlint-disable-next-line no-console -- warn logging
-				console.warn(
-					`Plural form index ${plural} for choice ${choice} exceeds available forms ${choicesLength} for locale ${locale}.`,
-				);
+interface BuiltLocales {
+	locales: Locale[];
+	/** Locale code → source directories to merge, in precedence order. */
+	sourceDirs: Record<string, string[]>;
+}
+
+function buildLocales(): BuiltLocales {
+	const locales: Locale[] = [];
+	const sourceDirs: Record<string, string[]> = {};
+
+	for (const base of baseLocales) {
+		const variants = countryLocaleVariants[base.sourceDir];
+		if (variants) {
+			for (const variant of variants) {
+				locales.push({
+					code: variant.code,
+					displayName: variant.displayName,
+					iso: variant.code,
+					...(base.dir ? { dir: base.dir } : {}),
+				});
+				sourceDirs[variant.code] = [base.sourceDir, variant.code];
 			}
-			return choicesLength - 1;
+			continue;
 		}
 
-		return plural;
+		locales.push({
+			code: base.sourceDir,
+			displayName: base.displayName,
+			iso: base.iso,
+			...(base.dir ? { dir: base.dir } : {}),
+		});
+		sourceDirs[base.sourceDir] = [base.sourceDir];
+	}
+
+	return {
+		locales: locales.toSorted((a, b) => a.code.localeCompare(b.code)),
+		sourceDirs,
 	};
 }
 
-/**
- * Base locales registered with Nuxt i18n.
- * Codes that appear in `countryLocaleVariants` expand into regional variants
- * and are not themselves selectable.
- *
- * Base codes like `en` / `es` are typed loosely because `@nuxtjs/i18n`
- * generates its Locale union from the *expanded* currentLocales.
- */
-const locales: (LocaleObjectData | (Omit<LocaleObjectData, "code"> & { code: string }))[] = [
-	{
-		code: "en",
-		files: localeFilesFor("en"),
-		name: "English",
-		language: "en-US",
-	},
-	{
-		code: "es",
-		files: localeFilesFor("es"),
-		name: "Español",
-		language: "es-ES",
-	},
-	{
-		code: "it-IT",
-		files: localeFilesFor("it-IT"),
-		name: "Italiano",
-		language: "it-IT",
-	},
-	{
-		code: "cs-CZ",
-		files: localeFilesFor("cs-CZ"),
-		name: "Čeština",
-		language: "cs-CZ",
-		pluralRule: createPluralRule("cs-CZ", {
-			zero: 2,
-			one: 0,
-			two: 1,
-			few: 1,
-			many: 2,
-			other: 2,
-		}),
-	},
-	{
-		code: "da-DK",
-		files: localeFilesFor("da-DK"),
-		name: "Dansk",
-		language: "da-DK",
-	},
-	{
-		code: "de-DE",
-		files: localeFilesFor("de-DE"),
-		name: "Deutsch",
-		language: "de-DE",
-	},
-	{
-		code: "el-GR",
-		files: localeFilesFor("el-GR"),
-		name: "Ελληνικά",
-		language: "el-GR",
-	},
-	{
-		code: "fi-FI",
-		files: localeFilesFor("fi-FI"),
-		name: "Suomi",
-		language: "fi-FI",
-	},
-	{
-		code: "fr-FR",
-		files: localeFilesFor("fr-FR"),
-		name: "Français",
-		language: "fr-FR",
-	},
-	{
-		code: "hi-IN",
-		files: localeFilesFor("hi-IN"),
-		name: "हिंदी",
-		language: "hi-IN",
-	},
-	{
-		code: "hr-HR",
-		files: localeFilesFor("hr-HR"),
-		name: "Hrvatski",
-		language: "hr-HR",
-	},
-	{
-		code: "hu-HU",
-		files: localeFilesFor("hu-HU"),
-		name: "Magyar",
-		language: "hu-HU",
-		pluralRule: createPluralRule("hu-HU", {
-			zero: 0,
-			one: 0,
-			two: 1,
-			few: 1,
-			many: 1,
-			other: 1,
-		}),
-	},
-	{
-		code: "id-ID",
-		files: localeFilesFor("id-ID"),
-		name: "Indonesia",
-		language: "id-ID",
-	},
-	{
-		code: "ko-KR",
-		files: localeFilesFor("ko-KR"),
-		name: "한국어",
-		language: "ko-KR",
-	},
-	{
-		code: "lt-LT",
-		files: localeFilesFor("lt-LT"),
-		name: "Lietuvių",
-		language: "lt-LT",
-	},
-	{
-		code: "nl-NL",
-		files: localeFilesFor("nl-NL"),
-		name: "Nederlands",
-		language: "nl-NL",
-	},
-	{
-		code: "pt-PT",
-		files: localeFilesFor("pt-PT"),
-		name: "Português (Portugal)",
-		language: "pt-PT",
-	},
-	{
-		code: "ro-RO",
-		files: localeFilesFor("ro-RO"),
-		name: "Română",
-		language: "ro-RO",
-	},
-	{
-		code: "ru-RU",
-		files: localeFilesFor("ru-RU"),
-		name: "Русский",
-		language: "ru-RU",
-		pluralRule: createPluralRule("ru-RU", {
-			zero: 2,
-			one: 0,
-			two: 1,
-			few: 1,
-			many: 2,
-			other: 3,
-		}),
-	},
-	{
-		code: "tr-TR",
-		files: localeFilesFor("tr-TR"),
-		name: "Türkçe",
-		language: "tr-TR",
-	},
-	{
-		code: "uk-UA",
-		files: localeFilesFor("uk-UA"),
-		name: "Українська",
-		language: "uk-UA",
-		pluralRule: createPluralRule("uk-UA", {
-			zero: 2,
-			one: 0,
-			two: 1,
-			few: 1,
-			many: 2,
-			other: 3,
-		}),
-	},
-];
+const built = buildLocales();
+
+export const currentLocales = built.locales;
 
 /**
- * Expand base locales into country variants:
- * `[...baseFeatures, ...variantFeatures]`.
+ * Locale code → the `i18n/locales/` directories merged into its bundle, in
+ * precedence order (base first, regional variant last).
  */
-function buildLocales() {
-	const useLocales = locales.reduce((acc, data) => {
-		const localeVariants = countryLocaleVariants[data.code];
-		if (localeVariants) {
-			const baseFiles = localeFilesFor(data.code);
-			for (const variant of localeVariants) {
-				const entry: LocaleObjectData = {
-					...data,
-					code: variant.code,
-					name: variant.name,
-					language: variant.code,
-					files: [...baseFiles, ...localeFilesFor(variant.code)],
-				};
-				delete entry.file;
-				acc.push(entry);
-			}
-		} else {
-			acc.push(data as LocaleObjectData);
-		}
-		return acc;
-	}, [] as LocaleObjectData[]);
+export const localeSourceDirs = built.sourceDirs;
 
-	return useLocales.toSorted((a, b) => a.code.localeCompare(b.code));
-}
+const DEFAULT_DATETIME_FORMATS: Record<string, Intl.DateTimeFormatOptions> = {
+	shortDate: {
+		dateStyle: "short",
+	},
+	short: {
+		dateStyle: "short",
+		timeStyle: "short",
+	},
+	long: {
+		dateStyle: "long",
+		timeStyle: "medium",
+	},
+};
 
-export const currentLocales = buildLocales();
+const DEFAULT_NUMBER_FORMATS: Record<string, Intl.NumberFormatOptions> = {
+	percentage: {
+		style: "percent",
+		maximumFractionDigits: 1,
+	},
+	smallCounting: {
+		style: "decimal",
+		maximumFractionDigits: 0,
+	},
+	kiloCounting: {
+		notation: "compact",
+		compactDisplay: "short",
+		maximumFractionDigits: 1,
+	},
+	millionCounting: {
+		notation: "compact",
+		compactDisplay: "short",
+		maximumFractionDigits: 2,
+	},
+};
 
-export const datetimeFormats = Object.values(currentLocales).reduce((acc, data) => {
-	const dateTimeFormats = data.dateTimeFormats;
-	if (dateTimeFormats) {
-		acc[data.code] = { ...dateTimeFormats };
-		delete data.dateTimeFormats;
-	} else {
-		acc[data.code] = {
-			shortDate: {
-				dateStyle: "short",
-			},
-			short: {
-				dateStyle: "short",
-				timeStyle: "short",
-			},
-			long: {
-				dateStyle: "long",
-				timeStyle: "medium",
-			},
-		};
-	}
+export const datetimeFormats: Record<
+	string,
+	Record<string, Intl.DateTimeFormatOptions>
+> = Object.fromEntries(
+	currentLocales.map((locale) => [locale.code, { ...DEFAULT_DATETIME_FORMATS }]),
+);
 
-	return acc;
-}, {} as DateTimeFormats);
-
-export const numberFormats = Object.values(currentLocales).reduce((acc, data) => {
-	const numberFormatsArray = data.numberFormats;
-	if (numberFormatsArray) {
-		acc[data.code] = { ...numberFormatsArray };
-		delete data.numberFormats;
-	} else {
-		acc[data.code] = {
-			percentage: {
-				style: "percent",
-				maximumFractionDigits: 1,
-			},
-			smallCounting: {
-				style: "decimal",
-				maximumFractionDigits: 0,
-			},
-			kiloCounting: {
-				notation: "compact",
-				compactDisplay: "short",
-				maximumFractionDigits: 1,
-			},
-			millionCounting: {
-				notation: "compact",
-				compactDisplay: "short",
-				maximumFractionDigits: 2,
-			},
-		};
-	}
-
-	return acc;
-}, {} as NumberFormats);
-
-export const pluralRules = Object.values(currentLocales).reduce((acc, data) => {
-	const pluralRule = data.pluralRule;
-	if (pluralRule) {
-		acc[data.code] = pluralRule;
-		delete data.pluralRule;
-	}
-
-	return acc;
-}, {} as PluralizationRules);
+export const numberFormats: Record<
+	string,
+	Record<string, Intl.NumberFormatOptions>
+> = Object.fromEntries(
+	currentLocales.map((locale) => [locale.code, { ...DEFAULT_NUMBER_FORMATS }]),
+);

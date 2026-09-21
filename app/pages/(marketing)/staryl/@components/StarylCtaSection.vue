@@ -12,19 +12,19 @@
 			/>
 			<div class="relative flex flex-col items-center text-center">
 				<p class="mb-4 font-mono text-sm font-medium text-primary">
-					{{ t("marketing.staryl.cta.eyebrow") }}
+					{{ ts("marketing.staryl.cta.eyebrow") }}
 				</p>
 				<h2
 					id="staryl-cta-heading"
 					class="max-w-190 text-4xl leading-[1.05] font-bold tracking-(--home-ls-tight) text-base-content md:text-5xl"
 				>
-					{{ t("marketing.staryl.cta.title") }}
+					{{ ts("marketing.staryl.cta.title") }}
 				</h2>
 				<p class="mt-5 max-w-140 text-base leading-relaxed text-base-content/65">
 					{{
 						inviteUrl === "#"
-							? t("marketing.staryl.cta.subtitle_no_invite")
-							: t("marketing.staryl.cta.subtitle")
+							? ts("marketing.staryl.cta.subtitle_no_invite")
+							: ts("marketing.staryl.cta.subtitle")
 					}}
 				</p>
 				<div class="mt-7 flex flex-col gap-3 sm:flex-row">
@@ -36,7 +36,7 @@
 						class="justify-center sm:min-w-48"
 						icon="ph:plus-circle-fill"
 					>
-						{{ t("marketing.staryl.cta.invite") }}
+						{{ ts("marketing.staryl.cta.invite") }}
 					</UButton>
 					<UButton
 						to="https://join.wolfstar.rocks"
@@ -48,7 +48,7 @@
 							inviteUrl === '#' ? undefined : 'staryl-cta-outline',
 						]"
 					>
-						{{ t("marketing.staryl.cta.ask_in_support") }}
+						{{ ts("marketing.staryl.cta.ask_in_support") }}
 					</UButton>
 				</div>
 			</div>
@@ -61,7 +61,7 @@ const { inviteUrl } = defineProps<{
 	inviteUrl: string;
 }>();
 
-const { t } = useI18n();
+const { ts } = useI18n();
 </script>
 
 <style scoped>

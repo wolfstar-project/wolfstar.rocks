@@ -10,13 +10,13 @@
 			<p
 				class="mb-4 font-mono text-xs font-semibold tracking-(--home-ls-label) text-primary uppercase"
 			>
-				{{ t("marketing.wolfstar.proof.eyebrow") }}
+				{{ ts("marketing.wolfstar.proof.eyebrow") }}
 			</p>
 			<h2
 				id="home-product-heading"
 				class="text-4xl leading-[1.05] font-bold tracking-(--home-ls-tight) text-base-content md:text-5xl"
 			>
-				{{ t("marketing.wolfstar.proof.title") }}
+				{{ ts("marketing.wolfstar.proof.title") }}
 			</h2>
 		</div>
 
@@ -44,6 +44,7 @@
 				<p class="text-base leading-relaxed text-base-content/65">{{ step.body }}</p>
 				<UButton
 					:to="step.to"
+					:locale="false"
 					color="primary"
 					variant="link"
 					class="mt-auto self-start px-0 pt-6"
@@ -57,31 +58,31 @@
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n();
+const { ts } = useI18n();
 
 const steps = computed(() => [
 	{
-		body: t("marketing.wolfstar.proof.step_1_body"),
-		cta: t("marketing.wolfstar.proof.step_1_cta"),
+		body: ts("marketing.wolfstar.proof.step_1_body"),
+		cta: ts("marketing.wolfstar.proof.step_1_cta"),
 		icon: "ph:shield-check-duotone",
 		index: "01",
-		title: t("marketing.wolfstar.proof.step_1_title"),
+		title: ts("marketing.wolfstar.proof.step_1_title"),
 		to: "#moderation-tools",
 	},
 	{
-		body: t("marketing.wolfstar.proof.step_2_body"),
-		cta: t("marketing.wolfstar.proof.step_2_cta"),
+		body: ts("marketing.wolfstar.proof.step_2_body"),
+		cta: ts("marketing.wolfstar.proof.step_2_cta"),
 		icon: "ph:file-text-duotone",
 		index: "02",
-		title: t("marketing.wolfstar.proof.step_2_title"),
+		title: ts("marketing.wolfstar.proof.step_2_title"),
 		to: "#advanced-logging",
 	},
 	{
-		body: t("marketing.wolfstar.proof.step_3_body"),
-		cta: t("marketing.wolfstar.proof.step_3_cta"),
+		body: ts("marketing.wolfstar.proof.step_3_body"),
+		cta: ts("marketing.wolfstar.proof.step_3_cta"),
 		icon: "ph:squares-four-duotone",
 		index: "03",
-		title: t("marketing.wolfstar.proof.step_3_title"),
+		title: ts("marketing.wolfstar.proof.step_3_title"),
 		to: "#dashboard",
 	},
 ]);

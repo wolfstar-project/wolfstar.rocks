@@ -6,7 +6,7 @@
 			:ui="{ content: 'min-w-48' }"
 		>
 			<UButton
-				:aria-label="t('profile.theme_menu_aria')"
+				:aria-label="ts('profile.theme_menu_aria')"
 				:icon="currentOption.icon"
 				:label="showLabel ? currentOption.label : undefined"
 				:trailing-icon="showLabel ? 'lucide:chevron-down' : undefined"
@@ -43,26 +43,26 @@ interface DocumentWithActiveVT extends Document {
 	readonly activeViewTransition: ViewTransition | null;
 }
 
-const { t } = useI18n();
+const { ts } = useI18n();
 const { preference, setColorMode } = useAppColorMode();
 const { effectiveReduceMotion } = useReduceMotion();
 
 const themeMeta = computed(() => ({
 	system: {
 		icon: "lucide:monitor",
-		label: t("common.system"),
+		label: ts("common.system"),
 	},
 	light: {
 		icon: "lucide:sun",
-		label: t("common.light"),
+		label: ts("common.light"),
 	},
 	dark: {
 		icon: "lucide:moon",
-		label: t("common.dark"),
+		label: ts("common.dark"),
 	},
 	midnight: {
 		icon: "lucide:sparkles",
-		label: t("common.midnight_experimental"),
+		label: ts("common.midnight_experimental"),
 	},
 }));
 

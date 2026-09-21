@@ -1,9 +1,9 @@
 <template>
-	<nav class="guild-rail hidden lg:flex" :aria-label="t('dashboard.server_rail_aria')">
+	<nav class="guild-rail hidden lg:flex" :aria-label="ts('dashboard.server_rail_aria')">
 		<NuxtLink
 			to="/"
 			class="guild-rail-home"
-			:aria-label="t('header.home', { name: 'WolfStar' })"
+			:aria-label="ts('header.home', { name: 'WolfStar' })"
 		>
 			<IconsWolfstar class="size-7 text-primary" aria-hidden="true" />
 		</NuxtLink>
@@ -40,8 +40,8 @@
 		<NuxtLink
 			to="/profile"
 			class="guild-rail-add"
-			:aria-label="t('dashboard.server_rail_all')"
-			:title="t('dashboard.server_rail_all')"
+			:aria-label="ts('dashboard.server_rail_all')"
+			:title="ts('dashboard.server_rail_all')"
 		>
 			<UIcon name="heroicons:plus" class="size-5.5" aria-hidden="true" />
 		</NuxtLink>
@@ -60,7 +60,7 @@ const { currentGuildId, guilds } = defineProps<{
 	pending?: boolean;
 }>();
 
-const { t } = useI18n();
+const { ts } = useI18n();
 
 const servers = computed(() => selectDashboardRailGuilds(guilds));
 </script>

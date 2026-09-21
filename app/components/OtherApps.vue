@@ -14,13 +14,13 @@
 				<p
 					class="mb-4 font-mono text-xs font-semibold tracking-(--home-ls-label) text-primary uppercase"
 				>
-					{{ t("marketing.other_apps.eyebrow") }}
+					{{ ts("marketing.other_apps.eyebrow") }}
 				</p>
 				<h2
 					id="home-apps-heading"
 					class="text-4xl leading-[1.05] font-bold tracking-(--home-ls-tight) text-base-content md:text-5xl"
 				>
-					{{ t("marketing.other_apps.title") }}
+					{{ ts("marketing.other_apps.title") }}
 				</h2>
 			</div>
 
@@ -36,7 +36,7 @@
 						:src="app.avatar"
 						width="96"
 						height="96"
-						:alt="t('marketing.other_apps.logo_alt', { app: app.name })"
+						:alt="ts('marketing.other_apps.logo_alt', { app: app.name })"
 						loading="lazy"
 						class="size-24 shrink-0 rounded-[1.25rem]"
 					/>
@@ -44,7 +44,7 @@
 						<p
 							class="font-mono text-xs tracking-(--home-ls-label) text-muted uppercase"
 						>
-							{{ t("marketing.other_apps.also_from") }}
+							{{ ts("marketing.other_apps.also_from") }}
 						</p>
 						<h3 class="text-3xl font-bold tracking-(--home-ls-tight) text-base-content">
 							{{ app.name }}
@@ -62,7 +62,7 @@
 								icon="ph:plus-circle-fill"
 								class="justify-center"
 							>
-								{{ t("marketing.other_apps.invite", { app: app.name }) }}
+								{{ ts("marketing.other_apps.invite", { app: app.name }) }}
 							</UButton>
 							<UButton
 								:to="app.explore"
@@ -70,10 +70,10 @@
 								variant="soft"
 								class="justify-center"
 							>
-								{{ t("marketing.other_apps.explore", { app: app.name }) }}
+								{{ ts("marketing.other_apps.explore", { app: app.name }) }}
 							</UButton>
 							<span v-if="app.invite === '#'" class="font-mono text-xs text-muted">
-								{{ t("marketing.other_apps.invite_pending") }}
+								{{ ts("marketing.other_apps.invite_pending") }}
 							</span>
 						</div>
 					</div>
@@ -88,5 +88,5 @@ const { apps } = defineProps<{
 	apps: readonly OtherApp[];
 }>();
 
-const { t } = useI18n();
+const { ts } = useI18n();
 </script>

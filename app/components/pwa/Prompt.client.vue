@@ -4,14 +4,14 @@
 			class="flex items-center gap-3 rounded-full bg-base-200 px-4 py-3 shadow-lg ring-1 ring-base-100"
 		>
 			<span class="text-lg" aria-hidden="true">✨</span>
-			<div class="text-sm font-medium">{{ t("pwa.update_available") }}</div>
-			<UButton color="primary" size="xs" :label="t('pwa.reload')" @click="reload" />
+			<div class="text-sm font-medium">{{ ts("pwa.update_available") }}</div>
+			<UButton color="primary" size="xs" :label="ts('pwa.reload')" @click="reload" />
 			<UButton
 				color="neutral"
 				variant="ghost"
 				size="xs"
 				icon="heroicons:x-mark-20-solid"
-				:aria-label="t('pwa.dismiss')"
+				:aria-label="ts('pwa.dismiss')"
 				@click="dismiss"
 			/>
 		</div>
@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n();
+const { ts } = useI18n();
 
 interface DocumentWithActiveVT extends Document {
 	readonly activeViewTransition: ViewTransition | null;

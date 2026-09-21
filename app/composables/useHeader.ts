@@ -1,7 +1,7 @@
 import type { NavigationMenuItem } from "@nuxt/ui";
 
 export function useHeader() {
-	const { t } = useI18n();
+	const { ts } = useI18n();
 
 	// Safely inject appName with fallback to prevent SSR issues
 	const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"));
@@ -17,28 +17,28 @@ export function useHeader() {
 
 	const featureLinks = computed(() => [
 		{
-			description: t("nav.moderation_tools_description"),
+			description: ts("nav.moderation_tools_description"),
 			icon: "lucide:shield-check",
-			label: t("nav.moderation_tools"),
+			label: ts("nav.moderation_tools"),
 			to: "/wolfstar#moderation-tools",
 		},
 		{
-			description: t("nav.advanced_logging_description"),
+			description: ts("nav.advanced_logging_description"),
 			icon: "lucide:file-text",
-			label: t("nav.advanced_logging"),
+			label: ts("nav.advanced_logging"),
 			to: "/wolfstar#advanced-logging",
 		},
 		{
-			description: t("nav.moderation_logs_description"),
+			description: ts("nav.moderation_logs_description"),
 			icon: "lucide:search",
-			label: t("nav.moderation_logs"),
+			label: ts("nav.moderation_logs"),
 			to: "/wolfstar#moderation-logs",
 		},
 	]);
 
 	const featuresGroup = computed<NavigationMenuItem>(() => ({
 		children: featureLinks.value,
-		label: t("nav.features"),
+		label: ts("nav.features"),
 		// The desktop panel is rendered by `AppHeader`'s `#features-content` slot.
 		slot: "features",
 	}));
@@ -48,14 +48,14 @@ export function useHeader() {
 			// `avatar` feeds the desktop panel, `icon` the vertical mobile menu,
 			// which renders no avatar of its own.
 			avatar: { alt: apps.WolfStar.name, src: apps.WolfStar.avatar },
-			description: t("nav.wolfstar_description"),
+			description: ts("nav.wolfstar_description"),
 			icon: "ph:shield-duotone",
 			label: apps.WolfStar.name,
 			to: apps.WolfStar.explore,
 		},
 		{
 			avatar: { alt: apps.Staryl.name, src: apps.Staryl.avatar },
-			description: t("nav.staryl_description"),
+			description: ts("nav.staryl_description"),
 			icon: "lucide:twitch",
 			label: apps.Staryl.name,
 			to: apps.Staryl.explore,
@@ -64,13 +64,13 @@ export function useHeader() {
 
 	const applicationsGroup = computed<NavigationMenuItem>(() => ({
 		children: applicationLinks.value,
-		label: t("nav.applications"),
+		label: ts("nav.applications"),
 		// The desktop panel is rendered by `AppHeader`'s `#applications-content` slot.
 		slot: "applications",
 	}));
 
 	const commandsLink = computed<NavigationMenuItem>(() => ({
-		label: t("nav.commands"),
+		label: ts("nav.commands"),
 		to: "/commands",
 		// No dropdown caret, so it keeps even padding where the groups leave room for one.
 		ui: { link: "px-4" },
@@ -88,7 +88,7 @@ export function useHeader() {
 		commandsLink.value,
 		{
 			icon: "lucide:github",
-			label: t("nav.github"),
+			label: ts("nav.github"),
 			rel: "noopener noreferrer",
 			target: "_blank",
 			to: "https://github.com/wolfstar-project/wolfstar.rocks",

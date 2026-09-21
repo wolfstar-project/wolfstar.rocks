@@ -1,10 +1,10 @@
 <template>
-	<UHeader class="app-navbar" :title="t('header.brand')" :aria-label="t('header.site_header')">
+	<UHeader class="app-navbar" :title="ts('header.brand')" :aria-label="ts('header.site_header')">
 		<template #left>
 			<NuxtLink
 				class="flex items-center gap-2.5"
 				:to="currentApp.explore"
-				:aria-label="t('header.home', { name: currentApp.name })"
+				:aria-label="ts('header.home', { name: currentApp.name })"
 			>
 				<AppLogoMark v-if="currentApp.name === 'WolfStar'" class="h-20 w-45" />
 				<span
@@ -23,7 +23,7 @@
 				:items="desktopLinks"
 				variant="link"
 				content-orientation="vertical"
-				:aria-label="t('nav.main_navigation')"
+				:aria-label="ts('nav.main_navigation')"
 				:ui="{
 					link: 'h-9 gap-1 rounded-full pr-3 pl-4 text-sm font-medium text-muted hover:text-base-content data-[state=open]:bg-base-300 data-[state=open]:text-base-content',
 					linkTrailingIcon: 'size-3.5',
@@ -95,7 +95,7 @@
 			<div class="hidden items-center gap-2 md:flex">
 				<UButton
 					v-if="currentApp.invite !== '#'"
-					:label="t('header.add_app')"
+					:label="ts('header.add_app')"
 					size="sm"
 					color="primary"
 					:to="currentApp.invite"
@@ -105,7 +105,7 @@
 					<LazyAppHeaderAuth />
 					<template #fallback>
 						<UButton
-							:label="t('header.sign_in')"
+							:label="ts('header.sign_in')"
 							size="md"
 							color="primary"
 							variant="soft"
@@ -118,12 +118,12 @@
 			</div>
 		</template>
 		<template #body>
-			<nav class="flex min-h-0 flex-1 flex-col gap-6" :aria-label="t('nav.mobile_menu')">
+			<nav class="flex min-h-0 flex-1 flex-col gap-6" :aria-label="ts('nav.mobile_menu')">
 				<UNavigationMenu
 					orientation="vertical"
 					:items="mobileLinks"
 					class="-mx-1"
-					:aria-label="t('nav.mobile_navigation')"
+					:aria-label="ts('nav.mobile_navigation')"
 					:ui="{
 						link: 'rounded-lg px-3 py-3 text-base font-medium',
 						childLink: 'rounded-lg px-3 py-2.5 text-sm',
@@ -135,7 +135,7 @@
 				<div class="mt-auto flex flex-col items-center gap-3 border-t border-default pt-5">
 					<UButton
 						v-if="currentApp.invite !== '#'"
-						:label="t('header.add_app')"
+						:label="ts('header.add_app')"
 						size="md"
 						color="primary"
 						:to="currentApp.invite"
@@ -146,7 +146,7 @@
 						<template #fallback>
 							<div class="flex justify-center">
 								<UButton
-									:label="t('header.sign_in')"
+									:label="ts('header.sign_in')"
 									size="md"
 									color="primary"
 									variant="soft"
@@ -164,7 +164,7 @@
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n();
+const { ts } = useI18n();
 const { applicationLinks, currentApp, desktopLinks, featureLinks, mobileLinks } = useHeader();
 
 /**

@@ -4,8 +4,8 @@
 			<UInput
 				v-model="q"
 				icon="i-lucide-search"
-				:placeholder="t('guild_logs.search_placeholder')"
-				:aria-label="t('guild_logs.search_aria')"
+				:placeholder="ts('guild_logs.search_placeholder')"
+				:aria-label="ts('guild_logs.search_aria')"
 				class="max-w-sm min-w-48"
 			/>
 			<USelect
@@ -16,7 +16,7 @@
 				label-key="label"
 				icon="i-lucide-filter"
 				class="w-48"
-				:aria-label="t('guild_logs.filter_action')"
+				:aria-label="ts('guild_logs.filter_action')"
 			/>
 		</div>
 		<ActivitySection
@@ -27,10 +27,10 @@
 			:max-visible="total"
 			empty-icon="i-lucide-gavel"
 			:empty-title="
-				warningsOnly ? t('guild_logs.no_warnings') : t('guild_logs.no_moderation_cases')
+				warningsOnly ? ts('guild_logs.no_warnings') : ts('guild_logs.no_moderation_cases')
 			"
-			:empty-description="debouncedQ ? t('guild_logs.no_filter_match') : undefined"
-			:refresh-label="t('guild_logs.refresh_moderation')"
+			:empty-description="debouncedQ ? ts('guild_logs.no_filter_match') : undefined"
+			:refresh-label="ts('guild_logs.refresh_moderation')"
 			record-label="case"
 			@refresh="refresh()"
 		>
@@ -61,7 +61,7 @@ import { formatTimeAgo } from "@vueuse/core";
 const UBadge = resolveComponent("UBadge");
 const UUser = resolveComponent("UUser");
 const { guildData } = useGuildData();
-const { t } = useI18n();
+const { ts } = useI18n();
 
 const { warningsOnly } = defineProps<{
 	warningsOnly?: boolean;
@@ -78,7 +78,7 @@ if (warningsOnly) {
 
 const selectedTypeCode = ref<number | null>(null);
 const actionTypeItems = computed(() => [
-	{ label: t("guild_logs.all_actions"), value: null },
+	{ label: ts("guild_logs.all_actions"), value: null },
 	...MODERATION_TYPE_FILTER_VALUES,
 ]);
 
@@ -103,12 +103,12 @@ const { entries, total, status, refresh } = useModerationLog({
 const columns = computed<TableColumn<ModerationLogEntry>[]>(() => [
 	{
 		accessorKey: "caseId",
-		header: t("guild_logs.columns.case"),
+		header: ts("guild_logs.columns.case"),
 		cell: ({ row }) => h("span", { class: "text-sm font-medium" }, `#${row.original.caseId}`),
 	},
 	{
 		accessorKey: "typeName",
-		header: t("guild_logs.columns.action"),
+		header: ts("guild_logs.columns.action"),
 		cell: ({ row }) =>
 			h(
 				UBadge,
@@ -122,11 +122,11 @@ const columns = computed<TableColumn<ModerationLogEntry>[]>(() => [
 	},
 	{
 		id: "target",
-		header: t("guild_logs.columns.user"),
+		header: ts("guild_logs.columns.user"),
 		cell: ({ row }) => {
 			const member = row.original.targetMember;
 			return h(UUser, {
-				name: member ? auditLogMemberName(member) : t("guild_logs.unknown"),
+				name: member ? auditLogMemberName(member) : ts("guild_logs.unknown"),
 				avatar: member ? auditLogMemberAvatar(member) : undefined,
 				size: "sm",
 			});
@@ -134,11 +134,11 @@ const columns = computed<TableColumn<ModerationLogEntry>[]>(() => [
 	},
 	{
 		id: "moderator",
-		header: t("guild_logs.columns.moderator"),
+		header: ts("guild_logs.columns.moderator"),
 		cell: ({ row }) => {
 			const member = row.original.moderatorMember;
 			return h(UUser, {
-				name: member ? auditLogMemberName(member) : t("guild_logs.unknown"),
+				name: member ? auditLogMemberName(member) : ts("guild_logs.unknown"),
 				avatar: member ? auditLogMemberAvatar(member) : undefined,
 				size: "sm",
 			});
@@ -146,9 +146,9 @@ const columns = computed<TableColumn<ModerationLogEntry>[]>(() => [
 	},
 	{
 		accessorKey: "reason",
-		header: t("guild_logs.columns.reason"),
+		header: ts("guild_logs.columns.reason"),
 		cell: ({ row }) => {
-			const reason = row.original.reason ?? t("guild_logs.no_reason");
+			const reason = row.original.reason ?? ts("guild_logs.no_reason");
 			return h(
 				"span",
 				{
@@ -161,7 +161,7 @@ const columns = computed<TableColumn<ModerationLogEntry>[]>(() => [
 	},
 	{
 		accessorKey: "createdAt",
-		header: t("guild_logs.columns.date"),
+		header: ts("guild_logs.columns.date"),
 		cell: ({ row }) =>
 			h(
 				"time",

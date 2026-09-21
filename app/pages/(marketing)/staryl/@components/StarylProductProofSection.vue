@@ -10,13 +10,13 @@
 			<p
 				class="mb-4 font-mono text-xs font-semibold tracking-(--home-ls-label) text-primary uppercase"
 			>
-				{{ t("marketing.staryl.proof.eyebrow") }}
+				{{ ts("marketing.staryl.proof.eyebrow") }}
 			</p>
 			<h2
 				id="staryl-product-heading"
 				class="text-4xl leading-[1.05] font-bold tracking-(--home-ls-tight) text-base-content md:text-5xl"
 			>
-				{{ t("marketing.staryl.proof.title") }}
+				{{ ts("marketing.staryl.proof.title") }}
 			</h2>
 		</div>
 
@@ -55,26 +55,26 @@
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n();
+const { ts } = useI18n();
 
 const proofSteps = computed(() => [
 	{
-		description: t("marketing.staryl.proof.step_1_body"),
+		description: ts("marketing.staryl.proof.step_1_body"),
 		icon: "ph:twitch-logo-duotone",
 		index: "01",
-		title: t("marketing.staryl.proof.step_1_title"),
+		title: ts("marketing.staryl.proof.step_1_title"),
 	},
 	{
-		description: t("marketing.staryl.proof.step_2_body"),
+		description: ts("marketing.staryl.proof.step_2_body"),
 		icon: "ph:arrow-right",
 		index: "02",
-		title: t("marketing.staryl.proof.step_2_title"),
+		title: ts("marketing.staryl.proof.step_2_title"),
 	},
 	{
-		description: t("marketing.staryl.proof.step_3_body"),
+		description: ts("marketing.staryl.proof.step_3_body"),
 		icon: "ph:users-three-duotone",
 		index: "03",
-		title: t("marketing.staryl.proof.step_3_title"),
+		title: ts("marketing.staryl.proof.step_3_title"),
 	},
 ]);
 </script>

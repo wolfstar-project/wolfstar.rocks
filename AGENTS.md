@@ -105,7 +105,7 @@ pnpm i18n:check:fix              # Sync locale keys (empty placeholders for miss
 pnpm vp run i18n:report          # Fail on missing/unused/dynamic i18n keys in app/**
 pnpm i18n:report:fix             # Remove unused keys from all locale feature files
 pnpm vp run i18n:schema          # Regenerate i18n/schemas/*.schema.json from en/*
-pnpm vp run build:lunaria        # Build Lunaria dashboard + status.json
+pnpm vp run build:lunaria        # Build Lunaria status.json
 pnpm tolgee:push                 # Push extracted strings to Tolgee (project 33768)
 pnpm tolgee:pull                 # Pull translations from Tolgee and remap into i18n/locales/
 pnpm tolgee:ensure-languages     # Create any Tolgee project languages missing from .tolgeerc.cjs

@@ -1,4 +1,4 @@
-import type { CommandLogData } from "#server/database";
+import type { CommandLogEntry } from "#shared/types/command-log";
 import { db } from "#server/database/prisma";
 import { fallbackMember, resolveGuildMembers } from "#server/utils/audit/resolve-members";
 import { CommandLogQuerySchema } from "#shared/schemas";
@@ -51,21 +51,21 @@ export default defineWrappedCachedResponseHandler(
 			...new Set(rows.map((row) => String(row.userId))),
 		]);
 
-		const entries: CommandLogData[] = rows.map((row) => {
+		const entries: CommandLogEntry[] = rows.map((row) => {
 			const userId = String(row.userId);
 			const member = memberMap.get(userId) ?? fallbackMember(userId);
 			return {
 				id: row.id,
-				guildId: row.guildId,
-				userId: row.userId,
+				guildId: String(row.guildId),
+				userId,
 				commandName: row.commandName,
 				commandType: row.commandType,
-				commandId: row.commandId ?? null,
+				commandId: row.commandId === null ? null : String(row.commandId),
 				subcommand: row.subcommand ?? null,
-				channelId: row.channelId ?? null,
+				channelId: row.channelId === null ? null : String(row.channelId),
 				success: row.success,
 				errorReason: row.errorReason ?? null,
-				executedAt: new Date(row.executedAt),
+				executedAt: row.executedAt,
 				latencyMs: row.latencyMs ?? null,
 				metadata: { member },
 			};

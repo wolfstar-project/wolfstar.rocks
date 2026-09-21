@@ -68,7 +68,7 @@ describe("ModerationLogTable", () => {
 				typeName: "Ban",
 				reason: "Spam",
 				referenceId: null,
-				duration: null,
+				duration: 0,
 				metadata: { archived: false, completed: false, temporary: false },
 				createdAt: "2026-05-15T12:00:00.000Z",
 			},

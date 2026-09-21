@@ -1,30 +1,65 @@
-export const ModerationTypeCode = {
-	Warning: 1,
-	Mute: 2,
+/**
+ * The moderation actions V7 stores, as its `ModerationActionType` native enum
+ * spells them. This is the identity the database holds; the numeric codes below
+ * exist only so the dashboard can keep filtering by a scalar.
+ */
+export const MODERATION_ACTIONS = [
+	"AddRole",
+	"RemoveRole",
+	"Nickname",
+	"AddWarning",
+	"RemoveWarning",
+	"Timeout",
+	"TimeoutEnd",
+	"Kick",
+	"Softban",
+	"Ban",
+	"Unban",
+] as const;
+
+export type ModerationAction = (typeof MODERATION_ACTIONS)[number];
+
+/**
+ * Filter key per action, and the only bridge between V7's enum and the numeric
+ * `typeCode` the dashboard's query string carries.
+ *
+ * Where an action is a V6 type under a new name it keeps that type's number, so
+ * existing links and the warnings tab keep working (`AddWarning` is V6's
+ * `Warning` = 1, `Nickname` is `SetNickname` = 12). The three actions V6 had no
+ * type for get numbers that were free in that range. Nothing reads these from
+ * the database any more — V7 stores the name — so they are a dashboard-local
+ * key, not part of the bot's contract.
+ */
+export const MODERATION_ACTION_CODE = {
+	AddRole: 13,
+	RemoveRole: 14,
+	Nickname: 12,
+	AddWarning: 1,
+	RemoveWarning: 15,
+	Timeout: 26,
+	TimeoutEnd: 27,
 	Kick: 3,
 	Softban: 4,
 	Ban: 5,
-	VoiceMute: 6,
-	VoiceKick: 7,
-	RestrictedReaction: 8,
-	RestrictedEmbed: 9,
-	RestrictedAttachment: 10,
-	RestrictedVoice: 11,
-	SetNickname: 12,
-	AddRole: 13,
-	RemoveRole: 14,
-	Timeout: 26,
-} as const;
+	Unban: 16,
+} as const satisfies Record<ModerationAction, number>;
 
-export type ModerationTypeName = keyof typeof ModerationTypeCode;
+export type ModerationTypeName = ModerationAction;
 
-// Reverse map: SmallInt -> canonical name
-const CODE_TO_NAME = new Map<number, ModerationTypeName>(
-	(Object.entries(ModerationTypeCode) as [ModerationTypeName, number][]).map(([k, v]) => [v, k]),
+const CODE_TO_ACTION = new Map<number, ModerationAction>(
+	(Object.entries(MODERATION_ACTION_CODE) as [ModerationAction, number][]).map(([name, code]) => [
+		code,
+		name,
+	]),
 );
 
-export function decodeModerationType(code: number): ModerationTypeName | "Unknown" {
-	return CODE_TO_NAME.get(code) ?? "Unknown";
+/** Names the action a filter code selects, or `null` when no action uses it. */
+export function moderationActionFromCode(code: number): ModerationAction | null {
+	return CODE_TO_ACTION.get(code) ?? null;
+}
+
+export function decodeModerationType(code: number): ModerationAction | "Unknown" {
+	return CODE_TO_ACTION.get(code) ?? "Unknown";
 }
 
 export interface ModerationMetadata {
@@ -50,6 +85,5 @@ export function decodeModerationMetadata(meta: number): ModerationMetadata {
 	};
 }
 
-export const MODERATION_TYPE_FILTER_VALUES: { value: number; label: string }[] = (
-	Object.entries(ModerationTypeCode) as [ModerationTypeName, number][]
-).map(([label, value]) => ({ value, label }));
+export const MODERATION_TYPE_FILTER_VALUES: { value: number; label: string }[] =
+	MODERATION_ACTIONS.map((label) => ({ value: MODERATION_ACTION_CODE[label], label }));

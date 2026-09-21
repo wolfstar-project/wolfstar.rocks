@@ -7,10 +7,10 @@ import { isCI, isTest } from "std-env";
 /**
  * Auto-generates ephemeral secrets required for test and CI builds.
  *
- * @onmax/nuxt-better-auth requires a non-empty, 32+ character secret; nuxt-og-image
- * requires an HMAC secret when strict mode is enabled. In production both are
- * supplied via environment variables. In CI the prebuilt server runs without those
- * env vars, so this module bakes random values into the build output at build time.
+ * nuxt-og-image requires an HMAC secret when strict mode is enabled. In production
+ * it is supplied via an environment variable. In CI the prebuilt server runs without
+ * that env var, so this module bakes a random value into the build output at build
+ * time. Better Auth needs no secret here: auth is clientOnly against the bot server.
  *
  * Guards preserve any value already present (e.g. from a local .env file) so
  * local development is unaffected.

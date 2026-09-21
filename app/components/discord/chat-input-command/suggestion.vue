@@ -88,6 +88,14 @@ const ariaLabel = computed(() => {
 	@apply grid min-h-12 cursor-pointer grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-md px-2 py-1.5 max-md:items-start max-md:gap-x-2.5 max-md:gap-y-0 max-md:py-2;
 }
 
+:global([data-theme="light"]) .discord-slash-command-suggestion {
+	--discord-slash-command-suggestion-hover: oklch(95.74% 0.004 264);
+	--discord-slash-command-suggestion-active: oklch(92.64% 0.006 264);
+	--discord-slash-command-suggestion-name: oklch(21.15% 0.009 264);
+	--discord-slash-command-suggestion-description: oklch(47.12% 0.012 264);
+	--discord-slash-command-suggestion-app: oklch(47.12% 0.012 264);
+}
+
 .discord-slash-command-suggestion:not(.discord-slash-command-suggestion-disabled):hover,
 .discord-slash-command-suggestion-active {
 	background-color: var(--discord-slash-command-suggestion-hover);

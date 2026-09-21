@@ -47,4 +47,8 @@ const label = computed(() => labelOverride ?? SlashCommandApps[app].label);
 	color: var(--discord-slash-command-suggestion-group-header);
 	background-color: var(--discord-slash-command-suggestions-bg, oklch(23.47% 0.005 272.95));
 }
+
+:global([data-theme="light"]) .discord-slash-command-suggestion-group-header {
+	--discord-slash-command-suggestion-group-header: oklch(21.15% 0.009 264);
+}
 </style>

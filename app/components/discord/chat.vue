@@ -1,6 +1,11 @@
 <template>
 	<section class="discord-chat" :aria-label="`${channelName} channel chat`">
-		<DiscordScrollbar auto-hide class="discord-chat-scrollbar">
+		<DiscordScrollbar
+			auto-hide
+			focusable
+			:viewport-label="`${channelName} channel messages`"
+			class="discord-chat-scrollbar"
+		>
 			<!-- Short channels: pin welcome + messages as one block above the composer. -->
 			<div class="discord-chat-scroller-inner mt-auto">
 				<DiscordChannelWelcome :channel-name :date :date-time :topic />
@@ -63,6 +68,10 @@ defineSlots<ChatSlots>();
 
 	@apply flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden font-whitney;
 	background-color: var(--discord-chat-bg);
+}
+
+:global([data-theme="light"]) .discord-chat {
+	--discord-chat-bg: oklch(98.17% 0.002 264);
 }
 
 .discord-chat-scrollbar {

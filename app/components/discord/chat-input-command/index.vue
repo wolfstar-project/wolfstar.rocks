@@ -83,6 +83,14 @@ const ariaLabel = computed(() => {
 	@apply inline font-whitney text-sm whitespace-nowrap;
 }
 
+:global([data-theme="light"]) .discord-slash-command-composed {
+	--discord-slash-command-composed-name: oklch(21.15% 0.009 264);
+	--discord-slash-command-option-name: oklch(47.12% 0.012 264);
+	--discord-slash-command-option-value: oklch(21.15% 0.009 264);
+	--discord-slash-command-option-focused: oklch(57.7% 0.209 273.88 / 0.2);
+	--discord-slash-command-option-placeholder: oklch(47.12% 0.012 264);
+}
+
 .discord-slash-command-composed-name,
 .discord-slash-command-composed-segment {
 	@apply font-semibold;

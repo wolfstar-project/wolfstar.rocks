@@ -44,7 +44,8 @@
 - Use the `onError` callback for error logging
 - Validate query strings with shared Valibot schemas from `shared/schemas/` via `getValidatedQuery(event, (body) => parse(Schema, body))`
 - For paginated guild log routes, use stable cache keys that include the guild id, route segment, and `url.search`
-- `defineWrappedResponseHandler`/`defineWrappedCachedResponseHandler` reject outdated browser sessions before auth, rate limiting, or cache resolution: `isClientOutdated()` from `nuxt-skew-protection/server` throws a 409 (with an `x-client-outdated` response header) so stale clients never consume quota or read data shaped for a newer server build
+- `defineWrappedResponseHandler`/`defineWrappedCachedResponseHandler` reject outdated browser sessions before auth, rate limiting, or cache resolution: `isClientOutdated()` from `nuxt-skew-protection/server` throws a 409 (with an `x-client-outdated` response header) so stale clients never consume quota or read data shaped for a newer server build (header name: `CLIENT_OUTDATED_HEADER` in `shared/utils/skew-protection.ts`, shared with the client)
+- `app/plugins/skew-protection.client.ts` is what makes that 409 truthful and actionable, and must not be removed while `skewProtection.updateStrategy` is `"polling"`. `isClientOutdated()` compares the `__nkpv` cookie against the server build id, but that cookie is only written by the module's Nitro middleware on document responses and by `createSkewConnection()` — a plugin that only ships with the `sse`/`ws`/adapter strategies. Marketing routes are prerendered and served statically, so a visitor entering through one keeps whatever build id last rendered an SSR document for them and every `/api/**` call 409s even though the browser runs the current build, unfixable by reloading. The plugin pins the cookie to the running build (via `resolveSkewCookie()`, whose attributes must keep matching the middleware's or the browser stores a second cookie), registers the `app:manifest:update` hook that populates `useSkewProtection().manifest` — otherwise `isAppOutdated` stays false until the lazy, `DeferredMount`-gated prompt mounts — and wraps `globalThis.fetch` to re-check the manifest on a real 409. That wrapper is the only global seam: Nuxt's auto-imported `$fetch` is a const captured from `#build/fetch` before any plugin runs, so replacing `globalThis.$fetch` would miss every existing call site, while `ofetch` resolves `globalThis.fetch` per request
 
 ## Vue Component Patterns
 
@@ -53,17 +54,24 @@
 - Place feature-specific components in grouped directories once a feature has multiple pieces, e.g. feedback UI in `app/components/feedback/`, OAuth status UI in `app/components/oauth/` (`StatusPanel.vue`, shared by all `app/pages/oauth/*.vue` for loading/success/error states)
 - In guild-settings `mapToGuildData()`/`calculateChanges()` functions, assign values onto `Partial<GuildData>` with `setGuildDataChange()` from `#shared/utils/guild-settings-map` instead of an `as any`/`as never` cast — it skips `undefined` so untouched keys stay out of PATCH payloads while keeping key/value types checked
 - Fatal errors render through `app/error.vue` → `app/components/ErrorPage.vue` (built on Nuxt UI's `UError`), with copy sourced from a dedicated `errors` i18n feature file (not `common`/`components`). Because `error.vue` replaces the app root on fatal errors, it must `await loadLocaleMessages(locale.value)` itself before translating — the normal per-route locale preloading doesn't run
+- `DiscordEmbed`'s `theme` prop (`app/components/discord/embed.vue`) wins over the ambient app-wide `data-theme` selector: `.discord-embed--light` applies whenever `theme === "light"`, and `:global([data-theme="light"] .discord-embed):not(.discord-embed--dark)` applies the same light colors when `theme` is omitted and the ambient theme is light — both selectors share one light color-variable declaration block so there's a single place to update Discord light-theme colors. Omitting `theme` follows the ambient theme instead of defaulting to dark.
 
 ## Auth and Feedback
 
-- Authentication is **clientOnly** against the WolfStar bot Better Auth server (`auth.clientOnly: true`). There is no local `server/auth.config.ts`, no Nuxt `/api/auth/**`, and no `serverAuth()` / `requireUserSession()` — see https://better-auth.nuxt.dev/guides/external-auth-backend
-- `app/auth.config.ts` uses `defineClientAuth()` with `baseURL` = `runtimeConfig.public.apiBaseUrl` (bot origin). Keep `NUXT_PUBLIC_SITE_URL` as the frontend origin
-- Login (`app/pages/oauth/login.vue`) calls `useAuthClient().signIn.social({ provider: "discord" })` with absolute frontend `callbackURL` / `errorCallbackURL` so redirects land on this site, not the bot
+- Authentication is **clientOnly** against the WolfStar bot Better Auth server (`auth.clientOnly: true`), on `better-auth` + `@nuxtjs/better-auth` (renamed from the deprecated `@onmax/nuxt-better-auth`). There is no local `server/auth.config.ts`, no Nuxt `/api/auth/**`, and no `serverAuth()` / `requireUserSession()` — see https://better-auth.nuxt.dev/guides/external-auth-backend
+- `app/auth.config.ts` uses `defineClientAuth()` with `baseURL` = `runtimeConfig.public.apiBaseUrl` (bot origin). Keep `NUXT_PUBLIC_SITE_URL` as the frontend origin. Under `import.meta.test` it returns an empty `baseURL` so Better Auth falls back to `window.location.origin`: `build:test` sets `NUXT_PUBLIC_SITE_URL=https://wolfstar.rocks` for correct SEO/OG output but serves the prebuilt app on `http://localhost:5678`, where a configured production base URL would be blocked by CORS
+- Redirect targets live in `nuxt.config.ts` under `auth.redirects` (`login`, `guest`, `authenticated`, `logout`) alongside `redirectQueryKey: "next"`, which must stay `"next"` because that is the query key `/oauth/login` and `/oauth/callback` read
+- Route protection lives in `definePageMeta({ auth })`, not in `routeRules`: the route-rule `auth` keys are untyped in clientOnly mode. `/oauth/login` carries `auth: { only: "guest", redirectTo: "/profile" }` (its `/login` alias shares the route record, so it is covered too) and the guild pages carry `auth: "user"`
+- `/oauth/login` (aliased at `/login`) starts sign-in with `useSignIn("social")` in `onMounted`, not the raw `useAuthClient()?.signIn.social`: the action handle never throws, so a failed hand-off renders a retry panel instead of an endless spinner. Its `callbackURL` / `errorCallbackURL` must be **absolute** frontend URLs (built from `window.location.origin`), or Better Auth resolves them against the bot API origin and the redirect lands on the bot
+- `app/pages/oauth/callback.vue` loads the fresh session through `fetchFreshSession()`, which wraps `fetchSessionWithRetry()` (`app/utils/oauth-session-retry.ts`) around a plain `fetchSession()` — never `fetchSession({ force: true })`. `force: true` bypasses the jwe cookie cache the callback just wrote and races the eventually-consistent secondary storage behind it, surfacing a false "session not found" right after a successful sign-in; the retry backoff (`attemptDelays()`, a generator over `DEFAULT_RETRY_DELAYS`) covers the storage-read fallback while the write propagates
+- The same page also runs the sapphire hop (`completeBotOauthCallback()` / `buildBotOauthAuthorizeUrl()` from `shared/utils/bot-oauth.ts`) to obtain the bot's `SAPPHIRE_AUTH` cookie, and retries a `prompt=none` silent-auth failure with `prompt=consent` when a post-login redirect is pending
 - Mock authentication in Nuxt component tests with `mockAuth()` from `test/nuxt/utils/auth.ts` (wraps `mockNuxtImport("useUserSession", ...)` plus an `$authorization` provide fallback) instead of hand-rolling `useUserSession`/`$authorization` mocks per spec
 - `server/plugins/authorization-resolver.ts` always resolves `null` user/tokens (no SSR session hydration). Authenticated bot data is fetched from the browser via `$api` with `credentials: "include"`
-- Client code uses `useUserSession()` (`user`, `loggedIn`, `ready`, `fetchSession()`, `signOut()`) against the bot auth origin
+- Client code uses `useUserSession()` (`user`, `loggedIn`, `ready`, `fetchSession()`, `signOut()`) for session state, and the action-handle composables (`useSignIn()`, `useSignUp()`, `useAuthClientAction()`) for auth actions that need loading/error state
 - `useSessionRefresh()` only calls `fetchSession()` (no Nuxt `/api/auth/refresh`)
 - Feedback UI uses the custom Sentry feedback flow under `app/components/feedback/`
+- `useAuthErrorMessage()` (`app/composables/useAuthErrorMessage.ts`) takes the whole failure — an `AuthActionError` from `useSignIn()`, a raw `?error=` query value, or a repeated query array — and tries `auth.errors.<CODE>` before `auth.errors.<MESSAGE>`, falling back to the message text. Better Auth's `code` is the stable translation key; `message` is only a fallback for failures that carry no code. When a provider's code has no matching i18n key (e.g. Better Auth's `INVALID_CODE`, which localizes as `INVALID_CALLBACK_REQUEST`), add the mapping to `AUTH_ERROR_CODE_MISMATCHES` in the same file instead of adding a duplicate i18n key
+- The local session helper in `server/utils/wrappedEventHandler.ts` is called `resolveHandlerSession`, not `getUserSession`: the module auto-imports a server util of the latter name into every `server/` file, and a local declaration silently shadows it module-wide
 - Keep feedback validation in `shared/schemas/feedback.ts` so forms and submit handlers share the same Valibot schema
 
 ## Settings and Preferences
@@ -82,11 +90,10 @@ pnpm dev:pwa                     # Development server with local PWA behavior en
 pnpm build                       # Production build
 pnpm build:test                  # Test-mode production build through vite-plus
 pnpm generate                    # Static generation
-pnpm generate-pwa-icons          # Regenerate PWA icon assets
-pnpm knip:fix                    # Auto-fix unused files, exports, and dependencies
 pnpm preview                     # Preview production build locally
 pnpm lint:fix                    # Run linter and auto-fix issues (oxlint + oxfmt)
 pnpm typecheck                   # TypeScript type checking
+pnpm vp run knip                 # Report unused files, exports, and dependencies
 pnpm vp run i18n:check           # Audit locale feature files against en/*
 pnpm i18n:check:fix              # Sync locale keys (empty placeholders for missing)
 pnpm vp run i18n:report          # Fail on missing/unused/dynamic i18n keys in app/**
@@ -96,14 +103,11 @@ pnpm vp run build:lunaria        # Build Lunaria dashboard + status.json
 pnpm tolgee:push                 # Push extracted strings to Tolgee (project 33768)
 pnpm tolgee:pull                 # Pull translations from Tolgee and remap into i18n/locales/
 pnpm tolgee:ensure-languages     # Create any Tolgee project languages missing from .tolgeerc.cjs
-pnpm tolgee:extract              # Print strings the Tolgee CLI would extract (dry run)
 pnpm test                        # Run all Vitest projects
 pnpm test:unit                   # Run unit tests
 pnpm test:nuxt                   # Nuxt component/API tests
 pnpm test:browser                # Playwright E2E tests against a prebuilt app
 pnpm test:browser:prebuilt       # Playwright E2E tests against an existing prebuilt app
-pnpm test:browser:ui             # Playwright UI mode against a prebuilt app
-pnpm test:browser:update         # Update Playwright snapshots
 pnpm test:a11y                   # Lighthouse accessibility checks in dark and light modes
 pnpm test:a11y:prebuilt          # Lighthouse accessibility checks against an existing prebuilt app
 pnpm test:perf                   # Lighthouse performance checks
@@ -112,34 +116,48 @@ pnpm test:bench                  # Vitest benchmark suite
 pnpm start:playwright:webserver  # Preview a test build on port 5678 for Playwright
 pnpm audit:verify                # Replay and verify the AuditEvent hash chain
 pnpm design:lint                 # Lint .claude/DESIGN.md with designmd
+pnpm skills:install              # Install/refresh skill packages via skilld (--direct --agent codex)
+pnpm skills:list                 # List skill packages skilld currently tracks
 pnpm storybook                   # Start Storybook dev server (http://localhost:6006)
 pnpm build-storybook             # Build static Storybook output
-pnpm chromatic                   # Publish Storybook to Chromatic for visual review
 pnpm vp run zizmor               # Lint GitHub Actions workflows for security issues (zizmor)
 pnpm vp run zizmor:fix           # Auto-fix zizmor findings
 pnpm vp run lint:type-aware      # Opt-in Oxlint type-aware linting (tsgolint); not part of the default lint/CI gate
 pnpm prisma:push                 # Push schema changes (development)
 pnpm prisma:migrate:dev          # Create and apply migration
-pnpm prisma:migrate:dev:create   # Create a migration without applying it
 pnpm prisma:migrate:diff         # Check migration drift against the Prisma schema
 pnpm prisma:migrate:deploy       # Apply migrations in deployment environments
-pnpm prisma:migrate:status       # Inspect migration status
-pnpm prisma:migrate:resolve      # Resolve migration history state
-pnpm prisma:migrate:reset        # Reset the local database
 pnpm prisma:generate             # Regenerate Prisma client
-pnpm prisma:generate:watch       # Regenerate Prisma client in watch mode
 pnpm prisma:seed                 # Seed the database
 pnpm prisma:studio               # Visual database editor (http://localhost:5555)
-pnpm update:interactive          # Interactive dependency updates with taze
+```
+
+Rarely-used tasks are no longer wrapped in `package.json`; run the underlying
+binary through `pnpm exec` instead:
+
+```bash
+pnpm exec prisma migrate dev --create-only  # Create a migration without applying it
+pnpm exec prisma migrate status             # Inspect migration status
+pnpm exec prisma migrate resolve            # Resolve migration history state
+pnpm exec prisma migrate reset              # Reset the local database
+pnpm exec prisma generate --watch           # Regenerate Prisma client in watch mode
+pnpm exec knip --fix                        # Auto-fix unused files, exports, and dependencies
+pnpm exec taze                              # Interactive dependency updates
+pnpm exec tolgee extract print              # Print strings the Tolgee CLI would extract (dry run)
+pnpm exec pwa-assets-generator              # Regenerate PWA icon assets
+pnpm test:browser:prebuilt --ui             # Playwright UI mode against a prebuilt app
+pnpm test:browser:prebuilt --update-snapshots  # Update Playwright snapshots
 ```
 
 ## Localization (i18n)
 
 - `i18n/locales/en/*.json` is the source of truth; every other locale carries the same key set
 - **Untranslated keys are empty strings, never a copy of the English text** — an English copy is indistinguishable from a real translation for Tolgee, Lunaria and translators, and it hides regional variants (`es-419` merges `es/*` then `es-419/*`)
-- `config/i18n-empty-placeholders.ts` provides the Vite plugin (registered in `nuxt.config.ts` under `vite.plugins`) that drops empty leaves from `i18n/locales/**/*.json` at build time, so vue-i18n falls back to `en-US` instead of rendering `""`. Locale _types_ are still generated from the on-disk files, so stripped keys stay valid in `$t()` call sites
+- `i18n.langDir` points at `i18n/.locales-build/` (gitignored), not at `i18n/locales/`: `modules/i18n-strip-empty-messages.ts` regenerates that directory on every Nuxt startup as a placeholder-free mirror of the sources, and refreshes single files through `builder:watch` in dev. @nuxtjs/i18n v10's `experimental.optimizeMessageBundling` reads plain-JSON locale files straight from disk — bypassing every bundler plugin — and serves them as Nitro server assets from the `/_i18n/**` messages route, which is where the browser gets its messages in production, so stripping empty leaves has to happen before the module reads them. `config/i18n-empty-placeholders.ts` still supplies the Vite-side transform (registered from the `vite:extendConfig` hook in `nuxt.config.ts`) plus `prioritizeVueI18nResourceTransform()`, which keeps the vue-i18n resource compiler ahead of Vite+'s JSON transform. Locale _types_ are generated from the mirror, whose `en-US` copy carries the full key set, so stripped keys stay valid in `$t()` call sites
 - `pnpm i18n:check:fix` (`scripts/compare-translations.ts`) adds missing keys as `""` and removes extra keys
 - `.tolgeerc.cjs` pulls `states: ["TRANSLATED", "REVIEWED", "UNTRANSLATED"]`; without `UNTRANSLATED`, `scripts/tolgee-pull-remap.ts` would wipe untranslated keys from disk on every sync (see wolfstar-project/wolfstar#240)
+- The `$schema` pointer in each locale file is editor tooling metadata and never migrates through Tolgee in either direction. `pnpm tolgee:push` runs `scripts/tolgee-push-prepare.ts` first, which mirrors `i18n/locales/**` into the gitignored `i18n/.tolgee-push/` with `$schema` stripped — `.tolgeerc.cjs` points `push.files[*].path` at that mirror, never at `i18n/locales/`, so the pointer cannot become a platform key translators see and edit. On the way back, `scripts/tolgee-pull-remap.ts` discards whatever `$schema` the export carries and re-inserts `localeSchemaPointer(namespace)` (`../../schemas/{namespace}.schema.json`) as the first key, so a stale key left on the platform from an earlier push can never overwrite the local pointer
+- `.tolgeerc.cjs`'s `NAMESPACES` is derived from `i18n/locale-features.json` (`.json` suffix stripped), not hardcoded, so the Tolgee namespace list and the app's feature-file list can't drift — a new feature file (e.g. `errors.json`, `marketing.json`) is picked up automatically. All eight namespaces put the project at ~907 string keys, past the Tolgee free plan's 500-key cap (per-project, not per-language, so `--languages` scoping doesn't help); confirm the plan has been upgraded, or scope `push.files` (not `patterns`, which only drives extraction and doesn't limit what `push.files` uploads) to a subset of namespaces, before running `pnpm tolgee:push` for real
 
 ## Prisma and Database Conventions
 
@@ -148,6 +166,12 @@ pnpm update:interactive          # Interactive dependency updates with taze
 - Use raw SQL migrations for database features Prisma cannot express, such as partial indexes on nullable columns
 - Do not add Prisma `@@index` entries for the manually-managed partial indexes on `Moderation.createdAt`; see migration `20260515000000_command_log_and_moderation_indexes`
 - `AuditEvent` is hash-chained and tamper-evident; `CommandLog` is not hash-chained and is written directly by the bot/shared PostgreSQL producer
+
+## Storage and Caching
+
+- Netlify's Nitro storage (`cache`, `fetch-cache`, `skew-protection`) mounts a resilient unstorage driver at `shared/utils/storage/netlify-blobs-resilient.ts` (registered from `modules/cache.ts`, which activates on any non-test build where `std-env`'s `provider === "netlify"` — production and deploy previews alike, not just production) instead of the stock `unstorage/drivers/netlify-blobs`. It fails open on transient failures instead of surfacing a 500 or an unhandled Sentry error: `getKeys`/`getItem` swallow both mid-body TCP resets (`isTransientNetworkError()`) and Netlify's short-lived edge token expiring mid-request (`isTransientBlobsTokenError()`, a `BlobsInternalError: Token expired` that self-heals on the next call) — see `shared/utils/storage/transient-network-error.ts`. `setItem`/`removeItem` get a couple of short retries first via `withFailOpenRetry()` (mirroring `resilient-fetch.ts`'s 3-attempt/short-backoff shape), since a dropped mutation leaves stale data behind rather than just missing a read
+- `createResilientNetlifyBlobsFetch()` (`shared/utils/storage/resilient-fetch.ts`) wraps `fetch` for that driver: it fully buffers each response body before returning, because `@netlify/blobs` only retries when `fetch()` itself throws, and a 200 with a truncated body would otherwise fail later inside `res.json()`/`res.arrayBuffer()`, past that retry loop. It skips buffering for null-body statuses (101/103/204/205/304) — constructing a `Response` with a non-null body for those throws a `TypeError` under Node 24's undici
+- The app's own rate limiter (`wolfstar:ratelimiter`, `wolfstar:auth-ratelimiter` in `modules/cache.ts`) mounts straight to `cloudflareKVHttp`, not the resilient Blobs driver — the fail-open behavior above only covers Netlify Blobs-backed storage (`defineCachedFunction`, the i18n handler cache, SWR fetch caching, and — on Netlify builds only, production or preview — `nuxt-skew-protection`'s `version-manifest.json` + rollback asset storage; `nuxt.config.ts`'s `skewProtection.storage` falls back to a plain `fs-lite` mount at `./.cache/skew-protection` everywhere else (local dev, CI, non-Netlify deploys), which has no transient-network failures to fail open on). None of this covers the `__nkpv` cookie itself, which is written on document responses and pinned client-side by `app/plugins/skew-protection.client.ts`, unrelated to this storage driver
 
 ## Guild Logs and Activity Patterns
 
@@ -293,7 +317,7 @@ All styling must use semantic tokens or CSS custom properties — no hardcoded c
 
 It checks:
 
-1. **Raw Tailwind palette classes** in `<template>` — e.g. `text-red-500`, `bg-blue-700`. Use semantic Nuxt UI classes (`text-primary`, `text-muted`, `bg-success`) or DaisyUI tokens instead.
+1. **Raw Tailwind palette classes** in `<template>` — e.g. `text-red-500`, `bg-blue-700`. Use semantic Nuxt UI classes (`text-primary`, `text-muted`, `bg-success`) instead.
 2. **Hex literals** in `<style>` — e.g. `#5865f2`. Move to a scoped CSS custom property declaration.
 3. **Color functions with literal arguments** in `<style>` — e.g. `hsla(235, 85.6%, 64.7%, 0.5)`. Move to a scoped CSS custom property. Allowed patterns:
     - `oklch(from var(--token) l c h / alpha)` — relative-color syntax
@@ -328,13 +352,13 @@ Prefer these semantic classes before reaching for palette colors:
 
 <!-- nuxt-skill-hub:start -->
 
-Use the `nuxt-dashboard` skill as the Nuxt router/entrypoint for tasks in this repository.
+Use the `nuxt` skill as the Nuxt router/entrypoint for tasks in this repository.
 
 <!-- nuxt-skill-hub:end -->
 
 <!-- skilld -->
 
-Before modifying code, evaluate each installed skill against the current task.
-For each skill, determine YES/NO relevance and invoke all YES skills before proceeding.
+Before modifying code, check .agents/skills/ for relevant skills.
+Read the SKILL.md for any matching package before proceeding.
 
 <!-- /skilld -->

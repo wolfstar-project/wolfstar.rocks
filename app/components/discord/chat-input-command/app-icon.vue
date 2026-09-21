@@ -53,6 +53,11 @@ const dimension = computed(() => Dimensions[size]);
 	background-color: var(--discord-slash-command-app-icon-bg);
 }
 
+:global([data-theme="light"]) .discord-slash-command-app-icon {
+	--discord-slash-command-app-icon-bg: oklch(92.64% 0.006 264);
+	--discord-slash-command-app-icon-glyph: oklch(47.12% 0.012 264);
+}
+
 .discord-slash-command-app-icon-header {
 	@apply size-4;
 }

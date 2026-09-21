@@ -77,6 +77,15 @@ describe("i18n locale files", () => {
 		}
 	});
 
+	it("uses strings for every translation leaf", () => {
+		for (const locale of listLocaleCodes()) {
+			const invalidEntries = collectEntries(loadMergedLocale(locale) as Nested).filter(
+				([, value]) => typeof value !== "string",
+			);
+			expect(invalidEntries, `${locale} contains non-string translation values`).toEqual([]);
+		}
+	});
+
 	it("never bulk-copies the English source into another language", () => {
 		// `en-US` / `en-GB` are English variants layered on top of `en/*`, so their
 		// values are legitimately identical to the reference.

@@ -195,6 +195,18 @@ function toggleMembers() {
 	color: var(--discord-channel-header-text);
 }
 
+:global([data-theme="light"]) .discord-channel-header {
+	--discord-channel-header-bg: oklch(98.17% 0.002 264);
+	--discord-channel-header-border: oklch(92.64% 0.006 264);
+	--discord-channel-header-edge: oklch(21.15% 0.009 264 / 0.08);
+	--discord-channel-header-text: oklch(21.15% 0.009 264);
+	--discord-channel-header-muted: oklch(47.12% 0.012 264);
+	--discord-channel-header-search-bg: oklch(93.74% 0.005 264);
+	--discord-channel-header-search-border: oklch(92.64% 0.006 264);
+	--discord-channel-header-search-placeholder: oklch(47.12% 0.012 264);
+	--discord-channel-header-search-icon: oklch(21.15% 0.009 264);
+}
+
 .discord-channel-header-desktop {
 	@apply flex h-12 items-center justify-between gap-3 pr-3 pl-4;
 }

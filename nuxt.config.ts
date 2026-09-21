@@ -3,7 +3,10 @@ import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
 import { isCI, isTest, provider } from "std-env";
 import { currentLocales } from "./config/i18n";
-import { stripEmptyI18nMessagesPlugin } from "./config/i18n-empty-placeholders";
+import {
+	prioritizeVueI18nResourceTransform,
+	stripEmptyI18nMessagesPlugin,
+} from "./config/i18n-empty-placeholders";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -35,7 +38,7 @@ export default defineNuxtConfig({
 		"@nuxtjs/i18n",
 		"@sentry/nuxt/module",
 		"evlog/nuxt",
-		"@onmax/nuxt-better-auth",
+		"@nuxtjs/better-auth",
 		"nuxt-vitalizer",
 		"stale-dep/nuxt",
 		"@nuxt/test-utils/module",
@@ -47,6 +50,30 @@ export default defineNuxtConfig({
 		],
 		...(isTest || isCI || isStorybook ? [] : [netlifyNuxt]),
 	],
+
+	// @nuxtjs/better-auth. Redirect targets are centralised here so route rules,
+	// page meta, `useSignIn('social')` and `signOut()` all agree on where users
+	// land, instead of each call site hardcoding its own path.
+	auth: {
+		// Better Auth runs on the WolfStar bot API; Nuxt hosts no auth server.
+		// See https://better-auth.nuxt.dev/guides/external-auth-backend
+		clientOnly: true,
+		redirects: {
+			// Aliased to /oauth/login, which immediately hands off to Discord.
+			login: "/login",
+			// Signed-in users who open a guest-only route (the login hand-off).
+			guest: "/profile",
+			// Fallback landing page after a completed sign-in, used when no safe
+			// `?next=` is present and no explicit onSuccess/callbackURL is given.
+			authenticated: "/profile",
+			logout: "/",
+		},
+		preserveRedirect: true,
+		// The app has used `next` since before the module owned redirects; keeping
+		// the module on the same key means a module-issued redirect to /login is
+		// readable by the login page instead of being silently dropped.
+		redirectQueryKey: "next",
+	},
 
 	content: {
 		// Use Node.js built-in sqlite (available in Node v22.5+) to avoid
@@ -161,11 +188,6 @@ export default defineNuxtConfig({
 		name: "WolfStar",
 	},
 
-	auth: {
-		clientOnly: true,
-		redirectQueryKey: "next",
-	},
-
 	colorMode: {
 		preference: "system", // Default theme
 		dataValue: "theme", // Activate data-theme in <html> tag
@@ -209,7 +231,7 @@ export default defineNuxtConfig({
 		options: {
 			rules: {
 				"meta-refresh": "off",
-				// NuxtUI/DaisyUI theme class merging produces duplicate utility classes
+				// Nuxt UI theme class merging produces duplicate utility classes
 				"no-dup-class": "off",
 				// NuxtUI components may render empty id attributes internally
 				"attribute-allowed-values": "off",
@@ -254,9 +276,9 @@ export default defineNuxtConfig({
 			},
 		},
 		"/oauth/callback": {
-			// Discord returns through this route before the server middleware forwards
-			// the OAuth response to Better Auth. A prerendered copy bypasses that
-			// middleware and leaves the browser on the callback status page.
+			// Better Auth (on the bot API) redirects the browser back to this route
+			// after the Discord code exchange; the page then reads the fresh session
+			// client-side. A prerendered copy would ship a stale status page.
 			prerender: false,
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 		},
@@ -267,6 +289,10 @@ export default defineNuxtConfig({
 			prerender: false,
 			robots: true,
 		},
+		// `/login` is an alias of `/oauth/login` and shares its route record, so the
+		// page's own `definePageMeta({ auth })` guard covers both paths. Route-rule
+		// `auth` keys are untyped in clientOnly mode, so protection for the guilds
+		// pages lives in their page meta too (`auth: "user"`).
 		"/login": { prerender: false },
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
 		// /profile hosts local UI settings (theme/locale/motion) for guests and the
@@ -298,9 +324,8 @@ export default defineNuxtConfig({
 				"Cache-Control": "public, max-age=0, must-revalidate",
 			},
 		},
-		// Changelog pulls live GitHub releases from ungh.cc, so it revalidates via
-		// ISR (1 hour) rather than prerendering against the external API at build time.
-		"/changelog": { appLayout: "default", robots: true, ...getISRConfig(60 * 60) },
+		"/changelog": { appLayout: "default", prerender: true, robots: true },
+		"/changelog/**": { appLayout: "default", prerender: true, robots: true },
 		// Nuxt Studio admin UI + auth callbacks — SSR-only, never index or prerender.
 		"/_studio": { prerender: false, robots: false },
 		"/_studio/**": { prerender: false, robots: false },
@@ -313,6 +338,31 @@ export default defineNuxtConfig({
 
 	features: {
 		inlineStyles: true,
+	},
+
+	hooks: {
+		"vite:extendConfig"(config) {
+			if (!config.plugins) {
+				throw new Error(
+					"vite:extendConfig exposed no plugin list, so the i18n empty-placeholder transform could not be registered.",
+				);
+			}
+			if (
+				!config.plugins.some(
+					(plugin) =>
+						typeof plugin === "object" &&
+						plugin !== null &&
+						!Array.isArray(plugin) &&
+						"name" in plugin &&
+						plugin.name === "wolfstar:i18n-empty-placeholders",
+				)
+			) {
+				config.plugins.unshift(stripEmptyI18nMessagesPlugin());
+			}
+			// Vite+ snapshots transform hooks before configResolved, so prioritize
+			// vue-i18n here while the inline plugin list is still mutable.
+			prioritizeVueI18nResourceTransform(config.plugins);
+		},
 	},
 
 	experimental: {
@@ -384,11 +434,6 @@ export default defineNuxtConfig({
 		css: {
 			transformer: "lightningcss",
 		},
-		plugins: [
-			// Untranslated keys are stored as empty strings; drop them so vue-i18n
-			// falls back to English instead of rendering "".
-			stripEmptyI18nMessagesPlugin(),
-		],
 		optimizeDeps: {
 			include: [
 				"@discordjs/core/http-only",
@@ -708,9 +753,13 @@ export default defineNuxtConfig({
 		strategy: "no_prefix",
 		detectBrowserLanguage: false,
 		// Paths are resolved relative to `restructureDir` (default "i18n/"), so this
-		// points at i18n/locales/. The vue-i18n runtime config (fallbackLocale,
-		// datetime/number formats) is auto-loaded from i18n/i18n.config.ts.
-		langDir: "locales",
+		// points at i18n/.locales-build/ — the generated, placeholder-free mirror of
+		// i18n/locales/ written by modules/i18n-strip-empty-messages.ts. Pointing the
+		// module at the sources instead would ship untranslated `""` placeholders,
+		// which vue-i18n renders verbatim instead of falling back to en-US. The
+		// vue-i18n runtime config (fallbackLocale, datetime/number formats) is
+		// auto-loaded from i18n/i18n.config.ts.
+		langDir: ".locales-build",
 		/**
 		 * Nitro-side locale detection runs in `render:before` and calls
 		 * `useI18nContext()` before checking whether the path is a Nuxt page.

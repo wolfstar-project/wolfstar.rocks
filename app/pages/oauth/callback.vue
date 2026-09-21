@@ -127,7 +127,7 @@ const hasCallbackParams = computed(() =>
 );
 const isError = computed(() => Boolean(route.query.error) && !oauthCode.value);
 const isSessionLoading = ref(!isError.value);
-const errorMessage = computed(() => localizeAuthError(route.query.error as string | undefined));
+const errorMessage = computed(() => localizeAuthError(route.query.error));
 
 onMounted(() => {
 	void completeSignIn();
@@ -148,6 +148,21 @@ async function redirectToPostLoginNext(): Promise<void> {
 	});
 }
 
+/**
+ * Better Auth's callback has just written both the session cookie and the jwe
+ * cookie-cache cookie, so a plain fetch (cookie cache allowed) is the most
+ * reliable read right now: `force: true` would bypass that cache and race the
+ * eventually-consistent secondary storage it was written to moments ago,
+ * surfacing a false "session not found" after a successful sign-in. The retry
+ * backoff covers the storage-read fallback while the write propagates.
+ */
+function fetchFreshSession(): Promise<boolean> {
+	return fetchSessionWithRetry({
+		fetchSession: () => fetchSession(),
+		hasSession: () => loggedIn.value,
+	});
+}
+
 async function completeSignIn() {
 	try {
 		// Sapphire hop: exchange Discord code for `SAPPHIRE_AUTH` on the bot origin.
@@ -163,9 +178,7 @@ async function completeSignIn() {
 				});
 			}
 
-			await fetchSession({ force: true });
-
-			if (!loggedIn.value) {
+			if (!(await fetchFreshSession())) {
 				isSessionMissing.value = true;
 				return;
 			}
@@ -195,9 +208,9 @@ async function completeSignIn() {
 			return;
 		}
 
-		await fetchSession({ force: true });
+		const signedIn = await fetchFreshSession();
 
-		if (!loggedIn.value) {
+		if (!signedIn) {
 			isSessionMissing.value = true;
 			return;
 		}

@@ -1,4 +1,5 @@
-import type { Plugin } from "vite";
+import type { Plugin, PluginOption } from "vite";
+import MagicString from "magic-string";
 
 /**
  * Untranslated keys live in `i18n/locales/{locale}/*.json` as empty strings, so
@@ -14,10 +15,50 @@ import type { Plugin } from "vite";
  *
  * Locale *types* are generated from the on-disk files, so stripped keys stay
  * type-safe in `$t()` call sites.
+ *
+ * @nuxtjs/i18n reads plain-JSON locale files from disk rather than through the
+ * bundlers, so this transform alone is not enough: the files it loads are the
+ * already-stripped mirror written by `modules/i18n-strip-empty-messages.ts`.
  */
-const LOCALES_SEGMENT = "/i18n/locales/";
+// Both the translator-facing sources and the generated, placeholder-free mirror
+// `i18n.langDir` points at (see `modules/i18n-strip-empty-messages.ts`).
+const LOCALES_SEGMENTS = ["/i18n/locales/", "/i18n/.locales-build/"];
+const VUE_I18N_RESOURCE_PLUGIN = "unplugin-vue-i18n:resource";
+const EMPTY_PLACEHOLDERS_PLUGIN = "wolfstar:i18n-empty-placeholders";
+const ALREADY_ES_MODULE = /^\s*export\b/;
+const prioritizedResourcePlugins = new WeakSet<Plugin>();
+
+function isLocaleResource(path: string | undefined): path is string {
+	return (
+		!!path &&
+		path.endsWith(".json") &&
+		LOCALES_SEGMENTS.some((segment) => path.includes(segment))
+	);
+}
 
 type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
+type ApplyToEnvironment = NonNullable<Plugin["applyToEnvironment"]>;
+type AppliedPlugins = Awaited<ReturnType<ApplyToEnvironment>>;
+
+/**
+ * Both transforms depend on running before Vite's built-in JSON transform: the
+ * resource compiler cannot parse `export default {…}` as JSON, and skipping it
+ * silently would ship an uncompiled locale module that only fails at render
+ * time under a runtime-only vue-i18n build. Fail loudly with the locale path
+ * from either guard instead.
+ */
+function alreadyEsModuleMessage(plugin: string, id: string): string {
+	return `[${plugin}] ${id} was already transformed into an ES module before empty placeholders could be stripped; the plugin lost its "pre" transform position.`;
+}
+
+function isVitePlugin(candidate: PluginOption): candidate is Plugin {
+	return (
+		!!candidate &&
+		!Array.isArray(candidate) &&
+		typeof candidate === "object" &&
+		"name" in candidate
+	);
+}
 
 /**
  * Recursively remove empty-string leaves, and any object left empty by that
@@ -36,19 +77,136 @@ export function stripEmptyMessages(value: JsonValue): JsonValue | undefined {
 	return Object.keys(result).length > 0 ? result : undefined;
 }
 
+/**
+ * `applyToEnvironment` may either gate the plugin (boolean) or return the
+ * plugin(s) that actually run in that environment; only the latter carries
+ * transforms that still need prioritizing.
+ */
+function prioritizeAppliedPlugins(applied: AppliedPlugins): void {
+	if (typeof applied === "boolean") return;
+	prioritizeVueI18nResourceTransform(Array.isArray(applied) ? applied : [applied]);
+}
+
+/**
+ * Vite+ uses Rolldown's per-hook ordering for its built-in JSON transform.
+ * `enforce: "pre"` on unplugin-vue-i18n is therefore not sufficient to keep
+ * that resource compiler ahead of `vite:json`; without this explicit order it
+ * receives the JSON plugin's `export default` output and tries to parse it as
+ * JSON. This can be removed once unplugin-vue-i18n sets the hook order itself.
+ */
+export function prioritizeVueI18nResourceTransform(plugins: readonly PluginOption[]): void {
+	for (const candidate of plugins) {
+		if (Array.isArray(candidate)) {
+			prioritizeVueI18nResourceTransform(candidate);
+			continue;
+		}
+		if (!isVitePlugin(candidate)) continue;
+
+		const plugin = candidate;
+		if (
+			!plugin.name.includes(VUE_I18N_RESOURCE_PLUGIN) ||
+			prioritizedResourcePlugins.has(plugin)
+		) {
+			continue;
+		}
+
+		prioritizedResourcePlugins.add(plugin);
+
+		const applyToEnvironment = plugin.applyToEnvironment;
+		if (applyToEnvironment) {
+			plugin.applyToEnvironment = function (environment) {
+				const applied = applyToEnvironment.call(this, environment);
+				if (!(applied instanceof Promise)) {
+					prioritizeAppliedPlugins(applied);
+					return applied;
+				}
+
+				return applied.then((resolved: AppliedPlugins) => {
+					prioritizeAppliedPlugins(resolved);
+					return resolved;
+				}) as ReturnType<ApplyToEnvironment>;
+			};
+		}
+
+		if (!plugin.transform) continue;
+		const transform = plugin.transform;
+		const handler = typeof transform === "function" ? transform : transform.handler;
+		plugin.transform = {
+			...(typeof transform === "function" ? {} : transform),
+			order: "pre",
+			async handler(code, id, options) {
+				const path = id.split("?")[0]?.replaceAll("\\", "/");
+				if (isLocaleResource(path) && ALREADY_ES_MODULE.test(code)) {
+					throw new Error(alreadyEsModuleMessage(VUE_I18N_RESOURCE_PLUGIN, id));
+				}
+
+				return handler.call(this, code, id, options);
+			},
+		};
+	}
+}
+
+/**
+ * Parse a locale JSON source, drop the `$schema` tooling pointer and every empty
+ * placeholder, and serialize what is left. Shared with the Nuxt module that
+ * writes the locale mirror, so bundled and disk-read locale files are stripped
+ * by exactly the same rules.
+ */
+export function stripEmptyLocaleJson(code: string, source: string, plugin: string): string {
+	let parsed: Record<string, JsonValue>;
+	try {
+		parsed = JSON.parse(code) as Record<string, JsonValue>;
+	} catch (error) {
+		throw new Error(
+			`[${plugin}] failed to parse locale JSON ${source}: ${error instanceof Error ? error.message : String(error)}`,
+			{ cause: error },
+		);
+	}
+
+	// `$schema` is editor tooling metadata, not a translatable message.
+	const { $schema: _schema, ...messages } = parsed;
+	return JSON.stringify(stripEmptyMessages(messages) ?? {});
+}
+
 export function stripEmptyI18nMessagesPlugin(): Plugin {
 	return {
-		name: "wolfstar:i18n-empty-placeholders",
-		// Must run before Vite's JSON plugin turns the file into an ES module.
+		name: EMPTY_PLACEHOLDERS_PLUGIN,
+		// Registration order keeps this before the resource compiler; hook order
+		// keeps both transforms before Vite+'s built-in JSON transform.
 		enforce: "pre",
-		transform(code, id) {
-			const path = id.split("?")[0]?.replaceAll("\\", "/");
-			if (!path?.endsWith(".json") || !path.includes(LOCALES_SEGMENT)) return null;
+		// Modules that inject their Vite plugins from a later `vite:extendConfig`
+		// hook (@nuxt/kit's env-injection path, used whenever `config.environments`
+		// is missing — Storybook builds) land after nuxt.config's own hook, so
+		// prioritize again here: plugin `config()` hooks run once the inline plugin
+		// list is complete. `prioritizedResourcePlugins` keeps this idempotent.
+		config(config) {
+			prioritizeVueI18nResourceTransform(config.plugins ?? []);
+		},
+		transform: {
+			order: "pre",
+			handler(code, id) {
+				const path = id.split("?")[0]?.replaceAll("\\", "/");
+				if (!isLocaleResource(path)) return null;
 
-			// `$schema` is editor tooling metadata, not a translatable message.
-			const { $schema: _schema, ...messages } = JSON.parse(code) as Record<string, JsonValue>;
-			const stripped = stripEmptyMessages(messages) ?? {};
-			return { code: JSON.stringify(stripped), map: null };
+				// Losing the `pre` position lets Vite's own JSON transform run
+				// first; fail loudly with the locale path instead of a bare
+				// `SyntaxError` from `JSON.parse`.
+				if (ALREADY_ES_MODULE.test(code)) {
+					throw new Error(alreadyEsModuleMessage(EMPTY_PLACEHOLDERS_PLUGIN, id));
+				}
+
+				const rewritten = new MagicString(code);
+				rewritten.overwrite(
+					0,
+					code.length,
+					stripEmptyLocaleJson(code, id, EMPTY_PLACEHOLDERS_PLUGIN),
+				);
+
+				return {
+					code: rewritten.toString(),
+					map: rewritten.generateMap({ source: id, includeContent: true, hires: true }),
+				};
+			},
 		},
 	};
 }

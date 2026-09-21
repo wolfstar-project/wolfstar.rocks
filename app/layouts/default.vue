@@ -8,7 +8,12 @@
 		</a>
 		<AppHeader />
 
-		<UMain id="maincontent" tabindex="-1" :aria-label="t('a11y.main_content')">
+		<UMain
+			id="maincontent"
+			tabindex="-1"
+			class="focus:outline-none"
+			:aria-label="t('a11y.main_content')"
+		>
 			<slot></slot>
 		</UMain>
 
@@ -44,8 +49,7 @@ const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"
 	@apply flex min-h-screen flex-col;
 	position: relative;
 	background-color: var(--color-base-100);
-	/* Clip 100vw full-bleed bands (CTA/testimonials) that exceed the layout
-	   when a scrollbar/gutter is present. DaisyUI owns html/overflow, so clip here. */
+	/* Prevent wide interactive previews from creating page-level horizontal scroll. */
 	overflow-x: clip;
 }
 

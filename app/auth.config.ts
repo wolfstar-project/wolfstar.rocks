@@ -1,4 +1,4 @@
-import { defineClientAuth } from "@onmax/nuxt-better-auth/config";
+import { defineClientAuth } from "@nuxtjs/better-auth/config";
 
 /**
  * Client-only Better Auth: the WolfStar bot hosts the auth server.

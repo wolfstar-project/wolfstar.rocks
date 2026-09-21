@@ -3,6 +3,7 @@ import type { EventHandler, EventHandlerRequest, H3Error, H3Event } from "h3";
 import type { CacheOptions } from "nitropack/types";
 import { createHash } from "node:crypto";
 import { type PartialRateLimit, type RateLimit, RateLimitSchema } from "#shared/schemas";
+import { CLIENT_OUTDATED_HEADER } from "#shared/utils/skew-protection";
 import { Collection } from "@discordjs/collection";
 import { AsyncQueue } from "@sapphire/async-queue";
 import { cast, isObject } from "@sapphire/utilities";
@@ -87,7 +88,12 @@ function normalizeRateLimitOptions(
 	}
 }
 
-async function getUserSession(
+/**
+ * Named `resolveHandlerSession`, not `getUserSession`: @nuxtjs/better-auth
+ * auto-imports a server util of that name into every `server/` file, and a
+ * local declaration silently shadows it for the whole module.
+ */
+async function resolveHandlerSession(
 	options: DefinedWrappedResponseHandlerOptions,
 	_event: H3Event,
 ): Promise<AppSession | null> {
@@ -323,7 +329,7 @@ function throwRateLimited(
 
 function throwClientOutdated(event: H3Event, log: WrappedLogger): never {
 	log.info("Outdated client rejected before handler execution");
-	setResponseHeader(event, "x-client-outdated", "true");
+	setResponseHeader(event, CLIENT_OUTDATED_HEADER, "true");
 
 	throw createError({
 		message: "Client version outdated. Please refresh.",
@@ -346,7 +352,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 		throwClientOutdated(event, log);
 	}
 
-	const session = await getUserSession(options, event);
+	const session = await resolveHandlerSession(options, event);
 	const id = getIdentifier(event, session, options.rateLimit?.ipHeader);
 
 	// Run per-request authorization before rate limiting and the (possibly

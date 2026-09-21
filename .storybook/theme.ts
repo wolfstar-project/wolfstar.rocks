@@ -13,8 +13,8 @@ export default create({
 	colorPrimary: "#5865f2",
 	colorSecondary: "#6977a4",
 
-	// App chrome — mapped from the dark DaisyUI theme tokens
-	// base-100: oklch(25% 0.016 252), base-200: oklch(23% 0.014 253)
+	// App chrome — mapped from the dark WolfStar theme surfaces
+	// surface-100: oklch(25% 0.016 252), surface-200: oklch(23% 0.014 253)
 	appBg: "#1b1d2b",
 	appContentBg: "#1e2030",
 	appHoverBg: "#23253a",
@@ -26,7 +26,7 @@ export default create({
 	fontBase: '"Inter", ui-sans-serif, system-ui, sans-serif',
 	fontCode: '"JetBrains Mono", ui-monospace, monospace',
 
-	// Text — base-content: oklch(90% 0 0) ≈ #e4e4e4
+	// Text — content: oklch(90% 0 0) ≈ #e4e4e4
 	textColor: "#e4e4e4",
 	textInverseColor: "#1e2030",
 	textMutedColor: "#9098b8",

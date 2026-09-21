@@ -241,6 +241,16 @@ function onKeydown(event: KeyboardEvent) {
 	color: var(--discord-message-composer-muted);
 }
 
+:global([data-theme="light"]) .discord-message-composer {
+	--discord-message-composer-bg: oklch(93.74% 0.005 264);
+	--discord-message-composer-border: oklch(92.64% 0.006 264);
+	--discord-message-composer-text: oklch(21.15% 0.009 264);
+	--discord-message-composer-muted: oklch(47.12% 0.012 264);
+	--discord-message-composer-hover: oklch(21.15% 0.009 264 / 0.08);
+	--discord-message-composer-add-bg: oklch(47.12% 0.012 264);
+	--discord-message-composer-pill-bg: oklch(98.17% 0.002 264);
+}
+
 .discord-message-composer-button {
 	@apply inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded border-0 bg-transparent p-0;
 	color: inherit;

@@ -201,6 +201,17 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	border: 1px solid var(--discord-slash-command-suggestions-border);
 }
 
+:global([data-theme="light"]) .discord-slash-command-suggestions {
+	--discord-slash-command-suggestions-bg: oklch(98.17% 0.002 264);
+	--discord-slash-command-suggestions-border: oklch(21.15% 0.009 264 / 0.08);
+	--discord-slash-command-suggestions-sidebar: oklch(95.74% 0.004 264);
+	--discord-slash-command-suggestions-sidebar-active: oklch(92.64% 0.006 264);
+	--discord-slash-command-suggestions-sidebar-hover: oklch(93.74% 0.005 264);
+	--discord-slash-command-suggestions-sidebar-icon: oklch(47.12% 0.012 264);
+	--discord-slash-command-suggestions-header: oklch(47.12% 0.012 264);
+	--discord-slash-command-suggestions-divider: oklch(21.15% 0.009 264 / 0.08);
+}
+
 @media (width < 48rem) {
 	.discord-slash-command-suggestions {
 		/* Edge-to-edge above the composer — no floating side/bottom gaps. */

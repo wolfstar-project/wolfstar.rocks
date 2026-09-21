@@ -8,7 +8,9 @@
 -- written to no-op when the V7 objects already exist. The legacy V6 tables are
 -- renamed to "<name>_v6" rather than dropped: their rows (guild settings,
 -- moderation cases, audit chain) do not map onto the V7 columns without a
--- data-specific backfill, so they are kept for that backfill to read.
+-- data-specific backfill, so they are kept for that backfill to read. That
+-- rename waits until the bot has migrated the database, so this migration
+-- running first leaves the populated V6 tables under their original names.
 
 -- CreateSchema
 CREATE SCHEMA IF NOT EXISTS "public";
@@ -546,21 +548,34 @@ END $$;
 -- Each rename only runs when the V6 table is still present and has not been
 -- archived yet, so re-running the migration (or running it against a database
 -- the bot already migrated) changes nothing.
+--
+-- A populated V6 table is only archived once "Guild" holds rows, which means
+-- the bot has migrated the shared database to V7 and no longer reads the V6
+-- names. Renaming it earlier would point the bot's own queries at relations
+-- that no longer exist, so on a still-V6 database the rename is skipped and
+-- picked up by a later run. Empty V6 tables (a fresh database replaying the
+-- full migration history) have no reader to strand and are archived either way.
 DO $$
 DECLARE
     legacy TEXT;
+    bot_migrated BOOLEAN;
+    has_rows BOOLEAN;
 BEGIN
-    FOREACH legacy IN ARRAY ARRAY['guilds', 'moderation', 'schedule', 'migrations', 'audit_event', 'audit_chain_head', 'command_log']
+    bot_migrated := EXISTS (SELECT 1 FROM "Guild");
+
+    -- "user" is the V6 lower-case table; V7 adds a separate quoted "User".
+    FOREACH legacy IN ARRAY ARRAY['guilds', 'moderation', 'schedule', 'migrations', 'audit_event', 'audit_chain_head', 'command_log', 'user']
     LOOP
-        IF to_regclass(format('public.%I', legacy)) IS NOT NULL
-            AND to_regclass(format('public.%I', legacy || '_v6')) IS NULL
+        IF to_regclass(format('public.%I', legacy)) IS NULL
+            OR to_regclass(format('public.%I', legacy || '_v6')) IS NOT NULL
         THEN
+            CONTINUE;
+        END IF;
+
+        EXECUTE format('SELECT EXISTS (SELECT 1 FROM %I)', legacy) INTO has_rows;
+
+        IF bot_migrated OR NOT has_rows THEN
             EXECUTE format('ALTER TABLE %I RENAME TO %I', legacy, legacy || '_v6');
         END IF;
     END LOOP;
-
-    -- The V6 "user" table is lower-case; V7 adds a separate quoted "User".
-    IF to_regclass('public.user') IS NOT NULL AND to_regclass('public.user_v6') IS NULL THEN
-        EXECUTE 'ALTER TABLE "user" RENAME TO user_v6';
-    END IF;
 END $$;

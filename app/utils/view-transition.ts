@@ -1,7 +1,3 @@
-// `nextTick` is imported rather than auto-imported so this module also runs
-// under the plain-node unit test project, which has no Nuxt auto-imports.
-import { nextTick } from "vue";
-
 interface DocumentWithActiveViewTransition extends Document {
 	readonly activeViewTransition: ViewTransition | null;
 }

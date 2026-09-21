@@ -1,4 +1,5 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 import { startViewTransition } from "~/utils/view-transition";
 
 interface TestDocument {
@@ -15,6 +16,13 @@ function stubDocument(value: TestDocument | undefined): void {
 		writable: true,
 	});
 }
+
+// The module under test calls Nuxt's auto-imported `nextTick`, which this
+// plain-node project doesn't provide, so stand it up as a global the way the
+// Nuxt build does.
+beforeAll(() => {
+	Object.assign(globalThis, { nextTick });
+});
 
 afterEach(() => {
 	stubDocument(originalDocument as unknown as TestDocument);

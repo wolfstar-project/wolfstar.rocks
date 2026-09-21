@@ -32,7 +32,7 @@ export default defineWrappedCachedResponseHandler(
 		if (from) filtered = filtered.where((row) => row.executedAt.gte(asTimestampString(from)));
 		if (to) filtered = filtered.where((row) => row.executedAt.lte(asTimestampString(to)));
 		if (q) {
-			const pattern = `%${q}%`;
+			const pattern = containsPattern(q);
 			filtered = filtered.where((row) =>
 				or(row.commandName.ilike(pattern), row.errorReason.ilike(pattern)),
 			);

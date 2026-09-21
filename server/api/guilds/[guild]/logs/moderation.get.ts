@@ -77,7 +77,7 @@ export default defineWrappedCachedResponseHandler(
 		}
 		if (from) filtered = filtered.where((row) => row.createdAt.gte(asTimestampString(from)));
 		if (to) filtered = filtered.where((row) => row.createdAt.lte(asTimestampString(to)));
-		if (q) filtered = filtered.where((row) => row.reason.ilike(`%${q}%`));
+		if (q) filtered = filtered.where((row) => row.reason.ilike(containsPattern(q)));
 
 		const [rows, { total }] = await Promise.all([
 			filtered

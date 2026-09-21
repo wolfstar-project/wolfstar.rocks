@@ -53,6 +53,18 @@ describe("AppHeader", () => {
 				"Social updates for Discord",
 			);
 		});
+
+		it("dismisses the panel when an entry is selected", async () => {
+			const wrapper = await mountSuspended(AppHeader);
+			await openDesktopMenu(wrapper, "Features");
+			expect(wrapper.findAll(".app-navbar-row").length).toBeGreaterThan(0);
+
+			await wrapper.find(".app-navbar-row").trigger("click");
+			await new Promise((resolve) => setTimeout(resolve, 100));
+			await wrapper.vm.$nextTick();
+
+			expect(wrapper.findAll(".app-navbar-row")).toHaveLength(0);
+		});
 	});
 
 	describe("hydration safety", () => {

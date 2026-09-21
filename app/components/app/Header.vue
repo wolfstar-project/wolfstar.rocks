@@ -19,6 +19,7 @@
 			class="hidden gap-0.5 rounded-full border border-(--home-border-subtle) bg-base-200 p-1 lg:inline-flex"
 		>
 			<UNavigationMenu
+				v-model="openMenu"
 				:items="desktopLinks"
 				variant="link"
 				content-orientation="vertical"
@@ -35,7 +36,11 @@
 				<template #features-content>
 					<ul class="app-navbar-panel w-105">
 						<li v-for="feature of featureLinks" :key="feature.to">
-							<NuxtLink :to="feature.to" class="app-navbar-row items-start">
+							<NuxtLink
+								:to="feature.to"
+								class="app-navbar-row items-start"
+								@click="openMenu = ''"
+							>
 								<span class="app-navbar-row-icon">
 									<UIcon
 										:name="feature.icon"
@@ -59,7 +64,11 @@
 				<template #applications-content>
 					<ul class="app-navbar-panel w-75">
 						<li v-for="application of applicationLinks" :key="application.to">
-							<NuxtLink :to="application.to" class="app-navbar-row items-center">
+							<NuxtLink
+								:to="application.to"
+								class="app-navbar-row items-center"
+								@click="openMenu = ''"
+							>
 								<NuxtImg
 									:src="application.avatar.src"
 									width="32"
@@ -157,6 +166,14 @@
 <script setup lang="ts">
 const { t } = useI18n();
 const { applicationLinks, currentApp, desktopLinks, featureLinks, mobileLinks } = useHeader();
+
+/**
+ * Value of the open desktop dropdown, `""` when none is open. The rows in the
+ * custom content slots are plain links rather than `NavigationMenuLink`, so
+ * nothing dismisses the panel on its own — and since the header survives
+ * navigation, an in-page `#` target would otherwise stay covered by it.
+ */
+const openMenu = ref("");
 </script>
 
 <style scoped>

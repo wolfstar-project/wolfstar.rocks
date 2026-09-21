@@ -16,6 +16,7 @@ permissions:
 jobs:
   chromatic:
     name: 📚 Chromatic
+    if: github.repository == 'wolfstar-project/wolfstar.rocks'
     runs-on: ubuntu-24.04-arm
 
     steps:

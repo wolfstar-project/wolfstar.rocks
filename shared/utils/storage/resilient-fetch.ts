@@ -32,12 +32,19 @@ export function createResilientNetlifyBlobsFetch(
 	return async (input, init) => {
 		let lastError: unknown;
 
+		// Null-body statuses per the Fetch spec: constructing a Response with a
+		// non-null body for these codes throws a TypeError in Node.js 24's undici.
+		const NULL_BODY_STATUSES = new Set([101, 103, 204, 205, 304]);
+
 		for (let attempt = 0; attempt < maxAttempts; attempt++) {
 			try {
 				const response = await baseFetch(input, init);
 				// Materialize the body so incomplete transfers throw here (retryable)
 				// instead of later inside @netlify/blobs after fetchAndRetry returned.
-				const body = await response.arrayBuffer();
+				// Skip buffering for null-body statuses (e.g. 204 No Content).
+				const body = NULL_BODY_STATUSES.has(response.status)
+					? null
+					: await response.arrayBuffer();
 				return new Response(body, {
 					status: response.status,
 					statusText: response.statusText,

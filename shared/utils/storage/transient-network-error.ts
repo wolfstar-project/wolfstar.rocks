@@ -49,3 +49,18 @@ export function isTransientNetworkError(error: unknown): boolean {
 	}
 	return TRANSIENT_MESSAGE_RE.test(readErrorMessage(error));
 }
+
+function isNamedError(error: unknown, name: string): boolean {
+	return typeof error === "object" && error !== null && "name" in error && error.name === name;
+}
+
+/**
+ * Detects Netlify's short-lived edge token expiring mid-request (`BlobsInternalError:
+ * Failed to decode token: Token expired`). The token auto-refreshes on the next call,
+ * so this is safe to treat as transient rather than surfacing a 500 to the caller.
+ */
+export function isTransientBlobsTokenError(error: unknown): boolean {
+	return (
+		isNamedError(error, "BlobsInternalError") && /token expired/i.test(readErrorMessage(error))
+	);
+}

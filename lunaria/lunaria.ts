@@ -1,5 +1,5 @@
 import type { I18nStatus } from "../shared/types/i18n-status.ts";
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import process from "node:process";
 import { currentLocales } from "../config/i18n.ts";
@@ -113,6 +113,8 @@ function buildJsonStatus(): I18nStatus {
 
 const jsonStatus = buildJsonStatus();
 const outDir = "dist/lunaria";
+// The whole directory is published, so drop artifacts left by earlier runs (e.g. index.html).
+rmSync(outDir, { recursive: true, force: true });
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "status.json"), `${JSON.stringify(jsonStatus, null, 2)}\n`);
 // eslint-disable-next-line no-console

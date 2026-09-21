@@ -77,9 +77,6 @@ overrides:
     vite: catalog:vite-plus
     vitest: catalog:vite-plus
 
-patchedDependencies:
-    "@nuxt/test-utils": patches/@nuxt__test-utils.patch
-
 savePrefix: ""
 
 shellEmulator: true

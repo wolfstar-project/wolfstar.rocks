@@ -23,7 +23,7 @@ describe("buildDiscordLinkCard", () => {
 	it("produces a valid Components v2 payload", () => {
 		const payload = toComponentEmbed(buildDiscordLinkCard(options));
 
-		expect(payload.component).toMatchObject({ accent_color: 0xfd171b, type: 17 });
+		expect(payload.component).toMatchObject({ accent_color: 16_586_523, type: 17 });
 		expect(payload.component.components).toHaveLength(3);
 	});
 
@@ -49,7 +49,7 @@ describe("buildDiscordLinkCard", () => {
 			buildDiscordLinkCard({ ...options, accentColor: STARYL_ACCENT_COLOR }),
 		);
 
-		expect(payload.component).toMatchObject({ accent_color: 0x787c89 });
+		expect(payload.component).toMatchObject({ accent_color: 7_896_201 });
 	});
 
 	it("rejects a button label over Discord's 80 character limit", () => {

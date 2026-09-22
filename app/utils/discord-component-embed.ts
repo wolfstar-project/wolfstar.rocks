@@ -10,11 +10,15 @@ import {
 	type EmbedElement,
 } from "discord-component-embed";
 
-/** `--branding-wolfstar` (`oklch(63% 0.2502 28.13)`) clamped to sRGB, as the RGB integer Discord expects. */
-const WOLFSTAR_ACCENT_COLOR = 0xfd171b;
+// Decimal, not hex: oxlint's unicorn/number-literal-case wants uppercase hex
+// digits, oxfmt normalizes hex literals to lowercase — the two disagree, so a
+// hex literal can never satisfy both. Decimal sidesteps the conflict.
 
-/** `--branding-staryl` (`oklch(0.5873 0.0204 272.13)`) as the RGB integer Discord expects. */
-export const STARYL_ACCENT_COLOR = 0x787c89;
+/** `--branding-wolfstar` (`oklch(63% 0.2502 28.13)`) clamped to sRGB (`#FD171B`), as the RGB integer Discord expects. */
+const WOLFSTAR_ACCENT_COLOR = 16_586_523;
+
+/** `--branding-staryl` (`oklch(0.5873 0.0204 272.13)`) as the RGB integer Discord expects (`#787C89`). */
+export const STARYL_ACCENT_COLOR = 7_896_201;
 
 export interface DiscordLinkCardOptions {
 	title: string;

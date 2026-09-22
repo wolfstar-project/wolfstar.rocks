@@ -88,6 +88,7 @@
 		"@vueuse/router": "^14.2.1",
 		"better-auth": "^1.7.0",
 		"cnfast": "^0.1.0",
+		"discord-component-embed": "0.2.2",
 		"dotenv": "^17.4.2",
 		"evlog": "^2.22.3",
 		"feed": "^5.2.1",

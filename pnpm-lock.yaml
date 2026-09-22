@@ -152,6 +152,9 @@ importers:
       cnfast:
         specifier: ^0.1.0
         version: 0.1.0
+      discord-component-embed:
+        specifier: 0.2.2
+        version: 0.2.2(react@19.2.8)
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
@@ -7685,6 +7688,15 @@ packages:
 
   discord-api-types@0.38.52:
     resolution: {integrity: sha512-uwe9EKfbjsmgWc2fdFjvDbj+dQqx3lp7wqDCmIha0jInuU+xeQjkCK9tMMn+p7RXfdVQORCInq4cD3U2ymDmyg==}
+
+  discord-component-embed@0.2.2:
+    resolution: {integrity: sha512-jKbi5bwoT7HGP+sKRUkcOlL5ixmXitfxICY0A35mfTkxAnjJvOr7OCn3JYxQaP73pHu8jRs0jMFyyUHlTMlH7g==}
+    engines: {node: '>=24.11'}
+    peerDependencies:
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      react:
+        optional: true
 
   doctypes@1.1.0:
     resolution: {integrity: sha512-LLBi6pEqS6Do3EKQ3J0NqHWV5hhb78Pi8vvESYwyOy2c31ZEZVdtitdzsQsKb7878PEERhzUk0ftqGhG6Mz+pQ==}
@@ -21707,6 +21719,12 @@ snapshots:
   diff@9.0.0: {}
 
   discord-api-types@0.38.52: {}
+
+  discord-component-embed@0.2.2(react@19.2.8):
+    dependencies:
+      discord-api-types: 0.38.52
+    optionalDependencies:
+      react: 19.2.8
 
   doctypes@1.1.0: {}
 

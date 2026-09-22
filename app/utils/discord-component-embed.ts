@@ -11,10 +11,10 @@ import {
 } from "discord-component-embed";
 
 /** `--branding-wolfstar` (`oklch(63% 0.2502 28.13)`) clamped to sRGB, as the RGB integer Discord expects. */
-const WOLFSTAR_ACCENT_COLOR = 0xfd171b;
+const WOLFSTAR_ACCENT_COLOR = 0xFD171B;
 
 /** `--branding-staryl` (`oklch(0.5873 0.0204 272.13)`) as the RGB integer Discord expects. */
-export const STARYL_ACCENT_COLOR = 0x787c89;
+export const STARYL_ACCENT_COLOR = 0x787C89;
 
 export interface DiscordLinkCardOptions {
 	title: string;

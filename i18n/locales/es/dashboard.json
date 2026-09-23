@@ -38,6 +38,11 @@
 			"management": "",
 			"resources": ""
 		},
+		"picker": {
+			"description": "",
+			"empty": "",
+			"title": ""
+		},
 		"reset_changes": "Deshacer cambios",
 		"save_changes": "Guardar cambios",
 		"server_rail_all": "",

@@ -58,19 +58,31 @@ describe("modules guild settings", () => {
 		}
 	});
 
-	it("renders a toggle and a configure link for every module", async () => {
+	it("renders a toggle and a configure button for every module", async () => {
 		const wrapper = await mountSuspended(Modules);
 
 		await nextTick();
 
-		for (const module of GUILD_MODULES) {
-			expect(
-				wrapper
-					.find(`a[href="/guilds/123456789012345678/manage/moderation/${module.slug}"]`)
-					.exists(),
-			).toBeTruthy();
-		}
+		const configureButtons = wrapper
+			.findAll("button")
+			.filter((button) => button.text().includes("Configure"));
+
+		expect(configureButtons).toHaveLength(GUILD_MODULES.length);
 		expect(wrapper.findAll('[aria-label^="Toggle "]')).toHaveLength(GUILD_MODULES.length);
+	});
+
+	it("opens the module section from its configure button", async () => {
+		const wrapper = await mountSuspended(Modules);
+
+		await nextTick();
+
+		const configureButtons = wrapper
+			.findAll("button")
+			.filter((button) => button.text().includes("Configure"));
+		await configureButtons[1]!.trigger("click");
+		await nextTick();
+
+		expect(useActiveGuild().section.value).toBe("moderation/capitals");
 	});
 
 	it("initializes state and the enabled count from guildSettings", async () => {

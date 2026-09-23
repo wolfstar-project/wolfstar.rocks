@@ -71,7 +71,7 @@ export function countEnabledModules(settings: GuildModuleFlags | null | undefine
 	return GUILD_MODULES.filter((module) => settings[module.key] === true).length;
 }
 
-/** The dashboard page where a module is configured. */
-export function guildModulePath(guildId: string, slug: GuildModuleEntry["slug"]): string {
-	return `/guilds/${guildId}/manage/moderation/${slug}`;
+/** The `/app` section where a module is configured. */
+export function guildModuleSection(slug: GuildModuleEntry["slug"]): string {
+	return `moderation/${slug}`;
 }

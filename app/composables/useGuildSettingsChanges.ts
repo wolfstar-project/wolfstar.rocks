@@ -1,6 +1,5 @@
 import type { GuildData } from "#server/database";
 import type { Options as DeepMergeOptions } from "deepmerge";
-import { useRouteParams } from "@vueuse/router";
 import deepMerge from "deepmerge";
 
 // Overwrite arrays when merging
@@ -9,30 +8,49 @@ const mergeOptions: DeepMergeOptions = {
 };
 
 export function useGuildSettingsChanges() {
-	const guildId = useRouteParams("id", null, { transform: String });
+	const { activeGuildId } = useActiveGuild();
 
-	// Use guild-scoped state key
-	const guildSettingsChanges = useState<GuildData | undefined>(
-		`guild:${guildId.value}:settings:changes`,
-		() => undefined,
+	const store = useState<Record<string, GuildData | undefined>>(
+		"guild:settings:changes",
+		() => ({}),
 	);
-	const resetCounter = useState<number>(`guild:${guildId.value}:settings:resetCounter`, () => 0);
+	const resetCounters = useState<Record<string, number>>(
+		"guild:settings:resetCounter",
+		() => ({}),
+	);
+
+	const guildSettingsChanges = computed(() =>
+		activeGuildId.value ? store.value[activeGuildId.value] : undefined,
+	);
+	const resetCounter = computed(() =>
+		activeGuildId.value ? (resetCounters.value[activeGuildId.value] ?? 0) : 0,
+	);
+
+	const write = (changes: GuildData | undefined) => {
+		const guildId = activeGuildId.value;
+		if (!guildId) {
+			return;
+		}
+		store.value = { ...store.value, [guildId]: changes };
+	};
 
 	const mergeGuildSettings = (changes?: Partial<GuildData>) => {
 		if (!changes) {
-			guildSettingsChanges.value = undefined;
+			write(undefined);
 			return;
 		}
 
-		guildSettingsChanges.value = deepMerge<GuildData, Partial<GuildData>>(
-			guildSettingsChanges.value ?? ({} as GuildData),
-			changes,
-			mergeOptions,
+		write(
+			deepMerge<GuildData, Partial<GuildData>>(
+				guildSettingsChanges.value ?? ({} as GuildData),
+				changes,
+				mergeOptions,
+			),
 		);
 		log.info({
 			tag: "guild:settings:changes",
 			action: "merge_settings",
-			guildId: guildId.value,
+			guildId: activeGuildId.value,
 			keys: Object.keys(changes),
 		});
 	};
@@ -49,35 +67,35 @@ export function useGuildSettingsChanges() {
 		const current = { ...guildSettingsChanges.value };
 		delete current[key];
 
-		// If no changes remain, set to undefined
-		if (Object.keys(current).length === 0) {
-			guildSettingsChanges.value = undefined;
-		} else {
-			guildSettingsChanges.value = current as GuildData;
-		}
+		// If no changes remain, drop the entry entirely
+		write(Object.keys(current).length === 0 ? undefined : (current as GuildData));
 		log.info({
 			tag: "guild:settings:changes",
 			action: "remove_change",
-			guildId: guildId.value,
+			guildId: activeGuildId.value,
 			key,
 		});
 	};
 
 	const resetGuildSettingsChanges = () => {
-		guildSettingsChanges.value = undefined;
-		resetCounter.value += 1;
+		const guildId = activeGuildId.value;
+		if (!guildId) {
+			return;
+		}
+		write(undefined);
+		resetCounters.value = { ...resetCounters.value, [guildId]: resetCounter.value + 1 };
 		log.info({
 			tag: "guild:settings:changes",
 			action: "reset_changes",
-			guildId: guildId.value,
+			guildId,
 		});
 	};
 
 	return {
-		guildSettingsChanges: readonly(guildSettingsChanges),
+		guildSettingsChanges,
 		mergeGuildSettings,
 		removeChange,
-		resetCounter: readonly(resetCounter),
+		resetCounter,
 		resetGuildSettingsChanges,
 		setGuildSettingsChanges,
 	};

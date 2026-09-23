@@ -84,7 +84,7 @@
 							variant="ghost"
 							size="sm"
 							trailing-icon="heroicons:chevron-right-20-solid"
-							:to="guildModulePath(guildData.id, module.slug)"
+							@click="goToSection(guildModuleSection(module.slug))"
 						>
 							{{ ts("guild_settings.modules.configure") }}
 						</UButton>
@@ -99,12 +99,16 @@
 import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
 import { ModulesSettingsSchema, type ModulesSettingsSchemaType } from "#shared/schemas";
-import { countEnabledModules, GUILD_MODULES, guildModulePath } from "#shared/utils/guild-modules";
+import {
+	countEnabledModules,
+	GUILD_MODULES,
+	guildModuleSection,
+} from "#shared/utils/guild-modules";
 import { setGuildDataChange } from "#shared/utils/guild-settings-map";
 
 const { ts } = useI18n();
-const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();
+const { goToSection } = useDashboardNavigation();
 const toast = useToast();
 
 const createDefaultState = (): ModulesSettingsSchemaType => {

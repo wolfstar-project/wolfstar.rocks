@@ -21,12 +21,13 @@
 				<p class="text-sm text-base-content/70">
 					<i18n-t keypath="guild_settings.events.moderation_events_help" tag="span">
 						<template #channelsPage>
-							<NuxtLink
-								:to="channelsPageLink"
-								class="text-primary underline hover:no-underline"
+							<button
+								type="button"
+								class="cursor-pointer text-primary underline hover:no-underline"
+								@click="goToSection('channels')"
 							>
 								{{ ts("guild_settings.events.channels_page_link") }}
-							</NuxtLink>
+							</button>
 						</template>
 					</i18n-t>
 				</p>
@@ -73,12 +74,13 @@
 				<p class="text-sm text-base-content/70">
 					<i18n-t keypath="guild_settings.events.message_events_help" tag="span">
 						<template #channelsPage>
-							<NuxtLink
-								:to="channelsPageLink"
-								class="text-primary underline hover:no-underline"
+							<button
+								type="button"
+								class="cursor-pointer text-primary underline hover:no-underline"
+								@click="goToSection('channels')"
 							>
 								{{ ts("guild_settings.events.channels_page_link") }}
-							</NuxtLink>
+							</button>
 						</template>
 					</i18n-t>
 				</p>
@@ -125,8 +127,8 @@ import { setGuildDataChange } from "#shared/utils/guild-settings-map";
 const { ts } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
 
-const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();
+const { goToSection } = useDashboardNavigation();
 const toast = useToast();
 
 const allEvents = [...ConfigurableModerationEvents, ...ConfigurableMessageEvents];
@@ -163,8 +165,6 @@ async function onError(event: FormErrorEvent) {
 		title: ts("guild_settings.save_failed"),
 	});
 }
-
-const channelsPageLink = computed(() => `/guilds/${guildData.value.id}/manage/channels`);
 
 watch(
 	guildSettings,

@@ -4,7 +4,7 @@ import { ModulesSettingsSchema } from "../../../../shared/schemas/modules";
 import {
 	countEnabledModules,
 	GUILD_MODULES,
-	guildModulePath,
+	guildModuleSection,
 } from "../../../../shared/utils/guild-modules";
 
 describe("guild modules registry", () => {
@@ -32,10 +32,8 @@ describe("guild modules registry", () => {
 		).toBe(2);
 	});
 
-	it("builds the moderation filter path for a module", () => {
-		expect(guildModulePath("123456789012345678", "word")).toBe(
-			"/guilds/123456789012345678/manage/moderation/word",
-		);
+	it("builds the /app section slug for a module", () => {
+		expect(guildModuleSection("word")).toBe("moderation/word");
 	});
 
 	it("schema accepts every module flag and defaults missing ones to false", () => {

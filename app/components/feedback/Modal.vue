@@ -80,7 +80,9 @@ const isSubmitting = ref(false);
 const { effectiveReduceMotion } = useReduceMotion();
 
 const isDashboard = computed(
-	() => route.path.startsWith("/guilds/") && route.path.includes("/manage"),
+	() =>
+		route.path === "/app" ||
+		(route.path.startsWith("/guilds/") && route.path.includes("/manage")),
 );
 
 const state = reactive<Schema>({

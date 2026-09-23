@@ -290,6 +290,9 @@ export default defineNuxtConfig({
 			prerender: false,
 			auth: { only: "guest", redirectTo: "/profile" },
 		},
+		// The dashboard is one client-rendered page; the guild it shows is app
+		// state, so nothing about it is prerenderable or worth indexing.
+		"/app": { auth: { only: "user", redirectTo: "/login" }, prerender: false, ssr: false },
 		"/guilds/**": { auth: { only: "user", redirectTo: "/login" } },
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
 		// /profile hosts local UI settings (theme/locale/motion) for guests and the
@@ -699,7 +702,7 @@ export default defineNuxtConfig({
 	},
 
 	sitemap: {
-		exclude: ["/oauth/guild", "/oauth/callback", "/guilds/[...id]"],
+		exclude: ["/app", "/oauth/guild", "/oauth/callback", "/guilds/[...id]"],
 		zeroRuntime: true,
 	},
 

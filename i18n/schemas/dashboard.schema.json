@@ -118,6 +118,21 @@
 					},
 					"additionalProperties": false
 				},
+				"picker": {
+					"type": "object",
+					"properties": {
+						"description": {
+							"type": "string"
+						},
+						"empty": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"reset_changes": {
 					"type": "string"
 				},

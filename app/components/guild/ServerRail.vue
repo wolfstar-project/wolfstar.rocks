@@ -10,15 +10,16 @@
 
 		<span class="guild-rail-divider" aria-hidden="true" />
 
-		<NuxtLink
+		<button
 			v-for="server of servers"
 			:key="server.id"
-			:to="`/guilds/${server.id}/manage`"
+			type="button"
 			class="guild-rail-item"
 			:class="server.id === currentGuildId ? 'guild-rail-item--active' : undefined"
 			:aria-current="server.id === currentGuildId ? 'page' : undefined"
 			:aria-label="server.name"
 			:title="server.name"
+			@click="emit('select', server.id)"
 		>
 			<UAvatar
 				:src="resolveGuildIconSrc(server, { size: 64 })"
@@ -27,7 +28,7 @@
 				size="lg"
 				:ui="{ root: 'rounded-2xl' }"
 			/>
-		</NuxtLink>
+		</button>
 
 		<USkeleton
 			v-for="n of pending && servers.length === 0 ? 3 : 0"
@@ -50,6 +51,11 @@
 
 <script setup lang="ts">
 import { resolveGuildIconSrc, selectDashboardRailGuilds } from "~/utils/guild-dashboard";
+
+const emit = defineEmits<{
+	/** The admin picked a server to manage. */
+	select: [guildId: string];
+}>();
 
 const { currentGuildId, guilds } = defineProps<{
 	/** Guild whose dashboard is open, highlighted in the rail. */
@@ -77,7 +83,7 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 .guild-rail-home,
 .guild-rail-item,
 .guild-rail-add {
-	@apply flex size-12 shrink-0 items-center justify-center rounded-2xl transition-[border-radius,background-color] duration-200;
+	@apply flex size-12 shrink-0 cursor-pointer items-center justify-center rounded-2xl border-0 bg-transparent p-0 transition-[border-radius,background-color] duration-200;
 }
 
 .guild-rail-home,

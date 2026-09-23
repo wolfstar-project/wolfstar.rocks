@@ -4,6 +4,7 @@
 			:current-guild-id="guildId ?? undefined"
 			:guilds="userGuilds"
 			:pending="userGuildsPending"
+			@select="goToGuild"
 		/>
 
 		<UDashboardSidebar
@@ -56,7 +57,7 @@
 			</template>
 		</UDashboardSidebar>
 
-		<slot v-if="isReadyToRender"></slot>
+		<slot v-if="!guildId || isReadyToRender"></slot>
 		<div
 			v-else-if="nuxtError"
 			class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4 text-center"
@@ -121,17 +122,17 @@
 		</div>
 
 		<UModal
-			v-model:open="showDialog"
+			:open="leaveDialogOpen"
 			:title="ts('dashboard.unsaved_title')"
 			:description="ts('dashboard.unsaved_description')"
 			:dismissible="false"
 		>
 			<template #footer>
 				<div class="flex justify-end gap-2">
-					<UButton color="neutral" variant="ghost" @click="cancelLeave">
+					<UButton color="neutral" variant="ghost" @click="stayOnPage">
 						{{ ts("dashboard.stay_on_page") }}
 					</UButton>
-					<UButton color="error" @click="confirmLeave">
+					<UButton color="error" @click="discardAndLeave">
 						{{ ts("dashboard.discard_changes") }}
 					</UButton>
 				</div>
@@ -167,16 +168,16 @@ function isSafeUrl(url: unknown): url is string {
 
 const { ts } = useI18n();
 
-const guildId = useRouteParams("id", null, { transform: String });
-
-if (!isValidGuildId(guildId.value)) {
-	throw createError({
-		why: ts("dashboard.invalid_guild_why"),
-		status: 400,
-		message: ts("dashboard.invalid_guild_message"),
-		fix: ts("dashboard.invalid_guild_fix"),
-	});
-}
+// The guild is dashboard state, not a route param: `/app` is one page.
+const {
+	activeGuildId: guildId,
+	cancelPendingNavigation,
+	confirmPendingNavigation,
+	goToGuild,
+	goToSection,
+	pendingNavigation,
+	section,
+} = useDashboardNavigation();
 
 const toast = useToast();
 const router = useRouter();
@@ -214,8 +215,11 @@ const {
 	pending: isLoading,
 	error,
 } = useAsyncData(
-	() => `dashboard:guild:${guildId.value}`,
+	() => `dashboard:guild:${guildId.value ?? "none"}`,
 	() => {
+		if (!guildId.value) {
+			return Promise.resolve(null);
+		}
 		const refreshQuery = refreshGuildCache.value ? { refresh: "true" } : undefined;
 		return Promise.all([
 			requestFetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(
@@ -227,6 +231,7 @@ const {
 			}),
 		]);
 	},
+	{ watch: [guildId] },
 );
 
 watch(
@@ -340,128 +345,54 @@ watch(
 
 const { effectiveReduceMotion } = useReduceMotion();
 
+const isModerationSection = computed(() => section.value.startsWith("moderation"));
+
+function sectionItem(slug: string, item: Omit<NavigationMenuItem, "active" | "onSelect">) {
+	return {
+		...item,
+		active: section.value === slug,
+		onSelect: () => {
+			open.value = false;
+			goToSection(slug);
+		},
+	} satisfies NavigationMenuItem;
+}
+
 const items = computed<NavigationMenuItem[][]>(() => [
 	[
 		{
 			label: ts("dashboard.nav_groups.management"),
 			type: "label",
 		},
+		sectionItem("", { icon: "heroicons:home", label: ts("dashboard.nav.home") }),
+		sectionItem("modules", { icon: "lucide:layout-grid", label: ts("dashboard.nav.modules") }),
 		{
-			exact: true,
-			icon: "heroicons:home",
-			label: ts("dashboard.nav.home"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/manage`,
-		},
-		{
-			icon: "lucide:layout-grid",
-			label: ts("dashboard.nav.modules"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/manage/modules`,
-		},
-		{
-			icon: "lucide:shield",
-			label: ts("dashboard.nav.moderation"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/manage/moderation`,
+			...sectionItem("moderation", {
+				icon: "lucide:shield",
+				label: ts("dashboard.nav.moderation"),
+			}),
+			active: isModerationSection.value,
+			defaultOpen: isModerationSection.value,
 			children: [
-				{
-					label: ts("dashboard.nav.bad_words"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/word`,
-				},
-				{
-					label: ts("dashboard.nav.capitals"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/capitals`,
-				},
-				{
-					label: ts("dashboard.nav.invites"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/invites`,
-				},
-				{
-					label: ts("dashboard.nav.links"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/links`,
-				},
-				{
+				sectionItem("moderation/word", { label: ts("dashboard.nav.bad_words") }),
+				sectionItem("moderation/capitals", { label: ts("dashboard.nav.capitals") }),
+				sectionItem("moderation/invites", { label: ts("dashboard.nav.invites") }),
+				sectionItem("moderation/links", { label: ts("dashboard.nav.links") }),
+				sectionItem("moderation/messages", {
 					label: ts("dashboard.nav.message_duplication"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/messages`,
-				},
-				{
-					label: ts("dashboard.nav.line_spam"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/lines`,
-				},
-				{
-					label: ts("dashboard.nav.reactions"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/reactions`,
-				},
+				}),
+				sectionItem("moderation/lines", { label: ts("dashboard.nav.line_spam") }),
+				sectionItem("moderation/reactions", { label: ts("dashboard.nav.reactions") }),
 			],
 		},
-		{
-			icon: "heroicons:hashtag",
-			label: ts("dashboard.nav.channels"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/manage/channels`,
-		},
-		{
-			icon: "heroicons:user-group",
-			label: ts("dashboard.nav.roles"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/manage/roles`,
-		},
-		{
-			icon: "heroicons:bell",
-			label: ts("dashboard.nav.events"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/manage/events`,
-		},
-		{
+		sectionItem("channels", { icon: "heroicons:hashtag", label: ts("dashboard.nav.channels") }),
+		sectionItem("roles", { icon: "heroicons:user-group", label: ts("dashboard.nav.roles") }),
+		sectionItem("events", { icon: "heroicons:bell", label: ts("dashboard.nav.events") }),
+		sectionItem("commands", {
 			icon: "heroicons:command-line",
 			label: ts("dashboard.nav.commands"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/manage/commands`,
-		},
-		{
-			icon: "lucide:logs",
-			label: ts("dashboard.nav.logs"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/logs`,
-		},
+		}),
+		sectionItem("logs", { icon: "lucide:logs", label: ts("dashboard.nav.logs") }),
 	],
 	[
 		{
@@ -513,15 +444,25 @@ watch(isReadyToSubmit, (ready) => {
 
 const { showDialog, confirmLeave, cancelLeave } = useUnsavedChanges(isReadyToSubmit);
 
-const guildIconSrc = computed(() => resolveGuildIconSrc(guildData.value, { size: 64 }));
-// Validate Guild ID format (Discord Snowflake: 17-19 digit string)
-function isValidGuildId(id: string | undefined | null): boolean {
-	if (isNullOrUndefined(id)) {
-		return false;
-	}
-	const snowflakeRegex = /^\d{17,19}$/;
-	return snowflakeRegex.test(id);
+// One dialog covers both ways of leaving staged edits behind: a route change
+// (router guard) and a guild/section switch inside `/app` (pending navigation).
+const leaveDialogOpen = computed(() => showDialog.value || pendingNavigation.value !== null);
+
+function stayOnPage() {
+	cancelPendingNavigation();
+	cancelLeave();
 }
+
+function discardAndLeave() {
+	if (pendingNavigation.value) {
+		resetGuildSettingsChanges();
+		confirmPendingNavigation();
+		return;
+	}
+	confirmLeave();
+}
+
+const guildIconSrc = computed(() => resolveGuildIconSrc(guildData.value, { size: 64 }));
 
 async function submitChanges() {
 	let data: GuildData;

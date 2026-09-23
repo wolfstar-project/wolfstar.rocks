@@ -1,6 +1,6 @@
 import type { GuildData, ReadonlyGuildData } from "#server/database/settings/types";
 import type { Awaitable, PickByValue } from "@sapphire/utilities";
-import prisma from "#server/database/prisma";
+import { db } from "#server/database/prisma";
 import { getDefaultGuildSettings } from "#server/database/settings/constants";
 import {
 	getSettingsContext,
@@ -117,17 +117,12 @@ class Transaction {
 
 		try {
 			if (WeakMapNotInitialized.has(this.settings)) {
-				await prisma.guild.create({
-					// @ts-expect-error readonly data
-					data: { ...this.settings, ...this.#changes },
-				});
+				await db.orm.public.Guild.create({ ...this.settings, ...this.#changes });
 				WeakMapNotInitialized.delete(this.settings);
 			} else {
-				await prisma.guild.update({
-					where: { id: this.settings.id },
-					// @ts-expect-error readonly data
-					data: this.#changes,
-				});
+				await db.orm.public.Guild.where((row) => row.id.eq(this.settings.id)).update(
+					this.#changes,
+				);
 			}
 
 			Object.assign(this.settings, this.#changes);
@@ -189,8 +184,7 @@ async function processFetch(id: string): Promise<ReadonlyGuildData> {
 }
 
 async function fetch(id: string): Promise<GuildData> {
-	const { guild } = prisma;
-	const existing = await guild.findUnique({ where: { id } });
+	const existing = await db.orm.public.Guild.first({ id: BigInt(id) });
 	if (existing) {
 		cache.set(id, existing);
 		return existing;

@@ -92,3 +92,17 @@ export function parseGuildSettings(
 		return fallback;
 	}
 }
+
+/**
+ * Picks the guilds that belong in the dashboard's server rail: the ones the
+ * viewer can manage *and* WolfStar has joined, since every rail entry links
+ * straight into that guild's dashboard. Sorted by name so the rail order stays
+ * stable between refreshes of `/api/users`.
+ */
+export function selectDashboardRailGuilds(
+	guilds: readonly OauthFlattenedGuild[],
+): OauthFlattenedGuild[] {
+	return guilds
+		.filter((guild) => guild.manageable && guild.wolfstarIsIn)
+		.toSorted((a, b) => a.name.localeCompare(b.name, "en", { sensitivity: "base" }));
+}

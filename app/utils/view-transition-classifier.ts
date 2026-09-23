@@ -9,7 +9,7 @@ export interface ClassifyInput {
 
 export function classifyNavigation(input: ClassifyInput): string[] {
 	const isMarketing = isMarketingPath(input.toPath);
-	const isDashboard = input.toPath.startsWith("/guilds/");
+	const isDashboard = input.toPath === "/app" || input.toPath.startsWith("/guilds/");
 
 	if (!isMarketing && !isDashboard) return [];
 

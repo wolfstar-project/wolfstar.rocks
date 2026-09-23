@@ -1,32 +1,44 @@
 import type { ModerationLogEntry } from "#shared/types/moderation-log";
+import type { ModerationAction } from "#shared/types/moderation-types";
+import type { ResultType } from "@prisma/orm-postgres/components/runtime";
 import type { APIGuildMember } from "discord-api-types/v10";
-import prisma from "#server/database/prisma";
+import { db } from "#server/database/prisma";
 import { fallbackMember, resolveGuildMembers } from "#server/utils/audit/resolve-members";
 import { ModerationLogQuerySchema } from "#shared/schemas";
-import { decodeModerationType, decodeModerationMetadata } from "#shared/types/moderation-types";
+import {
+	decodeModerationMetadata,
+	MODERATION_ACTION_CODE,
+	moderationActionFromCode,
+} from "#shared/types/moderation-types";
 import { createError, useLogger } from "evlog";
 import { parse } from "valibot";
 
-type ModerationRow = Awaited<ReturnType<typeof prisma.moderation.findMany>>[number];
+type ModerationRow = ResultType<typeof db.orm.public.ModerationAction>;
 
 function mapModerationRow(
 	row: ModerationRow,
 	memberMap: Map<string, APIGuildMember>,
 ): ModerationLogEntry {
+	const targetId = String(row.targetId);
+	const moderatorId = String(row.moderatorId);
+	// V7 stores the action by name, so the name is the identity and the numeric
+	// code is looked up from it rather than the other way round.
+	const action = row.action as ModerationAction;
+
 	return {
-		caseId: row.caseId,
-		guildId: row.guildId,
-		userId: row.userId ?? null,
-		targetMember: row.userId ? (memberMap.get(row.userId) ?? fallbackMember(row.userId)) : null,
-		moderatorId: row.moderatorId,
-		moderatorMember: memberMap.get(row.moderatorId) ?? fallbackMember(row.moderatorId),
-		typeCode: row.type,
-		typeName: decodeModerationType(row.type),
+		caseId: row.id,
+		guildId: String(row.guildId),
+		userId: targetId,
+		targetMember: memberMap.get(targetId) ?? fallbackMember(targetId),
+		moderatorId,
+		moderatorMember: memberMap.get(moderatorId) ?? fallbackMember(moderatorId),
+		typeCode: MODERATION_ACTION_CODE[action],
+		typeName: action,
 		reason: row.reason ?? null,
-		imageURL: row.imageURL ?? null,
-		duration: row.duration ?? null,
+		referenceId: row.referenceId ?? null,
+		duration: row.duration,
 		metadata: decodeModerationMetadata(row.metadata),
-		createdAt: row.createdAt?.toISOString() ?? null,
+		createdAt: row.createdAt,
 	};
 }
 
@@ -47,37 +59,37 @@ export default defineWrappedCachedResponseHandler(
 		const { limit, offset, userId, moderatorId, typeCode, from, to, q } =
 			await getValidatedQuery(event, (body) => parse(ModerationLogQuerySchema, body));
 
-		const where = {
-			guildId,
-			...(userId && { userId }),
-			...(moderatorId && { moderatorId }),
-			...(typeCode !== undefined && { type: typeCode }),
-			...(from || to
-				? {
-						createdAt: {
-							...(from && { gte: new Date(from) }),
-							...(to && { lte: new Date(to) }),
-						},
-					}
-				: {}),
-			...(q && { reason: { contains: q, mode: "insensitive" as const } }),
-		};
+		// One filtered collection, reused by the page query and the count: chaining
+		// returns a new collection each time, so neither terminal disturbs the other.
+		let filtered = db.orm.public.ModerationAction.where((row) =>
+			row.guildId.eq(BigInt(guildId)),
+		);
+		if (userId) filtered = filtered.where((row) => row.targetId.eq(BigInt(userId)));
+		if (moderatorId) {
+			filtered = filtered.where((row) => row.moderatorId.eq(BigInt(moderatorId)));
+		}
+		if (typeCode !== undefined) {
+			// An unrecognised code must not reach the database as an enum literal,
+			// so it selects nothing instead.
+			const action = moderationActionFromCode(typeCode);
+			if (action === null) return { entries: [], total: 0 };
+			filtered = filtered.where((row) => row.action.eq(action));
+		}
+		if (from) filtered = filtered.where((row) => row.createdAt.gte(asTimestampString(from)));
+		if (to) filtered = filtered.where((row) => row.createdAt.lte(asTimestampString(to)));
+		if (q) filtered = filtered.where((row) => row.reason.ilike(containsPattern(q)));
 
-		const [rows, total] = await Promise.all([
-			prisma.moderation.findMany({
-				where,
-				orderBy: [{ createdAt: "desc" }, { caseId: "desc" }],
-				take: limit,
-				skip: offset,
-			}),
-			prisma.moderation.count({ where }),
+		const [rows, { total }] = await Promise.all([
+			filtered
+				.orderBy([(row) => row.createdAt.desc(), (row) => row.id.desc()])
+				.limit(limit)
+				.offset(offset)
+				.all(),
+			filtered.aggregate((aggregate) => ({ total: aggregate.count() })),
 		]);
 
 		const idsToResolve = [
-			...new Set([
-				...rows.map((r) => r.userId).filter((id): id is string => id !== null),
-				...rows.map((r) => r.moderatorId),
-			]),
+			...new Set(rows.flatMap((row) => [String(row.targetId), String(row.moderatorId)])),
 		];
 
 		const memberMap = await resolveGuildMembers(guildId, idsToResolve);

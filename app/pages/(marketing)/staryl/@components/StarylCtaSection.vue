@@ -1,58 +1,56 @@
 <template>
 	<Section labelled-by="staryl-cta-heading" spacing="none" class="pb-28">
-		<div
-			class="staryl-cta grid overflow-hidden bg-neutral p-8 text-neutral-content sm:p-12 lg:grid-cols-[1fr_auto] lg:items-end lg:p-16"
-		>
-			<div>
-				<div class="mb-8 flex items-center gap-4">
-					<NuxtImg
-						src="/avatars/staryl.png"
-						width="48"
-						height="48"
-						alt=""
-						aria-hidden="true"
-						class="size-12 rounded-lg"
-					/>
-					<span
-						class="font-mono text-xs tracking-(--home-ls-label) text-neutral-content/60 uppercase"
-					>
-						{{ ts("marketing.staryl.cta.eyebrow") }}
-					</span>
-				</div>
+		<div class="staryl-cta relative overflow-hidden rounded-2xl px-6 py-14 sm:px-14 sm:py-16">
+			<NuxtImg
+				src="/avatars/staryl.png"
+				width="320"
+				height="320"
+				alt=""
+				aria-hidden="true"
+				loading="lazy"
+				class="staryl-cta-watermark"
+			/>
+			<div class="relative flex flex-col items-center text-center">
+				<p class="mb-4 font-mono text-sm font-medium text-primary">
+					{{ ts("marketing.staryl.cta.eyebrow") }}
+				</p>
 				<h2
 					id="staryl-cta-heading"
-					class="max-w-180 text-4xl leading-[1.02] font-bold tracking-(--home-ls-tight) md:text-5xl"
+					class="max-w-190 text-4xl leading-[1.05] font-bold tracking-(--home-ls-tight) text-base-content md:text-5xl"
 				>
 					{{ ts("marketing.staryl.cta.title") }}
 				</h2>
-				<p class="mt-5 max-w-145 text-base leading-relaxed text-neutral-content/70">
+				<p class="mt-5 max-w-140 text-base leading-relaxed text-base-content/65">
 					{{
 						inviteUrl === "#"
 							? ts("marketing.staryl.cta.subtitle_no_invite")
 							: ts("marketing.staryl.cta.subtitle")
 					}}
 				</p>
-			</div>
-			<div class="mt-9 flex flex-col gap-3 sm:flex-row lg:mt-0 lg:flex-col">
-				<UButton
-					v-if="inviteUrl !== '#'"
-					:to="inviteUrl"
-					color="primary"
-					size="xl"
-					class="justify-center lg:min-w-52"
-					icon="ph:plus-circle-fill"
-				>
-					{{ ts("marketing.staryl.cta.invite") }}
-				</UButton>
-				<UButton
-					to="https://join.wolfstar.rocks"
-					color="neutral"
-					variant="outline"
-					size="xl"
-					class="staryl-cta-outline justify-center lg:min-w-52"
-				>
-					{{ ts("marketing.staryl.cta.ask_in_support") }}
-				</UButton>
+				<div class="mt-7 flex flex-col gap-3 sm:flex-row">
+					<UButton
+						v-if="inviteUrl !== '#'"
+						:to="inviteUrl"
+						color="primary"
+						size="lg"
+						class="justify-center sm:min-w-48"
+						icon="ph:plus-circle-fill"
+					>
+						{{ ts("marketing.staryl.cta.invite") }}
+					</UButton>
+					<UButton
+						to="https://join.wolfstar.rocks"
+						:color="inviteUrl === '#' ? 'primary' : 'neutral'"
+						:variant="inviteUrl === '#' ? 'solid' : 'outline'"
+						size="lg"
+						:class="[
+							'justify-center sm:min-w-48',
+							inviteUrl === '#' ? undefined : 'staryl-cta-outline',
+						]"
+					>
+						{{ ts("marketing.staryl.cta.ask_in_support") }}
+					</UButton>
+				</div>
 			</div>
 		</div>
 	</Section>
@@ -69,9 +67,18 @@ const { ts } = useI18n();
 <style scoped>
 @reference "@/assets/css/main.css";
 
+.staryl-cta {
+	background-color: var(--color-base-300);
+	border: 1px solid var(--home-border-subtle);
+	border-top: 3px solid var(--color-primary);
+}
+
+.staryl-cta-watermark {
+	@apply pointer-events-none absolute -right-10 -bottom-16 size-80 opacity-[0.06];
+}
+
 .staryl-cta-outline {
-	border-color: oklch(from var(--color-neutral-content) l c h / 0.3);
-	background-color: transparent;
-	color: var(--color-neutral-content);
+	border-color: oklch(from var(--color-base-content) l c h / 0.2);
+	color: var(--color-base-content);
 }
 </style>

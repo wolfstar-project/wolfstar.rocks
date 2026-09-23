@@ -185,10 +185,6 @@ interface GuildCardsProps {
 	onRetry?: () => void;
 }
 
-interface DocumentWithActiveVT extends Document {
-	readonly activeViewTransition: ViewTransition | null;
-}
-
 const {
 	filteredGuilds,
 	guilds,
@@ -313,26 +309,14 @@ const INITIAL_COUNT = 20;
 const showError = computed(() => !loading && !!error);
 const errorVisible = ref(showError.value);
 
-if (import.meta.client) {
-	watch(showError, (newVal) => {
-		if (!document.startViewTransition) {
-			errorVisible.value = newVal;
-			return;
-		}
-		if (effectiveReduceMotion.value) {
-			errorVisible.value = newVal;
-			return;
-		}
-		if ((document as DocumentWithActiveVT).activeViewTransition) {
-			errorVisible.value = newVal;
-			return;
-		}
-		document.startViewTransition(async () => {
-			errorVisible.value = newVal;
-			await nextTick();
-		});
+// A navigation transition owns the screen, so the error state rides along with
+// it rather than interrupting it for one of its own.
+watch(showError, (visible) => {
+	startViewTransition(() => (errorVisible.value = visible), {
+		reduceMotion: effectiveReduceMotion.value,
+		whenActive: "bypass",
 	});
-}
+});
 const LOAD_MORE_COUNT = 10;
 
 const visibleCount = ref(INITIAL_COUNT);

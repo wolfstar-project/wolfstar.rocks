@@ -79,6 +79,30 @@ describe("useHeader", () => {
 		expect(labels).not.toContain("Changelog");
 	});
 
+	it("should describe and illustrate every Features child", async () => {
+		const { desktopLinks } = await setup();
+		const features = desktopLinks.value.find((l: any) => l.label === "Features");
+		expect(features?.children?.length).toBe(3);
+		expect(
+			features?.children?.every(
+				(child: any) =>
+					typeof child.icon === "string" && typeof child.description === "string",
+			),
+		).toBe(true);
+	});
+
+	it("should describe both applications", async () => {
+		const { desktopLinks } = await setup();
+		const applications = desktopLinks.value.find((l: any) => l.label === "Applications");
+		expect(applications?.children?.map((child: any) => child.label)).toEqual([
+			"WolfStar",
+			"Staryl",
+		]);
+		expect(
+			applications?.children?.every((child: any) => typeof child.description === "string"),
+		).toBe(true);
+	});
+
 	it("should give Features children destinations on mobile", async () => {
 		const { mobileLinks } = await setup();
 		const features = mobileLinks.value.find((l: any) => l.label === "Features");

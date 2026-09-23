@@ -40,7 +40,8 @@
 				<!-- Guild Icon with action overlay -->
 				<NuxtLink
 					v-if="guild.wolfstarIsIn && guild.manageable"
-					:to="`/guilds/${guild.id}/manage`"
+					to="/app"
+					@click="goToGuild(guild.id)"
 					class="group relative"
 					:aria-label="ts('guild_card.manage_aria', { name: guild.name })"
 				>
@@ -135,7 +136,8 @@
 				<div class="mt-auto w-full pt-2">
 					<NuxtLink
 						v-if="guild.wolfstarIsIn && guild.manageable"
-						:to="`/guilds/${guild.id}/manage`"
+						to="/app"
+						@click="goToGuild(guild.id)"
 						class="flex h-9 w-full items-center justify-center rounded-lg border border-success/20 bg-success/10 px-3 text-xs font-medium text-success transition-all duration-200 hover:bg-success/20 hover:shadow-md"
 						:aria-label="ts('guild_card.manage_server_aria', { name: guild.name })"
 					>
@@ -188,6 +190,10 @@ interface GuildCardProps {
 const { guild, loading = false } = defineProps<GuildCardProps>();
 
 const { ts } = useI18n();
+// Go through the guarded boundary, not `useActiveGuild().selectGuild`: with
+// settings staged on another server, this parks the switch for the
+// dashboard's "unsaved changes" dialog instead of dropping the edits.
+const { goToGuild } = useDashboardNavigation();
 
 const cardClasses = computed(() => {
 	if (loading || !guild) {

@@ -6,18 +6,20 @@
 		:ui="{ heading: 'text-xl font-bold tracking-wide' }"
 	>
 		<dl
-			class="grid grid-cols-2 gap-x-4 gap-y-3 md:grid-cols-3 md:gap-x-8 md:gap-y-4"
+			class="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5"
 			:aria-label="ts('guild_settings.general.server_stats_aria')"
 		>
 			<div
 				v-for="stat in serverStats"
 				:key="stat.label"
-				class="flex min-w-0 items-baseline justify-between md:justify-start md:gap-2"
+				class="min-w-0 rounded-xl border border-base-300/60 bg-base-100 p-4 shadow-sm"
 			>
-				<dt class="truncate text-sm font-semibold text-base-content/70 md:text-base">
-					{{ stat.label }}:
+				<dt
+					class="truncate text-xs font-bold tracking-wider text-base-content/60 uppercase"
+				>
+					{{ stat.label }}
 				</dt>
-				<dd class="shrink-0 text-base font-bold text-base-content md:text-lg">
+				<dd class="mt-1 font-mono text-2xl font-bold text-base-content">
 					{{ stat.value.toLocaleString() }}
 				</dd>
 			</div>
@@ -45,77 +47,80 @@
 		</div>
 	</GuildSettingsSection>
 
-	<GuildSettingsSection
-		:title="ts('guild_settings.general.title')"
-		class="rounded-md border border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6"
-		:ui="{ heading: 'text-xl font-bold tracking-wide' }"
-	>
-		<GuildSettingsForm
-			:schema="schema"
-			:state="state"
-			:map-to-guild-data="mapToGuildData"
-			class="grid grid-cols-1 gap-6 md:grid-cols-2"
-			:aria-label="ts('guild_settings.general.form_aria')"
-			@error="onError"
+	<div class="grid gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+		<GuildSettingsSection
+			:title="ts('guild_settings.general.title')"
+			class="rounded-md border border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6"
+			:ui="{ heading: 'text-xl font-bold tracking-wide' }"
 		>
-			<div>
-				<UFormField :label="ts('guild_settings.general.prefix')" name="prefix">
-					<UInput
-						id="prefix"
-						v-model="state.prefix"
-						:placeholder="ts('guild_settings.general.prefix_placeholder')"
-						color="primary"
-						class="w-full"
-						aria-describedby="prefix-description character-count"
-						:aria-label="ts('guild_settings.general.prefix_aria')"
-					>
-						<template #trailing>
-							<div
-								id="character-count"
-								class="text-xs text-muted tabular-nums"
-								aria-live="polite"
-								role="status"
-							>
-								{{ state.prefix?.length }}/10
-							</div>
+			<GuildSettingsForm
+				:schema="schema"
+				:state="state"
+				:map-to-guild-data="mapToGuildData"
+				class="grid grid-cols-1 gap-6 md:grid-cols-2"
+				:aria-label="ts('guild_settings.general.form_aria')"
+				@error="onError"
+			>
+				<div>
+					<UFormField :label="ts('guild_settings.general.prefix')" name="prefix">
+						<UInput
+							id="prefix"
+							v-model="state.prefix"
+							:placeholder="ts('guild_settings.general.prefix_placeholder')"
+							color="primary"
+							class="w-full"
+							aria-describedby="prefix-description character-count"
+							:aria-label="ts('guild_settings.general.prefix_aria')"
+						>
+							<template #trailing>
+								<div
+									id="character-count"
+									class="text-xs text-muted tabular-nums"
+									aria-live="polite"
+									role="status"
+								>
+									{{ state.prefix?.length }}/10
+								</div>
+							</template>
+						</UInput>
+						<template #error="{ error }">
+							<p class="text-sm text-error">{{ error }}</p>
 						</template>
-					</UInput>
-					<template #error="{ error }">
-						<p class="text-sm text-error">{{ error }}</p>
-					</template>
-					<template #description>
-						<p id="prefix-description" class="text-sm text-base-content/70">
-							{{ ts("guild_settings.general.prefix_description") }}
-						</p>
-					</template>
-				</UFormField>
-			</div>
+						<template #description>
+							<p id="prefix-description" class="text-sm text-base-content/70">
+								{{ ts("guild_settings.general.prefix_description") }}
+							</p>
+						</template>
+					</UFormField>
+				</div>
 
-			<div>
-				<UFormField :label="ts('guild_settings.general.language')" name="language">
-					<template #description>
-						<p id="language-description" class="text-sm text-base-content/70">
-							{{ ts("guild_settings.general.language_description") }}
-						</p>
-					</template>
-					<USelectMenu
-						id="language"
-						v-model="state.language"
-						color="primary"
-						:placeholder="ts('guild_settings.general.language_placeholder')"
-						class="w-full"
-						:items="items"
-						value-attribute="value"
-						:aria-label="ts('guild_settings.general.language_aria')"
-						aria-describedby="language-description"
-					/>
-					<template #error="{ error }">
-						<p class="text-sm text-error">{{ error }}</p>
-					</template>
-				</UFormField>
-			</div>
-		</GuildSettingsForm>
-	</GuildSettingsSection>
+				<div>
+					<UFormField :label="ts('guild_settings.general.language')" name="language">
+						<template #description>
+							<p id="language-description" class="text-sm text-base-content/70">
+								{{ ts("guild_settings.general.language_description") }}
+							</p>
+						</template>
+						<USelectMenu
+							id="language"
+							v-model="state.language"
+							color="primary"
+							:placeholder="ts('guild_settings.general.language_placeholder')"
+							class="w-full"
+							:items="items"
+							value-attribute="value"
+							:aria-label="ts('guild_settings.general.language_aria')"
+							aria-describedby="language-description"
+						/>
+						<template #error="{ error }">
+							<p class="text-sm text-error">{{ error }}</p>
+						</template>
+					</UFormField>
+				</div>
+			</GuildSettingsForm>
+		</GuildSettingsSection>
+		<GuildModulesSummary />
+	</div>
 
 	<ActivitySection
 		:title="ts('guild_settings.general.recent_activity')"

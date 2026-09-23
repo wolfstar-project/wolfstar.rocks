@@ -13,15 +13,20 @@
  * Exit codes: 0 = chain valid, 1 = invalid or fatal error.
  */
 
-import { PrismaClient } from "../server/database/generated/client/index.js";
+import type { Contract } from "../server/database/prisma8/contract.js";
+import postgres from "@prisma/orm-postgres/runtime";
+import contractJson from "../server/database/prisma8/contract.json" with { type: "json" };
 import { verifyPersistedAuditChain } from "../shared/audit/persisted.js";
 
-const prisma = new PrismaClient();
+const db = postgres<Contract>({
+	url: process.env.DATABASE_URL ?? "",
+	contractJson,
+});
 
 async function main() {
 	const [rows, head] = await Promise.all([
-		prisma.auditEvent.findMany(),
-		prisma.auditChainHead.findUnique({ where: { id: "default" } }),
+		db.orm.public.AuditEvent.all(),
+		db.orm.public.AuditChainHead.first({ id: "default" }),
 	]);
 
 	console.log(`Verifying ${rows.length} audit event(s)...`);
@@ -76,4 +81,5 @@ main()
 		console.error("Fatal error:", err);
 		process.exitCode = 1;
 	})
-	.finally(() => prisma.$disconnect());
+	// The façade-owned pool keeps the event loop alive until it is closed.
+	.finally(() => db.close());

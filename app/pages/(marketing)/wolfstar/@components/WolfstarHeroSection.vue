@@ -132,11 +132,14 @@ const { ts } = useI18n();
 }
 
 .home-hero-brief {
-	border-block: 1px solid var(--home-border-subtle);
+	/* Elevated brief card, per the redesign canvas. */
+	@apply rounded-xl p-7 shadow-lg;
+	background-color: var(--color-base-300);
+	border: 1px solid var(--home-border-subtle);
 }
 
 .home-hero-brief-header {
-	@apply flex items-center gap-4 py-5;
+	@apply flex items-center gap-4 pb-5;
 }
 
 .home-hero-brief-row {
@@ -145,7 +148,7 @@ const { ts } = useI18n();
 }
 
 .home-hero-brief-row dt {
-	@apply font-mono text-sm font-semibold text-base-content;
+	@apply font-mono text-sm font-semibold text-primary;
 }
 
 .home-hero-brief-row dd {

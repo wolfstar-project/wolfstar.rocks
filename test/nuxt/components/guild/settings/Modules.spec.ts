@@ -1,4 +1,5 @@
 import type { GuildData } from "#server/database";
+import type { ComponentInternalInstance } from "vue";
 import { GUILD_MODULES } from "#shared/utils/guild-modules";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -40,11 +41,16 @@ mockNuxtImport("useToast", () => () => ({
 	add: mockToastAdd,
 }));
 
+interface ModulesSetupState {
+	state: Record<string, boolean>;
+	enabledCount: number;
+}
+
 function getSetupState(wrapper: Awaited<ReturnType<typeof mountSuspended>>) {
-	return (wrapper.vm.$ as any).setupState as {
-		state: Record<string, boolean>;
-		enabledCount: number;
-	};
+	// `setupState` is a Vue internal: it carries the `<script setup>` bindings but
+	// is deliberately absent from the public `ComponentInternalInstance` type.
+	const instance = wrapper.vm.$ as ComponentInternalInstance & { setupState: ModulesSetupState };
+	return instance.setupState;
 }
 
 describe("modules guild settings", () => {

@@ -29,8 +29,14 @@
 			"logs": "Registros",
 			"message_duplication": "Duplicación de mensajes",
 			"moderation": "Moderación",
+			"modules": "",
 			"reactions": "Reacciones",
-			"roles": "Roles"
+			"roles": "Roles",
+			"support_server": ""
+		},
+		"nav_groups": {
+			"management": "",
+			"resources": ""
 		},
 		"reset_changes": "Deshacer cambios",
 		"save_changes": "Guardar cambios",

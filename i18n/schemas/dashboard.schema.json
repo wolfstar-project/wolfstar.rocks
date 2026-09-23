@@ -91,10 +91,28 @@
 						"moderation": {
 							"type": "string"
 						},
+						"modules": {
+							"type": "string"
+						},
 						"reactions": {
 							"type": "string"
 						},
 						"roles": {
+							"type": "string"
+						},
+						"support_server": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"nav_groups": {
+					"type": "object",
+					"properties": {
+						"management": {
+							"type": "string"
+						},
+						"resources": {
 							"type": "string"
 						}
 					},

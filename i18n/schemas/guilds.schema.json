@@ -544,6 +544,57 @@
 					},
 					"additionalProperties": false
 				},
+				"modules": {
+					"type": "object",
+					"properties": {
+						"active_hint": {
+							"type": "string"
+						},
+						"configure": {
+							"type": "string"
+						},
+						"disable_all": {
+							"type": "string"
+						},
+						"enable_all": {
+							"type": "string"
+						},
+						"enabled_count": {
+							"type": "string"
+						},
+						"form_aria": {
+							"type": "string"
+						},
+						"hint": {
+							"type": "string"
+						},
+						"inactive_hint": {
+							"type": "string"
+						},
+						"manage": {
+							"type": "string"
+						},
+						"off": {
+							"type": "string"
+						},
+						"on": {
+							"type": "string"
+						},
+						"subtitle": {
+							"type": "string"
+						},
+						"summary_aria": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						},
+						"toggle_aria": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"please_try_again": {
 					"type": "string"
 				},

@@ -1,9 +1,20 @@
 <template>
 	<UDashboardPanel id="home">
 		<template #header>
-			<UDashboardNavbar :ui="{ right: 'gap-3' }">
+			<UDashboardNavbar :title="sectionLabel" :ui="{ right: 'gap-3' }">
 				<template #leading>
 					<UDashboardSidebarCollapse />
+				</template>
+				<template #right>
+					<span
+						v-if="guildData?.name"
+						class="hidden max-w-48 truncate text-sm text-base-content/60 sm:inline"
+					>
+						· {{ guildData.name }}
+					</span>
+					<UBadge v-if="hasUnsavedChanges" color="warning" variant="subtle" size="sm">
+						{{ ts("dashboard.unsaved_title") }}
+					</UBadge>
 				</template>
 			</UDashboardNavbar>
 		</template>
@@ -37,6 +48,13 @@ const { ts } = useI18n();
 const route = useRoute();
 const toast = useToast();
 const { guildData } = useGuildData();
+const { guildSettingsChanges } = useGuildSettingsChanges();
+
+const hasUnsavedChanges = computed(
+	() =>
+		guildSettingsChanges.value !== undefined &&
+		Object.keys(guildSettingsChanges.value).length > 0,
+);
 
 const {
 	data: commands,
@@ -52,10 +70,29 @@ const {
 const idParam = route.params.id;
 const joinedPath = computed(() => (Array.isArray(idParam) ? idParam.join("/") : idParam || ""));
 
-const title = computed(
-	() =>
-		`${joinedPath.value.startsWith("moderation/") ? joinedPath.value.replace("moderation/", "") : joinedPath.value || ts("guild_manage.general")} · ${guildData.value?.name ?? ""}`,
-);
+// Section slug -> sidebar label, so the navbar and the document title read like the sidebar.
+const SECTION_LABEL_KEYS: Record<string, string> = {
+	"channels": "dashboard.nav.channels",
+	"commands": "dashboard.nav.commands",
+	"events": "dashboard.nav.events",
+	"moderation": "dashboard.nav.moderation",
+	"moderation/capitals": "dashboard.nav.capitals",
+	"moderation/invites": "dashboard.nav.invites",
+	"moderation/lines": "dashboard.nav.line_spam",
+	"moderation/links": "dashboard.nav.links",
+	"moderation/messages": "dashboard.nav.message_duplication",
+	"moderation/reactions": "dashboard.nav.reactions",
+	"moderation/word": "dashboard.nav.bad_words",
+	"modules": "dashboard.nav.modules",
+	"roles": "dashboard.nav.roles",
+};
+
+const sectionLabel = computed(() => {
+	const key = SECTION_LABEL_KEYS[joinedPath.value];
+	return key ? ts(key) : ts("guild_manage.general");
+});
+
+const title = computed(() => `${sectionLabel.value} · ${guildData.value?.name ?? ""}`);
 
 // Pre-define async components outside of computed to avoid re-creating
 // wrapper instances on every reactive update, which would unmount/remount.
@@ -66,6 +103,7 @@ const asyncComponentMap: Record<string, ReturnType<typeof defineAsyncComponent>>
 	),
 	"events": defineAsyncComponent(() => import("~/components/guild/settings/Events.vue")),
 	"moderation": defineAsyncComponent(() => import("~/components/guild/settings/Moderation.vue")),
+	"modules": defineAsyncComponent(() => import("~/components/guild/settings/Modules.vue")),
 	"roles": defineAsyncComponent(() => import("~/components/guild/settings/Roles.vue")),
 	"moderation/word": defineAsyncComponent(
 		() => import("~/components/guild/settings/filter/Word.vue"),

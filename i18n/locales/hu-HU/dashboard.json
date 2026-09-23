@@ -29,8 +29,14 @@
 			"logs": "",
 			"message_duplication": "",
 			"moderation": "",
+			"modules": "",
 			"reactions": "",
-			"roles": ""
+			"roles": "",
+			"support_server": ""
+		},
+		"nav_groups": {
+			"management": "",
+			"resources": ""
 		},
 		"reset_changes": "",
 		"save_changes": "",

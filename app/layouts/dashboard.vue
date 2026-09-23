@@ -108,16 +108,16 @@
 		<div
 			v-if="showSaveChangesBar"
 			style="view-transition-name: save-changes-bar"
-			class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2"
+			role="region"
+			:aria-label="ts('dashboard.unsaved_title')"
+			class="fixed right-4 bottom-4 z-50 flex items-center gap-2 rounded-xl border border-base-300 bg-base-100 p-2 shadow-xl"
 		>
-			<UFieldGroup>
-				<UButton color="primary" icon="heroicons:check" @click="submitChanges">
-					{{ ts("dashboard.save_changes") }}
-				</UButton>
-				<UButton color="error" icon="heroicons:arrow-path" @click="resetChanges">
-					{{ ts("dashboard.reset_changes") }}
-				</UButton>
-			</UFieldGroup>
+			<UButton color="primary" icon="heroicons:check" @click="submitChanges">
+				{{ ts("dashboard.save_changes") }}
+			</UButton>
+			<UButton color="error" icon="heroicons:arrow-path" @click="resetChanges">
+				{{ ts("dashboard.reset_changes") }}
+			</UButton>
 		</div>
 
 		<UModal
@@ -343,6 +343,10 @@ const { effectiveReduceMotion } = useReduceMotion();
 const items = computed<NavigationMenuItem[][]>(() => [
 	[
 		{
+			label: ts("dashboard.nav_groups.management"),
+			type: "label",
+		},
+		{
 			exact: true,
 			icon: "heroicons:home",
 			label: ts("dashboard.nav.home"),
@@ -350,6 +354,14 @@ const items = computed<NavigationMenuItem[][]>(() => [
 				open.value = false;
 			},
 			to: `/guilds/${guildId.value}/manage`,
+		},
+		{
+			icon: "lucide:layout-grid",
+			label: ts("dashboard.nav.modules"),
+			onSelect: () => {
+				open.value = false;
+			},
+			to: `/guilds/${guildId.value}/manage/modules`,
 		},
 		{
 			icon: "lucide:shield",
@@ -449,6 +461,23 @@ const items = computed<NavigationMenuItem[][]>(() => [
 				open.value = false;
 			},
 			to: `/guilds/${guildId.value}/logs`,
+		},
+	],
+	[
+		{
+			label: ts("dashboard.nav_groups.resources"),
+			type: "label",
+		},
+		{
+			icon: "lucide:terminal",
+			label: ts("nav.commands"),
+			to: "/commands",
+		},
+		{
+			icon: "lucide:life-buoy",
+			label: ts("dashboard.nav.support_server"),
+			target: "_blank",
+			to: "https://join.wolfstar.rocks",
 		},
 	],
 ]);

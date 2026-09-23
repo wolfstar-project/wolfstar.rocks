@@ -32,26 +32,32 @@
 				</p>
 			</div>
 
-			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+			<div class="grid grid-cols-1 gap-x-7 md:grid-cols-2">
 				<UFormField
 					v-for="event in ConfigurableModerationEvents"
 					:key="`form-field-${event.key}`"
-					:label="translateEntry(event, 'title')"
 					:name="event.key"
+					class="border-t border-base-300/60"
 				>
-					<template #description>
-						<p class="text-sm text-base-content/70">
-							{{ translateEntry(event, "description") }}
-						</p>
-					</template>
-					<USwitch
-						v-model="state[event.key]"
-						:aria-label="
-							ts('guild_settings.events.toggle_aria', {
-								title: translateEntry(event, 'title'),
-							})
-						"
-					/>
+					<div class="flex items-center justify-between gap-4 py-3">
+						<div class="min-w-0">
+							<p class="text-sm font-semibold text-base-content">
+								{{ translateEntry(event, "title") }}
+							</p>
+							<p class="mt-0.5 text-xs leading-relaxed text-base-content/70">
+								{{ translateEntry(event, "description") }}
+							</p>
+						</div>
+						<USwitch
+							v-model="state[event.key]"
+							class="shrink-0"
+							:aria-label="
+								ts('guild_settings.events.toggle_aria', {
+									title: translateEntry(event, 'title'),
+								})
+							"
+						/>
+					</div>
 				</UFormField>
 			</div>
 
@@ -78,26 +84,32 @@
 				</p>
 			</div>
 
-			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+			<div class="grid grid-cols-1 gap-x-7 md:grid-cols-2">
 				<UFormField
 					v-for="event in ConfigurableMessageEvents"
 					:key="`form-field-${event.key}`"
-					:label="translateEntry(event, 'title')"
 					:name="event.key"
+					class="border-t border-base-300/60"
 				>
-					<template #description>
-						<p class="text-sm text-base-content/70">
-							{{ translateEntry(event, "description") }}
-						</p>
-					</template>
-					<USwitch
-						v-model="state[event.key]"
-						:aria-label="
-							ts('guild_settings.events.toggle_aria', {
-								title: translateEntry(event, 'title'),
-							})
-						"
-					/>
+					<div class="flex items-center justify-between gap-4 py-3">
+						<div class="min-w-0">
+							<p class="text-sm font-semibold text-base-content">
+								{{ translateEntry(event, "title") }}
+							</p>
+							<p class="mt-0.5 text-xs leading-relaxed text-base-content/70">
+								{{ translateEntry(event, "description") }}
+							</p>
+						</div>
+						<USwitch
+							v-model="state[event.key]"
+							class="shrink-0"
+							:aria-label="
+								ts('guild_settings.events.toggle_aria', {
+									title: translateEntry(event, 'title'),
+								})
+							"
+						/>
+					</div>
 				</UFormField>
 			</div>
 		</GuildSettingsForm>

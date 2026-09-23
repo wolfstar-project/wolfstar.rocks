@@ -4,15 +4,15 @@
 			<UInput
 				v-model="query"
 				icon="i-lucide-search"
-				:placeholder="t('guild_logs.search_placeholder')"
-				:aria-label="t('guild_logs.search_aria')"
+				:placeholder="ts('guild_logs.search_placeholder')"
+				:aria-label="ts('guild_logs.search_aria')"
 				class="max-w-sm min-w-48"
 			/>
-			<span class="text-sm text-muted">{{ t("guild_logs.status_label") }}</span>
+			<span class="text-sm text-muted">{{ ts("guild_logs.status_label") }}</span>
 			<USelect
 				v-model="filters.success"
 				:items="statusItems"
-				:aria-label="t('guild_logs.filter_status')"
+				:aria-label="ts('guild_logs.filter_status')"
 			/>
 		</div>
 		<ActivitySection
@@ -22,9 +22,9 @@
 			:item-count="entries.length"
 			:max-visible="total"
 			empty-icon="i-lucide-terminal"
-			:empty-title="t('guild_logs.no_logs')"
-			:empty-description="debouncedQ ? t('guild_logs.no_commands_filter_match') : undefined"
-			:refresh-label="t('guild_logs.refresh_command')"
+			:empty-title="ts('guild_logs.no_logs')"
+			:empty-description="debouncedQ ? ts('guild_logs.no_commands_filter_match') : undefined"
+			:refresh-label="ts('guild_logs.refresh_command')"
 			record-label="command"
 			@refresh="refresh()"
 		>
@@ -52,7 +52,7 @@
 			>
 				<p class="text-sm text-muted">
 					{{
-						t("guild_logs.showing_entries", {
+						ts("guild_logs.showing_entries", {
 							shown: table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0,
 							total: table?.tableApi?.getFilteredRowModel().rows.length || 0,
 						})
@@ -80,7 +80,7 @@ const UBadge = resolveComponent("UBadge");
 const UAvatar = resolveComponent("UAvatar");
 const table = useTemplateRef("table");
 const { guildData } = useGuildData();
-const { t } = useI18n();
+const { ts } = useI18n();
 
 const page = ref(1);
 const limit = ref(20);
@@ -93,9 +93,9 @@ const offset = computed(() => (page.value - 1) * limit.value);
 const guildId = computed(() => guildData.value.id);
 
 const statusItems = computed(() => [
-	{ label: t("guild_logs.status_all"), value: "all" },
-	{ label: t("guild_logs.status_success"), value: "success" },
-	{ label: t("guild_logs.status_failed"), value: "failure" },
+	{ label: ts("guild_logs.status_all"), value: "all" },
+	{ label: ts("guild_logs.status_success"), value: "success" },
+	{ label: ts("guild_logs.status_failed"), value: "failure" },
 ]);
 
 const { entries, total, status, refresh } = useCommandLog({
@@ -108,7 +108,7 @@ const { entries, total, status, refresh } = useCommandLog({
 const columns = computed<TableColumn<CommandLogData>[]>(() => [
 	{
 		accessorKey: "executedAt",
-		header: t("guild_logs.columns.time"),
+		header: ts("guild_logs.columns.time"),
 		cell: ({ row }) =>
 			h(
 				"time",
@@ -122,7 +122,7 @@ const columns = computed<TableColumn<CommandLogData>[]>(() => [
 	},
 	{
 		id: "actor",
-		header: t("guild_logs.columns.user"),
+		header: ts("guild_logs.columns.user"),
 		cell: ({ row }) => {
 			const metadata = row.original.metadata as { member: APIGuildMember } | null;
 			const member = metadata?.member;
@@ -144,7 +144,7 @@ const columns = computed<TableColumn<CommandLogData>[]>(() => [
 	},
 	{
 		accessorKey: "commandName",
-		header: t("guild_logs.columns.command"),
+		header: ts("guild_logs.columns.command"),
 		cell: ({ row }) => {
 			const label = row.original.subcommand
 				? `/${row.original.commandName} ${row.original.subcommand}`
@@ -154,7 +154,7 @@ const columns = computed<TableColumn<CommandLogData>[]>(() => [
 	},
 	{
 		accessorKey: "success",
-		header: t("guild_logs.columns.status"),
+		header: ts("guild_logs.columns.status"),
 		cell: ({ row }) =>
 			h(
 				UBadge,
@@ -165,13 +165,13 @@ const columns = computed<TableColumn<CommandLogData>[]>(() => [
 				},
 				() =>
 					row.original.success
-						? t("guild_logs.status_success")
-						: t("guild_logs.status_failed"),
+						? ts("guild_logs.status_success")
+						: ts("guild_logs.status_failed"),
 			),
 	},
 	{
 		accessorKey: "latencyMs",
-		header: t("guild_logs.columns.latency"),
+		header: ts("guild_logs.columns.latency"),
 		cell: ({ row }) =>
 			h(
 				"span",

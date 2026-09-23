@@ -8,7 +8,7 @@
 				? 'w-48 bg-muted/90 border border-muted shadow-md rounded-md'
 				: 'w-(--reka-dropdown-menu-trigger-width) bg-muted/90 border border-muted shadow-md rounded-md',
 		}"
-		:aria-label="t('user_menu.account_menu')"
+		:aria-label="ts('user_menu.account_menu')"
 	>
 		<UButton
 			v-bind="{
@@ -26,8 +26,8 @@
 			}"
 			:aria-label="
 				collapsed
-					? t('header.user_menu')
-					: t('user_menu.user_menu_for', { name: user?.name ?? '' })
+					? ts('header.user_menu')
+					: ts('user_menu.user_menu_for', { name: user?.name ?? '' })
 			"
 			aria-haspopup="true"
 		/>
@@ -36,14 +36,13 @@
 
 <script setup lang="ts">
 import type { DropdownMenuItem } from "@nuxt/ui";
-import { isAppLocaleCode } from "~/utils/is-app-locale";
 
 const { collapsed } = defineProps<{
 	collapsed?: boolean;
 }>();
 
-const { t, locale, locales, setLocale } = useI18n();
-const { setPreferredLocale } = usePreferredLocale();
+const { ts } = useI18n();
+const { locale, locales, localeLabel, selectLocale } = useAppLocale();
 const isFeedbackOpen = ref(false);
 const { preference: colorModePreference, setColorMode } = useAppColorMode();
 const { user: authUser, signOut } = useUserSession();
@@ -53,8 +52,8 @@ const user = computed(() => {
 	return {
 		avatar: {
 			alt: current?.name
-				? t("user_menu.avatar_alt", { name: current.name })
-				: t("user_menu.avatar_fallback"),
+				? ts("user_menu.avatar_alt", { name: current.name })
+				: ts("user_menu.avatar_fallback"),
 			src: current?.image ?? undefined,
 		},
 		name: current?.name,
@@ -64,18 +63,13 @@ const user = computed(() => {
 const languageChildren = computed<DropdownMenuItem[]>(() =>
 	locales.value.map((entry) => ({
 		checked: locale.value === entry.code,
-		label: entry.name ?? entry.code,
+		label: localeLabel(entry),
 		onSelect(e: Event) {
 			e.preventDefault();
-			if (!isAppLocaleCode(entry.code)) return;
-			setPreferredLocale(entry.code);
-			void setLocale(entry.code);
+			void selectLocale(entry.code);
 		},
 		onUpdateChecked(checked: boolean) {
-			if (checked && isAppLocaleCode(entry.code)) {
-				setPreferredLocale(entry.code);
-				void setLocale(entry.code);
-			}
+			if (checked) void selectLocale(entry.code);
 		},
 		type: "checkbox" as const,
 	})),
@@ -92,12 +86,12 @@ const items = computed<DropdownMenuItem[][]>(() => [
 	[
 		{
 			icon: "lucide:user",
-			label: t("user_menu.profile"),
+			label: ts("user_menu.profile"),
 			to: "/profile",
 		},
 		{
 			icon: "lucide:bug",
-			label: t("user_menu.report_bug"),
+			label: ts("user_menu.report_bug"),
 			onSelect(e: Event) {
 				e.preventDefault();
 				isFeedbackOpen.value = true;
@@ -108,14 +102,14 @@ const items = computed<DropdownMenuItem[][]>(() => [
 		{
 			children: languageChildren.value,
 			icon: "lucide:languages",
-			label: t("common.language"),
+			label: ts("common.language"),
 		},
 		{
 			children: [
 				{
 					checked: colorModePreference.value === "system",
 					icon: "lucide:monitor",
-					label: t("common.system"),
+					label: ts("common.system"),
 					onSelect(e: Event) {
 						e.preventDefault();
 						setColorMode("system");
@@ -128,7 +122,7 @@ const items = computed<DropdownMenuItem[][]>(() => [
 				{
 					checked: colorModePreference.value === "light",
 					icon: "lucide:sun",
-					label: t("common.light"),
+					label: ts("common.light"),
 					onSelect(e: Event) {
 						e.preventDefault();
 						setColorMode("light");
@@ -141,7 +135,7 @@ const items = computed<DropdownMenuItem[][]>(() => [
 				{
 					checked: colorModePreference.value === "dark",
 					icon: "lucide:moon",
-					label: t("common.dark"),
+					label: ts("common.dark"),
 					onSelect(e: Event) {
 						e.preventDefault();
 						setColorMode("dark");
@@ -154,7 +148,7 @@ const items = computed<DropdownMenuItem[][]>(() => [
 				{
 					checked: colorModePreference.value === "midnight",
 					icon: "lucide:sparkles",
-					label: t("common.midnight_experimental"),
+					label: ts("common.midnight_experimental"),
 					onSelect(e: Event) {
 						e.preventDefault();
 						setColorMode("midnight");
@@ -166,13 +160,13 @@ const items = computed<DropdownMenuItem[][]>(() => [
 				},
 			],
 			icon: "lucide:sun-moon",
-			label: t("common.appearance"),
+			label: ts("common.appearance"),
 		},
 	],
 	[
 		{
 			icon: "lucide:log-out",
-			label: t("user_menu.sign_out"),
+			label: ts("user_menu.sign_out"),
 			async onSelect(e: Event) {
 				e.preventDefault();
 				// `auth.redirects.logout` in nuxt.config sends the user home afterwards.

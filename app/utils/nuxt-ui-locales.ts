@@ -64,7 +64,7 @@ export function getNuxtUiLocales(): NuxtUiLocale[] {
 		if (pack) return pack;
 		return Object.assign({}, en, {
 			code: appLocale.code,
-			name: appLocale.name ?? appLocale.code,
+			name: appLocale.displayName ?? appLocale.code,
 		});
 	});
 }

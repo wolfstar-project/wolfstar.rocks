@@ -153,7 +153,7 @@ pnpm i18n:check:fix      # Add missing keys (empty placeholders) / remove extras
 pnpm vp run i18n:report   # Detect missing, unused, or dynamic keys in code
 pnpm i18n:report:fix     # Remove unused keys from all locale feature files
 pnpm vp run i18n:schema   # Regenerate i18n/schemas/*.schema.json from en/*
-pnpm vp run build:lunaria # Build /lunaria dashboard + status.json
+pnpm vp run build:lunaria # Build /lunaria/status.json
 ```
 
 ### GitHub Actions security analysis
@@ -421,7 +421,7 @@ Empty leaves are stripped from the bundle at build time by the Vite plugin in [`
 | `pnpm vp run i18n:report`      | Fail on missing, unused, or dynamic keys used in `app/**`              |
 | `pnpm i18n:report:fix`         | Remove unused keys from all locale feature files                       |
 | `pnpm vp run i18n:schema`      | Regenerate `i18n/schemas/*.schema.json` for IDE validation             |
-| `pnpm vp run build:lunaria`    | Build `dist/lunaria/` dashboard + `status.json`                        |
+| `pnpm vp run build:lunaria`    | Build `dist/lunaria/status.json`                                       |
 
 CI runs `i18n:report` and checks that i18n schemas are up to date. Autofix runs `i18n:check` and `build:lunaria`. The Lunaria PR workflow posts a translation overview comment.
 
@@ -438,8 +438,7 @@ Prefer static string keys with `$t('…')` / `t('…')` so `i18n:report` can ana
 
 We track translation progress with [Lunaria](https://lunaria.dev/):
 
-- Built dashboard: `/lunaria/` (generated at build time)
-- JSON status for the app: `/lunaria/status.json`
+- JSON status for the app: `/lunaria/status.json` (generated at build time)
 - In-app page: `/translation-status`
 
 Use the [i18n-ally](https://marketplace.visualstudio.com/items?itemName=lokalise.i18n-ally) VS Code extension (recommended in `.vscode/extensions.json`) for editing locale files.

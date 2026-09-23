@@ -63,7 +63,7 @@ overrides:
     # Opt in to the Nuxt CLI v4 alpha ahead of nuxt depending on it directly:
     # interactive dev server, leaner install, and Nuxt 2/bridge support dropped.
     # https://github.com/nuxt/cli/releases/tag/v4.0.0-alpha.0
-    "@nuxt/cli": 4.0.0-alpha.0
+    "@nuxt/cli": 4.0.0-alpha.1
     # Keep a single discord-api-types instance; two copies make structurally
     # identical Discord payload types nominally incompatible during typecheck
     discord-api-types: 0.38.52
@@ -76,9 +76,6 @@ overrides:
     typescript: npm:typescript-native-bridge@6.0.3-bridge.10.tsgo.7.0.2
     vite: catalog:vite-plus
     vitest: catalog:vite-plus
-
-patchedDependencies:
-    "@nuxt/test-utils": patches/@nuxt__test-utils.patch
 
 savePrefix: ""
 

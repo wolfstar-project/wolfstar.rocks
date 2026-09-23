@@ -1,5 +1,5 @@
 import type { I18nStatus } from "../shared/types/i18n-status.ts";
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import process from "node:process";
 import { currentLocales } from "../config/i18n.ts";
@@ -80,7 +80,7 @@ function buildJsonStatus(): I18nStatus {
 			: "main";
 	const githubBase = `https://github.com/${repoName}`;
 
-	const appLocales = currentLocales.filter((l) => l.code !== sourceLocale.lang && l.name);
+	const appLocales = currentLocales.filter((l) => l.code !== sourceLocale.lang && l.displayName);
 
 	return {
 		generatedAt: new Date().toISOString(),
@@ -97,7 +97,7 @@ function buildJsonStatus(): I18nStatus {
 
 			return {
 				lang: locale.code,
-				label: locale.name!,
+				label: locale.displayName!,
 				dir: locale.dir ?? "ltr",
 				totalKeys,
 				completedKeys,
@@ -111,66 +111,11 @@ function buildJsonStatus(): I18nStatus {
 	};
 }
 
-function escapeHtml(value: string): string {
-	return value
-		.replaceAll("&", "&amp;")
-		.replaceAll("<", "&lt;")
-		.replaceAll(">", "&gt;")
-		.replaceAll('"', "&quot;")
-		.replaceAll("'", "&#39;");
-}
-
-function dashboardHtml(status: I18nStatus): string {
-	const rows = status.locales
-		.map(
-			(locale) => `
-      <details class="progress-details">
-        <summary>
-          <strong>${escapeHtml(locale.label)} <span class="lang-code">${escapeHtml(locale.lang)}</span></strong>
-          <hr />
-          <div class="progress-summary">
-            <span>${locale.missingKeys.length ? `${locale.missingKeys.length} missing keys` : "✔"}</span>
-            <span>${locale.completedKeys} / ${locale.totalKeys}</span>
-          </div>
-        </summary>
-        <p><a href="${escapeHtml(locale.githubEditUrl)}">Edit on GitHub</a></p>
-        ${
-			locale.missingKeys.length
-				? `<ul>${locale.missingKeys.map((key) => `<li>${escapeHtml(key)}</li>`).join("")}</ul>`
-				: "<p>This translation is complete.</p>"
-		}
-      </details>`,
-		)
-		.join("\n");
-
-	return `<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>WolfStar Translation Status</title>
-  <style>
-    body { font-family: system-ui, sans-serif; margin: 2rem auto; max-width: 40rem; line-height: 1.5; }
-    .progress-details { border: 1px solid #ccc; border-radius: 0.5rem; margin-bottom: 1rem; padding: 1rem; }
-    .progress-summary { display: flex; justify-content: space-between; font-size: 0.875rem; }
-    .lang-code { margin-left: 0.5rem; opacity: 0.7; }
-  </style>
-</head>
-<body>
-  <main>
-    <h1>WolfStar Translation Status</h1>
-    <p>Source: ${escapeHtml(status.sourceLocale.label)} (${escapeHtml(status.sourceLocale.lang)}) — ${status.sourceLocale.totalKeys} keys</p>
-    ${rows}
-  </main>
-</body>
-</html>
-`;
-}
-
 const jsonStatus = buildJsonStatus();
 const outDir = "dist/lunaria";
+// The whole directory is published, so drop artifacts left by earlier runs (e.g. index.html).
+rmSync(outDir, { recursive: true, force: true });
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "status.json"), `${JSON.stringify(jsonStatus, null, 2)}\n`);
-writeFileSync(join(outDir, "index.html"), dashboardHtml(jsonStatus));
 // eslint-disable-next-line no-console
-console.log("Generated dist/lunaria/index.html and dist/lunaria/status.json");
+console.log("Generated dist/lunaria/status.json");

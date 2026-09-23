@@ -63,7 +63,8 @@ definePageMeta({
 const { ts } = useI18n();
 const { selectGuild } = useActiveGuild();
 
-const guildId = useRouteQuery("guild_id", undefined, { transform: normalizeGuildIdQuery });
+const route = useRoute();
+const guildId = computed(() => normalizeGuildIdQuery(route.query.guild_id));
 const error = ref<string | null>(null);
 
 if (import.meta.client && guildId.value && !error.value) {

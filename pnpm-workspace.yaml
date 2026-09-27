@@ -24,14 +24,14 @@ catalogs:
 
     storybook:
         "@storybook-vue/nuxt": 9.1.0-29411911.f34c865
-        "@storybook/addon-a11y": ^10.5.4
-        "@storybook/addon-docs": ^10.5.4
-        "@storybook/addon-themes": ^10.5.4
+        "@storybook/addon-a11y": ^10.6.0
+        "@storybook/addon-docs": ^10.6.0
+        "@storybook/addon-themes": ^10.6.0
         msw-storybook-addon: ^2.0.7
-        storybook: ^10.5.4
+        storybook: ^10.6.0
 
     vite-plus:
-        vite: npm:@voidzero-dev/vite-plus-core@0.2.8
+        vite: npm:@voidzero-dev/vite-plus-core@0.3.3
         vite-plus: 0.2.7
         vitest: 4.1.10
         "@vitest/browser-playwright": 4.1.10
@@ -69,10 +69,10 @@ overrides:
     discord-api-types: 0.38.52
     # Nuxt 4.5 imports unhead/legacy; keep one version so Nitro cannot link the
     # server bundle to a different traced package copy that omits legacy.mjs.
-    "@unhead/vue": 3.2.3
-    "@unhead/bundler": 3.2.3
-    unhead: 3.2.3
-    sharp: 0.35.3
+    "@unhead/vue": 3.4.1
+    "@unhead/bundler": 3.4.1
+    unhead: 3.4.1
+    sharp: 0.35.4
     typescript: npm:typescript-native-bridge@6.0.3-bridge.10.tsgo.7.0.2
     vite: catalog:vite-plus
     vitest: catalog:vite-plus

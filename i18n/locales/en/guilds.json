@@ -180,6 +180,23 @@
 			"subtitle": "Configure how WolfStar handles moderation actions like bans, kicks, and mutes.",
 			"title": "Punishment Settings"
 		},
+		"modules": {
+			"active_hint": "Module is active on this server.",
+			"configure": "Configure",
+			"disable_all": "Disable all",
+			"enable_all": "Enable all",
+			"enabled_count": "{enabled} / {total} enabled",
+			"form_aria": "Modules settings form",
+			"hint": "Turn a module on, then configure it.",
+			"inactive_hint": "Enable to configure.",
+			"manage": "Manage modules",
+			"off": "Off",
+			"on": "Enabled",
+			"subtitle": "Turn WolfStar's moderation modules on or off for this server, one at a time or all at once.",
+			"summary_aria": "Modules overview",
+			"title": "Modules",
+			"toggle_aria": "Toggle {title}"
+		},
 		"please_try_again": "Please try again.",
 		"roles": {
 			"configurable": "Configurable Roles",

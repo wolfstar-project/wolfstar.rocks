@@ -42,6 +42,7 @@ import {
 
 	ErrorPage,
 	OauthStatusPanel,
+	GuildServerRail,
 	GuildSettingsSection,
 	IconsApp,
 	IconsWolfstar,
@@ -59,6 +60,7 @@ import {
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { createError } from "h3";
 import { describe, expect, it } from "vitest";
+import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 import { runAxe } from "./utils/axe";
 
 const inviteUrl =
@@ -550,6 +552,22 @@ describe("component accessibility audits", () => {
 		});
 	});
 
+	describe("GuildServerRail", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildServerRail, {
+				props: {
+					currentGuildId: "222222222222222222",
+					guilds: [
+						createMockOauthFlattenedGuild({ id: "111111111111111111", name: "Alpha" }),
+						createMockOauthFlattenedGuild({ id: "222222222222222222", name: "Beta" }),
+					],
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
 	describe("IconsApp", () => {
 		it("should have no accessibility violations", async () => {
 			const component = await mountSuspended(IconsApp);
@@ -623,7 +641,10 @@ describe("component accessibility audits", () => {
 
 		it("renders the WolfStar logo mark with the resized svg hidden from AT", async () => {
 			const wrapper = await mountAppHeader();
-			const svg = wrapper.find("svg");
+			const brandLink = wrapper.find("a[aria-label='WolfStar home']");
+			expect(brandLink.exists()).toBe(true);
+
+			const svg = brandLink.find("svg");
 			expect(svg.exists()).toBe(true);
 			expect(svg.attributes("aria-hidden")).toBe("true");
 			expect(svg.classes()).toContain("h-20");

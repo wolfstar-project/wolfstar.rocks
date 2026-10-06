@@ -1,4 +1,4 @@
-import type { NitroRuntimeConfig } from "nitropack/types";
+import type { NitroRuntimeConfig } from "nitropack";
 import { cast } from "@sapphire/utilities/cast";
 import { config } from "dotenv";
 

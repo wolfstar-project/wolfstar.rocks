@@ -93,7 +93,8 @@
 		"evlog": "^2.22.3",
 		"feed": "^5.2.1",
 		"fuse.js": "^7.5.0",
-		"nuxt": "^4.5.2",
+		"h3": "^1.15.11",
+		"nuxt": "^4.6.0",
 		"nuxt-i18n-micro": "3.28.1",
 		"nuxt-og-image": "6.7.6",
 		"nuxt-security": "^2.6.0",
@@ -118,7 +119,7 @@
 		"@google/design.md": "0.4.0",
 		"@netlify/nuxt": "0.3.9",
 		"@nuxt/hints": "1.1.4",
-		"@nuxt/test-utils": "4.3.2",
+		"@nuxt/test-utils": "4.3.3",
 		"@sapphire/bitfield": "1.2.4",
 		"@sapphire/snowflake": "3.5.5",
 		"@sapphire/time-utilities": "1.7.14",
@@ -166,7 +167,7 @@
 		}
 	},
 	"engines": {
-		"node": "^24.11.0 || >=26.0.0",
+		"node": "^24.15.0 || >=26.0.0",
 		"pnpm": ">=10"
 	},
 	"packageManager": "pnpm@11.20.0",

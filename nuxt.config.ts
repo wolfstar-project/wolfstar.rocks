@@ -337,10 +337,10 @@ export default defineNuxtConfig({
 		inlineStyles: true,
 	},
 
-	// Nuxt 5 defaults (typedPages, routeTypedFetch, viteEnvironmentApi,
-	// payloadExtraction: "client", inlineErrorRendering, case-sensitive routing,
-	// …) come from `compatibilityVersion: 5`; only flags it does not set, or
-	// that this project must override, belong in `experimental` below.
+	// Nuxt 5 defaults (typedPages, routeTypedFetch, payloadExtraction: "client",
+	// inlineErrorRendering, case-sensitive routing, …) come from
+	// `compatibilityVersion: 5`; only flags it does not set, or that this
+	// project must override, belong in `experimental` below.
 	future: {
 		compatibilityVersion: 5,
 	},
@@ -348,8 +348,7 @@ export default defineNuxtConfig({
 	experimental: {
 		clientNodeCompat: true,
 		typescriptPlugin: true,
-		// Storybook's builder still needs the legacy (non-Environment API) pipeline.
-		...(isStorybook ? { viteEnvironmentApi: false } : {}),
+		viteEnvironmentApi: !isStorybook,
 		checkOutdatedBuildInterval: 5 * 60 * 1000, // 5 minutes
 		// v5 drops Nitro auto-imports; everything under server/ still relies on
 		// them (defineEventHandler, createError, useRuntimeConfig, own utils, …).

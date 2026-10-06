@@ -5,6 +5,8 @@ rules:
     ignore:
       # lunariajs/action has no tag refs; keep the branch commit hash-pinned.
       - lunaria.yml:67
+      # wolfstar-project/.github publishes no tags; keep the reusable workflow hash-pinned.
+      - labelsync.yml:15
   dangerous-triggers:
     ignore:
       - enforce-release-source.yml

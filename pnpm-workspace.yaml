@@ -59,7 +59,7 @@ minimumReleaseAgeExclude:
     - vite-plus
 
 overrides:
-    "@netlify/api": ^14.0.19
+    "@netlify/api": ^15.1.2
     # Keep a single discord-api-types instance; two copies make structurally
     # identical Discord payload types nominally incompatible during typecheck
     discord-api-types: 0.38.52

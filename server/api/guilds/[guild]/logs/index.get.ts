@@ -65,7 +65,7 @@ export default defineWrappedCachedResponseHandler(
 					: {},
 			),
 			reason: row.reason,
-			timestamp: row.timestamp,
+			timestamp: timestampStringToUtcIso(row.timestamp),
 		}));
 
 		return { entries, total };

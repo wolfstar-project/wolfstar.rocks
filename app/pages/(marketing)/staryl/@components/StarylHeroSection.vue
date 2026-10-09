@@ -157,7 +157,6 @@ const SETUP_COMMAND = "/subscriptions twitch";
 }
 
 .staryl-hero-brief {
-	/* Elevated brief card, per the redesign canvas. */
 	@apply rounded-xl p-7 shadow-lg;
 	background-color: var(--color-base-300);
 	border: 1px solid var(--home-border-subtle);

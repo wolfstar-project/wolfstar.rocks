@@ -30,8 +30,16 @@ export function useGuildSettings() {
 		) as GuildData;
 	});
 
-	const setGuildSettings = (settings?: GuildData) => {
-		const guildId = activeGuildId.value;
+	/**
+	 * Writes settings for `targetGuildId`, defaulting to the active guild.
+	 *
+	 * An in-flight PATCH outlives the guild it was issued for: the admin can
+	 * confirm a switch while it runs. Callers that awaited a response therefore
+	 * pass the id they captured before awaiting, so the response lands on the
+	 * guild it belongs to instead of whichever one is active when it arrives.
+	 */
+	const setGuildSettings = (settings?: GuildData, targetGuildId?: string) => {
+		const guildId = targetGuildId ?? activeGuildId.value;
 		if (!guildId) {
 			return;
 		}

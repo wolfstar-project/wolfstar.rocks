@@ -38,7 +38,7 @@ function mapModerationRow(
 		referenceId: row.referenceId ?? null,
 		duration: row.duration,
 		metadata: decodeModerationMetadata(row.metadata),
-		createdAt: row.createdAt,
+		createdAt: timestampStringToUtcIso(row.createdAt),
 	};
 }
 

@@ -465,9 +465,18 @@ function discardAndLeave() {
 const guildIconSrc = computed(() => resolveGuildIconSrc(guildData.value, { size: 64 }));
 
 async function submitChanges() {
+	// The admin can confirm a guild switch while this PATCH is in flight, so the
+	// id is captured here and every later write targets it. Reading
+	// `guildId.value` after the await would apply this guild's response to
+	// whichever guild is active by then, and clear that guild's staged edits.
+	const targetGuildId = guildId.value;
+	if (!targetGuildId) {
+		return;
+	}
+
 	let data: GuildData;
 	try {
-		const response = await $fetch(`/api/guilds/${guildId.value}/settings`, {
+		const response = await $fetch(`/api/guilds/${targetGuildId}/settings`, {
 			body: {
 				data: objectToTuples(guildSettingsChanges.value as Partial<GuildData>),
 			},
@@ -477,7 +486,7 @@ async function submitChanges() {
 	} catch (error) {
 		log.error({
 			tag: "wolfstar:dashboard",
-			message: `Failed to save settings update for guild Id: ${guildId.value}`,
+			message: `Failed to save settings update for guild Id: ${targetGuildId}`,
 			error: parseError(error),
 		});
 		// Preserve staged edits; only notify so the admin can retry.
@@ -492,15 +501,15 @@ async function submitChanges() {
 	const savedSettings = data;
 	startViewTransition(
 		() => {
-			setGuildSettings(savedSettings);
-			setGuildSettingsChanges(undefined);
+			setGuildSettings(savedSettings, targetGuildId);
+			setGuildSettingsChanges(undefined, targetGuildId);
 		},
 		{ reduceMotion: effectiveReduceMotion.value },
 	);
 
 	log.info(
 		"wolfstar:dashboard",
-		`Guild settings changes saved successfully for guild Id: ${guildId.value}`,
+		`Guild settings changes saved successfully for guild Id: ${targetGuildId}`,
 	);
 
 	toast.add({

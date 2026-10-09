@@ -65,7 +65,7 @@ export default defineWrappedCachedResponseHandler(
 				channelId: row.channelId === null ? null : String(row.channelId),
 				success: row.success,
 				errorReason: row.errorReason ?? null,
-				executedAt: row.executedAt,
+				executedAt: timestampStringToUtcIso(row.executedAt),
 				latencyMs: row.latencyMs ?? null,
 				metadata: { member },
 			};

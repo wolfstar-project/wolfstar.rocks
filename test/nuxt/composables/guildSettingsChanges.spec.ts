@@ -127,4 +127,43 @@ describe("useGuildSettingsChanges", () => {
 
 		expect(guildSettingsChanges.value).toBeUndefined();
 	});
+
+	// A PATCH outlives the guild it was issued for: the admin can confirm a
+	// switch while it is in flight. The save handler captures the guild id
+	// before awaiting and passes it back in, so the late response cannot touch
+	// whichever guild happens to be active when it lands.
+	describe("explicit target guild", () => {
+		it("clears only the saved guild's draft", () => {
+			const { selectGuild } = useActiveGuild();
+
+			selectGuild(GUILD_ONE);
+			useGuildSettingsChanges().setGuildSettingsChanges({ language: "en-US" });
+
+			selectGuild(GUILD_TWO);
+			useGuildSettingsChanges().setGuildSettingsChanges({ language: "fr-FR" });
+
+			// Guild one's save resolves here, with guild two now active.
+			useGuildSettingsChanges().setGuildSettingsChanges(undefined, GUILD_ONE);
+
+			expect(useGuildSettingsChanges().guildSettingsChanges.value?.language).toBe("fr-FR");
+
+			selectGuild(GUILD_ONE);
+			expect(useGuildSettingsChanges().guildSettingsChanges.value).toBeUndefined();
+		});
+
+		it("merges into the target guild's draft, not the active one", () => {
+			const { selectGuild } = useActiveGuild();
+
+			selectGuild(GUILD_ONE);
+			useGuildSettingsChanges().setGuildSettingsChanges({ language: "en-US" });
+
+			selectGuild(GUILD_TWO);
+			useGuildSettingsChanges().setGuildSettingsChanges({ language: "de-DE" }, GUILD_ONE);
+
+			expect(useGuildSettingsChanges().guildSettingsChanges.value).toBeUndefined();
+
+			selectGuild(GUILD_ONE);
+			expect(useGuildSettingsChanges().guildSettingsChanges.value?.language).toBe("de-DE");
+		});
+	});
 });

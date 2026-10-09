@@ -26,37 +26,47 @@ export function useGuildSettingsChanges() {
 		activeGuildId.value ? (resetCounters.value[activeGuildId.value] ?? 0) : 0,
 	);
 
-	const write = (changes: GuildData | undefined) => {
-		const guildId = activeGuildId.value;
+	const write = (changes: GuildData | undefined, targetGuildId?: string | null) => {
+		const guildId = targetGuildId ?? activeGuildId.value;
 		if (!guildId) {
 			return;
 		}
 		store.value = { ...store.value, [guildId]: changes };
 	};
 
-	const mergeGuildSettings = (changes?: Partial<GuildData>) => {
+	/**
+	 * Merges into the draft for `targetGuildId`, defaulting to the active guild.
+	 *
+	 * An in-flight PATCH outlives the guild it was issued for: the admin can
+	 * confirm a switch while it runs. Callers that awaited a response therefore
+	 * pass the id they captured before awaiting, so clearing a saved draft
+	 * cannot erase edits staged on whichever guild is active when it arrives.
+	 */
+	const mergeGuildSettings = (changes?: Partial<GuildData>, targetGuildId?: string) => {
+		const guildId = targetGuildId ?? activeGuildId.value;
 		if (!changes) {
-			write(undefined);
+			write(undefined, guildId);
 			return;
 		}
 
 		write(
 			deepMerge<GuildData, Partial<GuildData>>(
-				guildSettingsChanges.value ?? ({} as GuildData),
+				(guildId ? store.value[guildId] : undefined) ?? ({} as GuildData),
 				changes,
 				mergeOptions,
 			),
+			guildId,
 		);
 		log.info({
 			tag: "guild:settings:changes",
 			action: "merge_settings",
-			guildId: activeGuildId.value,
+			guildId,
 			keys: Object.keys(changes),
 		});
 	};
 
-	const setGuildSettingsChanges = (changes?: Partial<GuildData>) => {
-		mergeGuildSettings(changes);
+	const setGuildSettingsChanges = (changes?: Partial<GuildData>, targetGuildId?: string) => {
+		mergeGuildSettings(changes, targetGuildId);
 	};
 
 	const removeChange = (key: keyof GuildData) => {

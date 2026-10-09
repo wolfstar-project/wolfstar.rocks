@@ -142,7 +142,6 @@ describe("BuildEnvironment", () => {
 			},
 		});
 
-		// The footer variant renders as a bordered status pill (redesign canvas).
 		const container = component.find("div");
 		expect(container.classes()).toContain("items-center");
 		expect(container.classes()).toContain("gap-2");

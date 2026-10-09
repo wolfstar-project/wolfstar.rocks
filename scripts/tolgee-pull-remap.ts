@@ -15,11 +15,13 @@ import {
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { normalizeTolgeeDictionary, withLocaleSchemaPointer } from "./utils/tolgee-dictionary.ts";
+import { planPullNamespaces } from "./utils/tolgee-namespaces.ts";
 
 const require = createRequire(import.meta.url);
 const config = require("../.tolgeerc.cjs") as {
 	tolgeeToLocal: Record<string, string>;
 	namespaces: string[];
+	unpushedNamespaces: string[];
 	pull: { path: string };
 };
 
@@ -52,19 +54,24 @@ if (absentTags.length > 0) {
 	);
 }
 
-// A namespace absent from every pulled language was never pushed to the
-// platform (e.g. `errors`/`marketing` while the Tolgee plan's key cap blocks
-// the push). Skip it and keep the local files instead of failing the sync.
-const hasPulledFile = (tag: string, ns: string) => existsSync(join(pullRoot, tag, `${ns}.json`));
-const skippedNamespaces = config.namespaces.filter(
-	(ns) => !mappedTags.some((tag) => hasPulledFile(tag, ns)),
-);
-if (skippedNamespaces.length > 0) {
+// Namespaces listed in `unpushedNamespaces` (e.g. `errors`/`marketing` while the
+// Tolgee plan's key cap blocks the push) are skipped when no language carries
+// them, keeping their local files. Any other absence still fails the pull.
+const {
+	active: namespaces,
+	skipped,
+	missing,
+} = planPullNamespaces({
+	namespaces: config.namespaces,
+	unpushedNamespaces: config.unpushedNamespaces,
+	tags: mappedTags,
+	hasPulledFile: (tag, ns) => existsSync(join(pullRoot, tag, `${ns}.json`)),
+});
+if (skipped.length > 0) {
 	console.warn(
-		`Namespaces absent from every pulled language (left untouched): ${skippedNamespaces.join(", ")}`,
+		`Unpushed namespaces absent from this pull (left untouched): ${skipped.join(", ")}`,
 	);
 }
-const namespaces = config.namespaces.filter((ns) => !skippedNamespaces.includes(ns));
 if (namespaces.length === 0) {
 	console.error(`No configured namespaces found in ${pullRoot}`);
 	process.exit(1);
@@ -73,9 +80,6 @@ if (namespaces.length === 0) {
 // Validate each present language is complete before touching i18n/locales/,
 // so a partial export cannot silently leave some namespaces stale while
 // updating others.
-const missing = mappedTags.flatMap((tag) =>
-	namespaces.filter((ns) => !hasPulledFile(tag, ns)).map((ns) => `${tag}/${ns}.json`),
-);
 if (missing.length > 0) {
 	console.error("Incomplete Tolgee pull; missing namespace files:");
 	for (const file of missing) console.error(`  - ${file}`);

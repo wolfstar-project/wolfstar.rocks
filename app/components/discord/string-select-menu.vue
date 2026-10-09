@@ -136,16 +136,15 @@ const {
 	update: updateTriggerBounds,
 } = useElementBounding(triggerRef);
 
-const placement = computed(
-	(): StringSelectMenuPlacement =>
-		resolveStringSelectMenuPlacement(
-			{
-				top: triggerTop.value,
-				bottom: triggerBottom.value,
-				height: triggerHeight.value,
-			},
-			import.meta.client ? window.innerHeight : 0,
-		),
+const placement = computed((): StringSelectMenuPlacement =>
+	resolveStringSelectMenuPlacement(
+		{
+			top: triggerTop.value,
+			bottom: triggerBottom.value,
+			height: triggerHeight.value,
+		},
+		import.meta.client ? window.innerHeight : 0,
+	),
 );
 
 const panelStyle = computed((): CSSProperties => {

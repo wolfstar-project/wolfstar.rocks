@@ -1,4 +1,4 @@
-import { expect, test } from "./test-utils";
+import { expect, test } from "./test-utils.ts";
 
 declare global {
 	interface Window {

@@ -33,6 +33,15 @@
 | Constants        | UPPER_SNAKE_CASE | `API_BASE_URL`          |
 | Types/Interfaces | PascalCase       | `GuildSettings`         |
 
+## Nuxt 5 Compatibility
+
+- `nuxt.config.ts` sets `future.compatibilityVersion: 5`, which already turns on `typedPages`, `routeTypedFetch`, `payloadExtraction: "client"`, `inlineErrorRendering`, `navigateToEarlyReturn`, `extractSerializablePageMeta`, `normalizePageNames`, `watcher: "builder"`, case-sensitive routing and `useState` reset-on-clear. Never repeat those in `experimental`; only add flags v5 leaves off (`early404`, `strictRouteTypes`) or deliberate overrides. `viteEnvironmentApi: !isStorybook` stays explicit even though v5 also defaults it on, so Storybook keeps the legacy pipeline
+- `experimental.nitroAutoImports: true` is a deliberate override: v5 turns Nitro auto-imports off, and every file under `server/` relies on them (`defineEventHandler`, `createError`, `getQuery`, `useRuntimeConfig`, the project's own `server/utils`). Remove it only after migrating `server/` to explicit imports
+- Because v5 routing is case-sensitive and `early404` 404s any path no page or alias can match before the Vue app boots, new entry points must be real pages or `definePageMeta` aliases — not router middleware redirects from unknown paths
+- v5 generates `.nuxt/tsconfig.node.json` with `module`/`moduleResolution: "nodenext"` and `erasableSyntaxOnly`, and Nuxt loads `nuxt.config.ts` and local modules natively in Node before falling back to jiti (`NUXT_B5023`/`NUXT_B8023` warnings). Relative imports in `nuxt.config.ts`, `modules/`, `config/` and `test/e2e/` therefore need explicit `.ts` extensions, JSON imports need `with { type: "json" }`, and directory imports must name the file
+- Typed `$fetch` (`routeTypedFetch`) pulls server handlers into the `shared` TS project, which is why `typescript.sharedTsConfig.include` lists `./content/types.d.ts` — without it `queryCollection()` in server routes resolves to `never`
+- `h3` is a direct dependency pinned to v1 (Nitro 2's major): code under `server/` and `test/` imports it directly, and without the pin pnpm hoists the h3 v2 release candidate that Nuxt 4.6's own runtime pulls in
+
 ## Server API Patterns
 
 - Routes go under `server/api/` with HTTP suffix (`.get.ts`, `.post.ts`)

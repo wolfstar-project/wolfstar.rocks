@@ -1,4 +1,4 @@
-import { expect, test } from "./test-utils";
+import { expect, test } from "./test-utils.ts";
 
 const PAGES = ["/", "/staryl", "/terms", "/privacy"] as const;
 const MARKETING_PAGES = [

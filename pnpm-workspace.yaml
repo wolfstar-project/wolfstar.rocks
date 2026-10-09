@@ -31,12 +31,12 @@ catalogs:
         storybook: ^10.5.4
 
     vite-plus:
-        vite: npm:@voidzero-dev/vite-plus-core@0.2.8
+        vite: npm:@voidzero-dev/vite-plus-core@0.3.3
         vite-plus: 0.3.3
-        vitest: 4.1.10
-        "@vitest/browser-playwright": 4.1.10
-        "@vitest/coverage-v8": 4.1.10
-        "@vitest/ui": 4.1.10
+        vitest: 4.1.11
+        "@vitest/browser-playwright": 4.1.11
+        "@vitest/coverage-v8": 4.1.11
+        "@vitest/ui": 4.1.11
 
 dedupePeers: true
 

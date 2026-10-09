@@ -116,7 +116,7 @@
 		"@discordjs/core": "2.6.0",
 		"@e18e/eslint-plugin": "0.8.1",
 		"@google/design.md": "0.4.0",
-		"@netlify/nuxt": "0.3.9",
+		"@netlify/nuxt": "1.0.1",
 		"@nuxt/hints": "1.1.4",
 		"@nuxt/test-utils": "4.3.2",
 		"@sapphire/bitfield": "1.2.4",

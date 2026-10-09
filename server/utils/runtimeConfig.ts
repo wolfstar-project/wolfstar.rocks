@@ -1,4 +1,7 @@
-import type { NitroRuntimeConfig } from "nitropack/types";
+// Not `nitropack/types` (as `wrappedEventHandler.ts` uses): `nuxt.config.ts`
+// imports this file, so it is also checked under the node tsconfig's
+// `nodenext` resolution, where that subpath's extensionless re-export fails.
+import type { NitroRuntimeConfig } from "nitropack";
 import { cast } from "@sapphire/utilities/cast";
 import { config } from "dotenv";
 

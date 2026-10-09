@@ -2,10 +2,10 @@ import netlifyNuxt from "@netlify/nuxt";
 import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
 import { isCI, isTest, provider } from "std-env";
-import { currentLocales, datetimeFormats, numberFormats } from "./config/i18n";
-import { pwa } from "./config/pwa";
-import { LOCALE_BUNDLES_DIR } from "./modules/i18n-locale-bundles";
-import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
+import { currentLocales, datetimeFormats, numberFormats } from "./config/i18n.ts";
+import { pwa } from "./config/pwa.ts";
+import { LOCALE_BUNDLES_DIR } from "./modules/i18n-locale-bundles.ts";
+import { generateRuntimeConfig } from "./server/utils/runtimeConfig.ts";
 
 const runtimeConfig = generateRuntimeConfig();
 const isStorybook = process.env.STORYBOOK === "true" || process.env.VITEST_STORYBOOK === "true";
@@ -340,12 +340,27 @@ export default defineNuxtConfig({
 		inlineStyles: true,
 	},
 
+	// Nuxt 5 defaults (typedPages, routeTypedFetch, payloadExtraction: "client",
+	// inlineErrorRendering, case-sensitive routing, …) come from
+	// `compatibilityVersion: 5`; only flags it does not set, or that this
+	// project must override, belong in `experimental` below.
+	future: {
+		compatibilityVersion: 5,
+	},
+
 	experimental: {
 		clientNodeCompat: true,
 		typescriptPlugin: true,
 		viteEnvironmentApi: !isStorybook,
-		typedPages: true,
 		checkOutdatedBuildInterval: 5 * 60 * 1000, // 5 minutes
+		// v5 drops Nitro auto-imports; everything under server/ still relies on
+		// them (defineEventHandler, createError, useRuntimeConfig, own utils, …).
+		nitroAutoImports: true,
+		// Unknown paths 404 before the Vue app, plugins and middleware are created;
+		// with inlineErrorRendering the branded error.vue still renders the page.
+		early404: true,
+		// Reject $fetch/useFetch calls to paths no server route answers.
+		strictRouteTypes: true,
 	},
 
 	compatibilityDate: "2025-09-20",
@@ -474,7 +489,9 @@ export default defineNuxtConfig({
 			include: ["../test/unit/app/**/*.ts"],
 		},
 		sharedTsConfig: {
-			include: ["../test/unit/shared/**/*.ts"],
+			// Typed $fetch (routeTypedFetch) pulls server handlers into this
+			// project, so it needs @nuxt/content's collection augmentations too.
+			include: ["../test/unit/shared/**/*.ts", "./content/types.d.ts"],
 		},
 		nodeTsConfig: {
 			compilerOptions: {

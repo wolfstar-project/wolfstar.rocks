@@ -52,13 +52,29 @@ if (absentTags.length > 0) {
 	);
 }
 
+// A namespace absent from every pulled language was never pushed to the
+// platform (e.g. `errors`/`marketing` while the Tolgee plan's key cap blocks
+// the push). Skip it and keep the local files instead of failing the sync.
+const hasPulledFile = (tag: string, ns: string) => existsSync(join(pullRoot, tag, `${ns}.json`));
+const skippedNamespaces = config.namespaces.filter(
+	(ns) => !mappedTags.some((tag) => hasPulledFile(tag, ns)),
+);
+if (skippedNamespaces.length > 0) {
+	console.warn(
+		`Namespaces absent from every pulled language (left untouched): ${skippedNamespaces.join(", ")}`,
+	);
+}
+const namespaces = config.namespaces.filter((ns) => !skippedNamespaces.includes(ns));
+if (namespaces.length === 0) {
+	console.error(`No configured namespaces found in ${pullRoot}`);
+	process.exit(1);
+}
+
 // Validate each present language is complete before touching i18n/locales/,
 // so a partial export cannot silently leave some namespaces stale while
 // updating others.
 const missing = mappedTags.flatMap((tag) =>
-	config.namespaces
-		.filter((ns) => !existsSync(join(pullRoot, tag, `${ns}.json`)))
-		.map((ns) => `${tag}/${ns}.json`),
+	namespaces.filter((ns) => !hasPulledFile(tag, ns)).map((ns) => `${tag}/${ns}.json`),
 );
 if (missing.length > 0) {
 	console.error("Incomplete Tolgee pull; missing namespace files:");
@@ -75,7 +91,7 @@ const writes: { dest: string; content: Buffer }[] = [];
 for (const tag of mappedTags) {
 	const localDir = config.tolgeeToLocal[tag];
 	if (!localDir) continue;
-	for (const ns of config.namespaces) {
+	for (const ns of namespaces) {
 		let content: Buffer;
 		try {
 			const source = readFileSync(join(pullRoot, tag, `${ns}.json`), "utf8");

@@ -87,35 +87,15 @@ const {
 // Pre-define async components outside of computed to avoid re-creating
 // wrapper instances on every reactive update, which would unmount/remount.
 const asyncComponentMap: Record<string, ReturnType<typeof defineAsyncComponent>> = {
-	"channels": defineAsyncComponent(() => import("~/components/guild/settings/Channels.vue")),
-	"commands": defineAsyncComponent(
+	automod: defineAsyncComponent(() => import("~/components/guild/settings/Automod.vue")),
+	channels: defineAsyncComponent(() => import("~/components/guild/settings/Channels.vue")),
+	commands: defineAsyncComponent(
 		() => import("~/components/guild/settings/DisabledCommands.vue"),
 	),
-	"events": defineAsyncComponent(() => import("~/components/guild/settings/Events.vue")),
-	"moderation": defineAsyncComponent(() => import("~/components/guild/settings/Moderation.vue")),
-	"modules": defineAsyncComponent(() => import("~/components/guild/settings/Modules.vue")),
-	"roles": defineAsyncComponent(() => import("~/components/guild/settings/Roles.vue")),
-	"moderation/word": defineAsyncComponent(
-		() => import("~/components/guild/settings/filter/Word.vue"),
-	),
-	"moderation/capitals": defineAsyncComponent(
-		() => import("~/components/guild/settings/filter/Capitals.vue"),
-	),
-	"moderation/invites": defineAsyncComponent(
-		() => import("~/components/guild/settings/filter/Invites.vue"),
-	),
-	"moderation/links": defineAsyncComponent(
-		() => import("~/components/guild/settings/filter/Links.vue"),
-	),
-	"moderation/messages": defineAsyncComponent(
-		() => import("~/components/guild/settings/filter/MessageDuplication.vue"),
-	),
-	"moderation/lines": defineAsyncComponent(
-		() => import("~/components/guild/settings/filter/NewLine.vue"),
-	),
-	"moderation/reactions": defineAsyncComponent(
-		() => import("~/components/guild/settings/filter/Reactions.vue"),
-	),
+	moderation: defineAsyncComponent(() => import("~/components/guild/settings/Moderation.vue")),
+	modules: defineAsyncComponent(() => import("~/components/guild/settings/Modules.vue")),
+	reports: defineAsyncComponent(() => import("~/components/guild/settings/Reports.vue")),
+	roles: defineAsyncComponent(() => import("~/components/guild/settings/Roles.vue")),
 };
 const defaultComponent = defineAsyncComponent(
 	() => import("~/components/guild/settings/General.vue"),

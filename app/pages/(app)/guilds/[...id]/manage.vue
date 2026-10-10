@@ -30,7 +30,7 @@ if (import.meta.client) {
 	const id = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
 	const slug = Array.isArray(route.params.slug) ? route.params.slug.join("/") : route.params.slug;
 	selectGuild(id ?? null);
-	setSection(slug ?? "");
+	setSection(resolveLegacyDashboardSection(slug ?? ""));
 	await navigateTo({ path: "/app", query: route.query }, { replace: true });
 }
 </script>

@@ -99,9 +99,9 @@ describe("auditLogChangeLines", () => {
 		expect(toText.length).toBeGreaterThan(0);
 	});
 
-	it("messagesModerationDm changed false -> true gives Disabled/Enabled", () => {
+	it("moderationTrackBans changed false -> true gives Disabled/Enabled", () => {
 		const entry = makeEntry({
-			changed: { messagesModerationDm: { from: false, to: true } },
+			changed: { moderationTrackBans: { from: false, to: true } },
 		});
 		const lines = auditLogChangeLines(entry, resolver);
 		expect(lines).toHaveLength(1);

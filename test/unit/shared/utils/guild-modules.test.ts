@@ -1,22 +1,19 @@
-import { parse } from "valibot";
 import { describe, expect, it } from "vitest";
-import { ModulesSettingsSchema } from "../../../../shared/schemas/modules";
-import {
-	countEnabledModules,
-	GUILD_MODULES,
-	guildModuleSection,
-} from "../../../../shared/utils/guild-modules";
+import { countEnabledModules, GUILD_MODULES } from "../../../../shared/utils/guild-modules";
 
 describe("guild modules registry", () => {
-	it("lists every selfmod module once with a unique key and slug", () => {
+	it("lists every module of the V7 Modules table once", () => {
 		const keys = GUILD_MODULES.map((module) => module.key);
-		const slugs = GUILD_MODULES.map((module) => module.slug);
+		const sections = GUILD_MODULES.map((module) => module.section);
 
-		expect(new Set(keys).size).toBe(GUILD_MODULES.length);
-		expect(new Set(slugs).size).toBe(GUILD_MODULES.length);
-		expect(keys.every((key) => key.startsWith("selfmod") && key.endsWith("Enabled"))).toBe(
-			true,
-		);
+		expect(keys.toSorted()).toStrictEqual([
+			"modulesAutomod",
+			"modulesCommands",
+			"modulesLogs",
+			"modulesModeration",
+			"modulesRoles",
+		]);
+		expect(new Set(sections).size).toBe(GUILD_MODULES.length);
 	});
 
 	it("counts only modules whose flag is exactly true", () => {
@@ -24,25 +21,11 @@ describe("guild modules registry", () => {
 		expect(countEnabledModules({})).toBe(0);
 		expect(
 			countEnabledModules({
-				selfmodCapitalsEnabled: null,
-				selfmodFilterEnabled: true,
-				selfmodInvitesEnabled: false,
-				selfmodLinksEnabled: true,
+				modulesAutomod: true,
+				modulesCommands: null,
+				modulesLogs: false,
+				modulesRoles: true,
 			}),
 		).toBe(2);
-	});
-
-	it("builds the /app section slug for a module", () => {
-		expect(guildModuleSection("word")).toBe("moderation/word");
-	});
-
-	it("schema accepts every module flag and defaults missing ones to false", () => {
-		const parsed = parse(ModulesSettingsSchema, { selfmodFilterEnabled: true });
-
-		expect(parsed.selfmodFilterEnabled).toBe(true);
-		for (const module of GUILD_MODULES) {
-			expect(module.key in parsed).toBe(true);
-		}
-		expect(parsed.selfmodReactionsEnabled).toBe(false);
 	});
 });

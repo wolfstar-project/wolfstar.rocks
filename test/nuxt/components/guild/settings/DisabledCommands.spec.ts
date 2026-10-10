@@ -3,11 +3,12 @@ import type { DOMWrapper } from "@vue/test-utils";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import DisabledCommands from "~/components/guild/settings/DisabledCommands.vue";
+import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 import { createMockGuildData } from "~~/test/mocks/guildData";
 
 // Mock composables at module scope
 const mockGuildSettings = createMockGuildData("123456789012345678", {
-	disabledCommands: ["ban"],
+	commandsDisabled: ["ban"],
 });
 const mockToastAdd = vi.fn();
 const mockSetGuildSettingsChanges = vi.fn();
@@ -35,6 +36,10 @@ mockNuxtImport("useGuildSettingsChanges", () => () => ({
 
 mockNuxtImport("useToast", () => () => ({
 	add: mockToastAdd,
+}));
+
+mockNuxtImport("useGuildData", () => () => ({
+	guildData: ref(createMockOauthFlattenedGuild({ id: "123456789012345678" })),
 }));
 
 // Mock commands data with multiple categories

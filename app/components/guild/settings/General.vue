@@ -107,40 +107,10 @@
 			:schema="schema"
 			:state="state"
 			:map-to-guild-data="mapToGuildData"
-			class="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2"
+			class="mt-4 grid grid-cols-1 gap-5"
 			:aria-label="ts('guild_settings.general.form_aria')"
 			@error="onError"
 		>
-			<UFormField :label="ts('guild_settings.general.prefix')" name="prefix">
-				<UInput
-					id="prefix"
-					v-model="state.prefix"
-					:placeholder="ts('guild_settings.general.prefix_placeholder')"
-					color="primary"
-					class="w-full"
-					aria-describedby="prefix-description character-count"
-					:aria-label="ts('guild_settings.general.prefix_aria')"
-				>
-					<template #trailing>
-						<div
-							id="character-count"
-							class="text-xs text-muted tabular-nums"
-							aria-live="polite"
-							role="status"
-						>
-							{{ state.prefix?.length }}/10
-						</div>
-					</template>
-				</UInput>
-				<template #error="{ error }">
-					<p class="text-sm text-error">{{ error }}</p>
-				</template>
-				<template #description>
-					<p id="prefix-description" class="text-[0.8125rem] text-muted">
-						{{ ts("guild_settings.general.prefix_description") }}
-					</p>
-				</template>
-			</UFormField>
 			<UFormField :label="ts('guild_settings.general.language')" name="language">
 				<template #description>
 					<p id="language-description" class="text-[0.8125rem] text-muted">
@@ -422,15 +392,10 @@ const state = reactive<Schema>({
 			value: currentLangKey,
 		};
 	})(),
-	prefix: guildSettings.value!.prefix,
 });
 
 function mapToGuildData(formState: Schema): Partial<GuildData> {
 	const changes: Partial<GuildData> = {};
-
-	if (formState.prefix) {
-		changes.prefix = formState.prefix;
-	}
 
 	if (formState.language) {
 		changes.language = formState.language.value;

@@ -71,11 +71,11 @@ export function guildSettingsSaveFailureToast(
  * intentionally — objects with null prototypes or non-plain class instances are rejected in
  * favour of the `fallback`, since guild settings are always plain JSON objects.
  */
-export function parseGuildSettings(
+export function parseGuildSettings<Settings extends object>(
 	raw: string,
-	fallback: Record<string, unknown>,
+	fallback: Settings,
 	onError?: (err: unknown) => void,
-): Record<string, unknown> {
+): Settings {
 	try {
 		const parsed: unknown = JSON.parse(raw);
 		if (
@@ -84,7 +84,7 @@ export function parseGuildSettings(
 			!Array.isArray(parsed) &&
 			Object.getPrototypeOf(parsed) === Object.prototype
 		) {
-			return parsed as Record<string, unknown>;
+			return parsed as Settings;
 		}
 		return fallback;
 	} catch (err) {
@@ -105,4 +105,15 @@ export function selectDashboardRailGuilds(
 	return guilds
 		.filter((guild) => guild.manageable && guild.wolfstarIsIn)
 		.toSorted((a, b) => a.name.localeCompare(b.name, "en", { sensitivity: "base" }));
+}
+
+/**
+ * Maps a section slug from a pre-V7 `/guilds/:id/manage/*` link to the section
+ * that holds those settings now. The per-filter pages became auto-moderation
+ * rules, and the event toggles moved next to the moderation log channel.
+ */
+export function resolveLegacyDashboardSection(slug: string): string {
+	if (slug.startsWith("moderation/")) return "automod";
+	if (slug === "events") return "moderation";
+	return slug;
 }

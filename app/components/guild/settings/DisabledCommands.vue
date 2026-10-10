@@ -4,6 +4,27 @@
 			:title="ts('guild_settings.commands.title')"
 			:description="ts('guild_settings.commands.subtitle')"
 		>
+			<GuildSettingsForm
+				:state="channelsState"
+				:schema="channelsSchema"
+				:map-to-guild-data="mapChannelsToGuildData"
+				:aria-label="ts('guild_settings.commands.channels_form_aria')"
+				@error="onChannelsError"
+			>
+				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+					<SelectChannels
+						v-for="config in ConfigurableCommandChannels"
+						:key="config.key"
+						v-model="channelsState[config.key]"
+						:guild="guildData"
+						:label="translateEntry(config, 'name')"
+						:tooltip-title="translateEntry(config, 'description')"
+					/>
+				</div>
+			</GuildSettingsForm>
+
+			<Separator />
+
 			<!-- Unified Form wrapper to match skeleton and content -->
 			<div v-if="loading" class="space-y-4">
 				<div v-for="i in 3" :key="i" class="space-y-2">
@@ -134,6 +155,7 @@ import type { FormErrorEvent } from "@nuxt/ui";
 import type * as v from "valibot";
 // oxlint-disable-next-line typescript/consistent-type-imports
 import { disabledCommandsSchema } from "#shared/schemas";
+import { ConfigurableCommandChannels } from "#shared/utils/settingsDataEntries";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
 
 const { commands } = defineProps<{
@@ -143,14 +165,21 @@ const { commands } = defineProps<{
 type Schema = v.InferOutput<typeof disabledCommandsSchema>;
 
 const { ts } = useI18n();
+const { translateEntry } = useSettingsEntryI18n();
 const toast = useToast();
+const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();
+
+const {
+	mapToGuildData: mapChannelsToGuildData,
+	onError: onChannelsError,
+	schema: channelsSchema,
+	state: channelsState,
+} = useSettingsForm({ many: ConfigurableCommandChannels.map((entry) => entry.key) });
 
 const expandedCategory = ref<string | undefined>(undefined);
 
-const state = reactive<Schema>(
-	createDefaultState(commands, guildSettings.value?.disabledCommands as string[]),
-);
+const state = reactive<Schema>(createDefaultState(commands, guildSettings.value?.commandsDisabled));
 
 // Loading state
 const loading = computed(() => !commands.length || !guildSettings.value);
@@ -198,7 +227,7 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 		}
 	}
 
-	return { disabledCommands };
+	return { commandsDisabled: disabledCommands };
 }
 
 function toggleCommand(name: string, isEnabled: boolean) {
@@ -235,7 +264,7 @@ function toggleCategory(category: string): void {
 function resetCategory(category: string) {
 	const commands = getCommandsByCategory(category);
 	for (const command of commands) {
-		toggleCommand(command.name, !guildSettings.value?.disabledCommands?.includes(command.name));
+		toggleCommand(command.name, !guildSettings.value?.commandsDisabled.includes(command.name));
 	}
 
 	toast.add({
@@ -266,10 +295,7 @@ watch(
 	loading,
 	(isLoading) => {
 		if (!isLoading && guildSettings.value) {
-			const newValues = createDefaultState(
-				commands,
-				guildSettings.value.disabledCommands as string[],
-			);
+			const newValues = createDefaultState(commands, guildSettings.value.commandsDisabled);
 
 			// Remove stale keys not in new values
 			for (const key in state) {

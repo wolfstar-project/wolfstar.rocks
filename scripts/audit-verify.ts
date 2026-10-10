@@ -13,16 +13,19 @@
  * Exit codes: 0 = chain valid, 1 = invalid or fatal error.
  */
 
-import type { Contract } from "../server/database/prisma8/contract.js";
+import type { Contract } from "../server/database/generated/prisma/contract.js";
 import type { PersistedAuditRow } from "../shared/audit/persisted.js";
 import postgres from "@prisma/orm-postgres/runtime";
-import contractJson from "../server/database/prisma8/contract.json" with { type: "json" };
+import { typedRuntimeDescriptor } from "prisma-orm-extension-typed-json/runtime";
+import contractJson from "../server/database/generated/prisma/contract.json" with { type: "json" };
 import { timestampStringToDate } from "../server/utils/timestamp-string.js";
 import { verifyPersistedAuditChain } from "../shared/audit/persisted.js";
 
 const db = postgres<Contract>({
-	url: process.env.DATABASE_URL ?? "",
+	url: process.env.DATABASE_URL || undefined,
 	contractJson,
+	// The contract's typed-JSON columns need their runtime codecs registered.
+	extensions: [typedRuntimeDescriptor],
 });
 
 type AuditEventRow = Awaited<ReturnType<typeof db.orm.public.AuditEvent.all>>[number];

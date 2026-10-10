@@ -1,4 +1,5 @@
-import { coerceBigIntFields, serializeSettings, writeSettingsTransaction } from "#server/database";
+import { serializeSettings, writeSettingsTransaction } from "#server/database";
+import { parseSettingsChanges } from "#server/database/settings/validation";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
 import { guildSettingsAccessDenied, guildSettingsUpdate } from "#shared/audit/actions";
 import { SettingsUpdateSchema } from "#shared/schemas";
@@ -73,8 +74,6 @@ export default defineWrappedResponseHandler(
 			throw canManageErr;
 		}
 
-		using trx = await writeSettingsTransaction(guild.id);
-
 		if (!data.every((entry): entry is [string, unknown] => entry !== undefined)) {
 			throw createError({
 				message: "Invalid data entries",
@@ -84,11 +83,20 @@ export default defineWrappedResponseHandler(
 			});
 		}
 
-		const settingsData = Object.fromEntries(data);
+		const parsed = parseSettingsChanges(data);
+		if (parsed.errors) {
+			throw createError({
+				message: "Invalid settings",
+				status: 400,
+				why: parsed.errors.join(" "),
+				fix: "Send only known setting keys, each with a value of its type",
+			});
+		}
+
+		const settingsData = parsed.data;
 		log.set({ settings: { keysUpdated: Object.keys(settingsData).length } });
 
-		// Coerce BigInt fields from JSON (numbers/strings) to BigInt
-		coerceBigIntFields(settingsData);
+		using trx = await writeSettingsTransaction(guild.id);
 
 		const beforeSettings = JSON.parse(serializeSettings(trx.settings)) as Record<
 			string,

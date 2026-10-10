@@ -17,7 +17,7 @@ export const MODERATION_ACTIONS = [
 	"Unban",
 ] as const;
 
-export type ModerationAction = (typeof MODERATION_ACTIONS)[number];
+export type ModerationActionName = (typeof MODERATION_ACTIONS)[number];
 
 /**
  * Filter key per action, and the only bridge between V7's enum and the numeric
@@ -42,23 +42,22 @@ export const MODERATION_ACTION_CODE = {
 	Softban: 4,
 	Ban: 5,
 	Unban: 16,
-} as const satisfies Record<ModerationAction, number>;
+} as const satisfies Record<ModerationActionName, number>;
 
-export type ModerationTypeName = ModerationAction;
+export type ModerationTypeName = ModerationActionName;
 
-const CODE_TO_ACTION = new Map<number, ModerationAction>(
-	(Object.entries(MODERATION_ACTION_CODE) as [ModerationAction, number][]).map(([name, code]) => [
-		code,
-		name,
-	]),
+const CODE_TO_ACTION = new Map<number, ModerationActionName>(
+	(Object.entries(MODERATION_ACTION_CODE) as [ModerationActionName, number][]).map(
+		([name, code]) => [code, name],
+	),
 );
 
 /** Names the action a filter code selects, or `null` when no action uses it. */
-export function moderationActionFromCode(code: number): ModerationAction | null {
+export function moderationActionFromCode(code: number): ModerationActionName | null {
 	return CODE_TO_ACTION.get(code) ?? null;
 }
 
-export function decodeModerationType(code: number): ModerationAction | "Unknown" {
+export function decodeModerationType(code: number): ModerationActionName | "Unknown" {
 	return CODE_TO_ACTION.get(code) ?? "Unknown";
 }
 

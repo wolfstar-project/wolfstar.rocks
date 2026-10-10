@@ -71,6 +71,11 @@ overrides:
     "@unhead/bundler": 3.4.2
     unhead: 3.4.2
     sharp: 0.35.3
+    # prisma-orm-extension-typed-json is only published for rc.5: run it on the rc.13 packs the
+    # contract needs, exactly as the bot does (wolfstar-project/wolfstar, V7).
+    prisma-orm-extension-typed-json>@prisma/orm-family-sql: 8.0.0-rc.13
+    prisma-orm-extension-typed-json>@prisma/orm-framework: 8.0.0-rc.13
+    "@prisma/orm-target-postgres": 8.0.0-rc.13
     typescript: npm:typescript-native-bridge@6.0.3-bridge.10.tsgo.7.0.2
     vite: catalog:vite-plus
     vitest: catalog:vite-plus
@@ -78,3 +83,6 @@ overrides:
 savePrefix: ""
 
 shellEmulator: true
+
+patchedDependencies:
+    prisma-orm-extension-typed-json: patches/prisma-orm-extension-typed-json.patch

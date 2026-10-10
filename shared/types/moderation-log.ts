@@ -1,5 +1,5 @@
 import type { APIGuildMember } from "discord-api-types/v10";
-import type { ModerationAction, ModerationMetadata } from "./moderation-types";
+import type { ModerationActionName, ModerationMetadata } from "./moderation-types";
 
 export interface ModerationLogEntry {
 	caseId: number;
@@ -9,7 +9,7 @@ export interface ModerationLogEntry {
 	moderatorId: string;
 	moderatorMember: APIGuildMember | null;
 	typeCode: number;
-	typeName: ModerationAction | "Unknown";
+	typeName: ModerationActionName | "Unknown";
 	reason: string | null;
 	referenceId: number | null;
 	duration: number;

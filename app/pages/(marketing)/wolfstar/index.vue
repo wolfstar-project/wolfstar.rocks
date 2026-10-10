@@ -10,9 +10,9 @@
 
 		<WolfstarModerationShowcaseSection />
 
-		<WolfstarCommandsSection />
-
 		<WolfstarDashboardSection />
+
+		<WolfstarCommandsSection />
 
 		<OtherApps :apps="[otherApps.Staryl]" />
 

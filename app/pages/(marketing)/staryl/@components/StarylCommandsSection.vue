@@ -14,7 +14,8 @@
 			align="start"
 			class="mb-10"
 		/>
-		<LazyStarylCommandsShowcase />
+		<!-- Below the fold: keep the SSR markup, defer hydration until it scrolls into view. -->
+		<LazyStarylCommandsShowcase hydrate-on-visible />
 	</Section>
 </template>
 

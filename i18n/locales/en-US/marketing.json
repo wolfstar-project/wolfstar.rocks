@@ -40,7 +40,7 @@
 				"setup_value": "Runs on {command}, no dashboard needed",
 				"sources_term": "Sources",
 				"sources_value": "Twitch live and offline alerts today, more sources planned",
-				"subtitle": "Staryl is in development. This page is a placeholder while its notification sources and command set are finalised.",
+				"subtitle": "Staryl is in development. Its notification sources and command set are still being finalised.",
 				"title": "Social updates, where your server already is.",
 				"view_source": "View source"
 			},

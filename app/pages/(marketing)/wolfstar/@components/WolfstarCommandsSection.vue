@@ -8,7 +8,8 @@
 			align="start"
 			class="mb-10"
 		/>
-		<LazyWolfstarCommandsShowcase />
+		<!-- Below the fold: keep the SSR markup, defer hydration until it scrolls into view. -->
+		<LazyWolfstarCommandsShowcase hydrate-on-visible />
 	</Section>
 </template>
 

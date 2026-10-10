@@ -15,8 +15,186 @@
 	"guild_settings": {
 		"automod": {
 			"form_aria": "Auto-moderation settings form",
+			"hard_actions": {
+				"Ban": "Ban",
+				"Kick": "Kick",
+				"Mute": "Mute",
+				"Softban": "Softban",
+				"Timeout": "Timeout",
+				"VoiceKick": "Voice kick",
+				"Warning": "Warning"
+			},
+			"options": {
+				"alerts": "Warn before banning",
+				"allowed": "Allowed domains",
+				"allowedCodes": "Allowed invite codes",
+				"allowedGuilds": "Allowed server IDs",
+				"characters": "Repeated characters",
+				"maximum": "Maximum",
+				"mentionsAllowed": "Mention points allowed",
+				"minimum": "Minimum length",
+				"timePeriod": "Time period (seconds)",
+				"words": "Words"
+			},
+			"rules": {
+				"count": "{count} / {max} rules",
+				"delete": "Delete",
+				"delete_aria": "Delete rule {name}",
+				"delete_description": "The rule \"{name}\" will stop acting on messages. This can't be undone.",
+				"delete_title": "Delete rule",
+				"edit": "Edit",
+				"edit_aria": "Edit rule {name}",
+				"editor": {
+					"action": "Action",
+					"cancel": "Cancel",
+					"create": "Create rule",
+					"create_title": "New rule",
+					"description": "Choose what the rule looks for and what happens when a member breaks it.",
+					"duration": "Duration",
+					"duration_unit_aria": "{label} unit",
+					"edit_title": "Edit {name}",
+					"enabled": "Enabled",
+					"escalation": "Escalation",
+					"escalation_add": "Add step",
+					"escalation_duration": "Punishments count for",
+					"escalation_duration_help": "How long a punishment counts towards the next step.",
+					"escalation_help": "What replaces the punishment for members who keep reaching the threshold. The last step repeats.",
+					"escalation_remove_aria": "Remove step {index}",
+					"escalation_step": "Step {index}",
+					"exemptions": "Exemptions",
+					"hard_action": "Punishment",
+					"hard_action_help": "Applied once a member reaches the threshold. A threshold of 0 punishes on the first infraction.",
+					"ignored_channels": "Ignored channels",
+					"ignored_roles": "Ignored roles",
+					"list_placeholder": "Type and press Enter",
+					"name": "Name",
+					"name_placeholder": "e.g. No invite links",
+					"options": "What it looks for",
+					"permanent_hint": "Leave at 0 for a permanent action.",
+					"save": "Save rule",
+					"soft_actions": "On every infraction",
+					"soft_actions_help": "Applied each time a message breaks the rule.",
+					"soft_alert": "Alert the channel",
+					"soft_delete": "Delete the message",
+					"soft_log": "Log it",
+					"threshold_duration": "Counted within",
+					"threshold_maximum": "Infractions before punishment",
+					"type": "Type",
+					"type_locked": "The type of a rule can't be changed."
+				},
+				"empty_description": "Create a rule to start filtering messages on this server.",
+				"empty_title": "No rules yet",
+				"errors": {
+					"generic": "Something went wrong. Please try again.",
+					"invalid": "The server refused one of the values. Check the fields and try again.",
+					"limit": "This server already has the maximum number of rules.",
+					"nameInvalid": "Use a name of 1 to 50 characters that isn't just a number.",
+					"nameRequired": "Give the rule a name.",
+					"nameTaken": "There is already a rule with that name.",
+					"timeoutNeedsDuration": "A timeout step needs a duration.",
+					"unknown": "This rule no longer exists. Reload the page."
+				},
+				"load_failed": "Couldn't load the rules.",
+				"loading_aria": "Loading auto-moderation rules",
+				"new": "New rule",
+				"retry": "Try again",
+				"subtitle": "Each rule watches for one kind of message and decides what happens to it. Rules are saved as soon as you confirm them.",
+				"title": "Rules",
+				"toasts": {
+					"created": "Rule \"{name}\" created",
+					"deleted": "Rule \"{name}\" deleted",
+					"saved": "Rule \"{name}\" saved"
+				},
+				"toggle_aria": "Toggle rule {name}"
+			},
 			"subtitle": "Choose where auto-moderation reports what it does, and whether it also follows Discord's own AutoMod.",
-			"title": "Auto-moderation"
+			"title": "Auto-moderation",
+			"types": {
+				"Attachments": {
+					"description": "Every message with an attachment breaks the rule.",
+					"name": "Attachments"
+				},
+				"Capitals": {
+					"description": "Messages of at least the minimum length in which at least the maximum percentage of letters are capitals.",
+					"name": "Capital letters"
+				},
+				"Characters": {
+					"description": "Messages longer than the maximum number of characters.",
+					"name": "Message length"
+				},
+				"Duplicates": {
+					"description": "Messages that repeat a character or a word more times in a row than allowed.",
+					"name": "Repeated text"
+				},
+				"Emojis": {
+					"description": "Messages with more emojis than the maximum.",
+					"name": "Emojis"
+				},
+				"ImageSpam": {
+					"description": "More images from one member than the maximum within the time period, in one message or several.",
+					"name": "Image spam"
+				},
+				"Invites": {
+					"description": "Discord invite links, except the allowed codes and servers.",
+					"name": "Invite links"
+				},
+				"Links": {
+					"description": "Links, except those to the allowed domains.",
+					"name": "Links"
+				},
+				"LinksCooldown": {
+					"description": "More links from one member than the maximum within the time period.",
+					"name": "Link cooldown"
+				},
+				"MaskedLinks": {
+					"description": "Messages with a link shown as different text.",
+					"name": "Masked links"
+				},
+				"MassMentions": {
+					"description": "Messages that mention more different users than the maximum.",
+					"name": "Mass mentions"
+				},
+				"MentionsCooldown": {
+					"description": "More mentions from one member than the maximum within the time period.",
+					"name": "Mention cooldown"
+				},
+				"MessageSpam": {
+					"description": "More messages from one member in a channel than the maximum within the time period.",
+					"name": "Message spam"
+				},
+				"Newlines": {
+					"description": "Messages with more lines than the maximum.",
+					"name": "Line breaks"
+				},
+				"NoMentionSpam": {
+					"description": "More mention points than allowed within the time period, which bans the member.",
+					"name": "Mention spam"
+				},
+				"Phishing": {
+					"description": "Links to known phishing domains, except the allowed ones.",
+					"name": "Phishing links"
+				},
+				"Spoilers": {
+					"description": "Messages with a spoiler, in their text or as an attachment.",
+					"name": "Spoilers"
+				},
+				"Stickers": {
+					"description": "Every message with a sticker breaks the rule.",
+					"name": "Stickers"
+				},
+				"StickersCooldown": {
+					"description": "More stickers from one member than the maximum within the time period.",
+					"name": "Sticker cooldown"
+				},
+				"Words": {
+					"description": "Messages that contain one of the listed words.",
+					"name": "Filtered words"
+				},
+				"Zalgo": {
+					"description": "Messages in which a character carries more combining marks than the maximum.",
+					"name": "Zalgo text"
+				}
+			}
 		},
 		"channels": {
 			"excluded_channels": "Excluded Channels",

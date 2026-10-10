@@ -15,8 +15,186 @@
 	"guild_settings": {
 		"automod": {
 			"form_aria": "",
+			"hard_actions": {
+				"Ban": "",
+				"Kick": "",
+				"Mute": "",
+				"Softban": "",
+				"Timeout": "",
+				"VoiceKick": "",
+				"Warning": ""
+			},
+			"options": {
+				"alerts": "",
+				"allowed": "",
+				"allowedCodes": "",
+				"allowedGuilds": "",
+				"characters": "",
+				"maximum": "",
+				"mentionsAllowed": "",
+				"minimum": "",
+				"timePeriod": "",
+				"words": ""
+			},
+			"rules": {
+				"count": "",
+				"delete": "",
+				"delete_aria": "",
+				"delete_description": "",
+				"delete_title": "",
+				"edit": "",
+				"edit_aria": "",
+				"editor": {
+					"action": "",
+					"cancel": "",
+					"create": "",
+					"create_title": "",
+					"description": "",
+					"duration": "",
+					"duration_unit_aria": "",
+					"edit_title": "",
+					"enabled": "",
+					"escalation": "",
+					"escalation_add": "",
+					"escalation_duration": "",
+					"escalation_duration_help": "",
+					"escalation_help": "",
+					"escalation_remove_aria": "",
+					"escalation_step": "",
+					"exemptions": "",
+					"hard_action": "",
+					"hard_action_help": "",
+					"ignored_channels": "",
+					"ignored_roles": "",
+					"list_placeholder": "",
+					"name": "",
+					"name_placeholder": "",
+					"options": "",
+					"permanent_hint": "",
+					"save": "",
+					"soft_actions": "",
+					"soft_actions_help": "",
+					"soft_alert": "",
+					"soft_delete": "",
+					"soft_log": "",
+					"threshold_duration": "",
+					"threshold_maximum": "",
+					"type": "",
+					"type_locked": ""
+				},
+				"empty_description": "",
+				"empty_title": "",
+				"errors": {
+					"generic": "",
+					"invalid": "",
+					"limit": "",
+					"nameInvalid": "",
+					"nameRequired": "",
+					"nameTaken": "",
+					"timeoutNeedsDuration": "",
+					"unknown": ""
+				},
+				"load_failed": "",
+				"loading_aria": "",
+				"new": "",
+				"retry": "",
+				"subtitle": "",
+				"title": "",
+				"toasts": {
+					"created": "",
+					"deleted": "",
+					"saved": ""
+				},
+				"toggle_aria": ""
+			},
 			"subtitle": "",
-			"title": ""
+			"title": "",
+			"types": {
+				"Attachments": {
+					"description": "",
+					"name": ""
+				},
+				"Capitals": {
+					"description": "",
+					"name": ""
+				},
+				"Characters": {
+					"description": "",
+					"name": ""
+				},
+				"Duplicates": {
+					"description": "",
+					"name": ""
+				},
+				"Emojis": {
+					"description": "",
+					"name": ""
+				},
+				"ImageSpam": {
+					"description": "",
+					"name": ""
+				},
+				"Invites": {
+					"description": "",
+					"name": ""
+				},
+				"Links": {
+					"description": "",
+					"name": ""
+				},
+				"LinksCooldown": {
+					"description": "",
+					"name": ""
+				},
+				"MaskedLinks": {
+					"description": "",
+					"name": ""
+				},
+				"MassMentions": {
+					"description": "",
+					"name": ""
+				},
+				"MentionsCooldown": {
+					"description": "",
+					"name": ""
+				},
+				"MessageSpam": {
+					"description": "",
+					"name": ""
+				},
+				"Newlines": {
+					"description": "",
+					"name": ""
+				},
+				"NoMentionSpam": {
+					"description": "",
+					"name": ""
+				},
+				"Phishing": {
+					"description": "",
+					"name": ""
+				},
+				"Spoilers": {
+					"description": "",
+					"name": ""
+				},
+				"Stickers": {
+					"description": "",
+					"name": ""
+				},
+				"StickersCooldown": {
+					"description": "",
+					"name": ""
+				},
+				"Words": {
+					"description": "",
+					"name": ""
+				},
+				"Zalgo": {
+					"description": "",
+					"name": ""
+				}
+			}
 		},
 		"channels": {
 			"excluded_channels": "",

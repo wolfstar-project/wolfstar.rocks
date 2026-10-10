@@ -1,0 +1,97 @@
+{
+	"version": 1,
+	"name": "wolfstar-rocks",
+	"agents": [
+		"codex"
+	],
+	"mode": "copy",
+	"skills": {
+		"accessibility": {
+			"source": "github:addyosmani/web-quality-skills/skills/accessibility#commit:95d6e255afe1596b557d7a8498517884438f5b3a"
+		},
+		"baseline-ui": {
+			"source": "github:ibelick/ui-skills/skills/baseline-ui#commit:b5be117f9cc3371caef7d3869f5c650f2033f14c"
+		},
+		"best-practices": {
+			"source": "github:addyosmani/web-quality-skills/skills/best-practices#commit:95d6e255afe1596b557d7a8498517884438f5b3a"
+		},
+		"core-web-vitals": {
+			"source": "github:addyosmani/web-quality-skills/skills/core-web-vitals#commit:95d6e255afe1596b557d7a8498517884438f5b3a"
+		},
+		"domain-modeling": {
+			"source": "github:mattpocock/skills/skills/engineering/domain-modeling#commit:5b15a47f2d7150f545fbcacbfe381787fc0230dc"
+		},
+		"find-skills": {
+			"source": "github:vercel-labs/skills/skills/find-skills#commit:435076e78988e1e6ec40d00b0b1d76bdbbc5419a"
+		},
+		"fixing-motion-performance": {
+			"source": "github:ibelick/ui-skills/skills/fixing-motion-performance#commit:b5be117f9cc3371caef7d3869f5c650f2033f14c"
+		},
+		"frontend-design": {
+			"source": "github:anthropics/skills/skills/frontend-design#commit:3b3fad96af16a10759d930941b4520ba0c40edae"
+		},
+		"grill-me": {
+			"source": "github:mattpocock/skills/skills/productivity/grill-me#commit:5b15a47f2d7150f545fbcacbfe381787fc0230dc"
+		},
+		"hallmark": {
+			"source": "github:nutlope/hallmark/skills/hallmark#commit:13ac0ec7e148655948100b6396439e481361d690"
+		},
+		"impeccable": {
+			"source": "github:pbakaus/impeccable/.agents/skills/impeccable#commit:56f44523f76efdcec813e67b38ee550e49b16f48"
+		},
+		"improve-codebase-architecture": {
+			"source": "github:mattpocock/skills/skills/engineering/improve-codebase-architecture#commit:5b15a47f2d7150f545fbcacbfe381787fc0230dc"
+		},
+		"nitro": {
+			"source": "github:antfu/skills/skills/nitro#commit:a74f281a27dadc02397bc1a174b0f2c97531b6ae"
+		},
+		"nuxt": {
+			"source": "github:onmax/nuxt-skills/skills/nuxt#commit:ebc0fce6228d1383aa826725bb8d04774adda70a"
+		},
+		"nuxt-content": {
+			"source": "github:onmax/nuxt-skills/skills/nuxt-content#commit:ebc0fce6228d1383aa826725bb8d04774adda70a"
+		},
+		"nuxt-i18n": {
+			"source": "github:onmax/nuxt-skills/skills/nuxt-i18n#commit:ebc0fce6228d1383aa826725bb8d04774adda70a"
+		},
+		"nuxt-modules": {
+			"source": "github:onmax/nuxt-skills/skills/nuxt-modules#commit:ebc0fce6228d1383aa826725bb8d04774adda70a"
+		},
+		"nuxt-seo": {
+			"source": "github:onmax/nuxt-skills/skills/nuxt-seo#commit:ebc0fce6228d1383aa826725bb8d04774adda70a"
+		},
+		"performance": {
+			"source": "github:addyosmani/web-quality-skills/skills/performance#commit:95d6e255afe1596b557d7a8498517884438f5b3a"
+		},
+		"planning-with-files": {
+			"source": "github:othmanadi/planning-with-files/skills/planning-with-files#commit:9e94390e5912b1ff296556505cd999ff84838160"
+		},
+		"seo": {
+			"source": "github:addyosmani/web-quality-skills/skills/seo#commit:95d6e255afe1596b557d7a8498517884438f5b3a"
+		},
+		"skill-creator": {
+			"source": "github:anthropics/skills/skills/skill-creator#commit:3b3fad96af16a10759d930941b4520ba0c40edae"
+		},
+		"systematic-debugging": {
+			"source": "github:obra/superpowers/skills/systematic-debugging#commit:b36e0829c6d0140e93cfef2ca599b1b07d4a7797"
+		},
+		"tdd": {
+			"source": "github:mattpocock/skills/skills/engineering/tdd#commit:5b15a47f2d7150f545fbcacbfe381787fc0230dc"
+		},
+		"test-driven-development": {
+			"source": "github:obra/superpowers/skills/test-driven-development#commit:b36e0829c6d0140e93cfef2ca599b1b07d4a7797"
+		},
+		"web-design-guidelines": {
+			"source": "github:vercel-labs/agent-skills/skills/web-design-guidelines#commit:dd089a8c752c966dee8bf0f27cb625ba193ffd9e"
+		},
+		"web-quality-audit": {
+			"source": "github:addyosmani/web-quality-skills/skills/web-quality-audit#commit:95d6e255afe1596b557d7a8498517884438f5b3a"
+		},
+		"webapp-testing": {
+			"source": "github:anthropics/skills/skills/webapp-testing#commit:3b3fad96af16a10759d930941b4520ba0c40edae"
+		},
+		"writing-plans": {
+			"source": "github:obra/superpowers/skills/writing-plans#commit:b36e0829c6d0140e93cfef2ca599b1b07d4a7797"
+		}
+	}
+}

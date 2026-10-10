@@ -320,6 +320,30 @@ jobs:
       - name: 🧹 Check for unused code
         run: vp run knip
 
+  # .skills/skilld.json declares every agent skill by exact source commit. The
+  # check fails when the installed copies or the lock drift from it, and never
+  # fetches remote bytes.
+  skills:
+    name: 🧩 Declared skills
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: voidzero-dev/setup-vp@143f5f385f39b1b753ffed1a01ad443811855c8b # v1.16.1
+        with:
+          node-version: lts/*
+          sfw: true
+          # root only, no scripts
+          run-install: |
+            - args: ["--filter", ".", "--ignore-scripts"]
+
+      - name: 🧩 Check declared skills
+        run: vp run skills:check
+
   i18n:
     name: 🌐 i18n validation
     runs-on: ubuntu-slim

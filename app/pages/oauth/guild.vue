@@ -61,6 +61,7 @@ definePageMeta({
 });
 
 const { ts } = useI18n();
+const { selectGuild } = useActiveGuild();
 
 const route = useRoute();
 const guildId = computed(() => normalizeGuildIdQuery(route.query.guild_id));
@@ -82,7 +83,8 @@ async function navigateToGuild() {
 
 	await promiseTimeout(1500);
 
-	await navigateTo(`/guilds/${guildId.value}/manage?refresh=true`);
+	selectGuild(guildId.value);
+	await navigateTo("/app?refresh=true");
 }
 
 useRobotsRule(robotBlockingPageProps);

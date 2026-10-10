@@ -21,37 +21,44 @@
 				<p class="text-sm text-base-content/70">
 					<i18n-t keypath="guild_settings.events.moderation_events_help" tag="span">
 						<template #channelsPage>
-							<NuxtLink
-								:to="channelsPageLink"
-								class="text-primary underline hover:no-underline"
+							<button
+								type="button"
+								class="cursor-pointer text-primary underline hover:no-underline"
+								@click="goToSection('channels')"
 							>
 								{{ ts("guild_settings.events.channels_page_link") }}
-							</NuxtLink>
+							</button>
 						</template>
 					</i18n-t>
 				</p>
 			</div>
 
-			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+			<div class="grid grid-cols-1 gap-x-7 md:grid-cols-2">
 				<UFormField
 					v-for="event in ConfigurableModerationEvents"
 					:key="`form-field-${event.key}`"
-					:label="translateEntry(event, 'title')"
 					:name="event.key"
+					class="border-t border-base-300/60"
 				>
-					<template #description>
-						<p class="text-sm text-base-content/70">
-							{{ translateEntry(event, "description") }}
-						</p>
-					</template>
-					<USwitch
-						v-model="state[event.key]"
-						:aria-label="
-							ts('guild_settings.events.toggle_aria', {
-								title: translateEntry(event, 'title'),
-							})
-						"
-					/>
+					<div class="flex items-center justify-between gap-4 py-3">
+						<div class="min-w-0">
+							<p class="text-sm font-semibold text-base-content">
+								{{ translateEntry(event, "title") }}
+							</p>
+							<p class="mt-0.5 text-xs leading-relaxed text-base-content/70">
+								{{ translateEntry(event, "description") }}
+							</p>
+						</div>
+						<USwitch
+							v-model="state[event.key]"
+							class="shrink-0"
+							:aria-label="
+								ts('guild_settings.events.toggle_aria', {
+									title: translateEntry(event, 'title'),
+								})
+							"
+						/>
+					</div>
 				</UFormField>
 			</div>
 
@@ -67,37 +74,44 @@
 				<p class="text-sm text-base-content/70">
 					<i18n-t keypath="guild_settings.events.message_events_help" tag="span">
 						<template #channelsPage>
-							<NuxtLink
-								:to="channelsPageLink"
-								class="text-primary underline hover:no-underline"
+							<button
+								type="button"
+								class="cursor-pointer text-primary underline hover:no-underline"
+								@click="goToSection('channels')"
 							>
 								{{ ts("guild_settings.events.channels_page_link") }}
-							</NuxtLink>
+							</button>
 						</template>
 					</i18n-t>
 				</p>
 			</div>
 
-			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+			<div class="grid grid-cols-1 gap-x-7 md:grid-cols-2">
 				<UFormField
 					v-for="event in ConfigurableMessageEvents"
 					:key="`form-field-${event.key}`"
-					:label="translateEntry(event, 'title')"
 					:name="event.key"
+					class="border-t border-base-300/60"
 				>
-					<template #description>
-						<p class="text-sm text-base-content/70">
-							{{ translateEntry(event, "description") }}
-						</p>
-					</template>
-					<USwitch
-						v-model="state[event.key]"
-						:aria-label="
-							ts('guild_settings.events.toggle_aria', {
-								title: translateEntry(event, 'title'),
-							})
-						"
-					/>
+					<div class="flex items-center justify-between gap-4 py-3">
+						<div class="min-w-0">
+							<p class="text-sm font-semibold text-base-content">
+								{{ translateEntry(event, "title") }}
+							</p>
+							<p class="mt-0.5 text-xs leading-relaxed text-base-content/70">
+								{{ translateEntry(event, "description") }}
+							</p>
+						</div>
+						<USwitch
+							v-model="state[event.key]"
+							class="shrink-0"
+							:aria-label="
+								ts('guild_settings.events.toggle_aria', {
+									title: translateEntry(event, 'title'),
+								})
+							"
+						/>
+					</div>
 				</UFormField>
 			</div>
 		</GuildSettingsForm>
@@ -113,8 +127,8 @@ import { setGuildDataChange } from "#shared/utils/guild-settings-map";
 const { ts } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
 
-const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();
+const { goToSection } = useDashboardNavigation();
 const toast = useToast();
 
 const allEvents = [...ConfigurableModerationEvents, ...ConfigurableMessageEvents];
@@ -151,8 +165,6 @@ async function onError(event: FormErrorEvent) {
 		title: ts("guild_settings.save_failed"),
 	});
 }
-
-const channelsPageLink = computed(() => `/guilds/${guildData.value.id}/manage/channels`);
 
 watch(
 	guildSettings,

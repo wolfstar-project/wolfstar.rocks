@@ -28,7 +28,7 @@
 		"i18n:check:fix": "node scripts/compare-translations.ts --fix",
 		"i18n:report:fix": "node scripts/remove-unused-translations.ts",
 		"lint:fix": "vp lint --fix && vp fmt",
-		"postinstall": "stale-dep -u && nuxt prepare && vp config",
+		"postinstall": "stale-dep -u && prisma contract emit && nuxt prepare && vp config",
 		"preview": "nuxt preview",
 		"prisma8:emit": "prisma contract emit",
 		"prisma8:infer": "prisma contract infer --output server/database/contract.prisma",

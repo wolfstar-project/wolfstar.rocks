@@ -80,6 +80,7 @@
 		"@vueuse/nuxt": "^14.2.1",
 		"better-auth": "^1.7.0",
 		"cnfast": "^0.1.0",
+		"confusables": "^1.1.1",
 		"discord-component-embed": "0.2.2",
 		"dotenv": "^17.4.2",
 		"evlog": "^2.22.3",

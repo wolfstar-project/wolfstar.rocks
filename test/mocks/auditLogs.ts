@@ -54,7 +54,7 @@ export const MOCK_MODERATION_ENTRY: ModerationLogEntry = {
 	typeCode: 1,
 	typeName: "Warning",
 	reason: "Spamming",
-	imageURL: null,
+	referenceId: null,
 	duration: null,
 	metadata: { archived: false, completed: false, temporary: false },
 	createdAt: "2026-05-15T00:00:00.000Z",

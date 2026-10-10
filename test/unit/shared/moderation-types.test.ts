@@ -1,13 +1,16 @@
 import {
-	ModerationTypeCode,
-	decodeModerationType,
 	decodeModerationMetadata,
+	decodeModerationType,
+	MODERATION_ACTION_CODE,
+	MODERATION_ACTIONS,
+	moderationActionFromCode,
 } from "#shared/types/moderation-types";
 import { describe, expect, it } from "vitest";
 
 describe("decodeModerationType", () => {
-	it("returns 'Warning' for code 1", () => {
-		expect(decodeModerationType(1)).toBe("Warning");
+	it("keeps V6's number for an action that was only renamed", () => {
+		expect(decodeModerationType(1)).toBe("AddWarning");
+		expect(decodeModerationType(12)).toBe("Nickname");
 	});
 
 	it("returns 'Ban' for code 5", () => {
@@ -26,10 +29,31 @@ describe("decodeModerationType", () => {
 		expect(decodeModerationType(0)).toBe("Unknown");
 	});
 
-	it("covers all ModerationTypeCode entries", () => {
-		for (const [name, code] of Object.entries(ModerationTypeCode)) {
-			expect(decodeModerationType(code)).toBe(name);
+	it("round-trips every V7 action", () => {
+		for (const action of MODERATION_ACTIONS) {
+			expect(decodeModerationType(MODERATION_ACTION_CODE[action])).toBe(action);
 		}
+	});
+});
+
+describe("moderationActionFromCode", () => {
+	it("names the action a filter code selects", () => {
+		expect(moderationActionFromCode(5)).toBe("Ban");
+	});
+
+	it("returns null for a code no action uses, so it never reaches the enum", () => {
+		expect(moderationActionFromCode(999)).toBeNull();
+		// V6 codes with no V7 action: Mute, VoiceMute, RestrictedReaction.
+		expect(moderationActionFromCode(2)).toBeNull();
+		expect(moderationActionFromCode(6)).toBeNull();
+		expect(moderationActionFromCode(8)).toBeNull();
+	});
+});
+
+describe("MODERATION_ACTION_CODE", () => {
+	it("assigns every action a distinct code", () => {
+		const codes = MODERATION_ACTIONS.map((action) => MODERATION_ACTION_CODE[action]);
+		expect(new Set(codes).size).toBe(codes.length);
 	});
 });
 

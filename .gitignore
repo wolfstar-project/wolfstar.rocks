@@ -87,3 +87,13 @@ test/**/__screenshots__/
 
 # TypeScript incremental build info
 *.tsbuildinfo
+
+# Agent skills vendored by `prisma skills sync` from the installed Prisma
+# packages. Regenerate with `pnpm exec prisma skills sync` rather than
+# committing four copies of the same 1.4 MB tree.
+.claude/skills/prisma-8/
+.claude/skills/prisma-composer-core-concepts/
+.agents/skills/prisma-8/
+.agents/skills/prisma-composer-core-concepts/
+.cursor/skills/
+.devin/

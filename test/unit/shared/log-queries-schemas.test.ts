@@ -6,6 +6,31 @@ import {
 import { safeParse } from "valibot";
 import { describe, expect, it } from "vitest";
 
+describe("snowflake filters", () => {
+	// The routes convert these with `BigInt()`, which throws on anything
+	// non-numeric, so a malformed filter must fail validation (400), not the handler (500).
+	it("accept a numeric Discord snowflake", () => {
+		expect(safeParse(ModerationLogQuerySchema, { userId: "123456789012345678" }).success).toBe(
+			true,
+		);
+		expect(safeParse(CommandLogQuerySchema, { userId: " 123456789012345678 " })).toMatchObject({
+			success: true,
+			output: { userId: "123456789012345678" },
+		});
+		expect(safeParse(DashboardActivityQuerySchema, { actorId: "42" }).success).toBe(true);
+	});
+
+	it("reject non-numeric or oversized ids", () => {
+		expect(
+			safeParse(ModerationLogQuerySchema, { moderatorId: "not-a-snowflake" }).success,
+		).toBe(false);
+		expect(
+			safeParse(CommandLogQuerySchema, { userId: "12345678901234567890123" }).success,
+		).toBe(false);
+		expect(safeParse(DashboardActivityQuerySchema, { actorId: "1e5" }).success).toBe(false);
+	});
+});
+
 describe("ModerationLogQuerySchema", () => {
 	it("accepts empty object with defaults", () => {
 		const result = safeParse(ModerationLogQuerySchema, {});

@@ -37,7 +37,7 @@ describe(`GET ${URL}`, () => {
 			expect(result.entries).toHaveLength(1);
 			expect(result.entries[0]).toMatchObject({
 				caseId: 1,
-				typeName: "Warning",
+				typeName: "AddWarning",
 			});
 		});
 

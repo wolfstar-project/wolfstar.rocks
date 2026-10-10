@@ -93,7 +93,9 @@ test/**/__screenshots__/
 # committing four copies of the same 1.4 MB tree.
 .claude/skills/prisma-8/
 .claude/skills/prisma-composer-core-concepts/
+.claude/skills/prisma-platform-core-concepts/
 .agents/skills/prisma-8/
 .agents/skills/prisma-composer-core-concepts/
+.agents/skills/prisma-platform-core-concepts/
 .cursor/skills/
 .devin/

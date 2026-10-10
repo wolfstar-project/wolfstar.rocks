@@ -27,11 +27,8 @@ const config: KnipConfig = {
 				"server/auth.config.ts",
 				/** Ambient H3EventContext augmentation, never imported directly */
 				"shared/types/auth.d.ts",
-				/** Aliased in vite.config.ts for #server/database/generated/client in tests, not imported directly */
-				"test/__stubs__/prisma-generated-client.ts",
-				/** Read by the Prisma ORM 7 CLI (`prisma7`), never imported */
-				"prisma7.config.ts",
-				"server/database/schema.prisma",
+				/** Read by the Prisma CLI (`prisma contract emit`), never imported */
+				"server/database/contract.prisma",
 			],
 			project: [
 				/** css/mdx/prisma are handled by registered compilers, so include them here */
@@ -44,7 +41,7 @@ const config: KnipConfig = {
 				"!.agent/**",
 				"!.claude/**",
 				/** Emitted by `prisma contract emit`; its exports are the framework's */
-				"!server/database/prisma8/contract.d.ts",
+				"!server/database/generated/**",
 			],
 			msw: {
 				entry: [".storybook/.public/mockServiceWorker.js"],

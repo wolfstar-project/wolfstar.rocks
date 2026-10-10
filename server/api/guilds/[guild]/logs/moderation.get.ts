@@ -1,5 +1,5 @@
 import type { ModerationLogEntry } from "#shared/types/moderation-log";
-import type { ModerationAction } from "#shared/types/moderation-types";
+import type { ModerationActionName } from "#shared/types/moderation-types";
 import type { ResultType } from "@prisma/orm-postgres/components/runtime";
 import type { APIGuildMember } from "discord-api-types/v10";
 import { db } from "#server/database/prisma";
@@ -23,7 +23,7 @@ function mapModerationRow(
 	const moderatorId = String(row.moderatorId);
 	// V7 stores the action by name, so the name is the identity and the numeric
 	// code is looked up from it rather than the other way round.
-	const action = row.action as ModerationAction;
+	const action = row.action as ModerationActionName;
 
 	return {
 		caseId: row.id,

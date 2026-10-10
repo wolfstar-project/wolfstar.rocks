@@ -16,6 +16,7 @@ jobs:
   sync-translations:
     name: 🌐 Sync translations from Tolgee
     runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
     permissions:
       contents: read # checkout repository; the sync branch is pushed with WOLFSTAR_TOKEN
 

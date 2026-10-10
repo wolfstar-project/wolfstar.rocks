@@ -688,6 +688,9 @@ export default defineNuxtConfig({
 	sentry: {
 		...runtimeConfig.sentry,
 		autoInjectServerSentry: "top-level-import",
+		// Strips the SDK's debug logging from the bundles. Replay stays
+		// untouched on purpose: sentry.client.config.ts lazy-loads it.
+		bundleSizeOptimizations: { excludeDebugStatements: true },
 		sourcemaps: {
 			filesToDeleteAfterUpload: [".*/**/public/**/*.map", ".output/**/public/**/*.map"],
 		},

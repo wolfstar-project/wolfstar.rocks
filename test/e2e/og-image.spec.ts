@@ -1,4 +1,4 @@
-import { expect, test } from "./test-utils";
+import { expect, test } from "./test-utils.ts";
 
 /**
  * OG image snapshot tests (Takumi templates).

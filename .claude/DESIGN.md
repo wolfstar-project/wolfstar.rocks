@@ -375,58 +375,15 @@ Example Component Prompts:
 
 ## Brand Personality & Voice
 
-**Character:** Approachable, competent, low-friction. Like a calm, capable team member — never condescending, never alarming unless the situation warrants it.
+**Character:** Approachable, competent, low-friction. Like a calm, capable team member: never condescending, never alarming unless the situation warrants it.
 
-**Voice principles:**
-
-- **Direct.** State what happens and why. No filler words.
-- **Calm.** Even for errors, don't escalate. Offer a path forward.
-- **Concise.** UI copy should fit in one glance. Eliminate redundant words.
-- **Inclusive.** Plain language. Avoid jargon unless the audience expects it (Discord server terms are fine).
-
-### Tone by context
-
-| Context            | Tone                            | Example                                           |
-| ------------------ | ------------------------------- | ------------------------------------------------- |
-| Success            | Warm, brief                     | "Settings saved."                                 |
-| Error              | Calm, actionable                | "Couldn't save. Check your connection and retry." |
-| Warning            | Factual, forward-looking        | "This will affect all channels in your server."   |
-| Empty state        | Helpful, inviting               | "No commands yet. Add your first one below."      |
-| Loading            | Absent — use skeleton, not text | —                                                 |
-| Destructive action | Explicit, one chance to confirm | "Delete this rule? This cannot be undone."        |
+Voice principles, tone by context, UI copy patterns (buttons, toasts, empty states, destructive dialogs), the claims policy, and the banned-language list are owned by [COPY.md](../COPY.md). Do not restate them here.
 
 ## Terminology
 
-Use these terms consistently in all user-facing text (templates, toast messages, page titles, empty states, button labels).
-
-| Use           | Do not use                        |
-| ------------- | --------------------------------- |
-| **Server**    | Guild, discord server, community  |
-| **Sign in**   | Log in, login, connect            |
-| **Sign out**  | Log out, logout, disconnect       |
-| **WolfStar**  | Wolfstar, wolfStar, Wolf Star     |
-| **Staryl**    | staryl, STARYL, Stary             |
-| **Dashboard** | Panel, admin panel, control panel |
-| **Settings**  | Configuration, config, options    |
-| **Invite**    | Add to server, install            |
+Product terms and the words they replace ("server" not "guild", "Sign in" not "Log in", "Dashboard" not "Panel", and the rest) are owned by [GLOSSARY.md](../GLOSSARY.md).
 
 **Scope:** Terminology applies only to user-facing strings. Routes, TypeScript types, composable names, Prisma models, and API endpoints retain their existing identifiers.
-
-## Copy Patterns
-
-**Buttons:** verb + noun. "Save settings", "Delete rule", "Invite WolfStar". Include the object where space allows; avoid bare verbs alone ("Save", "Delete").
-
-**Toasts:** always `title` + `description`.
-
-- Success: title "Settings saved" / description "Changes will apply to all channels."
-- Error: title "Save failed" / description "Check your connection and try again."
-- Warning: title "Heads up" / description "This will affect all channels."
-
-**Empty states:** heading + action prompt. "No rules yet. Create your first moderation rule."
-
-**Destructive dialogs:** title + explicit consequence + confirm button label.
-
-- "Delete this rule?" / "Rules cannot be recovered once deleted." / button "Delete rule"
 
 ## Similar Brands
 

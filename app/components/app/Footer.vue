@@ -58,12 +58,17 @@
 								to="https://www.netlify.com"
 								target="_blank"
 								rel="noopener noreferrer"
-								icon="simple-icons:netlify"
 								color="neutral"
 								variant="soft"
-								:ui="{ leadingIcon: 'bg-success' }"
 								:aria-label="ts('footer.powered_by_netlify_aria')"
-							/>
+							>
+								<template #leading>
+									<span
+										class="size-2 rounded-full bg-success"
+										aria-hidden="true"
+									/>
+								</template>
+							</UButton>
 						</div>
 					</div>
 					<nav

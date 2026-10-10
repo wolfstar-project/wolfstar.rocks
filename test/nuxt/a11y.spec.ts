@@ -623,7 +623,10 @@ describe("component accessibility audits", () => {
 
 		it("renders the WolfStar logo mark with the resized svg hidden from AT", async () => {
 			const wrapper = await mountAppHeader();
-			const svg = wrapper.find("svg");
+			const brandLink = wrapper.find("a[aria-label='WolfStar home']");
+			expect(brandLink.exists()).toBe(true);
+
+			const svg = brandLink.find("svg");
 			expect(svg.exists()).toBe(true);
 			expect(svg.attributes("aria-hidden")).toBe("true");
 			expect(svg.classes()).toContain("h-20");

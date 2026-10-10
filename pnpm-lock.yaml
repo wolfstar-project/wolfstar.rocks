@@ -142,9 +142,6 @@ importers:
       '@vueuse/nuxt':
         specifier: ^14.2.1
         version: 14.4.0(magic-string@1.4.3)(magicast@0.5.4)(nuxt@4.6.0)(oxc-parser@0.142.0)(rolldown@1.2.3)(unplugin@3.4.0)(vue@3.5.43)
-      '@vueuse/router':
-        specifier: ^14.2.1
-        version: 14.4.0(vue-router@5.4.0)(vue@3.5.43)
       better-auth:
         specifier: ^1.7.0
         version: 1.7.1(@opentelemetry/api@1.9.1)(@prisma/client@7.9.1)(drizzle-orm@0.41.0)(mongodb@7.5.0)(mysql2@3.15.3)(pg@8.22.0)(prisma@7.9.1)(react-dom@19.2.8)(react@19.2.8)(vitest@4.1.10)(vue@3.5.43)
@@ -6411,12 +6408,6 @@ packages:
     peerDependencies:
       nuxt: ^3.0.0 || ^4.0.0-0 || ^5.0.0-0
       vue: ^3.5.0
-
-  '@vueuse/router@14.4.0':
-    resolution: {integrity: sha512-q+dRUKI6xYGT4vNPq2t3fujrXPw2KBFV5Jxhw38liTFzwzGXBYcf8Qdjk7AiQpjEH2xLSin6WVTvj85EEIpo9w==}
-    peerDependencies:
-      vue: ^3.5.0
-      vue-router: ^4.0.0 || ^5.0.0
 
   '@vueuse/shared@10.11.1':
     resolution: {integrity: sha512-LHpC8711VFZlDaYUXEBbFBCQ7GS3dVU9mjOhhMhXP6txTV4EhYQg/KGnQuvt/sPAtoUKq7VVUnL6mVtFoL42sA==}
@@ -21106,12 +21097,6 @@ snapshots:
       - oxc-parser
       - rolldown
       - unplugin
-
-  '@vueuse/router@14.4.0(vue-router@5.4.0)(vue@3.5.43)':
-    dependencies:
-      '@vueuse/shared': 14.4.0(vue@3.5.43)
-      vue: 3.5.43(typescript-native-bridge@6.0.3-bridge.10.tsgo.7.0.2)
-      vue-router: 5.4.0(@voidzero-dev/vite-plus-core@0.2.8)(@vue/compiler-sfc@3.5.43)(esbuild@0.28.1)(rolldown@1.2.3)(rollup@4.62.2)(vue@3.5.43)
 
   '@vueuse/shared@10.11.1(vue@3.5.43)':
     dependencies:

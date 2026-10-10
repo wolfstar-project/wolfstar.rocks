@@ -180,6 +180,23 @@
 			"subtitle": "Configura come WolfStar gestisce le azioni di moderazione come ban, espulsioni e silenziamenti.",
 			"title": "Impostazioni sanzioni"
 		},
+		"modules": {
+			"active_hint": "",
+			"configure": "",
+			"disable_all": "",
+			"enable_all": "",
+			"enabled_count": "",
+			"form_aria": "",
+			"hint": "",
+			"inactive_hint": "",
+			"manage": "",
+			"off": "",
+			"on": "",
+			"subtitle": "",
+			"summary_aria": "",
+			"title": "",
+			"toggle_aria": ""
+		},
 		"please_try_again": "Riprova.",
 		"roles": {
 			"configurable": "Ruoli configurabili",

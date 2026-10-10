@@ -1,5 +1,12 @@
 <template>
 	<UDashboardGroup unit="rem">
+		<GuildServerRail
+			:current-guild-id="guildId ?? undefined"
+			:guilds="userGuilds"
+			:pending="userGuildsPending"
+			@select="goToGuild"
+		/>
+
 		<UDashboardSidebar
 			id="default"
 			collapsible
@@ -50,7 +57,7 @@
 			</template>
 		</UDashboardSidebar>
 
-		<slot v-if="isReadyToRender"></slot>
+		<slot v-if="!guildId || isReadyToRender"></slot>
 		<div
 			v-else-if="nuxtError"
 			class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4 text-center"
@@ -115,17 +122,17 @@
 		</div>
 
 		<UModal
-			v-model:open="showDialog"
+			:open="leaveDialogOpen"
 			:title="ts('dashboard.unsaved_title')"
 			:description="ts('dashboard.unsaved_description')"
 			:dismissible="false"
 		>
 			<template #footer>
 				<div class="flex justify-end gap-2">
-					<UButton color="neutral" variant="ghost" @click="cancelLeave">
+					<UButton color="neutral" variant="ghost" @click="stayOnPage">
 						{{ ts("dashboard.stay_on_page") }}
 					</UButton>
-					<UButton color="error" @click="confirmLeave">
+					<UButton color="error" @click="discardAndLeave">
 						{{ ts("dashboard.discard_changes") }}
 					</UButton>
 				</div>
@@ -140,7 +147,7 @@ import type { NavigationMenuItem } from "@nuxt/ui";
 import { isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { objectToTuples } from "@sapphire/utilities/objectToTuples";
-import { parseError, createError } from "evlog";
+import { parseError } from "evlog";
 import {
 	parseGuildSettings,
 	classifyGuildError,
@@ -161,16 +168,16 @@ function isSafeUrl(url: unknown): url is string {
 
 const { ts } = useI18n();
 
-const guildId = useRouteParams("id", null, { transform: String });
-
-if (!isValidGuildId(guildId.value)) {
-	throw createError({
-		why: ts("dashboard.invalid_guild_why"),
-		status: 400,
-		message: ts("dashboard.invalid_guild_message"),
-		fix: ts("dashboard.invalid_guild_fix"),
-	});
-}
+// The guild is dashboard state, not a route param: `/app` is one page.
+const {
+	activeGuildId: guildId,
+	cancelPendingNavigation,
+	confirmPendingNavigation,
+	goToGuild,
+	goToSection,
+	pendingNavigation,
+	section,
+} = useDashboardNavigation();
 
 const toast = useToast();
 const router = useRouter();
@@ -182,7 +189,12 @@ const { setGuildSettingsChanges, guildSettingsChanges, resetGuildSettingsChanges
 	useGuildSettingsChanges();
 
 const { user } = useUserSession();
-const { guilds: userGuilds } = useUser(user);
+const { guilds: userGuilds, status: userGuildsStatus } = useUser(user);
+// `useUser()` only fetches on the client, so the rail renders placeholders until
+// the guild list lands rather than appearing late and shifting the page.
+const userGuildsPending = computed(
+	() => userGuildsStatus.value === "idle" || userGuildsStatus.value === "pending",
+);
 watch(
 	[guildId, userGuilds],
 	([newGuildId, newUserGuilds]) => {
@@ -203,8 +215,11 @@ const {
 	pending: isLoading,
 	error,
 } = useAsyncData(
-	() => `dashboard:guild:${guildId.value}`,
+	() => `dashboard:guild:${guildId.value ?? "none"}`,
 	() => {
+		if (!guildId.value) {
+			return Promise.resolve(null);
+		}
 		const refreshQuery = refreshGuildCache.value ? { refresh: "true" } : undefined;
 		return Promise.all([
 			requestFetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(
@@ -216,6 +231,7 @@ const {
 			}),
 		]);
 	},
+	{ watch: [guildId] },
 );
 
 watch(
@@ -329,115 +345,70 @@ watch(
 
 const { effectiveReduceMotion } = useReduceMotion();
 
+const isModerationSection = computed(() => section.value.startsWith("moderation"));
+
+function sectionItem(slug: string, item: Omit<NavigationMenuItem, "active" | "onSelect">) {
+	return {
+		...item,
+		active: section.value === slug,
+		onSelect: () => {
+			open.value = false;
+			goToSection(slug);
+		},
+	} satisfies NavigationMenuItem;
+}
+
 const items = computed<NavigationMenuItem[][]>(() => [
 	[
 		{
-			exact: true,
-			icon: "heroicons:home",
-			label: ts("dashboard.nav.home"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/manage`,
+			label: ts("dashboard.nav_groups.management"),
+			type: "label",
 		},
+		sectionItem("", { icon: "heroicons:home", label: ts("dashboard.nav.home") }),
+		sectionItem("modules", { icon: "lucide:layout-grid", label: ts("dashboard.nav.modules") }),
 		{
-			icon: "lucide:shield",
-			label: ts("dashboard.nav.moderation"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/manage/moderation`,
+			...sectionItem("moderation", {
+				icon: "lucide:shield",
+				label: ts("dashboard.nav.moderation"),
+			}),
+			active: isModerationSection.value,
+			defaultOpen: isModerationSection.value,
 			children: [
-				{
-					label: ts("dashboard.nav.bad_words"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/word`,
-				},
-				{
-					label: ts("dashboard.nav.capitals"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/capitals`,
-				},
-				{
-					label: ts("dashboard.nav.invites"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/invites`,
-				},
-				{
-					label: ts("dashboard.nav.links"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/links`,
-				},
-				{
+				sectionItem("moderation/word", { label: ts("dashboard.nav.bad_words") }),
+				sectionItem("moderation/capitals", { label: ts("dashboard.nav.capitals") }),
+				sectionItem("moderation/invites", { label: ts("dashboard.nav.invites") }),
+				sectionItem("moderation/links", { label: ts("dashboard.nav.links") }),
+				sectionItem("moderation/messages", {
 					label: ts("dashboard.nav.message_duplication"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/messages`,
-				},
-				{
-					label: ts("dashboard.nav.line_spam"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/lines`,
-				},
-				{
-					label: ts("dashboard.nav.reactions"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/reactions`,
-				},
+				}),
+				sectionItem("moderation/lines", { label: ts("dashboard.nav.line_spam") }),
+				sectionItem("moderation/reactions", { label: ts("dashboard.nav.reactions") }),
 			],
 		},
-		{
-			icon: "heroicons:hashtag",
-			label: ts("dashboard.nav.channels"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/manage/channels`,
-		},
-		{
-			icon: "heroicons:user-group",
-			label: ts("dashboard.nav.roles"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/manage/roles`,
-		},
-		{
-			icon: "heroicons:bell",
-			label: ts("dashboard.nav.events"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/manage/events`,
-		},
-		{
+		sectionItem("channels", { icon: "heroicons:hashtag", label: ts("dashboard.nav.channels") }),
+		sectionItem("roles", { icon: "heroicons:user-group", label: ts("dashboard.nav.roles") }),
+		sectionItem("events", { icon: "heroicons:bell", label: ts("dashboard.nav.events") }),
+		sectionItem("commands", {
 			icon: "heroicons:command-line",
 			label: ts("dashboard.nav.commands"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/manage/commands`,
+		}),
+		sectionItem("logs", { icon: "lucide:logs", label: ts("dashboard.nav.logs") }),
+	],
+	[
+		{
+			label: ts("dashboard.nav_groups.resources"),
+			type: "label",
 		},
 		{
-			icon: "lucide:logs",
-			label: ts("dashboard.nav.logs"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/logs`,
+			icon: "lucide:terminal",
+			label: ts("nav.commands"),
+			to: "/commands",
+		},
+		{
+			icon: "lucide:life-buoy",
+			label: ts("dashboard.nav.support_server"),
+			target: "_blank",
+			to: "https://join.wolfstar.rocks",
 		},
 	],
 ]);
@@ -473,20 +444,39 @@ watch(isReadyToSubmit, (ready) => {
 
 const { showDialog, confirmLeave, cancelLeave } = useUnsavedChanges(isReadyToSubmit);
 
-const guildIconSrc = computed(() => resolveGuildIconSrc(guildData.value, { size: 64 }));
-// Validate Guild ID format (Discord Snowflake: 17-19 digit string)
-function isValidGuildId(id: string | undefined | null): boolean {
-	if (isNullOrUndefined(id)) {
-		return false;
-	}
-	const snowflakeRegex = /^\d{17,19}$/;
-	return snowflakeRegex.test(id);
+// One dialog covers both ways of leaving staged edits behind: a route change
+// (router guard) and a guild/section switch inside `/app` (pending navigation).
+const leaveDialogOpen = computed(() => showDialog.value || pendingNavigation.value !== null);
+
+function stayOnPage() {
+	cancelPendingNavigation();
+	cancelLeave();
 }
 
+function discardAndLeave() {
+	if (pendingNavigation.value) {
+		resetGuildSettingsChanges();
+		confirmPendingNavigation();
+		return;
+	}
+	confirmLeave();
+}
+
+const guildIconSrc = computed(() => resolveGuildIconSrc(guildData.value, { size: 64 }));
+
 async function submitChanges() {
+	// The admin can confirm a guild switch while this PATCH is in flight, so the
+	// id is captured here and every later write targets it. Reading
+	// `guildId.value` after the await would apply this guild's response to
+	// whichever guild is active by then, and clear that guild's staged edits.
+	const targetGuildId = guildId.value;
+	if (!targetGuildId) {
+		return;
+	}
+
 	let data: GuildData;
 	try {
-		const response = await $fetch(`/api/guilds/${guildId.value}/settings`, {
+		const response = await $fetch(`/api/guilds/${targetGuildId}/settings`, {
 			body: {
 				data: objectToTuples(guildSettingsChanges.value as Partial<GuildData>),
 			},
@@ -496,7 +486,7 @@ async function submitChanges() {
 	} catch (error) {
 		log.error({
 			tag: "wolfstar:dashboard",
-			message: `Failed to save settings update for guild Id: ${guildId.value}`,
+			message: `Failed to save settings update for guild Id: ${targetGuildId}`,
 			error: parseError(error),
 		});
 		// Preserve staged edits; only notify so the admin can retry.
@@ -511,15 +501,15 @@ async function submitChanges() {
 	const savedSettings = data;
 	startViewTransition(
 		() => {
-			setGuildSettings(savedSettings);
-			setGuildSettingsChanges(undefined);
+			setGuildSettings(savedSettings, targetGuildId);
+			setGuildSettingsChanges(undefined, targetGuildId);
 		},
 		{ reduceMotion: effectiveReduceMotion.value },
 	);
 
 	log.info(
 		"wolfstar:dashboard",
-		`Guild settings changes saved successfully for guild Id: ${guildId.value}`,
+		`Guild settings changes saved successfully for guild Id: ${targetGuildId}`,
 	);
 
 	toast.add({

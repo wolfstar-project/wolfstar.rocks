@@ -4,8 +4,7 @@
 
 # WolfStar.rocks
 
-The official web dashboard for WolfStar, a powerful multi-purpose Discord
-bot.<br/>
+The official web dashboard for WolfStar, a Discord moderation bot.<br/>
 
 [Official Site][official-site] · [Blog][blog] · [WolfStar Invite
 Link][invite-link] · [Support Server][discord-link] ·
@@ -58,8 +57,9 @@ moderation management. Built for you, the Super Admin.</sup>
 
 ## 👋🏻 Welcome to WolfStar.rocks
 
-WolfStar.rocks is the official web dashboard for WolfStar, a powerful
-multi-purpose Discord bot for moderation and community management.
+WolfStar.rocks is the official web dashboard for WolfStar, a Discord moderation
+bot. It gives your team one place to configure filters and server settings, and
+to review moderation, command, and settings history.
 
 </div>
 
@@ -69,23 +69,23 @@ multi-purpose Discord bot for moderation and community management.
 
 - **Modern Web Interface**: Built with Nuxt 4 and modern web technologies for a
   smooth user experience.
-- **Guild Management**: Manage your Discord server's settings, roles, and
+- **Server Management**: Manage your Discord server's settings, roles, and
   permissions through an intuitive web interface.
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile
   devices.
 - **OAuth Integration**: Secure Discord authentication and authorization.
-- **Audit Trail**: All security-relevant actions (guild settings changes,
-  logins, token refreshes, and OAuth CSRF denials) are captured via a
-  tamper-evident audit log. Each event is persisted to PostgreSQL with a SHA-256
-  hash chain, making the audit trail verifiable and tamper-evident.
+- **Audit Trail**: Dashboard settings changes and denied access attempts are
+  recorded in a tamper-evident audit log. Each event is persisted to PostgreSQL
+  with a SHA-256 hash chain, and `pnpm audit:verify` replays the chain to verify
+  it.
+- **Multi-language Dashboard**: The dashboard is translated through Tolgee, and
+  `/translation-status` shows how far each language has come.
 - **Accessibility**: Built with semantic HTML, keyboard navigation, and
   reduced-motion support.
 
 **On the roadmap**
 
 - **Real-time Updates**: Live updates for guild data and bot status.
-- **Multi-language Support**: Dashboard localization beyond the current
-  server-language setting.
 - **Dashboard Analytics**: Server statistics and bot usage metrics.
 
 </div>

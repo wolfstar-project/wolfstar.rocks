@@ -15,6 +15,7 @@ jobs:
   release-pr:
     name: 🚀 Create or update release PR
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     if: github.repository == 'wolfstar-project/wolfstar.rocks'
     permissions:
       contents: read

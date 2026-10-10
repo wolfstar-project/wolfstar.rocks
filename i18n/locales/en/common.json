@@ -90,7 +90,7 @@
 		"moderation_tools_description": "Tools to help you moderate your server"
 	},
 	"nuxtSiteConfig": {
-		"description": "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
+		"description": "WolfStar gives Discord moderation teams configurable AutoMod, searchable moderation and command history, and one dashboard for server settings.",
 		"name": "WolfStar"
 	},
 	"translation_status": {

@@ -3,7 +3,7 @@
 	"name": "@wolfstar-project/dashboard",
 	"version": "0.0.0",
 	"private": true,
-	"description": "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
+	"description": "WolfStar gives Discord moderation teams configurable AutoMod, searchable moderation and command history, and one dashboard for server settings.",
 	"homepage": "https://wolfstar.rocks",
 	"bugs": {
 		"url": "https://github.com/wolfstar-project/wolfstar.rocks/issues"
@@ -39,6 +39,8 @@
 		"prisma:studio": "prisma studio",
 		"skills:install": "skilld install --direct --agent codex",
 		"skills:list": "skilld list",
+		"skills:sync": "skilld sync --plain",
+		"skills:check": "skilld sync --check --plain",
 		"start:playwright:webserver": "NODE_ENV=test TEST=1 vp run preview --port 5678",
 		"storybook": "STORYBOOK=true storybook dev -p 6006",
 		"test": "TEST=1 vp test",
@@ -149,7 +151,7 @@
 		"prisma": "7.9.1",
 		"prisma-json-types-generator": "5.1.1",
 		"rolldown": "1.2.3",
-		"skilld": "3.0.0-beta.1",
+		"skilld": "3.6.7",
 		"storybook": "catalog:storybook",
 		"tailwindcss": "4.3.3",
 		"taze": "19.17.2",

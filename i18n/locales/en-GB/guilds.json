@@ -148,7 +148,7 @@
 		},
 		"general": {
 			"copy_server_id": "Copy Server ID",
-			"form_aria": "General guild settings form",
+			"form_aria": "General server settings form",
 			"language": "Language",
 			"language_aria": "Select bot language",
 			"language_description": "The language WolfStar uses for responses in this server.",

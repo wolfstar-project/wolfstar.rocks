@@ -3,29 +3,7 @@
 		:title="ts('guild_settings.roles.title')"
 		:description="ts('guild_settings.roles.subtitle')"
 	>
-		<!-- Loading Skeleton -->
-		<div v-if="loading" class="space-y-8">
-			<!-- Toggles Skeleton -->
-			<div class="space-y-4">
-				<USkeleton class="h-8 w-32" />
-				<USkeleton class="h-10 w-full" />
-			</div>
-
-			<!-- Configurable Roles Skeleton -->
-			<div class="space-y-4">
-				<USkeleton class="h-8 w-48" />
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-					<div v-for="i in 6" :key="`roles-skeleton-${i}`" class="space-y-2">
-						<USkeleton class="h-5 w-32" />
-						<USkeleton class="h-10 w-full" />
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- Roles Settings Form -->
 		<GuildSettingsForm
-			v-else
 			:state="state"
 			:schema="schema"
 			:map-to-guild-data="mapToGuildData"
@@ -33,224 +11,95 @@
 			class="space-y-8"
 			@error="onError"
 		>
-			<!-- Toggles Section -->
 			<div class="space-y-4">
 				<div class="flex items-center gap-2">
-					<UIcon name="heroicons:adjustments-horizontal" class="size-5 text-primary" />
+					<UIcon
+						name="heroicons:adjustments-horizontal"
+						class="size-5 text-primary"
+						aria-hidden="true"
+					/>
 					<h3 class="text-lg font-semibold text-base-content">
 						{{ ts("guild_settings.roles.general_options") }}
 					</h3>
 				</div>
 
-				<UFormField
-					:label="translateEntry(ConfigurableRemoveInitialRole, 'name')"
-					:description="translateEntry(ConfigurableRemoveInitialRole, 'tooltip')"
-					name="rolesRemoveInitial"
-				>
+				<div>
+					<GuildSettingsToggleRow
+						v-for="config in ConfigurableRoleToggles"
+						:key="config.key"
+						v-model="state[config.key]"
+						:name="config.key"
+						:title="translateEntry(config, 'name')"
+						:description="translateEntry(config, 'description')"
+					/>
+				</div>
+			</div>
+
+			<template v-for="group in roleGroups" :key="group.id">
+				<Separator />
+
+				<div class="space-y-4">
 					<div class="flex items-center gap-2">
-						<USwitch v-model="state.rolesRemoveInitial as boolean" />
+						<UIcon :name="group.icon" class="size-5 text-primary" aria-hidden="true" />
+						<h3 class="text-lg font-semibold text-base-content">{{ group.title }}</h3>
 					</div>
-				</UFormField>
-			</div>
+					<p class="text-sm text-base-content/70">{{ group.help }}</p>
 
-			<Separator />
-
-			<!-- Configurable Roles Section -->
-			<div class="space-y-4">
-				<div class="flex items-center gap-2">
-					<UIcon name="heroicons:user-group" class="size-5 text-primary" />
-					<h3 class="text-lg font-semibold text-base-content">
-						{{ ts("guild_settings.roles.configurable") }}
-					</h3>
+					<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+						<template v-for="roleConfig in group.roles" :key="roleConfig.key">
+							<SelectRoles
+								v-if="roleConfig.many"
+								v-model="state[roleConfig.key]"
+								:label="translateEntry(roleConfig, 'name')"
+								:guild="guildData"
+								:tooltip-title="translateEntry(roleConfig, 'description')"
+							/>
+							<SelectRole
+								v-else
+								v-model="state[roleConfig.key]"
+								:label="translateEntry(roleConfig, 'name')"
+								:guild="guildData"
+								:tooltip-title="translateEntry(roleConfig, 'description')"
+							/>
+						</template>
+					</div>
 				</div>
-				<p class="text-sm text-base-content/70">
-					{{ ts("guild_settings.roles.configurable_help") }}
-				</p>
-
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-					<template v-for="roleConfig in standardRoles" :key="roleConfig.key">
-						<!-- Many (Array) -->
-						<SelectRoles
-							v-if="isArrayKey(roleConfig.key)"
-							v-model="state[roleConfig.key] as string[]"
-							:label="translateEntry(roleConfig, 'name')"
-							:guild="guildData"
-							:tooltip-title="translateEntry(roleConfig, 'tooltip')"
-						/>
-
-						<!-- One (Single) -->
-						<SelectRole
-							v-else
-							v-model="state[roleConfig.key] as string | null"
-							:label="translateEntry(roleConfig, 'name')"
-							:guild="guildData"
-							:tooltip-title="translateEntry(roleConfig, 'tooltip')"
-						/>
-					</template>
-				</div>
-			</div>
-
-			<Separator />
-
-			<!-- Restricted Roles Section -->
-			<div class="space-y-4">
-				<div class="flex items-center gap-2">
-					<UIcon name="heroicons:shield-check" class="size-5 text-primary" />
-					<h3 class="text-lg font-semibold text-base-content">
-						{{ ts("guild_settings.roles.restricted") }}
-					</h3>
-				</div>
-				<p class="text-sm text-base-content/70">
-					{{ ts("guild_settings.roles.restricted_help") }}
-				</p>
-
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-					<template v-for="roleConfig in restrictedRoles" :key="roleConfig.key">
-						<!-- Many (Array) -->
-						<SelectRoles
-							v-if="isArrayKey(roleConfig.key)"
-							v-model="state[roleConfig.key] as string[]"
-							:label="translateEntry(roleConfig, 'name')"
-							:guild="guildData"
-							:tooltip-title="translateEntry(roleConfig, 'tooltip')"
-						/>
-
-						<!-- One (Single) -->
-						<SelectRole
-							v-else
-							v-model="state[roleConfig.key] as string | null"
-							:label="translateEntry(roleConfig, 'name')"
-							:guild="guildData"
-							:tooltip-title="translateEntry(roleConfig, 'tooltip')"
-						/>
-					</template>
-				</div>
-			</div>
+			</template>
 		</GuildSettingsForm>
 	</GuildSettingsSection>
 </template>
 
 <script setup lang="ts">
-import type { GuildData } from "#server/database";
-import type { FormErrorEvent } from "@nuxt/ui";
-import {
-	isRoleArrayKey,
-	RolesSettingsSchema as schema,
-	type RolesSettingsSchemaType as Schema,
-} from "#shared/schemas";
-import { setGuildDataChange } from "#shared/utils/guild-settings-map";
-import { isNullOrUndefined } from "@sapphire/utilities";
-import {
-	ConfigurableRemoveInitialRole,
-	ConfigurableRoles,
-} from "~~/shared/utils/settingsDataEntries";
+import type { Roles } from "#shared/types";
+import { ConfigurableRoles, ConfigurableRoleToggles } from "#shared/utils/settingsDataEntries";
 
 const { ts } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
-
 const { guildData } = useGuildData();
-const { guildSettings } = useGuildSettings();
-const toast = useToast();
 
-function isArrayKey(key: string): boolean {
-	return isRoleArrayKey(key);
-}
+const isManyRole = (role: Roles.Role): role is Roles.ManyRole => role.many;
+const isOneRole = (role: Roles.Role): role is Roles.OneRole => !role.many;
 
-const restrictedRoles = ConfigurableRoles.filter((r) => r.key.startsWith("rolesRestricted"));
-const standardRoles = ConfigurableRoles.filter((r) => !r.key.startsWith("rolesRestricted"));
-
-// Initialize form state with defaults
-const createDefaultState = (): Schema => {
-	const defaults: Schema = { rolesRemoveInitial: false };
-	for (const roleConfig of ConfigurableRoles) {
-		defaults[roleConfig.key] = isArrayKey(roleConfig.key) ? [] : null;
-	}
-	return defaults;
-};
-
-const state = reactive<Schema>(createDefaultState());
-
-// Loading state
-const loading = computed(() => !guildData.value?.roles || !guildSettings.value);
-
-// Compute original values from initialized state (snapshot)
-const originalValues = computed(() => {
-	if (loading.value) {
-		return createDefaultState();
-	}
-
-	const values = createDefaultState();
-
-	// Bool toggle
-	if (guildSettings.value && !isNullOrUndefined(guildSettings.value.rolesRemoveInitial)) {
-		values.rolesRemoveInitial = guildSettings.value.rolesRemoveInitial;
-	}
-
-	// Roles
-	for (const roleConfig of ConfigurableRoles) {
-		const key = roleConfig.key;
-		if (guildSettings.value && !isNullOrUndefined(guildSettings.value[key])) {
-			const val = guildSettings.value[key];
-			if (isArrayKey(roleConfig.key)) {
-				values[key] = Array.isArray(val) ? [...val] : [];
-			} else {
-				values[key] = typeof val === "string" ? val : null;
-			}
-		}
-	}
-
-	return values;
+const { mapToGuildData, onError, schema, state } = useSettingsForm({
+	one: ConfigurableRoles.filter(isOneRole).map((role) => role.key),
+	many: ConfigurableRoles.filter(isManyRole).map((role) => role.key),
+	toggles: ConfigurableRoleToggles.map((entry) => entry.key),
 });
 
-// Watch for loading state change to populate local state
-watch(
-	loading,
-	(isLoading) => {
-		if (!isLoading && guildData.value && guildSettings.value) {
-			const newValues = originalValues.value;
-			Object.assign(state, newValues);
-		}
+const roleGroups = computed(() => [
+	{
+		id: "standard",
+		icon: "heroicons:user-group",
+		title: ts("guild_settings.roles.configurable"),
+		help: ts("guild_settings.roles.configurable_help"),
+		roles: ConfigurableRoles.filter((role) => role.group === "standard"),
 	},
-	{ immediate: true },
-);
-
-// Map form state to GuildData changes
-function mapToGuildData(formState: Schema): Partial<GuildData> {
-	const changes: Partial<GuildData> = {};
-
-	// Always include the boolean toggle
-	if (typeof formState.rolesRemoveInitial === "boolean") {
-		setGuildDataChange(changes, "rolesRemoveInitial", formState.rolesRemoveInitial);
-	}
-
-	for (const roleConfig of ConfigurableRoles) {
-		const value = formState[roleConfig.key];
-		if (value === undefined) {
-			continue;
-		}
-
-		if (isArrayKey(roleConfig.key)) {
-			setGuildDataChange(changes, roleConfig.key, Array.isArray(value) ? value : []);
-			continue;
-		}
-
-		setGuildDataChange(changes, roleConfig.key, typeof value === "string" ? value : null);
-	}
-
-	return changes;
-}
-
-// Form error handler
-async function onError(event: FormErrorEvent) {
-	const element =
-		event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
-	element?.scrollIntoView({ behavior: "smooth", block: "center" });
-	const errorMessage = event.errors[0]?.message;
-	toast.add({
-		color: "error",
-		description: errorMessage ?? ts("guild_settings.please_try_again"),
-		icon: "heroicons:x-circle",
-		title: ts("guild_settings.save_failed"),
-	});
-}
+	{
+		id: "restricted",
+		icon: "heroicons:shield-check",
+		title: ts("guild_settings.roles.restricted"),
+		help: ts("guild_settings.roles.restricted_help"),
+		roles: ConfigurableRoles.filter((role) => role.group === "restricted"),
+	},
+]);
 </script>

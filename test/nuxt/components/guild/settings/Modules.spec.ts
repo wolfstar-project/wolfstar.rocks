@@ -10,8 +10,9 @@ import { createMockGuildData } from "~~/test/mocks/guildData";
 
 const createInitialGuildSettings = () =>
 	createMockGuildData("123456789012345678", {
-		selfmodFilterEnabled: true,
-		selfmodInvitesEnabled: true,
+		modulesAutomod: false,
+		modulesCommands: false,
+		modulesLogs: false,
 	});
 
 const mockGuildSettings = ref<GuildData | undefined>(createInitialGuildSettings());
@@ -88,7 +89,7 @@ describe("modules guild settings", () => {
 		await configureButtons[1]!.trigger("click");
 		await nextTick();
 
-		expect(useActiveGuild().section.value).toBe("moderation/capitals");
+		expect(useActiveGuild().section.value).toBe(GUILD_MODULES[1]!.section);
 	});
 
 	it("initializes state and the enabled count from guildSettings", async () => {
@@ -98,9 +99,9 @@ describe("modules guild settings", () => {
 
 		const { state, enabledCount } = getSetupState(wrapper);
 
-		expect(state.selfmodFilterEnabled).toBe(true);
-		expect(state.selfmodInvitesEnabled).toBe(true);
-		expect(state.selfmodLinksEnabled).toBe(false);
+		expect(state.modulesModeration).toBe(true);
+		expect(state.modulesRoles).toBe(true);
+		expect(state.modulesAutomod).toBe(false);
 		expect(enabledCount).toBe(2);
 		expect(wrapper.text()).toContain(`2 / ${GUILD_MODULES.length} enabled`);
 	});
@@ -130,14 +131,14 @@ describe("modules guild settings", () => {
 		const wrapper = await mountSuspended(Modules);
 
 		await nextTick();
-		expect(getSetupState(wrapper).state.selfmodLinksEnabled).toBe(false);
+		expect(getSetupState(wrapper).state.modulesAutomod).toBe(false);
 
 		mockGuildSettings.value = createMockGuildData("123456789012345678", {
-			selfmodLinksEnabled: true,
+			modulesAutomod: true,
 		});
 		await nextTick();
 		await nextTick();
 
-		expect(getSetupState(wrapper).state.selfmodLinksEnabled).toBe(true);
+		expect(getSetupState(wrapper).state.modulesAutomod).toBe(true);
 	});
 });

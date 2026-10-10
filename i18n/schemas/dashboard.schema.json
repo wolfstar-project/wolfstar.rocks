@@ -55,10 +55,7 @@
 				"nav": {
 					"type": "object",
 					"properties": {
-						"bad_words": {
-							"type": "string"
-						},
-						"capitals": {
+						"automod": {
 							"type": "string"
 						},
 						"channels": {
@@ -67,25 +64,10 @@
 						"commands": {
 							"type": "string"
 						},
-						"events": {
-							"type": "string"
-						},
 						"home": {
 							"type": "string"
 						},
-						"invites": {
-							"type": "string"
-						},
-						"line_spam": {
-							"type": "string"
-						},
-						"links": {
-							"type": "string"
-						},
 						"logs": {
-							"type": "string"
-						},
-						"message_duplication": {
 							"type": "string"
 						},
 						"moderation": {
@@ -94,7 +76,7 @@
 						"modules": {
 							"type": "string"
 						},
-						"reactions": {
+						"reports": {
 							"type": "string"
 						},
 						"roles": {

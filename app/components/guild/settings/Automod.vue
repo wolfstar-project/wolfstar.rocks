@@ -1,19 +1,19 @@
 <template>
 	<GuildSettingsSection
-		:title="ts('guild_settings.moderation.title')"
-		:description="ts('guild_settings.moderation.subtitle')"
+		:title="ts('guild_settings.automod.title')"
+		:description="ts('guild_settings.automod.subtitle')"
 	>
 		<GuildSettingsForm
 			:schema="schema"
 			:state="state"
 			:map-to-guild-data="mapToGuildData"
-			:aria-label="ts('guild_settings.moderation.form_aria')"
+			:aria-label="ts('guild_settings.automod.form_aria')"
 			class="space-y-6"
 			@error="onError"
 		>
 			<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 				<SelectChannel
-					v-for="config in ConfigurableModerationChannels"
+					v-for="config in ConfigurableAutomodChannels"
 					:key="config.key"
 					v-model="state[config.key]"
 					:guild="guildData"
@@ -24,7 +24,7 @@
 
 			<div class="grid grid-cols-1 gap-x-7 md:grid-cols-2">
 				<GuildSettingsToggleRow
-					v-for="config in ConfigurableModerationToggles"
+					v-for="config in ConfigurableAutomodToggles"
 					:key="config.key"
 					v-model="state[config.key]"
 					:name="config.key"
@@ -38,8 +38,8 @@
 
 <script setup lang="ts">
 import {
-	ConfigurableModerationChannels,
-	ConfigurableModerationToggles,
+	ConfigurableAutomodChannels,
+	ConfigurableAutomodToggles,
 } from "#shared/utils/settingsDataEntries";
 
 const { ts } = useI18n();
@@ -47,7 +47,7 @@ const { translateEntry } = useSettingsEntryI18n();
 const { guildData } = useGuildData();
 
 const { mapToGuildData, onError, schema, state } = useSettingsForm({
-	one: ConfigurableModerationChannels.map((entry) => entry.key),
-	toggles: ConfigurableModerationToggles.map((entry) => entry.key),
+	one: ConfigurableAutomodChannels.map((entry) => entry.key),
+	toggles: ConfigurableAutomodToggles.map((entry) => entry.key),
 });
 </script>

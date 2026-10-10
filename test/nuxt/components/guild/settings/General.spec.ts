@@ -13,7 +13,6 @@ import { createMockGuildData } from "~~/test/mocks/guildData";
 
 const createInitialGuildSettings = () =>
 	createMockGuildData("123456789012345678", {
-		prefix: "!",
 		language: "en-US",
 	});
 
@@ -70,11 +69,9 @@ function getSetupState(wrapper: Awaited<ReturnType<typeof mountSuspended>>) {
 	return (wrapper.vm.$ as any).setupState as {
 		mapLanguageKeysToNames: (langKey: string) => [string] | [string, string];
 		mapToGuildData: (formState: {
-			prefix: string;
 			language: { label: string; value: string };
 		}) => Partial<GuildData>;
 		state: {
-			prefix: string;
 			language: { label: string; value: string };
 		};
 	};
@@ -93,7 +90,7 @@ describe("general guild settings", () => {
 		}
 	});
 
-	it("renders prefix input and language select", async () => {
+	it("renders the language select and no prefix field", async () => {
 		const wrapper = await mountSuspended(General, {
 			props: {
 				languages: ["en-US", "es-ES", "de-DE"],
@@ -102,10 +99,8 @@ describe("general guild settings", () => {
 
 		await nextTick();
 
-		const prefixInput = wrapper.find("input#prefix");
-
-		expect(prefixInput.exists()).toBeTruthy();
-		expect((prefixInput.element as HTMLInputElement).value).toBe("!");
+		// V7 is slash-command only: the bot has no prefix setting any more.
+		expect(wrapper.find("input#prefix").exists()).toBe(false);
 		expect(wrapper.text()).toContain("Language");
 		expect(wrapper.html()).toContain("language");
 	});
@@ -119,12 +114,7 @@ describe("general guild settings", () => {
 
 		await nextTick();
 
-		const prefixInput = wrapper.find("input#prefix");
-		const setupState = getSetupState(wrapper);
-
-		expect((prefixInput.element as HTMLInputElement).value).toBe("!");
-		expect(setupState.state.prefix).toBe("!");
-		expect(setupState.state.language).toStrictEqual({
+		expect(getSetupState(wrapper).state.language).toStrictEqual({
 			label: "English, United States",
 			value: "en-US",
 		});
@@ -139,20 +129,12 @@ describe("general guild settings", () => {
 
 		await nextTick();
 
-		const prefixInput = wrapper.find("input#prefix");
-		await prefixInput.setValue("?");
+		const setupState = getSetupState(wrapper);
+		setupState.state.language = { label: "German", value: "de-DE" };
 		await nextTick();
 
-		const setupState = getSetupState(wrapper);
-		const mappedGuildData = setupState.mapToGuildData(setupState.state);
-
-		expect(mappedGuildData).toStrictEqual({
-			language: "en-US",
-			prefix: "?",
-		});
-		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
-			prefix: "?",
-		});
+		expect(setupState.mapToGuildData(setupState.state)).toStrictEqual({ language: "de-DE" });
+		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({ language: "de-DE" });
 	});
 
 	it("maps language keys to display names correctly", async () => {

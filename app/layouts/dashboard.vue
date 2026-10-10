@@ -345,8 +345,6 @@ watch(
 
 const { effectiveReduceMotion } = useReduceMotion();
 
-const isModerationSection = computed(() => section.value.startsWith("moderation"));
-
 function sectionItem(slug: string, item: Omit<NavigationMenuItem, "active" | "onSelect">) {
 	return {
 		...item,
@@ -366,32 +364,18 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		},
 		sectionItem("", { icon: "heroicons:home", label: ts("dashboard.nav.home") }),
 		sectionItem("modules", { icon: "lucide:layout-grid", label: ts("dashboard.nav.modules") }),
-		{
-			...sectionItem("moderation", {
-				icon: "lucide:shield",
-				label: ts("dashboard.nav.moderation"),
-			}),
-			active: isModerationSection.value,
-			defaultOpen: isModerationSection.value,
-			children: [
-				sectionItem("moderation/word", { label: ts("dashboard.nav.bad_words") }),
-				sectionItem("moderation/capitals", { label: ts("dashboard.nav.capitals") }),
-				sectionItem("moderation/invites", { label: ts("dashboard.nav.invites") }),
-				sectionItem("moderation/links", { label: ts("dashboard.nav.links") }),
-				sectionItem("moderation/messages", {
-					label: ts("dashboard.nav.message_duplication"),
-				}),
-				sectionItem("moderation/lines", { label: ts("dashboard.nav.line_spam") }),
-				sectionItem("moderation/reactions", { label: ts("dashboard.nav.reactions") }),
-			],
-		},
+		sectionItem("automod", {
+			icon: "lucide:shield-alert",
+			label: ts("dashboard.nav.automod"),
+		}),
+		sectionItem("moderation", { icon: "lucide:gavel", label: ts("dashboard.nav.moderation") }),
 		sectionItem("channels", { icon: "heroicons:hashtag", label: ts("dashboard.nav.channels") }),
 		sectionItem("roles", { icon: "heroicons:user-group", label: ts("dashboard.nav.roles") }),
-		sectionItem("events", { icon: "heroicons:bell", label: ts("dashboard.nav.events") }),
 		sectionItem("commands", {
 			icon: "heroicons:command-line",
 			label: ts("dashboard.nav.commands"),
 		}),
+		sectionItem("reports", { icon: "lucide:flag", label: ts("dashboard.nav.reports") }),
 		sectionItem("logs", { icon: "lucide:logs", label: ts("dashboard.nav.logs") }),
 	],
 	[

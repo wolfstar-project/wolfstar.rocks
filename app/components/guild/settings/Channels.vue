@@ -13,7 +13,11 @@
 		>
 			<div class="space-y-4">
 				<div class="flex items-center gap-2">
-					<UIcon name="i-heroicons-document-text" class="size-5 text-primary" />
+					<UIcon
+						name="i-heroicons-document-text"
+						class="size-5 text-primary"
+						aria-hidden="true"
+					/>
 					<h3 class="text-lg font-semibold text-base-content">
 						{{ ts("guild_settings.channels.logging_channels") }}
 					</h3>
@@ -23,15 +27,25 @@
 				</p>
 
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-					<div v-for="config in ConfigurableLoggingChannels" :key="config.key">
-						<SelectChannel
-							v-model="state[config.key] as string | null"
-							:guild="guildData"
-							:name="translateEntry(config, 'name')"
-							:label="translateEntry(config, 'name')"
-							:description="translateEntry(config, 'description')"
-						/>
-					</div>
+					<SelectChannel
+						v-for="config in ConfigurableLoggingChannels"
+						:key="config.key"
+						v-model="state[config.key]"
+						:guild="guildData"
+						:label="translateEntry(config, 'name')"
+						:tooltip-title="translateEntry(config, 'description')"
+					/>
+				</div>
+
+				<div>
+					<GuildSettingsToggleRow
+						v-for="config in ConfigurableLogToggles"
+						:key="config.key"
+						v-model="state[config.key]"
+						:name="config.key"
+						:title="translateEntry(config, 'name')"
+						:description="translateEntry(config, 'description')"
+					/>
 				</div>
 			</div>
 
@@ -39,7 +53,11 @@
 
 			<div class="space-y-4">
 				<div class="flex items-center gap-2">
-					<UIcon name="heroicons:eye-slash" class="size-5 text-warning" />
+					<UIcon
+						name="heroicons:eye-slash"
+						class="size-5 text-warning"
+						aria-hidden="true"
+					/>
 					<h3 class="text-lg font-semibold text-base-content">
 						{{ ts("guild_settings.channels.excluded_channels") }}
 					</h3>
@@ -49,13 +67,14 @@
 				</p>
 
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-					<div v-for="config in ConfigurableIgnoreChannels" :key="config.key">
-						<SelectChannels
-							v-model="state[config.key] as string[]"
-							:guild="guildData"
-							:label="translateEntry(config, 'name')"
-						/>
-					</div>
+					<SelectChannels
+						v-for="config in ConfigurableIgnoreChannels"
+						:key="config.key"
+						v-model="state[config.key]"
+						:guild="guildData"
+						:label="translateEntry(config, 'name')"
+						:tooltip-title="translateEntry(config, 'description')"
+					/>
 				</div>
 			</div>
 		</GuildSettingsForm>
@@ -63,72 +82,21 @@
 </template>
 
 <script setup lang="ts">
-import type { GuildData } from "#server/database";
-import type { FormErrorEvent } from "@nuxt/ui";
-import { ChannelsSettingsSchema, type ChannelsSettingsSchemaType } from "#shared/schemas";
-import { setGuildDataChange } from "#shared/utils/guild-settings-map";
 // Explicit import: unimport misses identifiers referenced only inside nested
 // functions and the template, leaving them unbound in the compiled module.
 import {
 	ConfigurableIgnoreChannels,
 	ConfigurableLoggingChannels,
+	ConfigurableLogToggles,
 } from "#shared/utils/settingsDataEntries";
 
 const { ts } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
-
 const { guildData } = useGuildData();
-const { guildSettings: _guildSettings } = useGuildSettings();
-const toast = useToast();
 
-const schema = ChannelsSettingsSchema;
-
-const createDefaultState = (): ChannelsSettingsSchemaType => {
-	const defaults: ChannelsSettingsSchemaType = {} as ChannelsSettingsSchemaType;
-	for (const config of ConfigurableLoggingChannels) {
-		defaults[config.key] = null;
-	}
-	for (const config of ConfigurableIgnoreChannels) {
-		defaults[config.key] = [];
-	}
-	return defaults;
-};
-
-const state = reactive<ChannelsSettingsSchemaType>(createDefaultState());
-
-function mapToGuildData(formState: ChannelsSettingsSchemaType): Partial<GuildData> {
-	const changes: Partial<GuildData> = {};
-
-	for (const config of ConfigurableLoggingChannels) {
-		const value = formState[config.key] as string | null | undefined;
-		// Include null values for nullable fields (user explicitly cleared)
-		// Only exclude undefined (form doesn't control this key)
-		if (value !== undefined) {
-			setGuildDataChange(changes, config.key, value);
-		}
-	}
-
-	for (const config of ConfigurableIgnoreChannels) {
-		const value = formState[config.key] as string[] | undefined;
-		// Include empty arrays (user explicitly cleared all ignored channels)
-		if (value !== undefined) {
-			setGuildDataChange(changes, config.key, value);
-		}
-	}
-
-	return changes;
-}
-
-async function onError(event: FormErrorEvent) {
-	const element =
-		event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
-	element?.scrollIntoView({ behavior: "smooth", block: "center" });
-	const errorMessage = event.errors[0]?.message;
-	toast.add({
-		color: "error",
-		description: errorMessage ?? ts("guild_settings.please_try_again"),
-		icon: "heroicons:x-circle",
-		title: ts("guild_settings.save_failed"),
-	});
-}
+const { mapToGuildData, onError, schema, state } = useSettingsForm({
+	one: ConfigurableLoggingChannels.map((entry) => entry.key),
+	many: ConfigurableIgnoreChannels.map((entry) => entry.key),
+	toggles: ConfigurableLogToggles.map((entry) => entry.key),
+});
 </script>

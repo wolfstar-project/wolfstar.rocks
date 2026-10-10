@@ -1,7 +1,7 @@
 # Core Requirements
 
 - The end goal is stability, speed, great user experience, and accessibility.
-- WolfStar.rocks is a Nuxt 4 full-stack dashboard for **WolfStar** (Discord moderation bot) and **Staryl** (social notifications bot). Built with Vue 3, TypeScript, Prisma, and PostgreSQL, featuring Discord OAuth2 authentication and guild management.
+- WolfStar.rocks is a Nuxt 4 full-stack dashboard for **WolfStar** (Discord moderation bot) and **Staryl** (social notifications bot). Built with Vue 3, TypeScript, Prisma ORM 8, and PostgreSQL, featuring Discord OAuth2 authentication and guild management.
 - Always reference these instructions first and fall back to search or documentation queries only when you encounter unexpected information.
 
 ## Code Quality Requirements
@@ -139,24 +139,16 @@ pnpm build-storybook             # Build static Storybook output
 pnpm vp run zizmor               # Lint GitHub Actions workflows for security issues (zizmor)
 pnpm vp run zizmor:fix           # Auto-fix zizmor findings
 pnpm vp run lint:type-aware      # Opt-in Oxlint type-aware linting (tsgolint); not part of the default lint/CI gate
-pnpm prisma:push                 # Push schema changes (development)
-pnpm prisma:migrate:dev          # Create and apply migration
-pnpm prisma:migrate:diff         # Check migration drift against the Prisma schema
-pnpm prisma:migrate:deploy       # Apply migrations in deployment environments
-pnpm prisma:generate             # Regenerate Prisma client
-pnpm prisma:seed                 # Seed the database
-pnpm prisma:studio               # Visual database editor (http://localhost:5555)
+pnpm prisma:generate             # Emit the Prisma ORM 8 contract artefacts (alias of prisma8:emit)
+pnpm prisma8:emit                # prisma contract emit → server/database/generated/prisma/
+pnpm prisma8:infer               # Re-infer server/database/contract.prisma from a live database
 ```
 
 Rarely-used tasks are no longer wrapped in `package.json`; run the underlying
 binary through `pnpm exec` instead:
 
 ```bash
-pnpm exec prisma migrate dev --create-only  # Create a migration without applying it
-pnpm exec prisma migrate status             # Inspect migration status
-pnpm exec prisma migrate resolve            # Resolve migration history state
-pnpm exec prisma migrate reset              # Reset the local database
-pnpm exec prisma generate --watch           # Regenerate Prisma client in watch mode
+pnpm exec prisma skills sync                # Refresh the vendored Prisma 8 reference docs (.agents/skills/prisma-8)
 pnpm exec knip --fix                        # Auto-fix unused files, exports, and dependencies
 pnpm exec taze                              # Interactive dependency updates
 pnpm exec tolgee extract print              # Print strings the Tolgee CLI would extract (dry run)
@@ -186,10 +178,16 @@ pnpm test:browser:prebuilt --update-snapshots  # Update Playwright snapshots
 
 ## Prisma and Database Conventions
 
-- Prisma schema lives in `server/database/schema.prisma`; migrations live in `server/database/migrations/`
-- Treat migrations as append-only once merged
-- Use raw SQL migrations for database features Prisma cannot express, such as partial indexes on nullable columns
-- Do not add Prisma `@@index` entries for the manually-managed partial indexes on `Moderation.createdAt`; see migration `20260515000000_command_log_and_moderation_indexes`
+- The database layer is **Prisma ORM 8 only** (`@prisma/orm-postgres`), set up the way the bot's `projects/database` package is (wolfstar-project/wolfstar, V7). Prisma 7 — `schema.prisma`, `@prisma/client`, the pg adapter, `prisma migrate` — is gone and must not come back; before touching anything here, read the vendored `prisma-8` skill (`pnpm exec prisma skills sync` refreshes it for the installed version)
+- `server/database/contract.prisma` is the data contract, and it is a **verbatim copy of the bot's** `projects/database/src/contract.prisma`. Never edit it here: copy the bot's file when it changes, then run `pnpm prisma:generate`. `prisma contract emit` must report the `storageHash` the bot's `migrations/app/refs/db.json` records — a different hash means the two services disagree about the database
+- `pnpm prisma:generate` emits `contract.json` / `contract.d.ts` into `server/database/generated/prisma/` (gitignored). Netlify and every CI job run it before building; run it after an install or a contract change, or `#server/database/generated/prisma/contract` will not resolve
+- The bot owns and migrates the shared database. `prisma.config.ts` wires no `migrations` directory on purpose: never run `prisma db sign`, `prisma db update` or `prisma migration plan` from this repo. `server/database/migrations/` is the frozen SQL record of how the tables the contract marks `@@control(external)` were created before the bot's ORM 8 migrations took over — keep it append-only and do not expect any script here to apply it
+- `server/database/prisma.ts` exports `db`, the one client: `postgres<Contract>({ url, contractJson, extensions: [typedRuntimeDescriptor], middleware: [lints()] })`. The typed-JSON extension (`prisma-orm-extension-typed-json`, pinned and patched in `pnpm-workspace.yaml` exactly as the bot pins it) gives the contract's `typed.Json("PrismaJson.X")` columns their types; those names are declared in the global `PrismaJson` namespace in `shared/types/prisma.ts`. `lints()` refuses an `UPDATE`/`DELETE` without a `WHERE`
+- Snowflakes are `BIGINT` columns and `timestamp(3)` columns are `TimestampString`. Convert at the boundary: ids cross the API as strings (a `bigint` makes `JSON.stringify` throw), and timestamps go through `asTimestampString()` / `timestampStringToUtcIso()` in `server/utils/timestamp-string.ts`, which read the zoneless text as UTC
+- A guild's settings are spread over normalized tables (`Guild`, `Modules`, `GuildLogs`, `GuildRoles`, …) but the app — like the bot — works with one flat `GuildData` object. `server/database/settings/columns.ts` maps every flat key to its table, column and conversion kind, and `GuildData`'s type is derived from that map and the contract; `storage.ts` (`fetchGuildData()`, `writeGuildData()`) reads the tables and writes the changed ones in one transaction, creating the parent rows a change needs. `columns.ts`, `storage.ts` and `constants.ts` mirror the bot's files of the same name: to add a setting, add its column and default in both repos
+- `parseSettingsChanges()` (`server/database/settings/validation.ts`) is the only gate between a PATCH body and those tables: it refuses unknown keys and values of the wrong type, and `null` resets a key to its default. A column added to `Columns` without a validator is refused rather than written unchecked
+- Auto-moderation is one `GuildAutoModerationRule` row per rule (type, thresholds, actions, JSON options), not per-filter columns. The rule types, limits, defaults and normalizers live in `shared/utils/automod-rules.ts`, ported from the bot's `settings/automod/types.ts`
+- The V7 model has no command prefix, no reaction roles and no `selfmod*` / `messagesModeration*` / `events*` settings. Audit rows written before the move keep their V6 keys, so `shared/utils/audit-field-metadata.ts` aliases the renamed ones (`LEGACY_AUDIT_FIELD_ALIASES`) to keep the activity feed readable
 - `AuditEvent` is hash-chained and tamper-evident; `CommandLog` is not hash-chained and is written directly by the bot/shared PostgreSQL producer
 
 ## Storage and Caching
@@ -200,11 +198,14 @@ pnpm test:browser:prebuilt --update-snapshots  # Update Playwright snapshots
 
 ## Dashboard (`/app`)
 
-- The guild dashboard is a single client-rendered page, `app/pages/app.vue` (route rule `"/app": { ssr: false }`), rendered inside `app/layouts/dashboard.vue`. The guild snowflake never appears in the URL: `useActiveGuild()` (`app/composables/useActiveGuild.ts`) holds `activeGuildId`, the open `section` (a manage slug such as `""` for Home, `modules`, `moderation/word`, `channels`, `logs`) and the `logsTab`, and `app/plugins/active-guild.client.ts` mirrors them to the `wolfstar-active-guild` localStorage key so a reload lands on the same server and section
+- The guild dashboard is a single client-rendered page, `app/pages/app.vue` (route rule `"/app": { ssr: false }`), rendered inside `app/layouts/dashboard.vue`. The guild snowflake never appears in the URL: `useActiveGuild()` (`app/composables/useActiveGuild.ts`) holds `activeGuildId`, the open `section` (a slug such as `""` for Home, `modules`, `automod`, `moderation`, `channels`, `roles`, `commands`, `reports`, `logs`) and the `logsTab`, and `app/plugins/active-guild.client.ts` mirrors them to the `wolfstar-active-guild` localStorage key so a reload lands on the same server and section
 - `useGuildData()`, `useGuildSettings()` and `useGuildSettingsChanges()` are keyed by the active guild (one `useState` map per store), so switching servers never leaks another guild's settings or staged edits
 - Switch sections or guilds through `useDashboardNavigation()` (`goToSection()`, `goToGuild()`), never by writing the state directly from components: with staged changes the switch is parked in `pendingNavigation` and the layout's "Unsaved Changes" dialog confirms or cancels it. In-dashboard links to other sections are buttons calling `goToSection()`, not `NuxtLink`s
 - `/guilds/:id/manage/*` and `/guilds/:id/logs/*` are legacy routes: the pages under `app/pages/(app)/guilds/[...id]/` only record the guild and section into state on the client and `navigateTo("/app")`. Do not add new pages under `/guilds/`
-- The Modules section (`app/components/guild/settings/Modules.vue`) and the Home summary card read the module registry in `shared/utils/guild-modules.ts` (one entry per `selfmod*Enabled` flag with its label, help key, icon and section slug); `ModulesSettingsSchema` in `shared/schemas/modules.ts` is derived from it
+- The Modules section (`app/components/guild/settings/Modules.vue`) and the Home summary card read the module registry in `shared/utils/guild-modules.ts`: one entry per flag of the V7 `Modules` table (`modulesAutomod`, `modulesModeration`, `modulesLogs`, `modulesCommands`, `modulesRoles`) with its label, help key, icon and the section that configures it
+- A settings section whose controls each edit one `GuildData` key as-is (a channel or role picker, a multi-picker, a switch) is built from `useSettingsForm({ one, many, toggles })` (`app/composables/useSettingsForm.ts`) and the entry lists in `shared/utils/settingsDataEntries.ts`: the composable returns the state, the Valibot schema, `mapToGuildData` and the error handler, and the entry types (`SingleSettingKey`, `ListSettingKey`, `ToggleSettingKey`) only accept keys of the right value type. Switch rows are `GuildSettingsToggleRow`. Do not hand-write a schema or a `mapToGuildData` for such a section
+- A section may hold more than one `GuildSettingsForm` (Commands does). Each form only removes its own reverted keys from the staged draft; it must never clear the whole draft
+- `resolveLegacyDashboardSection()` (`app/utils/guild-dashboard.ts`) maps pre-V7 slugs from old `/guilds/:id/manage/*` links (`moderation/word`, `events`, …) to the section that holds those settings now
 
 ## Guild Logs and Activity Patterns
 
@@ -255,7 +256,7 @@ Commit messages must follow Conventional Commits: `<type>(<scope>): <subject>`
 ## Troubleshooting
 
 - **Build issues:** Clear `.nuxt`, `.output`, and `node_modules/.cache`, then rebuild
-- **Prisma types stale:** Run `pnpm prisma:generate` after schema changes
+- **`#server/database/generated/prisma/contract` not found, or contract types stale:** Run `pnpm prisma:generate` (after an install, and whenever `server/database/contract.prisma` changes)
 - **OAuth redirect fails:** Ensure the Discord Developer Portal lists `<NUXT_PUBLIC_SITE_URL>/oauth/callback` verbatim, and that `NUXT_PUBLIC_SITE_URL` is set on the deployed environment — the redirect URI is derived from it
 - **Hot reload broken:** Check file watcher limits on Linux, restart dev server
 - **Type errors after updates:** Run `pnpm nuxt prepare && pnpm prisma:generate`
@@ -325,7 +326,7 @@ log.audit(
 - `shared/audit/envelope.ts` — canonical hash/envelope helpers
 - `shared/utils/audit-field-metadata.ts` — field labels and render metadata for dashboard-managed guild settings
 - `server/middleware/evlog-auth-identify.ts` — auto-identifies the request actor from the better-auth session via evlog's `createAuthMiddleware()` (`evlog/better-auth`, excludes `/api/auth/**`) so audit enrichers can resolve the actor without each handler calling `log.set({ user })` manually
-- `server/utils/audit/postgres-drain.ts` — Postgres sink with hash-chain (P2002 swallowed, P2034 retried 5x)
+- `server/utils/audit/postgres-drain.ts` — Postgres sink with hash-chain, on the ORM 8 client. Appends are serialized by a transaction-level advisory lock (`pg_advisory_xact_lock(1096107084)`, the key the bot's `AuditLogManager` takes too) instead of `Serializable` isolation, which the ORM 8 façade does not expose; ids that are not snowflakes are refused because the columns are `BIGINT`
 - `server/utils/audit/actor-bridge.ts` — resolves actor from request context
 - `server/utils/audit/patch-to-changes.ts` — converts `auditDiff()` JSON patches into dashboard-friendly change groups
 - `server/utils/audit/resolve-members.ts` — resolves Discord guild members for log display with fallback placeholders

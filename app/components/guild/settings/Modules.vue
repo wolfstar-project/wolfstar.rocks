@@ -4,7 +4,7 @@
 		:description="ts('guild_settings.modules.subtitle')"
 	>
 		<GuildSettingsForm
-			:schema="ModulesSettingsSchema"
+			:schema="schema"
 			:state="state"
 			:map-to-guild-data="mapToGuildData"
 			:aria-label="ts('guild_settings.modules.form_aria')"
@@ -84,7 +84,7 @@
 							variant="ghost"
 							size="sm"
 							trailing-icon="heroicons:chevron-right-20-solid"
-							@click="goToSection(guildModuleSection(module.slug))"
+							@click="goToSection(module.section)"
 						>
 							{{ ts("guild_settings.modules.configure") }}
 						</UButton>
@@ -96,69 +96,20 @@
 </template>
 
 <script setup lang="ts">
-import type { GuildData } from "#server/database";
-import type { FormErrorEvent } from "@nuxt/ui";
-import { ModulesSettingsSchema, type ModulesSettingsSchemaType } from "#shared/schemas";
-import {
-	countEnabledModules,
-	GUILD_MODULES,
-	guildModuleSection,
-} from "#shared/utils/guild-modules";
-import { setGuildDataChange } from "#shared/utils/guild-settings-map";
+import { GUILD_MODULES } from "#shared/utils/guild-modules";
 
 const { ts } = useI18n();
-const { guildSettings } = useGuildSettings();
 const { goToSection } = useDashboardNavigation();
-const toast = useToast();
 
-const createDefaultState = (): ModulesSettingsSchemaType => {
-	const defaults: Partial<ModulesSettingsSchemaType> = {};
-	for (const module of GUILD_MODULES) {
-		defaults[module.key] = guildSettings.value?.[module.key] ?? false;
-	}
-	return defaults as ModulesSettingsSchemaType;
-};
+const moduleKeys = GUILD_MODULES.map((module) => module.key);
 
-const state = reactive<ModulesSettingsSchemaType>(createDefaultState());
+const { mapToGuildData, onError, schema, state } = useSettingsForm({ toggles: moduleKeys });
 
 const enabledCount = computed(() => countEnabledModules(state));
 
 function setAll(enabled: boolean) {
-	for (const module of GUILD_MODULES) {
-		state[module.key] = enabled;
+	for (const key of moduleKeys) {
+		state[key] = enabled;
 	}
 }
-
-function mapToGuildData(stateData: ModulesSettingsSchemaType): Partial<GuildData> {
-	const result: Partial<GuildData> = {};
-	for (const module of GUILD_MODULES) {
-		setGuildDataChange(result, module.key, stateData[module.key]);
-	}
-	return result;
-}
-
-async function onError(event: FormErrorEvent) {
-	const element =
-		event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
-	element?.scrollIntoView({ behavior: "smooth", block: "center" });
-	const errorMessage = event.errors[0]?.message;
-	toast.add({
-		color: "error",
-		description: errorMessage ?? ts("guild_settings.please_try_again"),
-		icon: "heroicons:x-circle",
-		title: ts("guild_settings.save_failed"),
-	});
-}
-
-watch(
-	guildSettings,
-	(newSettings) => {
-		if (newSettings) {
-			for (const module of GUILD_MODULES) {
-				state[module.key] = newSettings[module.key] ?? false;
-			}
-		}
-	},
-	{ deep: true },
-);
 </script>

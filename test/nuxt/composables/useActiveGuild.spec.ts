@@ -37,16 +37,16 @@ describe("useActiveGuild", () => {
 		const { guildSettingsChanges, setGuildSettingsChanges } = useGuildSettingsChanges();
 
 		selectGuild(GUILD_A);
-		setGuildSettings({ prefix: "a!" } as GuildData);
-		setGuildSettingsChanges({ prefix: "b!" });
+		setGuildSettings({ language: "de-DE" } as GuildData);
+		setGuildSettingsChanges({ language: "it-IT" });
 
 		selectGuild(GUILD_B);
 		expect(originalGuildSettings.value).toBeUndefined();
 		expect(guildSettingsChanges.value).toBeUndefined();
 
 		selectGuild(GUILD_A);
-		expect(originalGuildSettings.value?.prefix).toBe("a!");
-		expect(guildSettingsChanges.value?.prefix).toBe("b!");
+		expect(originalGuildSettings.value?.language).toBe("de-DE");
+		expect(guildSettingsChanges.value?.language).toBe("it-IT");
 	});
 });
 
@@ -81,7 +81,7 @@ describe("useDashboardNavigation", () => {
 		} = useDashboardNavigation();
 
 		selectGuild(GUILD_A);
-		setGuildSettingsChanges({ prefix: "b!" });
+		setGuildSettingsChanges({ language: "it-IT" });
 		expect(hasStagedChanges.value).toBe(true);
 
 		goToSection("events");

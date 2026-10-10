@@ -34,6 +34,8 @@
 			</div>
 		</GuildSettingsForm>
 	</GuildSettingsSection>
+
+	<GuildAutomodRules />
 </template>
 
 <script setup lang="ts">

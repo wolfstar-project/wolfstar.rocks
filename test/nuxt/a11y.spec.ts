@@ -45,6 +45,7 @@ import {
 	DashboardSidebar,
 	ErrorPage,
 	OauthStatusPanel,
+	GuildAutomodDurationInput,
 	GuildServerRail,
 	GuildSettingsSection,
 	GuildSettingsToggleRow,
@@ -550,6 +551,16 @@ describe("component accessibility audits", () => {
 			const component = await mountSuspended(GuildSettingsSection, {
 				props: { title: "Sub Section", headingLevel: "h3" },
 				slots: { default: "<p>Sub section content</p>" },
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildAutomodDurationInput", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildAutomodDurationInput, {
+				props: { label: "Duration", modelValue: 600_000 },
 			});
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);

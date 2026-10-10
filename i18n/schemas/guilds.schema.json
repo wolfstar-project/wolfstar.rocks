@@ -49,11 +49,545 @@
 						"form_aria": {
 							"type": "string"
 						},
+						"hard_actions": {
+							"type": "object",
+							"properties": {
+								"Ban": {
+									"type": "string"
+								},
+								"Kick": {
+									"type": "string"
+								},
+								"Mute": {
+									"type": "string"
+								},
+								"Softban": {
+									"type": "string"
+								},
+								"Timeout": {
+									"type": "string"
+								},
+								"VoiceKick": {
+									"type": "string"
+								},
+								"Warning": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"options": {
+							"type": "object",
+							"properties": {
+								"alerts": {
+									"type": "string"
+								},
+								"allowed": {
+									"type": "string"
+								},
+								"allowedCodes": {
+									"type": "string"
+								},
+								"allowedGuilds": {
+									"type": "string"
+								},
+								"characters": {
+									"type": "string"
+								},
+								"maximum": {
+									"type": "string"
+								},
+								"mentionsAllowed": {
+									"type": "string"
+								},
+								"minimum": {
+									"type": "string"
+								},
+								"timePeriod": {
+									"type": "string"
+								},
+								"words": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"rules": {
+							"type": "object",
+							"properties": {
+								"count": {
+									"type": "string"
+								},
+								"delete": {
+									"type": "string"
+								},
+								"delete_aria": {
+									"type": "string"
+								},
+								"delete_description": {
+									"type": "string"
+								},
+								"delete_title": {
+									"type": "string"
+								},
+								"edit": {
+									"type": "string"
+								},
+								"edit_aria": {
+									"type": "string"
+								},
+								"editor": {
+									"type": "object",
+									"properties": {
+										"action": {
+											"type": "string"
+										},
+										"cancel": {
+											"type": "string"
+										},
+										"create": {
+											"type": "string"
+										},
+										"create_title": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"duration": {
+											"type": "string"
+										},
+										"duration_unit_aria": {
+											"type": "string"
+										},
+										"edit_title": {
+											"type": "string"
+										},
+										"enabled": {
+											"type": "string"
+										},
+										"escalation": {
+											"type": "string"
+										},
+										"escalation_add": {
+											"type": "string"
+										},
+										"escalation_duration": {
+											"type": "string"
+										},
+										"escalation_duration_help": {
+											"type": "string"
+										},
+										"escalation_help": {
+											"type": "string"
+										},
+										"escalation_remove_aria": {
+											"type": "string"
+										},
+										"escalation_step": {
+											"type": "string"
+										},
+										"exemptions": {
+											"type": "string"
+										},
+										"hard_action": {
+											"type": "string"
+										},
+										"hard_action_help": {
+											"type": "string"
+										},
+										"ignored_channels": {
+											"type": "string"
+										},
+										"ignored_roles": {
+											"type": "string"
+										},
+										"list_placeholder": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										},
+										"name_placeholder": {
+											"type": "string"
+										},
+										"options": {
+											"type": "string"
+										},
+										"permanent_hint": {
+											"type": "string"
+										},
+										"save": {
+											"type": "string"
+										},
+										"soft_actions": {
+											"type": "string"
+										},
+										"soft_actions_help": {
+											"type": "string"
+										},
+										"soft_alert": {
+											"type": "string"
+										},
+										"soft_delete": {
+											"type": "string"
+										},
+										"soft_log": {
+											"type": "string"
+										},
+										"threshold_duration": {
+											"type": "string"
+										},
+										"threshold_maximum": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
+										},
+										"type_locked": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"empty_description": {
+									"type": "string"
+								},
+								"empty_title": {
+									"type": "string"
+								},
+								"errors": {
+									"type": "object",
+									"properties": {
+										"generic": {
+											"type": "string"
+										},
+										"invalid": {
+											"type": "string"
+										},
+										"limit": {
+											"type": "string"
+										},
+										"nameInvalid": {
+											"type": "string"
+										},
+										"nameRequired": {
+											"type": "string"
+										},
+										"nameTaken": {
+											"type": "string"
+										},
+										"timeoutNeedsDuration": {
+											"type": "string"
+										},
+										"unknown": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"load_failed": {
+									"type": "string"
+								},
+								"loading_aria": {
+									"type": "string"
+								},
+								"new": {
+									"type": "string"
+								},
+								"retry": {
+									"type": "string"
+								},
+								"subtitle": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"toasts": {
+									"type": "object",
+									"properties": {
+										"created": {
+											"type": "string"
+										},
+										"deleted": {
+											"type": "string"
+										},
+										"saved": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"toggle_aria": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
 						"subtitle": {
 							"type": "string"
 						},
 						"title": {
 							"type": "string"
+						},
+						"types": {
+							"type": "object",
+							"properties": {
+								"Attachments": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"Capitals": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"Characters": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"Duplicates": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"Emojis": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"ImageSpam": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"Invites": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"Links": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"LinksCooldown": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"MaskedLinks": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"MassMentions": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"MentionsCooldown": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"MessageSpam": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"Newlines": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"NoMentionSpam": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"Phishing": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"Spoilers": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"Stickers": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"StickersCooldown": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"Words": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"Zalgo": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								}
+							},
+							"additionalProperties": false
 						}
 					},
 					"additionalProperties": false

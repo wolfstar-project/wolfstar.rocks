@@ -13,7 +13,9 @@ import "dotenv/config";
 // `prisma migration plan`.
 export default definePrismaConfig({
 	orm: definePostgresConfig({
-		contract: "server/database/contract.prisma",
+		// The bot's own contract, read straight from its repository: the
+		// `vendor/wolfstar` submodule pins the commit this app is built against.
+		contract: "vendor/wolfstar/projects/database/src/contract.prisma",
 		// Gitignored: regenerate with `pnpm prisma:generate`.
 		output: "server/database/generated/prisma",
 		extensions: [typedExtensionDescriptor],

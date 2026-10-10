@@ -1,11 +1,11 @@
 import type { GuildData } from "#server/database";
-import { mockNuxtImport } from "@nuxt/test-utils/runtime";
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 
-// Mock useRouteParams to provide a controllable guild ID
-const mockGuildId = ref<string | null>("test-guild-id");
-mockNuxtImport("useRouteParams", () => () => mockGuildId);
+// `/app` keeps the guild in state rather than the URL, so these tests drive
+// `useActiveGuild()` directly. The ids must be real snowflakes: `selectGuild()`
+// rejects anything that isn't one and leaves the active guild null.
+const GUILD_ONE = "123456789012345678";
+const GUILD_TWO = "987654321098765432";
 
 describe("useGuildSettingsChanges", () => {
 	// oxlint-disable-next-line typescript/consistent-type-imports
@@ -22,24 +22,24 @@ describe("useGuildSettingsChanges", () => {
 		if (import.meta.client) {
 			clearNuxtState();
 		}
+		useActiveGuild().selectGuild(GUILD_ONE);
 	});
 
 	it("properly scopes changes by guild ID", () => {
-		const mockGuild1 = createMockOauthFlattenedGuild({ id: "guild1", name: "Test Guild 1" });
-		const mockGuild2 = createMockOauthFlattenedGuild({ id: "guild2", name: "Test Guild 2" });
+		const { selectGuild } = useActiveGuild();
 
 		// Set changes for guild 1
-		mockGuildId.value = mockGuild1.id;
+		selectGuild(GUILD_ONE);
 		const changes1a = useGuildSettingsChanges();
 		changes1a.setGuildSettingsChanges({ prefix: "!" });
 
 		// Set changes for guild 2
-		mockGuildId.value = mockGuild2.id;
+		selectGuild(GUILD_TWO);
 		const changes2 = useGuildSettingsChanges();
 		changes2.setGuildSettingsChanges({ prefix: "?" });
 
 		// Switch back to guild 1
-		mockGuildId.value = mockGuild1.id;
+		selectGuild(GUILD_ONE);
 		const changes1b = useGuildSettingsChanges();
 
 		// Should have guild1's changes, not guild2's
@@ -51,6 +51,7 @@ describe("useGuildSettingsChanges", () => {
 
 		// Set some changes
 		setGuildSettingsChanges({ prefix: "!" });
+		expect(guildSettingsChanges.value).toBeDefined();
 
 		// Clear changes
 		setGuildSettingsChanges(undefined);
@@ -102,19 +103,67 @@ describe("useGuildSettingsChanges", () => {
 	});
 
 	it("does not persist changes across different guilds", () => {
-		const mockGuild1 = createMockOauthFlattenedGuild({ id: "guild1", name: "Test Guild 1" });
-		const mockGuild2 = createMockOauthFlattenedGuild({ id: "guild2", name: "Test Guild 2" });
+		const { selectGuild } = useActiveGuild();
 
 		// Set changes for guild 1
-		mockGuildId.value = mockGuild1.id;
+		selectGuild(GUILD_ONE);
 		const changes1 = useGuildSettingsChanges();
 		changes1.setGuildSettingsChanges({ prefix: "!" });
 
 		// Switch to guild 2 - should have no changes
-		mockGuildId.value = mockGuild2.id;
+		selectGuild(GUILD_TWO);
 		const changes2 = useGuildSettingsChanges();
 
 		// Guild 2 should have no changes
 		expect(changes2.guildSettingsChanges.value).toBeUndefined();
+	});
+
+	it("keeps changes out of state when no guild is active", () => {
+		const { selectGuild } = useActiveGuild();
+		selectGuild(null);
+
+		const { guildSettingsChanges, setGuildSettingsChanges } = useGuildSettingsChanges();
+		setGuildSettingsChanges({ language: "en-US" });
+
+		expect(guildSettingsChanges.value).toBeUndefined();
+	});
+
+	// A PATCH outlives the guild it was issued for: the admin can confirm a
+	// switch while it is in flight. The save handler captures the guild id
+	// before awaiting and passes it back in, so the late response cannot touch
+	// whichever guild happens to be active when it lands.
+	describe("explicit target guild", () => {
+		it("clears only the saved guild's draft", () => {
+			const { selectGuild } = useActiveGuild();
+
+			selectGuild(GUILD_ONE);
+			useGuildSettingsChanges().setGuildSettingsChanges({ language: "en-US" });
+
+			selectGuild(GUILD_TWO);
+			useGuildSettingsChanges().setGuildSettingsChanges({ language: "fr-FR" });
+
+			// Guild one's save resolves here, with guild two now active.
+			useGuildSettingsChanges().setGuildSettingsChanges(undefined, GUILD_ONE);
+
+			expect(useGuildSettingsChanges().guildSettingsChanges.value?.language).toBe("fr-FR");
+
+			selectGuild(GUILD_ONE);
+			expect(useGuildSettingsChanges().guildSettingsChanges.value).toBeUndefined();
+		});
+
+		it("merges into the target guild's draft, not the active one", () => {
+			const { selectGuild } = useActiveGuild();
+
+			selectGuild(GUILD_ONE);
+			useGuildSettingsChanges().setGuildSettingsChanges({ language: "en-US" });
+
+			selectGuild(GUILD_TWO);
+			useGuildSettingsChanges().setGuildSettingsChanges({ language: "de-DE" }, GUILD_ONE);
+
+			expect(useGuildSettingsChanges().guildSettingsChanges.value).toBeUndefined();
+
+			selectGuild(GUILD_ONE);
+			expect(useGuildSettingsChanges().guildSettingsChanges.value?.language).toBe("de-DE");
+		});
 	});
 });

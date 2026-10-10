@@ -180,6 +180,23 @@
 			"subtitle": "Configure how WolfStar handles moderation actions like bans, kicks, and mutes.",
 			"title": "Punishment Settings"
 		},
+		"modules": {
+			"active_hint": "",
+			"configure": "",
+			"disable_all": "",
+			"enable_all": "",
+			"enabled_count": "",
+			"form_aria": "",
+			"hint": "",
+			"inactive_hint": "",
+			"manage": "",
+			"off": "",
+			"on": "",
+			"subtitle": "",
+			"summary_aria": "",
+			"title": "",
+			"toggle_aria": ""
+		},
 		"please_try_again": "Please try again.",
 		"roles": {
 			"configurable": "Configurable Roles",

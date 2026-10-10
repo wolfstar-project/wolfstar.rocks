@@ -11,26 +11,32 @@
 			class="space-y-4"
 			@error="onError"
 		>
-			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+			<div class="grid grid-cols-1 gap-x-7 md:grid-cols-2">
 				<UFormField
 					v-for="setting in ConfigurableModerationKeys"
 					:key="`form-field-${setting.key}`"
-					:label="translateEntry(setting, 'name')"
 					:name="setting.key"
+					class="border-t border-base-300/60"
 				>
-					<template #description>
-						<p class="text-sm text-base-content/70">
-							{{ translateEntry(setting, "description") }}
-						</p>
-					</template>
-					<USwitch
-						v-model="state[setting.key]"
-						:aria-label="
-							ts('guild_settings.events.toggle_aria', {
-								title: translateEntry(setting, 'name'),
-							})
-						"
-					/>
+					<div class="flex items-center justify-between gap-4 py-3">
+						<div class="min-w-0">
+							<p class="text-sm font-semibold text-base-content">
+								{{ translateEntry(setting, "name") }}
+							</p>
+							<p class="mt-0.5 text-xs leading-relaxed text-base-content/70">
+								{{ translateEntry(setting, "description") }}
+							</p>
+						</div>
+						<USwitch
+							v-model="state[setting.key]"
+							class="shrink-0"
+							:aria-label="
+								ts('guild_settings.events.toggle_aria', {
+									title: translateEntry(setting, 'name'),
+								})
+							"
+						/>
+					</div>
 				</UFormField>
 			</div>
 		</GuildSettingsForm>

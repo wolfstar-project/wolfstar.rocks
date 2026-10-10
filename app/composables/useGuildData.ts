@@ -1,20 +1,27 @@
-import { useRouteParams } from "@vueuse/router";
+type DashboardGuild = ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>;
 
 const _useGuildData = () => {
-	const guildId = useRouteParams("id", null, { transform: String });
+	const { activeGuildId } = useActiveGuild();
 
-	const guild = useState<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(
-		`guild:${guildId.value}:data`,
+	// One store for every guild the admin opened, so switching back is instant
+	// and a switch never leaks another guild's data.
+	const store = useState<Record<string, DashboardGuild | undefined>>("guild:data", () => ({}));
+
+	const guild = computed(
+		() =>
+			(activeGuildId.value ? store.value[activeGuildId.value] : undefined) as DashboardGuild,
 	);
 
-	const setGuildData = (
-		newGuildData: ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>,
-	) => {
-		guild.value = newGuildData;
-		log.info({ tag: "guild:data", action: "set_guild_data", guildId: guildId.value });
+	const setGuildData = (newGuildData: DashboardGuild) => {
+		const guildId = activeGuildId.value;
+		if (!guildId) {
+			return;
+		}
+		store.value = { ...store.value, [guildId]: newGuildData };
+		log.info({ tag: "guild:data", action: "set_guild_data", guildId });
 	};
 
-	return { guildData: readonly(guild), setGuildData };
+	return { guildData: guild, setGuildData };
 };
 
 export const useGuildData = createSharedComposable(_useGuildData);

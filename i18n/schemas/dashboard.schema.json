@@ -91,10 +91,43 @@
 						"moderation": {
 							"type": "string"
 						},
+						"modules": {
+							"type": "string"
+						},
 						"reactions": {
 							"type": "string"
 						},
 						"roles": {
+							"type": "string"
+						},
+						"support_server": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"nav_groups": {
+					"type": "object",
+					"properties": {
+						"management": {
+							"type": "string"
+						},
+						"resources": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"picker": {
+					"type": "object",
+					"properties": {
+						"description": {
+							"type": "string"
+						},
+						"empty": {
+							"type": "string"
+						},
+						"title": {
 							"type": "string"
 						}
 					},
@@ -104,6 +137,12 @@
 					"type": "string"
 				},
 				"save_changes": {
+					"type": "string"
+				},
+				"server_rail_all": {
+					"type": "string"
+				},
+				"server_rail_aria": {
 					"type": "string"
 				},
 				"settings_saved_description": {

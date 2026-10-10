@@ -29,11 +29,24 @@
 			"logs": "Logs",
 			"message_duplication": "Message Duplication",
 			"moderation": "Moderation",
+			"modules": "Modules",
 			"reactions": "Reactions",
-			"roles": "Roles"
+			"roles": "Roles",
+			"support_server": "Support Server"
+		},
+		"nav_groups": {
+			"management": "Management",
+			"resources": "Resources"
+		},
+		"picker": {
+			"description": "Pick the server you want to manage. WolfStar remembers it on this device.",
+			"empty": "No servers you can manage yet. Invite WolfStar to one of your servers from your profile.",
+			"title": "Choose a server"
 		},
 		"reset_changes": "Reset Changes",
 		"save_changes": "Save Changes",
+		"server_rail_all": "All your servers",
+		"server_rail_aria": "Your servers",
 		"settings_saved_description": "Your server settings have been saved.",
 		"settings_saved_title": "Settings Saved",
 		"stay_on_page": "Stay on Page",

@@ -29,11 +29,24 @@
 			"logs": "Logs",
 			"message_duplication": "Message Duplication",
 			"moderation": "Moderation",
+			"modules": "",
 			"reactions": "Reactions",
-			"roles": "Roles"
+			"roles": "Roles",
+			"support_server": ""
+		},
+		"nav_groups": {
+			"management": "",
+			"resources": ""
+		},
+		"picker": {
+			"description": "",
+			"empty": "",
+			"title": ""
 		},
 		"reset_changes": "Reset Changes",
 		"save_changes": "Save Changes",
+		"server_rail_all": "",
+		"server_rail_aria": "",
 		"settings_saved_description": "Your server settings have been saved.",
 		"settings_saved_title": "Settings Saved",
 		"stay_on_page": "Stay on Page",

@@ -13,20 +13,57 @@
  * Exit codes: 0 = chain valid, 1 = invalid or fatal error.
  */
 
-import { PrismaClient } from "../server/database/generated/client/index.js";
+import type { Contract } from "../server/database/prisma8/contract.js";
+import type { PersistedAuditRow } from "../shared/audit/persisted.js";
+import postgres from "@prisma/orm-postgres/runtime";
+import contractJson from "../server/database/prisma8/contract.json" with { type: "json" };
+import { timestampStringToDate } from "../server/utils/timestamp-string.js";
 import { verifyPersistedAuditChain } from "../shared/audit/persisted.js";
 
-const prisma = new PrismaClient();
+const db = postgres<Contract>({
+	url: process.env.DATABASE_URL ?? "",
+	contractJson,
+});
+
+type AuditEventRow = Awaited<ReturnType<typeof db.orm.public.AuditEvent.all>>[number];
+
+/**
+ * Reshapes an ORM 8 row into the structural row the verifier hashes.
+ *
+ * The contract types the snowflake columns as `BigInt` and `timestamp(3)` as
+ * `TimestampString`, neither of which the envelope accepts: it rejects `BigInt`
+ * outright, and `envelopeFromPersistedRow()` calls `.toISOString()` on the
+ * timestamp. The drain hashed these values as decimal strings and a UTC ISO
+ * timestamp, so that is what has to be rebuilt here for the hashes to match.
+ */
+function toPersistedRow(row: AuditEventRow): PersistedAuditRow {
+	return {
+		action: row.action,
+		actorType: row.actorType,
+		actorId: String(row.actorId),
+		actorName: row.actorName ?? null,
+		targetType: row.targetType ?? null,
+		targetId: row.targetId === null || row.targetId === undefined ? null : String(row.targetId),
+		outcome: row.outcome,
+		tenantId: row.tenantId === null || row.tenantId === undefined ? null : String(row.tenantId),
+		reason: row.reason ?? null,
+		timestamp: timestampStringToDate(row.timestamp),
+		changes: row.changes,
+		context: row.context,
+		prevHash: row.prevHash ?? null,
+		hash: row.hash,
+	};
+}
 
 async function main() {
 	const [rows, head] = await Promise.all([
-		prisma.auditEvent.findMany(),
-		prisma.auditChainHead.findUnique({ where: { id: "default" } }),
+		db.orm.public.AuditEvent.all(),
+		db.orm.public.AuditChainHead.first({ id: "default" }),
 	]);
 
 	console.log(`Verifying ${rows.length} audit event(s)...`);
 
-	const result = verifyPersistedAuditChain(rows, head?.hash ?? null);
+	const result = verifyPersistedAuditChain(rows.map(toPersistedRow), head?.hash ?? null);
 
 	for (const problem of result.topologyProblems) {
 		switch (problem.kind) {
@@ -76,4 +113,5 @@ main()
 		console.error("Fatal error:", err);
 		process.exitCode = 1;
 	})
-	.finally(() => prisma.$disconnect());
+	// The façade-owned pool keeps the event loop alive until it is closed.
+	.finally(() => db.close());

@@ -37,13 +37,12 @@ describe("useGuildSettings", () => {
 
 	it("should merge settings with changes correctly", () => {
 		const originalSettings: Partial<ReturnType<typeof createMockGuildData>> = {
-			channelsIgnoreAll: ["channel-3"],
-			channelsLogsImage: "channel-2",
-			channelsLogsMemberAdd: null,
-			channelsLogsModeration: "channel-1",
+			logsIgnoreAll: ["channel-3"],
+			logsImage: "channel-2",
+			logsMemberAdd: null,
+			moderationChannel: "channel-1",
 			id: "guild-123",
 			language: "en-US",
-			prefix: "!",
 			rolesAdmin: ["role-1"],
 			rolesModerator: [],
 			rolesPublic: [],
@@ -51,32 +50,31 @@ describe("useGuildSettings", () => {
 		};
 
 		const changes: Partial<ReturnType<typeof createMockGuildData>> = {
-			channelsIgnoreAll: ["channel-4", "channel-5"],
-			channelsLogsImage: "channel-99",
-			prefix: "?",
+			logsIgnoreAll: ["channel-4", "channel-5"],
+			logsImage: "channel-99",
+			language: "fr-FR",
 		};
 
 		// Simulate merging
 		const mergedSettings = deepMerge(originalSettings, changes, mergeOptions);
 
 		// Verify merge behavior
-		expect(mergedSettings.channelsLogsImage).toBe("channel-99"); // Changed
-		expect(mergedSettings.channelsLogsModeration).toBe("channel-1"); // Unchanged
-		expect(mergedSettings.channelsIgnoreAll).toStrictEqual(["channel-4", "channel-5"]); // Array replaced
-		expect(mergedSettings.prefix).toBe("?"); // Changed
+		expect(mergedSettings.logsImage).toBe("channel-99"); // Changed
+		expect(mergedSettings.moderationChannel).toBe("channel-1"); // Unchanged
+		expect(mergedSettings.logsIgnoreAll).toStrictEqual(["channel-4", "channel-5"]); // Array replaced
+		expect(mergedSettings.language).toBe("fr-FR"); // Changed
 		expect(mergedSettings.rolesAdmin).toStrictEqual(["role-1"]); // Unchanged
 	});
 
 	it("should handle null values in changes", () => {
 		const originalSettings: Partial<ReturnType<typeof createMockGuildData>> = {
-			channelsIgnoreAll: [],
-			channelsLogsImage: "channel-2",
-			channelsLogsMemberAdd: "channel-3",
-			channelsLogsMemberRemove: null,
-			channelsLogsModeration: "channel-1",
+			logsIgnoreAll: [],
+			logsImage: "channel-2",
+			logsMemberAdd: "channel-3",
+			logsMemberRemove: null,
+			moderationChannel: "channel-1",
 			id: "guild-123",
 			language: "en-US",
-			prefix: "!",
 			rolesAdmin: [],
 			rolesModerator: [],
 			rolesPublic: [],
@@ -84,27 +82,26 @@ describe("useGuildSettings", () => {
 		};
 
 		const changes: Partial<ReturnType<typeof createMockGuildData>> = {
-			channelsLogsImage: null, // Clear channel
-			channelsLogsMemberAdd: null, // Clear message
+			logsImage: null, // Clear channel
+			logsMemberAdd: null, // Clear message
 		};
 
 		const mergedSettings = deepMerge(originalSettings, changes, mergeOptions);
 
 		// Verify null values are applied
-		expect(mergedSettings.channelsLogsImage).toBeNull();
-		expect(mergedSettings.channelsLogsMemberAdd).toBeNull();
-		expect(mergedSettings.channelsLogsModeration).toBe("channel-1"); // Unchanged
+		expect(mergedSettings.logsImage).toBeNull();
+		expect(mergedSettings.logsMemberAdd).toBeNull();
+		expect(mergedSettings.moderationChannel).toBe("channel-1"); // Unchanged
 	});
 
 	it("should handle array overwrites correctly", () => {
 		const originalSettings: Partial<ReturnType<typeof createMockGuildData>> = {
-			channelsIgnoreAll: ["channel-1", "channel-2", "channel-3"],
-			channelsLogsImage: null,
-			channelsLogsMemberAdd: null,
-			channelsLogsModeration: null,
+			logsIgnoreAll: ["channel-1", "channel-2", "channel-3"],
+			logsImage: null,
+			logsMemberAdd: null,
+			moderationChannel: null,
 			id: "guild-123",
 			language: "en-US",
-			prefix: "!",
 			rolesAdmin: ["role-1", "role-2"],
 			rolesModerator: ["role-3"],
 			rolesPublic: [],
@@ -112,14 +109,14 @@ describe("useGuildSettings", () => {
 		};
 
 		const changes: Partial<ReturnType<typeof createMockGuildData>> = {
-			channelsIgnoreAll: ["channel-99"], // Replace entire array
+			logsIgnoreAll: ["channel-99"], // Replace entire array
 			rolesAdmin: [], // Clear array
 		};
 
 		const mergedSettings = deepMerge(originalSettings, changes, mergeOptions);
 
 		// Arrays should be completely replaced (not merged)
-		expect(mergedSettings.channelsIgnoreAll).toStrictEqual(["channel-99"]);
+		expect(mergedSettings.logsIgnoreAll).toStrictEqual(["channel-99"]);
 		expect(mergedSettings.rolesAdmin).toStrictEqual([]);
 		expect(mergedSettings.rolesModerator).toStrictEqual(["role-3"]); // Unchanged
 	});
@@ -127,7 +124,7 @@ describe("useGuildSettings", () => {
 	it("should return undefined merged settings when original is undefined", () => {
 		const originalSettings = undefined;
 		const changes: Partial<ReturnType<typeof createMockGuildData>> = {
-			channelsLogsImage: "channel-1",
+			logsImage: "channel-1",
 		};
 
 		// Simulate the behavior where mergedSettings returns undefined if original is undefined
@@ -140,13 +137,12 @@ describe("useGuildSettings", () => {
 
 	it("should handle empty changes object", () => {
 		const originalSettings: Partial<ReturnType<typeof createMockGuildData>> = {
-			channelsIgnoreAll: [],
-			channelsLogsImage: null,
-			channelsLogsMemberAdd: null,
-			channelsLogsModeration: "channel-1",
+			logsIgnoreAll: [],
+			logsImage: null,
+			logsMemberAdd: null,
+			moderationChannel: "channel-1",
 			id: "guild-123",
 			language: "en-US",
-			prefix: "!",
 			rolesAdmin: [],
 			rolesModerator: [],
 			rolesPublic: [],
@@ -163,14 +159,13 @@ describe("useGuildSettings", () => {
 
 	it("should handle boolean changes correctly", () => {
 		const originalSettings: Partial<ReturnType<typeof createMockGuildData>> = {
-			channelsIgnoreAll: [],
-			channelsLogsImage: null,
-			channelsLogsMemberAdd: null,
-			channelsLogsModeration: null,
-			disableNaturalPrefix: false,
+			logsIgnoreAll: [],
+			logsImage: null,
+			logsMemberAdd: null,
+			moderationChannel: null,
+			moderationTrackBans: false,
 			id: "guild-123",
 			language: "en-US",
-			prefix: "!",
 			rolesAdmin: [],
 			rolesModerator: [],
 			rolesPublic: [],
@@ -178,25 +173,24 @@ describe("useGuildSettings", () => {
 		};
 
 		const changes: Partial<ReturnType<typeof createMockGuildData>> = {
-			disableNaturalPrefix: true,
+			moderationTrackBans: true,
 			rolesRemoveInitial: true,
 		};
 
 		const mergedSettings = deepMerge(originalSettings, changes, mergeOptions);
 
 		expect(mergedSettings.rolesRemoveInitial).toBeTruthy();
-		expect(mergedSettings.disableNaturalPrefix).toBeTruthy();
+		expect(mergedSettings.moderationTrackBans).toBeTruthy();
 	});
 
 	it("should handle multiple sequential changes", () => {
 		const originalSettings: Partial<ReturnType<typeof createMockGuildData>> = {
-			channelsIgnoreAll: [],
-			channelsLogsImage: null,
-			channelsLogsMemberAdd: null,
-			channelsLogsModeration: "channel-1",
+			logsIgnoreAll: [],
+			logsImage: null,
+			logsMemberAdd: null,
+			moderationChannel: "channel-1",
 			id: "guild-123",
 			language: "en-US",
-			prefix: "!",
 			rolesAdmin: [],
 			rolesModerator: [],
 			rolesPublic: [],
@@ -205,23 +199,23 @@ describe("useGuildSettings", () => {
 
 		// First change
 		const changes1: Partial<ReturnType<typeof createMockGuildData>> = {
-			channelsLogsImage: "channel-2",
+			logsImage: "channel-2",
 		};
 
 		let mergedSettings = deepMerge(originalSettings, changes1, mergeOptions);
 
-		expect(mergedSettings.channelsLogsImage).toBe("channel-2");
+		expect(mergedSettings.logsImage).toBe("channel-2");
 
 		// Second change (accumulate)
 		const changes2: Partial<ReturnType<typeof createMockGuildData>> = {
-			channelsLogsMemberAdd: "channel-3",
+			logsMemberAdd: "channel-3",
 		};
 
 		mergedSettings = deepMerge(mergedSettings, changes2, mergeOptions);
 
 		// Both changes should be present
-		expect(mergedSettings.channelsLogsImage).toBe("channel-2");
-		expect(mergedSettings.channelsLogsMemberAdd).toBe("channel-3");
-		expect(mergedSettings.channelsLogsModeration).toBe("channel-1"); // Original unchanged
+		expect(mergedSettings.logsImage).toBe("channel-2");
+		expect(mergedSettings.logsMemberAdd).toBe("channel-3");
+		expect(mergedSettings.moderationChannel).toBe("channel-1"); // Original unchanged
 	});
 });

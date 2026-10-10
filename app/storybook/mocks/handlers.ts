@@ -26,8 +26,7 @@ export const handlers = [
 
 	http.get("/api/guilds/:guildId/settings", () =>
 		HttpResponse.json({
-			guildId: "123456789012345678",
-			prefix: "!",
+			id: "123456789012345678",
 			language: "en-US",
 		}),
 	),

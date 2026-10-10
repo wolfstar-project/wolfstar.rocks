@@ -71,35 +71,15 @@ const {
 // Pre-define async components outside of computed to avoid re-creating
 // wrapper instances on every reactive update, which would unmount/remount.
 const asyncComponentMap: Record<string, ReturnType<typeof defineAsyncComponent>> = {
-	"channels": defineAsyncComponent(() => import("~/components/guild/settings/Channels.vue")),
-	"commands": defineAsyncComponent(
+	automod: defineAsyncComponent(() => import("~/components/guild/settings/Automod.vue")),
+	channels: defineAsyncComponent(() => import("~/components/guild/settings/Channels.vue")),
+	commands: defineAsyncComponent(
 		() => import("~/components/guild/settings/DisabledCommands.vue"),
 	),
-	"events": defineAsyncComponent(() => import("~/components/guild/settings/Events.vue")),
-	"moderation": defineAsyncComponent(() => import("~/components/guild/settings/Moderation.vue")),
-	"modules": defineAsyncComponent(() => import("~/components/guild/settings/Modules.vue")),
-	"roles": defineAsyncComponent(() => import("~/components/guild/settings/Roles.vue")),
-	"moderation/word": defineAsyncComponent(
-		() => import("~/components/guild/settings/filter/Word.vue"),
-	),
-	"moderation/capitals": defineAsyncComponent(
-		() => import("~/components/guild/settings/filter/Capitals.vue"),
-	),
-	"moderation/invites": defineAsyncComponent(
-		() => import("~/components/guild/settings/filter/Invites.vue"),
-	),
-	"moderation/links": defineAsyncComponent(
-		() => import("~/components/guild/settings/filter/Links.vue"),
-	),
-	"moderation/messages": defineAsyncComponent(
-		() => import("~/components/guild/settings/filter/MessageDuplication.vue"),
-	),
-	"moderation/lines": defineAsyncComponent(
-		() => import("~/components/guild/settings/filter/NewLine.vue"),
-	),
-	"moderation/reactions": defineAsyncComponent(
-		() => import("~/components/guild/settings/filter/Reactions.vue"),
-	),
+	moderation: defineAsyncComponent(() => import("~/components/guild/settings/Moderation.vue")),
+	modules: defineAsyncComponent(() => import("~/components/guild/settings/Modules.vue")),
+	reports: defineAsyncComponent(() => import("~/components/guild/settings/Reports.vue")),
+	roles: defineAsyncComponent(() => import("~/components/guild/settings/Roles.vue")),
 };
 const defaultComponent = defineAsyncComponent(
 	() => import("~/components/guild/settings/General.vue"),
@@ -107,20 +87,14 @@ const defaultComponent = defineAsyncComponent(
 
 // Section slug -> sidebar label, so the navbar and the document title read like the sidebar.
 const SECTION_LABEL_KEYS: Record<string, string> = {
-	"channels": "dashboard.nav.channels",
-	"commands": "dashboard.nav.commands",
-	"events": "dashboard.nav.events",
-	"logs": "dashboard.nav.logs",
-	"moderation": "dashboard.nav.moderation",
-	"moderation/capitals": "dashboard.nav.capitals",
-	"moderation/invites": "dashboard.nav.invites",
-	"moderation/lines": "dashboard.nav.line_spam",
-	"moderation/links": "dashboard.nav.links",
-	"moderation/messages": "dashboard.nav.message_duplication",
-	"moderation/reactions": "dashboard.nav.reactions",
-	"moderation/word": "dashboard.nav.bad_words",
-	"modules": "dashboard.nav.modules",
-	"roles": "dashboard.nav.roles",
+	automod: "dashboard.nav.automod",
+	channels: "dashboard.nav.channels",
+	commands: "dashboard.nav.commands",
+	logs: "dashboard.nav.logs",
+	moderation: "dashboard.nav.moderation",
+	modules: "dashboard.nav.modules",
+	reports: "dashboard.nav.reports",
+	roles: "dashboard.nav.roles",
 };
 
 const isLogsSection = computed(() => section.value === "logs");

@@ -1,10 +1,25 @@
-import type { CommandLogData } from "#server/database";
 import type { DashboardAuditEntry } from "#shared/types/audit-log";
+import type { CommandLogEntry } from "#shared/types/command-log";
 import type { ModerationLogEntry } from "#shared/types/moderation-log";
 import type { APIGuildMember } from "discord-api-types/v10";
 import { GUILD_ID } from "~~/test/nuxt/api/_helpers";
 
-export const MOCK_COMMAND_ENTRY: CommandLogData = {
+const MOCK_MEMBER = {
+	user: {
+		id: "111111111111111111",
+		username: "TestMember",
+		discriminator: "0",
+		avatar: null,
+		global_name: null,
+	},
+	roles: [],
+	joined_at: "",
+	deaf: false,
+	mute: false,
+	flags: 0,
+} as unknown as APIGuildMember;
+
+export const MOCK_COMMAND_ENTRY: CommandLogEntry = {
 	id: "00000000-0000-0000-0000-000000000001",
 	guildId: GUILD_ID,
 	userId: "111111111111111111",
@@ -15,9 +30,9 @@ export const MOCK_COMMAND_ENTRY: CommandLogData = {
 	channelId: "333333333333333330",
 	success: false,
 	errorReason: "User not found",
-	executedAt: new Date("2026-05-15T00:00:00.000Z"),
+	executedAt: "2026-05-15T00:00:00.000Z",
 	latencyMs: 120,
-	metadata: null,
+	metadata: { member: MOCK_MEMBER },
 };
 
 export const MOCK_AUDIT_ENTRY: DashboardAuditEntry = {
@@ -39,7 +54,7 @@ export const MOCK_AUDIT_ENTRY: DashboardAuditEntry = {
 		mute: false,
 		flags: 0,
 	} as unknown as APIGuildMember,
-	changes: { changed: { prefix: { from: "!", to: "?" } } },
+	changes: { changed: { language: { from: "en-US", to: "fr-FR" } } },
 	reason: null,
 	timestamp: "2026-05-15T00:00:00.000Z",
 };
@@ -52,10 +67,10 @@ export const MOCK_MODERATION_ENTRY: ModerationLogEntry = {
 	moderatorId: "222222222222222222",
 	moderatorMember: null,
 	typeCode: 1,
-	typeName: "Warning",
+	typeName: "AddWarning",
 	reason: "Spamming",
-	imageURL: null,
-	duration: null,
+	referenceId: null,
+	duration: 0,
 	metadata: { archived: false, completed: false, temporary: false },
 	createdAt: "2026-05-15T00:00:00.000Z",
 };

@@ -54,11 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-	countEnabledModules,
-	GUILD_MODULES,
-	guildModuleSection,
-} from "#shared/utils/guild-modules";
+import { countEnabledModules, GUILD_MODULES } from "#shared/utils/guild-modules";
 
 const { ts } = useI18n();
 const { guildSettings } = useGuildSettings();
@@ -71,7 +67,7 @@ const modules = computed(() =>
 		enabled: guildSettings.value?.[module.key] === true,
 		key: module.key,
 		labelKey: module.labelKey,
-		section: guildModuleSection(module.slug),
+		section: module.section,
 	})),
 );
 </script>

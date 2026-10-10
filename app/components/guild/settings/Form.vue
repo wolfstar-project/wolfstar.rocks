@@ -106,11 +106,11 @@ watch(
 			removeChange(key);
 		}
 
-		const hasChanges = objectKeys(changes).length > 0;
-		if (hasChanges) {
+		// Reverted keys were dropped one by one above. Clearing the whole draft
+		// here instead would also discard what another form on the same page
+		// has staged.
+		if (objectKeys(changes).length > 0) {
 			setGuildSettingsChanges(changes);
-		} else {
-			setGuildSettingsChanges(undefined);
 		}
 	},
 	{ deep: true },

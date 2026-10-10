@@ -1,10 +1,38 @@
+import type { Models } from "#server/database/prisma";
 import type { DrainContext, DrainFn } from "evlog";
-import { Prisma } from "#server/database/generated/client";
-import prisma from "#server/database/prisma";
+import { randomUUID } from "node:crypto";
+import { db } from "#server/database/prisma";
+import { asTimestampString } from "#server/utils/timestamp-string";
 import { type AuditEnvelope, hashEnvelope } from "#shared/audit/envelope";
 
-const MAX_RETRIES = 5;
-const BASE_RETRY_DELAY_MS = 10;
+type AuditEventRow = Models.public_AuditEvent;
+
+/**
+ * Key of the transaction-level advisory lock every writer of the audit chain
+ * takes. The chain head is one row shared by all tenants, so appends have to
+ * be globally serialized; the bot's `AuditLogManager` takes the same key
+ * (`0x4155444C`, ASCII `AUDL`), which is what keeps the two services from
+ * forking the chain between them. Released on commit or rollback.
+ */
+const AUDIT_CHAIN_LOCK_KEY = 1_096_107_084;
+
+const SNOWFLAKE_PATTERN = /^\d{1,20}$/u;
+
+/**
+ * The V7 contract stores actor, target and tenant ids as `BIGINT`. A value
+ * that is not a snowflake cannot be stored, and silently dropping it would
+ * leave a row whose hash no longer matches its columns, so it is refused.
+ */
+function toSnowflakeColumn(field: string, value: string): bigint {
+	if (!SNOWFLAKE_PATTERN.test(value)) {
+		throw new TypeError(`[audit] ${field} "${value}" is not a snowflake`);
+	}
+	return BigInt(value);
+}
+
+function toOptionalSnowflakeColumn(field: string, value: string | undefined): bigint | null {
+	return value === undefined ? null : toSnowflakeColumn(field, value);
+}
 
 export function createPostgresAuditDrain(): DrainFn {
 	return async (ctx: DrainContext): Promise<void> => {
@@ -21,7 +49,6 @@ export function createPostgresAuditDrain(): DrainFn {
 		const outcome = audit.outcome;
 		const tenantId = audit.context?.tenantId;
 		const reason = audit.reason;
-		const timestamp = new Date(ctx.event.timestamp);
 		// Normalize undefined to null so the envelope hash is stable and matches
 		// the null stored in the DB when no changes are recorded.
 		const changes = audit.changes ?? null;
@@ -35,112 +62,66 @@ export function createPostgresAuditDrain(): DrainFn {
 				}
 			: undefined;
 
-		for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
-			try {
-				await prisma.$transaction(
-					async (tx) => {
-						const head = await tx.auditChainHead.upsert({
-							where: { id: "default" },
-							create: { id: "default", hash: null },
-							update: {},
-						});
+		// Converted before the transaction opens: a value the columns cannot
+		// hold must not cost a connection or the chain lock.
+		const actorIdColumn = toSnowflakeColumn("actor id", actorId);
+		const targetIdColumn = toOptionalSnowflakeColumn("target id", targetId);
+		const tenantIdColumn = toOptionalSnowflakeColumn("tenant id", tenantId);
+		const timestamp = asTimestampString(new Date(ctx.event.timestamp).toISOString());
 
-						const envelope: AuditEnvelope = {
-							action,
-							outcome,
-							actor: {
-								type: actorType,
-								id: actorId,
-								displayName: audit.actor.displayName,
-							},
-							target:
-								targetType && targetId
-									? { type: targetType, id: targetId }
-									: undefined,
-							tenantId: tenantId ?? undefined,
-							reason: reason ?? undefined,
-							changes,
-							timestamp: ctx.event.timestamp,
-							context,
-							prevHash: head.hash,
-						};
+		await db.transaction(async (tx) => {
+			await tx.execute(
+				db.raw.sql`SELECT pg_advisory_xact_lock(${AUDIT_CHAIN_LOCK_KEY})`
+					.affectedCount()
+					.build(),
+			);
 
-						const hash = hashEnvelope(envelope);
+			const head = await tx.orm.public.AuditChainHead.first({ id: "default" });
+			const prevHash = head?.hash ?? null;
 
-						try {
-							await tx.auditEvent.create({
-								data: {
-									hash,
-									prevHash: head.hash,
-									action,
-									actorType,
-									actorId,
-									actorName,
-									targetType,
-									targetId,
-									outcome,
-									tenantId,
-									reason,
-									timestamp,
-									changes,
-									context,
-								},
-							});
-						} catch (err) {
-							// P2002 = unique constraint — idempotent retry, safe to swallow
-							if (
-								err instanceof Prisma.PrismaClientKnownRequestError &&
-								err.code === "P2002"
-							) {
-								// Defensively verify that the existing row's hash matches the recomputed one
-								// to catch any invariant violations from concurrent writes or timestamp drift
-								const existing = await tx.auditEvent.findUnique({
-									where: { hash },
-									select: { hash: true },
-								});
-								if (!existing || existing.hash !== hash) {
-									throw new Error(
-										`[audit] P2002 collision but hash mismatch: expected ${hash}, got ${existing?.hash}`,
-										{ cause: err },
-									);
-								}
-								return;
-							}
-							throw err;
-						}
+			const envelope: AuditEnvelope = {
+				action,
+				outcome,
+				actor: { type: actorType, id: actorId, displayName: actorName },
+				target: targetType && targetId ? { type: targetType, id: targetId } : undefined,
+				tenantId: tenantId ?? undefined,
+				reason: reason ?? undefined,
+				changes,
+				timestamp: ctx.event.timestamp,
+				context,
+				prevHash,
+			};
 
-						await tx.auditChainHead.update({
-							where: { id: "default" },
-							data: { hash },
-						});
-					},
-					{
-						isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
-						// timeout: max ms Prisma waits for the transaction to complete.
-						// maxWait: max ms Prisma waits to acquire a connection from the pool.
-						// Raise both if P2024 (pool timeout) appears under high concurrency.
-						timeout: 3000,
-						maxWait: 1500,
-					},
-				);
-				return;
-			} catch (err) {
-				// P2034 = serialization failure — retry with exponential backoff + full jitter
-				if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2034") {
-					if (attempt < MAX_RETRIES - 1) {
-						const backoff = BASE_RETRY_DELAY_MS * 2 ** attempt;
-						const jitter = Math.random() * backoff;
-						await new Promise((r) => setTimeout(r, backoff + jitter));
-						continue;
-					}
-					// Exhausted retries for P2034 serialization failure
-					throw new Error(
-						`[audit] Exhausted ${MAX_RETRIES} retry attempts for serialization failure`,
-						{ cause: err },
-					);
-				}
-				throw err;
-			}
-		}
+			const hash = hashEnvelope(envelope);
+
+			// `hash` is unique. Under the chain lock a second row with this hash
+			// can only be the same event delivered twice, so it is already stored.
+			const existing = await tx.orm.public.AuditEvent.first({ hash });
+			if (existing) return;
+
+			await tx.orm.public.AuditEvent.create({
+				id: randomUUID(),
+				hash,
+				prevHash,
+				action,
+				actorType,
+				actorId: actorIdColumn,
+				actorName: actorName ?? null,
+				targetType: targetType ?? null,
+				targetId: targetIdColumn,
+				outcome,
+				tenantId: tenantIdColumn,
+				reason: reason ?? null,
+				timestamp,
+				// The envelope guard above already proved both are plain JSON.
+				changes: changes as AuditEventRow["changes"],
+				context: (context ?? null) as AuditEventRow["context"],
+			});
+
+			await tx.orm.public.AuditChainHead.upsert({
+				create: { id: "default", hash, updatedAt: timestamp },
+				update: { hash, updatedAt: timestamp },
+			});
+		});
 	};
 }

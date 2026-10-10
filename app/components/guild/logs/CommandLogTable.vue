@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import type { CommandLogData } from "#server/database";
+import type { CommandLogEntry } from "#shared/types/command-log";
 import type { TableColumn } from "@nuxt/ui";
 import type { APIGuildMember } from "discord-api-types/v10";
 import { getPaginationRowModel } from "@tanstack/table-core";
@@ -105,7 +105,7 @@ const { entries, total, status, refresh } = useCommandLog({
 	filters,
 });
 
-const columns = computed<TableColumn<CommandLogData>[]>(() => [
+const columns = computed<TableColumn<CommandLogEntry>[]>(() => [
 	{
 		accessorKey: "executedAt",
 		header: ts("guild_logs.columns.time"),

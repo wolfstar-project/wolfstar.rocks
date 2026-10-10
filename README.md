@@ -129,8 +129,11 @@ multi-purpose Discord bot for moderation and community management.
    - Configure Discord OAuth2 settings in your Discord Developer Portal.
 
 4. **Database Setup**
-   - Ensure your WolfStar bot database is accessible.
-   - Run database migrations if needed.
+   - Ensure your WolfStar bot database is accessible. The bot owns the schema
+     and applies its migrations; this app never migrates the database.
+   - The data contract lives in the bot's repository, vendored as a git
+     submodule. `pnpm install` checks it out and emits the Prisma ORM 8
+     artefacts; clone with `--recurse-submodules` to fetch it up front.
 
 5. **Start the development server**
 
@@ -162,15 +165,10 @@ multi-purpose Discord bot for moderation and community management.
 - `pnpm build` - Build for production.
 - `pnpm preview` - Preview production build.
 - `pnpm lint:fix` - Run Oxlint & Oxfmt and fix issues.
-- `pnpm prisma:migrate:dev` - Create and apply a new migration in development.
-- `pnpm prisma:migrate:diff` - Check for schema drift between migrations and
-  schema (exits with error if differences found).
-- `pnpm prisma:migrate:deploy` - Apply all pending migrations to the database.
-- `pnpm prisma:push` - Push the Prisma schema to the database without generating
-  a migration.
-- `pnpm prisma:seed` - Seed the database with initial data.
-- `pnpm prisma:studio` - Open Prisma Studio for database management.
-- `pnpm prisma:generate` - Generate Prisma client.
+- `pnpm prisma:generate` - Emit the Prisma ORM 8 contract artefacts into
+  `server/database/generated/prisma/`. The contract comes from the bot's
+  repository, vendored as the `vendor/wolfstar` git submodule; run this again
+  after bumping it.
 - `pnpm test` - Run all tests.
 - `pnpm test:unit` - Run unit tests.
 - `pnpm test:nuxt` - Run Nuxt environment tests.
@@ -181,13 +179,7 @@ multi-purpose Discord bot for moderation and community management.
 Occasional one-off tasks are not wrapped in `package.json`. Run their binary
 directly instead:
 
-- `pnpm exec prisma migrate dev --create-only` - Create a migration without
-  applying it.
-- `pnpm exec prisma migrate status` - Check the status of migrations.
-- `pnpm exec prisma migrate resolve` - Mark a migration as applied or rolled
-  back.
-- `pnpm exec prisma migrate reset` - Reset the local database.
-- `pnpm exec prisma generate --watch` - Regenerate the Prisma client on change.
+- `pnpm exec prisma skills sync` - Refresh the vendored Prisma 8 reference docs.
 - `pnpm exec pwa-assets-generator` - Generate PWA icons and assets.
 - `pnpm exec taze` - Interactive dependency updates.
 
@@ -254,7 +246,8 @@ results visible on the [CodSpeed dashboard][codspeed-link].
 - **TypeScript** - Type safety
 - **Oxlint** - Code linting
 - **Oxfmt** - Code formatting
-- **Prisma** - Database ORM
+- **Prisma ORM 8** - Database client (the WolfStar bot owns the schema and its
+  migrations; this app consumes the same data contract)
 - **Tailwind CSS** - Utility-first CSS framework
 - **Nuxt UI** - Vue component library and design tokens
 

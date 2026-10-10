@@ -6,6 +6,7 @@ import {
 	parseGuildSettings,
 	parseGuildSettingsSaveResponse,
 	resolveGuildIconSrc,
+	resolveLegacyDashboardSection,
 	selectDashboardRailGuilds,
 } from "~/utils/guild-dashboard";
 import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
@@ -239,5 +240,22 @@ describe("selectDashboardRailGuilds", () => {
 	it("returns an empty rail when nothing qualifies", () => {
 		expect(selectDashboardRailGuilds([])).toStrictEqual([]);
 		expect(selectDashboardRailGuilds([guild({ manageable: false })])).toStrictEqual([]);
+	});
+});
+
+describe("resolveLegacyDashboardSection", () => {
+	it("sends the pre-V7 filter pages to auto-moderation", () => {
+		expect(resolveLegacyDashboardSection("moderation/word")).toBe("automod");
+		expect(resolveLegacyDashboardSection("moderation/capitals")).toBe("automod");
+	});
+
+	it("sends the removed Events page to moderation, where its toggles moved", () => {
+		expect(resolveLegacyDashboardSection("events")).toBe("moderation");
+	});
+
+	it("leaves the sections that still exist alone", () => {
+		for (const slug of ["", "moderation", "channels", "roles", "commands", "logs"]) {
+			expect(resolveLegacyDashboardSection(slug)).toBe(slug);
+		}
 	});
 });

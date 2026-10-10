@@ -44,6 +44,7 @@ import {
 	OauthStatusPanel,
 	GuildServerRail,
 	GuildSettingsSection,
+	GuildSettingsToggleRow,
 	IconsApp,
 	IconsWolfstar,
 	SectionHeader,
@@ -546,6 +547,21 @@ describe("component accessibility audits", () => {
 			const component = await mountSuspended(GuildSettingsSection, {
 				props: { title: "Sub Section", headingLevel: "h3" },
 				slots: { default: "<p>Sub section content</p>" },
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildSettingsToggleRow", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildSettingsToggleRow, {
+				props: {
+					description: "Opens a moderation case when a member is banned by hand.",
+					modelValue: true,
+					name: "moderationTrackBans",
+					title: "Track Manual Bans",
+				},
 			});
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);

@@ -177,7 +177,7 @@ export default defineNuxtConfig({
 	site: {
 		defaultLocale: "en-US",
 		description:
-			"WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
+			"WolfStar gives Discord moderation teams configurable AutoMod, searchable moderation and command history, and one dashboard for server settings.",
 		indexable: true,
 		name: "WolfStar",
 	},
@@ -702,7 +702,7 @@ export default defineNuxtConfig({
 			mobileWebAppCapable: "yes",
 			msapplicationConfig: "/browserconfig.xml",
 			ogDescription:
-				"WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
+				"WolfStar gives Discord moderation teams configurable AutoMod, searchable moderation and command history, and one dashboard for server settings.",
 			ogLocale: "en",
 			ogSiteName: "WolfStar",
 			ogTitle: "WolfStar",

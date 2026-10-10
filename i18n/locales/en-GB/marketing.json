@@ -9,7 +9,7 @@
 			"invite_pending": "Invite access coming later",
 			"logo_alt": "{app} logo",
 			"staryl_description": "Staryl brings social updates into Discord. Its public invite is not available yet.",
-			"title": "Want more? We've got you covered.",
+			"title": "Two apps, one project.",
 			"wolfstar_description": "WolfStar combines configurable moderation, server event logging, and dashboard-managed settings."
 		},
 		"staryl": {
@@ -46,11 +46,11 @@
 			},
 			"proof": {
 				"eyebrow": "What Staryl does",
-				"step_1_body": "Placeholder — describe which platforms Staryl watches once the supported source list is confirmed.",
+				"step_1_body": "Choose the streamer. Twitch is the only source today, and more sources are planned.",
 				"step_1_title": "Pick the source",
-				"step_2_body": "Placeholder — describe how updates reach a channel, and what can be customised per subscription.",
+				"step_2_body": "Each subscription sends one streamer's live or offline notification to one channel.",
 				"step_2_title": "Route the update",
-				"step_3_body": "Placeholder — describe what a server team can configure, and where they configure it.",
+				"step_3_body": "A server team adds, removes, shows, resets, and tests subscriptions with Staryl's slash commands. No dashboard is needed.",
 				"step_3_title": "Manage it together",
 				"title": "From source to server, in one hop."
 			},
@@ -67,7 +67,7 @@
 				"remove_response": "✅ Success! I will no longer post messages to #staryl-notifications whenever shroud goes live.",
 				"reset_description": "Remove all Twitch subscriptions from this server.",
 				"reset_response": "✅ Success! 3 subscriptions have been removed from this server.",
-				"search_placeholder": "Search Wolfstar HQ",
+				"search_placeholder": "Search WolfStar HQ",
 				"show_description": "Show all Twitch subscriptions for this server.",
 				"show_embed_offline": "ninja — #staryl-notifications → Offline",
 				"show_embed_online": "shroud — #staryl-notifications → Live",
@@ -92,7 +92,7 @@
 				"mock_fmbot_fm": "Show what you are listening to right now.",
 				"mock_ring_info": "Get information about the bot.",
 				"mock_utilsbot_poll": "Start a poll in this channel.",
-				"search_placeholder": "Search Wolfstar HQ",
+				"search_placeholder": "Search WolfStar HQ",
 				"select_aria": "Server configuration category",
 				"timestamp": "Today at 15:49"
 			},

@@ -21,9 +21,25 @@ const CONTRACT_PATH = resolve(SUBMODULE_PATH, "projects/database/src/contract.pr
 if (!existsSync(CONTRACT_PATH)) {
 	console.log(`[contract] ${SUBMODULE_PATH} is not checked out, initializing the submodule...`);
 	try {
-		execFileSync("git", ["submodule", "update", "--init", "--depth", "1", SUBMODULE_PATH], {
-			stdio: "inherit",
-		});
+		execFileSync(
+			"git",
+			[
+				// CI jobs that run in a container check the repository out as another
+				// user, and git then refuses to touch it ("dubious ownership"). Only
+				// these two directories are trusted, and only for this command.
+				"-c",
+				`safe.directory=${process.cwd()}`,
+				"-c",
+				`safe.directory=${resolve(SUBMODULE_PATH)}`,
+				"submodule",
+				"update",
+				"--init",
+				"--depth",
+				"1",
+				SUBMODULE_PATH,
+			],
+			{ stdio: "inherit" },
+		);
 	} catch (error) {
 		console.error(
 			`[contract] Could not initialize ${SUBMODULE_PATH}. Run \`git submodule update --init\` and install again.`,

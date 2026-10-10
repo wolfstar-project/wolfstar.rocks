@@ -290,6 +290,8 @@ export default defineConfig({
 			"@typescript-eslint/unbound-method": "off",
 		},
 		ignorePatterns: [
+			/** The bot's repository (git submodule), linted by its own tooling */
+			"vendor/**",
 			".output/**",
 			".data/**",
 			".nuxt/**",
@@ -507,6 +509,7 @@ export default defineConfig({
 			},
 		],
 		ignorePatterns: [
+			"vendor/",
 			".nuxt/",
 			"dist/",
 			"node_modules/",

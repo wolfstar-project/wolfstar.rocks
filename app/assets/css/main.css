@@ -6,6 +6,8 @@
 @import "./view-transitions.css";
 
 @source "../../../content/**/*";
+/* The bot's repository (git submodule) is not part of this app. */
+@source not "../../../vendor";
 
 /*
  * Theme variants that also cover the "no theme attribute" state.

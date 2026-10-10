@@ -27,8 +27,6 @@ const config: KnipConfig = {
 				"server/auth.config.ts",
 				/** Ambient H3EventContext augmentation, never imported directly */
 				"shared/types/auth.d.ts",
-				/** Read by the Prisma CLI (`prisma contract emit`), never imported */
-				"server/database/contract.prisma",
 			],
 			project: [
 				/** css/mdx/prisma are handled by registered compilers, so include them here */
@@ -46,6 +44,9 @@ const config: KnipConfig = {
 			msw: {
 				entry: [".storybook/.public/mockServiceWorker.js"],
 			},
+			/** The bot's repository (git submodule): only its contract is read, and its
+			 * own test and config files must not be picked up as entries of this app. */
+			ignore: ["vendor/**"],
 			ignoreDependencies: [
 				"@iconify-json/*",
 				"@commitlint/cli",

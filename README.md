@@ -131,7 +131,9 @@ multi-purpose Discord bot for moderation and community management.
 4. **Database Setup**
    - Ensure your WolfStar bot database is accessible. The bot owns the schema
      and applies its migrations; this app never migrates the database.
-   - Run `pnpm prisma:generate` to emit the Prisma ORM 8 contract artefacts.
+   - The data contract lives in the bot's repository, vendored as a git
+     submodule. `pnpm install` checks it out and emits the Prisma ORM 8
+     artefacts; clone with `--recurse-submodules` to fetch it up front.
 
 5. **Start the development server**
 
@@ -164,9 +166,9 @@ multi-purpose Discord bot for moderation and community management.
 - `pnpm preview` - Preview production build.
 - `pnpm lint:fix` - Run Oxlint & Oxfmt and fix issues.
 - `pnpm prisma:generate` - Emit the Prisma ORM 8 contract artefacts into
-  `server/database/generated/prisma/`. Run it after installing and whenever
-  `server/database/contract.prisma` changes.
-- `pnpm prisma8:infer` - Re-infer the contract from a live database.
+  `server/database/generated/prisma/`. The contract comes from the bot's
+  repository, vendored as the `vendor/wolfstar` git submodule; run this again
+  after bumping it.
 - `pnpm test` - Run all tests.
 - `pnpm test:unit` - Run unit tests.
 - `pnpm test:nuxt` - Run Nuxt environment tests.

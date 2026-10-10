@@ -43,9 +43,31 @@ interface Rule {
 	good: string;
 }
 
-/** Block comments and whole-line or trailing `//` comments, so prose cannot trip a rule. */
+/**
+ * Block and line comments, so prose cannot trip a rule. String literals are
+ * copied verbatim: a glob such as `".output/**\/public/**\/*.map"` must not be
+ * read as the start of a block comment.
+ */
 function stripComments(source: string): string {
-	return source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|\s)\/\/.*$/gm, "$1");
+	let output = "";
+	for (let i = 0; i < source.length; i++) {
+		const char = source[i] ?? "";
+		const next = source[i + 1];
+		if (char === '"' || char === "'" || char === "`") {
+			const end = skipString(source, i);
+			output += source.slice(i, end + 1);
+			i = end;
+		} else if (char === "/" && next === "/") {
+			while (i < source.length && source[i] !== "\n") i++;
+			output += "\n";
+		} else if (char === "/" && next === "*") {
+			const end = source.indexOf("*/", i + 2);
+			i = end === -1 ? source.length : end + 1;
+		} else {
+			output += char;
+		}
+	}
+	return output;
 }
 
 function matches(source: string, pattern: RegExp, label: string): string[] {
@@ -60,15 +82,55 @@ function templateOf(source: string): string {
 	return start === -1 || end === -1 ? "" : source.slice(start, end);
 }
 
-/** Body of the first `name: { ... }` object literal, matched by brace depth. */
-function objectBody(source: string, name: string): string | undefined {
-	const match = new RegExp(`\\b${name}\\s*:\\s*\\{`).exec(source);
-	if (!match) return undefined;
+/** Index of the closing quote of the string literal that opens at `index`. */
+function skipString(source: string, index: number): number {
+	const quote = source[index];
+	for (let i = index + 1; i < source.length; i++) {
+		if (source[i] === "\\") i++;
+		else if (source[i] === quote) return i;
+	}
+	return source.length;
+}
+
+/** Index of the `}` that closes the `{` at `open`, or -1. Braces inside strings are ignored. */
+function matchingBrace(source: string, open: number): number {
 	let depth = 0;
-	for (let i = match.index + match[0].length - 1; i < source.length; i++) {
-		if (source[i] === "{") depth++;
-		else if (source[i] === "}" && --depth === 0) {
-			return source.slice(match.index, i + 1);
+	for (let i = open; i < source.length; i++) {
+		const char = source[i];
+		if (char === '"' || char === "'" || char === "`") i = skipString(source, i);
+		else if (char === "{") depth++;
+		else if (char === "}" && --depth === 0) return i;
+	}
+	return -1;
+}
+
+/**
+ * Body of `name: { ... }` declared directly on the object passed to
+ * `defineNuxtConfig()`. Blocks of the same name nested deeper, such as
+ * `content.experimental` or `ui.experimental`, belong to other options.
+ */
+function nuxtConfigBlock(source: string, name: string): string | undefined {
+	const call = source.indexOf("defineNuxtConfig(");
+	const open = call === -1 ? -1 : source.indexOf("{", call);
+	const close = open === -1 ? -1 : matchingBrace(source, open);
+	if (close === -1) return undefined;
+
+	const key = new RegExp(`${name}\\s*:\\s*\\{`, "y");
+	let depth = 0;
+	for (let i = open; i < close; i++) {
+		const char = source[i];
+		if (char === '"' || char === "'" || char === "`") {
+			i = skipString(source, i);
+		} else if (char === "{") {
+			depth++;
+		} else if (char === "}") {
+			depth--;
+		} else if (depth === 1 && !/[\w$.]/.test(source[i - 1] ?? "")) {
+			key.lastIndex = i;
+			const match = key.exec(source);
+			if (match) {
+				return source.slice(i, matchingBrace(source, i + match[0].length - 1) + 1);
+			}
 		}
 	}
 	return undefined;
@@ -91,6 +153,11 @@ function collectFiles(root: string, extensions: string[]): string[] {
 	};
 	walk(absolute);
 	return files;
+}
+
+/** Roots that match no file, so a rule cannot lose coverage of one root unnoticed. */
+function unmatchedRoots(roots: string[], extensions: string[]): string[] {
+	return roots.filter((root) => collectFiles(root, extensions).length === 0);
 }
 
 const V5_DEFAULT_FLAGS = [
@@ -231,11 +298,16 @@ const RULES: Rule[] = [
 		roots: ["nuxt.config.ts"],
 		extensions: [".ts"],
 		violations: (source) => {
-			const body = objectBody(stripComments(source), "experimental") ?? "";
+			const config = stripComments(source);
+			// A moved or renamed config would otherwise pass vacuously.
+			if (!config.includes("defineNuxtConfig(")) {
+				return ["defineNuxtConfig() not found, so experimental cannot be checked"];
+			}
+			const body = nuxtConfigBlock(config, "experimental") ?? "";
 			return V5_DEFAULT_FLAGS.filter((flag) => new RegExp(`\\b${flag}\\s*:`).test(body));
 		},
-		bad: "experimental: {\n\ttypedPages: true,\n}",
-		good: "experimental: {\n\tearly404: true,\n}",
+		bad: "export default defineNuxtConfig({\n\texperimental: {\n\t\ttypedPages: true,\n\t},\n});",
+		good: "export default defineNuxtConfig({\n\tcontent: {\n\t\texperimental: { typedPages: true },\n\t},\n\texperimental: {\n\t\tearly404: true,\n\t},\n});",
 	},
 	{
 		id: "explicit-extensions-in-natively-loaded-files",
@@ -262,12 +334,14 @@ describe("forbidden patterns", () => {
 		});
 
 		it("holds across the repository", () => {
-			const files = rule.roots.flatMap((root) => collectFiles(root, rule.extensions));
-			// A moved or renamed root would otherwise pass vacuously.
+			// A moved or renamed root would otherwise drop its checks silently, even
+			// while another root of the same rule still matches files.
 			expect(
-				files.length,
-				`${rule.id}: no files matched ${rule.roots.join(", ")}`,
-			).toBeGreaterThan(0);
+				unmatchedRoots(rule.roots, rule.extensions),
+				`${rule.id}: no files matched these roots`,
+			).toEqual([]);
+
+			const files = rule.roots.flatMap((root) => collectFiles(root, rule.extensions));
 
 			const found = files.flatMap((file) =>
 				rule
@@ -278,6 +352,56 @@ describe("forbidden patterns", () => {
 			);
 
 			expect(found, `${rule.id}: ${rule.reason}`).toEqual([]);
+		});
+	});
+
+	describe("detector scope", () => {
+		const experimentalRule = RULES.find((rule) => rule.id === "no-v5-defaults-in-experimental");
+
+		it("checks the top-level experimental block when a nested one comes first", () => {
+			const source = `export default defineNuxtConfig({
+				content: { experimental: { sqliteConnector: "native" } },
+				experimental: { typedPages: true },
+			});`;
+
+			expect(experimentalRule?.violations(source)).toEqual(["typedPages"]);
+		});
+
+		it("ignores a flag name that only appears in a nested block", () => {
+			const source = `export default defineNuxtConfig({
+				ui: { experimental: { typedPages: true } },
+				experimental: { early404: true },
+			});`;
+
+			expect(experimentalRule?.violations(source)).toEqual([]);
+		});
+
+		it("reports a config it cannot find instead of passing", () => {
+			expect(experimentalRule?.violations("export default {};").length).toBeGreaterThan(0);
+		});
+
+		it("keeps code after a glob string and drops the comment", () => {
+			const source = `const maps = ".output/**/public/**/*.map"; // typedPages: true
+const flag = "kept"; /* block */ const next = 1;`;
+
+			expect(stripComments(source)).toBe(
+				`const maps = ".output/**/public/**/*.map"; \nconst flag = "kept";  const next = 1;`,
+			);
+		});
+
+		it("reads the real nuxt.config.ts through to its top-level experimental block", () => {
+			const config = stripComments(readFileSync(join(ROOT, "nuxt.config.ts"), "utf-8"));
+
+			expect(nuxtConfigBlock(config, "experimental")).toContain("early404");
+		});
+
+		it("names a root that matches no file", () => {
+			expect(
+				unmatchedRoots(
+					["app/pages/oauth/callback.vue", "app/pages/oauth/moved-callback.vue"],
+					[".vue"],
+				),
+			).toEqual(["app/pages/oauth/moved-callback.vue"]);
 		});
 	});
 

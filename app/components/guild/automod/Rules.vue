@@ -1,10 +1,15 @@
 <template>
-	<GuildSettingsSection
-		:title="ts('guild_settings.automod.rules.title')"
-		:description="ts('guild_settings.automod.rules.subtitle')"
-	>
-		<div class="flex flex-wrap items-center gap-3">
-			<UBadge color="primary" variant="subtle">
+	<section class="space-y-4" :aria-label="ts('guild_settings.automod.rules.title')">
+		<div class="flex flex-wrap items-center gap-2">
+			<UButton
+				color="primary"
+				icon="ic:round-add"
+				:disabled="isLoading || hasFailed || rules.length >= MaximumAutoModerationRules"
+				@click="openEditor(null)"
+			>
+				{{ ts("guild_settings.automod.rules.new") }}
+			</UButton>
+			<UBadge color="primary" variant="soft" size="lg" class="ml-auto font-semibold">
 				{{
 					ts("guild_settings.automod.rules.count", {
 						count: rules.length,
@@ -12,29 +17,20 @@
 					})
 				}}
 			</UBadge>
-			<UButton
-				class="ml-auto"
-				color="primary"
-				icon="heroicons:plus"
-				:disabled="isLoading || hasFailed || rules.length >= MaximumAutoModerationRules"
-				@click="openEditor(null)"
-			>
-				{{ ts("guild_settings.automod.rules.new") }}
-			</UButton>
 		</div>
 
 		<div
 			v-if="isLoading"
-			class="space-y-3"
+			class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
 			role="status"
 			:aria-label="ts('guild_settings.automod.rules.loading_aria')"
 		>
-			<USkeleton v-for="n in 3" :key="n" class="h-20 w-full rounded-xl" />
+			<USkeleton v-for="n in 3" :key="n" class="h-44 w-full rounded-lg" />
 		</div>
 
 		<div
 			v-else-if="hasFailed"
-			class="flex flex-col items-center gap-3 rounded-xl border border-base-300/60 py-10 text-center"
+			class="console-card flex flex-col items-center gap-3 py-10 text-center"
 			role="alert"
 		>
 			<UIcon
@@ -42,7 +38,7 @@
 				class="size-8 text-error"
 				aria-hidden="true"
 			/>
-			<p class="text-base-content/70">{{ ts("guild_settings.automod.rules.load_failed") }}</p>
+			<p class="text-toned">{{ ts("guild_settings.automod.rules.load_failed") }}</p>
 			<UButton color="neutral" variant="outline" @click="refresh()">
 				{{ ts("guild_settings.automod.rules.retry") }}
 			</UButton>
@@ -50,68 +46,96 @@
 
 		<div
 			v-else-if="rules.length === 0"
-			class="flex flex-col items-center gap-2 rounded-xl border border-base-300/60 px-4 py-10 text-center"
+			class="console-card flex flex-col items-center gap-2 px-4 py-10 text-center"
 		>
-			<UIcon
-				name="lucide:shield-alert"
-				class="size-8 text-base-content/40"
-				aria-hidden="true"
-			/>
-			<p class="font-semibold text-base-content">
+			<UIcon name="ic:round-shield" class="size-8 text-muted" aria-hidden="true" />
+			<p class="font-semibold">
 				{{ ts("guild_settings.automod.rules.empty_title") }}
 			</p>
-			<p class="max-w-md text-sm text-base-content/70">
+			<p class="max-w-md text-sm text-muted">
 				{{ ts("guild_settings.automod.rules.empty_description") }}
 			</p>
 		</div>
 
-		<ul v-else class="space-y-3" :aria-label="ts('guild_settings.automod.rules.title')">
+		<ul v-else class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
 			<li
 				v-for="rule in rules"
 				:key="rule.id"
-				class="flex flex-wrap items-center gap-x-4 gap-y-3 rounded-xl border bg-base-100 p-4 shadow-sm transition-colors"
-				:class="rule.enabled ? 'border-primary/30' : 'border-base-300/60'"
+				class="console-card flex flex-col gap-3"
+				:class="{ 'opacity-70': !rule.enabled }"
 			>
-				<div class="min-w-0 flex-1">
-					<p class="truncate font-semibold text-base-content">{{ rule.name }}</p>
-					<p class="mt-1 flex flex-wrap items-center gap-2 text-sm text-base-content/70">
-						<UBadge color="neutral" variant="subtle" size="sm">
+				<div class="flex items-start gap-2.5">
+					<span
+						class="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary/15 text-primary"
+						aria-hidden="true"
+					>
+						<UIcon :name="AUTOMOD_TYPE_ICONS[rule.type]" class="size-4.5" />
+					</span>
+					<div class="min-w-0 flex-1">
+						<p class="truncate text-[0.9375rem] leading-tight font-semibold">
+							{{ rule.name }}
+						</p>
+						<p class="truncate font-mono text-[0.6875rem] text-muted">
 							{{ ts(AUTOMOD_TYPE_NAME_KEYS[rule.type]) }}
-						</UBadge>
-						<span>{{ ts(AUTOMOD_HARD_ACTION_KEYS[rule.hardAction]) }}</span>
-					</p>
+						</p>
+					</div>
+					<USwitch
+						:model-value="rule.enabled"
+						:disabled="busyRuleId === rule.id"
+						:aria-label="
+							ts('guild_settings.automod.rules.toggle_aria', { name: rule.name })
+						"
+						@update:model-value="toggleRule(rule, $event)"
+					/>
 				</div>
 
-				<USwitch
-					:model-value="rule.enabled"
-					:disabled="busyRuleId === rule.id"
-					:aria-label="
-						ts('guild_settings.automod.rules.toggle_aria', { name: rule.name })
-					"
-					@update:model-value="toggleRule(rule, $event)"
-				/>
-				<UButton
-					color="neutral"
-					variant="ghost"
-					size="sm"
-					icon="heroicons:pencil-square"
-					:aria-label="ts('guild_settings.automod.rules.edit_aria', { name: rule.name })"
-					@click="openEditor(rule)"
+				<dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-0.5 text-[0.8125rem]">
+					<dt class="text-muted">{{ ts("guild_settings.automod.rules.threshold") }}</dt>
+					<dd>{{ thresholdLabel(rule) }}</dd>
+					<dt class="text-muted">{{ ts("guild_settings.automod.rules.action") }}</dt>
+					<dd>{{ actionLabel(rule) }}</dd>
+					<dt class="text-muted">{{ ts("guild_settings.automod.rules.on_hit") }}</dt>
+					<dd>{{ onHitLabel(rule) }}</dd>
+				</dl>
+
+				<ul
+					v-if="exemptions(rule).length > 0"
+					class="flex flex-wrap gap-1.5"
+					:aria-label="ts('guild_settings.automod.rules.editor.exemptions')"
 				>
-					{{ ts("guild_settings.automod.rules.edit") }}
-				</UButton>
-				<UButton
-					color="error"
-					variant="ghost"
-					size="sm"
-					icon="heroicons:trash"
-					:aria-label="
-						ts('guild_settings.automod.rules.delete_aria', { name: rule.name })
-					"
-					@click="ruleToDelete = rule"
-				>
-					{{ ts("guild_settings.automod.rules.delete") }}
-				</UButton>
+					<li
+						v-for="entry in exemptions(rule)"
+						:key="entry"
+						class="rounded-full bg-base-content/8 px-2.5 py-0.5 text-xs text-toned"
+					>
+						{{ entry }}
+					</li>
+				</ul>
+
+				<div class="mt-auto flex gap-2 pt-1">
+					<UButton
+						color="neutral"
+						variant="outline"
+						size="sm"
+						:aria-label="
+							ts('guild_settings.automod.rules.edit_aria', { name: rule.name })
+						"
+						@click="openEditor(rule)"
+					>
+						{{ ts("guild_settings.automod.rules.edit") }}
+					</UButton>
+					<UButton
+						color="error"
+						variant="outline"
+						size="sm"
+						:aria-label="
+							ts('guild_settings.automod.rules.delete_aria', { name: rule.name })
+						"
+						@click="ruleToDelete = rule"
+					>
+						{{ ts("guild_settings.automod.rules.delete") }}
+					</UButton>
+				</div>
 			</li>
 		</ul>
 
@@ -151,13 +175,18 @@
 				</div>
 			</template>
 		</UModal>
-	</GuildSettingsSection>
+	</section>
 </template>
 
 <script setup lang="ts">
 import type { AutomodRuleCreate, AutomodRuleErrorCode } from "~/composables/useAutomodRules";
 import { MaximumAutoModerationRules, type AutoModerationRule } from "#shared/utils/automod-rules";
-import { AUTOMOD_HARD_ACTION_KEYS, AUTOMOD_TYPE_NAME_KEYS } from "~/utils/automod-rule-labels";
+import { AutoModerationSoftActionBits } from "#shared/utils/automod-rules";
+import {
+	AUTOMOD_HARD_ACTION_KEYS,
+	AUTOMOD_TYPE_ICONS,
+	AUTOMOD_TYPE_NAME_KEYS,
+} from "~/utils/automod-rule-labels";
 
 const { ts } = useI18n();
 const toast = useToast();
@@ -185,6 +214,50 @@ const editorErrorCode = ref<AutomodRuleErrorCode | null>(null);
 const ruleToDelete = ref<AutoModerationRule | null>(null);
 const saving = ref(false);
 const busyRuleId = ref<string | null>(null);
+
+function thresholdLabel(rule: AutoModerationRule) {
+	if (rule.thresholdMaximum === 0) {
+		return ts("guild_settings.automod.rules.first_infraction");
+	}
+	return rule.thresholdDuration > 0
+		? `${rule.thresholdMaximum} / ${formatCompactDuration(rule.thresholdDuration)}`
+		: String(rule.thresholdMaximum);
+}
+
+function actionLabel(rule: AutoModerationRule) {
+	const action = ts(AUTOMOD_HARD_ACTION_KEYS[rule.hardAction]);
+	return rule.hardActionDuration
+		? `${action} · ${formatCompactDuration(rule.hardActionDuration)}`
+		: action;
+}
+
+function onHitLabel(rule: AutoModerationRule) {
+	const labels = [
+		rule.softAction & AutoModerationSoftActionBits.Alert
+			? ts("guild_settings.automod.rules.soft_alert_short")
+			: null,
+		rule.softAction & AutoModerationSoftActionBits.Log
+			? ts("guild_settings.automod.rules.soft_log_short")
+			: null,
+		rule.softAction & AutoModerationSoftActionBits.Delete
+			? ts("guild_settings.automod.rules.soft_delete_short")
+			: null,
+	].filter((label): label is string => label !== null);
+	return labels.length > 0 ? labels.join(" + ") : ts("guild_settings.automod.rules.nothing");
+}
+
+/** The roles and channels a rule leaves alone, by name. */
+function exemptions(rule: AutoModerationRule): string[] {
+	const roles = rule.ignoredRoles.map((id) => {
+		const name = guildData.value.roles.find((role) => role.id === id)?.name;
+		return name ? `@${name}` : null;
+	});
+	const channels = rule.ignoredChannels.map((id) => {
+		const name = guildData.value.channels.find((channel) => channel.id === id)?.name;
+		return name ? `#${name}` : null;
+	});
+	return [...roles, ...channels].filter((entry): entry is string => entry !== null);
+}
 
 function openEditor(rule: AutoModerationRule | null) {
 	editedRule.value = rule;

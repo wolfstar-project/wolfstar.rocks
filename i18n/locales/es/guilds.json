@@ -24,6 +24,8 @@
 				"VoiceKick": "",
 				"Warning": ""
 			},
+			"module_hint": "",
+			"module_settings": "",
 			"options": {
 				"alerts": "",
 				"allowed": "",
@@ -37,6 +39,7 @@
 				"words": ""
 			},
 			"rules": {
+				"action": "",
 				"count": "",
 				"delete": "",
 				"delete_aria": "",
@@ -94,11 +97,18 @@
 					"timeoutNeedsDuration": "",
 					"unknown": ""
 				},
+				"first_infraction": "",
 				"load_failed": "",
 				"loading_aria": "",
 				"new": "",
+				"nothing": "",
+				"on_hit": "",
 				"retry": "",
+				"soft_alert_short": "",
+				"soft_delete_short": "",
+				"soft_log_short": "",
 				"subtitle": "",
+				"threshold": "",
 				"title": "",
 				"toasts": {
 					"created": "",

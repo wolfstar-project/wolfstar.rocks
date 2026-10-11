@@ -41,3 +41,16 @@ export function joinDuration({ value, unit }: DurationParts): number {
 	if (!Number.isFinite(value) || value <= 0) return 0;
 	return Math.round(value * UNIT_MILLISECONDS[unit]);
 }
+
+const COMPACT_SUFFIX: Record<DurationUnit, string> = {
+	seconds: "s",
+	minutes: "m",
+	hours: "h",
+	days: "d",
+};
+
+/** `600_000` as `10m`: the shortest label a rule card can show for a duration. */
+export function formatCompactDuration(milliseconds: number): string {
+	const { value, unit } = splitDuration(milliseconds, "seconds");
+	return `${value}${COMPACT_SUFFIX[unit]}`;
+}

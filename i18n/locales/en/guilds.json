@@ -24,6 +24,8 @@
 				"VoiceKick": "Voice kick",
 				"Warning": "Warning"
 			},
+			"module_hint": "Turning this off keeps the rules below but stops every one of them.",
+			"module_settings": "Module settings",
 			"options": {
 				"alerts": "Warn before banning",
 				"allowed": "Allowed domains",
@@ -37,6 +39,7 @@
 				"words": "Words"
 			},
 			"rules": {
+				"action": "Action",
 				"count": "{count} / {max} rules",
 				"delete": "Delete",
 				"delete_aria": "Delete rule {name}",
@@ -94,11 +97,18 @@
 					"timeoutNeedsDuration": "A timeout step needs a duration.",
 					"unknown": "This rule no longer exists. Reload the page."
 				},
+				"first_infraction": "First infraction",
 				"load_failed": "Couldn't load the rules.",
 				"loading_aria": "Loading auto-moderation rules",
 				"new": "New rule",
+				"nothing": "Nothing",
+				"on_hit": "On hit",
 				"retry": "Try again",
+				"soft_alert_short": "Alert",
+				"soft_delete_short": "Delete",
+				"soft_log_short": "Log",
 				"subtitle": "Each rule watches for one kind of message and decides what happens to it. Rules are saved as soon as you confirm them.",
+				"threshold": "Threshold",
 				"title": "Rules",
 				"toasts": {
 					"created": "Rule \"{name}\" created",

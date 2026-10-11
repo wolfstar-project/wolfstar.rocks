@@ -60,3 +60,28 @@ export const AUTOMOD_HARD_ACTION_KEYS: Record<AutoModerationHardAction, string> 
 	VoiceKick: "guild_settings.automod.hard_actions.VoiceKick",
 	Warning: "guild_settings.automod.hard_actions.Warning",
 };
+
+/** The glyph that stands for a kind of rule on its card. */
+export const AUTOMOD_TYPE_ICONS: Record<AutoModerationRuleType, string> = {
+	Attachments: "ic:round-attach-file",
+	Capitals: "ic:round-text-fields",
+	Characters: "ic:round-format-size",
+	Duplicates: "ic:round-content-copy",
+	Emojis: "ic:round-emoji-emotions",
+	ImageSpam: "ic:round-image",
+	Invites: "ic:round-public",
+	Links: "ic:round-link",
+	LinksCooldown: "ic:round-link",
+	MaskedLinks: "ic:round-link-off",
+	MassMentions: "ic:round-groups",
+	MentionsCooldown: "ic:round-notifications-active",
+	MessageSpam: "ic:round-bolt",
+	Newlines: "ic:round-wrap-text",
+	NoMentionSpam: "ic:round-notifications-active",
+	Phishing: "ic:round-shield",
+	Spoilers: "ic:round-visibility-off",
+	Stickers: "ic:round-sticky-note-2",
+	StickersCooldown: "ic:round-sticky-note-2",
+	Words: "ic:round-close",
+	Zalgo: "ic:round-star",
+};

@@ -1,35 +1,51 @@
 <template>
-	<UDashboardPanel id="app">
-		<template #header>
-			<UDashboardNavbar :title="navbarTitle" :ui="{ right: 'gap-3' }">
-				<template #leading>
-					<UDashboardSidebarCollapse />
-				</template>
-				<template #right>
-					<span
-						v-if="activeGuildId && guildData?.name"
-						class="hidden max-w-48 truncate text-sm text-base-content/60 sm:inline"
-					>
-						· {{ guildData.name }}
-					</span>
-					<UBadge v-if="hasStagedChanges" color="warning" variant="subtle" size="sm">
-						{{ ts("dashboard.unsaved_title") }}
-					</UBadge>
-				</template>
-			</UDashboardNavbar>
-		</template>
+	<div class="flex min-h-0 flex-1 flex-col">
+		<header class="console-header">
+			<UButton
+				class="sm:hidden"
+				color="neutral"
+				variant="ghost"
+				size="lg"
+				icon="ic:round-menu"
+				:aria-label="ts('dashboard.nav_menu')"
+				:aria-expanded="drawerOpen"
+				@click="toggleDrawer"
+			/>
+			<div class="min-w-0 sm:flex sm:items-baseline sm:gap-2">
+				<h1 class="truncate text-[0.9375rem] leading-tight font-bold sm:text-base">
+					{{ navbarTitle }}
+				</h1>
+				<p
+					v-if="activeGuildId && guildData?.name"
+					class="truncate text-xs leading-tight text-muted sm:text-[0.8125rem]"
+				>
+					<span class="hidden sm:inline" aria-hidden="true">· </span>{{ guildData.name }}
+				</p>
+			</div>
+			<span class="flex-1"></span>
+			<span v-if="hasStagedChanges" role="status" class="console-unsaved">
+				<span
+					class="size-1.75 rounded-full bg-warning-content/55"
+					aria-hidden="true"
+				></span>
+				<span class="hidden sm:inline">{{ ts("dashboard.unsaved_title") }}</span>
+				<span class="sm:hidden">{{ ts("dashboard.unsaved_short") }}</span>
+			</span>
+		</header>
 
-		<template #body>
+		<div class="console-content">
 			<ClientOnly>
-				<GuildPicker v-if="!activeGuildId" />
-				<GuildLogsPanel v-else-if="isLogsSection" />
-				<component
-					:is="renderComponent"
-					v-else
-					:key="`${activeGuildId}:${section}`"
-					:commands="commands"
-					:languages="languages"
-				/>
+				<div class="flex flex-col gap-5">
+					<GuildPicker v-if="!activeGuildId" />
+					<GuildLogsPanel v-else-if="isLogsSection" />
+					<component
+						:is="renderComponent"
+						v-else
+						:key="`${activeGuildId}:${section}`"
+						:commands="commands"
+						:languages="languages"
+					/>
+				</div>
 				<template #fallback>
 					<div class="flex h-48 items-center justify-center">
 						<UIcon
@@ -39,8 +55,8 @@
 					</div>
 				</template>
 			</ClientOnly>
-		</template>
-	</UDashboardPanel>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -56,6 +72,7 @@ const { ts } = useI18n();
 const toast = useToast();
 const { guildData } = useGuildData();
 const { activeGuildId, hasStagedChanges, section } = useDashboardNavigation();
+const { open: drawerOpen, toggle: toggleDrawer } = useDashboardDrawer();
 
 const {
 	data: commands,
@@ -105,30 +122,13 @@ const defaultComponent = defineAsyncComponent(
 	() => import("~/components/guild/settings/General.vue"),
 );
 
-// Section slug -> sidebar label, so the navbar and the document title read like the sidebar.
-const SECTION_LABEL_KEYS: Record<string, string> = {
-	"channels": "dashboard.nav.channels",
-	"commands": "dashboard.nav.commands",
-	"events": "dashboard.nav.events",
-	"logs": "dashboard.nav.logs",
-	"moderation": "dashboard.nav.moderation",
-	"moderation/capitals": "dashboard.nav.capitals",
-	"moderation/invites": "dashboard.nav.invites",
-	"moderation/lines": "dashboard.nav.line_spam",
-	"moderation/links": "dashboard.nav.links",
-	"moderation/messages": "dashboard.nav.message_duplication",
-	"moderation/reactions": "dashboard.nav.reactions",
-	"moderation/word": "dashboard.nav.bad_words",
-	"modules": "dashboard.nav.modules",
-	"roles": "dashboard.nav.roles",
-};
-
 const isLogsSection = computed(() => section.value === "logs");
 const renderComponent = computed(() => asyncComponentMap[section.value] ?? defaultComponent);
 
+// The navbar and the document title read like the sidebar.
 const sectionLabel = computed(() => {
-	const key = SECTION_LABEL_KEYS[section.value];
-	return key ? ts(key) : ts("guild_manage.general");
+	const item = findDashboardNavItem(section.value);
+	return ts(item?.labelKey ?? "dashboard.nav.overview");
 });
 const navbarTitle = computed(() =>
 	activeGuildId.value ? sectionLabel.value : ts("dashboard.picker.title"),
@@ -224,3 +224,21 @@ useSeoMeta({
 	title: () => title.value,
 });
 </script>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+.console-header {
+	@apply flex h-13 shrink-0 items-center gap-2.5 px-2 sm:h-12 sm:pr-3 sm:pl-3.5;
+	border-bottom: 1px solid var(--home-border-subtle);
+	box-shadow: var(--console-shadow-low);
+}
+
+.console-content {
+	@apply min-h-0 flex-1 overflow-y-auto p-3.5 sm:p-5.5;
+}
+
+.console-unsaved {
+	@apply inline-flex h-6 shrink-0 items-center gap-1.5 rounded-full bg-warning px-2.5 text-xs font-bold whitespace-nowrap text-warning-content;
+}
+</style>

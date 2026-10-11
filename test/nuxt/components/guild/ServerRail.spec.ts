@@ -66,6 +66,6 @@ describe("GuildServerRail", () => {
 
 		const rail = wrapper.get("nav");
 		expect(rail.findAll("button.guild-rail-item")).toHaveLength(0);
-		expect(rail.findAll(".size-12.rounded-2xl").length).toBeGreaterThan(0);
+		expect(rail.findAll(".guild-rail-skeleton").length).toBeGreaterThan(0);
 	});
 });

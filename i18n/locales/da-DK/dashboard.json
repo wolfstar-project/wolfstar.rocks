@@ -30,14 +30,28 @@
 			"message_duplication": "",
 			"moderation": "",
 			"modules": "",
+			"overview": "",
 			"reactions": "",
 			"roles": "",
 			"support_server": ""
 		},
+		"nav_aria": "",
+		"nav_current_group": "",
 		"nav_groups": {
 			"management": "",
+			"modules": "",
+			"records": "",
 			"resources": ""
 		},
+		"nav_menu": "",
+		"nav_menu_description": "",
+		"nav_module_off": "",
+		"nav_pin": "",
+		"nav_pinned": "",
+		"nav_recent": "",
+		"nav_sections_aria": "",
+		"nav_unpin": "",
+		"nav_you": "",
 		"picker": {
 			"description": "",
 			"empty": "",
@@ -53,10 +67,13 @@
 		"unauthorized_description": "",
 		"unauthorized_title": "",
 		"unsaved_description": "",
+		"unsaved_short": "",
 		"unsaved_title": "",
 		"update_failed_fix": "",
 		"update_failed_message": "",
-		"update_failed_why": ""
+		"update_failed_why": "",
+		"user_preferences": "",
+		"user_sign_out": ""
 	},
 	"guild_logs": {
 		"all_actions": "",
@@ -83,6 +100,8 @@
 		"no_moderation_cases": "",
 		"no_reason": "",
 		"no_warnings": "",
+		"page_subtitle": "",
+		"page_title": "",
 		"refresh_activity": "",
 		"refresh_audit": "",
 		"refresh_command": "",

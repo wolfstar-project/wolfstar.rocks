@@ -1,13 +1,19 @@
 <template>
+	<DashboardPageHeader
+		:title="ts('guild_logs.page_title')"
+		:description="ts('guild_logs.page_subtitle')"
+	/>
+
 	<UTabs
 		v-model="logsTab"
 		:items="tabs"
+		variant="link"
 		:unmount-on-hide="false"
-		class="w-full"
-		:ui="{ list: 'px-4' }"
+		class="w-full gap-0"
+		:ui="{ list: 'justify-start border-b border-(--home-border-subtle)', content: 'pt-4' }"
 	>
 		<template #content="{ item }">
-			<div class="mt-4">
+			<div class="logs-card console-card p-0!">
 				<GuildLogsModerationLogTable v-if="item.value === 'moderation'" />
 				<GuildLogsModerationLogTable v-else-if="item.value === 'warnings'" warnings-only />
 				<GuildLogsCommandLogTable v-else-if="item.value === 'commands'" />
@@ -30,3 +36,13 @@ const tabs = computed<TabsItem[]>(() => [
 	{ value: "activity", label: ts("guild_logs.tab_activity") },
 ]);
 </script>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+/* The tables are generated, so their header cells are styled from here. */
+.logs-card :deep(thead th) {
+	@apply text-[0.6875rem] font-bold tracking-[0.06em] uppercase;
+	color: var(--ui-text-muted);
+}
+</style>

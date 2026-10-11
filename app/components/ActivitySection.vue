@@ -1,16 +1,19 @@
 <template>
-	<component
-		:is="plain ? 'div' : GuildSettingsSection"
-		v-bind="!plain ? { title, ui: { heading: 'text-xl font-bold tracking-wide' } } : {}"
-	>
+	<component :is="plain ? 'div' : 'section'" :class="plain ? undefined : 'console-card'">
 		<div
 			:class="
 				plain
 					? 'flex items-center justify-between px-4 py-3'
-					: 'mb-3 flex items-center justify-between'
+					: 'mb-3.5 flex items-center justify-between gap-3'
 			"
 		>
-			<p class="text-sm text-toned">
+			<div v-if="!plain" class="flex min-w-0 items-center gap-2.5">
+				<h3 class="truncate text-[1.0625rem] font-semibold">{{ title }}</h3>
+				<UBadge color="primary" variant="soft" size="md" class="font-semibold">
+					{{ itemCount }}
+				</UBadge>
+			</div>
+			<p v-else class="text-sm text-toned">
 				{{ itemCount }} {{ recordLabel }}{{ itemCount === 1 ? "" : "s" }} recorded
 			</p>
 			<UButton
@@ -43,8 +46,6 @@
 
 <script setup lang="ts">
 type AsyncDataStatus = "idle" | "pending" | "success" | "error";
-
-const GuildSettingsSection = resolveComponent("GuildSettingsSection");
 
 const {
 	title,

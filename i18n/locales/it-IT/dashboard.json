@@ -30,14 +30,28 @@
 			"message_duplication": "Messaggi duplicati",
 			"moderation": "Moderazione",
 			"modules": "",
+			"overview": "",
 			"reactions": "Reazioni",
 			"roles": "Ruoli",
 			"support_server": ""
 		},
+		"nav_aria": "",
+		"nav_current_group": "",
 		"nav_groups": {
 			"management": "",
+			"modules": "",
+			"records": "",
 			"resources": ""
 		},
+		"nav_menu": "",
+		"nav_menu_description": "",
+		"nav_module_off": "",
+		"nav_pin": "",
+		"nav_pinned": "",
+		"nav_recent": "",
+		"nav_sections_aria": "",
+		"nav_unpin": "",
+		"nav_you": "",
 		"picker": {
 			"description": "",
 			"empty": "",
@@ -53,10 +67,13 @@
 		"unauthorized_description": "La tua sessione è scaduta o non sei autorizzato. Accedi di nuovo per accedere alla dashboard.",
 		"unauthorized_title": "Non autorizzato",
 		"unsaved_description": "Hai modifiche non salvate che andranno perse se lasci questa pagina.",
+		"unsaved_short": "",
 		"unsaved_title": "Modifiche non salvate",
 		"update_failed_fix": "Riprova più tardi. Se il problema persiste, contatta il supporto.",
 		"update_failed_message": "Impossibile aggiornare le impostazioni del server",
-		"update_failed_why": "Qualcosa è andato storto durante il salvataggio delle impostazioni."
+		"update_failed_why": "Qualcosa è andato storto durante il salvataggio delle impostazioni.",
+		"user_preferences": "",
+		"user_sign_out": ""
 	},
 	"guild_logs": {
 		"all_actions": "Tutte le azioni",
@@ -83,6 +100,8 @@
 		"no_moderation_cases": "No moderation cases found",
 		"no_reason": "Nessun motivo fornito",
 		"no_warnings": "No warnings found",
+		"page_subtitle": "",
+		"page_title": "",
 		"refresh_activity": "Aggiorna log delle attività",
 		"refresh_audit": "Aggiorna log di audit",
 		"refresh_command": "Aggiorna log dei comandi",

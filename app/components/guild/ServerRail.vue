@@ -1,11 +1,11 @@
 <template>
-	<nav class="guild-rail hidden lg:flex" :aria-label="ts('dashboard.server_rail_aria')">
+	<nav class="guild-rail hidden sm:flex" :aria-label="ts('dashboard.server_rail_aria')">
 		<NuxtLink
 			to="/"
 			class="guild-rail-home"
 			:aria-label="ts('header.home', { name: 'WolfStar' })"
 		>
-			<IconsWolfstar class="size-7 text-primary" aria-hidden="true" />
+			<IconsWolfstar class="size-7 text-neutral-content" aria-hidden="true" />
 		</NuxtLink>
 
 		<span class="guild-rail-divider" aria-hidden="true" />
@@ -21,19 +21,21 @@
 			:title="server.name"
 			@click="emit('select', server.id)"
 		>
-			<UAvatar
-				:src="resolveGuildIconSrc(server, { size: 64 })"
-				:text="server.acronym"
+			<img
+				v-if="resolveGuildIconSrc(server, { size: 128 })"
+				:src="resolveGuildIconSrc(server, { size: 128 })"
 				alt=""
-				size="lg"
-				:ui="{ root: 'rounded-2xl' }"
+				class="size-full object-cover"
+				width="48"
+				height="48"
 			/>
+			<span v-else aria-hidden="true">{{ server.acronym }}</span>
 		</button>
 
 		<USkeleton
 			v-for="n of pending && servers.length === 0 ? 3 : 0"
 			:key="n"
-			class="size-12 rounded-2xl"
+			class="guild-rail-skeleton"
 		/>
 
 		<span class="guild-rail-divider" aria-hidden="true" />
@@ -75,32 +77,38 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 @reference "@/assets/css/main.css";
 
 .guild-rail {
-	@apply w-18 shrink-0 flex-col items-center gap-2 overflow-y-auto py-3;
-	background-color: var(--color-base-200);
-	border-right: 1px solid var(--home-border-subtle);
+	@apply w-15 shrink-0 flex-col items-center gap-2 overflow-x-hidden overflow-y-auto py-3 md:w-16 lg:w-17;
+	background-color: var(--console-rail);
 }
 
 .guild-rail-home,
 .guild-rail-item,
 .guild-rail-add {
-	@apply flex size-12 shrink-0 cursor-pointer items-center justify-center rounded-2xl border-0 bg-transparent p-0 transition-[border-radius,background-color] duration-200;
+	@apply flex size-11 shrink-0 cursor-pointer items-center justify-center overflow-hidden border-0 p-0 text-base font-semibold lg:size-12;
+	transition:
+		border-radius 170ms cubic-bezier(0.3, 0, 0.2, 1),
+		background-color 170ms;
 }
 
-.guild-rail-home,
-.guild-rail-add {
-	background-color: var(--color-base-300);
+/* The mark sits on a fixed dark tile in both themes, like the wordmark does. */
+.guild-rail-home {
+	@apply rounded-[15px] bg-neutral;
 }
 
-.guild-rail-add {
-	@apply text-success;
+.guild-rail-item {
+	@apply rounded-full;
+	background-color: var(--console-surface);
+	color: var(--ui-text-toned);
 }
 
-.guild-rail-home:hover,
 .guild-rail-item:hover,
-.guild-rail-add:hover,
 .guild-rail-item--active {
-	@apply rounded-xl;
-	background-color: var(--color-base-300);
+	@apply rounded-lg;
+}
+
+.guild-rail-item:hover {
+	background-color: var(--color-primary);
+	color: var(--color-primary-content);
 }
 
 .guild-rail-item--active {
@@ -108,8 +116,33 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 	outline-offset: 2px;
 }
 
+.guild-rail-item:has(img),
+.guild-rail-item:has(img):hover {
+	background-color: transparent;
+}
+
+.guild-rail-add {
+	@apply rounded-full text-success;
+	background-color: var(--console-surface);
+}
+
+.guild-rail-add:hover {
+	@apply rounded-lg;
+}
+
+.guild-rail-skeleton {
+	@apply size-11 shrink-0 rounded-full lg:size-12;
+}
+
 .guild-rail-divider {
-	@apply my-1 h-0.5 w-8 shrink-0 rounded-full;
+	@apply h-0.5 w-7 shrink-0 rounded-[1px];
 	background-color: var(--home-border-subtle);
+}
+
+.guild-rail-home:focus-visible,
+.guild-rail-item:focus-visible,
+.guild-rail-add:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: 2px;
 }
 </style>

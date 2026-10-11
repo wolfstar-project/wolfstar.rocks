@@ -1,5 +1,5 @@
 <template>
-	<UDashboardGroup unit="rem">
+	<div class="console">
 		<GuildServerRail
 			:current-guild-id="guildId ?? undefined"
 			:guilds="userGuilds"
@@ -7,119 +7,110 @@
 			@select="goToGuild"
 		/>
 
-		<UDashboardSidebar
-			id="default"
-			collapsible
-			resizable
-			:ui="{
-				header: 'bg-base-200/80',
-				body: 'bg-base-200/80 border-r border-base-200',
-				footer: 'bg-base-200/80 border-t border-b border-base-200',
-			}"
-		>
-			<template #header="{ collapsed }">
-				<div v-if="guildData" class="flex cursor-pointer items-center gap-0.5">
-					<UAvatar
-						:src="guildIconSrc"
-						:text="guildData.acronym"
-						:alt="guildData.name"
-						class="mr-2"
-					/>
-					<h1 v-if="!collapsed" class="text-lg font-semibold">{{ guildData.name }}</h1>
+		<aside v-if="guildId" class="console-sidebar" :aria-label="ts('dashboard.nav_aria')">
+			<DashboardSidebar />
+		</aside>
+
+		<div class="console-main">
+			<slot v-if="!guildId || isReadyToRender"></slot>
+			<div
+				v-else-if="nuxtError"
+				class="flex w-full flex-1 flex-col items-center justify-center space-y-4 px-4 text-center"
+				role="alert"
+				:aria-label="ts('dashboard.error_aria')"
+			>
+				<UIcon name="ph:warning-duotone" class="size-12 text-error" aria-hidden="true" />
+				<div class="space-y-2">
+					<h2 class="text-xl font-semibold text-base-content">
+						{{ nuxtError.statusMessage || ts("dashboard.error_title") }}
+					</h2>
+					<p v-if="nuxtError.status === 403">
+						{{ ts("dashboard.error_forbidden") }}
+					</p>
+					<p class="text-sm text-base-content/60">
+						{{ nuxtError.message || ts("dashboard.error_fallback") }}
+					</p>
 				</div>
-				<div v-else class="flex h-10 items-center justify-center">
-					<USkeleton class="mr-2 h-10 w-10 rounded-full" />
-					<div v-if="!collapsed" class="ms-2">
-						<USkeleton class="h-4 w-24 rounded" />
+			</div>
+			<div
+				v-else
+				class="flex w-full flex-1 flex-col items-center justify-center space-y-4 px-4"
+				role="status"
+				:aria-label="ts('dashboard.loading_aria')"
+			>
+				<div class="flex flex-col items-center space-y-4">
+					<UIcon
+						name="ph:warning-duotone"
+						class="size-12 text-primary"
+						aria-hidden="true"
+					/>
+					<div class="space-y-2 text-center">
+						<h2 class="text-xl font-semibold text-base-content">
+							{{ ts("dashboard.loading_title") }}
+						</h2>
+						<p class="text-sm text-base-content/60">
+							{{ ts("dashboard.loading_description") }}
+						</p>
+					</div>
+					<div class="flex items-center space-x-2">
+						<div
+							class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary"
+						></div>
+						<div
+							class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary [animation-delay:200ms]"
+						></div>
+						<div
+							class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary [animation-delay:400ms]"
+						></div>
+					</div>
+				</div>
+			</div>
+
+			<div
+				v-if="showSaveChangesBar"
+				style="view-transition-name: save-changes-bar"
+				role="region"
+				:aria-label="ts('dashboard.unsaved_title')"
+				class="console-savebar"
+			>
+				<span class="console-savebar-status">
+					<span class="size-2 rounded-full bg-warning" aria-hidden="true"></span>
+					{{ ts("dashboard.unsaved_title") }}
+				</span>
+				<UButton color="neutral" variant="outline" @click="resetChanges">
+					{{ ts("dashboard.reset_changes") }}
+				</UButton>
+				<UButton color="primary" icon="heroicons:check" @click="submitChanges">
+					{{ ts("dashboard.save_changes") }}
+				</UButton>
+			</div>
+
+			<DashboardBottomNav v-if="guildId" />
+		</div>
+
+		<USlideover
+			v-model:open="drawerOpen"
+			side="left"
+			:title="ts('dashboard.nav_menu')"
+			:description="ts('dashboard.nav_menu_description')"
+			:ui="{ content: 'w-[20.375rem] max-w-[90vw]' }"
+		>
+			<template #content>
+				<div class="console-drawer">
+					<GuildServerRail
+						class="flex!"
+						:current-guild-id="guildId ?? undefined"
+						:guilds="userGuilds"
+						:pending="userGuildsPending"
+						@select="selectFromDrawer"
+						@browse="browseFromDrawer"
+					/>
+					<div class="min-w-0 flex-1">
+						<DashboardSidebar v-if="guildId" @navigate="closeDrawer" />
 					</div>
 				</div>
 			</template>
-			<template #default="{ collapsed }">
-				<UNavigationMenu
-					:collapsed="collapsed"
-					:items="items[0]"
-					orientation="vertical"
-					tooltip
-					popover
-				/>
-
-				<UNavigationMenu
-					:collapsed="collapsed"
-					:items="items[1]"
-					orientation="vertical"
-					tooltip
-					class="mt-auto"
-				/>
-			</template>
-
-			<template #footer="{ collapsed }">
-				<UserMenu :collapsed="collapsed" />
-			</template>
-		</UDashboardSidebar>
-
-		<slot v-if="!guildId || isReadyToRender"></slot>
-		<div
-			v-else-if="nuxtError"
-			class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4 text-center"
-			role="alert"
-			:aria-label="ts('dashboard.error_aria')"
-		>
-			<UIcon name="ph:warning-duotone" class="size-12 text-error" aria-hidden="true" />
-			<div class="space-y-2">
-				<h2 class="text-xl font-semibold text-base-content">
-					{{ nuxtError.statusMessage || ts("dashboard.error_title") }}
-				</h2>
-				<p v-if="nuxtError.status === 403">
-					{{ ts("dashboard.error_forbidden") }}
-				</p>
-				<p class="text-sm text-base-content/60">
-					{{ nuxtError.message || ts("dashboard.error_fallback") }}
-				</p>
-			</div>
-		</div>
-		<div
-			v-else
-			class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4"
-			role="status"
-			:aria-label="ts('dashboard.loading_aria')"
-		>
-			<div class="flex flex-col items-center space-y-4">
-				<UIcon name="ph:warning-duotone" class="size-12 text-primary" aria-hidden="true" />
-				<div class="space-y-2 text-center">
-					<h2 class="text-xl font-semibold text-base-content">
-						{{ ts("dashboard.loading_title") }}
-					</h2>
-					<p class="text-sm text-base-content/60">
-						{{ ts("dashboard.loading_description") }}
-					</p>
-				</div>
-				<div class="flex items-center space-x-2">
-					<div
-						class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary"
-					></div>
-					<div
-						class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary [animation-delay:200ms]"
-					></div>
-					<div
-						class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary [animation-delay:400ms]"
-					></div>
-				</div>
-			</div>
-		</div>
-		<div
-			v-if="showSaveChangesBar"
-			style="view-transition-name: save-changes-bar"
-			role="region"
-			:aria-label="ts('dashboard.unsaved_title')"
-			class="fixed right-4 bottom-4 z-50 flex items-center gap-2 rounded-xl border border-base-300 bg-base-100 p-2 shadow-xl"
-		>
-			<UButton color="primary" icon="heroicons:check" @click="submitChanges">
-				{{ ts("dashboard.save_changes") }}
-			</UButton>
-			<UButton color="error" icon="heroicons:arrow-path" @click="resetChanges">
-				{{ ts("dashboard.reset_changes") }}
-			</UButton>
-		</div>
+		</USlideover>
 
 		<UModal
 			:open="leaveDialogOpen"
@@ -138,12 +129,11 @@
 				</div>
 			</template>
 		</UModal>
-	</UDashboardGroup>
+	</div>
 </template>
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
-import type { NavigationMenuItem } from "@nuxt/ui";
 import { isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { objectToTuples } from "@sapphire/utilities/objectToTuples";
@@ -153,7 +143,6 @@ import {
 	classifyGuildError,
 	parseGuildSettingsSaveResponse,
 	guildSettingsSaveFailureToast,
-	resolveGuildIconSrc,
 } from "~/utils/guild-dashboard";
 
 function isSafeUrl(url: unknown): url is string {
@@ -174,14 +163,12 @@ const {
 	cancelPendingNavigation,
 	confirmPendingNavigation,
 	goToGuild,
-	goToSection,
 	pendingNavigation,
-	section,
 } = useDashboardNavigation();
 
 const toast = useToast();
 const router = useRouter();
-const open = ref(false);
+const { close: closeDrawer, open: drawerOpen } = useDashboardDrawer();
 const nuxtError = useError();
 const { setGuildData, guildData } = useGuildData();
 const { setGuildSettings, guildSettings } = useGuildSettings();
@@ -345,74 +332,6 @@ watch(
 
 const { effectiveReduceMotion } = useReduceMotion();
 
-const isModerationSection = computed(() => section.value.startsWith("moderation"));
-
-function sectionItem(slug: string, item: Omit<NavigationMenuItem, "active" | "onSelect">) {
-	return {
-		...item,
-		active: section.value === slug,
-		onSelect: () => {
-			open.value = false;
-			goToSection(slug);
-		},
-	} satisfies NavigationMenuItem;
-}
-
-const items = computed<NavigationMenuItem[][]>(() => [
-	[
-		{
-			label: ts("dashboard.nav_groups.management"),
-			type: "label",
-		},
-		sectionItem("", { icon: "heroicons:home", label: ts("dashboard.nav.home") }),
-		sectionItem("modules", { icon: "lucide:layout-grid", label: ts("dashboard.nav.modules") }),
-		{
-			...sectionItem("moderation", {
-				icon: "lucide:shield",
-				label: ts("dashboard.nav.moderation"),
-			}),
-			active: isModerationSection.value,
-			defaultOpen: isModerationSection.value,
-			children: [
-				sectionItem("moderation/word", { label: ts("dashboard.nav.bad_words") }),
-				sectionItem("moderation/capitals", { label: ts("dashboard.nav.capitals") }),
-				sectionItem("moderation/invites", { label: ts("dashboard.nav.invites") }),
-				sectionItem("moderation/links", { label: ts("dashboard.nav.links") }),
-				sectionItem("moderation/messages", {
-					label: ts("dashboard.nav.message_duplication"),
-				}),
-				sectionItem("moderation/lines", { label: ts("dashboard.nav.line_spam") }),
-				sectionItem("moderation/reactions", { label: ts("dashboard.nav.reactions") }),
-			],
-		},
-		sectionItem("channels", { icon: "heroicons:hashtag", label: ts("dashboard.nav.channels") }),
-		sectionItem("roles", { icon: "heroicons:user-group", label: ts("dashboard.nav.roles") }),
-		sectionItem("events", { icon: "heroicons:bell", label: ts("dashboard.nav.events") }),
-		sectionItem("commands", {
-			icon: "heroicons:command-line",
-			label: ts("dashboard.nav.commands"),
-		}),
-		sectionItem("logs", { icon: "lucide:logs", label: ts("dashboard.nav.logs") }),
-	],
-	[
-		{
-			label: ts("dashboard.nav_groups.resources"),
-			type: "label",
-		},
-		{
-			icon: "lucide:terminal",
-			label: ts("nav.commands"),
-			to: "/commands",
-		},
-		{
-			icon: "lucide:life-buoy",
-			label: ts("dashboard.nav.support_server"),
-			target: "_blank",
-			to: "https://join.wolfstar.rocks",
-		},
-	],
-]);
-
 const isReadyToRender = computed(
 	() =>
 		!nuxtError.value &&
@@ -464,7 +383,15 @@ function discardAndLeave() {
 	confirmLeave();
 }
 
-const guildIconSrc = computed(() => resolveGuildIconSrc(guildData.value, { size: 64 }));
+function selectFromDrawer(id: string) {
+	closeDrawer();
+	goToGuild(id);
+}
+
+function browseFromDrawer() {
+	closeDrawer();
+	goToGuild(null);
+}
 
 async function submitChanges() {
 	// The admin can confirm a guild switch while this PATCH is in flight, so the
@@ -546,3 +473,73 @@ watch(guildId, (newGuildId, oldGuildId) => {
 	}
 });
 </script>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+/*
+ * Surfaces of the dashboard, from the rail (darkest) over the sidebar and cards
+ * to the page. In the light theme the cards and the sidebar are as bright as the
+ * page and only the rail is tinted. Components inside read these variables.
+ */
+.console,
+.console-drawer {
+	--console-main: var(--ink-600);
+	--console-surface: var(--ink-700);
+	--console-rail: var(--ink-800);
+	--console-input: var(--ink-500);
+	--console-border: var(--ink-400);
+	--console-hover: oklch(100% 0 0 / 0.04);
+	--console-active: oklch(100% 0 0 / 0.08);
+	--console-shadow-low:
+		0 1px 0 oklch(0% 0 0 / 0.2), 0 1.5px 0 oklch(0% 0 0 / 0.05), 0 2px 0 oklch(0% 0 0 / 0.05);
+
+	color: var(--ui-text);
+}
+
+.console {
+	@apply flex h-dvh min-h-0 w-full overflow-hidden;
+	background-color: var(--console-main);
+}
+
+/* The drawer is portaled out of `.console`, so it carries the tokens itself. */
+.console-drawer {
+	@apply flex h-full w-full overflow-hidden;
+	background-color: var(--console-surface);
+}
+
+@variant theme-light {
+	.console,
+	.console-drawer {
+		--console-main: var(--color-base-100);
+		--console-surface: var(--color-base-100);
+		--console-rail: oklch(92.1% 0.005 258.3);
+		--console-input: oklch(94.5% 0.003 247.9);
+		--console-border: oklch(91% 0.006 275);
+		--console-hover: oklch(0% 0 0 / 0.03);
+		--console-active: oklch(0% 0 0 / 0.07);
+		--console-shadow-low: 0 1px 2px oklch(0% 0 0 / 0.08);
+	}
+}
+
+.console-sidebar {
+	@apply hidden h-full w-49 shrink-0 sm:block md:w-53 lg:w-59;
+	background-color: var(--console-surface);
+	border-right: 1px solid var(--home-border-subtle);
+}
+
+.console-main {
+	@apply flex h-full min-h-0 min-w-0 flex-1 flex-col;
+	background-color: var(--console-main);
+}
+
+.console-savebar {
+	@apply z-10 flex shrink-0 flex-wrap items-center justify-end gap-2 px-4 py-3 sm:px-5.5;
+	background-color: var(--console-rail);
+	border-top: 1px solid var(--home-border-subtle);
+}
+
+.console-savebar-status {
+	@apply mr-auto inline-flex items-center gap-2 text-sm font-semibold;
+}
+</style>

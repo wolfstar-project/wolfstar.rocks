@@ -210,16 +210,23 @@ describe("general guild settings", () => {
 
 			await nextTick();
 
-			const html = wrapper.html();
-			expect(html).toContain("Members");
-			expect(html).toContain("42");
-			expect(html).toContain("Categories");
-			expect(html).toContain("1");
-			expect(html).toContain("Text Channels");
-			expect(html).toContain("2");
-			expect(html).toContain("Voice Channels");
-			expect(html).toContain("1");
-			expect(html).toContain("Roles");
+			const stats = wrapper.findAll("dl > div").map((card) => ({
+				label: card.find("dt").text(),
+				value: card.find("dd").text(),
+			}));
+
+			expect(stats.map((stat) => stat.label)).toStrictEqual([
+				"Members",
+				"Channels",
+				"Roles",
+				"Cases",
+				"Commands",
+			]);
+			expect(stats.find((stat) => stat.label === "Members")?.value).toBe("42");
+			// Three channels besides the category, which has its own note.
+			expect(stats.find((stat) => stat.label === "Channels")?.value).toBe("3");
+			expect(wrapper.text()).toContain("1 categories");
+			expect(stats.find((stat) => stat.label === "Roles")?.value).toBe("2");
 		});
 
 		it("calls copy with server id and toast options when Copy Server ID is clicked", async () => {

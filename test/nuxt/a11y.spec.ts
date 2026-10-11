@@ -40,6 +40,9 @@ import {
 
 	// #endregion
 
+	DashboardBottomNav,
+	DashboardPageHeader,
+	DashboardSidebar,
 	ErrorPage,
 	OauthStatusPanel,
 	GuildServerRail,
@@ -562,6 +565,36 @@ describe("component accessibility audits", () => {
 						createMockOauthFlattenedGuild({ id: "222222222222222222", name: "Beta" }),
 					],
 				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("DashboardSidebar", () => {
+		it("should have no accessibility violations", async () => {
+			useActiveGuild().selectGuild("123456789012345678");
+			useGuildData().setGuildData(
+				createMockOauthFlattenedGuild({ id: "123456789012345678", name: "WolfStar HQ" }),
+			);
+			const component = await mountSuspended(DashboardSidebar);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("DashboardBottomNav", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(DashboardBottomNav);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("DashboardPageHeader", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(DashboardPageHeader, {
+				props: { description: "Turn modules on or off.", title: "Modules" },
 			});
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);

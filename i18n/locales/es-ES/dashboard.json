@@ -30,14 +30,28 @@
 			"message_duplication": "Duplicación de mensajes",
 			"moderation": "Moderación",
 			"modules": "",
+			"overview": "",
 			"reactions": "Reacciones",
 			"roles": "Roles",
 			"support_server": ""
 		},
+		"nav_aria": "",
+		"nav_current_group": "",
 		"nav_groups": {
 			"management": "",
+			"modules": "",
+			"records": "",
 			"resources": ""
 		},
+		"nav_menu": "",
+		"nav_menu_description": "",
+		"nav_module_off": "",
+		"nav_pin": "",
+		"nav_pinned": "",
+		"nav_recent": "",
+		"nav_sections_aria": "",
+		"nav_unpin": "",
+		"nav_you": "",
 		"picker": {
 			"description": "",
 			"empty": "",
@@ -53,10 +67,13 @@
 		"unauthorized_description": "Tu sesión ha caducado o no estás autorizado. Por favor, vuelve a iniciar sesión para acceder al panel de control.",
 		"unauthorized_title": "No autorizado",
 		"unsaved_description": "Tienes cambios sin guardar que se perderán si abandonas esta página.",
+		"unsaved_short": "",
 		"unsaved_title": "Cambios sin guardar",
 		"update_failed_fix": "Por favor, inténtalo más tarde. Si el problema persiste, contacta con soporte.",
 		"update_failed_message": "Error al actualizar la configuración del servidor",
-		"update_failed_why": "Algo salió mal al guardar tu configuración."
+		"update_failed_why": "Algo salió mal al guardar tu configuración.",
+		"user_preferences": "",
+		"user_sign_out": ""
 	},
 	"guild_logs": {
 		"all_actions": "Todas las acciones",
@@ -83,6 +100,8 @@
 		"no_moderation_cases": "No moderation cases found",
 		"no_reason": "No se proporcionó motivo",
 		"no_warnings": "No warnings found",
+		"page_subtitle": "",
+		"page_title": "",
 		"refresh_activity": "Actualizar registro de actividad",
 		"refresh_audit": "Actualizar registro de auditoría",
 		"refresh_command": "Actualizar registro de comandos",

@@ -1,13 +1,13 @@
 <template>
 	<section
-		class="rounded-md border border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6"
+		class="console-card flex flex-col"
 		:aria-label="ts('guild_settings.modules.summary_aria')"
 	>
-		<div class="flex items-center justify-between gap-3">
-			<h2 class="text-xl font-semibold text-base-content">
+		<div class="mb-2 flex items-center justify-between gap-3">
+			<h3 class="text-base font-semibold">
 				{{ ts("guild_settings.modules.title") }}
-			</h2>
-			<UBadge color="primary" variant="subtle">
+			</h3>
+			<UBadge color="primary" variant="soft" size="md" class="font-semibold">
 				{{
 					ts("guild_settings.modules.enabled_count", {
 						enabled: enabledCount,
@@ -16,20 +16,16 @@
 				}}
 			</UBadge>
 		</div>
-		<ul class="mt-2 divide-y divide-base-300/60">
+		<ul>
 			<li v-for="module in modules" :key="module.key">
-				<button
-					type="button"
-					class="flex min-h-10 w-full cursor-pointer items-center gap-3 py-2 text-left text-sm transition-colors hover:text-base-content"
-					@click="goToSection(module.section)"
-				>
+				<button type="button" class="module-row" @click="goToSection(module.section)">
 					<span
 						class="size-2 shrink-0 rounded-full"
-						:class="module.enabled ? 'bg-success' : 'bg-base-content/30'"
+						:class="module.enabled ? 'bg-success' : 'bg-base-content/40'"
 						aria-hidden="true"
 					></span>
-					<span class="flex-1 text-base-content/80">{{ ts(module.labelKey) }}</span>
-					<span class="text-xs text-base-content/60">
+					<span class="flex-1 text-sm text-toned">{{ ts(module.labelKey) }}</span>
+					<span class="text-xs text-muted">
 						{{
 							module.enabled
 								? ts("guild_settings.modules.on")
@@ -39,17 +35,6 @@
 				</button>
 			</li>
 		</ul>
-		<div class="mt-3 flex justify-end">
-			<UButton
-				color="neutral"
-				variant="ghost"
-				size="sm"
-				trailing-icon="heroicons:chevron-right-20-solid"
-				@click="goToSection('modules')"
-			>
-				{{ ts("guild_settings.modules.manage") }}
-			</UButton>
-		</div>
 	</section>
 </template>
 
@@ -75,3 +60,21 @@ const modules = computed(() =>
 	})),
 );
 </script>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+.module-row {
+	@apply flex min-h-9 w-full cursor-pointer items-center gap-2.5 border-0 bg-transparent py-2 text-left;
+	border-top: 1px solid var(--home-border-subtle);
+}
+
+.module-row:hover {
+	background-color: var(--console-hover);
+}
+
+.module-row:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: -2px;
+}
+</style>

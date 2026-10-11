@@ -1,5 +1,25 @@
 <template>
-	<UModal :title="formattedLabel" :description>
+	<div v-if="layout === 'row'" class="select-row">
+		<label :for="rowId" class="select-row-label" :title="tooltipTitle">{{
+			formattedLabel
+		}}</label>
+		<USelectMenu
+			:id="rowId"
+			v-model="selectedValues"
+			:items
+			:disabled
+			multiple
+			value-key="value"
+			label-key="label"
+			:search-input
+			:placeholder="emptyLabel ?? 'None'"
+			:aria-describedby="tooltipTitle ? `${rowId}-help` : undefined"
+			class="select-row-control"
+			:ui="{ base: 'bg-(--console-input) text-[0.8125rem] ring-(--console-border)' }"
+		/>
+		<span v-if="tooltipTitle" :id="`${rowId}-help`" class="sr-only">{{ tooltipTitle }}</span>
+	</div>
+	<UModal v-else :title="formattedLabel" :description>
 		<UButton :label="buttonLabel" :disabled variant="soft" />
 		<template #body>
 			<SelectFieldWrapper :field-name :tooltip-title>
@@ -71,6 +91,10 @@ interface SelectManyProps {
 	imageInName?: string;
 	/** Disable the field */
 	disabled?: boolean;
+	/** `row` shows the label with an inline multi-select beside it. */
+	layout?: "button" | "row";
+	/** Text shown when nothing is selected in the `row` layout */
+	emptyLabel?: string;
 }
 
 interface Emits {
@@ -91,6 +115,8 @@ const {
 	tooltipTitle,
 	description,
 	imageInName,
+	layout = "button",
+	emptyLabel,
 } = defineProps<SelectManyProps>();
 
 const emit = defineEmits<Emits>();
@@ -118,6 +144,7 @@ const placeholder = computed(() =>
 		: (name ??
 			(selectedValues.value.length ? `${selectedValues.value.length} selected` : "None")),
 );
+const rowId = useId();
 const fieldName = computed(() => label.trim().toLowerCase().replace(/\s+/g, "-"));
 const searchInput = computed(() => (values.length > 10 ? { placeholder: "Search..." } : false));
 
@@ -137,3 +164,19 @@ function clearSelected() {
 	selectedValues.value = [];
 }
 </script>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+.select-row {
+	@apply flex min-h-9 items-center justify-between gap-4;
+}
+
+.select-row-label {
+	@apply min-w-0 text-sm;
+}
+
+.select-row-control {
+	@apply w-44 shrink-0 sm:w-52;
+}
+</style>

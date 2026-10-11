@@ -1,72 +1,63 @@
 <template>
-	<GuildSettingsSection
+	<DashboardPageHeader
 		:title="ts('guild_settings.roles.title')"
 		:description="ts('guild_settings.roles.subtitle')"
+	/>
+
+	<GuildSettingsForm
+		:state="state"
+		:schema="schema"
+		:map-to-guild-data="mapToGuildData"
+		:aria-label="ts('guild_settings.roles.form_aria')"
+		class="space-y-4"
+		@error="onError"
 	>
-		<GuildSettingsForm
-			:state="state"
-			:schema="schema"
-			:map-to-guild-data="mapToGuildData"
-			:aria-label="ts('guild_settings.roles.form_aria')"
-			class="space-y-8"
-			@error="onError"
-		>
-			<div class="space-y-4">
-				<div class="flex items-center gap-2">
-					<UIcon
-						name="heroicons:adjustments-horizontal"
-						class="size-5 text-primary"
-						aria-hidden="true"
-					/>
-					<h3 class="text-lg font-semibold text-base-content">
-						{{ ts("guild_settings.roles.general_options") }}
-					</h3>
+		<div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
+			<section
+				v-for="group in roleGroups"
+				:key="group.id"
+				class="console-card"
+				:aria-labelledby="`roles-${group.id}`"
+			>
+				<h3 :id="`roles-${group.id}`" class="mb-3 console-label">{{ group.title }}</h3>
+				<div class="space-y-2">
+					<template v-for="roleConfig in group.roles" :key="roleConfig.key">
+						<SelectRoles
+							v-if="roleConfig.many"
+							v-model="state[roleConfig.key]"
+							layout="row"
+							:label="translateEntry(roleConfig, 'name')"
+							:guild="guildData"
+							:tooltip-title="translateEntry(roleConfig, 'description')"
+						/>
+						<SelectRole
+							v-else
+							v-model="state[roleConfig.key]"
+							layout="row"
+							:empty-label="ts('guild_settings.roles.not_set')"
+							:label="translateEntry(roleConfig, 'name')"
+							:guild="guildData"
+							:tooltip-title="translateEntry(roleConfig, 'description')"
+						/>
+					</template>
 				</div>
+			</section>
+		</div>
 
-				<div>
-					<GuildSettingsToggleRow
-						v-for="config in ConfigurableRoleToggles"
-						:key="config.key"
-						v-model="state[config.key]"
-						:name="config.key"
-						:title="translateEntry(config, 'name')"
-						:description="translateEntry(config, 'description')"
-					/>
-				</div>
-			</div>
-
-			<template v-for="group in roleGroups" :key="group.id">
-				<Separator />
-
-				<div class="space-y-4">
-					<div class="flex items-center gap-2">
-						<UIcon :name="group.icon" class="size-5 text-primary" aria-hidden="true" />
-						<h3 class="text-lg font-semibold text-base-content">{{ group.title }}</h3>
-					</div>
-					<p class="text-sm text-base-content/70">{{ group.help }}</p>
-
-					<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-						<template v-for="roleConfig in group.roles" :key="roleConfig.key">
-							<SelectRoles
-								v-if="roleConfig.many"
-								v-model="state[roleConfig.key]"
-								:label="translateEntry(roleConfig, 'name')"
-								:guild="guildData"
-								:tooltip-title="translateEntry(roleConfig, 'description')"
-							/>
-							<SelectRole
-								v-else
-								v-model="state[roleConfig.key]"
-								:label="translateEntry(roleConfig, 'name')"
-								:guild="guildData"
-								:tooltip-title="translateEntry(roleConfig, 'description')"
-							/>
-						</template>
-					</div>
-				</div>
-			</template>
-		</GuildSettingsForm>
-	</GuildSettingsSection>
+		<section class="console-card" aria-labelledby="roles-behaviour">
+			<h3 id="roles-behaviour" class="mb-1 console-label">
+				{{ ts("guild_settings.roles.general_options") }}
+			</h3>
+			<GuildSettingsToggleRow
+				v-for="config in ConfigurableRoleToggles"
+				:key="config.key"
+				v-model="state[config.key]"
+				:name="config.key"
+				:title="translateEntry(config, 'name')"
+				:description="translateEntry(config, 'description')"
+			/>
+		</section>
+	</GuildSettingsForm>
 </template>
 
 <script setup lang="ts">
@@ -86,20 +77,27 @@ const { mapToGuildData, onError, schema, state } = useSettingsForm({
 	toggles: ConfigurableRoleToggles.map((entry) => entry.key),
 });
 
-const roleGroups = computed(() => [
+// The cards follow how the bot uses the roles: who is given what on join, who
+// counts as staff, what moderation hands out and the roles a restriction sets.
+const ROLE_GROUPS = [
 	{
-		id: "standard",
-		icon: "heroicons:user-group",
-		title: ts("guild_settings.roles.configurable"),
-		help: ts("guild_settings.roles.configurable_help"),
-		roles: ConfigurableRoles.filter((role) => role.group === "standard"),
+		id: "join",
+		keys: ["rolesInitial", "rolesInitialHumans", "rolesInitialRobots"],
 	},
-	{
-		id: "restricted",
-		icon: "heroicons:shield-check",
-		title: ts("guild_settings.roles.restricted"),
-		help: ts("guild_settings.roles.restricted_help"),
-		roles: ConfigurableRoles.filter((role) => role.group === "restricted"),
-	},
-]);
+	{ id: "staff", keys: ["rolesAdmin", "rolesModerator"] },
+	{ id: "moderation", keys: ["rolesMuted", "rolesPublic"] },
+	{ id: "restrictions", group: "restricted" },
+] as const;
+
+const roleGroups = computed(() =>
+	ROLE_GROUPS.map((group) => ({
+		id: group.id,
+		roles: ConfigurableRoles.filter((role) =>
+			"keys" in group
+				? (group.keys as readonly string[]).includes(role.key)
+				: role.group === group.group,
+		),
+		title: ts(`guild_settings.roles.groups.${group.id}`),
+	})).filter((group) => group.roles.length > 0),
+);
 </script>

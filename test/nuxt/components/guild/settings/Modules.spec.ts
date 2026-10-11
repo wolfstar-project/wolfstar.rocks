@@ -65,16 +65,17 @@ describe("modules guild settings", () => {
 		}
 	});
 
-	it("renders a toggle and a configure button for every module", async () => {
+	it("renders a toggle for every module and a configure button for the enabled ones", async () => {
 		const wrapper = await mountSuspended(Modules);
 
 		await nextTick();
 
-		const configureButtons = wrapper
-			.findAll("button")
-			.filter((button) => button.text().includes("Configure"));
+		const buttonsLabelled = (label: string) =>
+			wrapper.findAll("button").filter((button) => button.text().includes(label));
 
-		expect(configureButtons).toHaveLength(GUILD_MODULES.length);
+		// Moderation and Roles are on; a module that is off has to be enabled first.
+		expect(buttonsLabelled("Configure")).toHaveLength(2);
+		expect(buttonsLabelled("Enable first")).toHaveLength(GUILD_MODULES.length - 2);
 		expect(wrapper.findAll('[aria-label^="Toggle "]')).toHaveLength(GUILD_MODULES.length);
 	});
 
@@ -86,10 +87,10 @@ describe("modules guild settings", () => {
 		const configureButtons = wrapper
 			.findAll("button")
 			.filter((button) => button.text().includes("Configure"));
-		await configureButtons[1]!.trigger("click");
+		await configureButtons[0]!.trigger("click");
 		await nextTick();
 
-		expect(useActiveGuild().section.value).toBe(GUILD_MODULES[1]!.section);
+		expect(useActiveGuild().section.value).toBe("moderation");
 	});
 
 	it("initializes state and the enabled count from guildSettings", async () => {

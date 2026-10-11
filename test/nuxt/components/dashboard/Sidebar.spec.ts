@@ -46,14 +46,16 @@ describe("DashboardSidebar", () => {
 		useGuildData().setGuildData(
 			createMockOauthFlattenedGuild({ id: GUILD_ID, name: "WolfStar HQ" }),
 		);
-		useGuildSettings().setGuildSettings(createMockGuildData(GUILD_ID));
+		useGuildSettings().setGuildSettings(
+			createMockGuildData(GUILD_ID, { modulesRoles: false, modulesAutomod: true }),
+		);
 	});
 
 	it("names the server and lists every section", async () => {
 		const wrapper = await mountSidebar();
 
 		expect(wrapper.text()).toContain("WolfStar HQ");
-		for (const label of ["Overview", "Modules", "Moderation", "Logs"]) {
+		for (const label of ["Overview", "Modules", "Auto-moderation", "Moderation", "Logs"]) {
 			expect(rowFor(wrapper, label).exists()).toBe(true);
 		}
 	});
@@ -65,6 +67,14 @@ describe("DashboardSidebar", () => {
 		const current = wrapper.findAll('[aria-current="page"]');
 		expect(current).toHaveLength(1);
 		expect(current[0]!.text()).toContain("Moderation");
+	});
+
+	it("counts the enabled modules and flags a module that is off", async () => {
+		const wrapper = await mountSidebar();
+
+		expect(rowFor(wrapper, "Modules").find(".dashboard-nav-count").text()).toBe("4");
+		expect(rowFor(wrapper, "Roles").find('[title="Module is off"]').exists()).toBe(true);
+		expect(rowFor(wrapper, "Moderation").find('[title="Module is off"]').exists()).toBe(false);
 	});
 
 	it("opens a section and tells a drawer to close", async () => {
@@ -84,7 +94,7 @@ describe("DashboardSidebar", () => {
 		const modulesGroup = wrapper.findAll(".dashboard-nav-row").map((row) => row.text());
 		expect(wrapper.text()).toContain("Pinned");
 		expect(modulesGroup.findIndex((text) => text.startsWith("Commands"))).toBeLessThan(
-			modulesGroup.findIndex((text) => text.startsWith("Moderation")),
+			modulesGroup.findIndex((text) => text.startsWith("Auto-moderation")),
 		);
 		expect(
 			rowFor(wrapper, "Commands").find(".dashboard-nav-pin").attributes("aria-pressed"),

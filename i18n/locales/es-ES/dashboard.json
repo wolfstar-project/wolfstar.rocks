@@ -18,6 +18,7 @@
 		"loading_title": "Cargando panel de control",
 		"nav": {
 			"automod": "",
+			"automod_short": "",
 			"channels": "Canales",
 			"commands": "Comandos",
 			"home": "Inicio",

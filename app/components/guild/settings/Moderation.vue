@@ -1,28 +1,30 @@
 <template>
-	<GuildSettingsSection
+	<DashboardPageHeader
 		:title="ts('guild_settings.moderation.title')"
 		:description="ts('guild_settings.moderation.subtitle')"
+	/>
+
+	<GuildSettingsForm
+		:schema="schema"
+		:state="state"
+		:map-to-guild-data="mapToGuildData"
+		:aria-label="ts('guild_settings.moderation.form_aria')"
+		@error="onError"
 	>
-		<GuildSettingsForm
-			:schema="schema"
-			:state="state"
-			:map-to-guild-data="mapToGuildData"
-			:aria-label="ts('guild_settings.moderation.form_aria')"
-			class="space-y-6"
-			@error="onError"
-		>
-			<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+		<section class="console-card">
+			<div class="space-y-3">
 				<SelectChannel
 					v-for="config in ConfigurableModerationChannels"
 					:key="config.key"
 					v-model="state[config.key]"
+					layout="row"
 					:guild="guildData"
 					:label="translateEntry(config, 'name')"
 					:tooltip-title="translateEntry(config, 'description')"
 				/>
 			</div>
 
-			<div class="grid grid-cols-1 gap-x-7 md:grid-cols-2">
+			<div class="mt-3">
 				<GuildSettingsToggleRow
 					v-for="config in ConfigurableModerationToggles"
 					:key="config.key"
@@ -32,8 +34,8 @@
 					:description="translateEntry(config, 'description')"
 				/>
 			</div>
-		</GuildSettingsForm>
-	</GuildSettingsSection>
+		</section>
+	</GuildSettingsForm>
 </template>
 
 <script setup lang="ts">

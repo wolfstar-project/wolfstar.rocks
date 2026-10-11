@@ -1,9 +1,9 @@
 <template>
-	<UFormField :name="name" class="border-t border-base-300/60">
+	<UFormField :name="name" class="border-t border-(--home-border-subtle) first:border-t-0">
 		<div class="flex items-center justify-between gap-4 py-3">
 			<div class="min-w-0">
-				<p class="text-sm font-semibold text-base-content">{{ title }}</p>
-				<p class="mt-0.5 text-xs leading-relaxed text-base-content/70">
+				<p class="text-sm font-bold">{{ title }}</p>
+				<p class="mt-0.5 text-xs leading-relaxed text-muted">
 					{{ description }}
 				</p>
 			</div>

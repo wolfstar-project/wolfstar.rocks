@@ -18,6 +18,7 @@
 		"loading_title": "Caricamento dashboard",
 		"nav": {
 			"automod": "",
+			"automod_short": "",
 			"channels": "Canali",
 			"commands": "Comandi",
 			"home": "Home",

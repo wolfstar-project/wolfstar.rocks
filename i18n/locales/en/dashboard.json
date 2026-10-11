@@ -18,6 +18,7 @@
 		"loading_title": "Loading Dashboard",
 		"nav": {
 			"automod": "Auto-moderation",
+			"automod_short": "AutoMod",
 			"channels": "Channels",
 			"commands": "Commands",
 			"home": "Home",

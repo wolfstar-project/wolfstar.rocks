@@ -1,21 +1,50 @@
 <template>
-	<div>
-		<div v-for="category in categories" :key="category">
-			<CommandSubCategory
-				:commands="commands"
-				:search-value="searchValue"
-				:category-name="category"
-				:loading
+	<UCollapsible
+		:open
+		class="overflow-hidden rounded-2xl border border-(--home-border-subtle) bg-base-100"
+		@update:open="(value) => emit('update:open', value)"
+	>
+		<button
+			type="button"
+			class="flex w-full cursor-pointer items-center justify-between gap-3 px-5 py-4 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
+		>
+			<span class="flex min-w-0 items-center gap-3">
+				<span class="truncate text-[1.0625rem] font-bold text-highlighted">{{ name }}</span>
+				<span
+					class="rounded-full bg-base-content/8 px-2.25 py-0.5 text-xs font-semibold text-muted"
+					:aria-label="tc('marketing.commands.category_count', commands.length)"
+				>
+					{{ commands.length }}
+				</span>
+			</span>
+			<UIcon
+				name="i-heroicons-chevron-down-20-solid"
+				class="size-4.5 shrink-0 text-muted transition-transform duration-200"
+				:class="{ 'rotate-180': open }"
+				aria-hidden="true"
 			/>
-		</div>
-	</div>
+		</button>
+
+		<template #content>
+			<ul class="flex flex-col gap-2 px-4 pt-1 pb-4">
+				<li v-for="command in commands" :key="command.name">
+					<CommandItem :command />
+				</li>
+			</ul>
+		</template>
+	</UCollapsible>
 </template>
 
 <script lang="ts" setup>
-const { commands, searchValue, categories, loading } = defineProps<{
+const { name, commands, open } = defineProps<{
+	name: string;
 	commands: FlattenedCommand[];
-	searchValue: string;
-	categories: string[];
-	loading: boolean;
+	open: boolean;
 }>();
+
+const emit = defineEmits<{
+	"update:open": [open: boolean];
+}>();
+
+const { tc } = useI18n();
 </script>

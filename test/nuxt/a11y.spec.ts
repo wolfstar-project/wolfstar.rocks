@@ -3,6 +3,7 @@ import {
 	AppHeader,
 	AppHeaderAuth,
 	AppLogoMark,
+	AppPreferences,
 
 	// #region Wolfstar components
 	WolfstarCommandsSection,
@@ -34,7 +35,6 @@ import {
 	DiscordChatInputCommandSuggestion,
 	DiscordChatInputCommandMatched,
 	DiscordChatInputCommandSuggestions,
-	ProfileHeader,
 	DiscordAppLauncher,
 	DiscordStringSelectMenu,
 
@@ -728,39 +728,18 @@ describe("component accessibility audits", () => {
 			}
 		});
 
-		it("renders a settings link to /profile with an accessible name for guests", async () => {
+		it("renders a settings button with an accessible name for guests", async () => {
 			const wrapper = await mountSuspended(AppHeaderAuth);
-			const settingsLinks = wrapper.findAll("a[href='/profile']");
-			expect(settingsLinks.length).toBeGreaterThan(0);
-			for (const link of settingsLinks) {
-				expect(link.attributes("aria-label")).toBe("Settings");
-			}
+			const settingsButtons = wrapper.findAll('button[aria-label="Settings"]');
+			expect(settingsButtons.length).toBeGreaterThan(0);
 		});
 	});
 
-	describe("ProfileHeader", () => {
-		it("has no axe-core violations in the guest settings state", async () => {
-			const wrapper = await mountSuspended(ProfileHeader, {
-				props: {
-					user: null,
-					pending: false,
-				},
-			});
+	describe("AppPreferences", () => {
+		it("has no axe-core violations", async () => {
+			const wrapper = await mountSuspended(AppPreferences);
 			const results = await runAxe(wrapper);
 			expect(results.violations).toEqual([]);
-		});
-
-		it("labels the guest section and sign-in CTA accessibly", async () => {
-			const wrapper = await mountSuspended(ProfileHeader, {
-				props: {
-					user: null,
-					pending: false,
-				},
-			});
-			expect(wrapper.get("section").attributes("aria-label")).toBe("Local settings");
-			expect(wrapper.get('a[href="/login?next=/profile"]').attributes("aria-label")).toBe(
-				"Sign in with Discord",
-			);
 		});
 	});
 

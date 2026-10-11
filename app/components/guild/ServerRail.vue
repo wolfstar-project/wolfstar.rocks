@@ -40,14 +40,15 @@
 
 		<span class="guild-rail-divider" aria-hidden="true" />
 
-		<NuxtLink
-			to="/profile"
+		<button
+			type="button"
 			class="guild-rail-add"
 			:aria-label="ts('dashboard.server_rail_all')"
 			:title="ts('dashboard.server_rail_all')"
+			@click="emit('browse')"
 		>
-			<UIcon name="heroicons:plus" class="size-5.5" aria-hidden="true" />
-		</NuxtLink>
+			<UIcon name="ic:round-apps" class="size-5.5" aria-hidden="true" />
+		</button>
 	</nav>
 </template>
 
@@ -57,6 +58,8 @@ import { resolveGuildIconSrc, selectDashboardRailGuilds } from "~/utils/guild-da
 const emit = defineEmits<{
 	/** The admin picked a server to manage. */
 	select: [guildId: string];
+	/** The admin wants the list of every server they can manage. */
+	browse: [];
 }>();
 
 const { currentGuildId, guilds } = defineProps<{

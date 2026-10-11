@@ -42,21 +42,27 @@ describe("AppHeaderAuth", () => {
 		});
 	});
 
-	describe("guest settings link", () => {
-		it("links guests to /profile for local settings", async () => {
+	// `/profile` is deprecated: the local preferences open in a dialog, so a
+	// guest never leaves the page they are on to change the theme or language.
+	describe("guest settings button", () => {
+		it("opens the preferences dialog instead of navigating", async () => {
+			usePreferencesDialog().isOpen.value = false;
 			const wrapper = await mountSuspended(AppHeaderAuth);
-			const settings = wrapper.get('a[aria-label="Settings"]');
-			expect(settings.attributes("href")).toBe("/profile");
+			const settings = wrapper.get('button[aria-label="Settings"]');
 			expect(settings.classes().join(" ")).toContain("hidden");
 			expect(settings.classes().join(" ")).toContain("md:inline-flex");
+			expect(wrapper.find('a[href="/profile"]').exists()).toBe(false);
+
+			await settings.trigger("click");
+
+			expect(usePreferencesDialog().isOpen.value).toBe(true);
 		});
 
-		it("shows the settings link in the mobile drawer", async () => {
+		it("shows the settings button in the mobile drawer", async () => {
 			const wrapper = await mountSuspended(AppHeaderAuth, {
 				props: { mobile: true },
 			});
-			const settings = wrapper.get('a[aria-label="Settings"]');
-			expect(settings.attributes("href")).toBe("/profile");
+			const settings = wrapper.get('button[aria-label="Settings"]');
 			expect(settings.classes().join(" ")).toContain("rounded-lg");
 		});
 	});

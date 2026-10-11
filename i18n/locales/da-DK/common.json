@@ -59,8 +59,8 @@
 	"header": {
 		"add_app": "",
 		"brand": "",
+		"dashboard": "",
 		"home": "",
-		"profile": "",
 		"settings": "",
 		"sign_in": "",
 		"sign_in_discord": "",
@@ -107,7 +107,6 @@
 		"account_menu": "",
 		"avatar_alt": "",
 		"avatar_fallback": "",
-		"profile": "",
 		"report_bug": "",
 		"sign_out": "",
 		"user_menu_for": ""

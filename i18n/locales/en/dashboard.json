@@ -62,7 +62,7 @@
 		"nav_you": "You",
 		"picker": {
 			"description": "Pick the server you want to manage. WolfStar remembers it on this device.",
-			"empty": "No servers you can manage yet. Invite WolfStar to one of your servers from your profile.",
+			"empty": "No servers you can manage yet. You need the Manage Server permission on a server to set WolfStar up there.",
 			"title": "Choose a server"
 		},
 		"reset_changes": "Reset Changes",

@@ -56,10 +56,10 @@ export default defineNuxtConfig({
 			// Aliased to /oauth/login, which immediately hands off to Discord.
 			login: "/login",
 			// Signed-in users who open a guest-only route (the login hand-off).
-			guest: "/profile",
+			guest: "/app",
 			// Fallback landing page after a completed sign-in, used when no safe
 			// `?next=` is present and no explicit onSuccess/callbackURL is given.
-			authenticated: "/profile",
+			authenticated: "/app",
 			logout: "/",
 		},
 		preserveRedirect: true,
@@ -278,14 +278,14 @@ export default defineNuxtConfig({
 		"/oauth/login": {
 			prerender: false,
 			robots: true,
-			auth: { only: "guest", redirectTo: "/profile" },
+			auth: { only: "guest", redirectTo: "/app" },
 		},
 		// `/login` is an alias of `/oauth/login`, but route rules match on the
 		// requested path, so the guest rule has to be repeated here or signed-in
 		// users hitting /login get bounced back to Discord.
 		"/login": {
 			prerender: false,
-			auth: { only: "guest", redirectTo: "/profile" },
+			auth: { only: "guest", redirectTo: "/app" },
 		},
 		// The dashboard is one client-rendered page; the guild it shows is app
 		// state, so nothing about it is prerenderable or worth indexing.
@@ -298,19 +298,10 @@ export default defineNuxtConfig({
 		// Legacy entry points that forward into `/app`: sign-in gated, never indexed.
 		"/guilds/**": { auth: { only: "user", redirectTo: "/login" }, robots: false },
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
-		// /profile hosts local UI settings (theme/locale/motion) for guests and the
-		// Discord account/servers view for signed-in users. Never statically prerender
-		// it (crawlLinks would otherwise reach it via links on prerendered pages).
-		"/profile": {
-			appLayout: "default",
-			prerender: false,
-			robots: true,
-		},
-		"/account": {
-			appLayout: "default",
-			prerender: false,
-			robots: true,
-		},
+		// Deprecated: the page moved into `/app` (server list) and the preferences
+		// dialog (theme/locale/motion). Kept as permanent redirects for old links.
+		"/profile": { redirect: { to: "/app", statusCode: 301 }, prerender: false, robots: false },
+		"/account": { redirect: { to: "/app", statusCode: 301 }, prerender: false, robots: false },
 		"/starly": { appLayout: "default", robots: true },
 
 		// Static pages
@@ -734,7 +725,14 @@ export default defineNuxtConfig({
 	},
 
 	sitemap: {
-		exclude: ["/app", "/oauth/guild", "/oauth/callback", "/guilds/[...id]"],
+		exclude: [
+			"/app",
+			"/profile",
+			"/account",
+			"/oauth/guild",
+			"/oauth/callback",
+			"/guilds/[...id]",
+		],
 		zeroRuntime: true,
 	},
 

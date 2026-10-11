@@ -33,9 +33,6 @@
 		>
 			<UIcon name="heroicons:server" class="size-12 text-base-content/30" />
 			<p class="max-w-md text-base-content/70">{{ ts("dashboard.picker.empty") }}</p>
-			<UButton color="primary" variant="outline" to="/profile">
-				{{ ts("profile.servers") }}
-			</UButton>
 		</div>
 	</section>
 </template>

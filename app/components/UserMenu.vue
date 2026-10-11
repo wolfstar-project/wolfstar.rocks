@@ -39,6 +39,7 @@ const { collapsed } = defineProps<{
 }>();
 
 const { ts } = useI18n();
+const { open: openPreferences } = usePreferencesDialog();
 const { locale, locales, localeLabel, selectLocale } = useAppLocale();
 const isFeedbackOpen = ref(false);
 const { preference: colorModePreference, setColorMode } = useAppColorMode();
@@ -82,9 +83,9 @@ const items = computed<DropdownMenuItem[][]>(() => [
 	],
 	[
 		{
-			icon: "lucide:user",
-			label: ts("user_menu.profile"),
-			to: "/profile",
+			icon: "lucide:sliders-horizontal",
+			label: ts("header.settings"),
+			onSelect: () => openPreferences(),
 		},
 		{
 			icon: "lucide:bug",

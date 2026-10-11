@@ -11,12 +11,21 @@
 		<NuxtLayout>
 			<NuxtPage />
 		</NuxtLayout>
+		<LazyAppPreferencesDialog v-if="preferencesRequested" />
 	</UApp>
 </template>
 
 <script setup lang="ts">
 useSessionRefresh();
 useAuthIdentity();
+
+// The dialog's chunk is only fetched once someone opens it, and it then stays
+// mounted so closing it can animate out.
+const { isOpen: preferencesOpen } = usePreferencesDialog();
+const preferencesRequested = ref(preferencesOpen.value);
+watch(preferencesOpen, (isOpen) => {
+	if (isOpen) preferencesRequested.value = true;
+});
 
 const router = useRouter();
 const appName = ref<"wolfstar" | "staryl">("wolfstar");

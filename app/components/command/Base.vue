@@ -4,7 +4,7 @@
 		:aria-label="ts('marketing.commands.details_label', { command: command.name })"
 	>
 		<section v-if="help.usages?.length" class="flex flex-col gap-2.5">
-			<h3 class="flex items-center gap-2.5 text-[0.9375rem] font-bold text-highlighted">
+			<h3 class="flex items-center gap-2.5 text-[0.9375rem] font-bold text-default">
 				<span
 					class="flex size-6.5 shrink-0 items-center justify-center rounded-full bg-(--home-blurple-soft)"
 				>
@@ -19,7 +19,7 @@
 			<ul class="flex flex-col gap-2">
 				<li v-for="(usage, idx) in help.usages" :key="idx">
 					<code
-						class="block rounded-[0.625rem] border border-(--home-border-subtle) bg-base-content/4 px-4 py-3 font-mono text-[0.8125rem] text-highlighted"
+						class="block rounded-[10px] border border-(--home-border-subtle) bg-base-content/10 px-4 py-3 font-mono text-[0.8125rem] text-default theme-dark:bg-base-200"
 					>
 						<span class="text-primary">WolfStar</span>,
 						<span class="text-primary/80">{{ command.name }}</span>
@@ -30,7 +30,7 @@
 		</section>
 
 		<section v-if="help.extendedHelp" class="flex flex-col gap-2.5">
-			<h3 class="flex items-center gap-2.5 text-[0.9375rem] font-bold text-highlighted">
+			<h3 class="flex items-center gap-2.5 text-[0.9375rem] font-bold text-default">
 				<span
 					class="flex size-6.5 shrink-0 items-center justify-center rounded-full bg-(--home-blurple-soft)"
 				>
@@ -43,20 +43,20 @@
 				{{ ts("marketing.commands.extended_help") }}
 			</h3>
 			<div
-				class="rounded-[0.625rem] border border-(--home-border-subtle) bg-base-content/4 px-4 py-3.5 text-[0.84375rem] leading-[1.7] whitespace-pre-line text-toned"
+				class="rounded-[10px] border border-(--home-border-subtle) bg-base-content/10 px-4 py-3.5 text-[0.84375rem] leading-[1.7] whitespace-pre-line text-toned theme-dark:bg-base-200"
 				v-html="sanitizeAndFormat(resolveMultilineString(help.extendedHelp, true))"
 			></div>
 		</section>
 
 		<section v-if="help.explainedUsage?.length" class="flex flex-col gap-2.5">
-			<h3 class="text-[0.9375rem] font-bold text-highlighted">
+			<h3 class="text-[0.9375rem] font-bold text-default">
 				{{ ts("marketing.commands.explained_usage") }}
 			</h3>
 			<dl class="flex flex-col gap-2.5">
 				<div
 					v-for="([arg, desc], idx) in help.explainedUsage"
 					:key="idx"
-					class="rounded-r-[0.625rem] border-l-3 border-(--home-blurple-soft) bg-primary/6 px-3.5 py-2.5"
+					class="rounded-r-[10px] border-l-3 border-(--home-blurple-soft) bg-primary/6 px-3.5 py-2.5"
 				>
 					<dt class="text-[0.8125rem] font-bold text-primary">{{ arg }}</dt>
 					<dd
@@ -68,14 +68,14 @@
 		</section>
 
 		<section v-if="help.possibleFormats?.length" class="flex flex-col gap-2.5">
-			<h3 class="text-[0.9375rem] font-bold text-highlighted">
+			<h3 class="text-[0.9375rem] font-bold text-default">
 				{{ ts("marketing.commands.possible_formats") }}
 			</h3>
 			<dl class="flex flex-col gap-2.5">
 				<div
 					v-for="([type, example], idx) in help.possibleFormats"
 					:key="idx"
-					class="rounded-r-[0.625rem] border-l-3 border-(--home-blurple-soft) bg-primary/6 px-3.5 py-2.5"
+					class="rounded-r-[10px] border-l-3 border-(--home-blurple-soft) bg-primary/6 px-3.5 py-2.5"
 				>
 					<dt class="text-[0.8125rem] font-bold text-primary">{{ type }}</dt>
 					<dd class="text-[0.8125rem] text-toned">{{ example }}</dd>
@@ -84,14 +84,14 @@
 		</section>
 
 		<section v-if="help.examples?.length" class="flex flex-col gap-2.5">
-			<h3 class="text-[0.9375rem] font-bold text-highlighted">
+			<h3 class="text-[0.9375rem] font-bold text-default">
 				{{ ts("marketing.commands.examples") }}
 			</h3>
 			<ul class="flex flex-col gap-2.5">
 				<li
 					v-for="(example, idx) in help.examples"
 					:key="idx"
-					class="flex items-start gap-2.5 rounded-[0.625rem] border border-(--home-blurple-soft) bg-primary/5 px-3.5 py-3 font-mono text-[0.78125rem] text-highlighted"
+					class="flex items-start gap-2.5 rounded-[10px] border border-(--home-blurple-soft) bg-primary/5 px-3.5 py-3 font-mono text-[0.78125rem] text-default"
 				>
 					<UIcon
 						name="i-heroicons-chevron-right-20-solid"
@@ -108,11 +108,11 @@
 		</section>
 
 		<section v-if="help.reminder" class="flex flex-col gap-2.5">
-			<h3 class="text-[0.9375rem] font-bold text-highlighted">
+			<h3 class="text-[0.9375rem] font-bold text-default">
 				{{ ts("marketing.commands.reminder") }}
 			</h3>
 			<div
-				class="rounded-[0.625rem] border border-(--home-blurple-soft) bg-primary/5 px-4 py-3.5 text-[0.8125rem] leading-relaxed text-toned"
+				class="rounded-[10px] border border-(--home-blurple-soft) bg-primary/5 px-4 py-3.5 text-[0.8125rem] leading-relaxed text-toned"
 				v-html="sanitizeAndFormat(help.reminder)"
 			></div>
 		</section>

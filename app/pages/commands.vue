@@ -1,27 +1,30 @@
 <template>
 	<!-- `relative` lifts the page above the layout's decorative top glow, which otherwise veils the heading. -->
-	<UContainer class="relative px-4 pt-12 pb-20 sm:pt-16 sm:pb-24">
+	<UContainer class="commands-page relative px-4 pt-12 pb-20 sm:pt-16 sm:pb-24">
 		<header class="mx-auto mb-11 flex max-w-[45rem] flex-col gap-5 text-center">
 			<h1
-				class="text-4xl font-bold tracking-(--home-ls-tight) text-highlighted sm:text-[2.75rem]"
+				class="text-4xl font-bold tracking-(--home-ls-tight) text-default sm:text-[2.75rem]"
 			>
 				{{ ts("marketing.commands.title") }}
 			</h1>
 			<p class="text-lg leading-relaxed text-toned">
 				{{ ts("marketing.commands.subtitle_lead") }}
-				<strong class="font-semibold text-highlighted">{{
+				<strong class="font-semibold text-default">{{
 					ts("marketing.commands.subtitle_highlight")
 				}}</strong>
 				{{ ts("marketing.commands.subtitle_tail") }}
 			</p>
 		</header>
 
-		<section aria-labelledby="search-heading" class="mx-auto mb-4 flex max-w-[45rem] gap-2.5">
+		<section
+			aria-labelledby="search-heading"
+			class="mx-auto mb-4 flex max-w-[45rem] items-start gap-2.5"
+		>
 			<h2 id="search-heading" class="sr-only">
 				{{ ts("marketing.commands.search_heading") }}
 			</h2>
 			<div
-				class="flex h-13 min-w-0 flex-1 items-center gap-2.5 rounded-xl border border-base-content/15 bg-base-100 px-4.5 focus-within:border-primary focus-within:shadow-glow"
+				class="flex h-13 min-w-0 flex-1 items-center gap-2.5 rounded-[12px] border border-base-content/17 bg-base-100 px-4.5 focus-within:border-primary focus-within:shadow-glow theme-dark:bg-base-content/8"
 			>
 				<UIcon
 					name="i-heroicons-magnifying-glass"
@@ -31,7 +34,7 @@
 				<input
 					v-model="searchValue"
 					type="search"
-					class="commands-search min-w-0 flex-1 bg-transparent text-[0.9375rem] text-highlighted outline-none placeholder:text-muted"
+					class="commands-search min-w-0 flex-1 bg-transparent text-[0.9375rem] text-default outline-none placeholder:text-muted"
 					:placeholder="ts('marketing.commands.search_placeholder')"
 					:aria-label="ts('marketing.commands.search_label')"
 					:aria-describedby="isSearching ? 'search-results-count' : undefined"
@@ -52,8 +55,8 @@
 				icon="i-heroicons-arrow-path"
 				color="primary"
 				variant="soft"
-				size="xl"
-				class="h-13 rounded-xl px-5"
+				size="lg"
+				class="h-13 rounded-[12px] border border-primary/30 bg-primary/12 px-4 text-[0.9375rem] font-semibold hover:bg-primary/20 sm:px-5.5"
 				:loading
 				:aria-label="ts('marketing.commands.refresh_label')"
 				@click="refresh()"
@@ -74,7 +77,7 @@
 
 		<section
 			aria-labelledby="categories-heading"
-			class="mx-auto mt-8 flex max-w-[56.25rem] flex-col gap-2.5 rounded-2xl border border-(--home-border-subtle) bg-base-content/4 p-4 sm:p-7"
+			class="mx-auto mt-8 flex max-w-[56.25rem] flex-col gap-2.5 rounded-[16px] border border-(--home-border-subtle) bg-base-content/4 p-4 sm:p-7"
 		>
 			<h2 id="categories-heading" class="sr-only">
 				{{ ts("marketing.commands.categories_heading") }}
@@ -86,11 +89,11 @@
 				role="status"
 				:aria-label="ts('marketing.commands.loading')"
 			>
-				<USkeleton v-for="row in LOADING_ROWS" :key="row" class="h-14.5 rounded-2xl" />
+				<USkeleton v-for="row in LOADING_ROWS" :key="row" class="h-14.5 rounded-[16px]" />
 			</div>
 
 			<div v-else-if="commands.length === 0" class="px-6 py-12 text-center" role="status">
-				<p class="mb-1.5 text-base font-bold text-highlighted">
+				<p class="mb-1.5 text-base font-bold text-default">
 					{{ ts("marketing.commands.unavailable_title") }}
 				</p>
 				<p class="mb-5 text-sm text-muted">
@@ -107,7 +110,7 @@
 			</div>
 
 			<div v-else-if="groups.length === 0" class="px-6 py-12 text-center" role="status">
-				<p class="mb-1.5 text-base font-bold text-highlighted">
+				<p class="mb-1.5 text-base font-bold text-default">
 					{{ ts("marketing.commands.empty_title") }}
 				</p>
 				<p class="text-sm text-muted">
@@ -201,6 +204,22 @@ function toggleCategory(name: string, open: boolean) {
 </script>
 
 <style scoped>
+/* The redesign's commands page is one flat surface, so the layout's top glow is
+   switched off here. The element selector outranks the layout's scoped rule. */
+:global(div.app-layout:has(.commands-page)::before) {
+	display: none;
+}
+
+/* The field is one flat surface: its wrapper paints the background and border. Dev
+   tooling ships an unlayered `input { background; padding }` rule that would otherwise
+   win over the utility classes and draw a darker, padded box inside the wrapper. */
+.commands-search {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	box-shadow: none;
+}
+
 /* The field has its own clear button; hide the browser's. */
 .commands-search::-webkit-search-cancel-button {
 	appearance: none;

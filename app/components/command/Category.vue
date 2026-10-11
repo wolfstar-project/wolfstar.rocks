@@ -1,7 +1,7 @@
 <template>
 	<UCollapsible
 		:open
-		class="overflow-hidden rounded-2xl border border-(--home-border-subtle) bg-base-100"
+		class="overflow-hidden rounded-[16px] border border-(--home-border-subtle) bg-base-100 theme-dark:bg-base-content/5"
 		@update:open="(value) => emit('update:open', value)"
 	>
 		<button
@@ -9,7 +9,7 @@
 			class="flex w-full cursor-pointer items-center justify-between gap-3 px-5 py-4 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
 		>
 			<span class="flex min-w-0 items-center gap-3">
-				<span class="truncate text-[1.0625rem] font-bold text-highlighted">{{ name }}</span>
+				<span class="truncate text-[1.0625rem] font-bold text-default">{{ name }}</span>
 				<span
 					class="rounded-full bg-base-content/8 px-2.25 py-0.5 text-xs font-semibold text-muted"
 					:aria-label="tc('marketing.commands.category_count', commands.length)"

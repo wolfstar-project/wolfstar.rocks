@@ -1,13 +1,13 @@
 <template>
 	<UCollapsible
 		v-model:open="open"
-		class="overflow-hidden rounded-xl border border-(--home-border-subtle) bg-base-content/7"
+		class="overflow-hidden rounded-[12px] border border-(--home-border-subtle) bg-base-content/8"
 	>
 		<button
 			type="button"
 			class="flex w-full cursor-pointer items-center gap-4 px-4.5 py-3.5 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
 		>
-			<span class="shrink-0 font-mono text-sm font-bold text-highlighted">
+			<span class="shrink-0 font-mono text-sm font-bold text-default">
 				{{ command.name }}
 			</span>
 			<span class="min-w-0 flex-1 truncate text-[0.8125rem] text-toned">

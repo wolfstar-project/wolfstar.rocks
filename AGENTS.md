@@ -112,6 +112,8 @@ pnpm audit:verify                # Replay and verify the AuditEvent hash chain
 pnpm design:lint                 # Lint .claude/DESIGN.md with designmd
 pnpm skills:install              # Install/refresh skill packages via skilld (--direct --agent codex)
 pnpm skills:list                 # List skill packages skilld currently tracks
+pnpm skills:sync                 # Sync skilld skill packages (plain output)
+pnpm skills:check                # Check skilld skills are in sync without writing
 pnpm storybook                   # Start Storybook dev server (http://localhost:6006)
 pnpm build-storybook             # Build static Storybook output
 pnpm vp run zizmor               # Lint GitHub Actions workflows for security issues (zizmor)

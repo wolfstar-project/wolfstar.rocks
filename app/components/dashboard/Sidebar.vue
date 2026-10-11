@@ -145,7 +145,7 @@
 				icon="ic:round-settings"
 				:aria-label="ts('dashboard.user_preferences')"
 				:title="ts('dashboard.user_preferences')"
-				to="/profile"
+				@click="openPreferences"
 			/>
 			<UButton
 				color="neutral"
@@ -179,6 +179,7 @@ const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();
 const { goToSection, section } = useDashboardNavigation();
 const { signOut } = useUserSession();
+const { open: openPreferences } = usePreferencesDialog();
 const { isGroupOpen, isPinned, recent, recordVisit, toggleGroup, togglePin } =
 	useDashboardNavPrefs();
 

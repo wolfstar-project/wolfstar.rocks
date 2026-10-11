@@ -17,7 +17,7 @@ describe("DashboardBottomNav", () => {
 		expect(wrapper.findAll("button").map((button) => button.text())).toStrictEqual([
 			"Overview",
 			"Modules",
-			"Moderation",
+			"AutoMod",
 			"Logs",
 			"You",
 		]);
@@ -41,5 +41,16 @@ describe("DashboardBottomNav", () => {
 			.trigger("click");
 
 		expect(useActiveGuild().section.value).toBe("logs");
+	});
+
+	it("opens the preferences from the last tab", async () => {
+		const wrapper = await mountSuspended(DashboardBottomNav);
+
+		await wrapper
+			.findAll("button")
+			.find((button) => button.text() === "You")!
+			.trigger("click");
+
+		expect(usePreferencesDialog().isOpen.value).toBe(true);
 	});
 });

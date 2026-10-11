@@ -184,8 +184,11 @@ const openMenu = ref("");
 	width: 100%;
 	border-radius: 0;
 	border-bottom: 1px solid var(--home-border-subtle);
-	background: color-mix(in srgb, var(--ui-bg) 88%, transparent);
-	backdrop-filter: blur(12px);
+	/* Solid, and the same surface as the page under it: the redesign's navbar is
+	   one flat colour with the home page, not a translucent bar. `UHeader` ships
+	   a see-through background with a blur, so both are overridden. */
+	background-color: var(--color-base-100);
+	backdrop-filter: none;
 }
 
 /* The dropdown chrome lives on the viewport so the panel below can size itself;

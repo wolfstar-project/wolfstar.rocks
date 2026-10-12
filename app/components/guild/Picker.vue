@@ -5,7 +5,7 @@
 	>
 		<div>
 			<h2 class="text-2xl font-bold text-base-content">{{ ts("dashboard.picker.title") }}</h2>
-			<p class="mt-1 text-base-content/60">{{ ts("dashboard.picker.description") }}</p>
+			<p class="mt-1 text-toned">{{ ts("dashboard.picker.description") }}</p>
 		</div>
 
 		<div

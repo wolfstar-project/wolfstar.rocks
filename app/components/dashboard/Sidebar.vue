@@ -1,6 +1,6 @@
 <template>
 	<div class="dashboard-sidebar">
-		<header class="dashboard-sidebar-header">
+		<div class="dashboard-sidebar-header">
 			<template v-if="guildData">
 				<UAvatar
 					:src="guildIconSrc"
@@ -16,7 +16,7 @@
 				<USkeleton class="size-7 shrink-0 rounded-full" />
 				<USkeleton class="h-4 w-28 rounded" />
 			</template>
-		</header>
+		</div>
 
 		<nav
 			class="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto px-2 py-2.5"

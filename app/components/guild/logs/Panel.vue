@@ -10,7 +10,11 @@
 		variant="link"
 		:unmount-on-hide="false"
 		class="w-full gap-0"
-		:ui="{ list: 'justify-start border-b border-(--home-border-subtle)', content: 'pt-4' }"
+		:ui="{
+			list: 'justify-start border-b border-(--home-border-subtle)',
+			trigger: 'data-[state=active]:text-highlighted',
+			content: 'pt-4',
+		}"
 	>
 		<template #content="{ item }">
 			<div class="logs-card console-card p-0!">

@@ -1,5 +1,5 @@
 <template>
-	<div class="flex min-h-0 flex-1 flex-col">
+	<main class="flex min-h-0 flex-1 flex-col">
 		<header class="console-header">
 			<UButton
 				class="sm:hidden"
@@ -42,8 +42,7 @@
 						:is="renderComponent"
 						v-else
 						:key="`${activeGuildId}:${section}`"
-						:commands="commands"
-						:languages="languages"
+						v-bind="sectionProps"
 					/>
 				</div>
 				<template #fallback>
@@ -56,7 +55,7 @@
 				</template>
 			</ClientOnly>
 		</div>
-	</div>
+	</main>
 </template>
 
 <script setup lang="ts">
@@ -130,6 +129,14 @@ const sectionLabel = computed(() => {
 	const item = findDashboardNavItem(section.value);
 	return ts(item?.labelKey ?? "dashboard.nav.overview");
 });
+// Each section declares only the data it reads, so it is handed only that.
+const sectionProps = computed(() => {
+	if (renderComponent.value === defaultComponent) {
+		return { languages: languages.value };
+	}
+	return section.value === "commands" ? { commands: commands.value } : {};
+});
+
 const navbarTitle = computed(() =>
 	activeGuildId.value ? sectionLabel.value : ts("dashboard.picker.title"),
 );

@@ -68,8 +68,7 @@ Importing rules replaces the server's rules with the ones in the file.
 
 ::card{type="warning"}
 **This is an alpha.** It may be very unstable, commands and settings can change in breaking ways, and changes are
-announced beforehand in the notices channel on Discord. Do not rely on it for critical moderation. What happens to your
-data is in the main announcement.
+announced beforehand in the notices channel on Discord. Do not rely on it for critical moderation.
 ::
 
 ## Tell us what breaks

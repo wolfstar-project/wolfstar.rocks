@@ -16,6 +16,7 @@
 		</template>
 
 		<div
+			ref="desktopNav"
 			class="hidden gap-0.5 rounded-full border border-(--home-border-subtle) bg-base-200 p-1 lg:inline-flex"
 		>
 			<UNavigationMenu
@@ -39,7 +40,7 @@
 							<NuxtLink
 								:to="feature.to"
 								class="app-navbar-row items-start"
-								@click="openMenu = ''"
+								@click="closeMenu"
 							>
 								<span class="app-navbar-row-icon">
 									<UIcon
@@ -67,7 +68,7 @@
 							<NuxtLink
 								:to="application.to"
 								class="app-navbar-row items-center"
-								@click="openMenu = ''"
+								@click="closeMenu"
 							>
 								<NuxtImg
 									:src="application.avatar.src"
@@ -174,6 +175,18 @@ const { applicationLinks, currentApp, desktopLinks, featureLinks, mobileLinks } 
  * navigation, an in-page `#` target would otherwise stay covered by it.
  */
 const openMenu = ref("");
+const desktopNav = useTemplateRef<HTMLElement>("desktopNav");
+
+/**
+ * Closing unmounts the row that was just activated, which would drop focus to
+ * the page body. Hand it back to the trigger that opened the panel, so the next
+ * Tab continues from the menu instead of restarting past it.
+ */
+function closeMenu() {
+	const trigger = desktopNav.value?.querySelector<HTMLElement>('button[aria-expanded="true"]');
+	openMenu.value = "";
+	void nextTick(() => trigger?.focus({ preventScroll: true }));
+}
 </script>
 
 <style scoped>

@@ -72,14 +72,14 @@ export function useHeader() {
 	const commandsLink = computed<NavigationMenuItem>(() => ({
 		label: ts("nav.commands"),
 		to: "/commands",
-		// No dropdown caret, so it keeps even padding where the groups leave room for one.
-		ui: { link: "px-4" },
 	}));
 
 	const desktopLinks = computed<NavigationMenuItem[]>(() => [
 		featuresGroup.value,
 		applicationsGroup.value,
-		commandsLink.value,
+		// No dropdown caret, so it keeps even padding where the groups leave room for
+		// one. Desktop only: the mobile menu rows share one padding.
+		{ ...commandsLink.value, ui: { link: "px-4" } },
 	]);
 
 	const mobileLinks = computed<NavigationMenuItem[]>(() => [

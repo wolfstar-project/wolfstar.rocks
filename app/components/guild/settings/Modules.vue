@@ -78,6 +78,44 @@
 					</UButton>
 				</div>
 			</UFormField>
+
+			<section
+				v-for="module in announcedModules"
+				:key="module.slug"
+				class="console-card flex flex-col"
+				:aria-label="ts(module.labelKey)"
+			>
+				<div class="flex items-start justify-between gap-3">
+					<span
+						class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-base-content/8 text-muted"
+						aria-hidden="true"
+					>
+						<UIcon :name="module.icon" class="size-5.5" />
+					</span>
+					<UBadge color="neutral" variant="subtle" class="font-semibold">
+						{{ ts("dashboard.coming_soon.badge") }}
+					</UBadge>
+				</div>
+				<div class="mt-3 min-w-0 flex-1 opacity-60">
+					<p class="text-base font-bold">{{ ts(module.labelKey) }}</p>
+					<p
+						v-if="module.descriptionKey"
+						class="mt-1 text-[0.8125rem] leading-snug text-muted"
+					>
+						{{ ts(module.descriptionKey) }}
+					</p>
+				</div>
+				<div class="mt-4 flex justify-end">
+					<UButton
+						color="neutral"
+						variant="ghost"
+						size="sm"
+						@click="goToSection(module.slug)"
+					>
+						{{ ts("dashboard.coming_soon.learn_more") }}
+					</UButton>
+				</div>
+			</section>
 		</div>
 	</GuildSettingsForm>
 </template>
@@ -91,6 +129,9 @@ const { goToSection } = useDashboardNavigation();
 const moduleKeys = GUILD_MODULES.map((module) => module.key);
 
 const { mapToGuildData, onError, schema, state } = useSettingsForm({ toggles: moduleKeys });
+
+// Modules the bot has and the dashboard cannot configure yet.
+const announcedModules = DASHBOARD_NAV.filter((item) => item.comingSoon);
 
 const enabledCount = computed(() => countEnabledModules(state));
 

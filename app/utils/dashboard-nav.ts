@@ -12,6 +12,13 @@ export interface DashboardNavItem {
 	group: DashboardNavGroup;
 	/** The `modules*` flag the section configures, when it configures one. */
 	moduleKey?: GuildModuleEntry["key"];
+	/**
+	 * The section is announced but not built: the bot has the feature, the
+	 * dashboard has no routes for it yet, so it opens a placeholder page.
+	 */
+	comingSoon?: boolean;
+	/** What the section will do, for its placeholder page. */
+	descriptionKey?: string;
 }
 
 /**
@@ -67,6 +74,22 @@ export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
 		icon: "ic:round-flag",
 		labelKey: "dashboard.nav.reports",
 		slug: "reports",
+	},
+	{
+		comingSoon: true,
+		descriptionKey: "dashboard.coming_soon.autodelete",
+		group: "modules",
+		icon: "ic:round-timer",
+		labelKey: "dashboard.nav.autodelete",
+		slug: "autodelete",
+	},
+	{
+		comingSoon: true,
+		descriptionKey: "dashboard.coming_soon.autopurge",
+		group: "modules",
+		icon: "ic:round-cleaning-services",
+		labelKey: "dashboard.nav.autopurge",
+		slug: "autopurge",
 	},
 	{
 		group: "records",

@@ -38,7 +38,12 @@
 		class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5"
 		:aria-label="ts('guild_settings.general.server_stats_aria')"
 	>
-		<div v-for="stat in serverStats" :key="stat.label" class="stat-card">
+		<div
+			v-for="stat in serverStats"
+			:key="stat.label"
+			class="stat-card"
+			:class="{ 'stat-card--placeholder': stat.placeholder }"
+		>
 			<dt class="truncate text-xs font-semibold text-toned">{{ stat.label }}</dt>
 			<dd class="mt-1 font-mono text-xl font-bold">{{ stat.value }}</dd>
 			<dd class="mt-0.5 min-h-4 text-xs" :class="stat.noteClass ?? 'text-muted'">
@@ -107,7 +112,7 @@
 			:schema="schema"
 			:state="state"
 			:map-to-guild-data="mapToGuildData"
-			class="mt-4 grid grid-cols-1 gap-5"
+			class="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2"
 			:aria-label="ts('guild_settings.general.form_aria')"
 			@error="onError"
 		>
@@ -131,6 +136,20 @@
 				<template #error="{ error }">
 					<p class="text-sm text-error">{{ error }}</p>
 				</template>
+			</UFormField>
+			<UFormField :label="ts('dashboard.coming_soon.time_zone')">
+				<template #description>
+					<p class="text-[0.8125rem] text-muted">
+						{{ ts("dashboard.coming_soon.time_zone_description") }}
+					</p>
+				</template>
+				<UInput
+					disabled
+					class="w-full"
+					icon="ic:round-access-time"
+					:model-value="ts('dashboard.coming_soon.badge')"
+					:aria-label="ts('dashboard.coming_soon.time_zone')"
+				/>
 			</UFormField>
 		</GuildSettingsForm>
 	</section>
@@ -177,7 +196,6 @@ import {
 	type GeneralSettingsSchemaType as Schema,
 } from "#shared/schemas";
 import { getPaginationRowModel } from "@tanstack/table-core";
-import { ChannelType } from "discord-api-types/v10";
 
 const { languages } = defineProps<{
 	languages: string[];
@@ -250,14 +268,6 @@ const auditLogColumns = computed<TableColumn<(typeof auditEntries.value)[number]
 	},
 ]);
 
-const channelCounts = computed(() => {
-	const channels = guildData.value?.channels ?? [];
-	return {
-		categories: channels.filter((c) => c.type === ChannelType.GuildCategory).length,
-		total: channels.filter((c) => c.type !== ChannelType.GuildCategory).length,
-	};
-});
-
 // The log is asked for the last seven days only; its own total is exact even
 // when the page of entries below is not.
 const CHART_DAYS = 7;
@@ -300,9 +310,10 @@ const chartAria = computed(() =>
 const chartHeadingId = useId();
 const settingsHeadingId = useId();
 
+const STAT_PLACEHOLDER = "—";
+
 const serverStats = computed(() => {
 	const guild = guildData.value;
-	const roles = guild?.roles.length ?? 0;
 	const online = guild?.approximatePresenceCount ?? 0;
 	return [
 		{
@@ -312,19 +323,22 @@ const serverStats = computed(() => {
 			value: (guild?.approximateMemberCount ?? 0).toLocaleString(),
 		},
 		{
-			label: ts("guild_settings.general.stat_channels"),
-			note: tc("guild_settings.general.stat_categories_note", channelCounts.value.categories),
-			value: channelCounts.value.total.toLocaleString(),
-		},
-		{
-			label: ts("guild_settings.general.stat_roles"),
-			note: "",
-			value: roles.toLocaleString(),
-		},
-		{
 			label: ts("guild_settings.general.stat_cases"),
 			note: ts("guild_settings.general.stat_last_days", { count: CHART_DAYS }),
 			value: moderationTotal.value.toLocaleString(),
+		},
+		// Not counted anywhere the dashboard can read yet.
+		{
+			label: ts("dashboard.coming_soon.stat_automod_hits"),
+			note: ts("dashboard.coming_soon.badge"),
+			placeholder: true,
+			value: STAT_PLACEHOLDER,
+		},
+		{
+			label: ts("dashboard.coming_soon.stat_open_reports"),
+			note: ts("dashboard.coming_soon.badge"),
+			placeholder: true,
+			value: STAT_PLACEHOLDER,
 		},
 		{
 			label: ts("guild_settings.general.stat_commands"),
@@ -422,6 +436,11 @@ async function onError(event: FormErrorEvent) {
 
 <style scoped>
 @reference "@/assets/css/main.css";
+
+.stat-card--placeholder {
+	border-style: dashed;
+	color: var(--ui-text-muted);
+}
 
 .stat-card {
 	@apply min-w-0 rounded-lg px-3.5 py-3;

@@ -101,6 +101,9 @@
 									aria-hidden="true"
 								/>
 								<span class="min-w-0 flex-1 truncate">{{ ts(item.labelKey) }}</span>
+								<span v-if="item.comingSoon" class="dashboard-nav-soon">
+									{{ ts("dashboard.coming_soon.badge") }}
+								</span>
 								<span v-if="item.count !== null" class="dashboard-nav-count">
 									{{ item.count }}
 								</span>
@@ -212,7 +215,7 @@ function toRow(item: DashboardNavItem) {
 				: null,
 		current: section.value === item.slug,
 		off: item.moduleKey !== undefined && enabled === false,
-		pinnable: item.group === "modules",
+		pinnable: item.group === "modules" && !item.comingSoon,
 		pinned: isPinned(item.slug),
 	};
 }
@@ -323,6 +326,12 @@ const groups = computed(() =>
 
 .dashboard-nav-button--current {
 	color: var(--ui-text-highlighted);
+}
+
+.dashboard-nav-soon {
+	@apply shrink-0 rounded-full px-1.5 py-px text-[0.625rem] font-semibold tracking-[0.04em] uppercase;
+	background-color: var(--console-input);
+	color: var(--ui-text-muted);
 }
 
 .dashboard-nav-count {

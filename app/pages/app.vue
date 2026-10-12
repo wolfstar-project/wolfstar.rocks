@@ -97,12 +97,20 @@ const asyncComponentMap: Record<string, ReturnType<typeof defineAsyncComponent>>
 	reports: defineAsyncComponent(() => import("~/components/guild/settings/Reports.vue")),
 	roles: defineAsyncComponent(() => import("~/components/guild/settings/Roles.vue")),
 };
+const comingSoonComponent = defineAsyncComponent(
+	() => import("~/components/dashboard/ComingSoon.vue"),
+);
 const defaultComponent = defineAsyncComponent(
 	() => import("~/components/guild/settings/General.vue"),
 );
 
 const isLogsSection = computed(() => section.value === "logs");
-const renderComponent = computed(() => asyncComponentMap[section.value] ?? defaultComponent);
+const renderComponent = computed(() => {
+	if (findDashboardNavItem(section.value)?.comingSoon) {
+		return comingSoonComponent;
+	}
+	return asyncComponentMap[section.value] ?? defaultComponent;
+});
 
 // The navbar and the document title read like the sidebar.
 const sectionLabel = computed(() => {

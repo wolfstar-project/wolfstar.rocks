@@ -34,6 +34,16 @@
 					</span>
 				</button>
 			</li>
+			<li v-for="module in announcedModules" :key="module.slug">
+				<button type="button" class="module-row" @click="goToSection(module.slug)">
+					<span
+						class="size-2 shrink-0 rounded-full border border-base-content/40"
+						aria-hidden="true"
+					></span>
+					<span class="flex-1 text-sm text-muted">{{ ts(module.labelKey) }}</span>
+					<span class="text-xs text-muted">{{ ts("dashboard.coming_soon.badge") }}</span>
+				</button>
+			</li>
 		</ul>
 	</section>
 </template>
@@ -44,6 +54,8 @@ import { countEnabledModules, GUILD_MODULES } from "#shared/utils/guild-modules"
 const { ts } = useI18n();
 const { guildSettings } = useGuildSettings();
 const { goToSection } = useDashboardNavigation();
+
+const announcedModules = DASHBOARD_NAV.filter((item) => item.comingSoon);
 
 const enabledCount = computed(() => countEnabledModules(guildSettings.value));
 

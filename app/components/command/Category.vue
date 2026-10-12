@@ -12,9 +12,11 @@
 				<span class="truncate text-[1.0625rem] font-bold text-default">{{ name }}</span>
 				<span
 					class="rounded-full bg-base-content/8 px-2.25 py-0.5 text-xs font-semibold text-muted"
-					:aria-label="tc('marketing.commands.category_count', commands.length)"
 				>
-					{{ commands.length }}
+					<span aria-hidden="true">{{ commands.length }}</span>
+					<span class="sr-only">
+						{{ tc("marketing.commands.category_count", commands.length) }}
+					</span>
 				</span>
 			</span>
 			<UIcon

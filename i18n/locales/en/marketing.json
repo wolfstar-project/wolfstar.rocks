@@ -13,7 +13,7 @@
 			"guarded": "Cannot be disabled",
 			"loading": "Loading commands",
 			"no_description": "No description yet",
-			"no_details": "This command takes no arguments and has no extra notes.",
+			"no_details": "No usage notes are documented for this command yet.",
 			"permission_administrator": "Administrators only",
 			"permission_moderator": "Moderators & admins only",
 			"permission_staff": "Staff only",

@@ -134,7 +134,10 @@ const { ts } = useI18n();
 
 const help = computed(() => command.extendedHelp);
 
-/** Commands the bot documents with nothing but a description still get a line of context. */
+/**
+ * Commands the bot documents with nothing but a description still get a line
+ * of context. The chips count as details only when one actually renders.
+ */
 const hasDetails = computed(
 	() =>
 		Boolean(
@@ -144,9 +147,7 @@ const hasDetails = computed(
 			help.value.possibleFormats?.length ||
 			help.value.examples?.length ||
 			help.value.reminder,
-		) ||
-		command.permissionLevel > 0 ||
-		command.guarded,
+		) || hasCommandChips(command),
 );
 
 /**

@@ -37,38 +37,20 @@ const { command } = defineProps<{
 
 const { ts } = useI18n();
 
-const GUILD_ONLY_PRECONDITIONS = new Set([
-	"Administrator",
-	"DJ",
-	"GuildOnly",
-	"Moderator",
-	"NewsOnly",
-	"NSFW",
-	"TextOnly",
-]);
-
-const isGuildOnly = computed(() =>
-	command.preconditions.entries
-		.flatMap((preconditionEntry) => preconditionEntry.entries)
-		.filter(Boolean)
-		.map((entry) => entry.name)
-		.some((predicate) => GUILD_ONLY_PRECONDITIONS.has(predicate)),
-);
+const isGuildOnly = computed(() => isGuildOnlyCommand(command));
 
 const permissionLabel = computed(() => {
-	switch (command.permissionLevel) {
-		case 4:
+	switch (commandPermissionChip(command)) {
+		case "staff":
 			return ts("marketing.commands.permission_staff");
-		case 5:
+		case "moderator":
 			return ts("marketing.commands.permission_moderator");
-		case 6:
+		case "administrator":
 			return ts("marketing.commands.permission_administrator");
 		default:
 			return undefined;
 	}
 });
 
-const hasChips = computed(
-	() => Boolean(permissionLabel.value) || isGuildOnly.value || command.guarded,
-);
+const hasChips = computed(() => hasCommandChips(command));
 </script>

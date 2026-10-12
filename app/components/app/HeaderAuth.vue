@@ -53,7 +53,10 @@
 					color="primary"
 					variant="soft"
 					to="/login"
-					:class="mobile ? 'rounded-lg' : 'hidden rounded-lg md:inline-flex'"
+					:class="[
+						mobile ? 'rounded-lg' : 'hidden rounded-lg md:inline-flex',
+						'theme-dark:text-highlighted',
+					]"
 					icon="ic:round-discord"
 					:aria-label="ts('header.sign_in_discord')"
 				/>

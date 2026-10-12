@@ -56,7 +56,7 @@
 				color="primary"
 				variant="soft"
 				size="lg"
-				class="h-13 rounded-[12px] border border-primary/30 bg-primary/12 px-4 text-[0.9375rem] font-semibold hover:bg-primary/20 sm:px-5.5"
+				class="h-13 rounded-[12px] border border-primary/30 bg-primary/12 px-4 text-[0.9375rem] font-semibold hover:bg-primary/20 sm:px-5.5 theme-dark:text-highlighted"
 				:loading
 				:aria-label="ts('marketing.commands.refresh_label')"
 				@click="refresh()"

@@ -37,23 +37,6 @@ export const ActivityType = {
 	Custom: 4,
 } as const;
 
-export type {
-	DiscordMemberListApiFixture,
-	DiscordMemberListRoleFixture,
-	LoggingEventDetail,
-	ModerationAction,
-	Profile,
-	ShowcaseCommand,
-	SlashCommandApp,
-	SlashCommandAppName,
-} from "~/types/constants";
-export { Colors } from "~/types/constants";
-export type {
-	DiscordAppLauncherSheetSnap,
-	ResolveDiscordAppLauncherSheetSnapOptions,
-	StringSelectMenuPlacement,
-} from "~/types/discord";
-
 export const robotBlockingPageProps =
 	"nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1";
 

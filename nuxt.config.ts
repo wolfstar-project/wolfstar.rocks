@@ -128,12 +128,9 @@ export default defineNuxtConfig({
 			charset: "utf-8",
 			htmlAttrs: { lang: "en-US" },
 			link: [
-				// Preconnect for external domains (faster than dns-prefetch: includes TLS handshake)
+				// Preconnect covers the DNS lookup too, so no dns-prefetch beside it.
 				{ href: "https://cdn.discordapp.com", rel: "preconnect", crossorigin: "anonymous" },
 				{ href: "https://cdn.wolfstar.rocks", rel: "preconnect", crossorigin: "anonymous" },
-				// Fallback dns-prefetch for browsers that don't support preconnect
-				{ href: "https://cdn.discordapp.com", rel: "dns-prefetch" },
-				{ href: "https://cdn.wolfstar.rocks", rel: "dns-prefetch" },
 			],
 			meta: [
 				// Page transitions

@@ -19,6 +19,7 @@ jobs:
   enforce-source:
     if: github.repository == 'wolfstar-project/wolfstar.rocks'
     runs-on: ubuntu-slim
+    timeout-minutes: 5
     name: 🚦 Enforce release source
     steps:
       - name: Check PR is from main

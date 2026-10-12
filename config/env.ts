@@ -1,7 +1,7 @@
 import * as process from "node:process";
-import Git from "simple-git";
-import { version as packageVersion } from "../package.json";
-import { getNextVersion } from "../scripts/next-version";
+import { simpleGit } from "simple-git";
+import packageJson from "../package.json" with { type: "json" };
+import { getNextVersion } from "../scripts/next-version.ts";
 
 /**
  * Environment variable `PULL_REQUEST` provided by Netlify.
@@ -64,7 +64,7 @@ export const getPreviewUrl = () =>
 export const getProductionUrl = () =>
 	isProduction ? (process.env.URL ? process.env.URL : undefined) : undefined;
 
-const git = Git();
+const git = simpleGit();
 async function getGitInfo() {
 	let branch;
 	try {
@@ -118,7 +118,7 @@ export async function getVersion() {
 		const { next } = await getNextVersion();
 		return next;
 	} catch {
-		return packageVersion;
+		return packageJson.version;
 	}
 }
 

@@ -42,19 +42,15 @@ export type {
 	DiscordMemberListRoleFixture,
 	LoggingEventDetail,
 	ModerationAction,
-	OtherApp,
 	Profile,
-	ProfileName,
 	ShowcaseCommand,
 	SlashCommandApp,
 	SlashCommandAppName,
-	UIColors,
 } from "~/types/constants";
-export { BrandingColors, Colors } from "~/types/constants";
+export { Colors } from "~/types/constants";
 export type {
 	DiscordAppLauncherSheetSnap,
 	ResolveDiscordAppLauncherSheetSnapOptions,
-	StringSelectMenuOption,
 	StringSelectMenuPlacement,
 } from "~/types/discord";
 

@@ -23,7 +23,7 @@ export const NoCode: Story = {
 				<h1 class="sr-only">OAuth Callback</h1>
 				<OauthStatusPanel
 					tone="warning"
-					title="Login Required"
+					title="Sign In Required"
 					icon="heroicons:exclamation-triangle"
 				>
 					<template #description>
@@ -33,7 +33,7 @@ export const NoCode: Story = {
 					</template>
 					<template #actions>
 						<UButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
-							Go to Login
+							Go to sign in
 						</UButton>
 					</template>
 				</OauthStatusPanel>
@@ -92,7 +92,7 @@ export const SessionNotFound: Story = {
 					icon="heroicons:x-circle"
 				>
 					<template #description>
-						Your login session could not be loaded. Please sign in again.
+						Your session could not be loaded. Please sign in again.
 					</template>
 					<template #actions>
 						<UButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">

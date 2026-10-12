@@ -1,4 +1,4 @@
-import { expect, test } from "./test-utils";
+import { expect, test } from "./test-utils.ts";
 
 test("Shift+Escape does not draw an outline around the main content landmark", async ({
 	page,

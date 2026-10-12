@@ -23,6 +23,7 @@ jobs:
   pullfrog:
     name: 🐸 Pullfrog agent
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
       id-token: write # OIDC token exchanged by pullfrog/pullfrog for a scoped GitHub App token
       contents: read # checkout the repository

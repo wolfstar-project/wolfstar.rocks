@@ -20,7 +20,7 @@
 			</h2>
 		</div>
 
-		<div class="grid gap-4 md:grid-cols-3">
+		<div class="grid gap-4 lg:grid-cols-3">
 			<SurfaceCard
 				v-for="step of steps"
 				:key="step.index"
@@ -47,7 +47,7 @@
 					:locale="false"
 					color="primary"
 					variant="link"
-					class="mt-auto self-start px-0 pt-6"
+					class="mt-auto max-w-full self-start px-0 pt-6 text-left whitespace-normal"
 					trailing-icon="ph:arrow-right"
 				>
 					{{ step.cta }}

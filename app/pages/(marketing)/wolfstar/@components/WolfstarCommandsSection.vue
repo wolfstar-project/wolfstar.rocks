@@ -9,7 +9,7 @@
 			class="mb-10"
 		/>
 		<!-- Below the fold: keep the SSR markup, defer hydration until it scrolls into view. -->
-		<LazyWolfstarCommandsShowcase hydrate-on-visible />
+		<LazyWolfstarCommandsShowcase :hydrate-on-visible="{ rootMargin: '300px' }" />
 	</Section>
 </template>
 

@@ -15,7 +15,7 @@
 			class="mb-10"
 		/>
 		<!-- Below the fold: keep the SSR markup, defer hydration until it scrolls into view. -->
-		<LazyStarylCommandsShowcase hydrate-on-visible />
+		<LazyStarylCommandsShowcase :hydrate-on-visible="{ rootMargin: '300px' }" />
 	</Section>
 </template>
 

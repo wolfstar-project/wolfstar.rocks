@@ -103,9 +103,9 @@ const FLAG_COMBINATIONS = 1 << 5;
 // flags in the first byte, the case type in the second, and a marker bit that
 // tells the type is encoded. A row without the marker was not written by that
 // encoder, and its `action` is then the only source for the type.
-const METADATA_MASK = 0xFF;
+const METADATA_MASK = 255;
 const TYPE_SHIFT = 8;
-const TYPE_MASK = 0xFF << TYPE_SHIFT;
+const TYPE_MASK = METADATA_MASK << TYPE_SHIFT;
 export const MODERATION_TYPE_ENCODED_MARKER = 1 << 16;
 
 const ACTION_TO_TYPE = {

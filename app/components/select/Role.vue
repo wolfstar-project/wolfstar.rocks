@@ -26,7 +26,10 @@ interface SelectRoleProps {
 	/** The current selected role ID */
 	modelValue: string | null;
 	/** The guild data containing roles */
-	guild: DeepReadonly<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>;
+	/** `undefined` while the guild has not loaded: the list is then empty. */
+	guild:
+		| DeepReadonly<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>
+		| undefined;
 	/** Content to be shown as a tooltip when hovering over the button */
 	tooltipTitle?: string;
 	/** Whether to append an image to the end of the button, next to the value of the key */
@@ -59,13 +62,13 @@ const roleName = computed(() => {
 	if (!modelValue) {
 		return undefined;
 	}
-	const role = guild.roles.find((c) => c.id === modelValue);
+	const role = guild?.roles.find((c) => c.id === modelValue);
 	return role?.name;
 });
 
 // Filter and sort roles, then map to SelectOneValue format
 const roleValues = computed<SelectOneValue[]>(() =>
-	[...guild.roles]
+	[...(guild?.roles ?? [])]
 		.toSorted((c1, c2) => c1.rawPosition - c2.rawPosition)
 		.map((c) => ({
 			icon: "discord:text-channel",

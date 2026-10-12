@@ -1,6 +1,7 @@
-import { AppHeaderAuth } from "#components";
+import { AppHeaderAuth, AppPreferencesDialog } from "#components";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { defineComponent, h } from "vue";
 
 // `AppHeaderAuth` is a `.client.vue` component that reads the session through
 // `useUserSession`. Those calls resolve inside the precompiled module runtime,
@@ -56,6 +57,30 @@ describe("AppHeaderAuth", () => {
 			await settings.trigger("click");
 
 			expect(usePreferencesDialog().isOpen.value).toBe(true);
+		});
+
+		// The dialog is mounted by `app.vue`, apart from the button. Checking the
+		// flag alone would pass with the dialog gone, so both are rendered here.
+		it("shows the preferences once the button is clicked", async () => {
+			usePreferencesDialog().isOpen.value = false;
+			const wrapper = await mountSuspended(
+				defineComponent({
+					setup: () => () => [h(AppHeaderAuth), h(AppPreferencesDialog)],
+				}),
+				{ attachTo: document.body },
+			);
+			expect(document.body.querySelector('[role="dialog"]')).toBeNull();
+
+			await wrapper.get('button[aria-label="Settings"]').trigger("click");
+
+			await vi.waitFor(() => {
+				const dialog = document.body.querySelector('[role="dialog"]');
+				expect(dialog?.textContent).toContain("Settings");
+				expect(dialog?.textContent).toContain("Theme");
+			});
+
+			usePreferencesDialog().isOpen.value = false;
+			wrapper.unmount();
 		});
 
 		it("shows the settings button in the mobile drawer", async () => {

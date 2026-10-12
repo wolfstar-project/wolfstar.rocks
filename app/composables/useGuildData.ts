@@ -7,9 +7,10 @@ const _useGuildData = () => {
 	// and a switch never leaks another guild's data.
 	const store = useState<Record<string, DashboardGuild | undefined>>("guild:data", () => ({}));
 
-	const guild = computed(
-		() =>
-			(activeGuildId.value ? store.value[activeGuildId.value] : undefined) as DashboardGuild,
+	// `undefined` until a guild is active and its data has landed. Sections only
+	// render once it has, but the type keeps every reader honest about it.
+	const guild = computed<DashboardGuild | undefined>(() =>
+		activeGuildId.value ? store.value[activeGuildId.value] : undefined,
 	);
 
 	const setGuildData = (newGuildData: DashboardGuild) => {

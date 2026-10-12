@@ -63,6 +63,7 @@
 		"picker": {
 			"description": "",
 			"empty": "",
+			"error": "",
 			"title": ""
 		},
 		"reset_changes": "Deshacer cambios",

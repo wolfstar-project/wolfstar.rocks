@@ -193,6 +193,9 @@
 						"empty": {
 							"type": "string"
 						},
+						"error": {
+							"type": "string"
+						},
 						"title": {
 							"type": "string"
 						}

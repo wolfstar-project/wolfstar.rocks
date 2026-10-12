@@ -222,7 +222,7 @@ const {
 	refresh: refreshAuditLog,
 	status: auditLogStatus,
 } = useAuditLog({
-	guildId: guildData.value.id,
+	guildId: () => guildData.value?.id,
 	limit: page,
 	offset,
 });
@@ -277,12 +277,12 @@ const now = ref(new Date());
 const activityFrom = computed(() => moderationActivityStart(now.value, CHART_DAYS).toISOString());
 
 const { entries: moderationEntries, total: moderationTotal } = useModerationLog({
-	guildId: guildData.value.id,
+	guildId: () => guildData.value?.id,
 	limit: CHART_ENTRY_LIMIT,
 	filters: computed(() => ({ from: activityFrom.value })),
 });
 const { total: commandTotal } = useCommandLog({
-	guildId: guildData.value.id,
+	guildId: () => guildData.value?.id,
 	limit: 1,
 	filters: computed(() => ({ from: activityFrom.value })),
 });

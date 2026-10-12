@@ -63,6 +63,7 @@
 		"picker": {
 			"description": "Pick the server you want to manage. WolfStar remembers it on this device.",
 			"empty": "No servers you can manage yet. You need the Manage Server permission on a server to set WolfStar up there.",
+			"error": "Your servers could not be loaded. Check your connection and try again.",
 			"title": "Choose a server"
 		},
 		"reset_changes": "Reset Changes",

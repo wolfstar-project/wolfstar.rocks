@@ -321,7 +321,10 @@ const {
 } = defineProps<{
 	/** The rule to edit, or `null` to create one. */
 	rule?: AutoModerationRule | null;
-	guild: DeepReadonly<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>;
+	/** `undefined` while the guild has not loaded: the list is then empty. */
+	guild:
+		| DeepReadonly<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>
+		| undefined;
 	saving?: boolean;
 	/** Why the last save was refused, to show next to the field it is about. */
 	errorCode?: AutomodRuleErrorCode | null;

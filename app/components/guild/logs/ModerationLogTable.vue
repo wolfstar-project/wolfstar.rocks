@@ -92,7 +92,7 @@ watch(debouncedQ, (val) => {
 	filters.value.q = val || undefined;
 });
 
-const guildId = computed(() => guildData.value.id);
+const guildId = computed(() => guildData.value?.id);
 const { entries, total, status, refresh } = useModerationLog({
 	guildId,
 	limit,

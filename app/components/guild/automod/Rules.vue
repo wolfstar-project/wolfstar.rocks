@@ -249,11 +249,11 @@ function onHitLabel(rule: AutoModerationRule) {
 /** The roles and channels a rule leaves alone, by name. */
 function exemptions(rule: AutoModerationRule): string[] {
 	const roles = rule.ignoredRoles.map((id) => {
-		const name = guildData.value.roles.find((role) => role.id === id)?.name;
+		const name = guildData.value?.roles.find((role) => role.id === id)?.name;
 		return name ? `@${name}` : null;
 	});
 	const channels = rule.ignoredChannels.map((id) => {
-		const name = guildData.value.channels.find((channel) => channel.id === id)?.name;
+		const name = guildData.value?.channels.find((channel) => channel.id === id)?.name;
 		return name ? `#${name}` : null;
 	});
 	return [...roles, ...channels].filter((entry): entry is string => entry !== null);

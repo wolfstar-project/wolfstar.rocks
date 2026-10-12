@@ -90,7 +90,7 @@ const query = ref("");
 const debouncedQ = refDebounced(query, 300);
 const offset = computed(() => (page.value - 1) * limit.value);
 
-const guildId = computed(() => guildData.value.id);
+const guildId = computed(() => guildData.value?.id);
 
 const statusItems = computed(() => [
 	{ label: ts("guild_logs.status_all"), value: "all" },

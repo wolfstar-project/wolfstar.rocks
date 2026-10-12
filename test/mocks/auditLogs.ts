@@ -67,10 +67,10 @@ export const MOCK_MODERATION_ENTRY: ModerationLogEntry = {
 	moderatorId: "222222222222222222",
 	moderatorMember: null,
 	typeCode: 1,
-	typeName: "AddWarning",
+	typeName: "Warning",
 	reason: "Spamming",
 	referenceId: null,
 	duration: 0,
-	metadata: { archived: false, completed: false, temporary: false },
+	metadata: { archived: false, completed: false, temporary: false, undo: false },
 	createdAt: "2026-05-15T00:00:00.000Z",
 };

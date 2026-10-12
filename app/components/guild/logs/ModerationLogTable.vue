@@ -109,16 +109,21 @@ const columns = computed<TableColumn<ModerationLogEntry>[]>(() => [
 	{
 		accessorKey: "typeName",
 		header: ts("guild_logs.columns.action"),
-		cell: ({ row }) =>
-			h(
+		cell: ({ row }) => {
+			const { metadata, typeName } = row.original;
+			// A case that reverses another one (an unban, an unmute) carries the
+			// same type with the undo flag, so it is told apart here.
+			return h(
 				UBadge,
 				{
-					color: moderationActionVariant(row.original.typeName),
+					color: metadata.undo ? "success" : moderationActionVariant(typeName),
 					variant: "subtle",
 					size: "sm",
 				},
-				() => row.original.typeName,
-			),
+				() =>
+					metadata.undo ? ts("guild_logs.undo_action", { action: typeName }) : typeName,
+			);
+		},
 	},
 	{
 		id: "target",

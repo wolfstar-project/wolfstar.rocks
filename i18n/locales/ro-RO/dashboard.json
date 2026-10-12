@@ -128,6 +128,7 @@
 		"tab_moderation": "",
 		"tab_warnings": "",
 		"title": "",
+		"undo_action": "",
 		"unknown": ""
 	},
 	"guild_manage": {

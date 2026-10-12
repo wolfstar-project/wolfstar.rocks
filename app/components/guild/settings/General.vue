@@ -357,9 +357,7 @@ const serverStats = computed(() => {
 		},
 		{
 			label: ts("guild_settings.general.stat_channels"),
-			note: ts("guild_settings.general.stat_categories_note", {
-				count: channelCounts.value.categories,
-			}),
+			note: tc("guild_settings.general.stat_categories_note", channelCounts.value.categories),
 			value: channelCounts.value.total.toLocaleString(),
 		},
 		{

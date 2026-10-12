@@ -7,8 +7,20 @@ import { describe, expect, it } from "vitest";
 
 describe("timestamp-string", () => {
 	describe("asTimestampString", () => {
-		it("returns the value unchanged", () => {
+		it("returns a zoneless or UTC value unchanged", () => {
 			expect(asTimestampString("2026-10-09T21:02:50.123Z")).toBe("2026-10-09T21:02:50.123Z");
+			expect(asTimestampString("2026-10-09T21:02:50.123")).toBe("2026-10-09T21:02:50.123");
+			expect(asTimestampString("2026-10-09")).toBe("2026-10-09");
+		});
+
+		// PostgreSQL drops the designator of a `timestamp without time zone`
+		// value, so the offset has to be applied before the value is bound.
+		it("moves a value with an offset to UTC and drops the designator", () => {
+			expect(asTimestampString("2026-10-09T21:02:50+02:00")).toBe("2026-10-09T19:02:50.000");
+		});
+
+		it("refuses a value that is not a timestamp", () => {
+			expect(() => asTimestampString("2026-13-45T99:00:00+02:00")).toThrow(TypeError);
 		});
 	});
 

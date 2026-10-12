@@ -1,19 +1,5 @@
 import type { TimestampString } from "@prisma/orm-postgres/target/codec-types";
 
-/**
- * Narrows a validated ISO timestamp to the branded string the Prisma ORM 8
- * `TimestampString(3)` codec reads and writes.
- *
- * The contract authors its `timestamp(3)` columns as `TimestampString` rather
- * than `Timestamp`, whose `Temporal` codec needs a global this project's Node
- * versions do not provide. The brand exists so a plain string cannot be bound
- * to such a column by accident; callers pass values the query schemas have
- * already validated as ISO timestamps.
- */
-export function asTimestampString(value: string): TimestampString<3> {
-	return value as TimestampString<3>;
-}
-
 // A `Z` or `±HH[[:]MM]` designator. `timestamp(3)` columns carry no zone, so it
 // only matches values that already went through a conversion.
 const EXPLICIT_ZONE_PATTERN = /(?:Z|[+-]\d{2}(?::?\d{2})?)$/i;
@@ -23,6 +9,32 @@ const EXPLICIT_ZONE_PATTERN = /(?:Z|[+-]\d{2}(?::?\d{2})?)$/i;
 function hasExplicitZone(isoLike: string): boolean {
 	const timeStart = isoLike.indexOf("T");
 	return timeStart !== -1 && EXPLICIT_ZONE_PATTERN.test(isoLike.slice(timeStart + 1));
+}
+
+/**
+ * Narrows a validated ISO timestamp to the branded string the Prisma ORM 8
+ * `TimestampString(3)` codec reads and writes.
+ *
+ * The contract authors its `timestamp(3)` columns as `TimestampString` rather
+ * than `Timestamp`, whose `Temporal` codec needs a global this project's Node
+ * versions do not provide. The brand exists so a plain string cannot be bound
+ * to such a column by accident; callers pass values the query schemas have
+ * already validated as ISO timestamps.
+ *
+ * The columns hold UTC and no zone, and PostgreSQL ignores a zone designator on
+ * such a value instead of applying it. That is harmless for `Z`, which names
+ * the zone the column already holds; a value with an offset is moved to UTC
+ * here and bound without it.
+ */
+export function asTimestampString(value: string): TimestampString<3> {
+	if (/Z$/i.test(value) || !hasExplicitZone(value.replace(" ", "T"))) {
+		return value as TimestampString<3>;
+	}
+	const parsed = new Date(value);
+	if (Number.isNaN(parsed.getTime())) {
+		throw new TypeError(`Expected an ISO timestamp, received: ${value}`);
+	}
+	return parsed.toISOString().slice(0, -1) as TimestampString<3>;
 }
 
 /**

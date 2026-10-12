@@ -70,10 +70,43 @@
 						"form_aria": {
 							"type": "string"
 						},
+						"groups": {
+							"type": "object",
+							"properties": {
+								"channels": {
+									"type": "string"
+								},
+								"emojis": {
+									"type": "string"
+								},
+								"members": {
+									"type": "string"
+								},
+								"messages": {
+									"type": "string"
+								},
+								"reactions": {
+									"type": "string"
+								},
+								"roles": {
+									"type": "string"
+								},
+								"server": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
 						"logging_channels": {
 							"type": "string"
 						},
 						"logging_channels_help": {
+							"type": "string"
+						},
+						"not_logged": {
+							"type": "string"
+						},
+						"routed_count": {
 							"type": "string"
 						},
 						"subtitle": {
@@ -100,10 +133,22 @@
 						"disable_all": {
 							"type": "string"
 						},
+						"disabled_channels": {
+							"type": "string"
+						},
 						"enable_all": {
 							"type": "string"
 						},
+						"enabled_count": {
+							"type": "string"
+						},
 						"form_aria": {
+							"type": "string"
+						},
+						"off": {
+							"type": "string"
+						},
+						"on": {
 							"type": "string"
 						},
 						"reset": {
@@ -274,6 +319,9 @@
 						"enable_all": {
 							"type": "string"
 						},
+						"enable_first": {
+							"type": "string"
+						},
 						"enabled_count": {
 							"type": "string"
 						},
@@ -341,6 +389,27 @@
 							"type": "string"
 						},
 						"general_options": {
+							"type": "string"
+						},
+						"groups": {
+							"type": "object",
+							"properties": {
+								"join": {
+									"type": "string"
+								},
+								"moderation": {
+									"type": "string"
+								},
+								"restrictions": {
+									"type": "string"
+								},
+								"staff": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"not_set": {
 							"type": "string"
 						},
 						"restricted": {

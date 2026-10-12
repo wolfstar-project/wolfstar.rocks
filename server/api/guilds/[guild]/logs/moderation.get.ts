@@ -6,10 +6,13 @@ import { db } from "#server/database/prisma";
 import { fallbackMember, resolveGuildMembers } from "#server/utils/audit/resolve-members";
 import { ModerationLogQuerySchema } from "#shared/schemas";
 import {
-	decodeModerationMetadata,
-	MODERATION_ACTION_CODE,
-	moderationActionFromCode,
+	decodeModerationRecord,
+	MODERATION_TYPE_CODE,
+	MODERATION_TYPE_ENCODED_MARKER,
+	moderationRecordFilter,
+	moderationTypeFromCode,
 } from "#shared/types/moderation-types";
+import { and, or } from "@prisma/orm-postgres/orm-client";
 import { createError, useLogger } from "evlog";
 import { parse } from "valibot";
 
@@ -21,9 +24,12 @@ function mapModerationRow(
 ): ModerationLogEntry {
 	const targetId = String(row.targetId);
 	const moderatorId = String(row.moderatorId);
-	// V7 stores the action by name, so the name is the identity and the numeric
-	// code is looked up from it rather than the other way round.
-	const action = row.action as ModerationActionName;
+	// `action` is only the closest action the table's enum has: a mute is stored
+	// as `AddRole`, a voice kick as `Kick`. The case type is decoded as the bot does.
+	const { type, metadata } = decodeModerationRecord(
+		row.action as ModerationActionName,
+		row.metadata,
+	);
 
 	return {
 		caseId: row.id,
@@ -32,12 +38,12 @@ function mapModerationRow(
 		targetMember: memberMap.get(targetId) ?? fallbackMember(targetId),
 		moderatorId,
 		moderatorMember: memberMap.get(moderatorId) ?? fallbackMember(moderatorId),
-		typeCode: MODERATION_ACTION_CODE[action],
-		typeName: action,
+		typeCode: type === "Unknown" ? 0 : MODERATION_TYPE_CODE[type],
+		typeName: type,
 		reason: row.reason ?? null,
 		referenceId: row.referenceId ?? null,
 		duration: row.duration,
-		metadata: decodeModerationMetadata(row.metadata),
+		metadata,
 		createdAt: timestampStringToUtcIso(row.createdAt),
 	};
 }
@@ -69,11 +75,22 @@ export default defineWrappedCachedResponseHandler(
 			filtered = filtered.where((row) => row.moderatorId.eq(BigInt(moderatorId)));
 		}
 		if (typeCode !== undefined) {
-			// An unrecognised code must not reach the database as an enum literal,
-			// so it selects nothing instead.
-			const action = moderationActionFromCode(typeCode);
-			if (action === null) return { entries: [], total: 0 };
-			filtered = filtered.where((row) => row.action.eq(action));
+			const type = moderationTypeFromCode(typeCode);
+			if (type === null) return { entries: [], total: 0 };
+			// Filtering on `action` would mix the types that share one, so the rows
+			// are matched on the encoded type, or on `action` where none is encoded.
+			const { encodedMetadata, legacyActions } = moderationRecordFilter(type);
+			filtered = filtered.where((row) =>
+				legacyActions.length > 0
+					? or(
+							row.metadata.in(encodedMetadata),
+							and(
+								row.metadata.lt(MODERATION_TYPE_ENCODED_MARKER),
+								row.action.in(legacyActions),
+							),
+						)
+					: row.metadata.in(encodedMetadata),
+			);
 		}
 		if (from) filtered = filtered.where((row) => row.createdAt.gte(asTimestampString(from)));
 		if (to) filtered = filtered.where((row) => row.createdAt.lte(asTimestampString(to)));

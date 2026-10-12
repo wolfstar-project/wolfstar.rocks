@@ -19,6 +19,42 @@
 				"changes_reset_title": {
 					"type": "string"
 				},
+				"coming_soon": {
+					"type": "object",
+					"properties": {
+						"autodelete": {
+							"type": "string"
+						},
+						"autopurge": {
+							"type": "string"
+						},
+						"badge": {
+							"type": "string"
+						},
+						"body": {
+							"type": "string"
+						},
+						"learn_more": {
+							"type": "string"
+						},
+						"stat_automod_hits": {
+							"type": "string"
+						},
+						"stat_open_reports": {
+							"type": "string"
+						},
+						"time_zone": {
+							"type": "string"
+						},
+						"time_zone_description": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"discard_changes": {
 					"type": "string"
 				},
@@ -55,7 +91,16 @@
 				"nav": {
 					"type": "object",
 					"properties": {
+						"autodelete": {
+							"type": "string"
+						},
 						"automod": {
+							"type": "string"
+						},
+						"automod_short": {
+							"type": "string"
+						},
+						"autopurge": {
 							"type": "string"
 						},
 						"channels": {
@@ -341,6 +386,9 @@
 					"type": "string"
 				},
 				"title": {
+					"type": "string"
+				},
+				"undo_action": {
 					"type": "string"
 				},
 				"unknown": {

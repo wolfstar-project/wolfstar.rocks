@@ -6,13 +6,13 @@ import type {
 } from "#server/database/settings/types";
 import { Columns, isStoredKey, type StoredKey } from "#server/database/settings/columns";
 import { getDefaultGuildSettings } from "#server/database/settings/constants";
+import { isSnowflake } from "#shared/utils/snowflake";
 
 /** The most entries a list setting holds (roles, channels, commands, nodes). */
 export const MAXIMUM_SETTING_LIST_LENGTH = 250;
 const MAXIMUM_COMMAND_NAME_LENGTH = 32;
 const MAXIMUM_UNIQUE_ROLE_SET_NAME_LENGTH = 32;
 
-const SNOWFLAKE_PATTERN = /^\d{17,20}$/u;
 // BCP 47 tags as the bot ships them: `en-US`, `es-419`, `pt-BR`, …
 const LANGUAGE_PATTERN = /^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/u;
 
@@ -23,10 +23,6 @@ class SettingValueError extends Error {}
 
 function fail(message: string): never {
 	throw new SettingValueError(message);
-}
-
-function isSnowflake(value: unknown): value is string {
-	return typeof value === "string" && SNOWFLAKE_PATTERN.test(value);
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {

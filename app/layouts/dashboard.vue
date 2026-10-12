@@ -464,8 +464,10 @@ const isReadyToSubmit = computed(
 // below, mid-navigation: a navigation transition owns the screen, so the bar
 // rides along with it rather than interrupting it for one of its own.
 const showSaveChangesBar = ref(isReadyToSubmit.value);
-watch(isReadyToSubmit, (ready) => {
-	startViewTransition(() => (showSaveChangesBar.value = ready), {
+watch(isReadyToSubmit, () => {
+	// Read the state when the transition commits, not when it was requested: a
+	// later change that bypasses a running transition must not be overwritten.
+	startViewTransition(() => (showSaveChangesBar.value = isReadyToSubmit.value), {
 		reduceMotion: effectiveReduceMotion.value,
 		whenActive: "bypass",
 	});

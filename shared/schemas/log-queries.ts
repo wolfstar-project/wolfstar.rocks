@@ -20,9 +20,9 @@ const coercedNumber = (min = 0) =>
 const optionalString = (maxLen: number) => optional(pipe(string(), trim(), maxLength(maxLen)));
 
 /**
- * A Discord snowflake filter. The value is converted with `BigInt()` before it
- * reaches the database, which throws on anything non-numeric, so the shape is
- * checked here and a malformed filter answers 400 instead of 500.
+ * A Discord snowflake filter. A non-numeric value can never match a stored id,
+ * so the shape is checked here and a malformed filter answers 400 instead of
+ * running a query that returns nothing.
  */
 const optionalSnowflake = optional(
 	pipe(string(), trim(), maxLength(20), regex(/^\d+$/u, "Expected a Discord snowflake")),

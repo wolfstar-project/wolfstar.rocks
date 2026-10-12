@@ -203,11 +203,17 @@ describe("general guild settings", () => {
 				"AutoMod hits",
 				"Open reports",
 				"Commands",
+				"Channels",
+				"Roles",
 			]);
 			expect(stats.find((stat) => stat.label === "Members")?.value).toBe("42");
 			// Nothing counts these yet, so they say so instead of showing a number.
 			expect(stats.find((stat) => stat.label === "AutoMod hits")?.value).toBe("—");
 			expect(stats.find((stat) => stat.label === "Open reports")?.value).toBe("—");
+			// Three channels besides the category, which has its own note.
+			expect(stats.find((stat) => stat.label === "Channels")?.value).toBe("3");
+			expect(wrapper.text()).toContain("1 categories");
+			expect(stats.find((stat) => stat.label === "Roles")?.value).toBe("2");
 		});
 
 		it("calls copy with server id and toast options when Copy Server ID is clicked", async () => {

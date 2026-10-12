@@ -35,7 +35,7 @@
 	</header>
 
 	<dl
-		class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5"
+		class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5 2xl:grid-cols-7"
 		:aria-label="ts('guild_settings.general.server_stats_aria')"
 	>
 		<div
@@ -196,6 +196,7 @@ import {
 	type GeneralSettingsSchemaType as Schema,
 } from "#shared/schemas";
 import { getPaginationRowModel } from "@tanstack/table-core";
+import { ChannelType } from "discord-api-types/v10";
 
 const { languages } = defineProps<{
 	languages: string[];
@@ -312,6 +313,14 @@ const settingsHeadingId = useId();
 
 const STAT_PLACEHOLDER = "—";
 
+const channelCounts = computed(() => {
+	const channels = guildData.value?.channels ?? [];
+	return {
+		categories: channels.filter((c) => c.type === ChannelType.GuildCategory).length,
+		total: channels.filter((c) => c.type !== ChannelType.GuildCategory).length,
+	};
+});
+
 const serverStats = computed(() => {
 	const guild = guildData.value;
 	const online = guild?.approximatePresenceCount ?? 0;
@@ -344,6 +353,18 @@ const serverStats = computed(() => {
 			label: ts("guild_settings.general.stat_commands"),
 			note: ts("guild_settings.general.stat_last_days", { count: CHART_DAYS }),
 			value: commandTotal.value.toLocaleString(),
+		},
+		{
+			label: ts("guild_settings.general.stat_channels"),
+			note: ts("guild_settings.general.stat_categories_note", {
+				count: channelCounts.value.categories,
+			}),
+			value: channelCounts.value.total.toLocaleString(),
+		},
+		{
+			label: ts("guild_settings.general.stat_roles"),
+			note: "",
+			value: (guild?.roles.length ?? 0).toLocaleString(),
 		},
 	];
 });

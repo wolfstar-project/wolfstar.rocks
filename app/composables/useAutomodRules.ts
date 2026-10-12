@@ -74,35 +74,53 @@ export function useAutomodRules(guildId: MaybeRefOrGetter<string | null | undefi
 		}
 	}
 
+	/**
+	 * Patches the list with a write's answer, unless the admin opened another
+	 * guild while the request was in flight: `rules` follows the active guild,
+	 * so the answer would land in that guild's list. The guild it belongs to is
+	 * fetched again when it is reopened.
+	 */
+	function patchRules(
+		requestGuildId: string | null,
+		patch: (current: AutoModerationRule[]) => AutoModerationRule[],
+	) {
+		if (id.value === requestGuildId) {
+			asyncData.data.value = patch(rules.value);
+		}
+	}
+
 	async function createRule(body: AutomodRuleCreate) {
+		const requestGuildId = id.value;
 		const result = await run(() =>
 			$fetch<AutoModerationRule>(base.value, { body, method: "POST" }),
 		);
 		if (result.ok) {
-			asyncData.data.value = [...rules.value, result.value];
+			patchRules(requestGuildId, (current) => [...current, result.value]);
 		}
 		return result;
 	}
 
 	async function updateRule(ruleId: string, body: AutomodRuleUpdate) {
+		const requestGuildId = id.value;
 		const result = await run(() =>
 			$fetch<AutoModerationRule>(`${base.value}/${ruleId}`, { body, method: "PATCH" }),
 		);
 		if (result.ok) {
-			asyncData.data.value = rules.value.map((rule) =>
-				rule.id === ruleId ? result.value : rule,
+			patchRules(requestGuildId, (current) =>
+				current.map((rule) => (rule.id === ruleId ? result.value : rule)),
 			);
 		}
 		return result;
 	}
 
 	async function deleteRule(ruleId: string) {
+		const requestGuildId = id.value;
 		const result = await run(() =>
 			$fetch<null>(`${base.value}/${ruleId}`, { method: "DELETE" }),
 		);
 		// A rule that is already gone is as deleted as one this call removed.
 		if (result.ok || result.code === "unknown") {
-			asyncData.data.value = rules.value.filter((rule) => rule.id !== ruleId);
+			patchRules(requestGuildId, (current) => current.filter((rule) => rule.id !== ruleId));
 		}
 		return result.ok ? ({ ok: true, value: undefined } as const) : result;
 	}

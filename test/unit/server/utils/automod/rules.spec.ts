@@ -1,7 +1,23 @@
 import type { AutoModerationRule } from "#shared/utils/automod-rules";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("#server/database/prisma", () => ({ db: { orm: {} } }));
+// Every write runs in a transaction that first takes the guild's advisory lock.
+const database = vi.hoisted(() => {
+	const tx = { execute: vi.fn(), orm: { transaction: true } };
+	return {
+		lockQuery: vi.fn((_strings: TemplateStringsArray, ...keys: number[]) => ({
+			affectedCount: () => ({ build: () => ({ keys }) }),
+		})),
+		tx,
+	};
+});
+vi.mock("#server/database/prisma", () => ({
+	db: {
+		orm: {},
+		raw: { sql: database.lockQuery },
+		transaction: (run: (tx: typeof database.tx) => unknown) => run(database.tx),
+	},
+}));
 
 const storage = vi.hoisted(() => ({
 	fetchAutoModerationRules: vi.fn(),
@@ -181,5 +197,23 @@ describe("auto-moderation rule service", () => {
 		]);
 
 		expect(order).toStrictEqual(["start:First", "end:First", "start:Second", "end:Second"]);
+	});
+
+	// The queue only orders this process. Another instance reads and writes
+	// under the same lock, so its change is not replaced by a stale merge.
+	it("reads and writes inside one transaction that holds the guild's lock", async () => {
+		await updateAutoModerationRule(GUILD_ID, "1", () => ({ enabled: false }));
+
+		expect(database.tx.execute).toHaveBeenCalledOnce();
+		const [namespace, guildKey] = database.lockQuery.mock.calls[0]?.slice(1) ?? [];
+		expect(namespace).toBeTypeOf("number");
+		expect(guildKey).toBe(Number(BigInt(GUILD_ID) % 2_147_483_647n));
+		expect(storage.fetchAutoModerationRules).toHaveBeenCalledWith(database.tx.orm, GUILD_ID);
+		expect(storage.patchAutoModerationRule).toHaveBeenCalledWith(
+			database.tx.orm,
+			GUILD_ID,
+			"1",
+			{ enabled: false },
+		);
 	});
 });

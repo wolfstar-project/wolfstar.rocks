@@ -64,47 +64,49 @@ export async function fetchAutoModerationRules(
 
 /**
  * Creates a rule, and the `Guild` row it references when the guild has none yet.
- * @param db The database to write through.
+ *
+ * The two writes belong together, so `orm` is a transaction's `tx.orm`: the
+ * caller opens it, since it also holds the lock its writes run under.
+ *
+ * @param orm The transaction to write through.
  * @param guildId The guild's ID.
  * @param data The rule to create.
  * @param language The language a `Guild` row is created with.
  */
 export async function insertAutoModerationRule(
-	db: Database,
+	orm: Orm,
 	guildId: Snowflake,
 	data: AutoModerationRuleData,
 	language = "en-US",
 ): Promise<AutoModerationRule> {
 	const id = BigInt(guildId);
-	return db.transaction(async (tx) => {
-		await tx.orm.public.Guild.upsert({ create: { id, language }, update: { id } });
-		const row = await tx.orm.public.GuildAutoModerationRule.create({
-			...data,
-			guildId: id,
-			ignoredRoles: data.ignoredRoles.map((role) => BigInt(role)),
-			ignoredChannels: data.ignoredChannels.map((channel) => BigInt(channel)),
-		});
-		return toRule(row);
+	await orm.public.Guild.upsert({ create: { id, language }, update: { id } });
+	const row = await orm.public.GuildAutoModerationRule.create({
+		...data,
+		guildId: id,
+		ignoredRoles: data.ignoredRoles.map((role) => BigInt(role)),
+		ignoredChannels: data.ignoredChannels.map((channel) => BigInt(channel)),
 	});
+	return toRule(row);
 }
 
 /**
  * Edits a rule of a guild.
- * @param db The database to write through.
+ * @param orm The ORM surface to write through, `db.orm` or a transaction's `tx.orm`.
  * @param guildId The guild's ID, so a rule of another guild is never edited.
  * @param ruleId The rule's ID.
  * @param data What changes.
  * @returns Whether the rule existed: `false` as well for an ID that is not one.
  */
 export async function patchAutoModerationRule(
-	db: Database,
+	orm: Orm,
 	guildId: Snowflake,
 	ruleId: string,
 	data: Partial<AutoModerationRuleData>,
 ): Promise<boolean> {
 	if (!isRowId(ruleId)) return false;
 
-	const count = await db.orm.public.GuildAutoModerationRule.where({
+	const count = await orm.public.GuildAutoModerationRule.where({
 		id: BigInt(ruleId),
 		guildId: BigInt(guildId),
 	}).updateAndCount(toColumns(data));
@@ -116,13 +118,13 @@ export async function patchAutoModerationRule(
  * @returns Whether the rule existed.
  */
 export async function removeAutoModerationRule(
-	db: Database,
+	orm: Orm,
 	guildId: Snowflake,
 	ruleId: string,
 ): Promise<boolean> {
 	if (!isRowId(ruleId)) return false;
 
-	const count = await db.orm.public.GuildAutoModerationRule.where({
+	const count = await orm.public.GuildAutoModerationRule.where({
 		id: BigInt(ruleId),
 		guildId: BigInt(guildId),
 	}).deleteAndCount();

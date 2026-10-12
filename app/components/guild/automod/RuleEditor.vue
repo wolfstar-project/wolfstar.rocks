@@ -159,6 +159,7 @@
 						<UFormField
 							:label="ts('guild_settings.automod.rules.editor.duration')"
 							:help="ts('guild_settings.automod.rules.editor.permanent_hint')"
+							:error="actionError"
 						>
 							<GuildAutomodDurationInput
 								v-model="draft.hardActionDuration"
@@ -437,7 +438,8 @@ const nameError = computed(() => {
 	return problem ? ts(NAME_PROBLEM_KEYS[problem]) : undefined;
 });
 
-// A timeout cannot be permanent: Discord caps it, and the bot refuses the step.
+// A timeout cannot be permanent: Discord takes none without an end, whether it
+// is the rule's own action or a step of the escalation.
 const escalationError = computed(() =>
 	submitted.value &&
 	draft.escalation.some((step) => step.action === "Timeout" && step.duration <= 0)
@@ -445,9 +447,21 @@ const escalationError = computed(() =>
 		: undefined,
 );
 
+const actionError = computed(() =>
+	submitted.value && draft.hardAction === "Timeout" && draft.hardActionDuration <= 0
+		? ts("guild_settings.automod.rules.errors.timeoutNeedsDuration")
+		: undefined,
+);
+
 function submit() {
 	submitted.value = true;
-	if (validateAutomodRuleName(draft.name) !== null || escalationError.value) return;
+	if (
+		validateAutomodRuleName(draft.name) !== null ||
+		escalationError.value ||
+		actionError.value
+	) {
+		return;
+	}
 	emit("save", automodRuleDraftToBody(draft));
 }
 </script>

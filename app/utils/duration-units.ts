@@ -32,8 +32,9 @@ export function splitDuration(
 		}
 	}
 
-	// Not a whole number of seconds: keep the precision the smallest unit allows.
-	return { value: Math.round(milliseconds / 1000), unit: "seconds" };
+	// Not a whole number of seconds: a fraction keeps the value exact, where
+	// rounding would change a duration the moment it is loaded into a field.
+	return { value: milliseconds / 1000, unit: "seconds" };
 }
 
 /** Joins a value and its unit back into milliseconds. */

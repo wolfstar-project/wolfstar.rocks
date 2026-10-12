@@ -8,6 +8,7 @@ import {
 	type AutoModerationRule,
 	type AutoModerationRuleType,
 } from "#shared/utils/automod-rules";
+import { toRaw } from "vue";
 
 export type AutomodRuleOptionValue = number | boolean | string[];
 
@@ -57,7 +58,9 @@ function toDraft(rule: RuleFields): AutomodRuleDraft {
 		thresholdDuration: rule.thresholdDuration,
 		ignoredRoles: [...rule.ignoredRoles],
 		ignoredChannels: [...rule.ignoredChannels],
-		options: structuredClone(rule.options) as Record<string, AutomodRuleOptionValue>,
+		// A rule held in a `ref` hands out reactive proxies, which
+		// `structuredClone` refuses to copy.
+		options: structuredClone(toRaw(rule.options)) as Record<string, AutomodRuleOptionValue>,
 		escalation: rule.escalation.map((step) => ({
 			action: step.action,
 			duration: step.duration ?? 0,

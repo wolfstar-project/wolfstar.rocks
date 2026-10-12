@@ -11,6 +11,7 @@ import {
 	type AutoModerationRuleData,
 	type AutoModerationRuleType,
 } from "#shared/utils/automod-rules";
+import { isSnowflake } from "#shared/utils/snowflake";
 import { isObject } from "@sapphire/utilities";
 import { remove as removeConfusables } from "confusables";
 
@@ -203,8 +204,4 @@ function isInteger(value: unknown, minimum: number, maximum: number): value is n
 	return (
 		typeof value === "number" && Number.isInteger(value) && value >= minimum && value <= maximum
 	);
-}
-
-function isSnowflake(value: unknown): value is string {
-	return typeof value === "string" && /^\d{17,20}$/u.test(value);
 }

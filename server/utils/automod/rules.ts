@@ -1,5 +1,5 @@
 import type { Snowflake } from "discord-api-types/v10";
-import { db } from "#server/database/prisma";
+import { db, type Database } from "#server/database/prisma";
 import {
 	fetchAutoModerationRules,
 	insertAutoModerationRule,
@@ -55,22 +55,43 @@ function validateName(
 	return trimmed;
 }
 
+type Orm = Database["orm"];
+
 const locks = new Collection<Snowflake, AsyncQueue>();
+
+// First key of the advisory lock the rule writes of a guild run under; the
+// second is derived from the guild. Arbitrary, and only has to differ from the
+// keys other code locks on (the audit chain uses a single-key lock).
+const RULES_LOCK_NAMESPACE = 1_635_086_445;
+const RULES_LOCK_KEY_RANGE = 2_147_483_647n;
 
 /**
  * Runs the writes of a guild one after the other, each on the rules the
  * database has at that time, so two changes made at once do not undo each
- * other. The queue only covers this process: across processes (other
- * instances, the bot) the unique index on the name is what holds.
+ * other.
+ *
+ * The queue orders the writes of this process without holding a connection for
+ * each one waiting. The transaction-scoped advisory lock orders them across
+ * the other instances of the dashboard, which share no memory. The bot does
+ * not take that lock: against it, the unique index on the name is what holds.
  */
 async function write<T>(
 	guildId: Snowflake,
-	callback: (rules: readonly AutoModerationRule[]) => Promise<T>,
+	callback: (rules: readonly AutoModerationRule[], orm: Orm) => Promise<T>,
 ): Promise<T> {
 	const lock = locks.ensure(guildId, () => new AsyncQueue());
 	await lock.wait();
 	try {
-		return await callback(await fetchAutoModerationRules(db.orm, guildId));
+		// Two guilds that share a key only wait for each other; nothing breaks.
+		const guildKey = Number(BigInt(guildId) % RULES_LOCK_KEY_RANGE);
+		return await db.transaction(async (tx) => {
+			await tx.execute(
+				db.raw.sql`SELECT pg_advisory_xact_lock(${RULES_LOCK_NAMESPACE}, ${guildKey})`
+					.affectedCount()
+					.build(),
+			);
+			return callback(await fetchAutoModerationRules(tx.orm, guildId), tx.orm);
+		});
 	} finally {
 		lock.shift();
 		if (lock.remaining === 0) locks.delete(guildId);
@@ -111,10 +132,10 @@ export function createAutoModerationRule(
 	type: AutoModerationRuleType,
 	data: Partial<Omit<AutoModerationRuleData, "name" | "type">> = {},
 ): Promise<AutoModerationRule> {
-	return write(guildId, async (rules) => {
+	return write(guildId, async (rules, orm) => {
 		if (rules.length >= MaximumAutoModerationRules) throw new AutoModerationRuleError("limit");
 
-		return insertAutoModerationRule(db, guildId, {
+		return insertAutoModerationRule(orm, guildId, {
 			...getDefaultAutoModerationRule(type),
 			...data,
 			name: validateName(rules, name),
@@ -149,7 +170,7 @@ export function updateAutoModerationRule(
 	ruleId: string,
 	resolve: (rule: AutoModerationRule) => AutoModerationRuleUpdate | null,
 ): Promise<AutoModerationRuleChange> {
-	return write(guildId, async (rules) => {
+	return write(guildId, async (rules, orm) => {
 		const rule = rules.find((entry) => entry.id === ruleId);
 		if (!rule) throw new AutoModerationRuleError("unknown");
 
@@ -162,7 +183,7 @@ export function updateAutoModerationRule(
 			update.name === undefined
 				? update
 				: { ...update, name: validateName(rules, update.name, ruleId) };
-		const found = await patchAutoModerationRule(db, guildId, ruleId, patch).catch(
+		const found = await patchAutoModerationRule(orm, guildId, ruleId, patch).catch(
 			rethrowNameTaken,
 		);
 		if (!found) throw new AutoModerationRuleError("unknown");
@@ -181,9 +202,9 @@ export function deleteAutoModerationRule(
 	guildId: Snowflake,
 	ruleId: string,
 ): Promise<AutoModerationRule> {
-	return write(guildId, async (rules) => {
+	return write(guildId, async (rules, orm) => {
 		const rule = rules.find((entry) => entry.id === ruleId);
-		if (!rule || !(await removeAutoModerationRule(db, guildId, ruleId))) {
+		if (!rule || !(await removeAutoModerationRule(orm, guildId, ruleId))) {
 			throw new AutoModerationRuleError("unknown");
 		}
 		return rule;

@@ -76,6 +76,12 @@
 							},
 							"additionalProperties": false
 						},
+						"module_hint": {
+							"type": "string"
+						},
+						"module_settings": {
+							"type": "string"
+						},
 						"options": {
 							"type": "object",
 							"properties": {
@@ -115,6 +121,9 @@
 						"rules": {
 							"type": "object",
 							"properties": {
+								"action": {
+									"type": "string"
+								},
 								"count": {
 									"type": "string"
 								},
@@ -286,6 +295,9 @@
 									},
 									"additionalProperties": false
 								},
+								"first_infraction": {
+									"type": "string"
+								},
 								"load_failed": {
 									"type": "string"
 								},
@@ -295,10 +307,28 @@
 								"new": {
 									"type": "string"
 								},
+								"nothing": {
+									"type": "string"
+								},
+								"on_hit": {
+									"type": "string"
+								},
 								"retry": {
 									"type": "string"
 								},
+								"soft_alert_short": {
+									"type": "string"
+								},
+								"soft_delete_short": {
+									"type": "string"
+								},
+								"soft_log_short": {
+									"type": "string"
+								},
 								"subtitle": {
+									"type": "string"
+								},
+								"threshold": {
 									"type": "string"
 								},
 								"title": {

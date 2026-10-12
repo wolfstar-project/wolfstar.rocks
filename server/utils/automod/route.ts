@@ -119,7 +119,9 @@ export function auditAutoModerationRuleChange(
 	name: string,
 ): void {
 	const { guild, member } = useManagedGuild(event);
-	const key = `automodRule.${name}`;
+	// The audit diff addresses a field by a `/`-separated path, so a `/` in the
+	// name would split the key and lose the old values. `∕` reads the same.
+	const key = `automodRule.${name.replaceAll("/", "∕")}`;
 
 	withAuditMethods(useLogger(event)).audit(
 		guildSettingsUpdate({

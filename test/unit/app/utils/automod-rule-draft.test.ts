@@ -1,6 +1,6 @@
 import type { AutoModerationRule } from "#shared/utils/automod-rules";
-import { beforeAll, describe, expect, it } from "vitest";
-import { toRaw } from "vue";
+import { describe, expect, it } from "vitest";
+import { ref } from "vue";
 import {
 	automodRuleDraftToBody,
 	automodRuleToDraft,
@@ -8,12 +8,6 @@ import {
 	validateAutomodRuleName,
 } from "~/utils/automod-rule-draft";
 import { joinDuration, splitDuration } from "~/utils/duration-units";
-
-// The module under test calls Nuxt's auto-imported `toRaw`, which this
-// plain-node project doesn't provide.
-beforeAll(() => {
-	Object.assign(globalThis, { toRaw });
-});
 
 const rule: AutoModerationRule = {
 	id: "7",
@@ -40,6 +34,16 @@ describe("auto-moderation rule draft", () => {
 			softLog: false,
 			softAlert: true,
 		});
+	});
+
+	// `Rules.vue` keeps the rule being edited in a `ref`, whose nested values
+	// are proxies `structuredClone` cannot copy.
+	it("reads a rule held in a ref", () => {
+		const edited = ref({ ...rule, type: "Words" as const, options: { words: ["spam"] } });
+		const draft = automodRuleToDraft(edited.value);
+
+		expect(draft.options).toStrictEqual({ words: ["spam"] });
+		expect(draft.options).not.toBe(edited.value.options);
 	});
 
 	it("round-trips a rule through the form unchanged", () => {
@@ -103,5 +107,12 @@ describe("duration units", () => {
 		expect(joinDuration({ value: 2, unit: "hours" })).toBe(7_200_000);
 		expect(joinDuration({ value: -1, unit: "hours" })).toBe(0);
 		expect(joinDuration(splitDuration(600_000))).toBe(600_000);
+	});
+
+	// A value loaded into a field is written back as soon as it is shown, so
+	// reading it must not round it: the largest duration allowed is not whole.
+	it("keeps a duration that is not a whole number of seconds", () => {
+		expect(splitDuration(1500)).toStrictEqual({ value: 1.5, unit: "seconds" });
+		expect(joinDuration(splitDuration(2_147_483_647))).toBe(2_147_483_647);
 	});
 });

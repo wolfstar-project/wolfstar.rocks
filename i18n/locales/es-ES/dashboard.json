@@ -66,6 +66,7 @@
 		"stay_on_page": "Permanecer en la página",
 		"unauthorized_description": "Tu sesión ha caducado o no estás autorizado. Por favor, vuelve a iniciar sesión para acceder al panel de control.",
 		"unauthorized_title": "No autorizado",
+		"unsaved_bar": "",
 		"unsaved_description": "Tienes cambios sin guardar que se perderán si abandonas esta página.",
 		"unsaved_short": "",
 		"unsaved_title": "Cambios sin guardar",

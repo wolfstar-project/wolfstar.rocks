@@ -66,6 +66,7 @@
 		"stay_on_page": "Stay on Page",
 		"unauthorized_description": "Your session has expired or you are not authorized. Please sign in again to access the dashboard.",
 		"unauthorized_title": "Unauthorized",
+		"unsaved_bar": "",
 		"unsaved_description": "You have unsaved changes that will be lost if you leave this page.",
 		"unsaved_short": "",
 		"unsaved_title": "Unsaved Changes",

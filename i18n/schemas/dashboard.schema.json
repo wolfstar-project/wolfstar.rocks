@@ -202,6 +202,9 @@
 				"unauthorized_title": {
 					"type": "string"
 				},
+				"unsaved_bar": {
+					"type": "string"
+				},
 				"unsaved_description": {
 					"type": "string"
 				},

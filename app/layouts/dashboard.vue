@@ -73,15 +73,24 @@
 				:aria-label="ts('dashboard.unsaved_title')"
 				class="console-savebar"
 			>
-				<span class="console-savebar-status">
-					<span class="size-2 rounded-full bg-warning" aria-hidden="true"></span>
-					{{ ts("dashboard.unsaved_title") }}
-				</span>
-				<UButton color="neutral" variant="outline" @click="resetChanges">
-					{{ ts("dashboard.reset_changes") }}
-				</UButton>
-				<UButton color="primary" icon="heroicons:check" @click="submitChanges">
+				<span class="size-2 shrink-0 rounded-full bg-warning" aria-hidden="true"></span>
+				<span class="console-savebar-status">{{ ts("dashboard.unsaved_bar") }}</span>
+				<UButton
+					color="primary"
+					icon="heroicons:check"
+					class="console-savebar-action"
+					@click="submitChanges"
+				>
 					{{ ts("dashboard.save_changes") }}
+				</UButton>
+				<UButton
+					color="neutral"
+					variant="outline"
+					icon="heroicons:arrow-path"
+					class="console-savebar-action"
+					@click="resetChanges"
+				>
+					{{ ts("dashboard.reset_changes") }}
 				</UButton>
 			</div>
 
@@ -561,17 +570,34 @@ watch(guildId, (newGuildId, oldGuildId) => {
 }
 
 .console-main {
-	@apply flex h-full min-h-0 min-w-0 flex-1 flex-col;
+	@apply relative flex h-full min-h-0 min-w-0 flex-1 flex-col;
 	background-color: var(--console-main);
 }
 
+/* A floating card rather than a docked strip. On phones it sits in the flow
+   just above the tab bar; from `sm` up it floats over the end of the page,
+   which gets room to scroll clear of it (see below). */
 .console-savebar {
-	@apply z-10 flex shrink-0 flex-wrap items-center justify-end gap-2 px-4 py-3 sm:px-5.5;
+	@apply z-10 mx-3 my-2 flex shrink-0 items-center gap-2.5 rounded-[10px] py-2.5 pr-3 pl-4 sm:absolute sm:inset-x-4 sm:bottom-4 sm:m-0;
 	background-color: var(--console-rail);
-	border-top: 1px solid var(--home-border-subtle);
+	border: 1px solid var(--console-border);
+	box-shadow:
+		0 8px 24px oklch(0% 0 0 / 0.28),
+		0 2px 6px oklch(0% 0 0 / 0.2);
 }
 
+/* Below desktop the two actions share the card and the dot says the rest. */
 .console-savebar-status {
-	@apply mr-auto inline-flex items-center gap-2 text-sm font-semibold;
+	@apply hidden min-w-0 flex-1 text-sm lg:block;
+}
+
+.console-savebar-action {
+	@apply h-9 flex-1 justify-center rounded-md px-4 lg:flex-none;
+}
+
+.console-main:has(> .console-savebar) :deep(.console-content) {
+	@variant sm {
+		padding-bottom: 5.5rem;
+	}
 }
 </style>

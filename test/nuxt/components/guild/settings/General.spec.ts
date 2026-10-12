@@ -225,7 +225,7 @@ describe("general guild settings", () => {
 			expect(stats.find((stat) => stat.label === "Members")?.value).toBe("42");
 			// Three channels besides the category, which has its own note.
 			expect(stats.find((stat) => stat.label === "Channels")?.value).toBe("3");
-			expect(wrapper.text()).toContain("1 categories");
+			expect(wrapper.text()).toContain("1 category");
 			expect(stats.find((stat) => stat.label === "Roles")?.value).toBe("2");
 		});
 

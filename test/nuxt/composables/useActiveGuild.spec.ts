@@ -66,7 +66,7 @@ describe("useDashboardNavigation", () => {
 		expect(pendingNavigation.value).toBeNull();
 	});
 
-	it("parks a switch while changes are staged until it is confirmed or cancelled", () => {
+	it("parks a guild switch while changes are staged until it is confirmed or cancelled", () => {
 		const { selectGuild } = useActiveGuild();
 		const { setGuildSettingsChanges } = useGuildSettingsChanges();
 		const {
@@ -84,17 +84,20 @@ describe("useDashboardNavigation", () => {
 		setGuildSettingsChanges({ prefix: "b!" });
 		expect(hasStagedChanges.value).toBe(true);
 
+		// Staged edits follow the admin across the sections of one guild.
 		goToSection("events");
-		expect(section.value).toBe("");
-		expect(pendingNavigation.value).toStrictEqual({ section: "events" });
-
-		cancelPendingNavigation();
+		expect(section.value).toBe("events");
 		expect(pendingNavigation.value).toBeNull();
-		expect(section.value).toBe("");
 
 		goToGuild(GUILD_B);
 		expect(activeGuildId.value).toBe(GUILD_A);
 		expect(pendingNavigation.value).toStrictEqual({ guildId: GUILD_B });
+
+		cancelPendingNavigation();
+		expect(pendingNavigation.value).toBeNull();
+		expect(activeGuildId.value).toBe(GUILD_A);
+
+		goToGuild(GUILD_B);
 
 		confirmPendingNavigation();
 		expect(activeGuildId.value).toBe(GUILD_B);

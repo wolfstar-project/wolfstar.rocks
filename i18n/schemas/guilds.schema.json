@@ -463,6 +463,18 @@
 						"language_placeholder": {
 							"type": "string"
 						},
+						"mod_actions_aria": {
+							"type": "string"
+						},
+						"mod_actions_partial": {
+							"type": "string"
+						},
+						"mod_actions_title": {
+							"type": "string"
+						},
+						"mod_actions_total": {
+							"type": "string"
+						},
 						"need_help": {
 							"type": "string"
 						},
@@ -470,6 +482,12 @@
 							"type": "string"
 						},
 						"no_activity_description": {
+							"type": "string"
+						},
+						"overview_subtitle": {
+							"type": "string"
+						},
+						"overview_title": {
 							"type": "string"
 						},
 						"prefix": {
@@ -505,19 +523,28 @@
 						"server_stats_aria": {
 							"type": "string"
 						},
-						"stat_categories": {
+						"stat_cases": {
+							"type": "string"
+						},
+						"stat_categories_note": {
+							"type": "string"
+						},
+						"stat_channels": {
+							"type": "string"
+						},
+						"stat_commands": {
+							"type": "string"
+						},
+						"stat_last_days": {
 							"type": "string"
 						},
 						"stat_members": {
 							"type": "string"
 						},
+						"stat_online": {
+							"type": "string"
+						},
 						"stat_roles": {
-							"type": "string"
-						},
-						"stat_text_channels": {
-							"type": "string"
-						},
-						"stat_voice_channels": {
 							"type": "string"
 						},
 						"subtitle": {

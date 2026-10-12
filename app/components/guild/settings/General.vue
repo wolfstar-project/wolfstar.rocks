@@ -213,7 +213,7 @@ const { languages } = defineProps<{
 	languages: string[];
 }>();
 
-const { ts } = useI18n();
+const { tc, ts } = useI18n();
 const { guildSettings } = useGuildSettings();
 const { guildData } = useGuildData();
 
@@ -343,9 +343,7 @@ const serverStats = computed(() => {
 		},
 		{
 			label: ts("guild_settings.general.stat_channels"),
-			note: ts("guild_settings.general.stat_categories_note", {
-				count: channelCounts.value.categories,
-			}),
+			note: tc("guild_settings.general.stat_categories_note", channelCounts.value.categories),
 			value: channelCounts.value.total.toLocaleString(),
 		},
 		{

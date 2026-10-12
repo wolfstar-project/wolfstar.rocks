@@ -165,6 +165,7 @@ const {
 	goToGuild,
 	pendingNavigation,
 } = useDashboardNavigation();
+const { selectGuild } = useActiveGuild();
 
 const toast = useToast();
 const router = useRouter();
@@ -196,6 +197,20 @@ watch(
 const requestFetch = useRequestFetch();
 const route = useRoute();
 const refreshGuildCache = computed(() => route.query.refresh === "true");
+
+// A server card's link carries its guild so that opening it in a new tab lands
+// on that server. The id moves into state here and leaves the URL.
+watch(
+	() => route.query.guild,
+	(requestedGuildId) => {
+		if (!isValidGuildId(requestedGuildId)) {
+			return;
+		}
+		goToGuild(requestedGuildId);
+		void router.replace({ query: { ...route.query, guild: undefined } });
+	},
+	{ immediate: true },
+);
 
 const {
 	data,
@@ -241,6 +256,12 @@ watch(
 
 			setGuildSettings(parsedSettings as GuildData);
 
+			// One uncached load is enough after the bot was invited: left in the
+			// URL, the flag would bypass the cache for every guild opened later.
+			if (refreshGuildCache.value) {
+				void router.replace({ query: { ...route.query, refresh: undefined } });
+			}
+
 			if (nuxtError.value) {
 				clearError();
 			}
@@ -261,7 +282,15 @@ watch(
 				error: parsedError,
 			});
 
-			switch (classifyGuildError(parsedError.status)) {
+			const failure = classifyGuildError(parsedError.status);
+			// The selection is restored from storage on the next visit: left in
+			// place, a guild the admin can no longer open would fail every time.
+			// A signed-out session keeps it, to come back to after signing in.
+			if (failure !== "unauthorized") {
+				selectGuild(null);
+			}
+
+			switch (failure) {
 				case "forbidden": {
 					if (import.meta.client) {
 						toast.add({
@@ -380,6 +409,9 @@ function discardAndLeave() {
 		confirmPendingNavigation();
 		return;
 	}
+	// The active guild outlives the route, so a draft left in place would be
+	// back on the next visit to `/app` after the admin chose to discard it.
+	resetGuildSettingsChanges();
 	confirmLeave();
 }
 

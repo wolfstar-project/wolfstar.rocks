@@ -1,7 +1,8 @@
 /**
- * Section and guild switches that respect staged settings changes: with edits
- * pending, the switch is parked in `pendingNavigation` for the layout's
- * "unsaved changes" dialog to confirm or cancel.
+ * Section and guild switches that respect staged settings changes. Staged
+ * edits are kept per guild and survive a section switch, so only leaving the
+ * guild is parked in `pendingNavigation` for the layout's "unsaved changes"
+ * dialog to confirm or cancel.
  *
  * Kept apart from `useActiveGuild()` on purpose: `useGuildSettingsChanges()`
  * depends on the active guild, so folding this in would make the two
@@ -19,10 +20,6 @@ export function useDashboardNavigation() {
 
 	function goToSection(slug: string) {
 		if (slug === section.value) {
-			return;
-		}
-		if (hasStagedChanges.value) {
-			pendingNavigation.value = { section: slug };
 			return;
 		}
 		setSection(slug);

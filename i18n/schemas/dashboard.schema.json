@@ -94,6 +94,9 @@
 						"modules": {
 							"type": "string"
 						},
+						"overview": {
+							"type": "string"
+						},
 						"reactions": {
 							"type": "string"
 						},
@@ -106,10 +109,22 @@
 					},
 					"additionalProperties": false
 				},
+				"nav_aria": {
+					"type": "string"
+				},
+				"nav_current_group": {
+					"type": "string"
+				},
 				"nav_groups": {
 					"type": "object",
 					"properties": {
 						"management": {
+							"type": "string"
+						},
+						"modules": {
+							"type": "string"
+						},
+						"records": {
 							"type": "string"
 						},
 						"resources": {
@@ -117,6 +132,33 @@
 						}
 					},
 					"additionalProperties": false
+				},
+				"nav_menu": {
+					"type": "string"
+				},
+				"nav_menu_description": {
+					"type": "string"
+				},
+				"nav_module_off": {
+					"type": "string"
+				},
+				"nav_pin": {
+					"type": "string"
+				},
+				"nav_pinned": {
+					"type": "string"
+				},
+				"nav_recent": {
+					"type": "string"
+				},
+				"nav_sections_aria": {
+					"type": "string"
+				},
+				"nav_unpin": {
+					"type": "string"
+				},
+				"nav_you": {
+					"type": "string"
 				},
 				"picker": {
 					"type": "object",
@@ -163,6 +205,9 @@
 				"unsaved_description": {
 					"type": "string"
 				},
+				"unsaved_short": {
+					"type": "string"
+				},
 				"unsaved_title": {
 					"type": "string"
 				},
@@ -173,6 +218,12 @@
 					"type": "string"
 				},
 				"update_failed_why": {
+					"type": "string"
+				},
+				"user_preferences": {
+					"type": "string"
+				},
+				"user_sign_out": {
 					"type": "string"
 				}
 			},
@@ -251,6 +302,12 @@
 					"type": "string"
 				},
 				"no_warnings": {
+					"type": "string"
+				},
+				"page_subtitle": {
+					"type": "string"
+				},
+				"page_title": {
 					"type": "string"
 				},
 				"refresh_activity": {

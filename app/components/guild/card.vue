@@ -40,7 +40,7 @@
 				<!-- Guild Icon with action overlay -->
 				<NuxtLink
 					v-if="guild.wolfstarIsIn && guild.manageable"
-					to="/app"
+					:to="{ path: '/app', query: { guild: guild.id } }"
 					@click="goToGuild(guild.id)"
 					class="group relative"
 					:aria-label="ts('guild_card.manage_aria', { name: guild.name })"
@@ -136,7 +136,7 @@
 				<div class="mt-auto w-full pt-2">
 					<NuxtLink
 						v-if="guild.wolfstarIsIn && guild.manageable"
-						to="/app"
+						:to="{ path: '/app', query: { guild: guild.id } }"
 						@click="goToGuild(guild.id)"
 						class="flex h-9 w-full items-center justify-center rounded-lg border border-success/20 bg-success/10 px-3 text-xs font-medium text-success transition-all duration-200 hover:bg-success/20 hover:shadow-md"
 						:aria-label="ts('guild_card.manage_server_aria', { name: guild.name })"

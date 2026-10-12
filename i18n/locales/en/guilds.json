@@ -174,7 +174,7 @@
 			"server_info_description": "Your server at a glance. Adjust settings below or explore sections in the sidebar.",
 			"server_stats_aria": "Server statistics",
 			"stat_cases": "Cases",
-			"stat_categories_note": "{count} categories",
+			"stat_categories_note": "No categories | 1 category | {count} categories",
 			"stat_channels": "Channels",
 			"stat_commands": "Commands",
 			"stat_last_days": "last {count} days",

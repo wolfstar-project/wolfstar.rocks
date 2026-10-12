@@ -328,7 +328,8 @@ const serverStats = computed(() => {
 		{
 			label: ts("guild_settings.general.stat_members"),
 			note: online > 0 ? ts("guild_settings.general.stat_online", { count: online }) : "",
-			noteClass: "text-success",
+			// The success green is too light to read on a white card.
+			noteClass: "text-toned theme-dark:text-success",
 			value: (guild?.approximateMemberCount ?? 0).toLocaleString(),
 		},
 		{

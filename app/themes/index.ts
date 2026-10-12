@@ -9,6 +9,7 @@ import link from "./link";
 import main from "./main";
 import navigationMenu from "./navigation-menu";
 import skeleton from "./skeleton";
+import switchTheme from "./switch";
 import tabs from "./tabs";
 import toaster from "./toaster";
 
@@ -24,6 +25,7 @@ const ui = {
 	main,
 	navigationMenu,
 	skeleton,
+	switch: switchTheme,
 	tabs,
 	toaster,
 } as const;

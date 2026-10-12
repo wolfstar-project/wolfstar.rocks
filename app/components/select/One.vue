@@ -180,9 +180,12 @@ const rowValue = computed({
 	},
 });
 const rowPlaceholder = computed(() => emptyLabel ?? "None");
-const selectRowUi = {
-	base: "bg-(--console-input) text-[0.8125rem] ring-(--console-border)",
-};
+// A fixed-width field like the design's, so a column of rows lines up. An
+// unset row reads as a placeholder rather than as a chosen value.
+const selectRowUi = computed(() => ({
+	base: "h-8 w-37.5 rounded-[5px] bg-(--console-input)! text-[0.8125rem] ring-(--console-border)",
+	value: rowValue.value === NONE_VALUE ? "text-muted" : "",
+}));
 
 // Button label shown in the trigger, e.g. "Member Add Logs: None"
 const buttonLabel = computed(() => `${formattedLabel.value}: ${selectedLabel.value ?? "None"}`);
@@ -197,9 +200,5 @@ const buttonLabel = computed(() => `${formattedLabel.value}: ${selectedLabel.val
 
 .select-row-label {
 	@apply min-w-0 text-sm;
-}
-
-.select-row-control {
-	@apply w-44 shrink-0 sm:w-52;
 }
 </style>

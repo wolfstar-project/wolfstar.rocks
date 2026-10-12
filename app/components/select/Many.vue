@@ -15,7 +15,9 @@
 			:placeholder="emptyLabel ?? 'None'"
 			:aria-describedby="tooltipTitle ? `${rowId}-help` : undefined"
 			class="select-row-control"
-			:ui="{ base: 'bg-(--console-input) text-[0.8125rem] ring-(--console-border)' }"
+			:ui="{
+				base: 'h-8 w-37.5 rounded-[5px] bg-(--console-input)! text-[0.8125rem] ring-(--console-border)',
+			}"
 		/>
 		<span v-if="tooltipTitle" :id="`${rowId}-help`" class="sr-only">{{ tooltipTitle }}</span>
 	</div>
@@ -174,9 +176,5 @@ function clearSelected() {
 
 .select-row-label {
 	@apply min-w-0 text-sm;
-}
-
-.select-row-control {
-	@apply w-44 shrink-0 sm:w-52;
 }
 </style>

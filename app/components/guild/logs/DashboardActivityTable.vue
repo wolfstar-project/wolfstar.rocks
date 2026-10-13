@@ -34,7 +34,7 @@
 					base: 'table-fixed border-separate border-spacing-0',
 					thead: '[&>tr]:bg-muted/50 [&>tr]:after:content-none',
 					tbody: '[&>tr]:last:[&>td]:border-b-0',
-					th: 'py-2 first:rounded-l-lg last:rounded-r-lg border-y border-default first:border-l last:border-r',
+					th: 'py-2 first:rounded-l-[8px] last:rounded-r-[8px] border-y border-default first:border-l last:border-r',
 					td: 'border-b border-default',
 					separator: 'h-0',
 				}"
@@ -46,7 +46,7 @@
 				<p class="text-sm text-muted">
 					{{
 						ts("guild_logs.showing_entries", {
-							shown: table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0,
+							shown: table?.tableApi?.getRowModel().rows.length || 0,
 							total: table?.tableApi?.getFilteredRowModel().rows.length || 0,
 						})
 					}}

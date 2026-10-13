@@ -132,7 +132,7 @@ const columns = computed<TableColumn<ModerationLogEntry>[]>(() => [
 			const member = row.original.targetMember;
 			return h(UUser, {
 				name: member ? auditLogMemberName(member) : ts("guild_logs.unknown"),
-				avatar: member ? auditLogMemberAvatar(member) : undefined,
+				avatar: auditLogMemberAvatar(member),
 				size: "sm",
 			});
 		},
@@ -144,7 +144,7 @@ const columns = computed<TableColumn<ModerationLogEntry>[]>(() => [
 			const member = row.original.moderatorMember;
 			return h(UUser, {
 				name: member ? auditLogMemberName(member) : ts("guild_logs.unknown"),
-				avatar: member ? auditLogMemberAvatar(member) : undefined,
+				avatar: auditLogMemberAvatar(member),
 				size: "sm",
 			});
 		},

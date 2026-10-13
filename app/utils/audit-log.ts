@@ -104,10 +104,20 @@ export function auditLogMemberName(member: APIGuildMember): string {
 	return member.user?.global_name ?? member.user?.username ?? member.nick ?? "Unknown User";
 }
 
-export function auditLogMemberAvatar(member: APIGuildMember) {
+/**
+ * Avatar props for a member shown next to their name.
+ *
+ * The name is always printed beside the picture, so the image is decorative
+ * and carries no `alt`. That also keeps `UAvatar` from spelling a fallback out
+ * of it: a log row stores the member as they were, and once their avatar has
+ * changed the stored one no longer loads. The Discord mark stands in then, as
+ * it does for a row with no member at all.
+ */
+export function auditLogMemberAvatar(member?: APIGuildMember | null) {
 	return {
-		alt: `${auditLogMemberName(member)}'s avatar`,
-		src: member.user ? avatarURL(member.user, { size: 64 }) : undefined,
+		alt: "",
+		icon: "ic:round-discord",
+		src: member?.user ? avatarURL(member.user, { size: 64 }) : undefined,
 	};
 }
 

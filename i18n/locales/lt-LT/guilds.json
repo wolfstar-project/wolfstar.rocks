@@ -49,10 +49,10 @@
 				"edit_aria": "",
 				"editor": {
 					"action": "",
+					"back": "",
 					"cancel": "",
 					"create": "",
 					"create_title": "",
-					"description": "",
 					"duration": "",
 					"duration_unit_aria": "",
 					"edit_title": "",
@@ -115,7 +115,13 @@
 					"deleted": "",
 					"saved": ""
 				},
-				"toggle_aria": ""
+				"toggle_aria": "",
+				"type_picker": {
+					"content_filters": "",
+					"description": "",
+					"rate_limits": "",
+					"title": ""
+				}
 			},
 			"subtitle": "",
 			"title": "",

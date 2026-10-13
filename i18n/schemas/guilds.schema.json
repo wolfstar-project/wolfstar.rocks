@@ -151,6 +151,9 @@
 										"action": {
 											"type": "string"
 										},
+										"back": {
+											"type": "string"
+										},
 										"cancel": {
 											"type": "string"
 										},
@@ -158,9 +161,6 @@
 											"type": "string"
 										},
 										"create_title": {
-											"type": "string"
-										},
-										"description": {
 											"type": "string"
 										},
 										"duration": {
@@ -351,6 +351,24 @@
 								},
 								"toggle_aria": {
 									"type": "string"
+								},
+								"type_picker": {
+									"type": "object",
+									"properties": {
+										"content_filters": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"rate_limits": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
 								}
 							},
 							"additionalProperties": false

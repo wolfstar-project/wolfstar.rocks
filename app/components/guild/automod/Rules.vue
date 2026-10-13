@@ -139,13 +139,17 @@
 			</li>
 		</ul>
 
+		<GuildAutomodTypePicker v-model:open="typePickerOpen" @pick="createRuleOfType" />
+
 		<GuildAutomodRuleEditor
 			v-model:open="editorOpen"
 			:rule="editedRule"
+			:type="newRuleType"
 			:guild="guildData"
 			:saving="saving"
 			:error-code="editorErrorCode"
 			@save="saveRule"
+			@back="pickTypeAgain"
 		/>
 
 		<UModal
@@ -180,7 +184,11 @@
 
 <script setup lang="ts">
 import type { AutomodRuleCreate, AutomodRuleErrorCode } from "~/composables/useAutomodRules";
-import { MaximumAutoModerationRules, type AutoModerationRule } from "#shared/utils/automod-rules";
+import {
+	MaximumAutoModerationRules,
+	type AutoModerationRule,
+	type AutoModerationRuleType,
+} from "#shared/utils/automod-rules";
 import { AutoModerationSoftActionBits } from "#shared/utils/automod-rules";
 import {
 	AUTOMOD_HARD_ACTION_KEYS,
@@ -259,10 +267,32 @@ function exemptions(rule: AutoModerationRule): string[] {
 	return [...roles, ...channels].filter((entry): entry is string => entry !== null);
 }
 
+// A new rule starts with its type, which it keeps for good; the form opens on
+// the type that was picked. Editing goes straight to the form.
+const typePickerOpen = ref(false);
+const newRuleType = ref<AutoModerationRuleType>("Words");
+
 function openEditor(rule: AutoModerationRule | null) {
+	if (rule === null) {
+		typePickerOpen.value = true;
+		return;
+	}
 	editedRule.value = rule;
 	editorErrorCode.value = null;
 	editorOpen.value = true;
+}
+
+function createRuleOfType(type: AutoModerationRuleType) {
+	typePickerOpen.value = false;
+	newRuleType.value = type;
+	editedRule.value = null;
+	editorErrorCode.value = null;
+	editorOpen.value = true;
+}
+
+function pickTypeAgain() {
+	editorOpen.value = false;
+	typePickerOpen.value = true;
 }
 
 function notifyFailure(code: AutomodRuleErrorCode) {

@@ -51,6 +51,33 @@ export const AUTOMOD_TYPE_DESCRIPTION_KEYS: Record<AutoModerationRuleType, strin
 	Zalgo: "guild_settings.automod.types.Zalgo.description",
 };
 
+/** The colour a kind of rule is shown in: what it guards against, not how bad it is. */
+export type AutomodTypeTone = "primary" | "warning" | "error";
+
+export const AUTOMOD_TYPE_TONES: Record<AutoModerationRuleType, AutomodTypeTone> = {
+	Attachments: "primary",
+	Capitals: "warning",
+	Characters: "warning",
+	Duplicates: "warning",
+	Emojis: "primary",
+	ImageSpam: "warning",
+	Invites: "primary",
+	Links: "primary",
+	LinksCooldown: "primary",
+	MaskedLinks: "error",
+	MassMentions: "error",
+	MentionsCooldown: "error",
+	MessageSpam: "warning",
+	Newlines: "error",
+	NoMentionSpam: "error",
+	Phishing: "error",
+	Spoilers: "warning",
+	Stickers: "primary",
+	StickersCooldown: "primary",
+	Words: "error",
+	Zalgo: "warning",
+};
+
 export const AUTOMOD_HARD_ACTION_KEYS: Record<AutoModerationHardAction, string> = {
 	Ban: "guild_settings.automod.hard_actions.Ban",
 	Kick: "guild_settings.automod.hard_actions.Kick",

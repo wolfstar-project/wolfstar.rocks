@@ -6,12 +6,12 @@
 				? ts('guild_settings.automod.rules.editor.edit_title', { name: rule.name })
 				: ts('guild_settings.automod.rules.editor.create_title')
 		"
-		:description="ts('guild_settings.automod.rules.editor.description')"
+		:description="ts(AUTOMOD_TYPE_DESCRIPTION_KEYS[draft.type])"
 		:dismissible="!saving"
-		:ui="{ content: 'sm:max-w-2xl' }"
+		:ui="{ content: 'sm:max-w-205' }"
 	>
 		<template #body>
-			<form :id="formId" class="space-y-6" novalidate @submit.prevent="submit">
+			<form :id="formId" class="space-y-5" novalidate @submit.prevent="submit">
 				<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 					<UFormField
 						:label="ts('guild_settings.automod.rules.editor.name')"
@@ -31,22 +31,24 @@
 
 					<UFormField
 						:label="ts('guild_settings.automod.rules.editor.type')"
-						:help="
-							rule ? ts('guild_settings.automod.rules.editor.type_locked') : undefined
-						"
+						:help="ts('guild_settings.automod.rules.editor.type_locked')"
 					>
-						<USelect
-							v-model="draft.type"
-							:items="typeItems"
-							:disabled="rule !== null"
-							class="w-full"
-						/>
+						<!-- Picked before the form opens and fixed from then on, so it
+						     is shown, not offered. -->
+						<div class="editor-type">
+							<GuildAutomodTypeIcon
+								:type="draft.type"
+								class="size-6! rounded-[6px]!"
+							/>
+							<span class="truncate">{{
+								ts(AUTOMOD_TYPE_NAME_KEYS[draft.type])
+							}}</span>
+							<span class="ml-auto font-mono text-[0.6875rem] text-muted">
+								{{ draft.type }}
+							</span>
+						</div>
 					</UFormField>
 				</div>
-
-				<p class="text-sm text-base-content/70">
-					{{ ts(AUTOMOD_TYPE_DESCRIPTION_KEYS[draft.type]) }}
-				</p>
 
 				<UFormField :label="ts('guild_settings.automod.rules.editor.enabled')">
 					<USwitch
@@ -56,8 +58,9 @@
 				</UFormField>
 
 				<fieldset v-if="optionFields.length > 0" class="space-y-4">
-					<legend class="text-base font-semibold text-base-content">
-						{{ ts("guild_settings.automod.rules.editor.options") }}
+					<legend class="editor-heading">
+						<span>{{ ts("guild_settings.automod.rules.editor.options") }}</span>
+						<span aria-hidden="true"></span>
 					</legend>
 					<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 						<UFormField
@@ -96,33 +99,35 @@
 				</fieldset>
 
 				<fieldset class="space-y-3">
-					<legend class="text-base font-semibold text-base-content">
-						{{ ts("guild_settings.automod.rules.editor.soft_actions") }}
+					<legend class="editor-heading">
+						<span>{{ ts("guild_settings.automod.rules.editor.soft_actions") }}</span>
+						<span aria-hidden="true"></span>
 					</legend>
-					<p class="text-sm text-base-content/70">
+					<p class="text-[0.8125rem] text-muted">
 						{{ ts("guild_settings.automod.rules.editor.soft_actions_help") }}
 					</p>
-					<div class="flex flex-wrap gap-x-6 gap-y-2">
-						<UCheckbox
-							v-model="draft.softDelete"
-							:label="ts('guild_settings.automod.rules.editor.soft_delete')"
+					<div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+						<USwitch
+							v-model="draft.softAlert"
+							:label="ts('guild_settings.automod.rules.editor.soft_alert')"
 						/>
-						<UCheckbox
+						<USwitch
 							v-model="draft.softLog"
 							:label="ts('guild_settings.automod.rules.editor.soft_log')"
 						/>
-						<UCheckbox
-							v-model="draft.softAlert"
-							:label="ts('guild_settings.automod.rules.editor.soft_alert')"
+						<USwitch
+							v-model="draft.softDelete"
+							:label="ts('guild_settings.automod.rules.editor.soft_delete')"
 						/>
 					</div>
 				</fieldset>
 
 				<fieldset class="space-y-4">
-					<legend class="text-base font-semibold text-base-content">
-						{{ ts("guild_settings.automod.rules.editor.hard_action") }}
+					<legend class="editor-heading">
+						<span>{{ ts("guild_settings.automod.rules.editor.hard_action") }}</span>
+						<span aria-hidden="true"></span>
 					</legend>
-					<p class="text-sm text-base-content/70">
+					<p class="text-[0.8125rem] text-muted">
 						{{ ts("guild_settings.automod.rules.editor.hard_action_help") }}
 					</p>
 					<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -170,10 +175,11 @@
 				</fieldset>
 
 				<fieldset class="space-y-3">
-					<legend class="text-base font-semibold text-base-content">
-						{{ ts("guild_settings.automod.rules.editor.escalation") }}
+					<legend class="editor-heading">
+						<span>{{ ts("guild_settings.automod.rules.editor.escalation") }}</span>
+						<span aria-hidden="true"></span>
 					</legend>
-					<p class="text-sm text-base-content/70">
+					<p class="text-[0.8125rem] text-muted">
 						{{ ts("guild_settings.automod.rules.editor.escalation_help") }}
 					</p>
 
@@ -181,7 +187,7 @@
 						<li
 							v-for="(step, index) in draft.escalation"
 							:key="index"
-							class="grid grid-cols-1 items-end gap-3 sm:grid-cols-[1fr_1fr_auto]"
+							class="editor-step grid grid-cols-1 items-end gap-3 sm:grid-cols-[1fr_1fr_auto]"
 						>
 							<UFormField
 								:label="
@@ -223,18 +229,17 @@
 						{{ escalationError }}
 					</p>
 
-					<UButton
-						color="neutral"
-						variant="outline"
-						size="sm"
-						icon="heroicons:plus"
+					<button
+						type="button"
+						class="editor-add-step"
 						:disabled="
 							draft.escalation.length >= MaximumAutoModerationRuleEscalationSteps
 						"
 						@click="draft.escalation.push({ action: 'Timeout', duration: 600_000 })"
 					>
+						<UIcon name="ic:round-add" class="size-4" aria-hidden="true" />
 						{{ ts("guild_settings.automod.rules.editor.escalation_add") }}
-					</UButton>
+					</button>
 
 					<UFormField
 						v-if="draft.escalation.length > 0"
@@ -249,8 +254,9 @@
 				</fieldset>
 
 				<fieldset class="space-y-4">
-					<legend class="text-base font-semibold text-base-content">
-						{{ ts("guild_settings.automod.rules.editor.exemptions") }}
+					<legend class="editor-heading">
+						<span>{{ ts("guild_settings.automod.rules.editor.exemptions") }}</span>
+						<span aria-hidden="true"></span>
 					</legend>
 					<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 						<SelectRoles
@@ -269,8 +275,25 @@
 		</template>
 
 		<template #footer>
-			<div class="flex w-full justify-end gap-2">
-				<UButton color="neutral" variant="ghost" :disabled="saving" @click="open = false">
+			<div class="flex w-full items-center gap-2.5">
+				<UButton
+					v-if="rule === null"
+					color="neutral"
+					variant="ghost"
+					icon="ic:round-arrow-back"
+					:disabled="saving"
+					@click="emit('back')"
+				>
+					{{ ts("guild_settings.automod.rules.editor.back") }}
+				</UButton>
+				<span class="grow"></span>
+				<UButton
+					color="neutral"
+					variant="outline"
+					class="border border-(--field-border) bg-transparent text-highlighted hover:bg-base-content/6"
+					:disabled="saving"
+					@click="open = false"
+				>
 					{{ ts("guild_settings.automod.rules.editor.cancel") }}
 				</UButton>
 				<UButton type="submit" :form="formId" color="primary" :loading="saving">
@@ -292,16 +315,15 @@ import {
 	AutoModerationHardActions,
 	AutoModerationRuleLimits,
 	AutoModerationRuleOptionLimits,
-	AutoModerationRuleTypes,
 	MaximumAutoModerationRuleEscalationSteps,
 	MaximumAutoModerationRuleNameLength,
 	type AutoModerationRule,
+	type AutoModerationRuleType,
 } from "#shared/utils/automod-rules";
 import {
 	automodRuleDraftToBody,
 	automodRuleToDraft,
 	createAutomodRuleDraft,
-	defaultAutomodRuleOptions,
 	validateAutomodRuleName,
 	type AutomodRuleDraft,
 } from "~/utils/automod-rule-draft";
@@ -315,12 +337,15 @@ const open = defineModel<boolean>("open", { required: true });
 
 const {
 	rule = null,
+	type = "Words",
 	guild,
 	saving = false,
 	errorCode = null,
 } = defineProps<{
 	/** The rule to edit, or `null` to create one. */
 	rule?: AutoModerationRule | null;
+	/** The kind of rule to create, picked before the form opens. */
+	type?: AutoModerationRuleType;
 	/** `undefined` while the guild has not loaded: the list is then empty. */
 	guild:
 		| DeepReadonly<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>
@@ -333,6 +358,8 @@ const {
 const emit = defineEmits<{
 	/** The form is valid and should be saved with this body. */
 	save: [body: AutomodRuleCreate];
+	/** A new rule's type should be picked again. */
+	back: [];
 }>();
 
 const { ts } = useI18n();
@@ -353,10 +380,6 @@ const OPTION_LABEL_KEYS: Record<string, string> = {
 	words: "guild_settings.automod.options.words",
 };
 
-const typeItems = computed(() =>
-	AutoModerationRuleTypes.map((value) => ({ label: ts(AUTOMOD_TYPE_NAME_KEYS[value]), value })),
-);
-
 const hardActionItems = computed(() =>
 	AutoModerationHardActions.map((value) => ({
 		label: ts(AUTOMOD_HARD_ACTION_KEYS[value]),
@@ -364,7 +387,7 @@ const hardActionItems = computed(() =>
 	})),
 );
 
-const draft = reactive<AutomodRuleDraft>(createAutomodRuleDraft("Words"));
+const draft = reactive<AutomodRuleDraft>(createAutomodRuleDraft(type));
 const submitted = ref(false);
 
 // The form is filled when the modal opens rather than when the prop changes,
@@ -373,21 +396,10 @@ watch(
 	open,
 	(isOpen) => {
 		if (!isOpen) return;
-		Object.assign(draft, rule ? automodRuleToDraft(rule) : createAutomodRuleDraft("Words"));
+		Object.assign(draft, rule ? automodRuleToDraft(rule) : createAutomodRuleDraft(type));
 		submitted.value = false;
 	},
 	{ immediate: true },
-);
-
-// The options belong to the type: a new rule that changes type starts from
-// that type's defaults. An existing rule cannot change type.
-watch(
-	() => draft.type,
-	(type, previous) => {
-		if (rule === null && type !== previous) {
-			draft.options = defaultAutomodRuleOptions(type);
-		}
-	},
 );
 
 interface OptionField {
@@ -468,3 +480,47 @@ function submit() {
 	emit("save", automodRuleDraftToBody(draft));
 }
 </script>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+/* A section title followed by a hairline to the edge of the form. */
+.editor-heading {
+	@apply mb-1 flex w-full items-center gap-3 text-[1.0625rem] font-semibold;
+}
+
+.editor-heading span:last-child {
+	@apply h-px flex-1;
+	background-color: var(--field-border);
+}
+
+.editor-type {
+	@apply flex h-10 items-center gap-2 rounded-[6px] px-2.5 text-sm;
+	background-color: var(--field-surface);
+	border: 1px solid var(--field-border);
+}
+
+.editor-step {
+	@apply rounded-[8px] p-3;
+	background-color: var(--field-surface);
+}
+
+.editor-add-step {
+	@apply flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-[8px] bg-transparent text-sm font-medium;
+	border: 1px dashed var(--field-border);
+	color: var(--ui-text-toned);
+}
+
+.editor-add-step:hover:not(:disabled) {
+	background-color: color-mix(in oklab, var(--field-surface) 60%, transparent);
+}
+
+.editor-add-step:disabled {
+	@apply cursor-default opacity-50;
+}
+
+.editor-add-step:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: -1px;
+}
+</style>

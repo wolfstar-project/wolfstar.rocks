@@ -49,10 +49,10 @@
 				"edit_aria": "Edit rule {name}",
 				"editor": {
 					"action": "Action",
+					"back": "Back",
 					"cancel": "Cancel",
 					"create": "Create rule",
 					"create_title": "New rule",
-					"description": "Choose what the rule looks for and what happens when a member breaks it.",
 					"duration": "Duration",
 					"duration_unit_aria": "{label} unit",
 					"edit_title": "Edit {name}",
@@ -115,7 +115,13 @@
 					"deleted": "Rule \"{name}\" deleted",
 					"saved": "Rule \"{name}\" saved"
 				},
-				"toggle_aria": "Toggle rule {name}"
+				"toggle_aria": "Toggle rule {name}",
+				"type_picker": {
+					"content_filters": "Content filters",
+					"description": "A rule keeps the type it is created with.",
+					"rate_limits": "Rate limits",
+					"title": "Pick a rule type"
+				}
 			},
 			"subtitle": "Choose where auto-moderation reports what it does, and whether it also follows Discord's own AutoMod.",
 			"title": "Auto Moderation",

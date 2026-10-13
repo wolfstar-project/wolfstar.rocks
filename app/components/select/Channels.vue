@@ -1,74 +1,50 @@
 <template>
 	<SelectMany
-		:label="label"
-		:name="selectedCount"
-		:values="channelValues"
+		:label
+		:options
+		kind="channel"
 		:model-value="modelValue"
 		:tooltip-title="tooltipTitle"
-		:image-in-name="imageInName"
-		:disabled="disabled"
-		@update:model-value="
-			$emit('update:modelValue', $event);
-			$emit('change', $event);
-		"
-		@change="$emit('change', $event)"
-		@reset="$emit('reset')"
+		:disabled
+		:layout
+		:empty-label="emptyLabel"
+		@update:model-value="emit('update:modelValue', $event)"
+		@change="emit('change', $event)"
 	/>
 </template>
 
-<script lang="ts">
-import type { DeepReadonly } from "@sapphire/utilities";
-import type { SelectManyValue } from "./Many.vue";
-import { ChannelType } from "discord-api-types/v10";
-
-interface SelectChannelsProps {
-	/** The label to show on the button */
-	label: string;
-	/** The current selected channel IDs */
-	modelValue: string[];
-	/** The guild data containing channels */
-	/** `undefined` while the guild has not loaded: the list is then empty. */
-	guild:
-		| DeepReadonly<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>
-		| undefined;
-	/** Content to be shown as a tooltip when hovering over the button */
-	tooltipTitle?: string;
-	/** Whether to append an image to the end of the button, next to the value of the key */
-	imageInName?: string;
-	/** Disable the field */
-	disabled?: boolean;
-}
-
-interface Emits {
-	(e: "update:modelValue", value: string[]): void;
-	(e: "change", value: string[]): void;
-	(e: "reset"): void;
-}
-</script>
-
 <script setup lang="ts">
+import type { DeepReadonly } from "@sapphire/utilities";
+
 const {
 	label,
 	modelValue,
 	guild,
 	tooltipTitle,
-	imageInName,
 	disabled = false,
-} = defineProps<SelectChannelsProps>();
+	layout = "field",
+	emptyLabel,
+} = defineProps<{
+	/** The label of the field */
+	label: string;
+	modelValue: string[];
+	/** `undefined` while the guild has not loaded: the list is then empty. */
+	guild:
+		| DeepReadonly<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>
+		| undefined;
+	/** Help text: shown under a `field`, read to screen readers in a `row` */
+	tooltipTitle?: string;
+	/** Disable the field */
+	disabled?: boolean;
+	layout?: "field" | "row";
+	/** Text shown while nothing is selected */
+	emptyLabel?: string;
+}>();
 
-defineEmits<Emits>();
+const emit = defineEmits<{
+	"update:modelValue": [value: string[]];
+	"change": [value: string[]];
+}>();
 
-// Count of selected channels
-const selectedCount = computed(() => modelValue.length);
-
-// Filter and sort channels, then map to SelectManyValue format
-const channelValues = computed<SelectManyValue[]>(() =>
-	(guild?.channels ?? [])
-		.filter((c) => c.type === ChannelType.GuildText || c.type === ChannelType.GuildAnnouncement)
-		.toSorted((c1, c2) => c1.rawPosition - c2.rawPosition)
-		.map((c) => ({
-			name: c.name,
-			value: c.id,
-		})),
-);
+const options = computed(() => channelOptions(guild));
 </script>

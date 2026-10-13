@@ -751,6 +751,9 @@
 						"language_placeholder": {
 							"type": "string"
 						},
+						"last_change": {
+							"type": "string"
+						},
 						"mod_actions_aria": {
 							"type": "string"
 						},

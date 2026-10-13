@@ -209,6 +209,14 @@
 		--ink-400: oklch(38% 0.012 273.1);
 		--ink-300: oklch(44.7% 0.014 252.2);
 
+		/* Form fields and the popovers they open (selects, menus): the design
+		   system's `surface-input`, `border-default`, `surface-raised` and
+		   `shadow-high`. Light values here, dark ones in the theme blocks below. */
+		--field-surface: oklch(94.5% 0.003 247.9);
+		--field-border: oklch(91% 0.006 275);
+		--popover-surface: var(--color-base-100);
+		--popover-shadow: 0 8px 16px oklch(0% 0 0 / 0.12);
+
 		/* WolfStar home redesign aliases (from _ds/tokens/colors.css + spacing.css) */
 		--home-border-subtle: oklch(from var(--color-base-content) l c h / 0.05);
 		--home-blurple-soft: oklch(from var(--color-primary) l c h / 0.12);
@@ -278,6 +286,11 @@
 	   attribute, the dark class, and the attribute-less system-preference state. */
 	:root {
 		@variant theme-dark {
+			--field-surface: var(--ink-500);
+			--field-border: var(--ink-400);
+			--popover-surface: var(--ink-600);
+			--popover-shadow: 0 8px 16px oklch(0% 0 0 / 0.24);
+
 			--ui-text-dimmed: var(--color-neutral-500);
 			--ui-text-muted: var(--color-neutral-400);
 			--ui-text-toned: var(--color-neutral-300);
@@ -306,6 +319,11 @@
 
 	[data-theme="midnight"],
 	.midnight {
+		--field-surface: var(--ink-500);
+		--field-border: var(--ink-400);
+		--popover-surface: var(--ink-600);
+		--popover-shadow: 0 8px 16px oklch(0% 0 0 / 0.24);
+
 		--ui-text-dimmed: var(--color-neutral-500);
 		--ui-text-muted: var(--color-neutral-400);
 		--ui-text-toned: var(--color-neutral-300);

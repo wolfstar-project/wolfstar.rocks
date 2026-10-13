@@ -97,6 +97,9 @@
 				"none": {
 					"type": "string"
 				},
+				"nothing_matches": {
+					"type": "string"
+				},
 				"search": {
 					"type": "string"
 				},

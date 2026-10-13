@@ -122,14 +122,13 @@
 						{{ ts("guild_settings.general.language_description") }}
 					</p>
 				</template>
-				<USelectMenu
+				<SelectBase
 					id="language"
-					v-model="state.language"
-					color="primary"
+					v-model="languageValue"
+					:options="items"
+					:clearable="false"
 					:placeholder="ts('guild_settings.general.language_placeholder')"
 					class="w-full"
-					:items="items"
-					value-attribute="value"
 					:aria-label="ts('guild_settings.general.language_aria')"
 					aria-describedby="language-description"
 				/>
@@ -159,10 +158,11 @@
 		:total="auditLogTotal"
 		:status="auditLogStatus"
 		:item-count="auditEntries.length"
-		:max-visible="0"
-		empty-icon="heroicons:clipboard-document-list"
 		:empty-title="ts('guild_settings.general.no_activity')"
-		:empty-description="ts('guild_settings.general.no_activity_description')"
+		:empty-description="
+			ts('guild_settings.general.no_activity_description', { count: CHART_DAYS })
+		"
+		:empty-note="lastChangeNote"
 		:refresh-label="ts('guild_logs.refresh_audit')"
 		@refresh="refreshAuditLog()"
 	>
@@ -239,10 +239,15 @@ const toast = useToast();
 
 const { copy, copied } = useClipboard();
 
-const auditLogPage = ref(1);
-const page = ref(10);
-const offset = computed(() => (auditLogPage.value - 1) * page.value);
+// The log is asked for the last seven days only; its own total is exact even
+// when the page of entries below is not.
+const CHART_DAYS = 7;
+const CHART_ENTRY_LIMIT = 100;
+const now = ref(new Date());
+const activityFrom = computed(() => moderationActivityStart(now.value, CHART_DAYS).toISOString());
 
+// Recent activity is the same seven days. When they were quiet, the newest
+// entry of all says when the settings last changed, and who changed them.
 const {
 	entries: auditEntries,
 	total: auditLogTotal,
@@ -250,16 +255,13 @@ const {
 	status: auditLogStatus,
 } = useAuditLog({
 	guildId: () => guildData.value?.id,
-	limit: page,
-	offset,
+	limit: 10,
+	filters: computed(() => ({ from: activityFrom.value })),
 });
-
-// The log is asked for the last seven days only; its own total is exact even
-// when the page of entries below is not.
-const CHART_DAYS = 7;
-const CHART_ENTRY_LIMIT = 100;
-const now = ref(new Date());
-const activityFrom = computed(() => moderationActivityStart(now.value, CHART_DAYS).toISOString());
+const { entries: latestAuditEntries } = useAuditLog({
+	guildId: () => guildData.value?.id,
+	limit: 1,
+});
 
 const { entries: moderationEntries, total: moderationTotal } = useModerationLog({
 	guildId: () => guildData.value?.id,
@@ -286,6 +288,15 @@ const isChartPartial = computed(() => moderationTotal.value > moderationEntries.
 function barHeight(count: number) {
 	return peakCount.value === 0 ? 0 : Math.max(4, Math.round((count / peakCount.value) * 100));
 }
+
+const lastChangeNote = computed(() => {
+	const latest = latestAuditEntries.value[0];
+	if (!latest) return undefined;
+	return ts("guild_settings.general.last_change", {
+		name: auditLogMemberName(latest.member),
+		when: formatDaysAgo(latest.timestamp, now.value, locale.value),
+	});
+});
 
 const chartAria = computed(() =>
 	ts("guild_settings.general.mod_actions_aria", {
@@ -396,8 +407,10 @@ const items = computed(() =>
 		const englishName = mapping[1];
 
 		return {
-			value: langKey,
 			label: englishName ?? nativeName,
+			// The name speakers use, then the tag the bot stores.
+			note: `${nativeName} \u00B7 ${langKey}`,
+			value: langKey,
 		};
 	}),
 );
@@ -411,6 +424,15 @@ const state = reactive<Schema>({
 			value: currentLangKey,
 		};
 	})(),
+});
+
+// The form keeps the chosen option; the select works with its tag.
+const languageValue = computed<string | string[] | null>({
+	get: () => state.language?.value ?? null,
+	set: (value) => {
+		const option = items.value.find((item) => item.value === value);
+		if (option) state.language = { label: option.label, value: option.value };
+	},
 });
 
 function mapToGuildData(formState: Schema): Partial<GuildData> {

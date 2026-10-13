@@ -6,6 +6,7 @@ import {
 	auditLogActionParts,
 	auditLogChangeLines,
 	formatActivityTime,
+	formatDaysAgo,
 } from "~/utils/audit-log";
 
 function makeEntry(partial: Partial<DashboardAuditEntry["changes"]>): DashboardAuditEntry {
@@ -216,5 +217,15 @@ describe("formatActivityTime", () => {
 
 	it("follows the locale", () => {
 		expect(formatActivityTime(at(12, 22, 41), now, "it-IT")).toBe("Ieri 22:41");
+	});
+});
+
+describe("formatDaysAgo", () => {
+	const now = new Date(2026, 9, 13, 15, 0);
+
+	it("counts calendar days back", () => {
+		expect(formatDaysAgo(new Date(2026, 8, 26, 23, 0), now, "en-GB")).toBe("17 days ago");
+		expect(formatDaysAgo(new Date(2026, 9, 12, 1, 0), now, "en-GB")).toBe("yesterday");
+		expect(formatDaysAgo(new Date(2026, 9, 13, 1, 0), now, "en-GB")).toBe("today");
 	});
 });

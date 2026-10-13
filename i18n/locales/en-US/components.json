@@ -31,6 +31,7 @@
 		"min_duration": "The minimum duration is {value} {unit}.",
 		"minutes": "Minutes",
 		"none": "None",
+		"nothing_matches": "",
 		"search": "Search...",
 		"seconds": "Seconds"
 	}

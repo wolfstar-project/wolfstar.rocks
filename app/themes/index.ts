@@ -8,6 +8,8 @@ import footerColumns from "./footer-columns";
 import link from "./link";
 import main from "./main";
 import navigationMenu from "./navigation-menu";
+import select from "./select";
+import selectMenu from "./select-menu";
 import skeleton from "./skeleton";
 import switchTheme from "./switch";
 import tabs from "./tabs";
@@ -24,6 +26,8 @@ const ui = {
 	link,
 	main,
 	navigationMenu,
+	select,
+	selectMenu,
 	skeleton,
 	switch: switchTheme,
 	tabs,

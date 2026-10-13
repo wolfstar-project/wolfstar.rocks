@@ -1,83 +1,109 @@
 import {
-	ModerationTypeCode,
-	decodeModerationType,
 	decodeModerationMetadata,
+	decodeModerationRecord,
+	MODERATION_CASE_TYPES,
+	MODERATION_TYPE_CODE,
+	MODERATION_TYPE_ENCODED_MARKER,
+	moderationRecordFilter,
+	moderationTypeFromCode,
 } from "#shared/types/moderation-types";
 import { describe, expect, it } from "vitest";
 
-describe("decodeModerationType", () => {
-	it("returns 'Warning' for code 1", () => {
-		expect(decodeModerationType(1)).toBe("Warning");
+// The bot's `encodeModerationRecordMetadata(type, metadata)`.
+function encode(type: (typeof MODERATION_CASE_TYPES)[number], flags = 0) {
+	return MODERATION_TYPE_ENCODED_MARKER | (MODERATION_CASE_TYPES.indexOf(type) << 8) | flags;
+}
+
+describe("moderationTypeFromCode", () => {
+	it("keeps the numbers V6 stored", () => {
+		expect(moderationTypeFromCode(1)).toBe("Warning");
+		expect(moderationTypeFromCode(2)).toBe("Mute");
+		expect(moderationTypeFromCode(5)).toBe("Ban");
+		expect(moderationTypeFromCode(26)).toBe("Timeout");
 	});
 
-	it("returns 'Ban' for code 5", () => {
-		expect(decodeModerationType(5)).toBe("Ban");
+	it("returns null for a code no type uses", () => {
+		expect(moderationTypeFromCode(0)).toBeNull();
+		expect(moderationTypeFromCode(999)).toBeNull();
 	});
 
-	it("returns 'Timeout' for code 26", () => {
-		expect(decodeModerationType(26)).toBe("Timeout");
-	});
-
-	it("returns 'Unknown' for unmapped code", () => {
-		expect(decodeModerationType(999)).toBe("Unknown");
-	});
-
-	it("returns 'Unknown' for code 0", () => {
-		expect(decodeModerationType(0)).toBe("Unknown");
-	});
-
-	it("covers all ModerationTypeCode entries", () => {
-		for (const [name, code] of Object.entries(ModerationTypeCode)) {
-			expect(decodeModerationType(code)).toBe(name);
-		}
+	it("assigns every case type a distinct code", () => {
+		const codes = MODERATION_CASE_TYPES.map((type) => MODERATION_TYPE_CODE[type]);
+		expect(new Set(codes).size).toBe(codes.length);
 	});
 });
 
 describe("decodeModerationMetadata", () => {
-	it("decodes archived flag (0x1)", () => {
-		expect(decodeModerationMetadata(0x1)).toEqual({
-			archived: true,
-			completed: false,
-			temporary: false,
-		});
-	});
-
-	it("decodes completed flag (0x2)", () => {
-		expect(decodeModerationMetadata(0x2)).toEqual({
-			archived: false,
-			completed: true,
-			temporary: false,
-		});
-	});
-
-	it("decodes temporary flag (0x4)", () => {
-		expect(decodeModerationMetadata(0x4)).toEqual({
-			archived: false,
-			completed: false,
-			temporary: true,
-		});
-	});
-
-	it("decodes all flags combined (0x7)", () => {
-		expect(decodeModerationMetadata(0x7)).toEqual({
-			archived: true,
-			completed: true,
-			temporary: true,
-		});
-	});
-
-	it("decodes no flags (0)", () => {
-		expect(decodeModerationMetadata(0)).toEqual({
+	it("reads the bot's flags", () => {
+		expect(decodeModerationMetadata(0)).toStrictEqual({
 			archived: false,
 			completed: false,
 			temporary: false,
+			undo: false,
+		});
+		expect(decodeModerationMetadata(1 << 0).undo).toBe(true);
+		expect(decodeModerationMetadata(1 << 1).temporary).toBe(true);
+		expect(decodeModerationMetadata(1 << 2).temporary).toBe(true);
+		expect(decodeModerationMetadata(1 << 3).archived).toBe(true);
+		expect(decodeModerationMetadata(1 << 4).completed).toBe(true);
+	});
+});
+
+describe("decodeModerationRecord", () => {
+	it("reads the encoded type rather than the closest action", () => {
+		expect(decodeModerationRecord("AddRole", encode("Mute")).type).toBe("Mute");
+		expect(decodeModerationRecord("AddRole", encode("RestrictedEmbed")).type).toBe(
+			"RestrictedEmbed",
+		);
+		expect(decodeModerationRecord("Kick", encode("VoiceKick")).type).toBe("VoiceKick");
+		expect(decodeModerationRecord("AddRole", encode("RoleAdd")).type).toBe("RoleAdd");
+	});
+
+	it("reads the flags next to the encoded type", () => {
+		const decoded = decodeModerationRecord("RemoveRole", encode("Mute", 0b11));
+		expect(decoded).toStrictEqual({
+			metadata: { archived: false, completed: false, temporary: true, undo: true },
+			type: "Mute",
 		});
 	});
 
-	it("ignores unknown bits", () => {
-		const result = decodeModerationMetadata(31);
-		expect(result.archived).toBe(true);
-		expect(result.completed).toBe(true);
-		expect(result.temporary).toBe(true);
+	it("falls back to the action on a row written without the marker", () => {
+		expect(decodeModerationRecord("AddWarning", 0).type).toBe("Warning");
+		expect(decodeModerationRecord("Unban", 0)).toStrictEqual({
+			metadata: { archived: false, completed: false, temporary: false, undo: true },
+			type: "Ban",
+		});
+	});
+
+	it("reports a type number the dashboard does not know", () => {
+		expect(
+			decodeModerationRecord("Kick", MODERATION_TYPE_ENCODED_MARKER | (200 << 8)).type,
+		).toBe("Unknown");
+	});
+});
+
+describe("moderationRecordFilter", () => {
+	it("selects a type that shares its action with others by its encoded values only", () => {
+		const { encodedMetadata, legacyActions } = moderationRecordFilter("Mute");
+		expect(legacyActions).toStrictEqual([]);
+		expect(encodedMetadata).toContain(encode("Mute"));
+		expect(encodedMetadata).toContain(encode("Mute", 0b11111));
+		expect(encodedMetadata).not.toContain(encode("RoleAdd"));
+	});
+
+	it("also selects unmarked rows through the actions that imply the type", () => {
+		expect(moderationRecordFilter("Warning").legacyActions).toStrictEqual([
+			"AddWarning",
+			"RemoveWarning",
+		]);
+		expect(moderationRecordFilter("RoleAdd").legacyActions).toStrictEqual(["AddRole"]);
+	});
+
+	it("round-trips every case type", () => {
+		for (const type of MODERATION_CASE_TYPES) {
+			for (const metadata of moderationRecordFilter(type).encodedMetadata) {
+				expect(decodeModerationRecord("Kick", metadata).type).toBe(type);
+			}
+		}
 	});
 });

@@ -138,7 +138,7 @@
 						v-if="guild.wolfstarIsIn && guild.manageable"
 						:to="{ path: '/app', query: { guild: guild.id } }"
 						@click="goToGuild(guild.id)"
-						class="flex h-9 w-full items-center justify-center rounded-lg border border-success/20 bg-success/10 px-3 text-xs font-medium text-success transition-all duration-200 hover:bg-success/20 hover:shadow-md"
+						class="flex h-9 w-full items-center justify-center rounded-lg border border-success/20 bg-success/10 px-3 text-xs font-medium text-highlighted transition-all duration-200 hover:bg-success/20 hover:shadow-md theme-dark:text-success"
 						:aria-label="ts('guild_card.manage_server_aria', { name: guild.name })"
 					>
 						<UIcon
@@ -152,7 +152,7 @@
 						v-else-if="guild.manageable"
 						:to="guildAddURL(guild.id)"
 						external
-						class="flex h-9 w-full items-center justify-center rounded-lg border border-primary/20 bg-primary/10 px-3 text-xs font-medium text-primary transition-all duration-200 group-hover:bg-primary/20 hover:shadow-md"
+						class="flex h-9 w-full items-center justify-center rounded-lg border border-primary/20 bg-primary/10 px-3 text-xs font-medium text-primary transition-all duration-200 group-hover:bg-primary/20 hover:shadow-md theme-dark:text-highlighted"
 						:aria-label="ts('guild_card.invite_bot_aria', { name: guild.name })"
 					>
 						<UIcon

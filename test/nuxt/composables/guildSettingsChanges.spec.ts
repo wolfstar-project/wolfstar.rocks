@@ -1,4 +1,3 @@
-import type { GuildData } from "#server/database";
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 
 // `/app` keeps the guild in state rather than the URL, so these tests drive
@@ -31,26 +30,26 @@ describe("useGuildSettingsChanges", () => {
 		// Set changes for guild 1
 		selectGuild(GUILD_ONE);
 		const changes1a = useGuildSettingsChanges();
-		changes1a.setGuildSettingsChanges({ prefix: "!" });
+		changes1a.setGuildSettingsChanges({ language: "en-GB" });
 
 		// Set changes for guild 2
 		selectGuild(GUILD_TWO);
 		const changes2 = useGuildSettingsChanges();
-		changes2.setGuildSettingsChanges({ prefix: "?" });
+		changes2.setGuildSettingsChanges({ language: "fr-FR" });
 
 		// Switch back to guild 1
 		selectGuild(GUILD_ONE);
 		const changes1b = useGuildSettingsChanges();
 
 		// Should have guild1's changes, not guild2's
-		expect(changes1b.guildSettingsChanges.value?.prefix).toBe("!");
+		expect(changes1b.guildSettingsChanges.value?.language).toBe("en-GB");
 	});
 
 	it("clears changes completely (not merge with {})", () => {
 		const { guildSettingsChanges, setGuildSettingsChanges } = useGuildSettingsChanges();
 
 		// Set some changes
-		setGuildSettingsChanges({ prefix: "!" });
+		setGuildSettingsChanges({ language: "en-GB" });
 		expect(guildSettingsChanges.value).toBeDefined();
 
 		// Clear changes
@@ -66,40 +65,40 @@ describe("useGuildSettingsChanges", () => {
 
 		// Set multiple changes
 		setGuildSettingsChanges({
-			commandAutoDelete: [] as GuildData["commandAutoDelete"],
-			prefix: "!",
+			commandsDisabled: [],
+			language: "en-GB",
 		});
 
 		// Remove one key using removeChange
-		removeChange("prefix");
-		// Prefix should be gone, commandAutoDelete should remain
+		removeChange("language");
+		// Language should be gone, commandsDisabled should remain
 		expect(guildSettingsChanges.value).toBeDefined();
-		expect(guildSettingsChanges.value).not.toHaveProperty("prefix");
-		expect(guildSettingsChanges.value).toHaveProperty("commandAutoDelete");
+		expect(guildSettingsChanges.value).not.toHaveProperty("language");
+		expect(guildSettingsChanges.value).toHaveProperty("commandsDisabled");
 	});
 
 	it("handles partial updates correctly", () => {
 		const { guildSettingsChanges, mergeGuildSettings } = useGuildSettingsChanges();
 
 		// Set initial changes
-		mergeGuildSettings({ prefix: "!" });
+		mergeGuildSettings({ language: "en-GB" });
 
 		// Merge additional changes
-		mergeGuildSettings({ commandAutoDelete: [] as GuildData["commandAutoDelete"] });
+		mergeGuildSettings({ commandsDisabled: [] });
 
 		// Should have both changes
-		expect(guildSettingsChanges.value?.prefix).toBe("!");
-		expect(guildSettingsChanges.value?.commandAutoDelete).toStrictEqual([]);
+		expect(guildSettingsChanges.value?.language).toBe("en-GB");
+		expect(guildSettingsChanges.value?.commandsDisabled).toStrictEqual([]);
 	});
 
 	it("returns Partial<GuildData> type", () => {
 		const { guildSettingsChanges, setGuildSettingsChanges } = useGuildSettingsChanges();
 
 		// Should accept partial data
-		setGuildSettingsChanges({ prefix: "!" }); // Not full GuildData
+		setGuildSettingsChanges({ language: "en-GB" }); // Not full GuildData
 
 		// Should work with partial data
-		expect(guildSettingsChanges.value?.prefix).toBe("!");
+		expect(guildSettingsChanges.value?.language).toBe("en-GB");
 	});
 
 	it("does not persist changes across different guilds", () => {
@@ -108,7 +107,7 @@ describe("useGuildSettingsChanges", () => {
 		// Set changes for guild 1
 		selectGuild(GUILD_ONE);
 		const changes1 = useGuildSettingsChanges();
-		changes1.setGuildSettingsChanges({ prefix: "!" });
+		changes1.setGuildSettingsChanges({ language: "en-GB" });
 
 		// Switch to guild 2 - should have no changes
 		selectGuild(GUILD_TWO);

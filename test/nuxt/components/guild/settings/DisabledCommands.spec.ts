@@ -3,11 +3,12 @@ import type { DOMWrapper } from "@vue/test-utils";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import DisabledCommands from "~/components/guild/settings/DisabledCommands.vue";
+import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 import { createMockGuildData } from "~~/test/mocks/guildData";
 
 // Mock composables at module scope
 const mockGuildSettings = createMockGuildData("123456789012345678", {
-	disabledCommands: ["ban"],
+	commandsDisabled: ["ban"],
 });
 const mockToastAdd = vi.fn();
 const mockSetGuildSettingsChanges = vi.fn();
@@ -35,6 +36,10 @@ mockNuxtImport("useGuildSettingsChanges", () => () => ({
 
 mockNuxtImport("useToast", () => () => ({
 	add: mockToastAdd,
+}));
+
+mockNuxtImport("useGuildData", () => () => ({
+	guildData: ref(createMockOauthFlattenedGuild({ id: "123456789012345678" })),
 }));
 
 // Mock commands data with multiple categories
@@ -117,12 +122,12 @@ type MountedDisabledCommands = Awaited<ReturnType<typeof mountSuspended>>;
 
 function getCommandCard(wrapper: MountedDisabledCommands, commandName: string) {
 	const label = wrapper
-		.findAll("p.font-medium")
+		.findAll("p.font-mono")
 		.find((el: DOMWrapper<Element>) => el.text() === commandName);
 	expect(label, `expected command label "${commandName}"`).toBeDefined();
 
 	let current: Element | null = label!.element.parentElement;
-	while (current && !current.classList.contains("rounded-lg")) {
+	while (current && !current.classList.contains("command-tile")) {
 		current = current.parentElement;
 	}
 
@@ -204,7 +209,7 @@ describe("disabledCommands", () => {
 		await wrapper.vm.$nextTick();
 
 		// Find command names in the grid
-		const commandElements = wrapper.findAll("p.font-medium");
+		const commandElements = wrapper.findAll("p.font-mono");
 
 		// Should find General commands: avatar, ping, help
 		const commandNames = commandElements.map((el) => el.text());
@@ -213,7 +218,7 @@ describe("disabledCommands", () => {
 		expect(commandNames).toContain("help");
 
 		// Each command should have a description
-		const descriptions = wrapper.findAll("p.text-sm");
+		const descriptions = wrapper.findAll("p.text-xs");
 		expect(descriptions.length).toBeGreaterThan(0);
 
 		// Verify visibility of command elements
@@ -238,7 +243,7 @@ describe("disabledCommands", () => {
 
 		// Find a specific command element (use "avatar" from General category)
 		const findAvatarCommand = () =>
-			wrapper.findAll("p.font-medium").find((el) => el.text() === "avatar");
+			wrapper.findAll("p.font-mono").find((el) => el.text() === "avatar");
 
 		// Initially, commands should not be visible (accordion closed)
 		let avatarElement = findAvatarCommand();
@@ -280,7 +285,7 @@ describe("disabledCommands", () => {
 
 		// Find General and Moderation commands
 		const findCommand = (name: string) =>
-			wrapper.findAll("p.font-medium").find((el) => el.text() === name);
+			wrapper.findAll("p.font-mono").find((el) => el.text() === name);
 
 		// General command (avatar) should be visible
 		let avatarElement = findCommand("avatar");

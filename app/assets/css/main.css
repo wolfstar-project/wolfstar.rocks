@@ -6,6 +6,8 @@
 @import "./view-transitions.css";
 
 @source "../../../content/**/*";
+/* The bot's repository (git submodule) is not part of this app. */
+@source not "../../../vendor";
 
 /*
  * Theme variants that also cover the "no theme attribute" state.
@@ -198,13 +200,14 @@
 
 		/* Neutral "ink" scale of the WolfStar design system, which the dashboard
 		   console paints its rail, sidebar, cards and page with (#18191C, #202225,
-		   #2B2D31, #313338, #383A40, #404249). */
+		   #2B2D31, #313338, #383A40, #404249, #4F555C). */
 		--ink-900: oklch(21.4% 0.006 271.1);
 		--ink-800: oklch(25.1% 0.006 258.4);
 		--ink-700: oklch(29.7% 0.008 264.4);
 		--ink-600: oklch(32.1% 0.009 268.4);
 		--ink-500: oklch(34.9% 0.011 271.1);
 		--ink-400: oklch(38% 0.012 273.1);
+		--ink-300: oklch(44.7% 0.014 252.2);
 
 		/* WolfStar home redesign aliases (from _ds/tokens/colors.css + spacing.css) */
 		--home-border-subtle: oklch(from var(--color-base-content) l c h / 0.05);

@@ -1,8 +1,11 @@
 import {
 	ACTIVE_GUILD_STORAGE_KEY,
+	DEFAULT_DASHBOARD_SECTION,
 	isValidGuildId,
 	useActiveGuild,
 } from "~/composables/useActiveGuild";
+import { findDashboardNavItem } from "~/utils/dashboard-nav";
+import { resolveLegacyDashboardSection } from "~/utils/guild-dashboard";
 
 /**
  * Mirrors the active guild and section to localStorage so `/app` reopens where
@@ -22,7 +25,11 @@ export default defineNuxtPlugin(() => {
 					activeGuildId.value = stored.guildId;
 				}
 				if (typeof stored.section === "string") {
-					section.value = stored.section;
+					// A section saved before V7 (`events`, `moderation/word`) or one
+					// that no longer exists would otherwise render Home under a slug
+					// the page does not treat as Home.
+					const slug = resolveLegacyDashboardSection(stored.section);
+					section.value = findDashboardNavItem(slug) ? slug : DEFAULT_DASHBOARD_SECTION;
 				}
 				if (typeof stored.logsTab === "string") {
 					logsTab.value = stored.logsTab;

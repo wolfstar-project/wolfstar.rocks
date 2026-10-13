@@ -12,6 +12,13 @@ export interface DashboardNavItem {
 	group: DashboardNavGroup;
 	/** The `modules*` flag the section configures, when it configures one. */
 	moduleKey?: GuildModuleEntry["key"];
+	/**
+	 * The section is announced but not built: the bot has the feature, the
+	 * dashboard has no routes for it yet, so it opens a placeholder page.
+	 */
+	comingSoon?: boolean;
+	/** What the section will do, for its placeholder page. */
+	descriptionKey?: string;
 }
 
 /**
@@ -28,75 +35,55 @@ export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
 	},
 	{
 		group: "modules",
+		icon: "ic:round-shield",
+		labelKey: "dashboard.nav.automod",
+		moduleKey: "modulesAutomod",
+		shortLabelKey: "dashboard.nav.automod_short",
+		slug: "automod",
+	},
+	{
+		group: "modules",
 		icon: "ic:round-gavel",
 		labelKey: "dashboard.nav.moderation",
+		moduleKey: "modulesModeration",
 		slug: "moderation",
 	},
 	{
 		group: "modules",
-		icon: "ic:round-text-fields",
-		labelKey: "dashboard.nav.bad_words",
-		slug: "moderation/word",
-	},
-	{
-		group: "modules",
-		icon: "ic:round-format-size",
-		labelKey: "dashboard.nav.capitals",
-		slug: "moderation/capitals",
-	},
-	{
-		group: "modules",
-		icon: "ic:round-public",
-		labelKey: "dashboard.nav.invites",
-		slug: "moderation/invites",
-	},
-	{
-		group: "modules",
-		icon: "ic:round-link",
-		labelKey: "dashboard.nav.links",
-		slug: "moderation/links",
-	},
-	{
-		group: "modules",
-		icon: "ic:round-content-copy",
-		labelKey: "dashboard.nav.message_duplication",
-		slug: "moderation/messages",
-	},
-	{
-		group: "modules",
-		icon: "ic:round-wrap-text",
-		labelKey: "dashboard.nav.line_spam",
-		slug: "moderation/lines",
-	},
-	{
-		group: "modules",
-		icon: "ic:round-emoji-emotions",
-		labelKey: "dashboard.nav.reactions",
-		slug: "moderation/reactions",
-	},
-	{
-		group: "modules",
-		icon: "ic:round-tag",
-		labelKey: "dashboard.nav.channels",
-		slug: "channels",
-	},
-	{
-		group: "modules",
-		icon: "ic:round-people",
-		labelKey: "dashboard.nav.roles",
-		slug: "roles",
-	},
-	{
-		group: "modules",
 		icon: "ic:round-notifications",
-		labelKey: "dashboard.nav.events",
-		slug: "events",
+		labelKey: "dashboard.nav.channels",
+		moduleKey: "modulesLogs",
+		slug: "channels",
 	},
 	{
 		group: "modules",
 		icon: "ic:round-terminal",
 		labelKey: "dashboard.nav.commands",
+		moduleKey: "modulesCommands",
 		slug: "commands",
+	},
+	{
+		group: "modules",
+		icon: "ic:round-people",
+		labelKey: "dashboard.nav.roles",
+		moduleKey: "modulesRoles",
+		slug: "roles",
+	},
+	{
+		comingSoon: true,
+		descriptionKey: "dashboard.coming_soon.autodelete",
+		group: "modules",
+		icon: "ic:round-timer",
+		labelKey: "dashboard.nav.autodelete",
+		slug: "autodelete",
+	},
+	{
+		comingSoon: true,
+		descriptionKey: "dashboard.coming_soon.autopurge",
+		group: "modules",
+		icon: "ic:round-cleaning-services",
+		labelKey: "dashboard.nav.autopurge",
+		slug: "autopurge",
 	},
 	{
 		group: "records",

@@ -27,8 +27,6 @@ const config: KnipConfig = {
 				"server/auth.config.ts",
 				/** Ambient H3EventContext augmentation, never imported directly */
 				"shared/types/auth.d.ts",
-				/** Aliased in vite.config.ts for #server/database/generated/client in tests, not imported directly */
-				"test/__stubs__/prisma-generated-client.ts",
 			],
 			project: [
 				/** css/mdx/prisma are handled by registered compilers, so include them here */
@@ -40,10 +38,15 @@ const config: KnipConfig = {
 				"!.skills/**",
 				"!.agent/**",
 				"!.claude/**",
+				/** Emitted by `prisma contract emit`; its exports are the framework's */
+				"!server/database/generated/**",
 			],
 			msw: {
 				entry: [".storybook/.public/mockServiceWorker.js"],
 			},
+			/** The bot's repository (git submodule): only its contract is read, and its
+			 * own test and config files must not be picked up as entries of this app. */
+			ignore: ["vendor/**"],
 			ignoreDependencies: [
 				"@iconify-json/*",
 				"@commitlint/cli",

@@ -35,10 +35,15 @@
 	</header>
 
 	<dl
-		class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5"
+		class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5 2xl:grid-cols-7"
 		:aria-label="ts('guild_settings.general.server_stats_aria')"
 	>
-		<div v-for="stat in serverStats" :key="stat.label" class="stat-card">
+		<div
+			v-for="stat in serverStats"
+			:key="stat.label"
+			class="stat-card"
+			:class="{ 'stat-card--placeholder': stat.placeholder }"
+		>
 			<dt class="truncate text-xs font-semibold text-toned">{{ stat.label }}</dt>
 			<dd class="mt-1 font-mono text-xl font-bold">{{ stat.value }}</dd>
 			<dd class="mt-0.5 min-h-4 text-xs" :class="stat.noteClass ?? 'text-muted'">
@@ -111,36 +116,6 @@
 			:aria-label="ts('guild_settings.general.form_aria')"
 			@error="onError"
 		>
-			<UFormField :label="ts('guild_settings.general.prefix')" name="prefix">
-				<UInput
-					id="prefix"
-					v-model="state.prefix"
-					:placeholder="ts('guild_settings.general.prefix_placeholder')"
-					color="primary"
-					class="w-full"
-					aria-describedby="prefix-description character-count"
-					:aria-label="ts('guild_settings.general.prefix_aria')"
-				>
-					<template #trailing>
-						<div
-							id="character-count"
-							class="text-xs text-muted tabular-nums"
-							aria-live="polite"
-							role="status"
-						>
-							{{ state.prefix?.length }}/10
-						</div>
-					</template>
-				</UInput>
-				<template #error="{ error }">
-					<p class="text-sm text-error">{{ error }}</p>
-				</template>
-				<template #description>
-					<p id="prefix-description" class="text-[0.8125rem] text-muted">
-						{{ ts("guild_settings.general.prefix_description") }}
-					</p>
-				</template>
-			</UFormField>
 			<UFormField :label="ts('guild_settings.general.language')" name="language">
 				<template #description>
 					<p id="language-description" class="text-[0.8125rem] text-muted">
@@ -161,6 +136,20 @@
 				<template #error="{ error }">
 					<p class="text-sm text-error">{{ error }}</p>
 				</template>
+			</UFormField>
+			<UFormField :label="ts('dashboard.coming_soon.time_zone')">
+				<template #description>
+					<p class="text-[0.8125rem] text-muted">
+						{{ ts("dashboard.coming_soon.time_zone_description") }}
+					</p>
+				</template>
+				<UInput
+					disabled
+					class="w-full"
+					icon="ic:round-access-time"
+					:model-value="ts('dashboard.coming_soon.badge')"
+					:aria-label="ts('dashboard.coming_soon.time_zone')"
+				/>
 			</UFormField>
 		</GuildSettingsForm>
 	</section>
@@ -280,14 +269,6 @@ const auditLogColumns = computed<TableColumn<(typeof auditEntries.value)[number]
 	},
 ]);
 
-const channelCounts = computed(() => {
-	const channels = guildData.value?.channels ?? [];
-	return {
-		categories: channels.filter((c) => c.type === ChannelType.GuildCategory).length,
-		total: channels.filter((c) => c.type !== ChannelType.GuildCategory).length,
-	};
-});
-
 // The log is asked for the last seven days only; its own total is exact even
 // when the page of entries below is not.
 const CHART_DAYS = 7;
@@ -330,16 +311,49 @@ const chartAria = computed(() =>
 const chartHeadingId = useId();
 const settingsHeadingId = useId();
 
+const STAT_PLACEHOLDER = "—";
+
+const channelCounts = computed(() => {
+	const channels = guildData.value?.channels ?? [];
+	return {
+		categories: channels.filter((c) => c.type === ChannelType.GuildCategory).length,
+		total: channels.filter((c) => c.type !== ChannelType.GuildCategory).length,
+	};
+});
+
 const serverStats = computed(() => {
 	const guild = guildData.value;
-	const roles = guild?.roles.length ?? 0;
 	const online = guild?.approximatePresenceCount ?? 0;
 	return [
 		{
 			label: ts("guild_settings.general.stat_members"),
 			note: online > 0 ? ts("guild_settings.general.stat_online", { count: online }) : "",
-			noteClass: "text-success",
+			// The success green is too light to read on a white card.
+			noteClass: "text-toned theme-dark:text-success",
 			value: (guild?.approximateMemberCount ?? 0).toLocaleString(),
+		},
+		{
+			label: ts("guild_settings.general.stat_cases"),
+			note: ts("guild_settings.general.stat_last_days", { count: CHART_DAYS }),
+			value: moderationTotal.value.toLocaleString(),
+		},
+		// Not counted anywhere the dashboard can read yet.
+		{
+			label: ts("dashboard.coming_soon.stat_automod_hits"),
+			note: ts("dashboard.coming_soon.badge"),
+			placeholder: true,
+			value: STAT_PLACEHOLDER,
+		},
+		{
+			label: ts("dashboard.coming_soon.stat_open_reports"),
+			note: ts("dashboard.coming_soon.badge"),
+			placeholder: true,
+			value: STAT_PLACEHOLDER,
+		},
+		{
+			label: ts("guild_settings.general.stat_commands"),
+			note: ts("guild_settings.general.stat_last_days", { count: CHART_DAYS }),
+			value: commandTotal.value.toLocaleString(),
 		},
 		{
 			label: ts("guild_settings.general.stat_channels"),
@@ -349,17 +363,7 @@ const serverStats = computed(() => {
 		{
 			label: ts("guild_settings.general.stat_roles"),
 			note: "",
-			value: roles.toLocaleString(),
-		},
-		{
-			label: ts("guild_settings.general.stat_cases"),
-			note: ts("guild_settings.general.stat_last_days", { count: CHART_DAYS }),
-			value: moderationTotal.value.toLocaleString(),
-		},
-		{
-			label: ts("guild_settings.general.stat_commands"),
-			note: ts("guild_settings.general.stat_last_days", { count: CHART_DAYS }),
-			value: commandTotal.value.toLocaleString(),
+			value: (guild?.roles.length ?? 0).toLocaleString(),
 		},
 	];
 });
@@ -422,15 +426,10 @@ const state = reactive<Schema>({
 			value: currentLangKey,
 		};
 	})(),
-	prefix: guildSettings.value!.prefix,
 });
 
 function mapToGuildData(formState: Schema): Partial<GuildData> {
 	const changes: Partial<GuildData> = {};
-
-	if (formState.prefix) {
-		changes.prefix = formState.prefix;
-	}
 
 	if (formState.language) {
 		changes.language = formState.language.value;
@@ -457,6 +456,11 @@ async function onError(event: FormErrorEvent) {
 
 <style scoped>
 @reference "@/assets/css/main.css";
+
+.stat-card--placeholder {
+	border-style: dashed;
+	color: var(--ui-text-muted);
+}
 
 .stat-card {
 	@apply min-w-0 rounded-lg px-3.5 py-3;

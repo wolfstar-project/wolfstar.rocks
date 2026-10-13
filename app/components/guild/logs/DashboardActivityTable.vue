@@ -1,85 +1,114 @@
 <template>
-	<div class="w-full flex-1 divide-y divide-accented">
-		<div class="flex items-center justify-between gap-2 overflow-x-auto px-4 py-3.5">
-			<UInput
-				v-model="query"
-				icon="i-lucide-search"
-				:placeholder="ts('guild_logs.search_placeholder')"
-				:aria-label="ts('guild_logs.search_aria')"
-				class="max-w-sm min-w-48"
-			/>
-		</div>
-		<ActivitySection
-			:plain="true"
-			:total="total"
-			:status="status"
-			:item-count="entries.length"
-			:max-visible="total"
-			empty-icon="i-lucide-activity"
-			:empty-title="ts('guild_logs.no_logs')"
-			:empty-description="debouncedQ ? ts('guild_logs.no_activity_filter_match') : undefined"
-			:refresh-label="ts('guild_logs.refresh_activity')"
-			@refresh="refresh()"
+	<GuildLogsShell
+		v-model:search="query"
+		v-model:page="page"
+		:status="status"
+		:total="total"
+		:shown="rows.length"
+		:page-size="limit"
+		:refresh-label="ts('guild_logs.refresh_activity')"
+		empty-icon="ic:round-history"
+		:empty-title="ts('guild_logs.no_logs')"
+		:empty-description="debouncedQuery ? ts('guild_logs.no_activity_filter_match') : undefined"
+		@refresh="refresh()"
+	>
+		<div
+			class="logs-table hidden md:block"
+			role="table"
+			:aria-label="ts('guild_logs.tab_activity')"
+			:style="TABLE_STYLE"
 		>
-			<UTable
-				ref="table"
-				:data="entries"
-				:columns="columns"
-				:loading="status === 'pending' || status === 'idle'"
-				:pagination-options="{
-					getPaginationRowModel: getPaginationRowModel(),
-				}"
-				class="min-h-100 shrink-0"
-				:ui="{
-					base: 'table-fixed border-separate border-spacing-0',
-					thead: '[&>tr]:bg-muted/50 [&>tr]:after:content-none',
-					tbody: '[&>tr]:last:[&>td]:border-b-0',
-					th: 'py-2 first:rounded-l-[8px] last:rounded-r-[8px] border-y border-default first:border-l last:border-r',
-					td: 'border-b border-default',
-					separator: 'h-0',
-				}"
-			/>
-			<div
-				v-if="total > page"
-				class="mt-4 flex items-center justify-between border-t border-default pt-4"
-			>
-				<p class="text-sm text-muted">
-					{{
-						ts("guild_logs.showing_entries", {
-							shown: table?.tableApi?.getRowModel().rows.length || 0,
-							total: table?.tableApi?.getFilteredRowModel().rows.length || 0,
-						})
-					}}
-				</p>
-				<UPagination
-					:default-page="(table?.tableApi?.getState().pagination.pageIndex || 0) + 1"
-					:items-per-page="table?.tableApi?.getState().pagination.pageSize"
-					:total="table?.tableApi?.getFilteredRowModel().rows.length"
-					@update:page="(p: number) => table?.tableApi?.setPageIndex(p - 1)"
-				/>
+			<div class="logs-grid" role="rowgroup">
+				<div class="logs-head" role="row">
+					<span role="columnheader">{{ ts("guild_logs.columns.date") }}</span>
+					<span role="columnheader">{{ ts("guild_logs.columns.user") }}</span>
+					<span role="columnheader">{{ ts("guild_logs.columns.action") }}</span>
+					<span role="columnheader">{{ ts("guild_logs.columns.outcome") }}</span>
+				</div>
+				<div v-for="row in rows" :key="row.id" class="logs-row" role="row">
+					<time
+						class="logs-mono"
+						role="cell"
+						:datetime="row.datetime"
+						:title="row.fullDate"
+					>
+						{{ row.at }}
+					</time>
+					<div class="flex min-w-0 items-center gap-2.5" role="cell">
+						<UAvatar v-bind="row.avatar" size="md" class="shrink-0" />
+						<div class="min-w-0">
+							<p class="truncate text-sm font-semibold">{{ row.name }}</p>
+							<p class="truncate text-xs text-muted">@{{ row.username }}</p>
+						</div>
+					</div>
+					<span class="min-w-0 text-[0.8125rem] leading-[1.45] text-toned" role="cell">
+						<span
+							v-for="(part, index) in row.parts"
+							:key="index"
+							:class="{ 'logs-strong': part.strong }"
+							>{{ part.text }}</span
+						>
+					</span>
+					<span role="cell">
+						<GuildLogsPill :tone="row.outcomeTone">{{ row.outcome }}</GuildLogsPill>
+					</span>
+				</div>
 			</div>
-		</ActivitySection>
-	</div>
+		</div>
+
+		<ul class="logs-table md:hidden" :aria-label="ts('guild_logs.tab_activity')">
+			<li v-for="row in rows" :key="row.id" class="logs-card">
+				<div class="logs-line">
+					<div class="logs-member">
+						<UAvatar v-bind="row.avatar" size="xs" class="shrink-0" />
+						<span class="truncate text-sm font-semibold">{{ row.name }}</span>
+					</div>
+					<span class="grow"></span>
+					<GuildLogsPill :tone="row.outcomeTone">{{ row.outcome }}</GuildLogsPill>
+				</div>
+				<p class="text-[0.8125rem] leading-[1.45] text-toned">
+					<span
+						v-for="(part, index) in row.parts"
+						:key="index"
+						:class="{ 'logs-strong': part.strong }"
+						>{{ part.text }}</span
+					>
+				</p>
+				<div class="logs-line">
+					<span class="grow"></span>
+					<time class="logs-mono" :datetime="row.datetime" :title="row.fullDate">
+						{{ row.at }}
+					</time>
+				</div>
+			</li>
+		</ul>
+	</GuildLogsShell>
 </template>
 
 <script setup lang="ts">
 import type { DashboardAuditEntry } from "#shared/types/audit-log";
-import type { TableColumn } from "@nuxt/ui";
-import { getPaginationRowModel } from "@tanstack/table-core";
-import { formatTimeAgo } from "@vueuse/core";
+import type { LogsPillTone } from "./Pill.vue";
 
-const UAvatar = resolveComponent("UAvatar");
-const table = useTemplateRef("table");
+const TABLE_STYLE = {
+	"--logs-columns": "9.375rem minmax(0, 1fr) minmax(0, 1.8fr) 6.5rem",
+	"--logs-min-width": "47.5rem",
+};
+
 const { guildData } = useGuildData();
 const { ts } = useI18n();
+const { locale } = useAppLocale();
 
 const page = ref(1);
-const limit = ref(20);
-const filters = ref<{ q?: string }>({});
-const query = ref("");
-
-const debouncedQ = refDebounced(query, 300);
+const limit = ref(LOGS_PAGE_SIZE);
 const offset = computed(() => (page.value - 1) * limit.value);
+const filters = ref<{ q?: string }>({});
+
+const query = ref("");
+const debouncedQuery = refDebounced(query, 300);
+watch(debouncedQuery, (value) => {
+	filters.value.q = value || undefined;
+	page.value = 1;
+});
 
 const guildId = computed(() => guildData.value?.id);
 
@@ -90,60 +119,41 @@ const { entries, total, status, refresh } = useAuditLog({
 	filters,
 });
 
-const columns = computed<TableColumn<DashboardAuditEntry>[]>(() => [
-	{
-		id: "actor",
-		header: ts("guild_logs.columns.user"),
-		cell: ({ row }) => {
-			return h("div", { class: "flex items-center gap-3" }, [
-				h(UAvatar, {
-					...auditLogMemberAvatar(row.original.member),
-					size: "lg",
-				}),
-				h("div", undefined, [
-					h(
-						"p",
-						{ class: "font-medium text-highlighted" },
-						auditLogMemberName(row.original.member),
-					),
-					h("p", { class: "" }, `@${row.original.member.user?.username ?? "unknown"}`),
-				]),
-			]);
-		},
-	},
-	{
-		id: "description",
-		header: ts("guild_logs.columns.action"),
-		cell: ({ row }) => {
-			const text = auditLogActionDescription(row.original);
-			return h("span", { class: "line-clamp-2 text-sm", title: text }, text);
-		},
-	},
-	{
-		accessorKey: "timestamp",
-		header: ts("guild_logs.columns.when"),
-		cell: ({ row }) =>
-			h(
-				"time",
-				{
-					datetime: row.original.timestamp,
-					title: new Date(row.original.timestamp).toLocaleString(),
-					class: "whitespace-nowrap text-sm text-muted",
-				},
-				formatTimeAgo(new Date(row.original.timestamp)),
-			),
-	},
-]);
+function outcome(value: DashboardAuditEntry["outcome"]): { label: string; tone: LogsPillTone } {
+	switch (value) {
+		case "success":
+			return { label: ts("guild_logs.outcomes.success"), tone: "success" };
+		case "denied":
+			return { label: ts("guild_logs.outcomes.denied"), tone: "warning" };
+		default:
+			return { label: ts("guild_logs.outcomes.failure"), tone: "error" };
+	}
+}
 
-watch(debouncedQ, (val) => {
-	filters.value.q = val || undefined;
-});
+// Channel and role ids in a change read as their names when the guild has them.
+const resolver = computed(() => ({
+	channels: new Map((guildData.value?.channels ?? []).map((item) => [item.id, item])),
+	roles: new Map((guildData.value?.roles ?? []).map((item) => [item.id, item])),
+}));
 
-watch(
-	[filters],
-	() => {
-		page.value = 1;
-	},
-	{ deep: true },
+const now = new Date();
+
+const rows = computed(() =>
+	entries.value.map((entry) => {
+		const happened = new Date(entry.timestamp);
+		const result = outcome(entry.outcome);
+		return {
+			at: formatActivityTime(happened, now, locale.value),
+			avatar: auditLogMemberAvatar(entry.member),
+			datetime: happened.toISOString(),
+			fullDate: happened.toLocaleString(locale.value),
+			id: entry.id,
+			name: auditLogMemberName(entry.member),
+			outcome: result.label,
+			outcomeTone: result.tone,
+			parts: auditLogActionParts(entry, resolver.value),
+			username: entry.member.user?.username ?? "",
+		};
+	}),
 );
 </script>

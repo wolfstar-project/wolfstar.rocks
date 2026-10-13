@@ -89,4 +89,37 @@ describe("ModerationLogTable", () => {
 		// Ensure no hardcoded hex colors appear in inline style attributes (semantic tokens must be used)
 		expect(component.html()).not.toMatch(/style="[^"]*#[0-9a-fA-F]{3,8}/);
 	});
+
+	// The same entries are laid out twice: a table from `md` up, cards below it.
+	it("renders each case as a table row and as a card", async () => {
+		const component = await mountSuspended(ModerationLogTable);
+
+		expect(component.findAll('[role="table"] [role="row"]')).toHaveLength(2);
+		expect(component.findAll("ul > li")).toHaveLength(1);
+		expect(component.get("ul > li").text()).toContain("by ModUser");
+	});
+
+	it("reads a ban with no duration as permanent and names the target by handle", async () => {
+		const component = await mountSuspended(ModerationLogTable);
+		const cells = component.findAll('[role="table"] [role="cell"]').map((cell) => cell.text());
+
+		expect(cells).toContain("#100");
+		expect(cells).toContain("@TargetUser");
+		expect(cells).toContain("Permanent");
+	});
+
+	it("pages through the server's total", async () => {
+		mockTotal.value = 25;
+		const component = await mountSuspended(ModerationLogTable);
+
+		expect(component.text()).toContain("Showing 1 of 25 entries");
+		expect(component.text()).toContain("1 / 3");
+		expect(
+			component.get('button[aria-label="Previous page"]').attributes("disabled"),
+		).toBeDefined();
+
+		await component.get('button[aria-label="Next page"]').trigger("click");
+
+		expect(component.text()).toContain("2 / 3");
+	});
 });

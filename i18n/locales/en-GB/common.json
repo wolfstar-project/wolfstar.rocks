@@ -87,7 +87,9 @@
 		"moderation_logs": "Moderation Logs",
 		"moderation_logs_description": "Searchable moderation history for every action",
 		"moderation_tools": "Moderation Tools",
-		"moderation_tools_description": "Tools to help you moderate your server"
+		"moderation_tools_description": "Tools to help you moderate your server",
+		"staryl_description": "",
+		"wolfstar_description": ""
 	},
 	"nuxtSiteConfig": {
 		"description": "",

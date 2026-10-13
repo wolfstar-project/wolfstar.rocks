@@ -448,15 +448,17 @@ async function onError(event: FormErrorEvent) {
 }
 
 .stat-card {
-	@apply min-w-0 rounded-lg px-3.5 py-3;
+	@apply min-w-0 rounded-[8px] px-3.5 py-3;
 	background-color: var(--console-surface);
 	border: 1px solid var(--home-border-subtle);
 }
 
-/* Date, user, action: a fixed first column and a 2:3 split of the rest. On
+/* Radii are spelled in pixels: this app's `rounded-lg` is 16px, twice the
+   design's 8px.
+   Date, user, action: a fixed first column and a 2:3 split of the rest. On
    narrow screens the table scrolls sideways instead of crushing the columns. */
 .activity-table {
-	@apply overflow-x-auto rounded-lg;
+	@apply overflow-x-auto rounded-[8px];
 	border: 1px solid var(--console-border);
 }
 

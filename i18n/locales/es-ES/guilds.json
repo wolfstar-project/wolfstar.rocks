@@ -36,7 +36,7 @@
 			"not_logged": "",
 			"routed_count": "",
 			"subtitle": "Elige dónde publica WolfStar los registros y qué canales ignorar.",
-			"title": "Configuración de canales"
+			"title": ""
 		},
 		"commands": {
 			"category_reset": "Restablecer categoría",

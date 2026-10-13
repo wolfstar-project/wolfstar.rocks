@@ -30,10 +30,10 @@
 		"loading_title": "Loading Dashboard",
 		"nav": {
 			"autodelete": "Auto-Delete",
-			"automod": "Auto-moderation",
+			"automod": "Auto Moderation",
 			"automod_short": "AutoMod",
 			"autopurge": "Auto-Purge",
-			"channels": "Channels",
+			"channels": "Events",
 			"commands": "Commands",
 			"home": "Home",
 			"logs": "Logs",

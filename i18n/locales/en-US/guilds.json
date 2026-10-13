@@ -36,7 +36,7 @@
 			"not_logged": "",
 			"routed_count": "",
 			"subtitle": "Choose where WolfStar posts logs and which channels to ignore.",
-			"title": "Channel Settings"
+			"title": ""
 		},
 		"commands": {
 			"category_reset": "Category Reset",

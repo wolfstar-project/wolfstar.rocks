@@ -102,6 +102,9 @@ repeated messages, words, mentions, reactions, attachments. A filter has soft ac
 **Marketing phrase:** "AutoMod", as in "Configurable message filters and escalation rules". It names the
 whole set of filters. UI panels keep "filter".
 
+**Dashboard section:** "Auto Moderation" holds the filters. The section that routes log events to their
+logging channels is "Events", and the history of cases, commands and settings activity is "Logs".
+
 **Never:** automod rule, spam rule, content rule.
 
 ### soft action

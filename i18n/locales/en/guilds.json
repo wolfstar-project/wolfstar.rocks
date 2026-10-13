@@ -14,9 +14,9 @@
 	},
 	"guild_settings": {
 		"automod": {
-			"form_aria": "Auto-moderation settings form",
+			"form_aria": "Auto Moderation settings form",
 			"subtitle": "Choose where auto-moderation reports what it does, and whether it also follows Discord's own AutoMod.",
-			"title": "Auto-moderation"
+			"title": "Auto Moderation"
 		},
 		"channels": {
 			"excluded_channels": "Excluded Channels",
@@ -36,7 +36,7 @@
 			"not_logged": "not logged",
 			"routed_count": "{routed} of {total} routed",
 			"subtitle": "Choose where WolfStar posts logs and which channels to ignore.",
-			"title": "Channel Settings"
+			"title": "Event Logs"
 		},
 		"commands": {
 			"category_reset": "Category Reset",
@@ -148,7 +148,7 @@
 		"entries": {
 			"automodChannel": {
 				"description": "Receives a log message when an auto-moderation rule acts on a message.",
-				"name": "Auto-moderation Logs"
+				"name": "Auto Moderation Logs"
 			},
 			"automodTrackNative": {
 				"description": "Also logs the actions taken by Discord's own AutoMod rules.",

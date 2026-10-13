@@ -55,7 +55,7 @@ describe("DashboardSidebar", () => {
 		const wrapper = await mountSidebar();
 
 		expect(wrapper.text()).toContain("WolfStar HQ");
-		for (const label of ["Overview", "Modules", "Auto-moderation", "Moderation", "Logs"]) {
+		for (const label of ["Overview", "Modules", "Auto Moderation", "Moderation", "Logs"]) {
 			expect(rowFor(wrapper, label).exists()).toBe(true);
 		}
 	});
@@ -94,7 +94,7 @@ describe("DashboardSidebar", () => {
 		const modulesGroup = wrapper.findAll(".dashboard-nav-row").map((row) => row.text());
 		expect(wrapper.text()).toContain("Pinned");
 		expect(modulesGroup.findIndex((text) => text.startsWith("Commands"))).toBeLessThan(
-			modulesGroup.findIndex((text) => text.startsWith("Auto-moderation")),
+			modulesGroup.findIndex((text) => text.startsWith("Auto Moderation")),
 		);
 		expect(
 			rowFor(wrapper, "Commands").find(".dashboard-nav-pin").attributes("aria-pressed"),

@@ -335,7 +335,21 @@ const groups = computed(() =>
 	color: var(--ui-text-muted);
 }
 
-.dashboard-nav-pin--on {
+/* The row is the only thing that lights up on hover. Its two buttons stay
+   clear, so no second highlight appears under the label or the pin; the rule
+   also outranks the `button:hover` background the auth devtools page leaks
+   into the app during development. */
+.dashboard-nav-button:hover,
+.dashboard-nav-pin:hover {
+	background-color: transparent;
+}
+
+.dashboard-nav-pin:hover {
+	color: var(--ui-text-highlighted);
+}
+
+.dashboard-nav-pin--on,
+.dashboard-nav-pin--on:hover {
 	@apply opacity-100;
 	color: var(--color-primary);
 }

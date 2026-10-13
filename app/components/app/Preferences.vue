@@ -1,7 +1,7 @@
 <template>
 	<div class="space-y-6">
 		<!-- Appearance -->
-		<UCard class="border border-base-200/60 bg-base-100 shadow-sm">
+		<UCard v-if="shows('appearance')" class="border border-base-200/60 bg-base-100 shadow-sm">
 			<template #header>
 				<div class="flex items-center gap-3">
 					<div class="flex size-7 items-center justify-center rounded-full bg-primary/10">
@@ -36,7 +36,7 @@
 		</UCard>
 
 		<!-- Language -->
-		<UCard class="border border-base-200/60 bg-base-100 shadow-sm">
+		<UCard v-if="shows('language')" class="border border-base-200/60 bg-base-100 shadow-sm">
 			<template #header>
 				<div class="flex items-center gap-3">
 					<div class="flex size-7 items-center justify-center rounded-full bg-primary/10">
@@ -82,7 +82,7 @@
 		</UCard>
 
 		<!-- Accessibility -->
-		<UCard class="border border-base-200/60 bg-base-100 shadow-sm">
+		<UCard v-if="shows('appearance')" class="border border-base-200/60 bg-base-100 shadow-sm">
 			<template #header>
 				<div class="flex items-center gap-3">
 					<div class="flex size-7 items-center justify-center rounded-full bg-primary/10">
@@ -177,6 +177,18 @@ import { getNuxtUiLocales } from "~/utils/nuxt-ui-locales";
  * language and reduced motion. They are stored through `useSettings()`, so
  * this component only renders the controls.
  */
+const { only } = defineProps<{
+	/**
+	 * Shows one group instead of all of them, for the settings dialog, which
+	 * gives each its own page. Reduced motion belongs with the appearance.
+	 */
+	only?: "appearance" | "language";
+}>();
+
+function shows(group: "appearance" | "language") {
+	return only === undefined || only === group;
+}
+
 const { ts } = useI18n();
 const { locale, selectLocale } = useAppLocale();
 const { reduceMotionEnabled, effectiveReduceMotion, setReduceMotion, systemPreferenceActive } =

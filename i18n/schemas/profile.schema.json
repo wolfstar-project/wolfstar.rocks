@@ -16,7 +16,34 @@
 				"appearance_description": {
 					"type": "string"
 				},
+				"back": {
+					"type": "string"
+				},
+				"close": {
+					"type": "string"
+				},
+				"connections": {
+					"type": "string"
+				},
+				"copy": {
+					"type": "string"
+				},
 				"current_status": {
+					"type": "string"
+				},
+				"discord_id": {
+					"type": "string"
+				},
+				"display_name": {
+					"type": "string"
+				},
+				"edit_on_discord": {
+					"type": "string"
+				},
+				"email": {
+					"type": "string"
+				},
+				"from_discord": {
 					"type": "string"
 				},
 				"language_description": {
@@ -37,10 +64,22 @@
 				"motion_reduced": {
 					"type": "string"
 				},
+				"my_account": {
+					"type": "string"
+				},
+				"my_account_description": {
+					"type": "string"
+				},
+				"notifications": {
+					"type": "string"
+				},
 				"reduce_motion": {
 					"type": "string"
 				},
 				"reduce_motion_description": {
+					"type": "string"
+				},
+				"sections_aria": {
 					"type": "string"
 				},
 				"servers": {
@@ -68,6 +107,9 @@
 					"type": "string"
 				},
 				"theme_menu_aria": {
+					"type": "string"
+				},
+				"username": {
 					"type": "string"
 				}
 			},

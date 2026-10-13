@@ -6,7 +6,9 @@ import {
 	parseGuildSettings,
 	parseGuildSettingsSaveResponse,
 	resolveGuildIconSrc,
+	selectDashboardRailGuilds,
 } from "~/utils/guild-dashboard";
+import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 
 describe("guild-dashboard utilities - guild switch watcher simulation", () => {
 	it("should clear staged changes when guild ID changes", () => {
@@ -207,5 +209,35 @@ describe("parseGuildSettings", () => {
 	it("returns the fallback for non-object JSON (number)", () => {
 		const fallback = { fallback: true };
 		expect(parseGuildSettings("42", fallback)).toBe(fallback);
+	});
+});
+
+describe("selectDashboardRailGuilds", () => {
+	const guild = (overrides: Partial<OauthFlattenedGuild>) =>
+		createMockOauthFlattenedGuild(overrides);
+
+	it("keeps only guilds the viewer manages and WolfStar has joined", () => {
+		const rail = selectDashboardRailGuilds([
+			guild({ id: "1", name: "Alpha", manageable: true, wolfstarIsIn: true }),
+			guild({ id: "2", name: "Beta", manageable: false, wolfstarIsIn: true }),
+			guild({ id: "3", name: "Gamma", manageable: true, wolfstarIsIn: false }),
+		]);
+
+		expect(rail.map((entry) => entry.id)).toStrictEqual(["1"]);
+	});
+
+	it("sorts entries by name so the rail order stays stable", () => {
+		const rail = selectDashboardRailGuilds([
+			guild({ id: "1", name: "zeta" }),
+			guild({ id: "2", name: "Alpha" }),
+			guild({ id: "3", name: "mid" }),
+		]);
+
+		expect(rail.map((entry) => entry.name)).toStrictEqual(["Alpha", "mid", "zeta"]);
+	});
+
+	it("returns an empty rail when nothing qualifies", () => {
+		expect(selectDashboardRailGuilds([])).toStrictEqual([]);
+		expect(selectDashboardRailGuilds([guild({ manageable: false })])).toStrictEqual([]);
 	});
 });

@@ -69,7 +69,6 @@
 <script setup lang="ts">
 import type { FormErrorEvent } from "@nuxt/ui";
 import { FeedbackSchema as schema, type FeedbackState as Schema } from "#shared/schemas";
-import { captureFeedback } from "@sentry/nuxt";
 
 const open = defineModel<boolean>("open", { default: false });
 const { ts } = useI18n();
@@ -80,7 +79,9 @@ const isSubmitting = ref(false);
 const { effectiveReduceMotion } = useReduceMotion();
 
 const isDashboard = computed(
-	() => route.path.startsWith("/guilds/") && route.path.includes("/manage"),
+	() =>
+		route.path === "/app" ||
+		(route.path.startsWith("/guilds/") && route.path.includes("/manage")),
 );
 
 const state = reactive<Schema>({
@@ -94,6 +95,9 @@ async function onSubmit() {
 
 	isSubmitting.value = true;
 	try {
+		// Loaded on submit: the SDK is not needed to render the form, and the
+		// component test runner cannot import it at module load.
+		const { captureFeedback } = await import("@sentry/nuxt");
 		captureFeedback({
 			name: state.name,
 			email: state.email,

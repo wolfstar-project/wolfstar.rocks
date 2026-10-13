@@ -91,10 +91,85 @@
 						"moderation": {
 							"type": "string"
 						},
+						"modules": {
+							"type": "string"
+						},
+						"overview": {
+							"type": "string"
+						},
 						"reactions": {
 							"type": "string"
 						},
 						"roles": {
+							"type": "string"
+						},
+						"support_server": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"nav_aria": {
+					"type": "string"
+				},
+				"nav_current_group": {
+					"type": "string"
+				},
+				"nav_groups": {
+					"type": "object",
+					"properties": {
+						"management": {
+							"type": "string"
+						},
+						"modules": {
+							"type": "string"
+						},
+						"records": {
+							"type": "string"
+						},
+						"resources": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"nav_menu": {
+					"type": "string"
+				},
+				"nav_menu_description": {
+					"type": "string"
+				},
+				"nav_module_off": {
+					"type": "string"
+				},
+				"nav_pin": {
+					"type": "string"
+				},
+				"nav_pinned": {
+					"type": "string"
+				},
+				"nav_recent": {
+					"type": "string"
+				},
+				"nav_sections_aria": {
+					"type": "string"
+				},
+				"nav_unpin": {
+					"type": "string"
+				},
+				"nav_you": {
+					"type": "string"
+				},
+				"picker": {
+					"type": "object",
+					"properties": {
+						"description": {
+							"type": "string"
+						},
+						"empty": {
+							"type": "string"
+						},
+						"title": {
 							"type": "string"
 						}
 					},
@@ -104,6 +179,12 @@
 					"type": "string"
 				},
 				"save_changes": {
+					"type": "string"
+				},
+				"server_rail_all": {
+					"type": "string"
+				},
+				"server_rail_aria": {
 					"type": "string"
 				},
 				"settings_saved_description": {
@@ -121,7 +202,13 @@
 				"unauthorized_title": {
 					"type": "string"
 				},
+				"unsaved_bar": {
+					"type": "string"
+				},
 				"unsaved_description": {
+					"type": "string"
+				},
+				"unsaved_short": {
 					"type": "string"
 				},
 				"unsaved_title": {
@@ -134,6 +221,12 @@
 					"type": "string"
 				},
 				"update_failed_why": {
+					"type": "string"
+				},
+				"user_preferences": {
+					"type": "string"
+				},
+				"user_sign_out": {
 					"type": "string"
 				}
 			},
@@ -212,6 +305,12 @@
 					"type": "string"
 				},
 				"no_warnings": {
+					"type": "string"
+				},
+				"page_subtitle": {
+					"type": "string"
+				},
+				"page_title": {
 					"type": "string"
 				},
 				"refresh_activity": {

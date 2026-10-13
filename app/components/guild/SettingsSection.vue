@@ -4,16 +4,16 @@ import { tv, type ClassValue } from "tailwind-variants";
 
 const theme = tv({
 	slots: {
-		root: "w-full space-y-6",
+		root: "w-full space-y-5",
 		header: "space-y-1",
 		heading: "",
-		description: "text-sm text-toned",
+		description: "text-[0.8125rem] leading-normal text-muted",
 		content: "space-y-4",
 	},
 	variants: {
 		disableTypography: {
 			true: { heading: "" },
-			false: { heading: "divider divider-start text-xl font-semibold" },
+			false: { heading: "text-xl font-bold tracking-[0.01em]" },
 		},
 	},
 });

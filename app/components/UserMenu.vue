@@ -14,16 +14,13 @@
 			v-bind="{
 				...user,
 				label: collapsed ? undefined : user?.name,
-				trailingIcon: collapsed ? undefined : 'lucide:chevrons-up-down',
 			}"
-			color="primary"
+			color="neutral"
 			variant="ghost"
+			size="xl"
 			block
 			:square="collapsed"
-			class="data-[state=open]:bg-primary/10"
-			:ui="{
-				trailingIcon: 'text-dimmed',
-			}"
+			class="justify-start data-[state=open]:bg-base-content/10"
 			:aria-label="
 				collapsed
 					? ts('header.user_menu')

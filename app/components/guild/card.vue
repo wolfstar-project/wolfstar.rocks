@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="relative flex h-full transform-gpu flex-col rounded-xl border border-base-300/70 bg-base-100 p-2 shadow-lg transition-all duration-300 ease-out motion-reduce:transform-none motion-reduce:transition-none md:p-4"
+		class="relative flex h-full flex-col rounded-lg border border-(--home-border-subtle) bg-(--console-surface,var(--ink-700)) p-3 shadow-(--console-shadow-low,none) transition-colors duration-200 motion-reduce:transition-none md:p-4"
 		:class="cardClasses"
 	>
 		<!-- Skeleton Loading State -->
@@ -40,7 +40,8 @@
 				<!-- Guild Icon with action overlay -->
 				<NuxtLink
 					v-if="guild.wolfstarIsIn && guild.manageable"
-					:to="`/guilds/${guild.id}/manage`"
+					:to="{ path: '/app', query: { guild: guild.id } }"
+					@click="goToGuild(guild.id)"
 					class="group relative"
 					:aria-label="ts('guild_card.manage_aria', { name: guild.name })"
 				>
@@ -135,7 +136,8 @@
 				<div class="mt-auto w-full pt-2">
 					<NuxtLink
 						v-if="guild.wolfstarIsIn && guild.manageable"
-						:to="`/guilds/${guild.id}/manage`"
+						:to="{ path: '/app', query: { guild: guild.id } }"
+						@click="goToGuild(guild.id)"
 						class="flex h-9 w-full items-center justify-center rounded-lg border border-success/20 bg-success/10 px-3 text-xs font-medium text-success transition-all duration-200 hover:bg-success/20 hover:shadow-md"
 						:aria-label="ts('guild_card.manage_server_aria', { name: guild.name })"
 					>
@@ -188,18 +190,18 @@ interface GuildCardProps {
 const { guild, loading = false } = defineProps<GuildCardProps>();
 
 const { ts } = useI18n();
+// Go through the guarded boundary, not `useActiveGuild().selectGuild`: with
+// settings staged on another server, this parks the switch for the
+// dashboard's "unsaved changes" dialog instead of dropping the edits.
+const { goToGuild } = useDashboardNavigation();
 
 const cardClasses = computed(() => {
 	if (loading || !guild) {
 		return {};
 	}
 	return {
-		"hover:-translate-y-1 hover:shadow-2xl focus-visible:-translate-y-1 focus-visible:shadow-2xl focus-visible:outline-none focus-visible:ring-2 motion-reduce:hover:shadow-xl motion-reduce:hover:translate-y-0": true,
-		"hover:border-primary/40 focus-visible:border-primary/50 focus-visible:ring-primary/40":
-			!guild.wolfstarIsIn && guild.manageable,
-		"outline outline-2 outline-error/20": !guild.manageable,
-		"outline outline-2 outline-success/20 hover:border-success/40 focus-visible:border-success/50 focus-visible:ring-success/40":
-			guild.wolfstarIsIn && guild.manageable,
+		"opacity-70": !guild.manageable,
+		"hover:border-primary/40 focus-within:border-primary/50": guild.manageable,
 	};
 });
 

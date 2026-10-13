@@ -153,9 +153,17 @@ pnpm test:browser:prebuilt --update-snapshots  # Update Playwright snapshots
 - Do not add Prisma `@@index` entries for the manually-managed partial indexes on `Moderation.createdAt`; see migration `20260515000000_command_log_and_moderation_indexes`
 - `AuditEvent` is hash-chained and tamper-evident; `CommandLog` is not hash-chained and is written directly by the bot/shared PostgreSQL producer
 
+## Dashboard (`/app`)
+
+- The guild dashboard is a single client-rendered page, `app/pages/app.vue` (route rule `"/app": { ssr: false }`), rendered inside `app/layouts/dashboard.vue`. The guild snowflake never appears in the URL: `useActiveGuild()` (`app/composables/useActiveGuild.ts`) holds `activeGuildId`, the open `section` (a manage slug such as `""` for Home, `modules`, `moderation/word`, `channels`, `logs`) and the `logsTab`, and `app/plugins/active-guild.client.ts` mirrors them to the `wolfstar-active-guild` localStorage key so a reload lands on the same server and section
+- `useGuildData()`, `useGuildSettings()` and `useGuildSettingsChanges()` are keyed by the active guild (one `useState` map per store), so switching servers never leaks another guild's settings or staged edits
+- Switch sections or guilds through `useDashboardNavigation()` (`goToSection()`, `goToGuild()`), never by writing the state directly from components: with staged changes the switch is parked in `pendingNavigation` and the layout's "Unsaved Changes" dialog confirms or cancels it. In-dashboard links to other sections are buttons calling `goToSection()`, not `NuxtLink`s
+- `/guilds/:id/manage/*` and `/guilds/:id/logs/*` are legacy routes: the pages under `app/pages/(app)/guilds/[...id]/` only record the guild and section into state on the client and `navigateTo("/app")`. Do not add new pages under `/guilds/`
+- The Modules section (`app/components/guild/settings/Modules.vue`) and the Home summary card read the module registry in `shared/utils/guild-modules.ts` (one entry per `selfmod*Enabled` flag with its label, help key, icon and section slug); `ModulesSettingsSchema` in `shared/schemas/modules.ts` is derived from it
+
 ## Guild Logs and Activity Patterns
 
-- Guild log routes live under `server/api/guilds/[guild]/logs/`
+- Guild log routes live under `server/api/guilds/[guild]/logs/`; the client renders them in the Logs section of `/app` through `app/components/guild/logs/Panel.vue`
 - Use `defineWrappedCachedResponseHandler` with `auth: true`, explicit `maxAge`, `swr: false`, `onError`, and route-specific rate limits for log endpoints
 - Validate log route filters with `DashboardActivityQuerySchema`, `CommandLogQuerySchema`, or `ModerationLogQuerySchema` from `shared/schemas/log-queries.ts`
 - Use `resolveGuildMembers()` and `fallbackMember()` from `server/utils/audit/resolve-members.ts` when log rows need Discord member metadata

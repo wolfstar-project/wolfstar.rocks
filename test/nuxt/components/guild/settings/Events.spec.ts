@@ -149,15 +149,21 @@ describe("events guild settings", () => {
 		);
 	});
 
-	it("computes channels page link from guild ID", async () => {
+	it("opens the Channels section from the help text", async () => {
 		const wrapper = await mountSuspended(Events);
 
 		await nextTick();
 
-		const channelsLink = wrapper.find('a[href="/guilds/123456789012345678/manage/channels"]');
+		const channelsButton = wrapper
+			.findAll("button")
+			.find((button) => button.text().includes("Channels page"));
 
-		expect(channelsLink.exists()).toBeTruthy();
-		expect(channelsLink.text()).toContain("Channels page");
+		expect(channelsButton?.exists()).toBeTruthy();
+
+		await channelsButton!.trigger("click");
+		await nextTick();
+
+		expect(useActiveGuild().section.value).toBe("channels");
 	});
 
 	it("syncs state when guildSettings change externally", async () => {

@@ -7,6 +7,114 @@
 		"marketing": {
 			"type": "object",
 			"properties": {
+				"commands": {
+					"type": "object",
+					"properties": {
+						"categories_heading": {
+							"type": "string"
+						},
+						"category_count": {
+							"type": "string"
+						},
+						"details_label": {
+							"type": "string"
+						},
+						"empty_description": {
+							"type": "string"
+						},
+						"empty_title": {
+							"type": "string"
+						},
+						"examples": {
+							"type": "string"
+						},
+						"explained_usage": {
+							"type": "string"
+						},
+						"extended_help": {
+							"type": "string"
+						},
+						"guarded": {
+							"type": "string"
+						},
+						"loading": {
+							"type": "string"
+						},
+						"no_description": {
+							"type": "string"
+						},
+						"no_details": {
+							"type": "string"
+						},
+						"permission_administrator": {
+							"type": "string"
+						},
+						"permission_moderator": {
+							"type": "string"
+						},
+						"permission_staff": {
+							"type": "string"
+						},
+						"possible_formats": {
+							"type": "string"
+						},
+						"properties_label": {
+							"type": "string"
+						},
+						"refresh": {
+							"type": "string"
+						},
+						"refresh_label": {
+							"type": "string"
+						},
+						"reminder": {
+							"type": "string"
+						},
+						"results": {
+							"type": "string"
+						},
+						"search_clear": {
+							"type": "string"
+						},
+						"search_heading": {
+							"type": "string"
+						},
+						"search_label": {
+							"type": "string"
+						},
+						"search_placeholder": {
+							"type": "string"
+						},
+						"server_only": {
+							"type": "string"
+						},
+						"subtitle_highlight": {
+							"type": "string"
+						},
+						"subtitle_lead": {
+							"type": "string"
+						},
+						"subtitle_tail": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						},
+						"try_again": {
+							"type": "string"
+						},
+						"unavailable_description": {
+							"type": "string"
+						},
+						"unavailable_title": {
+							"type": "string"
+						},
+						"usage": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"other_apps": {
 					"type": "object",
 					"properties": {

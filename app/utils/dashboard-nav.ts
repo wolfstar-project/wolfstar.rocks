@@ -70,12 +70,6 @@ export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
 		slug: "roles",
 	},
 	{
-		group: "modules",
-		icon: "ic:round-flag",
-		labelKey: "dashboard.nav.reports",
-		slug: "reports",
-	},
-	{
 		comingSoon: true,
 		descriptionKey: "dashboard.coming_soon.autodelete",
 		group: "modules",

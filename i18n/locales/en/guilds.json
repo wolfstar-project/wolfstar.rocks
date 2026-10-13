@@ -89,8 +89,9 @@
 			"title": "General Settings"
 		},
 		"moderation": {
+			"cases_title": "Cases",
 			"form_aria": "Moderation settings form",
-			"subtitle": "Choose where moderation cases are logged and which manual actions open a case.",
+			"subtitle": "Where cases are logged, which manual actions open one, and how member reports are reviewed.",
 			"title": "Moderation"
 		},
 		"modules": {
@@ -120,8 +121,7 @@
 		},
 		"please_try_again": "Please try again.",
 		"reports": {
-			"form_aria": "Reports settings form",
-			"subtitle": "Let members report messages and users to your moderators, and choose how those reports are handled.",
+			"subtitle": "Members report a message or a user; your moderators review it.",
 			"title": "Reports"
 		},
 		"roles": {

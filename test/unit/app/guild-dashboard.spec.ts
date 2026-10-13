@@ -253,6 +253,10 @@ describe("resolveLegacyDashboardSection", () => {
 		expect(resolveLegacyDashboardSection("events")).toBe("moderation");
 	});
 
+	it("sends the removed Reports page to moderation, which holds its settings now", () => {
+		expect(resolveLegacyDashboardSection("reports")).toBe("moderation");
+	});
+
 	it("leaves the sections that still exist alone", () => {
 		for (const slug of ["", "moderation", "channels", "roles", "commands", "logs"]) {
 			expect(resolveLegacyDashboardSection(slug)).toBe(slug);

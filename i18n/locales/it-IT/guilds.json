@@ -89,6 +89,7 @@
 			"title": "Impostazioni generali"
 		},
 		"moderation": {
+			"cases_title": "",
 			"form_aria": "Modulo impostazioni moderazione",
 			"subtitle": "",
 			"title": ""
@@ -120,7 +121,6 @@
 		},
 		"please_try_again": "Riprova.",
 		"reports": {
-			"form_aria": "",
 			"subtitle": "",
 			"title": ""
 		},

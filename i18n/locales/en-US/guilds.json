@@ -89,6 +89,7 @@
 			"title": "General Settings"
 		},
 		"moderation": {
+			"cases_title": "",
 			"form_aria": "Moderation settings form",
 			"subtitle": "",
 			"title": ""
@@ -120,7 +121,6 @@
 		},
 		"please_try_again": "Please try again.",
 		"reports": {
-			"form_aria": "",
 			"subtitle": "",
 			"title": ""
 		},

@@ -271,6 +271,9 @@
 				"moderation": {
 					"type": "object",
 					"properties": {
+						"cases_title": {
+							"type": "string"
+						},
 						"form_aria": {
 							"type": "string"
 						},
@@ -364,9 +367,6 @@
 				"reports": {
 					"type": "object",
 					"properties": {
-						"form_aria": {
-							"type": "string"
-						},
 						"subtitle": {
 							"type": "string"
 						},

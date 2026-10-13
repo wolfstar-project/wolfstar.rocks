@@ -89,6 +89,7 @@
 			"title": ""
 		},
 		"moderation": {
+			"cases_title": "",
 			"form_aria": "",
 			"subtitle": "",
 			"title": ""
@@ -120,7 +121,6 @@
 		},
 		"please_try_again": "",
 		"reports": {
-			"form_aria": "",
 			"subtitle": "",
 			"title": ""
 		},

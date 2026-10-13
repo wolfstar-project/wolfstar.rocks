@@ -97,8 +97,26 @@ describe("moderation guild settings", () => {
 
 		expect(wrapper.text()).toContain("Moderation");
 		expect(wrapper.text()).toContain(
-			"Choose where moderation cases are logged and which manual actions open a case.",
+			"Where cases are logged, which manual actions open one, and how member reports are reviewed.",
 		);
+	});
+
+	// Reports are set up next to the cases they can close into, not on a page
+	// of their own.
+	it("groups the settings into a Cases and a Reports card", async () => {
+		const wrapper = await mountSuspended(Moderation);
+
+		await nextTick();
+
+		expect(wrapper.findAll("section h2").map((heading) => heading.text())).toStrictEqual([
+			"Cases",
+			"Reports",
+		]);
+		const [cases, reports] = wrapper.findAll("section");
+		expect(cases?.text()).toContain("Moderation Logs");
+		expect(reports?.text()).toContain("Reports Channel");
+		expect(reports?.text()).toContain("Notified Role");
+		expect(reports?.text()).toContain("Anonymous Reports");
 	});
 
 	it("initializes toggle states from guildSettings", async () => {

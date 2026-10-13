@@ -17,6 +17,23 @@
 		/>
 		<span v-if="tooltipTitle" :id="`${rowId}-help`" class="sr-only">{{ tooltipTitle }}</span>
 	</div>
+	<div v-else-if="layout === 'field'" class="select-field">
+		<label :for="rowId" class="select-field-label">{{ formattedLabel }}</label>
+		<USelect
+			:id="rowId"
+			v-model="rowValue"
+			:items="rowItems"
+			:disabled
+			value-key="value"
+			label-key="label"
+			:placeholder="rowPlaceholder"
+			:aria-describedby="tooltipTitle ? `${rowId}-help` : undefined"
+			:ui="selectFieldUi"
+		/>
+		<p v-if="tooltipTitle" :id="`${rowId}-help`" class="select-field-help">
+			{{ tooltipTitle }}
+		</p>
+	</div>
 	<UModal v-else :title="formattedLabel" :description>
 		<UButton :label="buttonLabel" :disabled variant="soft" />
 
@@ -92,9 +109,12 @@ interface SelectOneProps {
 	/**
 	 * `button` opens a dialog from a "Label: value" button; `row` shows the
 	 * label with an inline select beside it, for settings lists.
+	 *
+	 * `field` stacks the label, a full-width select and the help text, for a
+	 * setting that stands on its own in a card.
 	 */
-	layout?: "button" | "row";
-	/** Text shown when nothing is selected in the `row` layout */
+	layout?: "button" | "row" | "field";
+	/** Text shown when nothing is selected in the `row` and `field` layouts */
 	emptyLabel?: string;
 }
 
@@ -187,6 +207,11 @@ const selectRowUi = computed(() => ({
 	value: rowValue.value === NONE_VALUE ? "text-muted" : "",
 }));
 
+const selectFieldUi = computed(() => ({
+	base: "h-9 w-full rounded-[5px] bg-(--console-input)! text-sm ring-(--console-border)",
+	value: rowValue.value === NONE_VALUE ? "text-muted" : "",
+}));
+
 // Button label shown in the trigger, e.g. "Member Add Logs: None"
 const buttonLabel = computed(() => `${formattedLabel.value}: ${selectedLabel.value ?? "None"}`);
 </script>
@@ -200,5 +225,17 @@ const buttonLabel = computed(() => `${formattedLabel.value}: ${selectedLabel.val
 
 .select-row-label {
 	@apply min-w-0 text-sm;
+}
+
+.select-field {
+	@apply flex min-w-0 flex-col gap-1.5;
+}
+
+.select-field-label {
+	@apply text-sm font-medium;
+}
+
+.select-field-help {
+	@apply text-[0.8125rem] leading-normal text-muted;
 }
 </style>

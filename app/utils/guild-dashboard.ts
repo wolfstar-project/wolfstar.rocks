@@ -115,5 +115,7 @@ export function selectDashboardRailGuilds(
 export function resolveLegacyDashboardSection(slug: string): string {
 	if (slug.startsWith("moderation/")) return "automod";
 	if (slug === "events") return "moderation";
+	// Reports had a page of their own before they moved in with the cases.
+	if (slug === "reports") return "moderation";
 	return slug;
 }

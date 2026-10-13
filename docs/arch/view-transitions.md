@@ -13,12 +13,12 @@ Router-driven View Transitions are enabled via a **manual plugin** (not `experim
 
 ## Type vocabulary
 
-| Type              | When added                                                                                |
-| ----------------- | ----------------------------------------------------------------------------------------- |
-| `nav-forward`     | Client-side push navigation                                                               |
-| `nav-back`        | Popstate (browser back/forward) without UA visual transition                              |
-| `route-marketing` | Destination is `/`, `/wolfstar`, `/staryl`, `/privacy`, `/terms`, `/commands`, `/profile` |
-| `route-dashboard` | Destination starts with `/guilds/`                                                        |
+| Type              | When added                                                                    |
+| ----------------- | ----------------------------------------------------------------------------- |
+| `nav-forward`     | Client-side push navigation                                                   |
+| `nav-back`        | Popstate (browser back/forward) without UA visual transition                  |
+| `route-marketing` | Destination is `/`, `/wolfstar`, `/staryl`, `/privacy`, `/terms`, `/commands` |
+| `route-dashboard` | Destination starts with `/guilds/`                                            |
 
 ## Rules
 

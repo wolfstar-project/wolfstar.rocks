@@ -63,6 +63,7 @@
 		"picker": {
 			"description": "",
 			"empty": "",
+			"error": "",
 			"title": ""
 		},
 		"reset_changes": "Reset Changes",
@@ -86,19 +87,26 @@
 	},
 	"guild_logs": {
 		"all_actions": "All actions",
+		"by_moderator": "",
 		"columns": {
 			"action": "Action",
 			"case": "Case",
+			"channel": "",
 			"command": "Command",
 			"date": "Date",
 			"duration": "Duration",
 			"latency": "Latency",
 			"moderator": "Moderator",
+			"outcome": "",
 			"reason": "Reason",
-			"status": "Status",
-			"time": "Time",
-			"user": "User",
-			"when": "When"
+			"result": "",
+			"type": "",
+			"user": "User"
+		},
+		"command_types": {
+			"message": "",
+			"slash": "",
+			"user": ""
 		},
 		"filter_action": "Filter by action type",
 		"filter_status": "Filter by status",
@@ -109,24 +117,30 @@
 		"no_moderation_cases": "No moderation cases found",
 		"no_reason": "No reason provided",
 		"no_warnings": "No warnings found",
+		"outcomes": {
+			"denied": "",
+			"failure": "",
+			"success": ""
+		},
 		"page_subtitle": "",
 		"page_title": "",
+		"permanent": "",
 		"refresh_activity": "Refresh activity log",
 		"refresh_audit": "Refresh audit log",
 		"refresh_command": "Refresh command log",
 		"refresh_moderation": "Refresh moderation log",
+		"result_succeeded": "",
 		"search_aria": "Search logs",
 		"search_placeholder": "Search logs...",
 		"showing_entries": "Showing {shown} of {total} entries",
-		"status_all": "All",
+		"status_all": "",
 		"status_failed": "Failed",
-		"status_label": "Status",
 		"status_success": "Success",
 		"tab_activity": "Dashboard Activity",
 		"tab_commands": "Commands",
 		"tab_moderation": "Moderation",
 		"tab_warnings": "Warnings",
-		"title": "Logs",
+		"tabs_aria": "",
 		"undo_action": "",
 		"unknown": "Unknown"
 	},

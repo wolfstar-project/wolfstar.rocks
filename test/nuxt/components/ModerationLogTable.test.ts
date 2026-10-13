@@ -89,4 +89,61 @@ describe("ModerationLogTable", () => {
 		// Ensure no hardcoded hex colors appear in inline style attributes (semantic tokens must be used)
 		expect(component.html()).not.toMatch(/style="[^"]*#[0-9a-fA-F]{3,8}/);
 	});
+
+	// The same entries are laid out twice: a table from `md` up, cards below it.
+	it("renders each case as a table row and as a card", async () => {
+		const component = await mountSuspended(ModerationLogTable);
+
+		expect(component.findAll("table tbody tr")).toHaveLength(1);
+		expect(component.findAll("ul > li")).toHaveLength(1);
+		expect(component.get("ul > li").text()).toContain("by ModUser");
+	});
+
+	it("lays the table out in the design's columns", async () => {
+		const component = await mountSuspended(ModerationLogTable);
+
+		expect(component.findAll("table thead th").map((cell) => cell.text())).toStrictEqual([
+			"Case",
+			"User",
+			"Moderator",
+			"Action",
+			"Reason",
+			"Duration",
+			"Date",
+		]);
+	});
+
+	it("reads a ban with no duration as permanent and names the target by handle", async () => {
+		const component = await mountSuspended(ModerationLogTable);
+		const cells = component.findAll("table tbody td").map((cell) => cell.text());
+
+		expect(cells).toContain("#100");
+		expect(cells).toContain("@TargetUser");
+		expect(cells).toContain("Permanent");
+	});
+
+	it("drops the duration column for warnings", async () => {
+		const component = await mountSuspended(ModerationLogTable, {
+			props: { warningsOnly: true },
+		});
+
+		expect(component.findAll("table thead th").map((cell) => cell.text())).not.toContain(
+			"Duration",
+		);
+	});
+
+	it("pages through the server's total", async () => {
+		mockTotal.value = 25;
+		const component = await mountSuspended(ModerationLogTable);
+
+		expect(component.text()).toContain("Showing 1 of 25 entries");
+		// Two arrows around the position, as the design pages: no numbered buttons.
+		expect(component.get(".logs-page-label:not(.hidden)").text()).toBe("1 / 3");
+		const numbered = component
+			.findAll("nav button")
+			.filter((button) => /^\d+$/.test(button.text()));
+		expect(numbered).toHaveLength(0);
+
+		mockTotal.value = 1;
+	});
 });

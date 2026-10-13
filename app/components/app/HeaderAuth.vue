@@ -42,10 +42,10 @@
 					size="md"
 					color="neutral"
 					variant="ghost"
-					to="/profile"
 					:class="mobile ? 'rounded-lg' : 'hidden rounded-lg md:inline-flex'"
 					icon="lucide:sliders-horizontal"
 					:aria-label="ts('header.settings')"
+					@click="openPreferences"
 				/>
 				<UButton
 					:label="ts('header.sign_in')"
@@ -83,12 +83,18 @@ const { mobile = false } = defineProps<{
 
 const { ts } = useI18n();
 const { signOut } = useUserSession();
+const { open: openPreferences } = usePreferencesDialog();
 
 const items = computed<DropdownMenuItem[]>(() => [
 	{
-		icon: "lucide:user",
-		label: ts("header.profile"),
-		to: "/profile",
+		icon: "lucide:layout-dashboard",
+		label: ts("header.dashboard"),
+		to: "/app",
+	},
+	{
+		icon: "lucide:sliders-horizontal",
+		label: ts("header.settings"),
+		onSelect: () => openPreferences(),
 	},
 	{
 		icon: "lucide:log-out",

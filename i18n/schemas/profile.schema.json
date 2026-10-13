@@ -13,40 +13,37 @@
 				"accessibility_description": {
 					"type": "string"
 				},
-				"account_management": {
-					"type": "string"
-				},
 				"appearance_description": {
 					"type": "string"
 				},
-				"applying_filters": {
+				"back": {
 					"type": "string"
 				},
-				"clear_search": {
+				"close": {
+					"type": "string"
+				},
+				"connections": {
+					"type": "string"
+				},
+				"copy": {
 					"type": "string"
 				},
 				"current_status": {
 					"type": "string"
 				},
-				"default_avatar": {
+				"discord_id": {
+					"type": "string"
+				},
+				"display_name": {
+					"type": "string"
+				},
+				"edit_on_discord": {
 					"type": "string"
 				},
 				"email": {
 					"type": "string"
 				},
-				"error_loading_title": {
-					"type": "string"
-				},
-				"failed_to_load": {
-					"type": "string"
-				},
-				"get_premium": {
-					"type": "string"
-				},
-				"guest_profile": {
-					"type": "string"
-				},
-				"guest_tagline": {
+				"from_discord": {
 					"type": "string"
 				},
 				"language_description": {
@@ -55,19 +52,10 @@
 				"language_help": {
 					"type": "string"
 				},
-				"loading_more": {
-					"type": "string"
-				},
 				"loading_servers": {
 					"type": "string"
 				},
-				"manageable": {
-					"type": "string"
-				},
 				"members": {
-					"type": "string"
-				},
-				"members_online": {
 					"type": "string"
 				},
 				"motion_enabled": {
@@ -76,19 +64,13 @@
 				"motion_reduced": {
 					"type": "string"
 				},
-				"no_matching_description": {
+				"my_account": {
 					"type": "string"
 				},
-				"no_matching_servers": {
+				"my_account_description": {
 					"type": "string"
 				},
-				"no_servers": {
-					"type": "string"
-				},
-				"no_servers_description": {
-					"type": "string"
-				},
-				"premium": {
+				"notifications": {
 					"type": "string"
 				},
 				"reduce_motion": {
@@ -97,40 +79,13 @@
 				"reduce_motion_description": {
 					"type": "string"
 				},
-				"refresh_servers": {
-					"type": "string"
-				},
-				"reload_page": {
-					"type": "string"
-				},
-				"search_matching": {
-					"type": "string"
-				},
-				"search_servers": {
-					"type": "string"
-				},
-				"search_servers_aria": {
-					"type": "string"
-				},
-				"seo_description": {
-					"type": "string"
-				},
-				"server_list_aria": {
+				"sections_aria": {
 					"type": "string"
 				},
 				"servers": {
 					"type": "string"
 				},
-				"servers_count": {
-					"type": "string"
-				},
-				"servers_guest_description": {
-					"type": "string"
-				},
 				"servers_list_aria": {
-					"type": "string"
-				},
-				"servers_sign_in_prompt": {
 					"type": "string"
 				},
 				"settings_tagline": {
@@ -154,16 +109,7 @@
 				"theme_menu_aria": {
 					"type": "string"
 				},
-				"title": {
-					"type": "string"
-				},
-				"user_id": {
-					"type": "string"
-				},
-				"user_id_label": {
-					"type": "string"
-				},
-				"user_profile": {
+				"username": {
 					"type": "string"
 				}
 			},

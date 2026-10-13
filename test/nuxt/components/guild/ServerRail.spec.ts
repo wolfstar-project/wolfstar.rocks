@@ -59,6 +59,19 @@ describe("GuildServerRail", () => {
 		expect(wrapper.findAll("button.guild-rail-item")).toHaveLength(0);
 	});
 
+	// The rail used to link to /profile for the full list; that page is gone and
+	// the list is the dashboard's own picker.
+	it("asks for the server list instead of leaving the dashboard", async () => {
+		const wrapper = await mountSuspended(GuildServerRail, {
+			props: { guilds: [createMockOauthFlattenedGuild()] },
+		});
+
+		expect(wrapper.find('a[href="/profile"]').exists()).toBe(false);
+		await wrapper.get('button[aria-label="All your servers"]').trigger("click");
+
+		expect(wrapper.emitted("browse")).toHaveLength(1);
+	});
+
 	it("holds the rail open with placeholders while the guilds load", async () => {
 		const wrapper = await mountSuspended(GuildServerRail, {
 			props: { guilds: [], pending: true },

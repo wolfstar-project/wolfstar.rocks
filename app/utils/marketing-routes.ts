@@ -5,8 +5,6 @@ export const MARKETING_PATHS = [
 	"/privacy",
 	"/terms",
 	"/commands",
-	"/profile",
-	"/account",
 	"/blog",
 	"/changelog",
 	"/translation-status",

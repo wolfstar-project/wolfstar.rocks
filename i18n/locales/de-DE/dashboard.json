@@ -63,6 +63,7 @@
 		"picker": {
 			"description": "",
 			"empty": "",
+			"error": "",
 			"title": ""
 		},
 		"reset_changes": "",
@@ -86,19 +87,26 @@
 	},
 	"guild_logs": {
 		"all_actions": "",
+		"by_moderator": "",
 		"columns": {
 			"action": "",
 			"case": "",
+			"channel": "",
 			"command": "",
 			"date": "",
 			"duration": "",
 			"latency": "",
 			"moderator": "",
+			"outcome": "",
 			"reason": "",
-			"status": "",
-			"time": "",
-			"user": "",
-			"when": ""
+			"result": "",
+			"type": "",
+			"user": ""
+		},
+		"command_types": {
+			"message": "",
+			"slash": "",
+			"user": ""
 		},
 		"filter_action": "",
 		"filter_status": "",
@@ -109,24 +117,30 @@
 		"no_moderation_cases": "",
 		"no_reason": "",
 		"no_warnings": "",
+		"outcomes": {
+			"denied": "",
+			"failure": "",
+			"success": ""
+		},
 		"page_subtitle": "",
 		"page_title": "",
+		"permanent": "",
 		"refresh_activity": "",
 		"refresh_audit": "",
 		"refresh_command": "",
 		"refresh_moderation": "",
+		"result_succeeded": "",
 		"search_aria": "",
 		"search_placeholder": "",
 		"showing_entries": "",
 		"status_all": "",
 		"status_failed": "",
-		"status_label": "",
 		"status_success": "",
 		"tab_activity": "",
 		"tab_commands": "",
 		"tab_moderation": "",
 		"tab_warnings": "",
-		"title": "",
+		"tabs_aria": "",
 		"undo_action": "",
 		"unknown": ""
 	},

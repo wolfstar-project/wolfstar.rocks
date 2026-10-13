@@ -25,7 +25,10 @@ interface SelectRolesProps {
 	/** The current selected role IDs */
 	modelValue: string[];
 	/** The guild data containing roles */
-	guild: DeepReadonly<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>;
+	/** `undefined` while the guild has not loaded: the list is then empty. */
+	guild:
+		| DeepReadonly<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>
+		| undefined;
 	/** Content to be shown as a tooltip when hovering over the button */
 	tooltipTitle?: string;
 	/** Whether to append an image to the end of the button, next to the value of the key */
@@ -62,8 +65,8 @@ const roleSummary = computed(() => {
 
 // Filter and sort roles, then map to SelectManyValue format
 const roleValues = computed<SelectManyValue[]>(() =>
-	[...guild.roles]
-		.filter((r) => r.id !== guild.id)
+	[...(guild?.roles ?? [])]
+		.filter((r) => r.id !== guild?.id)
 		.toSorted((r1, r2) => r2.rawPosition - r1.rawPosition)
 		.map((r) => ({
 			icon: "discord:text-channel",

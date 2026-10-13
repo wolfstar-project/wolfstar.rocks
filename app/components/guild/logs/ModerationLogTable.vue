@@ -1,74 +1,81 @@
 <template>
-	<div class="w-full flex-1 divide-y divide-accented">
-		<div class="flex items-center gap-2 overflow-x-auto px-4 py-3.5">
-			<UInput
-				v-model="q"
-				icon="i-lucide-search"
-				:placeholder="ts('guild_logs.search_placeholder')"
-				:aria-label="ts('guild_logs.search_aria')"
-				class="max-w-sm min-w-48"
-			/>
+	<GuildLogsShell
+		v-model:search="query"
+		v-model:page="page"
+		:status="status"
+		:total="total"
+		:shown="rows.length"
+		:page-size="limit"
+		:refresh-label="ts('guild_logs.refresh_moderation')"
+		empty-icon="ic:round-gavel"
+		:empty-title="
+			warningsOnly ? ts('guild_logs.no_warnings') : ts('guild_logs.no_moderation_cases')
+		"
+		:empty-description="isFiltered ? ts('guild_logs.no_filter_match') : undefined"
+		@refresh="refresh()"
+	>
+		<template v-if="!warningsOnly" #filter>
 			<USelect
-				v-if="!warningsOnly"
 				v-model="selectedTypeCode"
 				:items="actionTypeItems"
-				value-key="value"
-				label-key="label"
-				icon="i-lucide-filter"
-				class="w-48"
 				:aria-label="ts('guild_logs.filter_action')"
+				:ui="LOGS_FILTER_UI"
 			/>
-		</div>
-		<ActivitySection
-			:plain="true"
-			:total="total"
-			:status="status"
-			:item-count="entries.length"
-			:max-visible="total"
-			empty-icon="i-lucide-gavel"
-			:empty-title="
-				warningsOnly ? ts('guild_logs.no_warnings') : ts('guild_logs.no_moderation_cases')
-			"
-			:empty-description="debouncedQ ? ts('guild_logs.no_filter_match') : undefined"
-			:refresh-label="ts('guild_logs.refresh_moderation')"
-			record-label="case"
-			@refresh="refresh()"
-		>
-			<UTable
-				:data="entries"
-				:columns="columns"
-				:loading="status === 'pending'"
-				class="min-h-100"
-			/>
-			<div class="flex justify-end border-t border-accented px-4 py-3.5">
-				<UPagination
-					v-if="total > limit"
-					v-model:page="page"
-					:total="total"
-					:page-size="limit"
-				/>
-			</div>
-		</ActivitySection>
-	</div>
+		</template>
+
+		<UTable
+			:data="rows"
+			:columns="columns"
+			:aria-label="tableLabel"
+			:style="tableStyle"
+			:ui="LOGS_TABLE_UI"
+		/>
+
+		<ul class="logs-table md:hidden" :aria-label="tableLabel">
+			<li v-for="row in rows" :key="row.caseId" class="logs-card">
+				<div class="logs-line">
+					<span class="logs-case">#{{ row.caseId }}</span>
+					<div class="logs-member">
+						<UAvatar v-bind="row.targetAvatar" size="xs" class="shrink-0" />
+						<span class="truncate text-sm font-semibold">{{ row.target }}</span>
+					</div>
+					<span class="grow"></span>
+					<GuildLogsPill :tone="row.tone">{{ row.action }}</GuildLogsPill>
+				</div>
+				<span class="block text-[0.8125rem] leading-[1.45] text-toned">{{
+					row.reason
+				}}</span>
+				<div class="logs-line">
+					<span class="truncate text-xs text-muted">
+						{{ ts("guild_logs.by_moderator", { name: row.moderator }) }}
+					</span>
+					<span class="grow"></span>
+					<span v-if="!warningsOnly" class="logs-mono">{{ row.duration }}</span>
+					<time class="logs-mono" :datetime="row.datetime" :title="row.fullDate">
+						{{ row.at }}
+					</time>
+				</div>
+			</li>
+		</ul>
+	</GuildLogsShell>
 </template>
 
 <script setup lang="ts">
 import type { ModerationLogEntry } from "#shared/types/moderation-log";
 import type { TableColumn } from "@nuxt/ui";
+import type { LogsPillTone } from "./Pill.vue";
 import { MODERATION_TYPE_FILTER_VALUES } from "#shared/types/moderation-types";
-import { formatTimeAgo } from "@vueuse/core";
-
-const UBadge = resolveComponent("UBadge");
-const UUser = resolveComponent("UUser");
-const { guildData } = useGuildData();
-const { ts } = useI18n();
 
 const { warningsOnly } = defineProps<{
 	warningsOnly?: boolean;
 }>();
 
+const { guildData } = useGuildData();
+const { ts } = useI18n();
+const { locale } = useAppLocale();
+
 const page = ref(1);
-const limit = ref(20);
+const limit = ref(LOGS_PAGE_SIZE);
 const offset = computed(() => (page.value - 1) * limit.value);
 
 const filters = ref<{ q?: string; typeCode?: number }>({});
@@ -82,17 +89,21 @@ const actionTypeItems = computed(() => [
 	...MODERATION_TYPE_FILTER_VALUES,
 ]);
 
-watch(selectedTypeCode, (val) => {
-	filters.value.typeCode = val ?? undefined;
+watch(selectedTypeCode, (value) => {
+	filters.value.typeCode = value ?? undefined;
+	page.value = 1;
 });
 
-const q = ref("");
-const debouncedQ = refDebounced(q, 300);
-watch(debouncedQ, (val) => {
-	filters.value.q = val || undefined;
+const query = ref("");
+const debouncedQuery = refDebounced(query, 300);
+watch(debouncedQuery, (value) => {
+	filters.value.q = value || undefined;
+	page.value = 1;
 });
 
-const guildId = computed(() => guildData.value.id);
+const isFiltered = computed(() => Boolean(debouncedQuery.value) || selectedTypeCode.value !== null);
+
+const guildId = computed(() => guildData.value?.id);
 const { entries, total, status, refresh } = useModerationLog({
 	guildId,
 	limit,
@@ -100,93 +111,128 @@ const { entries, total, status, refresh } = useModerationLog({
 	filters,
 });
 
-const columns = computed<TableColumn<ModerationLogEntry>[]>(() => [
+const tableLabel = computed(() =>
+	warningsOnly ? ts("guild_logs.tab_warnings") : ts("guild_logs.tab_moderation"),
+);
+
+const tableStyle = computed(() => ({
+	"--logs-min-width": warningsOnly ? "51.25rem" : "56.25rem",
+}));
+
+// Punishments that hold until someone lifts them when no duration was given.
+const OPEN_ENDED_TYPES = new Set<string>([
+	"Ban",
+	"Mute",
+	"VoiceMute",
+	"RestrictedReaction",
+	"RestrictedEmbed",
+	"RestrictedAttachment",
+	"RestrictedVoice",
+	"RestrictedEmoji",
+]);
+
+function durationLabel(entry: ModerationLogEntry): string {
+	// The table stores seconds, and `0` for a case that is not temporary.
+	if (entry.duration > 0) return formatCompactDuration(entry.duration * 1000);
+	return !entry.metadata.undo && OPEN_ENDED_TYPES.has(entry.typeName)
+		? ts("guild_logs.permanent")
+		: "\u2013";
+}
+
+const now = new Date();
+
+const rows = computed(() =>
+	entries.value.map((entry) => {
+		const { metadata, typeName } = entry;
+		const created = entry.createdAt ? new Date(entry.createdAt) : null;
+		const target = entry.targetMember?.user?.username;
+		return {
+			// A case that reverses another one (an unban, an unmute) carries the
+			// same type with the undo flag, so it is told apart here.
+			action: metadata.undo ? ts("guild_logs.undo_action", { action: typeName }) : typeName,
+			at: created ? formatActivityTime(created, now, locale.value) : "\u2013",
+			caseId: entry.caseId,
+			datetime: entry.createdAt ?? undefined,
+			duration: durationLabel(entry),
+			fullDate: created?.toLocaleString(locale.value),
+			moderator: entry.moderatorMember
+				? auditLogMemberName(entry.moderatorMember)
+				: ts("guild_logs.unknown"),
+			moderatorAvatar: auditLogMemberAvatar(entry.moderatorMember),
+			reason: entry.reason ?? ts("guild_logs.no_reason"),
+			target: target ? `@${target}` : ts("guild_logs.unknown"),
+			targetAvatar: auditLogMemberAvatar(entry.targetMember),
+			tone: (metadata.undo ? "success" : moderationActionVariant(typeName)) as LogsPillTone,
+		};
+	}),
+);
+
+type Row = (typeof rows.value)[number];
+
+const UAvatar = resolveComponent("UAvatar");
+const GuildLogsPill = resolveComponent("GuildLogsPill");
+
+function memberCell(avatar: Row["targetAvatar"], name: string, strong: boolean) {
+	return h("div", { class: "logs-member" }, [
+		h(UAvatar, { ...avatar, class: "shrink-0", size: "xs" }),
+		h(
+			"span",
+			{ class: ["truncate text-sm text-highlighted", strong ? "font-semibold" : ""] },
+			name,
+		),
+	]);
+}
+
+function dateCell(row: Row) {
+	return h("time", { class: "logs-mono", datetime: row.datetime, title: row.fullDate }, row.at);
+}
+
+const columns = computed<TableColumn<Row>[]>(() => [
 	{
 		accessorKey: "caseId",
 		header: ts("guild_logs.columns.case"),
-		cell: ({ row }) => h("span", { class: "text-sm font-medium" }, `#${row.original.caseId}`),
+		meta: logsColumnWidth("w-16"),
+		cell: ({ row }) => h("span", { class: "logs-case" }, `#${row.original.caseId}`),
 	},
 	{
-		accessorKey: "typeName",
-		header: ts("guild_logs.columns.action"),
-		cell: ({ row }) => {
-			const { metadata, typeName } = row.original;
-			// A case that reverses another one (an unban, an unmute) carries the
-			// same type with the undo flag, so it is told apart here.
-			return h(
-				UBadge,
-				{
-					color: metadata.undo ? "success" : moderationActionVariant(typeName),
-					variant: "subtle",
-					size: "sm",
-				},
-				() =>
-					metadata.undo ? ts("guild_logs.undo_action", { action: typeName }) : typeName,
-			);
-		},
-	},
-	{
-		id: "target",
+		accessorKey: "target",
 		header: ts("guild_logs.columns.user"),
-		cell: ({ row }) => {
-			const member = row.original.targetMember;
-			return h(UUser, {
-				name: member ? auditLogMemberName(member) : ts("guild_logs.unknown"),
-				avatar: member ? auditLogMemberAvatar(member) : undefined,
-				size: "sm",
-			});
-		},
+		cell: ({ row }) => memberCell(row.original.targetAvatar, row.original.target, true),
 	},
 	{
-		id: "moderator",
+		accessorKey: "moderator",
 		header: ts("guild_logs.columns.moderator"),
-		cell: ({ row }) => {
-			const member = row.original.moderatorMember;
-			return h(UUser, {
-				name: member ? auditLogMemberName(member) : ts("guild_logs.unknown"),
-				avatar: member ? auditLogMemberAvatar(member) : undefined,
-				size: "sm",
-			});
-		},
+		cell: ({ row }) => memberCell(row.original.moderatorAvatar, row.original.moderator, false),
+	},
+	{
+		accessorKey: "action",
+		header: ts("guild_logs.columns.action"),
+		meta: logsColumnWidth("w-32"),
+		cell: ({ row }) => h(GuildLogsPill, { tone: row.original.tone }, () => row.original.action),
 	},
 	{
 		accessorKey: "reason",
 		header: ts("guild_logs.columns.reason"),
-		cell: ({ row }) => {
-			const reason = row.original.reason ?? ts("guild_logs.no_reason");
-			return h(
-				"span",
-				{
-					class: "line-clamp-1 max-w-xs text-sm text-muted",
-					title: reason,
-				},
-				reason,
-			);
-		},
-	},
-	{
-		accessorKey: "createdAt",
-		header: ts("guild_logs.columns.date"),
+		meta: logsColumnWidth("w-[28%]"),
 		cell: ({ row }) =>
-			h(
-				"time",
+			h("span", { class: "block truncate", title: row.original.reason }, row.original.reason),
+	},
+	// A warning has no duration to show.
+	...(warningsOnly
+		? []
+		: [
 				{
-					datetime: row.original.createdAt ?? "",
-					title: row.original.createdAt
-						? new Date(row.original.createdAt).toLocaleString()
-						: "",
-					class: "whitespace-nowrap text-sm text-muted",
-				},
-				row.original.createdAt ? formatTimeAgo(new Date(row.original.createdAt)) : "—",
-			),
+					accessorKey: "duration",
+					header: ts("guild_logs.columns.duration"),
+					meta: logsColumnWidth("w-24"),
+					cell: ({ row }) => h("span", { class: "logs-mono" }, row.original.duration),
+				} satisfies TableColumn<Row>,
+			]),
+	{
+		accessorKey: "at",
+		header: ts("guild_logs.columns.date"),
+		meta: logsColumnWidth("w-38"),
+		cell: ({ row }) => dateCell(row.original),
 	},
 ]);
-
-watch(
-	[filters],
-	() => {
-		page.value = 1;
-	},
-	{ deep: true },
-);
 </script>

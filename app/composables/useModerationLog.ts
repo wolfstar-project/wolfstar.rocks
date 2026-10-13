@@ -13,7 +13,7 @@ export function useModerationLog({
 	offset,
 	filters,
 }: {
-	guildId: MaybeRefOrGetter<string>;
+	guildId: MaybeRefOrGetter<string | undefined>;
 	immediate?: boolean;
 	limit?: MaybeRefOrGetter<number>;
 	offset?: MaybeRefOrGetter<number>;
@@ -38,6 +38,9 @@ export function useModerationLog({
 		() =>
 			`guild:${toValue(guildId)}:logs:moderation:${resolvedLimit.value ?? "default"}:${resolvedOffset.value ?? 0}:${JSON.stringify(resolvedFilters.value || {})}`,
 		() => {
+			// Without a guild there is nothing to ask for, and no URL to ask it at.
+			const id = toValue(guildId);
+			if (!id) return Promise.resolve<ModerationLogResponse>({ entries: [], total: 0 });
 			const query: Record<string, string | number> = {};
 			if (resolvedLimit.value !== undefined) query.limit = resolvedLimit.value;
 			if (resolvedOffset.value !== undefined) query.offset = resolvedOffset.value;
@@ -50,12 +53,7 @@ export function useModerationLog({
 				if (f.to) query.to = f.to;
 				if (f.q) query.q = f.q;
 			}
-			return $fetch<ModerationLogResponse>(
-				`/api/guilds/${toValue(guildId)}/logs/moderation`,
-				{
-					query,
-				},
-			);
+			return $fetch<ModerationLogResponse>(`/api/guilds/${id}/logs/moderation`, { query });
 		},
 		{
 			immediate: immediate !== false,

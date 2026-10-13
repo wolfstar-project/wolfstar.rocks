@@ -9,9 +9,7 @@
 		>
 			<div v-if="!plain" class="flex min-w-0 items-center gap-2.5">
 				<h3 class="truncate text-[1.0625rem] font-semibold">{{ title }}</h3>
-				<UBadge color="primary" variant="soft" size="md" class="font-semibold">
-					{{ itemCount }}
-				</UBadge>
+				<span class="activity-count">{{ total }}</span>
 			</div>
 			<p v-else class="text-sm text-toned">
 				{{ itemCount }} {{ recordLabel }}{{ itemCount === 1 ? "" : "s" }} recorded
@@ -77,3 +75,13 @@ const emit = defineEmits<{
 	refresh: [];
 }>();
 </script>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+/* The design system's soft primary badge: a blurple tint with the count in the
+   same hue. The light theme uses body text, which the tint cannot carry. */
+.activity-count {
+	@apply inline-flex h-5.5 min-w-7 shrink-0 items-center justify-center rounded-full bg-primary/15 px-2.5 text-xs font-semibold text-primary theme-light:text-default;
+}
+</style>

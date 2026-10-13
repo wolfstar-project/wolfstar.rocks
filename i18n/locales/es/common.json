@@ -59,8 +59,8 @@
 	"header": {
 		"add_app": "Añadir app",
 		"brand": "WolfStar",
+		"dashboard": "",
 		"home": "Inicio de {name}",
-		"profile": "Perfil",
 		"settings": "Settings",
 		"sign_in": "Iniciar sesión",
 		"sign_in_discord": "Iniciar sesión con Discord",
@@ -107,7 +107,6 @@
 		"account_menu": "Menú de cuenta de usuario",
 		"avatar_alt": "Avatar de {name}",
 		"avatar_fallback": "Avatar de usuario",
-		"profile": "Perfil",
 		"report_bug": "Informar de un error",
 		"sign_out": "Cerrar sesión",
 		"user_menu_for": "Menú de usuario de {name}"

@@ -27,7 +27,10 @@ interface SelectChannelsProps {
 	/** The current selected channel IDs */
 	modelValue: string[];
 	/** The guild data containing channels */
-	guild: DeepReadonly<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>;
+	/** `undefined` while the guild has not loaded: the list is then empty. */
+	guild:
+		| DeepReadonly<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>
+		| undefined;
 	/** Content to be shown as a tooltip when hovering over the button */
 	tooltipTitle?: string;
 	/** Whether to append an image to the end of the button, next to the value of the key */
@@ -60,7 +63,7 @@ const selectedCount = computed(() => modelValue.length);
 
 // Filter and sort channels, then map to SelectManyValue format
 const channelValues = computed<SelectManyValue[]>(() =>
-	guild.channels
+	(guild?.channels ?? [])
 		.filter((c) => c.type === ChannelType.GuildText || c.type === ChannelType.GuildAnnouncement)
 		.toSorted((c1, c2) => c1.rawPosition - c2.rawPosition)
 		.map((c) => ({

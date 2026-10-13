@@ -309,17 +309,13 @@ export const ModerationActions: Record<string, ModerationAction> = {
 
 const MODERATION_VARIANT_MAP: Record<string, string> = {
 	Ban: "error",
-	Kick: "warning",
+	Kick: "error",
 	Mute: "warning",
 	Softban: "error",
 	Timeout: "warning",
-	VoiceKick: "warning",
+	VoiceKick: "error",
 	VoiceMute: "warning",
-	Warning: "neutral",
-	Unban: "success",
-	Unmute: "success",
-	UnVoiceMute: "success",
-	Untimeout: "success",
+	Warning: "warning",
 };
 
 export function moderationActionVariant(typeName: string): string {

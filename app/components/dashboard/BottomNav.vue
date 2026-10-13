@@ -28,8 +28,9 @@ import { findDashboardNavItem } from "~/utils/dashboard-nav";
 const { ts } = useI18n();
 const { goToSection, section } = useDashboardNavigation();
 const { user } = useUserSession();
+const { open: openPreferences } = usePreferencesDialog();
 
-const TAB_SLUGS = ["", "modules", "moderation", "logs"] as const;
+const TAB_SLUGS = ["", "modules", "automod", "logs"] as const;
 
 const tabs = computed(() => [
 	...TAB_SLUGS.flatMap((slug) => {
@@ -51,7 +52,7 @@ const tabs = computed(() => [
 		icon: "ic:round-person",
 		id: "you",
 		label: ts("dashboard.nav_you"),
-		pick: () => navigateTo("/profile"),
+		pick: openPreferences,
 	},
 ]);
 </script>

@@ -20,7 +20,7 @@ export function useAuditLog({
 	offset,
 	filters,
 }: {
-	guildId: MaybeRefOrGetter<string>;
+	guildId: MaybeRefOrGetter<string | undefined>;
 	immediate?: boolean;
 	limit?: MaybeRefOrGetter<number>;
 	offset?: MaybeRefOrGetter<number>;
@@ -38,6 +38,9 @@ export function useAuditLog({
 		() =>
 			`guild:${toValue(guildId)}:logs:activity:${resolvedLimit.value ?? "default"}:${resolvedOffset.value ?? 0}:${JSON.stringify(resolvedFilters.value ?? {})}`,
 		() => {
+			// Without a guild there is nothing to ask for, and no URL to ask it at.
+			const id = toValue(guildId);
+			if (!id) return Promise.resolve<AuditLogResponse>({ entries: [], total: 0 });
 			const query: Record<string, string | number> = {};
 			if (resolvedLimit.value !== undefined) query.limit = resolvedLimit.value;
 			if (resolvedOffset.value !== undefined) query.offset = resolvedOffset.value;
@@ -48,7 +51,7 @@ export function useAuditLog({
 				if (f.to) query.to = f.to;
 				if (f.q) query.q = f.q;
 			}
-			return $fetch<AuditLogResponse>(`/api/guilds/${toValue(guildId)}/logs`, {
+			return $fetch<AuditLogResponse>(`/api/guilds/${id}/logs`, {
 				query,
 			});
 		},

@@ -193,6 +193,9 @@
 						"empty": {
 							"type": "string"
 						},
+						"error": {
+							"type": "string"
+						},
 						"title": {
 							"type": "string"
 						}
@@ -262,6 +265,9 @@
 				"all_actions": {
 					"type": "string"
 				},
+				"by_moderator": {
+					"type": "string"
+				},
 				"columns": {
 					"type": "object",
 					"properties": {
@@ -269,6 +275,9 @@
 							"type": "string"
 						},
 						"case": {
+							"type": "string"
+						},
+						"channel": {
 							"type": "string"
 						},
 						"command": {
@@ -286,19 +295,34 @@
 						"moderator": {
 							"type": "string"
 						},
+						"outcome": {
+							"type": "string"
+						},
 						"reason": {
 							"type": "string"
 						},
-						"status": {
+						"result": {
 							"type": "string"
 						},
-						"time": {
+						"type": {
 							"type": "string"
 						},
 						"user": {
 							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"command_types": {
+					"type": "object",
+					"properties": {
+						"message": {
+							"type": "string"
 						},
-						"when": {
+						"slash": {
+							"type": "string"
+						},
+						"user": {
 							"type": "string"
 						}
 					},
@@ -331,10 +355,28 @@
 				"no_warnings": {
 					"type": "string"
 				},
+				"outcomes": {
+					"type": "object",
+					"properties": {
+						"denied": {
+							"type": "string"
+						},
+						"failure": {
+							"type": "string"
+						},
+						"success": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"page_subtitle": {
 					"type": "string"
 				},
 				"page_title": {
+					"type": "string"
+				},
+				"permanent": {
 					"type": "string"
 				},
 				"refresh_activity": {
@@ -347,6 +389,9 @@
 					"type": "string"
 				},
 				"refresh_moderation": {
+					"type": "string"
+				},
+				"result_succeeded": {
 					"type": "string"
 				},
 				"search_aria": {
@@ -364,9 +409,6 @@
 				"status_failed": {
 					"type": "string"
 				},
-				"status_label": {
-					"type": "string"
-				},
 				"status_success": {
 					"type": "string"
 				},
@@ -382,7 +424,7 @@
 				"tab_warnings": {
 					"type": "string"
 				},
-				"title": {
+				"tabs_aria": {
 					"type": "string"
 				},
 				"undo_action": {

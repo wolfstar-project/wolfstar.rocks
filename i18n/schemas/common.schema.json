@@ -181,10 +181,10 @@
 				"brand": {
 					"type": "string"
 				},
-				"home": {
+				"dashboard": {
 					"type": "string"
 				},
-				"profile": {
+				"home": {
 					"type": "string"
 				},
 				"settings": {
@@ -323,9 +323,6 @@
 					"type": "string"
 				},
 				"avatar_fallback": {
-					"type": "string"
-				},
-				"profile": {
 					"type": "string"
 				},
 				"report_bug": {

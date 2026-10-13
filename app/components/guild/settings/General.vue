@@ -166,36 +166,65 @@
 		:refresh-label="ts('guild_logs.refresh_audit')"
 		@refresh="refreshAuditLog()"
 	>
-		<UTable
-			ref="table"
-			:data="auditEntries"
-			:columns="auditLogColumns"
-			:loading="auditLogStatus === 'pending'"
-			:pagination-options="{
-				getPaginationRowModel: getPaginationRowModel(),
-			}"
-			class="shrink-0"
-			:ui="{
-				base: 'table-fixed border-separate border-spacing-0',
-				thead: '[&>tr]:bg-base-content/5 [&>tr]:after:content-none',
-				tbody: '[&>tr]:last:[&>td]:border-b-0',
-				th: 'py-2 text-[0.6875rem] font-bold tracking-[0.06em] uppercase first:rounded-l-lg last:rounded-r-lg',
-				td: 'border-b border-(--home-border-subtle)',
-				separator: 'h-0',
-			}"
-		/>
+		<div class="activity-table">
+			<table :aria-label="ts('guild_settings.general.recent_activity')">
+				<thead>
+					<tr>
+						<th scope="col">{{ ts("guild_logs.columns.date") }}</th>
+						<th scope="col">{{ ts("guild_logs.columns.user") }}</th>
+						<th scope="col">{{ ts("guild_logs.columns.action") }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="entry in auditEntries" :key="entry.id">
+						<td>
+							<time
+								class="font-mono text-xs whitespace-nowrap text-toned"
+								:datetime="new Date(entry.timestamp).toISOString()"
+								:title="new Date(entry.timestamp).toLocaleString(locale)"
+							>
+								{{ formatActivityTime(entry.timestamp, now, locale) }}
+							</time>
+						</td>
+						<td>
+							<div class="flex min-w-0 items-center gap-2.5">
+								<UAvatar
+									v-bind="auditLogMemberAvatar(entry.member)"
+									size="md"
+									class="shrink-0"
+								/>
+								<div class="min-w-0">
+									<p class="truncate text-sm font-semibold">
+										{{ auditLogMemberName(entry.member) }}
+									</p>
+									<p class="truncate text-xs text-muted">
+										@{{ entry.member.user?.username }}
+									</p>
+								</div>
+							</div>
+						</td>
+						<td class="text-[0.8125rem] leading-[1.45] text-toned">
+							<span
+								v-for="(part, index) in auditLogActionParts(entry)"
+								:key="index"
+								:class="{ 'activity-table-strong': part.strong }"
+								>{{ part.text }}</span
+							>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</ActivitySection>
 </template>
 
 <script lang="ts" setup>
 import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
-import type { TableColumn } from "@nuxt/ui";
 import {
 	GeneralSettingsSchema as schema,
 	type GeneralSettingsSchemaType as Schema,
 } from "#shared/schemas";
-import { getPaginationRowModel } from "@tanstack/table-core";
 import { ChannelType } from "discord-api-types/v10";
 
 const { languages } = defineProps<{
@@ -210,8 +239,6 @@ const toast = useToast();
 
 const { copy, copied } = useClipboard();
 
-const UAvatar = resolveComponent("UAvatar");
-
 const auditLogPage = ref(1);
 const page = ref(10);
 const offset = computed(() => (auditLogPage.value - 1) * page.value);
@@ -222,52 +249,10 @@ const {
 	refresh: refreshAuditLog,
 	status: auditLogStatus,
 } = useAuditLog({
-	guildId: guildData.value.id,
+	guildId: () => guildData.value?.id,
 	limit: page,
 	offset,
 });
-
-const auditLogColumns = computed<TableColumn<(typeof auditEntries.value)[number]>[]>(() => [
-	{
-		accessorKey: "timestamp",
-		header: ts("guild_logs.columns.date"),
-		cell: ({ row }) => {
-			return h(
-				"time",
-				{
-					class: "whitespace-nowrap text-xs text-highlighted",
-					datetime: new Date(row.original.timestamp).toISOString(),
-				},
-				new Date(row.original.timestamp).toLocaleString(),
-			);
-		},
-	},
-	{
-		accessorKey: "member",
-		header: ts("guild_logs.columns.user"),
-		cell: ({ row }) => {
-			return h("div", { class: "flex items-center gap-3" }, [
-				h(UAvatar, {
-					...auditLogMemberAvatar(row.original.member),
-					size: "lg",
-				}),
-				h("div", undefined, [
-					h(
-						"p",
-						{ class: "font-medium text-highlighted" },
-						auditLogMemberName(row.original.member),
-					),
-					h("p", { class: "" }, `@${row.original.member.user.username}`),
-				]),
-			]);
-		},
-	},
-	{
-		id: "description",
-		header: ts("guild_logs.columns.action"),
-		cell: ({ row }) => auditLogActionDescription(row.original),
-	},
-]);
 
 // The log is asked for the last seven days only; its own total is exact even
 // when the page of entries below is not.
@@ -277,12 +262,12 @@ const now = ref(new Date());
 const activityFrom = computed(() => moderationActivityStart(now.value, CHART_DAYS).toISOString());
 
 const { entries: moderationEntries, total: moderationTotal } = useModerationLog({
-	guildId: guildData.value.id,
+	guildId: () => guildData.value?.id,
 	limit: CHART_ENTRY_LIMIT,
 	filters: computed(() => ({ from: activityFrom.value })),
 });
 const { total: commandTotal } = useCommandLog({
-	guildId: guildData.value.id,
+	guildId: () => guildData.value?.id,
 	limit: 1,
 	filters: computed(() => ({ from: activityFrom.value })),
 });
@@ -463,8 +448,43 @@ async function onError(event: FormErrorEvent) {
 }
 
 .stat-card {
-	@apply min-w-0 rounded-lg px-3.5 py-3;
+	@apply min-w-0 rounded-[8px] px-3.5 py-3;
 	background-color: var(--console-surface);
 	border: 1px solid var(--home-border-subtle);
+}
+
+/* Radii are spelled in pixels: this app's `rounded-lg` is 16px, twice the
+   design's 8px.
+   Date, user, action: a fixed first column and a 2:3 split of the rest. On
+   narrow screens the table scrolls sideways instead of crushing the columns. */
+.activity-table {
+	@apply overflow-x-auto rounded-[8px];
+	border: 1px solid var(--console-border);
+}
+
+.activity-table table {
+	@apply w-full min-w-140 table-fixed border-collapse text-left;
+}
+
+.activity-table th {
+	@apply px-3.5 py-2 text-[0.6875rem] font-bold tracking-[0.06em] text-muted uppercase;
+	background-color: var(--console-active);
+}
+
+.activity-table th:first-child {
+	width: 9.375rem;
+}
+
+.activity-table th:nth-child(2) {
+	width: calc((100% - 9.375rem) * 0.4);
+}
+
+.activity-table td {
+	@apply px-3.5 py-2.5 align-middle;
+	border-top: 1px solid var(--home-border-subtle);
+}
+
+.activity-table-strong {
+	@apply font-semibold text-primary theme-light:text-default;
 }
 </style>

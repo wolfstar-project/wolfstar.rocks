@@ -5,6 +5,7 @@
 			:guilds="userGuilds"
 			:pending="userGuildsPending"
 			@select="goToGuild"
+			@browse="goToGuild(null)"
 		/>
 
 		<aside v-if="guildId" class="console-sidebar" :aria-label="ts('dashboard.nav_aria')">

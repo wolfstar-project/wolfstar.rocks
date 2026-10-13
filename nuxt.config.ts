@@ -363,6 +363,15 @@ export default defineNuxtConfig({
 		future: {
 			nativeSWR: true,
 		},
+		// The bot API only allows the production origin, so a browser on
+		// localhost cannot call it directly. In development `$api` goes through
+		// this same-origin path instead (see `app/plugins/api.ts`).
+		devProxy: {
+			"/__bot-api": {
+				target: process.env.NUXT_PUBLIC_API_BASE_URL || "http://localhost:8282",
+				changeOrigin: true,
+			},
+		},
 		esbuild: {
 			options: {
 				target: "es2024",

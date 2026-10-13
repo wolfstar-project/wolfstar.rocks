@@ -67,7 +67,13 @@
 					}"
 				>
 					<template #item="{ item, page: currentPage, pageCount }">
-						<span :class="item.value === currentPage ? 'logs-page-label' : 'hidden'">
+						<span
+							:class="
+								item.type === 'page' && item.value === currentPage
+									? 'logs-page-label'
+									: 'hidden'
+							"
+						>
 							{{ currentPage }} / {{ pageCount }}
 						</span>
 					</template>

@@ -137,11 +137,12 @@ describe("ModerationLogTable", () => {
 		const component = await mountSuspended(ModerationLogTable);
 
 		expect(component.text()).toContain("Showing 1 of 25 entries");
-		const pages = component
+		// Two arrows around the position, as the design pages: no numbered buttons.
+		expect(component.get(".logs-page-label:not(.hidden)").text()).toBe("1 / 3");
+		const numbered = component
 			.findAll("nav button")
-			.map((button) => button.text())
-			.filter((text) => /^\d+$/.test(text));
-		expect(pages).toStrictEqual(["1", "2", "3"]);
+			.filter((button) => /^\d+$/.test(button.text()));
+		expect(numbered).toHaveLength(0);
 
 		mockTotal.value = 1;
 	});

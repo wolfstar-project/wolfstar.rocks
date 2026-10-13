@@ -47,18 +47,31 @@
 					{{ ts("guild_logs.showing_entries", { shown, total }) }}
 				</p>
 				<span class="grow"></span>
+				<!-- The design pages with two arrows around "1 / 3". `UPagination` keeps
+				     the paging logic and its keyboard support; its numbered buttons and
+				     the jump-to-edge arrows are hidden, and the current page's slot
+				     carries the label. -->
 				<UPagination
 					v-if="total > pageSize"
 					v-model:page="page"
 					:total="total"
 					:items-per-page="pageSize"
-					:sibling-count="1"
-					size="sm"
+					:sibling-count="0"
 					color="neutral"
 					variant="outline"
-					active-color="primary"
-					active-variant="solid"
-				/>
+					:ui="{
+						list: 'gap-2.5',
+						first: 'hidden',
+						last: 'hidden',
+						ellipsis: 'hidden',
+					}"
+				>
+					<template #item="{ item, page: currentPage, pageCount }">
+						<span :class="item.value === currentPage ? 'logs-page-label' : 'hidden'">
+							{{ currentPage }} / {{ pageCount }}
+						</span>
+					</template>
+				</UPagination>
 			</div>
 		</template>
 	</div>
@@ -139,6 +152,23 @@ const { ts } = useI18n();
 .logs-shell :deep(.logs-table) {
 	@apply overflow-x-auto rounded-[8px];
 	border: 1px solid var(--console-border);
+}
+
+/* The pager's two arrows: 36px squares with the table's border, as designed. */
+.logs-shell :deep(nav[role="navigation"] button),
+.logs-shell :deep(nav button[data-slot]) {
+	@apply size-9 justify-center rounded-[5px] bg-transparent p-0 ring-0;
+	border: 1px solid var(--console-border);
+	color: var(--ui-text-toned);
+}
+
+.logs-shell :deep(nav button:hover:not(:disabled)) {
+	background-color: var(--console-active);
+}
+
+.logs-shell :deep(.logs-page-label) {
+	@apply font-mono text-[0.8125rem] whitespace-nowrap;
+	color: var(--ui-text-toned);
 }
 
 .logs-shell :deep(.logs-card) {

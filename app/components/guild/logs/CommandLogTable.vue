@@ -21,61 +21,13 @@
 			/>
 		</template>
 
-		<div
-			class="logs-table hidden md:block"
-			role="table"
+		<UTable
+			:data="rows"
+			:columns="columns"
 			:aria-label="ts('guild_logs.tab_commands')"
 			:style="TABLE_STYLE"
-		>
-			<div class="logs-grid" role="rowgroup">
-				<div class="logs-head" role="row">
-					<span role="columnheader">{{ ts("guild_logs.columns.command") }}</span>
-					<span role="columnheader">{{ ts("guild_logs.columns.user") }}</span>
-					<span role="columnheader">{{ ts("guild_logs.columns.channel") }}</span>
-					<span role="columnheader">{{ ts("guild_logs.columns.type") }}</span>
-					<span role="columnheader">{{ ts("guild_logs.columns.result") }}</span>
-					<span role="columnheader">{{ ts("guild_logs.columns.latency") }}</span>
-					<span role="columnheader">{{ ts("guild_logs.columns.date") }}</span>
-				</div>
-				<div v-for="row in rows" :key="row.id" class="logs-row" role="row">
-					<span
-						class="truncate font-mono text-[0.8125rem]"
-						:class="{ 'text-error': !row.success }"
-						role="cell"
-					>
-						{{ row.name }}
-					</span>
-					<div class="logs-member" role="cell">
-						<UAvatar v-bind="row.avatar" size="xs" class="shrink-0" />
-						<span class="truncate text-sm font-semibold">{{ row.user }}</span>
-					</div>
-					<span class="truncate text-[0.8125rem] text-toned" role="cell">
-						{{ row.channel }}
-					</span>
-					<span role="cell">
-						<GuildLogsPill :tone="row.typeTone">{{ row.type }}</GuildLogsPill>
-					</span>
-					<span
-						class="truncate text-[0.8125rem] text-toned"
-						role="cell"
-						:title="row.result"
-					>
-						{{ row.result }}
-					</span>
-					<span class="logs-mono" :class="row.latencyClass" role="cell">
-						{{ row.latency }}
-					</span>
-					<time
-						class="logs-mono"
-						role="cell"
-						:datetime="row.datetime"
-						:title="row.fullDate"
-					>
-						{{ row.at }}
-					</time>
-				</div>
-			</div>
-		</div>
+			:ui="LOGS_TABLE_UI"
+		/>
 
 		<ul class="logs-table md:hidden" :aria-label="ts('guild_logs.tab_commands')">
 			<li v-for="row in rows" :key="row.id" class="logs-card">
@@ -113,13 +65,10 @@
 </template>
 
 <script setup lang="ts">
+import type { TableColumn } from "@nuxt/ui";
 import type { LogsPillTone } from "./Pill.vue";
 
-const TABLE_STYLE = {
-	"--logs-columns":
-		"minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) 8.5rem minmax(0, 1.2fr) 5rem 7.5rem",
-	"--logs-min-width": "57.5rem",
-};
+const TABLE_STYLE = { "--logs-min-width": "57.5rem" };
 
 // Above this a command felt slow to whoever ran it.
 const SLOW_LATENCY_MS = 300;
@@ -213,4 +162,79 @@ const rows = computed(() =>
 		};
 	}),
 );
+
+type Row = (typeof rows.value)[number];
+
+const UAvatar = resolveComponent("UAvatar");
+const GuildLogsPill = resolveComponent("GuildLogsPill");
+
+function memberCell(avatar: Row["avatar"], name: string, strong: boolean) {
+	return h("div", { class: "logs-member" }, [
+		h(UAvatar, { ...avatar, class: "shrink-0", size: "xs" }),
+		h(
+			"span",
+			{ class: ["truncate text-sm text-highlighted", strong ? "font-semibold" : ""] },
+			name,
+		),
+	]);
+}
+
+function dateCell(row: Row) {
+	return h("time", { class: "logs-mono", datetime: row.datetime, title: row.fullDate }, row.at);
+}
+
+const columns = computed<TableColumn<Row>[]>(() => [
+	{
+		accessorKey: "name",
+		header: ts("guild_logs.columns.command"),
+		cell: ({ row }) =>
+			h(
+				"span",
+				{
+					class: [
+						"block truncate font-mono text-highlighted",
+						row.original.success ? "" : "text-error!",
+					],
+				},
+				row.original.name,
+			),
+	},
+	{
+		accessorKey: "user",
+		header: ts("guild_logs.columns.user"),
+		cell: ({ row }) => memberCell(row.original.avatar, row.original.user, true),
+	},
+	{
+		accessorKey: "channel",
+		header: ts("guild_logs.columns.channel"),
+		cell: ({ row }) => h("span", { class: "block truncate" }, row.original.channel),
+	},
+	{
+		accessorKey: "type",
+		header: ts("guild_logs.columns.type"),
+		meta: logsColumnWidth("w-36"),
+		cell: ({ row }) =>
+			h(GuildLogsPill, { tone: row.original.typeTone }, () => row.original.type),
+	},
+	{
+		accessorKey: "result",
+		header: ts("guild_logs.columns.result"),
+		meta: logsColumnWidth("w-[20%]"),
+		cell: ({ row }) =>
+			h("span", { class: "block truncate", title: row.original.result }, row.original.result),
+	},
+	{
+		accessorKey: "latency",
+		header: ts("guild_logs.columns.latency"),
+		meta: logsColumnWidth("w-22"),
+		cell: ({ row }) =>
+			h("span", { class: ["logs-mono", row.original.latencyClass] }, row.original.latency),
+	},
+	{
+		accessorKey: "at",
+		header: ts("guild_logs.columns.date"),
+		meta: logsColumnWidth("w-38"),
+		cell: ({ row }) => dateCell(row.original),
+	},
+]);
 </script>

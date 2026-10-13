@@ -334,9 +334,6 @@
 				"filter_status": {
 					"type": "string"
 				},
-				"next_page": {
-					"type": "string"
-				},
 				"no_activity_filter_match": {
 					"type": "string"
 				},
@@ -379,13 +376,7 @@
 				"page_title": {
 					"type": "string"
 				},
-				"pages_aria": {
-					"type": "string"
-				},
 				"permanent": {
-					"type": "string"
-				},
-				"previous_page": {
 					"type": "string"
 				},
 				"refresh_activity": {

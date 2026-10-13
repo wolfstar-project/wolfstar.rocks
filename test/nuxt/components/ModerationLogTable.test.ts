@@ -94,18 +94,42 @@ describe("ModerationLogTable", () => {
 	it("renders each case as a table row and as a card", async () => {
 		const component = await mountSuspended(ModerationLogTable);
 
-		expect(component.findAll('[role="table"] [role="row"]')).toHaveLength(2);
+		expect(component.findAll("table tbody tr")).toHaveLength(1);
 		expect(component.findAll("ul > li")).toHaveLength(1);
 		expect(component.get("ul > li").text()).toContain("by ModUser");
 	});
 
+	it("lays the table out in the design's columns", async () => {
+		const component = await mountSuspended(ModerationLogTable);
+
+		expect(component.findAll("table thead th").map((cell) => cell.text())).toStrictEqual([
+			"Case",
+			"User",
+			"Moderator",
+			"Action",
+			"Reason",
+			"Duration",
+			"Date",
+		]);
+	});
+
 	it("reads a ban with no duration as permanent and names the target by handle", async () => {
 		const component = await mountSuspended(ModerationLogTable);
-		const cells = component.findAll('[role="table"] [role="cell"]').map((cell) => cell.text());
+		const cells = component.findAll("table tbody td").map((cell) => cell.text());
 
 		expect(cells).toContain("#100");
 		expect(cells).toContain("@TargetUser");
 		expect(cells).toContain("Permanent");
+	});
+
+	it("drops the duration column for warnings", async () => {
+		const component = await mountSuspended(ModerationLogTable, {
+			props: { warningsOnly: true },
+		});
+
+		expect(component.findAll("table thead th").map((cell) => cell.text())).not.toContain(
+			"Duration",
+		);
 	});
 
 	it("pages through the server's total", async () => {
@@ -113,13 +137,12 @@ describe("ModerationLogTable", () => {
 		const component = await mountSuspended(ModerationLogTable);
 
 		expect(component.text()).toContain("Showing 1 of 25 entries");
-		expect(component.text()).toContain("1 / 3");
-		expect(
-			component.get('button[aria-label="Previous page"]').attributes("disabled"),
-		).toBeDefined();
+		const pages = component
+			.findAll("nav button")
+			.map((button) => button.text())
+			.filter((text) => /^\d+$/.test(text));
+		expect(pages).toStrictEqual(["1", "2", "3"]);
 
-		await component.get('button[aria-label="Next page"]').trigger("click");
-
-		expect(component.text()).toContain("2 / 3");
+		mockTotal.value = 1;
 	});
 });

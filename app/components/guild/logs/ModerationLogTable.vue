@@ -23,58 +23,13 @@
 			/>
 		</template>
 
-		<div
-			class="logs-table hidden md:block"
-			role="table"
+		<UTable
+			:data="rows"
+			:columns="columns"
 			:aria-label="tableLabel"
 			:style="tableStyle"
-		>
-			<div class="logs-grid" role="rowgroup">
-				<div class="logs-head" role="row">
-					<span role="columnheader">{{ ts("guild_logs.columns.case") }}</span>
-					<span role="columnheader">{{ ts("guild_logs.columns.user") }}</span>
-					<span role="columnheader">{{ ts("guild_logs.columns.moderator") }}</span>
-					<span role="columnheader">{{ ts("guild_logs.columns.action") }}</span>
-					<span role="columnheader">{{ ts("guild_logs.columns.reason") }}</span>
-					<span v-if="!warningsOnly" role="columnheader">
-						{{ ts("guild_logs.columns.duration") }}
-					</span>
-					<span role="columnheader">{{ ts("guild_logs.columns.date") }}</span>
-				</div>
-				<div v-for="row in rows" :key="row.caseId" class="logs-row" role="row">
-					<span class="logs-case" role="cell">#{{ row.caseId }}</span>
-					<div class="logs-member" role="cell">
-						<UAvatar v-bind="row.targetAvatar" size="xs" class="shrink-0" />
-						<span class="truncate text-sm font-semibold">{{ row.target }}</span>
-					</div>
-					<div class="logs-member" role="cell">
-						<UAvatar v-bind="row.moderatorAvatar" size="xs" class="shrink-0" />
-						<span class="truncate text-sm">{{ row.moderator }}</span>
-					</div>
-					<span role="cell">
-						<GuildLogsPill :tone="row.tone">{{ row.action }}</GuildLogsPill>
-					</span>
-					<span
-						class="truncate text-[0.8125rem] text-toned"
-						role="cell"
-						:title="row.reason"
-					>
-						{{ row.reason }}
-					</span>
-					<span v-if="!warningsOnly" class="logs-mono" role="cell">{{
-						row.duration
-					}}</span>
-					<time
-						class="logs-mono"
-						role="cell"
-						:datetime="row.datetime"
-						:title="row.fullDate"
-					>
-						{{ row.at }}
-					</time>
-				</div>
-			</div>
-		</div>
+			:ui="LOGS_TABLE_UI"
+		/>
 
 		<ul class="logs-table md:hidden" :aria-label="tableLabel">
 			<li v-for="row in rows" :key="row.caseId" class="logs-card">
@@ -107,6 +62,7 @@
 
 <script setup lang="ts">
 import type { ModerationLogEntry } from "#shared/types/moderation-log";
+import type { TableColumn } from "@nuxt/ui";
 import type { LogsPillTone } from "./Pill.vue";
 import { MODERATION_TYPE_FILTER_VALUES } from "#shared/types/moderation-types";
 
@@ -159,19 +115,9 @@ const tableLabel = computed(() =>
 	warningsOnly ? ts("guild_logs.tab_warnings") : ts("guild_logs.tab_moderation"),
 );
 
-const tableStyle = computed(() =>
-	warningsOnly
-		? {
-				"--logs-columns":
-					"3.25rem minmax(0, 1.1fr) minmax(0, 1fr) 8rem minmax(0, 1.8fr) 7.5rem",
-				"--logs-min-width": "51.25rem",
-			}
-		: {
-				"--logs-columns":
-					"3.25rem minmax(0, 1.1fr) minmax(0, 1fr) 7.5rem minmax(0, 1.6fr) 5.75rem 7.5rem",
-				"--logs-min-width": "56.25rem",
-			},
-);
+const tableStyle = computed(() => ({
+	"--logs-min-width": warningsOnly ? "51.25rem" : "56.25rem",
+}));
 
 // Punishments that hold until someone lifts them when no duration was given.
 const OPEN_ENDED_TYPES = new Set<string>([
@@ -220,4 +166,73 @@ const rows = computed(() =>
 		};
 	}),
 );
+
+type Row = (typeof rows.value)[number];
+
+const UAvatar = resolveComponent("UAvatar");
+const GuildLogsPill = resolveComponent("GuildLogsPill");
+
+function memberCell(avatar: Row["targetAvatar"], name: string, strong: boolean) {
+	return h("div", { class: "logs-member" }, [
+		h(UAvatar, { ...avatar, class: "shrink-0", size: "xs" }),
+		h(
+			"span",
+			{ class: ["truncate text-sm text-highlighted", strong ? "font-semibold" : ""] },
+			name,
+		),
+	]);
+}
+
+function dateCell(row: Row) {
+	return h("time", { class: "logs-mono", datetime: row.datetime, title: row.fullDate }, row.at);
+}
+
+const columns = computed<TableColumn<Row>[]>(() => [
+	{
+		accessorKey: "caseId",
+		header: ts("guild_logs.columns.case"),
+		meta: logsColumnWidth("w-16"),
+		cell: ({ row }) => h("span", { class: "logs-case" }, `#${row.original.caseId}`),
+	},
+	{
+		accessorKey: "target",
+		header: ts("guild_logs.columns.user"),
+		cell: ({ row }) => memberCell(row.original.targetAvatar, row.original.target, true),
+	},
+	{
+		accessorKey: "moderator",
+		header: ts("guild_logs.columns.moderator"),
+		cell: ({ row }) => memberCell(row.original.moderatorAvatar, row.original.moderator, false),
+	},
+	{
+		accessorKey: "action",
+		header: ts("guild_logs.columns.action"),
+		meta: logsColumnWidth("w-32"),
+		cell: ({ row }) => h(GuildLogsPill, { tone: row.original.tone }, () => row.original.action),
+	},
+	{
+		accessorKey: "reason",
+		header: ts("guild_logs.columns.reason"),
+		meta: logsColumnWidth("w-[28%]"),
+		cell: ({ row }) =>
+			h("span", { class: "block truncate", title: row.original.reason }, row.original.reason),
+	},
+	// A warning has no duration to show.
+	...(warningsOnly
+		? []
+		: [
+				{
+					accessorKey: "duration",
+					header: ts("guild_logs.columns.duration"),
+					meta: logsColumnWidth("w-24"),
+					cell: ({ row }) => h("span", { class: "logs-mono" }, row.original.duration),
+				} satisfies TableColumn<Row>,
+			]),
+	{
+		accessorKey: "at",
+		header: ts("guild_logs.columns.date"),
+		meta: logsColumnWidth("w-38"),
+		cell: ({ row }) => dateCell(row.original),
+	},
+]);
 </script>

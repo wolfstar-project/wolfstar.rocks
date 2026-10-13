@@ -12,49 +12,13 @@
 		:empty-description="debouncedQuery ? ts('guild_logs.no_activity_filter_match') : undefined"
 		@refresh="refresh()"
 	>
-		<div
-			class="logs-table hidden md:block"
-			role="table"
+		<UTable
+			:data="rows"
+			:columns="columns"
 			:aria-label="ts('guild_logs.tab_activity')"
 			:style="TABLE_STYLE"
-		>
-			<div class="logs-grid" role="rowgroup">
-				<div class="logs-head" role="row">
-					<span role="columnheader">{{ ts("guild_logs.columns.date") }}</span>
-					<span role="columnheader">{{ ts("guild_logs.columns.user") }}</span>
-					<span role="columnheader">{{ ts("guild_logs.columns.action") }}</span>
-					<span role="columnheader">{{ ts("guild_logs.columns.outcome") }}</span>
-				</div>
-				<div v-for="row in rows" :key="row.id" class="logs-row" role="row">
-					<time
-						class="logs-mono"
-						role="cell"
-						:datetime="row.datetime"
-						:title="row.fullDate"
-					>
-						{{ row.at }}
-					</time>
-					<div class="flex min-w-0 items-center gap-2.5" role="cell">
-						<UAvatar v-bind="row.avatar" size="md" class="shrink-0" />
-						<div class="min-w-0">
-							<p class="truncate text-sm font-semibold">{{ row.name }}</p>
-							<p class="truncate text-xs text-muted">@{{ row.username }}</p>
-						</div>
-					</div>
-					<span class="min-w-0 text-[0.8125rem] leading-[1.45] text-toned" role="cell">
-						<span
-							v-for="(part, index) in row.parts"
-							:key="index"
-							:class="{ 'logs-strong': part.strong }"
-							>{{ part.text }}</span
-						>
-					</span>
-					<span role="cell">
-						<GuildLogsPill :tone="row.outcomeTone">{{ row.outcome }}</GuildLogsPill>
-					</span>
-				</div>
-			</div>
-		</div>
+			:ui="LOGS_TABLE_UI"
+		/>
 
 		<ul class="logs-table md:hidden" :aria-label="ts('guild_logs.tab_activity')">
 			<li v-for="row in rows" :key="row.id" class="logs-card">
@@ -87,12 +51,10 @@
 
 <script setup lang="ts">
 import type { DashboardAuditEntry } from "#shared/types/audit-log";
+import type { TableColumn } from "@nuxt/ui";
 import type { LogsPillTone } from "./Pill.vue";
 
-const TABLE_STYLE = {
-	"--logs-columns": "9.375rem minmax(0, 1fr) minmax(0, 1.8fr) 6.5rem",
-	"--logs-min-width": "47.5rem",
-};
+const TABLE_STYLE = { "--logs-min-width": "47.5rem" };
 
 const { guildData } = useGuildData();
 const { ts } = useI18n();
@@ -156,4 +118,63 @@ const rows = computed(() =>
 		};
 	}),
 );
+
+type Row = (typeof rows.value)[number];
+
+const UAvatar = resolveComponent("UAvatar");
+const GuildLogsPill = resolveComponent("GuildLogsPill");
+
+const columns = computed<TableColumn<Row>[]>(() => [
+	{
+		accessorKey: "at",
+		header: ts("guild_logs.columns.date"),
+		meta: logsColumnWidth("w-38"),
+		cell: ({ row }) =>
+			h(
+				"time",
+				{
+					class: "logs-mono",
+					datetime: row.original.datetime,
+					title: row.original.fullDate,
+				},
+				row.original.at,
+			),
+	},
+	{
+		accessorKey: "name",
+		header: ts("guild_logs.columns.user"),
+		meta: logsColumnWidth("w-[26%]"),
+		cell: ({ row }) =>
+			h("div", { class: "flex min-w-0 items-center gap-2.5" }, [
+				h(UAvatar, { ...row.original.avatar, class: "shrink-0", size: "md" }),
+				h("div", { class: "min-w-0" }, [
+					h(
+						"p",
+						{ class: "truncate text-sm font-semibold text-highlighted" },
+						row.original.name,
+					),
+					h("p", { class: "truncate text-xs text-muted" }, `@${row.original.username}`),
+				]),
+			]),
+	},
+	{
+		id: "action",
+		header: ts("guild_logs.columns.action"),
+		cell: ({ row }) =>
+			h(
+				"span",
+				{ class: "leading-[1.45]" },
+				row.original.parts.map((part) =>
+					h("span", { class: part.strong ? "logs-strong" : undefined }, part.text),
+				),
+			),
+	},
+	{
+		accessorKey: "outcome",
+		header: ts("guild_logs.columns.outcome"),
+		meta: logsColumnWidth("w-30"),
+		cell: ({ row }) =>
+			h(GuildLogsPill, { tone: row.original.outcomeTone }, () => row.original.outcome),
+	},
+]);
 </script>

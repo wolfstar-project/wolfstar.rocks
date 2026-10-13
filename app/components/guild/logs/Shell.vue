@@ -47,33 +47,18 @@
 					{{ ts("guild_logs.showing_entries", { shown, total }) }}
 				</p>
 				<span class="grow"></span>
-				<div
-					role="group"
-					:aria-label="ts('guild_logs.pages_aria')"
-					class="flex items-center gap-2.5"
-				>
-					<button
-						type="button"
-						class="logs-page-button"
-						:disabled="page <= 1"
-						:aria-label="ts('guild_logs.previous_page')"
-						@click="page -= 1"
-					>
-						<UIcon name="ic:round-chevron-left" class="size-4.5" aria-hidden="true" />
-					</button>
-					<span class="font-mono text-[0.8125rem] whitespace-nowrap text-toned">
-						{{ page }} / {{ pageCount }}
-					</span>
-					<button
-						type="button"
-						class="logs-page-button"
-						:disabled="page >= pageCount"
-						:aria-label="ts('guild_logs.next_page')"
-						@click="page += 1"
-					>
-						<UIcon name="ic:round-chevron-right" class="size-4.5" aria-hidden="true" />
-					</button>
-				</div>
+				<UPagination
+					v-if="total > pageSize"
+					v-model:page="page"
+					:total="total"
+					:items-per-page="pageSize"
+					:sibling-count="1"
+					size="sm"
+					color="neutral"
+					variant="outline"
+					active-color="primary"
+					active-variant="solid"
+				/>
 			</div>
 		</template>
 	</div>
@@ -105,8 +90,6 @@ const emit = defineEmits<{
 }>();
 
 const { ts } = useI18n();
-
-const pageCount = computed(() => Math.max(1, Math.ceil(total / pageSize)));
 </script>
 
 <style scoped>
@@ -150,50 +133,12 @@ const pageCount = computed(() => Math.max(1, Math.ceil(total / pageSize)));
 	background-color: var(--console-active);
 }
 
-.logs-page-button {
-	@apply flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-[5px] bg-transparent p-0;
-	border: 1px solid var(--console-border);
-	color: var(--ui-text-toned);
-}
-
-.logs-page-button:hover:not(:disabled) {
-	background-color: var(--console-active);
-}
-
-.logs-page-button:disabled {
-	@apply cursor-default opacity-40;
-}
-
-.logs-page-button:focus-visible {
-	outline: 2px solid var(--color-primary);
-	outline-offset: -2px;
-}
-
-/* The caller renders the entries in the default slot: a grid table from `md`
-   up, and below it a list of small cards (what happened, why, who and when). */
+/* The caller renders the entries in the default slot: a `UTable` from `md`
+   up (see `LOGS_TABLE_UI`), and below it a list of small cards: what happened,
+   why, who and when. */
 .logs-shell :deep(.logs-table) {
 	@apply overflow-x-auto rounded-[8px];
 	border: 1px solid var(--console-border);
-}
-
-.logs-shell :deep(.logs-grid) {
-	min-width: var(--logs-min-width, 0);
-}
-
-.logs-shell :deep(.logs-head),
-.logs-shell :deep(.logs-row) {
-	@apply grid gap-3 px-3.5;
-	grid-template-columns: var(--logs-columns);
-}
-
-.logs-shell :deep(.logs-head) {
-	@apply py-2.5 text-[0.6875rem] font-bold tracking-[0.06em] text-muted uppercase;
-	background-color: var(--console-active);
-}
-
-.logs-shell :deep(.logs-row) {
-	@apply min-h-11.5 items-center py-1.5;
-	border-top: 1px solid var(--home-border-subtle);
 }
 
 .logs-shell :deep(.logs-card) {

@@ -104,11 +104,7 @@
 		"title": ""
 	},
 	"user_menu": {
-		"account_menu": "",
-		"avatar_alt": "",
-		"avatar_fallback": "",
 		"report_bug": "",
-		"sign_out": "",
-		"user_menu_for": ""
+		"sign_out": ""
 	}
 }

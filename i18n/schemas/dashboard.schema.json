@@ -253,6 +253,9 @@
 				"user_preferences": {
 					"type": "string"
 				},
+				"user_settings_for": {
+					"type": "string"
+				},
 				"user_sign_out": {
 					"type": "string"
 				}

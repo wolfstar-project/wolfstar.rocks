@@ -83,6 +83,7 @@
 		"update_failed_message": "Error al actualizar la configuración del servidor",
 		"update_failed_why": "Algo salió mal al guardar tu configuración.",
 		"user_preferences": "",
+		"user_settings_for": "",
 		"user_sign_out": ""
 	},
 	"guild_logs": {

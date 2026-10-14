@@ -163,6 +163,24 @@
 						<AppPreferences v-else-if="section === 'appearance'" only="appearance" />
 						<AppPreferences v-else-if="section === 'language'" only="language" />
 
+						<div v-else-if="section === 'report'" class="settings-card">
+							<FeedbackForm
+								:id="feedbackFormId"
+								v-model:submitting="isSendingFeedback"
+							/>
+							<div class="mt-5 flex justify-end">
+								<UButton
+									type="submit"
+									:form="feedbackFormId"
+									color="primary"
+									:loading="isSendingFeedback"
+									icon="i-lucide-send"
+								>
+									{{ ts("feedback.send") }}
+								</UButton>
+							</div>
+						</div>
+
 						<div
 							v-else
 							class="settings-card flex flex-col items-center gap-3 py-12 text-center"
@@ -188,7 +206,13 @@
 </template>
 
 <script setup lang="ts">
-type SettingsSection = "account" | "appearance" | "notifications" | "language" | "connections";
+type SettingsSection =
+	| "account"
+	| "appearance"
+	| "notifications"
+	| "language"
+	| "connections"
+	| "report";
 
 const { ts } = useI18n();
 const { isOpen } = usePreferencesDialog();
@@ -197,6 +221,8 @@ const { user: discordUser } = useUser(authUser);
 const { copy, copied } = useClipboard();
 
 const headingId = useId();
+const feedbackFormId = useId();
+const isSendingFeedback = ref(false);
 
 /** The signed-in admin, as Discord describes them. A guest has no account page. */
 const account = computed(() => {
@@ -248,11 +274,18 @@ const sections = computed(() => {
 			label: ts("common.language"),
 		},
 		{ icon: "ic:round-link", id: "connections", label: ts("profile.connections") },
+		{
+			description: ts("feedback.description"),
+			icon: "ic:round-bug-report",
+			id: "report",
+			label: ts("user_menu.report_bug"),
+		},
 	];
-	// A guest only has what the browser stores: the look and the language.
+	// A guest only has what the browser stores (the look and the language) and
+	// can still report a bug.
 	return account.value
 		? all
-		: all.filter((item) => item.id === "appearance" || item.id === "language");
+		: all.filter((item) => ["appearance", "language", "report"].includes(item.id));
 });
 
 const section = ref<SettingsSection>("appearance");

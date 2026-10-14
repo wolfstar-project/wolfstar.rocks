@@ -135,9 +135,15 @@
 		</nav>
 
 		<footer class="dashboard-sidebar-footer">
-			<div class="dashboard-user min-w-0 flex-1">
-				<UserMenu />
-			</div>
+			<button
+				type="button"
+				class="dashboard-user"
+				:aria-label="ts('dashboard.user_settings_for', { name: account.name })"
+				@click="openSettings"
+			>
+				<UAvatar :src="account.avatar" alt="" size="md" icon="ic:round-person" />
+				<span class="truncate">{{ account.name }}</span>
+			</button>
 			<UButton
 				color="neutral"
 				variant="ghost"
@@ -178,7 +184,15 @@ const { ts } = useI18n();
 const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();
 const { goToSection, section } = useDashboardNavigation();
-const { signOut } = useUserSession();
+const { user: authUser, signOut } = useUserSession();
+// The session carries no picture of its own; the Discord account does.
+const { user: discordUser } = useUser(authUser);
+const account = computed(() => ({
+	avatar:
+		authUser.value?.image ??
+		(discordUser.value ? avatarURL(discordUser.value, { size: 64 }) : undefined),
+	name: discordUser.value?.global_name ?? authUser.value?.name ?? "",
+}));
 const { open: openPreferences } = usePreferencesDialog();
 
 // In the drawer the sidebar sits in a dialog of its own: it is closed first, so
@@ -283,13 +297,18 @@ const groups = computed(() =>
 	box-shadow: var(--console-shadow-low);
 }
 
-.dashboard-user :deep(button) {
-	@apply min-h-11 gap-2.5 px-1.5 py-1 text-sm font-semibold;
+.dashboard-user {
+	@apply flex min-h-11 min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded-[6px] border-0 bg-transparent px-1.5 py-1 text-left text-sm font-semibold;
 	color: var(--ui-text-highlighted);
 }
 
-.dashboard-user :deep(button:hover) {
+.dashboard-user:hover {
 	background-color: var(--console-hover);
+}
+
+.dashboard-user:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: -2px;
 }
 
 .dashboard-nav-label {

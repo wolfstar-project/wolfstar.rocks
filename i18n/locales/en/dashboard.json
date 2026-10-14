@@ -83,6 +83,7 @@
 		"update_failed_message": "Failed to update server settings",
 		"update_failed_why": "Something went wrong while saving your settings.",
 		"user_preferences": "Preferences",
+		"user_settings_for": "User settings for {name}",
 		"user_sign_out": "Sign out"
 	},
 	"guild_logs": {

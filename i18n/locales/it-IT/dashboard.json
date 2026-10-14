@@ -83,6 +83,7 @@
 		"update_failed_message": "Impossibile aggiornare le impostazioni del server",
 		"update_failed_why": "Qualcosa è andato storto durante il salvataggio delle impostazioni.",
 		"user_preferences": "",
+		"user_settings_for": "",
 		"user_sign_out": ""
 	},
 	"guild_logs": {

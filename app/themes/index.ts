@@ -19,6 +19,7 @@ import skeleton from "./skeleton";
 import switchTheme from "./switch";
 import tabs from "./tabs";
 import textarea from "./textarea";
+import toast from "./toast";
 import toaster from "./toaster";
 
 const ui = {
@@ -43,6 +44,7 @@ const ui = {
 	switch: switchTheme,
 	tabs,
 	textarea,
+	toast,
 	toaster,
 } as const;
 

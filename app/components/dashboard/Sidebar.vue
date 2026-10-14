@@ -145,7 +145,7 @@
 				icon="ic:round-settings"
 				:aria-label="ts('dashboard.user_preferences')"
 				:title="ts('dashboard.user_preferences')"
-				@click="openPreferences"
+				@click="openSettings"
 			/>
 			<UButton
 				color="neutral"
@@ -180,6 +180,13 @@ const { guildSettings } = useGuildSettings();
 const { goToSection, section } = useDashboardNavigation();
 const { signOut } = useUserSession();
 const { open: openPreferences } = usePreferencesDialog();
+
+// In the drawer the sidebar sits in a dialog of its own: it is closed first, so
+// the settings do not open stacked on top of it.
+function openSettings() {
+	emit("navigate");
+	openPreferences();
+}
 const { isGroupOpen, isPinned, recent, recordVisit, toggleGroup, togglePin } =
 	useDashboardNavPrefs();
 

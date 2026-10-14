@@ -5,6 +5,15 @@
 @import "./utilities.css";
 @import "./view-transitions.css";
 
+/* nuxt-og-image resolves custom properties from :root and @property only,
+   and Tailwind registers this one in a layer the renderer does not read, so
+   every OG template warned that its borders were skipped. The value is
+   Tailwind's own initial one; a registered, non-inherited property set on the
+   root changes nothing below it. */
+:root {
+	--tw-border-style: solid;
+}
+
 @source "../../../content/**/*";
 /* The bot's repository (git submodule) is not part of this app. */
 @source not "../../../vendor";

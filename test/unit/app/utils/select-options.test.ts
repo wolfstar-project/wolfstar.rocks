@@ -56,9 +56,9 @@ describe("roleOptions", () => {
 		guild({
 			roles: [
 				{ color: 0, id: "100", name: "@everyone", rawPosition: 0 },
-				{ color: 0x5865F2, id: "2", name: "Admin", rawPosition: 9 },
+				{ color: 5_793_266, id: "2", name: "Admin", rawPosition: 9 },
 				{ color: 0, id: "3", name: "Member", rawPosition: 1 },
-				{ color: 0x00FF00, id: "4", name: "Mod", rawPosition: 5 },
+				{ color: 65_280, id: "4", name: "Mod", rawPosition: 5 },
 			],
 		}),
 	);

@@ -835,6 +835,12 @@
 						"no_activity_description": {
 							"type": "string"
 						},
+						"no_activity_yet": {
+							"type": "string"
+						},
+						"no_activity_yet_description": {
+							"type": "string"
+						},
 						"overview_subtitle": {
 							"type": "string"
 						},
@@ -994,6 +1000,72 @@
 				"reports": {
 					"type": "object",
 					"properties": {
+						"queue": {
+							"type": "object",
+							"properties": {
+								"columns": {
+									"type": "object",
+									"properties": {
+										"filed": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										},
+										"status": {
+											"type": "string"
+										},
+										"target": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"empty_description": {
+									"type": "string"
+								},
+								"empty_status_description": {
+									"type": "string"
+								},
+								"empty_status_title": {
+									"type": "string"
+								},
+								"empty_title": {
+									"type": "string"
+								},
+								"filter_aria": {
+									"type": "string"
+								},
+								"refresh": {
+									"type": "string"
+								},
+								"status": {
+									"type": "object",
+									"properties": {
+										"actioned": {
+											"type": "string"
+										},
+										"all": {
+											"type": "string"
+										},
+										"dismissed": {
+											"type": "string"
+										},
+										"open": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"table_aria": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
 						"subtitle": {
 							"type": "string"
 						},

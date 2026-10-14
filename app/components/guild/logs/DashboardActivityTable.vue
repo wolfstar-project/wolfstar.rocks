@@ -30,14 +30,17 @@
 					<span class="grow"></span>
 					<GuildLogsPill :tone="row.outcomeTone">{{ row.outcome }}</GuildLogsPill>
 				</div>
-				<p class="text-[0.8125rem] leading-[1.45] text-toned">
-					<span
-						v-for="(part, index) in row.parts"
-						:key="index"
-						:class="{ 'logs-strong': part.strong }"
-						>{{ part.text }}</span
-					>
-				</p>
+				<div class="flex items-center gap-2.5">
+					<p class="min-w-0 flex-auto text-[0.8125rem] leading-[1.45] text-toned">
+						<span
+							v-for="(part, index) in row.parts"
+							:key="index"
+							:class="{ 'logs-strong': part.strong }"
+							>{{ part.text }}</span
+						>
+					</p>
+					<GuildAuditChanges :entry="row.entry" :resolver />
+				</div>
 				<div class="logs-line">
 					<span class="grow"></span>
 					<time class="logs-mono" :datetime="row.datetime" :title="row.fullDate">
@@ -108,6 +111,7 @@ const rows = computed(() =>
 			at: formatActivityTime(happened, now, locale.value),
 			avatar: auditLogMemberAvatar(entry.member),
 			datetime: happened.toISOString(),
+			entry,
 			fullDate: happened.toLocaleString(locale.value),
 			id: entry.id,
 			name: auditLogMemberName(entry.member),
@@ -123,6 +127,7 @@ type Row = (typeof rows.value)[number];
 
 const UAvatar = resolveComponent("UAvatar");
 const GuildLogsPill = resolveComponent("GuildLogsPill");
+const GuildAuditChanges = resolveComponent("GuildAuditChanges");
 
 const columns = computed<TableColumn<Row>[]>(() => [
 	{
@@ -161,13 +166,16 @@ const columns = computed<TableColumn<Row>[]>(() => [
 		id: "action",
 		header: ts("guild_logs.columns.action"),
 		cell: ({ row }) =>
-			h(
-				"span",
-				{ class: "leading-[1.45]" },
-				row.original.parts.map((part) =>
-					h("span", { class: part.strong ? "logs-strong" : undefined }, part.text),
+			h("div", { class: "flex min-w-0 items-center gap-2.5" }, [
+				h(
+					"span",
+					{ class: "min-w-0 flex-auto leading-[1.45]" },
+					row.original.parts.map((part) =>
+						h("span", { class: part.strong ? "logs-strong" : undefined }, part.text),
+					),
 				),
-			),
+				h(GuildAuditChanges, { entry: row.original.entry, resolver: resolver.value }),
+			]),
 	},
 	{
 		accessorKey: "outcome",

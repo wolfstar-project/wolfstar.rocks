@@ -47,7 +47,7 @@
 				<template v-if="group.id === 'overview' || isGroupOpen(group.id)">
 					<div
 						v-if="group.recent.length > 0"
-						class="flex flex-wrap items-center gap-1.5 pt-0.5 pr-1.5 pb-2 pl-2.5"
+						class="flex flex-wrap items-center gap-1.5 pt-0.5 pr-1.5 pb-1 pl-2.5"
 					>
 						<UIcon
 							name="ic:round-access-time"
@@ -325,7 +325,7 @@ const groups = computed(() =>
 }
 
 .dashboard-nav-divider {
-	@apply mx-2.5 my-1.5 h-px;
+	@apply mx-2.5 my-0.5 h-px;
 	background-color: var(--home-border-subtle);
 }
 

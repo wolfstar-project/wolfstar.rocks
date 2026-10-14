@@ -27,7 +27,11 @@
 			/>
 		</div>
 
-		<LoadingSpinner v-if="status !== 'success' && status !== 'error' && shown === 0" />
+		<DashboardSkeleton
+			v-if="status !== 'success' && status !== 'error' && shown === 0"
+			kind="table"
+			bare
+		/>
 
 		<div v-else-if="shown === 0" class="logs-empty" role="status">
 			<span class="logs-empty-icon">

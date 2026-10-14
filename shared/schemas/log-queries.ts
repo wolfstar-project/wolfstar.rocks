@@ -7,6 +7,7 @@ import {
 	integer,
 	object,
 	optional,
+	picklist,
 	pipe,
 	string,
 	transform,
@@ -92,4 +93,13 @@ export const DashboardActivityQuerySchema = object({
 	from: optionalIsoDate,
 	to: optionalIsoDate,
 	q: optionalString(200),
+});
+
+/** The states a member report moves through, as the bot's `ReportStatus` enum names them. */
+export const REPORT_STATUSES = ["Open", "Actioned", "Dismissed"] as const;
+
+export const ReportQuerySchema = object({
+	limit: optional(pipe(coercedNumber(1), maxValue(100)), 30),
+	offset: optional(coercedNumber(), 0),
+	status: optional(picklist(REPORT_STATUSES)),
 });

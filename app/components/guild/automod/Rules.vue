@@ -113,9 +113,8 @@
 						<p class="truncate text-[0.9375rem] leading-tight font-semibold">
 							{{ rule.name }}
 						</p>
-						<p class="truncate font-mono text-[0.6875rem] text-muted">
-							{{ ts(AUTOMOD_TYPE_NAME_KEYS[rule.type]) }}
-						</p>
+						<!-- The tile says what kind of rule it is; a screen reader hears it. -->
+						<p class="sr-only">{{ ts(AUTOMOD_TYPE_NAME_KEYS[rule.type]) }}</p>
 					</div>
 					<USwitch
 						:model-value="rule.enabled"

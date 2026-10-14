@@ -277,6 +277,8 @@
 			"need_help": "Need Help?",
 			"no_activity": "No recent activity",
 			"no_activity_description": "Nothing has changed on this server in the last {count} days. Changes made from the dashboard will show up here.",
+			"no_activity_yet": "No activity yet",
+			"no_activity_yet_description": "Nothing has been changed on this server yet. Turn on a module and every change made from the dashboard will show up here.",
 			"overview_subtitle": "WolfStar on {name}, straight off the shared database.",
 			"overview_title": "Overview",
 			"recent_activity": "Recent Activity",
@@ -330,6 +332,28 @@
 		},
 		"please_try_again": "Please try again.",
 		"reports": {
+			"queue": {
+				"columns": {
+					"filed": "Filed",
+					"reason": "Reason",
+					"status": "Status",
+					"target": "Target"
+				},
+				"empty_description": "When a member reports someone, the report waits here until a moderator actions or dismisses it.",
+				"empty_status_description": "No report has that status right now.",
+				"empty_status_title": "Nothing in this bucket",
+				"empty_title": "No reports yet",
+				"filter_aria": "Show reports by status",
+				"refresh": "Refresh reports",
+				"status": {
+					"actioned": "Actioned",
+					"all": "All",
+					"dismissed": "Dismissed",
+					"open": "Open"
+				},
+				"table_aria": "Reports",
+				"title": "Review queue"
+			},
 			"subtitle": "Members report a message or a user; your moderators review it.",
 			"title": "Reports"
 		},

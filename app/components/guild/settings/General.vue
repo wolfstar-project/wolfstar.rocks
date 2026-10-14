@@ -158,9 +158,15 @@
 		:total="auditLogTotal"
 		:status="auditLogStatus"
 		:item-count="auditEntries.length"
-		:empty-title="ts('guild_settings.general.no_activity')"
+		:empty-title="
+			hasNoActivityEver
+				? ts('guild_settings.general.no_activity_yet')
+				: ts('guild_settings.general.no_activity')
+		"
 		:empty-description="
-			ts('guild_settings.general.no_activity_description', { count: CHART_DAYS })
+			hasNoActivityEver
+				? ts('guild_settings.general.no_activity_yet_description')
+				: ts('guild_settings.general.no_activity_description', { count: CHART_DAYS })
 		"
 		:empty-note="lastChangeNote"
 		:refresh-label="ts('guild_logs.refresh_audit')"
@@ -203,13 +209,23 @@
 								</div>
 							</div>
 						</td>
-						<td class="text-[0.8125rem] leading-[1.45] text-toned">
-							<span
-								v-for="(part, index) in auditLogActionParts(entry)"
-								:key="index"
-								:class="{ 'activity-table-strong': part.strong }"
-								>{{ part.text }}</span
-							>
+						<td>
+							<div class="flex min-w-0 items-center gap-2.5">
+								<span
+									class="min-w-0 flex-auto text-[0.8125rem] leading-[1.45] text-toned"
+								>
+									<span
+										v-for="(part, index) in auditLogActionParts(
+											entry,
+											auditResolver,
+										)"
+										:key="index"
+										:class="{ 'activity-table-strong': part.strong }"
+										>{{ part.text }}</span
+									>
+								</span>
+								<GuildAuditChanges :entry :resolver="auditResolver" />
+							</div>
 						</td>
 					</tr>
 				</tbody>
@@ -258,7 +274,12 @@ const {
 	limit: 10,
 	filters: computed(() => ({ from: activityFrom.value })),
 });
-const { entries: latestAuditEntries } = useAuditLog({
+// Channel and role ids in a change read as their names when the guild has them.
+const auditResolver = computed(() => ({
+	channels: new Map((guildData.value?.channels ?? []).map((item) => [item.id, item])),
+	roles: new Map((guildData.value?.roles ?? []).map((item) => [item.id, item])),
+}));
+const { entries: latestAuditEntries, status: latestAuditStatus } = useAuditLog({
 	guildId: () => guildData.value?.id,
 	limit: 1,
 });
@@ -288,6 +309,11 @@ const isChartPartial = computed(() => moderationTotal.value > moderationEntries.
 function barHeight(count: number) {
 	return peakCount.value === 0 ? 0 : Math.max(4, Math.round((count / peakCount.value) * 100));
 }
+
+// A server nobody has changed yet reads differently from a quiet week.
+const hasNoActivityEver = computed(
+	() => latestAuditStatus.value === "success" && latestAuditEntries.value.length === 0,
+);
 
 const lastChangeNote = computed(() => {
 	const latest = latestAuditEntries.value[0];

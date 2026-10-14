@@ -2,6 +2,7 @@ import {
 	ModerationLogQuerySchema,
 	CommandLogQuerySchema,
 	DashboardActivityQuerySchema,
+	ReportQuerySchema,
 } from "#shared/schemas/log-queries";
 import { safeParse } from "valibot";
 import { describe, expect, it } from "vitest";
@@ -134,5 +135,23 @@ describe("date filters", () => {
 		for (const from of ["yesterday", "2026-13-45", "09/10/2026", "2026-10-09T99:00:00Z"]) {
 			expect(parseFrom(from).success).toBe(false);
 		}
+	});
+});
+
+describe("ReportQuerySchema", () => {
+	it("takes one of the bot's report statuses, or none", () => {
+		expect(safeParse(ReportQuerySchema, {})).toMatchObject({
+			success: true,
+			output: { limit: 30, offset: 0 },
+		});
+		expect(safeParse(ReportQuerySchema, { status: "Open", limit: "10" })).toMatchObject({
+			success: true,
+			output: { limit: 10, status: "Open" },
+		});
+	});
+
+	it("refuses a status the enum does not have", () => {
+		expect(safeParse(ReportQuerySchema, { status: "Closed" }).success).toBe(false);
+		expect(safeParse(ReportQuerySchema, { status: "open" }).success).toBe(false);
 	});
 });

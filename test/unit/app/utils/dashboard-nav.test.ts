@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DASHBOARD_NAV, findDashboardNavItem } from "~/utils/dashboard-nav";
+import { DASHBOARD_NAV, dashboardSkeletonKind, findDashboardNavItem } from "~/utils/dashboard-nav";
 import enDashboard from "../../../../i18n/locales/en/dashboard.json" with { type: "json" };
 
 function resolve(path: string): unknown {
@@ -39,5 +39,15 @@ describe("DASHBOARD_NAV", () => {
 	it("finds a section by its slug", () => {
 		expect(findDashboardNavItem("logs")?.group).toBe("records");
 		expect(findDashboardNavItem("nowhere")).toBeUndefined();
+	});
+});
+
+describe("dashboardSkeletonKind", () => {
+	it("draws the overview, the tables and the settings pages each in their shape", () => {
+		expect(dashboardSkeletonKind("")).toBe("overview");
+		expect(dashboardSkeletonKind("logs")).toBe("table");
+		expect(dashboardSkeletonKind("automod")).toBe("table");
+		expect(dashboardSkeletonKind("moderation")).toBe("form");
+		expect(dashboardSkeletonKind("roles")).toBe("form");
 	});
 });

@@ -26,8 +26,6 @@
 		"invalid_guild_message": "The provided server ID is not valid.",
 		"invalid_guild_why": "Server IDs must be 17-19 digit numbers.",
 		"loading_aria": "Loading dashboard",
-		"loading_description": "Loading server settings...",
-		"loading_title": "Loading Dashboard",
 		"nav": {
 			"autodelete": "",
 			"automod": "",
@@ -89,6 +87,13 @@
 	"guild_logs": {
 		"all_actions": "All actions",
 		"by_moderator": "",
+		"changes": {
+			"close": "",
+			"none": "",
+			"show_all": "",
+			"title": "",
+			"to": ""
+		},
 		"columns": {
 			"action": "Action",
 			"case": "Case",

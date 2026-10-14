@@ -37,6 +37,7 @@
 			<ClientOnly>
 				<div class="flex flex-col gap-5">
 					<GuildPicker v-if="!activeGuildId" />
+					<DashboardSkeleton v-else-if="!isGuildLoaded" :kind="skeletonKind" />
 					<GuildLogsPanel v-else-if="isLogsSection" />
 					<component
 						:is="renderComponent"
@@ -46,12 +47,7 @@
 					/>
 				</div>
 				<template #fallback>
-					<div class="flex h-48 items-center justify-center">
-						<UIcon
-							name="heroicons:arrow-path"
-							class="size-8 animate-spin text-primary"
-						/>
-					</div>
+					<DashboardSkeleton :kind="skeletonKind" />
 				</template>
 			</ClientOnly>
 		</div>
@@ -59,6 +55,8 @@
 </template>
 
 <script setup lang="ts">
+import type { Component } from "vue";
+import { DashboardSkeleton } from "#components";
 import * as Sentry from "@sentry/nuxt";
 
 definePageMeta({
@@ -70,6 +68,7 @@ definePageMeta({
 const { ts } = useI18n();
 const toast = useToast();
 const { guildData } = useGuildData();
+const { guildSettings } = useGuildSettings();
 const { activeGuildId, hasStagedChanges, section } = useDashboardNavigation();
 const { open: drawerOpen, toggle: toggleDrawer } = useDashboardDrawer();
 
@@ -84,23 +83,49 @@ const {
 	error: languagesError,
 } = useLanguages({ immediate: false });
 
+// The layout fetches the server and its settings; until both are in, the
+// section is drawn as a skeleton of its own shape.
+const isGuildLoaded = computed(
+	() =>
+		!!guildData.value &&
+		Object.keys(guildData.value).length > 0 &&
+		!!guildSettings.value &&
+		Object.keys(guildSettings.value).length > 0,
+);
+const skeletonKind = computed(() => dashboardSkeletonKind(section.value));
+
+// A section's code is loaded on its first opening; the skeleton stands in for
+// it when that takes a moment.
+function sectionComponent(loader: () => Promise<Component>, kind: DashboardSkeletonKind) {
+	return defineAsyncComponent({
+		delay: 150,
+		loader,
+		loadingComponent: h(DashboardSkeleton, { kind }),
+	});
+}
+
 // Pre-define async components outside of computed to avoid re-creating
 // wrapper instances on every reactive update, which would unmount/remount.
 const asyncComponentMap: Record<string, ReturnType<typeof defineAsyncComponent>> = {
-	automod: defineAsyncComponent(() => import("~/components/guild/settings/Automod.vue")),
-	channels: defineAsyncComponent(() => import("~/components/guild/settings/Channels.vue")),
-	commands: defineAsyncComponent(
+	automod: sectionComponent(() => import("~/components/guild/settings/Automod.vue"), "table"),
+	channels: sectionComponent(() => import("~/components/guild/settings/Channels.vue"), "form"),
+	commands: sectionComponent(
 		() => import("~/components/guild/settings/DisabledCommands.vue"),
+		"form",
 	),
-	moderation: defineAsyncComponent(() => import("~/components/guild/settings/Moderation.vue")),
-	modules: defineAsyncComponent(() => import("~/components/guild/settings/Modules.vue")),
-	roles: defineAsyncComponent(() => import("~/components/guild/settings/Roles.vue")),
+	moderation: sectionComponent(
+		() => import("~/components/guild/settings/Moderation.vue"),
+		"form",
+	),
+	modules: sectionComponent(() => import("~/components/guild/settings/Modules.vue"), "form"),
+	roles: sectionComponent(() => import("~/components/guild/settings/Roles.vue"), "form"),
 };
 const comingSoonComponent = defineAsyncComponent(
 	() => import("~/components/dashboard/ComingSoon.vue"),
 );
-const defaultComponent = defineAsyncComponent(
+const defaultComponent = sectionComponent(
 	() => import("~/components/guild/settings/General.vue"),
+	"overview",
 );
 
 const isLogsSection = computed(() => section.value === "logs");

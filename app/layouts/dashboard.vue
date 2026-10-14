@@ -13,9 +13,10 @@
 		</aside>
 
 		<div class="console-main">
-			<slot v-if="!guildId || isReadyToRender"></slot>
+			<!-- The page shows its own skeleton until the server's data is in. -->
+			<slot v-if="!guildId || !nuxtError"></slot>
 			<div
-				v-else-if="nuxtError"
+				v-else
 				class="flex w-full flex-1 flex-col items-center justify-center space-y-4 px-4 text-center"
 				role="alert"
 				:aria-label="ts('dashboard.error_aria')"
@@ -33,40 +34,6 @@
 					</p>
 				</div>
 			</div>
-			<div
-				v-else
-				class="flex w-full flex-1 flex-col items-center justify-center space-y-4 px-4"
-				role="status"
-				:aria-label="ts('dashboard.loading_aria')"
-			>
-				<div class="flex flex-col items-center space-y-4">
-					<UIcon
-						name="ph:warning-duotone"
-						class="size-12 text-primary"
-						aria-hidden="true"
-					/>
-					<div class="space-y-2 text-center">
-						<h2 class="text-xl font-semibold text-base-content">
-							{{ ts("dashboard.loading_title") }}
-						</h2>
-						<p class="text-sm text-base-content/60">
-							{{ ts("dashboard.loading_description") }}
-						</p>
-					</div>
-					<div class="flex items-center space-x-2">
-						<div
-							class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary"
-						></div>
-						<div
-							class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary [animation-delay:200ms]"
-						></div>
-						<div
-							class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary [animation-delay:400ms]"
-						></div>
-					</div>
-				</div>
-			</div>
-
 			<div
 				v-if="showSaveChangesBar"
 				style="view-transition-name: save-changes-bar"
@@ -149,7 +116,7 @@
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
-import { isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
+import { objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { objectToTuples } from "@sapphire/utilities/objectToTuples";
 import { parseError } from "evlog";
@@ -186,7 +153,7 @@ const toast = useToast();
 const router = useRouter();
 const { close: closeDrawer, open: drawerOpen } = useDashboardDrawer();
 const nuxtError = useError();
-const { setGuildData, guildData } = useGuildData();
+const { setGuildData } = useGuildData();
 const { setGuildSettings, guildSettings } = useGuildSettings();
 const { setGuildSettingsChanges, guildSettingsChanges, resetGuildSettingsChanges } =
 	useGuildSettingsChanges();
@@ -227,11 +194,7 @@ watch(
 	{ immediate: true },
 );
 
-const {
-	data,
-	pending: isLoading,
-	error,
-} = useAsyncData(
+const { data, error } = useAsyncData(
 	() => `dashboard:guild:${guildId.value ?? "none"}`,
 	() => {
 		if (!guildId.value) {
@@ -375,16 +338,6 @@ watch(
 );
 
 const { effectiveReduceMotion } = useReduceMotion();
-
-const isReadyToRender = computed(
-	() =>
-		!nuxtError.value &&
-		!isLoading.value &&
-		!isNullOrUndefined(guildData.value) &&
-		!isNullOrUndefined(guildSettings.value) &&
-		!isNullOrUndefinedOrZero(objectValues(guildData.value).length) &&
-		!isNullOrUndefinedOrZero(objectValues(guildSettings.value).length),
-);
 
 const isReadyToSubmit = computed(
 	() =>

@@ -277,6 +277,8 @@
 			"need_help": "¿Necesitas ayuda?",
 			"no_activity": "",
 			"no_activity_description": "",
+			"no_activity_yet": "",
+			"no_activity_yet_description": "",
 			"overview_subtitle": "",
 			"overview_title": "",
 			"recent_activity": "Actividad reciente",
@@ -330,6 +332,28 @@
 		},
 		"please_try_again": "Por favor, inténtalo de nuevo.",
 		"reports": {
+			"queue": {
+				"columns": {
+					"filed": "",
+					"reason": "",
+					"status": "",
+					"target": ""
+				},
+				"empty_description": "",
+				"empty_status_description": "",
+				"empty_status_title": "",
+				"empty_title": "",
+				"filter_aria": "",
+				"refresh": "",
+				"status": {
+					"actioned": "",
+					"all": "",
+					"dismissed": "",
+					"open": ""
+				},
+				"table_aria": "",
+				"title": ""
+			},
 			"subtitle": "",
 			"title": ""
 		},

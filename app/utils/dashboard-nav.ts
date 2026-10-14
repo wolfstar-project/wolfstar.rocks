@@ -96,3 +96,16 @@ export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
 export function findDashboardNavItem(slug: string): DashboardNavItem | undefined {
 	return DASHBOARD_NAV.find((item) => item.slug === slug);
 }
+
+/** The shape a section's loading skeleton takes. */
+export type DashboardSkeletonKind = "overview" | "table" | "form";
+
+/**
+ * Which skeleton stands in for a section while it loads: the overview its own,
+ * the logs and the rule list a table, every settings page a form.
+ */
+export function dashboardSkeletonKind(slug: string): DashboardSkeletonKind {
+	if (slug === "") return "overview";
+	if (slug === "logs" || slug === "automod") return "table";
+	return "form";
+}

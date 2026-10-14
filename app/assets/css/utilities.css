@@ -486,3 +486,15 @@
 		animation: none !important;
 	}
 }
+
+/* The secondary action of a dialog: an outlined button on the panel, next to
+   the filled primary one. */
+@utility dialog-cancel {
+	border: 1px solid var(--field-border);
+	background-color: transparent;
+	color: var(--ui-text-highlighted);
+
+	&:hover:not(:disabled) {
+		background-color: color-mix(in oklab, var(--ui-text-highlighted) 6%, transparent);
+	}
+}

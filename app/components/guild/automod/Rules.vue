@@ -167,7 +167,8 @@
 				<div class="flex w-full justify-end gap-2">
 					<UButton
 						color="neutral"
-						variant="ghost"
+						variant="outline"
+						class="dialog-cancel"
 						:disabled="saving"
 						@click="ruleToDelete = null"
 					>

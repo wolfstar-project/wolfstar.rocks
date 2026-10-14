@@ -130,7 +130,12 @@
 		>
 			<template #footer>
 				<div class="flex justify-end gap-2">
-					<UButton color="neutral" variant="ghost" @click="stayOnPage">
+					<UButton
+						color="neutral"
+						variant="outline"
+						class="dialog-cancel"
+						@click="stayOnPage"
+					>
 						{{ ts("dashboard.stay_on_page") }}
 					</UButton>
 					<UButton color="error" @click="discardAndLeave">

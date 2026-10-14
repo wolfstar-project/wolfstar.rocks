@@ -290,7 +290,7 @@
 				<UButton
 					color="neutral"
 					variant="outline"
-					class="border border-(--field-border) bg-transparent text-highlighted hover:bg-base-content/6"
+					class="dialog-cancel"
 					:disabled="saving"
 					@click="open = false"
 				>

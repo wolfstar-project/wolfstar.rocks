@@ -43,10 +43,11 @@
 		</template>
 
 		<template #footer>
-			<UFieldGroup class="justify-end">
+			<div class="flex w-full justify-end gap-2.5">
 				<UButton
 					color="neutral"
-					variant="ghost"
+					variant="outline"
+					class="dialog-cancel"
 					:disabled="isSubmitting"
 					@click="open = false"
 				>
@@ -61,7 +62,7 @@
 				>
 					{{ ts("feedback.send") }}
 				</UButton>
-			</UFieldGroup>
+			</div>
 		</template>
 	</UModal>
 </template>

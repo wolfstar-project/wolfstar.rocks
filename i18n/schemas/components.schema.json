@@ -76,10 +76,22 @@
 		"select": {
 			"type": "object",
 			"properties": {
+				"add": {
+					"type": "string"
+				},
+				"add_to": {
+					"type": "string"
+				},
+				"clear": {
+					"type": "string"
+				},
 				"clear_selected": {
 					"type": "string"
 				},
 				"days": {
+					"type": "string"
+				},
+				"done": {
 					"type": "string"
 				},
 				"hours": {
@@ -97,13 +109,25 @@
 				"none": {
 					"type": "string"
 				},
+				"nothing_chosen": {
+					"type": "string"
+				},
 				"nothing_matches": {
+					"type": "string"
+				},
+				"remove_option": {
 					"type": "string"
 				},
 				"search": {
 					"type": "string"
 				},
 				"seconds": {
+					"type": "string"
+				},
+				"unknown_channel": {
+					"type": "string"
+				},
+				"unknown_role": {
 					"type": "string"
 				}
 			},

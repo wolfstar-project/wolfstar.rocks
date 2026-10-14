@@ -41,6 +41,13 @@
 			"rules": {
 				"action": "",
 				"count": "",
+				"defaults": {
+					"description": "",
+					"escalation_title": "",
+					"rule_title": "",
+					"save": "",
+					"saved": ""
+				},
 				"delete": "",
 				"delete_aria": "",
 				"delete_description": "",
@@ -87,6 +94,7 @@
 				},
 				"empty_description": "",
 				"empty_title": "",
+				"enabled_count": "",
 				"errors": {
 					"generic": "",
 					"invalid": "",
@@ -101,9 +109,11 @@
 				"load_failed": "",
 				"loading_aria": "",
 				"new": "",
+				"no_match": "",
 				"nothing": "",
 				"on_hit": "",
 				"retry": "",
+				"search_placeholder": "",
 				"soft_alert_short": "",
 				"soft_delete_short": "",
 				"soft_log_short": "",
@@ -225,10 +235,14 @@
 				"roles": "",
 				"server": ""
 			},
+			"ignore_dialog_title": "",
+			"ignored_count": "",
 			"logging_channels": "",
 			"logging_channels_help": "",
 			"not_logged": "",
+			"nothing_ignored": "",
 			"routed_count": "",
+			"search_text_channels": "",
 			"subtitle": "",
 			"title": ""
 		},

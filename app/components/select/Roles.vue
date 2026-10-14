@@ -1,5 +1,23 @@
 <template>
+	<SelectChips
+		v-if="layout === 'chips'"
+		:model-value="modelValue"
+		:label
+		:description="tooltipTitle"
+		:options
+		kind="role"
+		:disabled
+		:empty-label="emptyLabel"
+		:dialog-title="dialogTitle"
+		:search-placeholder="searchPlaceholder"
+		:count-label="countLabel"
+		@update:model-value="
+			emit('update:modelValue', $event);
+			emit('change', $event);
+		"
+	/>
 	<SelectMany
+		v-else
 		:label
 		:options
 		kind="role"
@@ -24,6 +42,9 @@ const {
 	disabled = false,
 	layout = "field",
 	emptyLabel,
+	dialogTitle,
+	searchPlaceholder,
+	countLabel,
 } = defineProps<{
 	/** The label of the field */
 	label: string;
@@ -36,7 +57,15 @@ const {
 	tooltipTitle?: string;
 	/** Disable the field */
 	disabled?: boolean;
-	layout?: "field" | "row";
+	/**
+	 * `field` and `row` are selects; `chips` lists the choice as removable chips
+	 * and picks it in a dialog of checkboxes.
+	 */
+	layout?: "field" | "row" | "chips";
+	/** For `chips`: the dialog's title, its search placeholder and its count. */
+	dialogTitle?: string;
+	searchPlaceholder?: string;
+	countLabel?: (count: number) => string;
 	/** Text shown while nothing is selected */
 	emptyLabel?: string;
 }>();

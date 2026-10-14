@@ -123,7 +123,18 @@ const byValue = computed(() => new Map(options.map((option) => [option.value, op
 
 // A stored id whose channel or role is gone still has to be shown, and cleared.
 const chosen = computed(() =>
-	selected.value.map((value) => byValue.value.get(value) ?? { label: value, value }),
+	selected.value.map(
+		(value) =>
+			byValue.value.get(value) ?? {
+				label:
+					kind === "role"
+						? ts("select.unknown_role")
+						: kind === "channel"
+							? ts("select.unknown_channel")
+							: value,
+				value,
+			},
+	),
 );
 const first = computed(() => chosen.value[0]);
 const chips = computed(() => chosen.value.slice(0, VISIBLE_CHIPS));

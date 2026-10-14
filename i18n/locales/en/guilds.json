@@ -41,6 +41,13 @@
 			"rules": {
 				"action": "Action",
 				"count": "{count} / {max} rules",
+				"defaults": {
+					"description": "New rules you create from here start with these. They are kept in this browser.",
+					"escalation_title": "Default escalation",
+					"rule_title": "Default rule",
+					"save": "Save defaults",
+					"saved": "Defaults saved. New rules start from them."
+				},
 				"delete": "Delete",
 				"delete_aria": "Delete rule {name}",
 				"delete_description": "The rule \"{name}\" will stop acting on messages. This can't be undone.",
@@ -87,6 +94,7 @@
 				},
 				"empty_description": "Create a rule to start filtering messages on this server.",
 				"empty_title": "No rules yet",
+				"enabled_count": "{enabled} of {total} enabled",
 				"errors": {
 					"generic": "Something went wrong. Please try again.",
 					"invalid": "The server refused one of the values. Check the fields and try again.",
@@ -100,10 +108,12 @@
 				"first_infraction": "First infraction",
 				"load_failed": "Couldn't load the rules.",
 				"loading_aria": "Loading auto-moderation rules",
-				"new": "New rule",
+				"new": "Create rule",
+				"no_match": "No rule matches that search.",
 				"nothing": "Nothing",
 				"on_hit": "On hit",
 				"retry": "Try again",
+				"search_placeholder": "Search rules by name or type…",
 				"soft_alert_short": "Alert",
 				"soft_delete_short": "Delete",
 				"soft_log_short": "Log",
@@ -213,7 +223,7 @@
 			}
 		},
 		"channels": {
-			"excluded_channels": "Excluded Channels",
+			"excluded_channels": "Ignored channels",
 			"excluded_channels_help": "Select channels that should be ignored for specific logging events. Messages and events in these channels won't be logged.",
 			"form_aria": "Channel settings form",
 			"groups": {
@@ -225,10 +235,14 @@
 				"roles": "Roles",
 				"server": "Server & bot"
 			},
+			"ignore_dialog_title": "Ignore channels",
+			"ignored_count": "No channels ignored | 1 channel ignored | {count} channels ignored",
 			"logging_channels": "Logging Channels",
 			"logging_channels_help": "Select which channels should receive specific log events. Leave empty to disable logging for that event.",
 			"not_logged": "not logged",
+			"nothing_ignored": "Nothing ignored.",
 			"routed_count": "{routed} of {total} routed",
+			"search_text_channels": "Search text channels…",
 			"subtitle": "Choose where WolfStar posts logs and which channels to ignore.",
 			"title": "Event Logs"
 		},

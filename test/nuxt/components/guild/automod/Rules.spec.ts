@@ -53,7 +53,24 @@ describe("GuildAutomodRules", () => {
 		expect(items[0]!.text()).toContain("Bad words");
 		expect(items[0]!.text()).toContain("Filtered words");
 		expect(items[0]!.text()).toContain("Warning");
-		expect(wrapper.text()).toContain("2 / 25 rules");
+		expect(wrapper.text()).toMatch(/\d of 2 enabled/);
+	});
+
+	it("narrows the list to the rules a search matches by name or type", async () => {
+		const wrapper = await mountSuspended(Rules);
+		const search = wrapper.get('input[placeholder="Search rules by name or type…"]');
+
+		await search.setValue("quiet");
+		const byName = wrapper.findAll("ul > li.console-card");
+		expect(byName).toHaveLength(1);
+		expect(byName[0]!.text()).toContain("Quiet rule");
+
+		// Both rules are word filters, so the name of their type matches both.
+		await search.setValue("filtered words");
+		expect(wrapper.findAll("ul > li.console-card")).toHaveLength(2);
+
+		await search.setValue("nothing like this");
+		expect(wrapper.text()).toContain("No rule matches that search.");
 	});
 
 	it("shows placeholders while the rules load", async () => {
@@ -112,7 +129,7 @@ describe("GuildAutomodRules", () => {
 	it("asks for the type of a new rule before opening its form", async () => {
 		const wrapper = await mountSuspended(Rules, { attachTo: document.body });
 
-		const create = wrapper.findAll("button").find((button) => button.text() === "New rule");
+		const create = wrapper.findAll("button").find((button) => button.text() === "Create rule");
 		await create!.trigger("click");
 
 		await vi.waitFor(() => {
@@ -145,7 +162,7 @@ describe("GuildAutomodRules", () => {
 		);
 		const wrapper = await mountSuspended(Rules);
 
-		const create = wrapper.findAll("button").find((button) => button.text() === "New rule");
+		const create = wrapper.findAll("button").find((button) => button.text() === "Create rule");
 		expect(create!.attributes("disabled")).toBeDefined();
 	});
 });

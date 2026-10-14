@@ -24,15 +24,23 @@
 		"update_available": "Update available"
 	},
 	"select": {
+		"add": "",
+		"add_to": "",
+		"clear": "",
 		"clear_selected": "Clear selected",
 		"days": "Days",
+		"done": "",
 		"hours": "Hours",
 		"max_duration": "The maximum duration is {value} {unit}.",
 		"min_duration": "The minimum duration is {value} {unit}.",
 		"minutes": "Minutes",
 		"none": "None",
+		"nothing_chosen": "",
 		"nothing_matches": "",
+		"remove_option": "",
 		"search": "Search...",
-		"seconds": "Seconds"
+		"seconds": "Seconds",
+		"unknown_channel": "",
+		"unknown_role": ""
 	}
 }

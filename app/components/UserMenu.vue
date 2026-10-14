@@ -3,11 +3,7 @@
 	<UDropdownMenu
 		:items="items"
 		:content="{ align: 'center', collisionPadding: 12 }"
-		:ui="{
-			content: collapsed
-				? 'w-48 bg-muted/90 border border-muted shadow-md rounded-md'
-				: 'w-(--reka-dropdown-menu-trigger-width) bg-muted/90 border border-muted shadow-md rounded-md',
-		}"
+		:ui="{ content: collapsed ? 'w-52' : 'w-(--reka-dropdown-menu-trigger-width) min-w-56' }"
 		:aria-label="ts('user_menu.account_menu')"
 	>
 		<UButton
@@ -44,6 +40,8 @@ const { locale, locales, localeLabel, selectLocale } = useAppLocale();
 const isFeedbackOpen = ref(false);
 const { preference: colorModePreference, setColorMode } = useAppColorMode();
 const { user: authUser, signOut } = useUserSession();
+// The session carries no picture of its own; the Discord account does.
+const { user: discordUser } = useUser(authUser);
 
 const user = computed(() => {
 	const current = authUser.value;
@@ -52,7 +50,10 @@ const user = computed(() => {
 			alt: current?.name
 				? ts("user_menu.avatar_alt", { name: current.name })
 				: ts("user_menu.avatar_fallback"),
-			src: current?.image ?? undefined,
+			size: "md" as const,
+			src:
+				current?.image ??
+				(discordUser.value ? avatarURL(discordUser.value, { size: 64 }) : undefined),
 		},
 		name: current?.name,
 	};

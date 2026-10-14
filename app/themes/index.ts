@@ -2,6 +2,7 @@ import avatar from "./avatar";
 import badge from "./badge";
 import button from "./button";
 import container from "./container";
+import dropdownMenu from "./dropdown-menu";
 import fieldGroup from "./field-group";
 import footer from "./footer";
 import footerColumns from "./footer-columns";
@@ -26,6 +27,7 @@ const ui = {
 	button,
 	container,
 	fieldGroup,
+	dropdownMenu,
 	footer,
 	footerColumns,
 	input,

@@ -490,11 +490,21 @@
 /* The secondary action of a dialog: an outlined button on the panel, next to
    the filled primary one. */
 @utility dialog-cancel {
+	/* DaisyUI paints a button from these, so they are set as well. */
+	--btn-bg: transparent;
+	--btn-border: var(--field-border);
+	--btn-fg: var(--ui-text-highlighted);
+	--btn-shadow: none;
 	border: 1px solid var(--field-border);
-	background-color: transparent;
+	/* Outranks the background Nuxt UI gives a neutral outline button. */
+	background-color: transparent !important;
 	color: var(--ui-text-highlighted);
 
 	&:hover:not(:disabled) {
-		background-color: color-mix(in oklab, var(--ui-text-highlighted) 6%, transparent);
+		background-color: color-mix(
+			in oklab,
+			var(--ui-text-highlighted) 6%,
+			transparent
+		) !important;
 	}
 }

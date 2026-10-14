@@ -128,3 +128,70 @@ export function validateAutomodRuleName(name: string): AutomodRuleNameProblem | 
 	if (/^\d+$/u.test(trimmed)) return "digitsOnly";
 	return null;
 }
+
+/** What a new rule starts from besides its type: its actions, threshold and exemptions. */
+export type AutomodRuleDefaultFields = Pick<
+	AutomodRuleDraft,
+	| "softDelete"
+	| "softLog"
+	| "softAlert"
+	| "hardAction"
+	| "hardActionDuration"
+	| "thresholdMaximum"
+	| "thresholdDuration"
+	| "ignoredRoles"
+	| "ignoredChannels"
+>;
+
+/** The escalation a new rule starts with. */
+export type AutomodEscalationDefaultFields = Pick<
+	AutomodRuleDraft,
+	"escalation" | "escalationDuration"
+>;
+
+export interface AutomodRuleDefaults {
+	rule?: AutomodRuleDefaultFields;
+	escalation?: AutomodEscalationDefaultFields;
+}
+
+export function pickAutomodRuleDefaults(draft: AutomodRuleDraft): AutomodRuleDefaultFields {
+	return {
+		hardAction: draft.hardAction,
+		hardActionDuration: draft.hardActionDuration,
+		ignoredChannels: [...draft.ignoredChannels],
+		ignoredRoles: [...draft.ignoredRoles],
+		softAlert: draft.softAlert,
+		softDelete: draft.softDelete,
+		softLog: draft.softLog,
+		thresholdDuration: draft.thresholdDuration,
+		thresholdMaximum: draft.thresholdMaximum,
+	};
+}
+
+export function pickAutomodEscalationDefaults(
+	draft: AutomodRuleDraft,
+): AutomodEscalationDefaultFields {
+	return {
+		escalation: draft.escalation.map((step) => ({ ...step })),
+		escalationDuration: draft.escalationDuration,
+	};
+}
+
+/** A draft with the saved defaults laid over its type's own. */
+export function applyAutomodRuleDefaults(
+	draft: AutomodRuleDraft,
+	defaults: AutomodRuleDefaults | undefined,
+): AutomodRuleDraft {
+	return {
+		...draft,
+		...(defaults?.rule && {
+			...defaults.rule,
+			ignoredChannels: [...defaults.rule.ignoredChannels],
+			ignoredRoles: [...defaults.rule.ignoredRoles],
+		}),
+		...(defaults?.escalation && {
+			escalation: defaults.escalation.escalation.map((step) => ({ ...step })),
+			escalationDuration: defaults.escalation.escalationDuration,
+		}),
+	};
+}

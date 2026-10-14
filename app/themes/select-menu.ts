@@ -8,6 +8,8 @@ export default {
 		content:
 			"w-max max-w-85 min-w-[max(var(--reka-combobox-trigger-width),13.75rem)] rounded-[8px] bg-(--popover-surface) shadow-(--popover-shadow) ring-(--field-border)",
 		group: "p-1",
+		// Group headings already part the lists; a rule between them is noise.
+		separator: "hidden",
 		label: "px-2.5 pt-2 pb-1 text-[0.6875rem] font-bold tracking-[0.06em] text-muted uppercase",
 		item: "min-h-9 items-center rounded-[5px] text-highlighted before:inset-0 before:rounded-[5px] data-highlighted:not-data-disabled:before:bg-base-content/6 data-[state=checked]:before:bg-primary/14 data-[state=checked]:data-highlighted:not-data-disabled:before:bg-primary/14",
 		itemTrailing: "gap-2.5",
@@ -17,6 +19,11 @@ export default {
 		input: "border-b border-(--home-border-subtle) p-2 [&_[data-slot=leading]]:start-2 [&_input]:h-8.5 [&_input]:rounded-[6px] [&_input]:bg-(--field-surface) [&_input]:text-[0.8125rem] [&_input]:ring [&_input]:ring-(--field-border) [&_input]:ring-inset",
 	},
 	variants: {
+		// Group headings already part the lists; the rules Nuxt UI draws between
+		// groups are taken off.
+		virtualize: {
+			false: { viewport: "divide-y-0" },
+		},
 		size: {
 			sm: {
 				base: "h-8 px-2.5 text-[0.8125rem]",

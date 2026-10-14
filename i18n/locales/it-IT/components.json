@@ -24,15 +24,23 @@
 		"update_available": "Aggiornamento disponibile"
 	},
 	"select": {
+		"add": "",
+		"add_to": "",
+		"clear": "",
 		"clear_selected": "Cancella selezione",
 		"days": "Giorni",
+		"done": "",
 		"hours": "Ore",
 		"max_duration": "Durata massima",
 		"min_duration": "Durata minima",
 		"minutes": "Minuti",
 		"none": "Nessuno",
+		"nothing_chosen": "",
 		"nothing_matches": "",
+		"remove_option": "",
 		"search": "Cerca...",
-		"seconds": "Secondi"
+		"seconds": "Secondi",
+		"unknown_channel": "",
+		"unknown_role": ""
 	}
 }

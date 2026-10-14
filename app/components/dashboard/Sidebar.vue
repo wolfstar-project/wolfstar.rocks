@@ -267,14 +267,17 @@ const groups = computed(() =>
 	box-shadow: var(--console-shadow-low);
 }
 
+/* The account sits in a card of its own, held off the sidebar's edges, so it
+   reads as the person using the dashboard rather than part of the server. */
 .dashboard-sidebar-footer {
-	@apply flex shrink-0 items-center gap-1 p-2;
-	border-top: 1px solid var(--home-border-subtle);
+	@apply m-2 flex shrink-0 items-center gap-1 rounded-[10px] p-1.5;
 	background-color: var(--console-rail);
+	border: 1px solid var(--console-border);
+	box-shadow: var(--console-shadow-low);
 }
 
 .dashboard-user :deep(button) {
-	@apply min-h-11 gap-2.5 px-2 py-1 text-sm font-semibold;
+	@apply min-h-11 gap-2.5 px-1.5 py-1 text-sm font-semibold;
 	color: var(--ui-text-highlighted);
 }
 

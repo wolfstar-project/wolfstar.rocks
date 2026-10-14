@@ -59,21 +59,28 @@
 		</div>
 
 		<section class="console-card" aria-labelledby="channels-excluded">
-			<h3 id="channels-excluded" class="console-label">
-				{{ ts("guild_settings.channels.excluded_channels") }}
-			</h3>
-			<p class="mt-1 mb-3 text-[0.8125rem] text-muted">
+			<div class="flex items-center gap-3">
+				<h3 id="channels-excluded" class="text-[1.0625rem] font-semibold whitespace-nowrap">
+					{{ ts("guild_settings.channels.excluded_channels") }}
+				</h3>
+				<span class="h-px flex-1 bg-(--field-border)" aria-hidden="true"></span>
+			</div>
+			<p class="mt-1.5 text-[0.8125rem] text-muted">
 				{{ ts("guild_settings.channels.excluded_channels_help") }}
 			</p>
-			<div class="space-y-2">
+			<div class="mt-4 flex flex-col gap-5">
 				<SelectChannels
 					v-for="config in ConfigurableIgnoreChannels"
 					:key="config.key"
 					v-model="state[config.key]"
-					layout="row"
+					layout="chips"
 					:guild="guildData"
 					:label="translateEntry(config, 'name')"
 					:tooltip-title="translateEntry(config, 'description')"
+					:empty-label="ts('guild_settings.channels.nothing_ignored')"
+					:dialog-title="ts('guild_settings.channels.ignore_dialog_title')"
+					:search-placeholder="ts('guild_settings.channels.search_text_channels')"
+					:count-label="(count) => tc('guild_settings.channels.ignored_count', count)"
 				/>
 			</div>
 		</section>
@@ -89,7 +96,7 @@ import {
 	ConfigurableLogToggles,
 } from "#shared/utils/settingsDataEntries";
 
-const { ts } = useI18n();
+const { tc, ts } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
 const { guildData } = useGuildData();
 

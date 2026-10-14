@@ -1,23 +1,53 @@
 <template>
 	<section class="space-y-4" :aria-label="ts('guild_settings.automod.rules.title')">
-		<div class="flex flex-wrap items-center gap-2">
+		<div class="flex flex-wrap items-center gap-2.5">
 			<UButton
 				color="primary"
-				icon="ic:round-add"
 				:disabled="isLoading || hasFailed || rules.length >= MaximumAutoModerationRules"
+				:title="
+					ts('guild_settings.automod.rules.count', {
+						count: rules.length,
+						max: MaximumAutoModerationRules,
+					})
+				"
 				@click="openEditor(null)"
 			>
 				{{ ts("guild_settings.automod.rules.new") }}
 			</UButton>
-			<UBadge color="primary" variant="soft" size="lg" class="ml-auto font-semibold">
+			<UButton
+				color="neutral"
+				variant="outline"
+				class="dialog-cancel"
+				@click="openDefaults('escalation')"
+			>
+				{{ ts("guild_settings.automod.rules.defaults.escalation_title") }}
+			</UButton>
+			<UButton
+				color="neutral"
+				variant="outline"
+				class="dialog-cancel"
+				@click="openDefaults('defaults')"
+			>
+				{{ ts("guild_settings.automod.rules.defaults.rule_title") }}
+			</UButton>
+			<span class="rules-count ml-auto">
 				{{
-					ts("guild_settings.automod.rules.count", {
-						count: rules.length,
-						max: MaximumAutoModerationRules,
+					ts("guild_settings.automod.rules.enabled_count", {
+						enabled: rules.filter((rule) => rule.enabled).length,
+						total: rules.length,
 					})
 				}}
-			</UBadge>
+			</span>
 		</div>
+
+		<UInput
+			v-if="rules.length > 0"
+			v-model="query"
+			icon="ic:round-search"
+			:placeholder="ts('guild_settings.automod.rules.search_placeholder')"
+			:aria-label="ts('guild_settings.automod.rules.search_placeholder')"
+			class="w-full"
+		/>
 
 		<div
 			v-if="isLoading"
@@ -57,9 +87,17 @@
 			</p>
 		</div>
 
+		<p
+			v-else-if="shownRules.length === 0"
+			class="console-card py-8 text-center text-[0.8125rem] text-muted"
+			role="status"
+		>
+			{{ ts("guild_settings.automod.rules.no_match") }}
+		</p>
+
 		<ul v-else class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
 			<li
-				v-for="rule in rules"
+				v-for="rule in shownRules"
 				:key="rule.id"
 				class="console-card flex flex-col gap-3"
 				:class="{ 'opacity-70': !rule.enabled }"
@@ -117,6 +155,7 @@
 						color="neutral"
 						variant="outline"
 						size="sm"
+						class="rule-action"
 						:aria-label="
 							ts('guild_settings.automod.rules.edit_aria', { name: rule.name })
 						"
@@ -128,6 +167,7 @@
 						color="error"
 						variant="outline"
 						size="sm"
+						class="rule-action rule-action--danger"
 						:aria-label="
 							ts('guild_settings.automod.rules.delete_aria', { name: rule.name })
 						"
@@ -145,11 +185,14 @@
 			v-model:open="editorOpen"
 			:rule="editedRule"
 			:type="newRuleType"
+			:mode="editorMode"
+			:defaults="defaults"
 			:guild="guildData"
 			:saving="saving"
 			:error-code="editorErrorCode"
 			@save="saveRule"
 			@back="pickTypeAgain"
+			@save-defaults="saveDefaults"
 		/>
 
 		<UModal
@@ -185,6 +228,7 @@
 
 <script setup lang="ts">
 import type { AutomodRuleCreate, AutomodRuleErrorCode } from "~/composables/useAutomodRules";
+import type { AutomodRuleDefaults } from "~/utils/automod-rule-draft";
 import {
 	MaximumAutoModerationRules,
 	type AutoModerationRule,
@@ -273,7 +317,41 @@ function exemptions(rule: AutoModerationRule): string[] {
 const typePickerOpen = ref(false);
 const newRuleType = ref<AutoModerationRuleType>("Words");
 
+const editorMode = ref<"rule" | "defaults" | "escalation">("rule");
+const { defaults, save: storeDefaults } = useAutomodRuleDefaults(() => guildData.value?.id);
+
+function openDefaults(mode: "defaults" | "escalation") {
+	editorMode.value = mode;
+	editedRule.value = null;
+	editorErrorCode.value = null;
+	editorOpen.value = true;
+}
+
+function saveDefaults(patch: AutomodRuleDefaults) {
+	storeDefaults(patch);
+	editorOpen.value = false;
+	toast.add({
+		color: "success",
+		icon: "heroicons:check-circle",
+		title: ts("guild_settings.automod.rules.defaults.saved"),
+	});
+}
+
+// Rules are matched on their name and on the name of their type.
+const query = ref("");
+const shownRules = computed(() => {
+	const needle = query.value.trim().toLowerCase();
+	if (!needle) return rules.value;
+	return rules.value.filter(
+		(rule) =>
+			rule.name.toLowerCase().includes(needle) ||
+			ts(AUTOMOD_TYPE_NAME_KEYS[rule.type]).toLowerCase().includes(needle) ||
+			rule.type.toLowerCase().includes(needle),
+	);
+});
+
 function openEditor(rule: AutoModerationRule | null) {
+	editorMode.value = "rule";
 	if (rule === null) {
 		typePickerOpen.value = true;
 		return;
@@ -285,6 +363,7 @@ function openEditor(rule: AutoModerationRule | null) {
 
 function createRuleOfType(type: AutoModerationRuleType) {
 	typePickerOpen.value = false;
+	editorMode.value = "rule";
 	newRuleType.value = type;
 	editedRule.value = null;
 	editorErrorCode.value = null;
@@ -360,3 +439,34 @@ async function confirmDelete() {
 	}
 }
 </script>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+/* The design system's soft badge: a blurple tint, the count in monospace. */
+.rules-count {
+	@apply inline-flex h-6.5 items-center rounded-full bg-primary/15 px-2.5 font-mono text-xs font-semibold text-primary theme-light:text-default;
+}
+
+/* A rule card's actions: compact, square-cornered and outlined. */
+.rule-action {
+	--btn-bg: transparent;
+	--btn-shadow: none;
+	@apply h-7 rounded-[5px] bg-transparent! px-3 text-xs font-medium ring-0;
+	border: 1px solid var(--field-border);
+	color: var(--ui-text-highlighted);
+}
+
+.rule-action:hover:not(:disabled) {
+	background-color: color-mix(in oklab, var(--ui-text-highlighted) 6%, transparent) !important;
+}
+
+.rule-action--danger {
+	border-color: color-mix(in oklab, var(--color-error) 60%, transparent);
+	color: var(--color-error);
+}
+
+.rule-action--danger:hover:not(:disabled) {
+	background-color: color-mix(in oklab, var(--color-error) 10%, transparent) !important;
+}
+</style>

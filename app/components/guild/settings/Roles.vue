@@ -20,12 +20,12 @@
 				:aria-labelledby="`roles-${group.id}`"
 			>
 				<h3 :id="`roles-${group.id}`" class="mb-3 console-label">{{ group.title }}</h3>
-				<div class="space-y-2">
+				<div class="flex flex-col gap-4">
 					<template v-for="roleConfig in group.roles" :key="roleConfig.key">
 						<SelectRoles
 							v-if="roleConfig.many"
 							v-model="state[roleConfig.key]"
-							layout="row"
+							layout="field"
 							:label="translateEntry(roleConfig, 'name')"
 							:guild="guildData"
 							:tooltip-title="translateEntry(roleConfig, 'description')"
@@ -33,7 +33,7 @@
 						<SelectRole
 							v-else
 							v-model="state[roleConfig.key]"
-							layout="row"
+							layout="field"
 							:empty-label="ts('guild_settings.roles.not_set')"
 							:label="translateEntry(roleConfig, 'name')"
 							:guild="guildData"

@@ -1,104 +1,102 @@
 <template>
 	<UModal
 		v-model:open="open"
-		:title="
-			rule
-				? ts('guild_settings.automod.rules.editor.edit_title', { name: rule.name })
-				: ts('guild_settings.automod.rules.editor.create_title')
-		"
-		:description="ts(AUTOMOD_TYPE_DESCRIPTION_KEYS[draft.type])"
+		:title="title"
+		:description="description"
 		:dismissible="!saving"
 		:ui="{ content: 'sm:max-w-205' }"
 	>
 		<template #body>
 			<form :id="formId" class="space-y-5" novalidate @submit.prevent="submit">
-				<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-					<UFormField
-						:label="ts('guild_settings.automod.rules.editor.name')"
-						:error="nameError"
-						required
-					>
-						<UInput
-							v-model="draft.name"
-							:maxlength="MaximumAutoModerationRuleNameLength"
-							:placeholder="
-								ts('guild_settings.automod.rules.editor.name_placeholder')
-							"
-							autocomplete="off"
-							class="w-full"
+				<template v-if="mode === 'rule'">
+					<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+						<UFormField
+							:label="ts('guild_settings.automod.rules.editor.name')"
+							:error="nameError"
+							required
+						>
+							<UInput
+								v-model="draft.name"
+								:maxlength="MaximumAutoModerationRuleNameLength"
+								:placeholder="
+									ts('guild_settings.automod.rules.editor.name_placeholder')
+								"
+								autocomplete="off"
+								class="w-full"
+							/>
+						</UFormField>
+
+						<UFormField
+							:label="ts('guild_settings.automod.rules.editor.type')"
+							:help="ts('guild_settings.automod.rules.editor.type_locked')"
+						>
+							<!-- Picked before the form opens and fixed from then on, so it
+						     is shown, not offered. -->
+							<div class="editor-type">
+								<GuildAutomodTypeIcon
+									:type="draft.type"
+									class="size-6! rounded-[6px]!"
+								/>
+								<span class="truncate">{{
+									ts(AUTOMOD_TYPE_NAME_KEYS[draft.type])
+								}}</span>
+								<span class="ml-auto font-mono text-[0.6875rem] text-muted">
+									{{ draft.type }}
+								</span>
+							</div>
+						</UFormField>
+					</div>
+
+					<UFormField :label="ts('guild_settings.automod.rules.editor.enabled')">
+						<USwitch
+							v-model="draft.enabled"
+							:aria-label="ts('guild_settings.automod.rules.editor.enabled')"
 						/>
 					</UFormField>
 
-					<UFormField
-						:label="ts('guild_settings.automod.rules.editor.type')"
-						:help="ts('guild_settings.automod.rules.editor.type_locked')"
-					>
-						<!-- Picked before the form opens and fixed from then on, so it
-						     is shown, not offered. -->
-						<div class="editor-type">
-							<GuildAutomodTypeIcon
-								:type="draft.type"
-								class="size-6! rounded-[6px]!"
-							/>
-							<span class="truncate">{{
-								ts(AUTOMOD_TYPE_NAME_KEYS[draft.type])
-							}}</span>
-							<span class="ml-auto font-mono text-[0.6875rem] text-muted">
-								{{ draft.type }}
-							</span>
+					<fieldset v-if="optionFields.length > 0" class="space-y-4">
+						<legend class="editor-heading">
+							<span>{{ ts("guild_settings.automod.rules.editor.options") }}</span>
+							<span aria-hidden="true"></span>
+						</legend>
+						<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+							<UFormField
+								v-for="field in optionFields"
+								:key="field.key"
+								:label="field.label"
+								:class="field.kind === 'list' ? 'sm:col-span-2' : undefined"
+							>
+								<UInputNumber
+									v-if="field.kind === 'number'"
+									:model-value="numberOption(field.key)"
+									:min="field.minimum"
+									:max="field.maximum"
+									:aria-label="field.label"
+									class="w-full"
+									@update:model-value="draft.options[field.key] = $event ?? 0"
+								/>
+								<USwitch
+									v-else-if="field.kind === 'boolean'"
+									:model-value="draft.options[field.key] === true"
+									:aria-label="field.label"
+									@update:model-value="draft.options[field.key] = $event"
+								/>
+								<UInputTags
+									v-else
+									:model-value="listOption(field.key)"
+									:placeholder="
+										ts('guild_settings.automod.rules.editor.list_placeholder')
+									"
+									:aria-label="field.label"
+									class="w-full"
+									@update:model-value="draft.options[field.key] = $event"
+								/>
+							</UFormField>
 						</div>
-					</UFormField>
-				</div>
+					</fieldset>
+				</template>
 
-				<UFormField :label="ts('guild_settings.automod.rules.editor.enabled')">
-					<USwitch
-						v-model="draft.enabled"
-						:aria-label="ts('guild_settings.automod.rules.editor.enabled')"
-					/>
-				</UFormField>
-
-				<fieldset v-if="optionFields.length > 0" class="space-y-4">
-					<legend class="editor-heading">
-						<span>{{ ts("guild_settings.automod.rules.editor.options") }}</span>
-						<span aria-hidden="true"></span>
-					</legend>
-					<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-						<UFormField
-							v-for="field in optionFields"
-							:key="field.key"
-							:label="field.label"
-							:class="field.kind === 'list' ? 'sm:col-span-2' : undefined"
-						>
-							<UInputNumber
-								v-if="field.kind === 'number'"
-								:model-value="numberOption(field.key)"
-								:min="field.minimum"
-								:max="field.maximum"
-								:aria-label="field.label"
-								class="w-full"
-								@update:model-value="draft.options[field.key] = $event ?? 0"
-							/>
-							<USwitch
-								v-else-if="field.kind === 'boolean'"
-								:model-value="draft.options[field.key] === true"
-								:aria-label="field.label"
-								@update:model-value="draft.options[field.key] = $event"
-							/>
-							<UInputTags
-								v-else
-								:model-value="listOption(field.key)"
-								:placeholder="
-									ts('guild_settings.automod.rules.editor.list_placeholder')
-								"
-								:aria-label="field.label"
-								class="w-full"
-								@update:model-value="draft.options[field.key] = $event"
-							/>
-						</UFormField>
-					</div>
-				</fieldset>
-
-				<fieldset class="space-y-3">
+				<fieldset v-if="mode !== 'escalation'" class="space-y-3">
 					<legend class="editor-heading">
 						<span>{{ ts("guild_settings.automod.rules.editor.soft_actions") }}</span>
 						<span aria-hidden="true"></span>
@@ -122,7 +120,7 @@
 					</div>
 				</fieldset>
 
-				<fieldset class="space-y-4">
+				<fieldset v-if="mode !== 'escalation'" class="space-y-4">
 					<legend class="editor-heading">
 						<span>{{ ts("guild_settings.automod.rules.editor.hard_action") }}</span>
 						<span aria-hidden="true"></span>
@@ -174,7 +172,7 @@
 					</div>
 				</fieldset>
 
-				<fieldset class="space-y-3">
+				<fieldset v-if="mode !== 'defaults'" class="space-y-3">
 					<legend class="editor-heading">
 						<span>{{ ts("guild_settings.automod.rules.editor.escalation") }}</span>
 						<span aria-hidden="true"></span>
@@ -253,7 +251,7 @@
 					</UFormField>
 				</fieldset>
 
-				<fieldset class="space-y-4">
+				<fieldset v-if="mode !== 'escalation'" class="space-y-4">
 					<legend class="editor-heading">
 						<span>{{ ts("guild_settings.automod.rules.editor.exemptions") }}</span>
 						<span aria-hidden="true"></span>
@@ -261,13 +259,17 @@
 					<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 						<SelectRoles
 							v-model="draft.ignoredRoles"
+							layout="chips"
 							:guild="guild"
 							:label="ts('guild_settings.automod.rules.editor.ignored_roles')"
+							:empty-label="ts('select.none')"
 						/>
 						<SelectChannels
 							v-model="draft.ignoredChannels"
+							layout="chips"
 							:guild="guild"
 							:label="ts('guild_settings.automod.rules.editor.ignored_channels')"
+							:empty-label="ts('select.none')"
 						/>
 					</div>
 				</fieldset>
@@ -277,7 +279,7 @@
 		<template #footer>
 			<div class="flex w-full items-center gap-2.5">
 				<UButton
-					v-if="rule === null"
+					v-if="mode === 'rule' && rule === null"
 					color="neutral"
 					variant="ghost"
 					icon="ic:round-arrow-back"
@@ -297,11 +299,7 @@
 					{{ ts("guild_settings.automod.rules.editor.cancel") }}
 				</UButton>
 				<UButton type="submit" :form="formId" color="primary" :loading="saving">
-					{{
-						rule
-							? ts("guild_settings.automod.rules.editor.save")
-							: ts("guild_settings.automod.rules.editor.create")
-					}}
+					{{ saveLabel }}
 				</UButton>
 			</div>
 		</template>
@@ -321,7 +319,11 @@ import {
 	type AutoModerationRuleType,
 } from "#shared/utils/automod-rules";
 import {
+	applyAutomodRuleDefaults,
 	automodRuleDraftToBody,
+	pickAutomodEscalationDefaults,
+	pickAutomodRuleDefaults,
+	type AutomodRuleDefaults,
 	automodRuleToDraft,
 	createAutomodRuleDraft,
 	validateAutomodRuleName,
@@ -337,6 +339,8 @@ const open = defineModel<boolean>("open", { required: true });
 
 const {
 	rule = null,
+	mode = "rule",
+	defaults,
 	type = "Words",
 	guild,
 	saving = false,
@@ -344,6 +348,14 @@ const {
 } = defineProps<{
 	/** The rule to edit, or `null` to create one. */
 	rule?: AutoModerationRule | null;
+	/**
+	 * `rule` edits or creates a rule. `defaults` and `escalation` edit what new
+	 * rules start from instead: their actions, threshold and exemptions, or
+	 * their escalation.
+	 */
+	mode?: "rule" | "defaults" | "escalation";
+	/** The saved defaults, laid over a new rule and shown when editing them. */
+	defaults?: AutomodRuleDefaults;
 	/** The kind of rule to create, picked before the form opens. */
 	type?: AutoModerationRuleType;
 	/** `undefined` while the guild has not loaded: the list is then empty. */
@@ -360,6 +372,8 @@ const emit = defineEmits<{
 	save: [body: AutomodRuleCreate];
 	/** A new rule's type should be picked again. */
 	back: [];
+	/** The defaults were edited; only the part this mode shows is set. */
+	saveDefaults: [defaults: AutomodRuleDefaults];
 }>();
 
 const { ts } = useI18n();
@@ -396,7 +410,12 @@ watch(
 	open,
 	(isOpen) => {
 		if (!isOpen) return;
-		Object.assign(draft, rule ? automodRuleToDraft(rule) : createAutomodRuleDraft(type));
+		Object.assign(
+			draft,
+			mode === "rule" && rule
+				? automodRuleToDraft(rule)
+				: applyAutomodRuleDefaults(createAutomodRuleDraft(type), defaults),
+		);
 		submitted.value = false;
 	},
 	{ immediate: true },
@@ -468,8 +487,39 @@ const actionError = computed(() =>
 		: undefined,
 );
 
+const title = computed(() => {
+	if (mode === "defaults") return ts("guild_settings.automod.rules.defaults.rule_title");
+	if (mode === "escalation") return ts("guild_settings.automod.rules.defaults.escalation_title");
+	return rule
+		? ts("guild_settings.automod.rules.editor.edit_title", { name: rule.name })
+		: ts("guild_settings.automod.rules.editor.create_title");
+});
+
+const description = computed(() =>
+	mode === "rule"
+		? ts(AUTOMOD_TYPE_DESCRIPTION_KEYS[draft.type])
+		: ts("guild_settings.automod.rules.defaults.description"),
+);
+
+const saveLabel = computed(() => {
+	if (mode !== "rule") return ts("guild_settings.automod.rules.defaults.save");
+	return rule
+		? ts("guild_settings.automod.rules.editor.save")
+		: ts("guild_settings.automod.rules.editor.create");
+});
+
 function submit() {
 	submitted.value = true;
+	if (mode === "defaults") {
+		if (actionError.value) return;
+		emit("saveDefaults", { rule: pickAutomodRuleDefaults(draft) });
+		return;
+	}
+	if (mode === "escalation") {
+		if (escalationError.value) return;
+		emit("saveDefaults", { escalation: pickAutomodEscalationDefaults(draft) });
+		return;
+	}
 	if (
 		validateAutomodRuleName(draft.name) !== null ||
 		escalationError.value ||

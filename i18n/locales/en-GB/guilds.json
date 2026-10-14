@@ -41,6 +41,13 @@
 			"rules": {
 				"action": "",
 				"count": "",
+				"defaults": {
+					"description": "",
+					"escalation_title": "",
+					"rule_title": "",
+					"save": "",
+					"saved": ""
+				},
 				"delete": "",
 				"delete_aria": "",
 				"delete_description": "",
@@ -87,6 +94,7 @@
 				},
 				"empty_description": "",
 				"empty_title": "",
+				"enabled_count": "",
 				"errors": {
 					"generic": "",
 					"invalid": "",
@@ -101,9 +109,11 @@
 				"load_failed": "",
 				"loading_aria": "",
 				"new": "",
+				"no_match": "",
 				"nothing": "",
 				"on_hit": "",
 				"retry": "",
+				"search_placeholder": "",
 				"soft_alert_short": "",
 				"soft_delete_short": "",
 				"soft_log_short": "",
@@ -213,7 +223,7 @@
 			}
 		},
 		"channels": {
-			"excluded_channels": "Excluded Channels",
+			"excluded_channels": "",
 			"excluded_channels_help": "Select channels that should be ignored for specific logging events. Messages and events in these channels won't be logged.",
 			"form_aria": "Channel settings form",
 			"groups": {
@@ -225,10 +235,14 @@
 				"roles": "",
 				"server": ""
 			},
+			"ignore_dialog_title": "",
+			"ignored_count": "",
 			"logging_channels": "Logging Channels",
 			"logging_channels_help": "Select which channels should receive specific log events. Leave empty to disable logging for that event.",
 			"not_logged": "",
+			"nothing_ignored": "",
 			"routed_count": "",
+			"search_text_channels": "",
 			"subtitle": "Choose where WolfStar posts logs and which channels to ignore.",
 			"title": ""
 		},

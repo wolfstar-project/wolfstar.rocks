@@ -127,6 +127,27 @@
 								"count": {
 									"type": "string"
 								},
+								"defaults": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"escalation_title": {
+											"type": "string"
+										},
+										"rule_title": {
+											"type": "string"
+										},
+										"save": {
+											"type": "string"
+										},
+										"saved": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
 								"delete": {
 									"type": "string"
 								},
@@ -265,6 +286,9 @@
 								"empty_title": {
 									"type": "string"
 								},
+								"enabled_count": {
+									"type": "string"
+								},
 								"errors": {
 									"type": "object",
 									"properties": {
@@ -307,6 +331,9 @@
 								"new": {
 									"type": "string"
 								},
+								"no_match": {
+									"type": "string"
+								},
 								"nothing": {
 									"type": "string"
 								},
@@ -314,6 +341,9 @@
 									"type": "string"
 								},
 								"retry": {
+									"type": "string"
+								},
+								"search_placeholder": {
 									"type": "string"
 								},
 								"soft_alert_short": {
@@ -679,6 +709,12 @@
 							},
 							"additionalProperties": false
 						},
+						"ignore_dialog_title": {
+							"type": "string"
+						},
+						"ignored_count": {
+							"type": "string"
+						},
 						"logging_channels": {
 							"type": "string"
 						},
@@ -688,7 +724,13 @@
 						"not_logged": {
 							"type": "string"
 						},
+						"nothing_ignored": {
+							"type": "string"
+						},
 						"routed_count": {
+							"type": "string"
+						},
+						"search_text_channels": {
 							"type": "string"
 						},
 						"subtitle": {

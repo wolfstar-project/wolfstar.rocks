@@ -21,6 +21,7 @@
 		"moderation_dms": "",
 		"moderation_dms_description": "",
 		"moderation_dms_failed": "",
+		"moderation_dms_retry": "",
 		"motion_enabled": "Movimiento activado",
 		"motion_reduced": "Movimiento reducido",
 		"my_account": "",

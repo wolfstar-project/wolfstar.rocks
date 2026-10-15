@@ -17,17 +17,23 @@ export function useUserSettings() {
 		{ server: false, watch: [() => user.value?.id] },
 	);
 
+	// Only the newest change decides what is shown: an older request that
+	// settles later neither overwrites it nor rolls it back.
+	let latestChange = 0;
+
 	async function setReport(report: boolean): Promise<boolean> {
+		const change = ++latestChange;
 		const previous = asyncData.data.value;
 		asyncData.data.value = { ...previous, report };
 		try {
-			asyncData.data.value = await $fetch<UserSettings>("/api/users/settings", {
+			const saved = await $fetch<UserSettings>("/api/users/settings", {
 				body: { report },
 				method: "PATCH",
 			});
+			if (change === latestChange) asyncData.data.value = saved;
 			return true;
 		} catch {
-			asyncData.data.value = previous;
+			if (change === latestChange) asyncData.data.value = previous;
 			return false;
 		}
 	}

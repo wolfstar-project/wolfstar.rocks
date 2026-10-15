@@ -658,13 +658,13 @@ export function resolveStringSelectMenuPlacement(
 /** Default Recents row for the Discord App Launcher demo. */
 export const discordAppLauncherRecents: readonly DiscordAppLauncherEntry[] = [
 	{
-		id: "wolfstar-conf-menu",
+		id: "wolfstar-settings-menu",
 		name: "WolfStar Beta",
 		description: "> Customizable moderation and more!",
 		avatar: "/avatars/wolfstar.png",
 		kind: "command",
-		commandName: "conf menu",
-		tileTitle: "conf menu",
+		commandName: "settings server menu",
+		tileTitle: "settings server menu",
 		tileSubtitle: "WolfStar Beta",
 	},
 	{

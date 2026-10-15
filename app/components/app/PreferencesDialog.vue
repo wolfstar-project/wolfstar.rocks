@@ -205,8 +205,21 @@
 										{{ ts("profile.moderation_dms_description") }}
 									</p>
 								</div>
+								<!-- A failed read says so and offers another try, instead of
+								     leaving the skeleton up for good. -->
+								<UButton
+									v-if="!userSettings && userSettingsStatus === 'error'"
+									color="neutral"
+									variant="outline"
+									size="sm"
+									icon="ic:round-refresh"
+									:aria-label="ts('profile.moderation_dms_retry')"
+									@click="refreshUserSettings()"
+								>
+									{{ ts("common.retry") }}
+								</UButton>
 								<USkeleton
-									v-if="!userSettings"
+									v-else-if="!userSettings"
 									class="h-6 w-11 shrink-0 rounded-full"
 								/>
 								<USwitch
@@ -274,7 +287,12 @@ const { ts } = useI18n();
 const { isOpen, requestedSection } = usePreferencesDialog();
 const { user: authUser, signOut } = useUserSession();
 const { user: discordUser, status: discordStatus, refresh: refreshDiscordUser } = useUser(authUser);
-const { data: userSettings, setReport, refresh: refreshUserSettings } = useUserSettings();
+const {
+	data: userSettings,
+	status: userSettingsStatus,
+	setReport,
+	refresh: refreshUserSettings,
+} = useUserSettings();
 const toast = useToast();
 const { copy, copied } = useClipboard();
 

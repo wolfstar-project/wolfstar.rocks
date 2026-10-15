@@ -67,6 +67,9 @@
 				"moderation_dms_failed": {
 					"type": "string"
 				},
+				"moderation_dms_retry": {
+					"type": "string"
+				},
 				"motion_enabled": {
 					"type": "string"
 				},

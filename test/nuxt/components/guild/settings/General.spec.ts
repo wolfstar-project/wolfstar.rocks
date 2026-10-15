@@ -13,7 +13,6 @@ import { createMockGuildData } from "~~/test/mocks/guildData";
 
 const createInitialGuildSettings = () =>
 	createMockGuildData("123456789012345678", {
-		prefix: "!",
 		language: "en-US",
 	});
 
@@ -70,11 +69,9 @@ function getSetupState(wrapper: Awaited<ReturnType<typeof mountSuspended>>) {
 	return (wrapper.vm.$ as any).setupState as {
 		mapLanguageKeysToNames: (langKey: string) => [string] | [string, string];
 		mapToGuildData: (formState: {
-			prefix: string;
 			language: { label: string; value: string };
 		}) => Partial<GuildData>;
 		state: {
-			prefix: string;
 			language: { label: string; value: string };
 		};
 	};
@@ -93,7 +90,7 @@ describe("general guild settings", () => {
 		}
 	});
 
-	it("renders prefix input and language select", async () => {
+	it("renders the language select and no prefix field", async () => {
 		const wrapper = await mountSuspended(General, {
 			props: {
 				languages: ["en-US", "es-ES", "de-DE"],
@@ -102,10 +99,8 @@ describe("general guild settings", () => {
 
 		await nextTick();
 
-		const prefixInput = wrapper.find("input#prefix");
-
-		expect(prefixInput.exists()).toBeTruthy();
-		expect((prefixInput.element as HTMLInputElement).value).toBe("!");
+		// V7 is slash-command only: the bot has no prefix setting any more.
+		expect(wrapper.find("input#prefix").exists()).toBe(false);
 		expect(wrapper.text()).toContain("Language");
 		expect(wrapper.html()).toContain("language");
 	});
@@ -119,12 +114,7 @@ describe("general guild settings", () => {
 
 		await nextTick();
 
-		const prefixInput = wrapper.find("input#prefix");
-		const setupState = getSetupState(wrapper);
-
-		expect((prefixInput.element as HTMLInputElement).value).toBe("!");
-		expect(setupState.state.prefix).toBe("!");
-		expect(setupState.state.language).toStrictEqual({
+		expect(getSetupState(wrapper).state.language).toStrictEqual({
 			label: "English, United States",
 			value: "en-US",
 		});
@@ -139,20 +129,12 @@ describe("general guild settings", () => {
 
 		await nextTick();
 
-		const prefixInput = wrapper.find("input#prefix");
-		await prefixInput.setValue("?");
+		const setupState = getSetupState(wrapper);
+		setupState.state.language = { label: "German", value: "de-DE" };
 		await nextTick();
 
-		const setupState = getSetupState(wrapper);
-		const mappedGuildData = setupState.mapToGuildData(setupState.state);
-
-		expect(mappedGuildData).toStrictEqual({
-			language: "en-US",
-			prefix: "?",
-		});
-		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
-			prefix: "?",
-		});
+		expect(setupState.mapToGuildData(setupState.state)).toStrictEqual({ language: "de-DE" });
+		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({ language: "de-DE" });
 	});
 
 	it("maps language keys to display names correctly", async () => {
@@ -183,22 +165,19 @@ describe("general guild settings", () => {
 
 		await nextTick();
 
-		const selectMenu = wrapper.findComponent({ name: "USelectMenu" });
+		// The select shows each language by its English name, with the native
+		// name and the tag the bot stores set beside it.
+		const select = wrapper.findComponent({ name: "SelectBase" });
 
-		expect(selectMenu.exists()).toBeTruthy();
-		expect(selectMenu.props("items")).toStrictEqual([
+		expect(select.exists()).toBeTruthy();
+		expect(select.props("options")).toStrictEqual([
 			{
 				label: "English, United States",
+				note: "American English \u00B7 en-US",
 				value: "en-US",
 			},
-			{
-				label: "Spanish",
-				value: "es-ES",
-			},
-			{
-				label: "German",
-				value: "de-DE",
-			},
+			{ label: "Spanish", note: "Espa\u00F1ol \u00B7 es-ES", value: "es-ES" },
+			{ label: "German", note: "Deutsch \u00B7 de-DE", value: "de-DE" },
 		]);
 	});
 
@@ -210,16 +189,28 @@ describe("general guild settings", () => {
 
 			await nextTick();
 
-			const html = wrapper.html();
-			expect(html).toContain("Members");
-			expect(html).toContain("42");
-			expect(html).toContain("Categories");
-			expect(html).toContain("1");
-			expect(html).toContain("Text Channels");
-			expect(html).toContain("2");
-			expect(html).toContain("Voice Channels");
-			expect(html).toContain("1");
-			expect(html).toContain("Roles");
+			const stats = wrapper.findAll("dl > div").map((card) => ({
+				label: card.find("dt").text(),
+				value: card.find("dd").text(),
+			}));
+
+			expect(stats.map((stat) => stat.label)).toStrictEqual([
+				"Members",
+				"Cases",
+				"AutoMod hits",
+				"Open reports",
+				"Commands",
+				"Channels",
+				"Roles",
+			]);
+			expect(stats.find((stat) => stat.label === "Members")?.value).toBe("42");
+			// Nothing counts these yet, so they say so instead of showing a number.
+			expect(stats.find((stat) => stat.label === "AutoMod hits")?.value).toBe("—");
+			expect(stats.find((stat) => stat.label === "Open reports")?.value).toBe("—");
+			// Three channels besides the category, which has its own note.
+			expect(stats.find((stat) => stat.label === "Channels")?.value).toBe("3");
+			expect(wrapper.text()).toContain("1 category");
+			expect(stats.find((stat) => stat.label === "Roles")?.value).toBe("2");
 		});
 
 		it("calls copy with server id and toast options when Copy Server ID is clicked", async () => {

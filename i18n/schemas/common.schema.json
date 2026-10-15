@@ -181,10 +181,10 @@
 				"brand": {
 					"type": "string"
 				},
-				"home": {
+				"dashboard": {
 					"type": "string"
 				},
-				"profile": {
+				"home": {
 					"type": "string"
 				},
 				"settings": {
@@ -267,6 +267,12 @@
 				},
 				"moderation_tools_description": {
 					"type": "string"
+				},
+				"staryl_description": {
+					"type": "string"
+				},
+				"wolfstar_description": {
+					"type": "string"
 				}
 			},
 			"additionalProperties": false
@@ -310,25 +316,10 @@
 		"user_menu": {
 			"type": "object",
 			"properties": {
-				"account_menu": {
-					"type": "string"
-				},
-				"avatar_alt": {
-					"type": "string"
-				},
-				"avatar_fallback": {
-					"type": "string"
-				},
-				"profile": {
-					"type": "string"
-				},
 				"report_bug": {
 					"type": "string"
 				},
 				"sign_out": {
-					"type": "string"
-				},
-				"user_menu_for": {
 					"type": "string"
 				}
 			},

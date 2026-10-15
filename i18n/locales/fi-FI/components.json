@@ -24,14 +24,23 @@
 		"update_available": ""
 	},
 	"select": {
+		"add": "",
+		"add_to": "",
+		"clear": "",
 		"clear_selected": "",
 		"days": "",
+		"done": "",
 		"hours": "",
 		"max_duration": "",
 		"min_duration": "",
 		"minutes": "",
 		"none": "",
+		"nothing_chosen": "",
+		"nothing_matches": "",
+		"remove_option": "",
 		"search": "",
-		"seconds": ""
+		"seconds": "",
+		"unknown_channel": "",
+		"unknown_role": ""
 	}
 }

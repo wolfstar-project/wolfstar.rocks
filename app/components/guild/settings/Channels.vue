@@ -1,134 +1,132 @@
 <template>
-	<GuildSettingsSection
+	<DashboardPageHeader
 		:title="ts('guild_settings.channels.title')"
 		:description="ts('guild_settings.channels.subtitle')"
 	>
-		<GuildSettingsForm
-			:state="state"
-			:schema="schema"
-			:map-to-guild-data="mapToGuildData"
-			:aria-label="ts('guild_settings.channels.form_aria')"
-			class="space-y-8"
-			@error="onError"
-		>
-			<div class="space-y-4">
-				<div class="flex items-center gap-2">
-					<UIcon name="i-heroicons-document-text" class="size-5 text-primary" />
-					<h3 class="text-lg font-semibold text-base-content">
-						{{ ts("guild_settings.channels.logging_channels") }}
-					</h3>
-				</div>
-				<p class="text-sm text-base-content/70">
-					{{ ts("guild_settings.channels.logging_channels_help") }}
-				</p>
+		<UBadge color="primary" variant="soft" size="lg" class="font-semibold">
+			{{
+				ts("guild_settings.channels.routed_count", {
+					routed: routedCount,
+					total: ConfigurableLoggingChannels.length,
+				})
+			}}
+		</UBadge>
+	</DashboardPageHeader>
 
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-					<div v-for="config in ConfigurableLoggingChannels" :key="config.key">
-						<SelectChannel
-							v-model="state[config.key] as string | null"
-							:guild="guildData"
-							:name="translateEntry(config, 'name')"
-							:label="translateEntry(config, 'name')"
-							:description="translateEntry(config, 'description')"
-						/>
-					</div>
+	<GuildSettingsForm
+		:state="state"
+		:schema="schema"
+		:map-to-guild-data="mapToGuildData"
+		:aria-label="ts('guild_settings.channels.form_aria')"
+		class="space-y-4"
+		@error="onError"
+	>
+		<p class="text-[0.8125rem] text-muted">
+			{{ ts("guild_settings.channels.logging_channels_help") }}
+		</p>
+
+		<div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
+			<section
+				v-for="group in loggingGroups"
+				:key="group.id"
+				class="console-card"
+				:aria-labelledby="`channels-${group.id}`"
+			>
+				<h3 :id="`channels-${group.id}`" class="mb-3 console-label">{{ group.title }}</h3>
+				<div class="space-y-2">
+					<SelectChannel
+						v-for="config in group.entries"
+						:key="config.key"
+						v-model="state[config.key]"
+						layout="row"
+						:empty-label="ts('guild_settings.channels.not_logged')"
+						:guild="guildData"
+						:label="translateEntry(config, 'name')"
+						:tooltip-title="translateEntry(config, 'description')"
+					/>
 				</div>
+				<div v-if="group.toggles.length > 0" class="mt-3">
+					<GuildSettingsToggleRow
+						v-for="config in group.toggles"
+						:key="config.key"
+						v-model="state[config.key]"
+						:name="config.key"
+						:title="translateEntry(config, 'name')"
+						:description="translateEntry(config, 'description')"
+					/>
+				</div>
+			</section>
+		</div>
+
+		<section class="console-card" aria-labelledby="channels-excluded">
+			<div class="flex items-center gap-3">
+				<h3 id="channels-excluded" class="text-[1.0625rem] font-semibold whitespace-nowrap">
+					{{ ts("guild_settings.channels.excluded_channels") }}
+				</h3>
+				<span class="h-px flex-1 bg-(--field-border)" aria-hidden="true"></span>
 			</div>
-
-			<Separator />
-
-			<div class="space-y-4">
-				<div class="flex items-center gap-2">
-					<UIcon name="heroicons:eye-slash" class="size-5 text-warning" />
-					<h3 class="text-lg font-semibold text-base-content">
-						{{ ts("guild_settings.channels.excluded_channels") }}
-					</h3>
-				</div>
-				<p class="text-sm text-base-content/70">
-					{{ ts("guild_settings.channels.excluded_channels_help") }}
-				</p>
-
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-					<div v-for="config in ConfigurableIgnoreChannels" :key="config.key">
-						<SelectChannels
-							v-model="state[config.key] as string[]"
-							:guild="guildData"
-							:label="translateEntry(config, 'name')"
-						/>
-					</div>
-				</div>
+			<p class="mt-1.5 text-[0.8125rem] text-muted">
+				{{ ts("guild_settings.channels.excluded_channels_help") }}
+			</p>
+			<div class="mt-4 flex flex-col gap-5">
+				<SelectChannels
+					v-for="config in ConfigurableIgnoreChannels"
+					:key="config.key"
+					v-model="state[config.key]"
+					layout="chips"
+					:guild="guildData"
+					:label="translateEntry(config, 'name')"
+					:tooltip-title="translateEntry(config, 'description')"
+					:empty-label="ts('guild_settings.channels.nothing_ignored')"
+					:dialog-title="ts('guild_settings.channels.ignore_dialog_title')"
+					:search-placeholder="ts('guild_settings.channels.search_text_channels')"
+					:count-label="(count) => tc('guild_settings.channels.ignored_count', count)"
+				/>
 			</div>
-		</GuildSettingsForm>
-	</GuildSettingsSection>
+		</section>
+	</GuildSettingsForm>
 </template>
 
 <script setup lang="ts">
-import type { GuildData } from "#server/database";
-import type { FormErrorEvent } from "@nuxt/ui";
-import { ChannelsSettingsSchema, type ChannelsSettingsSchemaType } from "#shared/schemas";
-import { setGuildDataChange } from "#shared/utils/guild-settings-map";
 // Explicit import: unimport misses identifiers referenced only inside nested
 // functions and the template, leaving them unbound in the compiled module.
 import {
 	ConfigurableIgnoreChannels,
 	ConfigurableLoggingChannels,
+	ConfigurableLogToggles,
 } from "#shared/utils/settingsDataEntries";
 
-const { ts } = useI18n();
+const { tc, ts } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
-
 const { guildData } = useGuildData();
-const { guildSettings: _guildSettings } = useGuildSettings();
-const toast = useToast();
 
-const schema = ChannelsSettingsSchema;
+const { mapToGuildData, onError, schema, state } = useSettingsForm({
+	one: ConfigurableLoggingChannels.map((entry) => entry.key),
+	many: ConfigurableIgnoreChannels.map((entry) => entry.key),
+	toggles: ConfigurableLogToggles.map((entry) => entry.key),
+});
 
-const createDefaultState = (): ChannelsSettingsSchemaType => {
-	const defaults: ChannelsSettingsSchemaType = {} as ChannelsSettingsSchemaType;
-	for (const config of ConfigurableLoggingChannels) {
-		defaults[config.key] = null;
-	}
-	for (const config of ConfigurableIgnoreChannels) {
-		defaults[config.key] = [];
-	}
-	return defaults;
-};
+// One card per kind of event, in the order the events are written to the log.
+const LOGGING_GROUPS = [
+	{ id: "members", pattern: /^logs(Member|Prune)/ },
+	{ id: "messages", pattern: /^logs(Message|Image)/ },
+	{ id: "reactions", pattern: /^logsReaction/ },
+	{ id: "roles", pattern: /^logsRole/ },
+	{ id: "channels", pattern: /^logsChannel/ },
+	{ id: "emojis", pattern: /^logsEmoji/ },
+	{ id: "server", pattern: /^logs(Server|Command|Settings)/ },
+] as const;
 
-const state = reactive<ChannelsSettingsSchemaType>(createDefaultState());
+const loggingGroups = computed(() =>
+	LOGGING_GROUPS.map((group) => ({
+		entries: ConfigurableLoggingChannels.filter((entry) => group.pattern.test(entry.key)),
+		id: group.id,
+		title: ts(`guild_settings.channels.groups.${group.id}`),
+		toggles: ConfigurableLogToggles.filter((entry) => group.pattern.test(entry.key)),
+	})).filter((group) => group.entries.length > 0),
+);
 
-function mapToGuildData(formState: ChannelsSettingsSchemaType): Partial<GuildData> {
-	const changes: Partial<GuildData> = {};
-
-	for (const config of ConfigurableLoggingChannels) {
-		const value = formState[config.key] as string | null | undefined;
-		// Include null values for nullable fields (user explicitly cleared)
-		// Only exclude undefined (form doesn't control this key)
-		if (value !== undefined) {
-			setGuildDataChange(changes, config.key, value);
-		}
-	}
-
-	for (const config of ConfigurableIgnoreChannels) {
-		const value = formState[config.key] as string[] | undefined;
-		// Include empty arrays (user explicitly cleared all ignored channels)
-		if (value !== undefined) {
-			setGuildDataChange(changes, config.key, value);
-		}
-	}
-
-	return changes;
-}
-
-async function onError(event: FormErrorEvent) {
-	const element =
-		event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
-	element?.scrollIntoView({ behavior: "smooth", block: "center" });
-	const errorMessage = event.errors[0]?.message;
-	toast.add({
-		color: "error",
-		description: errorMessage ?? ts("guild_settings.please_try_again"),
-		icon: "heroicons:x-circle",
-		title: ts("guild_settings.save_failed"),
-	});
-}
+const routedCount = computed(
+	() => ConfigurableLoggingChannels.filter((entry) => state[entry.key]).length,
+);
 </script>

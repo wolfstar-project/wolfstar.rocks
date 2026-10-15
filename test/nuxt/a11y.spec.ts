@@ -3,6 +3,7 @@ import {
 	AppHeader,
 	AppHeaderAuth,
 	AppLogoMark,
+	AppPreferences,
 
 	// #region Wolfstar components
 	WolfstarCommandsSection,
@@ -34,15 +35,23 @@ import {
 	DiscordChatInputCommandSuggestion,
 	DiscordChatInputCommandMatched,
 	DiscordChatInputCommandSuggestions,
-	ProfileHeader,
 	DiscordAppLauncher,
 	DiscordStringSelectMenu,
 
 	// #endregion
 
+	DashboardBottomNav,
+	DashboardPageHeader,
+	DashboardSidebar,
+	DashboardSkeleton,
 	ErrorPage,
 	OauthStatusPanel,
+	GuildAuditChanges,
+	GuildAutomodDurationInput,
+	GuildReviewQueue,
+	GuildServerRail,
 	GuildSettingsSection,
+	GuildSettingsToggleRow,
 	IconsApp,
 	IconsWolfstar,
 	SectionHeader,
@@ -56,9 +65,11 @@ import {
 	StarylProductProofSection,
 	// #endregion
 } from "#components";
-import { mountSuspended } from "@nuxt/test-utils/runtime";
+import { mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
 import { createError } from "h3";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { MOCK_AUDIT_ENTRY } from "~~/test/mocks/auditLogs";
+import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 import { runAxe } from "./utils/axe";
 
 const inviteUrl =
@@ -550,6 +561,138 @@ describe("component accessibility audits", () => {
 		});
 	});
 
+	describe("GuildAutomodDurationInput", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildAutomodDurationInput, {
+				props: { label: "Duration", modelValue: 600_000 },
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildSettingsToggleRow", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildSettingsToggleRow, {
+				props: {
+					description: "Opens a moderation case when a member is banned by hand.",
+					modelValue: true,
+					name: "moderationTrackBans",
+					title: "Track Manual Bans",
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildServerRail", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildServerRail, {
+				props: {
+					currentGuildId: "222222222222222222",
+					guilds: [
+						createMockOauthFlattenedGuild({ id: "111111111111111111", name: "Alpha" }),
+						createMockOauthFlattenedGuild({ id: "222222222222222222", name: "Beta" }),
+					],
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("DashboardSidebar", () => {
+		it("should have no accessibility violations", async () => {
+			useActiveGuild().selectGuild("123456789012345678");
+			useGuildData().setGuildData(
+				createMockOauthFlattenedGuild({ id: "123456789012345678", name: "WolfStar HQ" }),
+			);
+			const component = await mountSuspended(DashboardSidebar);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("DashboardSkeleton", () => {
+		it.each(["overview", "modules", "table", "form"] as const)(
+			"should have no accessibility violations as a %s",
+			async (kind) => {
+				const component = await mountSuspended(DashboardSkeleton, { props: { kind } });
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			},
+		);
+	});
+
+	describe("GuildReviewQueue", () => {
+		it("should have no accessibility violations", async () => {
+			registerEndpoint("/api/guilds/123456789012345678/reports", {
+				method: "GET",
+				handler: () => ({
+					entries: [
+						{
+							closedAt: null,
+							createdAt: "2026-10-14T12:32:00.000Z",
+							id: "412",
+							reason: "Spamming the same link in #general",
+							status: "Open",
+							targetId: "223456789012345678",
+							targetTag: "loud-user",
+						},
+					],
+					total: 1,
+				}),
+			});
+			useActiveGuild().selectGuild("123456789012345678");
+			useGuildData().setGuildData(
+				createMockOauthFlattenedGuild({ id: "123456789012345678", name: "WolfStar HQ" }),
+			);
+			const component = await mountSuspended(GuildReviewQueue);
+			await vi.waitFor(() => expect(component.find("tbody tr").exists()).toBe(true));
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildAuditChanges", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildAuditChanges, {
+				props: {
+					entry: {
+						...MOCK_AUDIT_ENTRY,
+						changes: {
+							changed: {
+								language: { from: "en-US", to: "it-IT" },
+								modulesAutomod: { from: false, to: true },
+							},
+						},
+					},
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("DashboardBottomNav", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(DashboardBottomNav);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("DashboardPageHeader", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(DashboardPageHeader, {
+				props: { description: "Turn modules on or off.", title: "Modules" },
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
 	describe("IconsApp", () => {
 		it("should have no accessibility violations", async () => {
 			const component = await mountSuspended(IconsApp);
@@ -623,7 +766,10 @@ describe("component accessibility audits", () => {
 
 		it("renders the WolfStar logo mark with the resized svg hidden from AT", async () => {
 			const wrapper = await mountAppHeader();
-			const svg = wrapper.find("svg");
+			const brandLink = wrapper.find("a[aria-label='WolfStar home']");
+			expect(brandLink.exists()).toBe(true);
+
+			const svg = brandLink.find("svg");
 			expect(svg.exists()).toBe(true);
 			expect(svg.attributes("aria-hidden")).toBe("true");
 			expect(svg.classes()).toContain("h-20");
@@ -647,39 +793,18 @@ describe("component accessibility audits", () => {
 			}
 		});
 
-		it("renders a settings link to /profile with an accessible name for guests", async () => {
+		it("renders a settings button with an accessible name for guests", async () => {
 			const wrapper = await mountSuspended(AppHeaderAuth);
-			const settingsLinks = wrapper.findAll("a[href='/profile']");
-			expect(settingsLinks.length).toBeGreaterThan(0);
-			for (const link of settingsLinks) {
-				expect(link.attributes("aria-label")).toBe("Settings");
-			}
+			const settingsButtons = wrapper.findAll('button[aria-label="Settings"]');
+			expect(settingsButtons.length).toBeGreaterThan(0);
 		});
 	});
 
-	describe("ProfileHeader", () => {
-		it("has no axe-core violations in the guest settings state", async () => {
-			const wrapper = await mountSuspended(ProfileHeader, {
-				props: {
-					user: null,
-					pending: false,
-				},
-			});
+	describe("AppPreferences", () => {
+		it("has no axe-core violations", async () => {
+			const wrapper = await mountSuspended(AppPreferences);
 			const results = await runAxe(wrapper);
 			expect(results.violations).toEqual([]);
-		});
-
-		it("labels the guest section and sign-in CTA accessibly", async () => {
-			const wrapper = await mountSuspended(ProfileHeader, {
-				props: {
-					user: null,
-					pending: false,
-				},
-			});
-			expect(wrapper.get("section").attributes("aria-label")).toBe("Local settings");
-			expect(wrapper.get('a[href="/login?next=/profile"]').attributes("aria-label")).toBe(
-				"Sign in with Discord",
-			);
 		});
 	});
 

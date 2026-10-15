@@ -2,9 +2,46 @@ import {
 	ModerationLogQuerySchema,
 	CommandLogQuerySchema,
 	DashboardActivityQuerySchema,
+	ReportQuerySchema,
 } from "#shared/schemas/log-queries";
 import { safeParse } from "valibot";
 import { describe, expect, it } from "vitest";
+
+describe("snowflake filters", () => {
+	// The routes convert these with `BigInt()`, which throws on anything
+	// non-numeric, so a malformed filter must fail validation (400), not the handler (500).
+	it("accept a numeric Discord snowflake", () => {
+		expect(safeParse(ModerationLogQuerySchema, { userId: "123456789012345678" }).success).toBe(
+			true,
+		);
+		expect(safeParse(CommandLogQuerySchema, { userId: " 123456789012345678 " })).toMatchObject({
+			success: true,
+			output: { userId: "123456789012345678" },
+		});
+		expect(
+			safeParse(DashboardActivityQuerySchema, { actorId: "9223372036854775807" }).success,
+		).toBe(true);
+	});
+
+	it("reject non-numeric or oversized ids", () => {
+		expect(
+			safeParse(ModerationLogQuerySchema, { moderatorId: "not-a-snowflake" }).success,
+		).toBe(false);
+		expect(
+			safeParse(CommandLogQuerySchema, { userId: "12345678901234567890123" }).success,
+		).toBe(false);
+		expect(safeParse(DashboardActivityQuerySchema, { actorId: "1e5" }).success).toBe(false);
+		expect(safeParse(DashboardActivityQuerySchema, { actorId: "42" }).success).toBe(false);
+	});
+
+	// The columns are `BIGINT`: a 19-digit value above its range has the right
+	// shape and would only fail inside the query.
+	it("reject an id a BIGINT column cannot hold", () => {
+		expect(safeParse(ModerationLogQuerySchema, { userId: "9223372036854775808" }).success).toBe(
+			false,
+		);
+	});
+});
 
 describe("ModerationLogQuerySchema", () => {
 	it("accepts empty object with defaults", () => {
@@ -69,5 +106,52 @@ describe("DashboardActivityQuerySchema", () => {
 	it("rejects limit above 100", () => {
 		const result = safeParse(DashboardActivityQuerySchema, { limit: "200" });
 		expect(result.success).toBe(false);
+	});
+});
+
+describe("date filters", () => {
+	const parseFrom = (from: string) => safeParse(DashboardActivityQuerySchema, { from });
+
+	it("normalize a date or date-time to UTC", () => {
+		expect(parseFrom("2026-10-09").output).toMatchObject({ from: "2026-10-09T00:00:00.000Z" });
+		expect(parseFrom("2026-10-09T21:02:50.123Z").output).toMatchObject({
+			from: "2026-10-09T21:02:50.123Z",
+		});
+	});
+
+	it("apply an offset instead of leaving it for the database to drop", () => {
+		expect(parseFrom("2026-10-09T21:02:50+02:00").output).toMatchObject({
+			from: "2026-10-09T19:02:50.000Z",
+		});
+	});
+
+	it("read a date-time without a zone as UTC", () => {
+		expect(parseFrom("2026-10-09T21:02:50").output).toMatchObject({
+			from: "2026-10-09T21:02:50.000Z",
+		});
+	});
+
+	it("reject text that is not an ISO date", () => {
+		for (const from of ["yesterday", "2026-13-45", "09/10/2026", "2026-10-09T99:00:00Z"]) {
+			expect(parseFrom(from).success).toBe(false);
+		}
+	});
+});
+
+describe("ReportQuerySchema", () => {
+	it("takes one of the bot's report statuses, or none", () => {
+		expect(safeParse(ReportQuerySchema, {})).toMatchObject({
+			success: true,
+			output: { limit: 30, offset: 0 },
+		});
+		expect(safeParse(ReportQuerySchema, { status: "Open", limit: "10" })).toMatchObject({
+			success: true,
+			output: { limit: 10, status: "Open" },
+		});
+	});
+
+	it("refuses a status the enum does not have", () => {
+		expect(safeParse(ReportQuerySchema, { status: "Closed" }).success).toBe(false);
+		expect(safeParse(ReportQuerySchema, { status: "open" }).success).toBe(false);
 	});
 });

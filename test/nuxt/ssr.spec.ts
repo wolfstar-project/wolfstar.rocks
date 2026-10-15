@@ -990,7 +990,7 @@ describe("component SSR rendering", () => {
 				props: { title: "Settings", description: "Configure your guild" },
 				slots: { default: "<p>Form</p>" },
 			});
-			const desc = wrapper.find("p.text-sm");
+			const desc = wrapper.find("p.text-muted");
 			expect(desc.exists()).toBe(true);
 			expect(desc.text()).toBe("Configure your guild");
 		});

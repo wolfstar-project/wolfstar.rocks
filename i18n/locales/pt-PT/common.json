@@ -59,8 +59,8 @@
 	"header": {
 		"add_app": "",
 		"brand": "",
+		"dashboard": "",
 		"home": "",
-		"profile": "",
 		"settings": "",
 		"sign_in": "",
 		"sign_in_discord": "",
@@ -87,7 +87,9 @@
 		"moderation_logs": "",
 		"moderation_logs_description": "",
 		"moderation_tools": "",
-		"moderation_tools_description": ""
+		"moderation_tools_description": "",
+		"staryl_description": "",
+		"wolfstar_description": ""
 	},
 	"nuxtSiteConfig": {
 		"description": "",
@@ -102,12 +104,7 @@
 		"title": ""
 	},
 	"user_menu": {
-		"account_menu": "",
-		"avatar_alt": "",
-		"avatar_fallback": "",
-		"profile": "",
 		"report_bug": "",
-		"sign_out": "",
-		"user_menu_for": ""
+		"sign_out": ""
 	}
 }

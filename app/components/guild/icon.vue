@@ -37,6 +37,7 @@
 					class="flex items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-105"
 					:class="iconSizeClasses"
 					role="img"
+					:aria-label="guild?.name"
 				>
 					<USkeleton v-if="!loaded" class="h-full w-full rounded-[inherit]" />
 					<NuxtImg

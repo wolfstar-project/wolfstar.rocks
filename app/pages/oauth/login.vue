@@ -53,8 +53,10 @@ onMounted(() => {
 
 async function startSignIn() {
 	const queryNext = route.query.next;
-	const nextUrl = (Array.isArray(queryNext) ? queryNext[0] : queryNext) || "/";
-	const safeNext = isSafeRedirectPath(nextUrl) ? nextUrl : "/";
+	// A sign-in started without a destination (the header button) lands on the
+	// dashboard, the same place `auth.redirects.authenticated` names.
+	const nextUrl = (Array.isArray(queryNext) ? queryNext[0] : queryNext) || "/app";
+	const safeNext = isSafeRedirectPath(nextUrl) ? nextUrl : "/app";
 	log.info({ tag: "oauth:login", action: "login_redirect", next: safeNext });
 
 	// `execute` never throws: a failed hand-off lands in `signInDiscord.error`

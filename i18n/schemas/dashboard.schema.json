@@ -19,6 +19,42 @@
 				"changes_reset_title": {
 					"type": "string"
 				},
+				"coming_soon": {
+					"type": "object",
+					"properties": {
+						"autodelete": {
+							"type": "string"
+						},
+						"autopurge": {
+							"type": "string"
+						},
+						"badge": {
+							"type": "string"
+						},
+						"body": {
+							"type": "string"
+						},
+						"learn_more": {
+							"type": "string"
+						},
+						"stat_automod_hits": {
+							"type": "string"
+						},
+						"stat_open_reports": {
+							"type": "string"
+						},
+						"time_zone": {
+							"type": "string"
+						},
+						"time_zone_description": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"discard_changes": {
 					"type": "string"
 				},
@@ -46,19 +82,19 @@
 				"loading_aria": {
 					"type": "string"
 				},
-				"loading_description": {
-					"type": "string"
-				},
-				"loading_title": {
-					"type": "string"
-				},
 				"nav": {
 					"type": "object",
 					"properties": {
-						"bad_words": {
+						"autodelete": {
 							"type": "string"
 						},
-						"capitals": {
+						"automod": {
+							"type": "string"
+						},
+						"automod_short": {
+							"type": "string"
+						},
+						"autopurge": {
 							"type": "string"
 						},
 						"channels": {
@@ -67,34 +103,94 @@
 						"commands": {
 							"type": "string"
 						},
-						"events": {
-							"type": "string"
-						},
 						"home": {
-							"type": "string"
-						},
-						"invites": {
-							"type": "string"
-						},
-						"line_spam": {
-							"type": "string"
-						},
-						"links": {
 							"type": "string"
 						},
 						"logs": {
 							"type": "string"
 						},
-						"message_duplication": {
-							"type": "string"
-						},
 						"moderation": {
 							"type": "string"
 						},
-						"reactions": {
+						"modules": {
+							"type": "string"
+						},
+						"overview": {
 							"type": "string"
 						},
 						"roles": {
+							"type": "string"
+						},
+						"support_server": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"nav_aria": {
+					"type": "string"
+				},
+				"nav_current_group": {
+					"type": "string"
+				},
+				"nav_groups": {
+					"type": "object",
+					"properties": {
+						"management": {
+							"type": "string"
+						},
+						"modules": {
+							"type": "string"
+						},
+						"records": {
+							"type": "string"
+						},
+						"resources": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"nav_menu": {
+					"type": "string"
+				},
+				"nav_menu_description": {
+					"type": "string"
+				},
+				"nav_module_off": {
+					"type": "string"
+				},
+				"nav_pin": {
+					"type": "string"
+				},
+				"nav_pinned": {
+					"type": "string"
+				},
+				"nav_recent": {
+					"type": "string"
+				},
+				"nav_sections_aria": {
+					"type": "string"
+				},
+				"nav_unpin": {
+					"type": "string"
+				},
+				"nav_you": {
+					"type": "string"
+				},
+				"picker": {
+					"type": "object",
+					"properties": {
+						"description": {
+							"type": "string"
+						},
+						"empty": {
+							"type": "string"
+						},
+						"error": {
+							"type": "string"
+						},
+						"title": {
 							"type": "string"
 						}
 					},
@@ -104,6 +200,12 @@
 					"type": "string"
 				},
 				"save_changes": {
+					"type": "string"
+				},
+				"server_rail_all": {
+					"type": "string"
+				},
+				"server_rail_aria": {
 					"type": "string"
 				},
 				"settings_saved_description": {
@@ -121,7 +223,13 @@
 				"unauthorized_title": {
 					"type": "string"
 				},
+				"unsaved_bar": {
+					"type": "string"
+				},
 				"unsaved_description": {
+					"type": "string"
+				},
+				"unsaved_short": {
 					"type": "string"
 				},
 				"unsaved_title": {
@@ -135,6 +243,15 @@
 				},
 				"update_failed_why": {
 					"type": "string"
+				},
+				"user_preferences": {
+					"type": "string"
+				},
+				"user_settings_for": {
+					"type": "string"
+				},
+				"user_sign_out": {
+					"type": "string"
 				}
 			},
 			"additionalProperties": false
@@ -145,6 +262,30 @@
 				"all_actions": {
 					"type": "string"
 				},
+				"by_moderator": {
+					"type": "string"
+				},
+				"changes": {
+					"type": "object",
+					"properties": {
+						"close": {
+							"type": "string"
+						},
+						"none": {
+							"type": "string"
+						},
+						"show_all": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						},
+						"to": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"columns": {
 					"type": "object",
 					"properties": {
@@ -152,6 +293,9 @@
 							"type": "string"
 						},
 						"case": {
+							"type": "string"
+						},
+						"channel": {
 							"type": "string"
 						},
 						"command": {
@@ -169,19 +313,34 @@
 						"moderator": {
 							"type": "string"
 						},
+						"outcome": {
+							"type": "string"
+						},
 						"reason": {
 							"type": "string"
 						},
-						"status": {
+						"result": {
 							"type": "string"
 						},
-						"time": {
+						"type": {
 							"type": "string"
 						},
 						"user": {
 							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"command_types": {
+					"type": "object",
+					"properties": {
+						"message": {
+							"type": "string"
 						},
-						"when": {
+						"slash": {
+							"type": "string"
+						},
+						"user": {
 							"type": "string"
 						}
 					},
@@ -214,6 +373,30 @@
 				"no_warnings": {
 					"type": "string"
 				},
+				"outcomes": {
+					"type": "object",
+					"properties": {
+						"denied": {
+							"type": "string"
+						},
+						"failure": {
+							"type": "string"
+						},
+						"success": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"page_subtitle": {
+					"type": "string"
+				},
+				"page_title": {
+					"type": "string"
+				},
+				"permanent": {
+					"type": "string"
+				},
 				"refresh_activity": {
 					"type": "string"
 				},
@@ -224,6 +407,9 @@
 					"type": "string"
 				},
 				"refresh_moderation": {
+					"type": "string"
+				},
+				"result_succeeded": {
 					"type": "string"
 				},
 				"search_aria": {
@@ -241,9 +427,6 @@
 				"status_failed": {
 					"type": "string"
 				},
-				"status_label": {
-					"type": "string"
-				},
 				"status_success": {
 					"type": "string"
 				},
@@ -259,7 +442,10 @@
 				"tab_warnings": {
 					"type": "string"
 				},
-				"title": {
+				"tabs_aria": {
+					"type": "string"
+				},
+				"undo_action": {
 					"type": "string"
 				},
 				"unknown": {

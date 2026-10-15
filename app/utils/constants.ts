@@ -37,23 +37,6 @@ export const ActivityType = {
 	Custom: 4,
 } as const;
 
-export type {
-	DiscordMemberListApiFixture,
-	DiscordMemberListRoleFixture,
-	LoggingEventDetail,
-	ModerationAction,
-	Profile,
-	ShowcaseCommand,
-	SlashCommandApp,
-	SlashCommandAppName,
-} from "~/types/constants";
-export { Colors } from "~/types/constants";
-export type {
-	DiscordAppLauncherSheetSnap,
-	ResolveDiscordAppLauncherSheetSnapOptions,
-	StringSelectMenuPlacement,
-} from "~/types/discord";
-
 export const robotBlockingPageProps =
 	"nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1";
 
@@ -326,17 +309,13 @@ export const ModerationActions: Record<string, ModerationAction> = {
 
 const MODERATION_VARIANT_MAP: Record<string, string> = {
 	Ban: "error",
-	Kick: "warning",
+	Kick: "error",
 	Mute: "warning",
 	Softban: "error",
 	Timeout: "warning",
-	VoiceKick: "warning",
+	VoiceKick: "error",
 	VoiceMute: "warning",
-	Warning: "neutral",
-	Unban: "success",
-	Unmute: "success",
-	UnVoiceMute: "success",
-	Untimeout: "success",
+	Warning: "warning",
 };
 
 export function moderationActionVariant(typeName: string): string {

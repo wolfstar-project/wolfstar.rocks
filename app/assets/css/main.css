@@ -5,7 +5,18 @@
 @import "./utilities.css";
 @import "./view-transitions.css";
 
+/* nuxt-og-image resolves custom properties from :root and @property only,
+   and Tailwind registers this one in a layer the renderer does not read, so
+   every OG template warned that its borders were skipped. The value is
+   Tailwind's own initial one; a registered, non-inherited property set on the
+   root changes nothing below it. */
+:root {
+	--tw-border-style: solid;
+}
+
 @source "../../../content/**/*";
+/* The bot's repository (git submodule) is not part of this app. */
+@source not "../../../vendor";
 
 /*
  * Theme variants that also cover the "no theme attribute" state.
@@ -196,6 +207,39 @@
 		--spectrum-purple: oklch(60.3% 0.257 320.9);
 		--boost-pink: oklch(76.9% 0.229 328.9);
 
+		/* Neutral "ink" scale of the WolfStar design system, which the dashboard
+		   console paints its rail, sidebar, cards and page with (#18191C, #202225,
+		   #2B2D31, #313338, #383A40, #404249, #4F555C). */
+		--ink-900: oklch(21.4% 0.006 271.1);
+		--ink-800: oklch(25.1% 0.006 258.4);
+		--ink-700: oklch(29.7% 0.008 264.4);
+		--ink-600: oklch(32.1% 0.009 268.4);
+		--ink-500: oklch(34.9% 0.011 271.1);
+		--ink-400: oklch(38% 0.012 273.1);
+		--ink-300: oklch(44.7% 0.014 252.2);
+
+		/* The miniature windows of the theme picker in the settings dialog. Each
+		   one shows its own theme whatever the page is in, so they are fixed:
+		   the ink scale for dark, Discord's light greys (#E3E5E8, #F2F3F5,
+		   #C4C9CE) for light, near-black for midnight. */
+		--theme-preview-light-app: oklch(100% 0 0);
+		--theme-preview-light-rail: oklch(91.6% 0.004 264.5);
+		--theme-preview-light-side: oklch(96.4% 0.002 247.8);
+		--theme-preview-light-line: oklch(83.4% 0.008 236.6);
+		--theme-preview-midnight-app: oklch(0% 0 0);
+		--theme-preview-midnight-rail: oklch(10% 0 0);
+		--theme-preview-midnight-side: oklch(16% 0 0);
+		--theme-preview-midnight-line: oklch(32% 0 0);
+		--theme-preview-system-line: oklch(64.6% 0.006 247.9);
+
+		/* Form fields and the popovers they open (selects, menus): the design
+		   system's `surface-input`, `border-default`, `surface-raised` and
+		   `shadow-high`. Light values here, dark ones in the theme blocks below. */
+		--field-surface: oklch(94.5% 0.003 247.9);
+		--field-border: oklch(91% 0.006 275);
+		--popover-surface: var(--color-base-100);
+		--popover-shadow: 0 8px 16px oklch(0% 0 0 / 0.12);
+
 		/* WolfStar home redesign aliases (from _ds/tokens/colors.css + spacing.css) */
 		--home-border-subtle: oklch(from var(--color-base-content) l c h / 0.05);
 		--home-blurple-soft: oklch(from var(--color-primary) l c h / 0.12);
@@ -265,6 +309,11 @@
 	   attribute, the dark class, and the attribute-less system-preference state. */
 	:root {
 		@variant theme-dark {
+			--field-surface: var(--ink-500);
+			--field-border: var(--ink-400);
+			--popover-surface: var(--ink-600);
+			--popover-shadow: 0 8px 16px oklch(0% 0 0 / 0.24);
+
 			--ui-text-dimmed: var(--color-neutral-500);
 			--ui-text-muted: var(--color-neutral-400);
 			--ui-text-toned: var(--color-neutral-300);
@@ -293,6 +342,11 @@
 
 	[data-theme="midnight"],
 	.midnight {
+		--field-surface: var(--ink-500);
+		--field-border: var(--ink-400);
+		--popover-surface: var(--ink-600);
+		--popover-shadow: 0 8px 16px oklch(0% 0 0 / 0.24);
+
 		--ui-text-dimmed: var(--color-neutral-500);
 		--ui-text-muted: var(--color-neutral-400);
 		--ui-text-toned: var(--color-neutral-300);

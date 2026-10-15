@@ -30,6 +30,15 @@ describe("classifyNavigation", () => {
 		expect(result).toEqual(["nav-forward", "route-dashboard"]);
 	});
 
+	it("tags nav-forward + route-dashboard for the /app dashboard", () => {
+		const result = classifyNavigation({
+			toPath: "/app",
+			fromPath: "/profile",
+			isPopstate: false,
+		});
+		expect(result).toEqual(["nav-forward", "route-dashboard"]);
+	});
+
 	it("returns empty array for oauth routes", () => {
 		const result = classifyNavigation({
 			toPath: "/oauth/login",

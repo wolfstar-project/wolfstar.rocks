@@ -59,8 +59,8 @@
 	"header": {
 		"add_app": "Añadir app",
 		"brand": "WolfStar",
+		"dashboard": "",
 		"home": "Inicio de {name}",
-		"profile": "Perfil",
 		"settings": "Settings",
 		"sign_in": "Iniciar sesión",
 		"sign_in_discord": "Iniciar sesión con Discord",
@@ -87,7 +87,9 @@
 		"moderation_logs": "Registros de moderación",
 		"moderation_logs_description": "Historial de moderación con búsqueda para cada acción",
 		"moderation_tools": "Herramientas de moderación",
-		"moderation_tools_description": "Herramientas para ayudarte a moderar tu servidor"
+		"moderation_tools_description": "Herramientas para ayudarte a moderar tu servidor",
+		"staryl_description": "",
+		"wolfstar_description": ""
 	},
 	"nuxtSiteConfig": {
 		"description": "",
@@ -102,12 +104,7 @@
 		"title": "Estado de las traducciones"
 	},
 	"user_menu": {
-		"account_menu": "Menú de cuenta de usuario",
-		"avatar_alt": "Avatar de {name}",
-		"avatar_fallback": "Avatar de usuario",
-		"profile": "Perfil",
 		"report_bug": "Informar de un error",
-		"sign_out": "Cerrar sesión",
-		"user_menu_for": "Menú de usuario de {name}"
+		"sign_out": "Cerrar sesión"
 	}
 }

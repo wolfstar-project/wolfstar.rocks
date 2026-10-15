@@ -462,15 +462,17 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		intro: "Select a module to configure the settings of WolfStar HQ.",
 		selectPlaceholder: "Select a module",
 		selectOptions: [
-			{ value: "general", label: "General", emoji: "twemoji:gear" },
+			// The bot's module emojis where the brand files have them, its
+			// Unicode fallbacks otherwise.
+			{ value: "general", label: "General", emoji: "/emojis/module-general.svg" },
 			{ value: "modules", label: "Modules", emoji: "twemoji:puzzle-piece" },
 			{ value: "automod", label: "Automod", emoji: "twemoji:shield" },
-			{ value: "commands", label: "Commands", emoji: "twemoji:keyboard" },
-			{ value: "honeypot", label: "Honeypot", emoji: "twemoji:honey-pot" },
+			{ value: "commands", label: "Commands", emoji: "/emojis/module-commands.svg" },
+			{ value: "honeypot", label: "Honeypot", emoji: "/emojis/module-honeypot.svg" },
 			{ value: "logs", label: "Logs", emoji: "twemoji:scroll" },
 			{ value: "moderation", label: "Moderation", emoji: "twemoji:hammer" },
-			{ value: "reports", label: "Reports", emoji: "twemoji:triangular-flag" },
-			{ value: "roles", label: "Roles", emoji: "twemoji:performing-arts" },
+			{ value: "reports", label: "Reports", emoji: "/emojis/module-reports.svg" },
+			{ value: "roles", label: "Roles", emoji: "/emojis/module-roles.svg" },
 		],
 		rows: [
 			{ code: "en-US", label: "Language", value: "English (United States)" },

@@ -93,7 +93,7 @@
 												:color="Colors.Green"
 											>
 												<img
-													:src="GREEN_TICK_EMOJI"
+													:src="EMOJIS.greenTick"
 													alt=":greenTick:"
 													class="showcase-custom-emoji"
 													draggable="false"
@@ -135,7 +135,8 @@
 															</div>
 														</DiscordV2TextDisplay>
 														<DiscordButton
-															icon="twemoji:counterclockwise-arrows-button"
+															:emoji="EMOJIS.reload"
+															emoji-name="reload"
 														/>
 													</div>
 													<DiscordActionRow>
@@ -182,15 +183,25 @@
 																>
 															</div>
 														</DiscordV2TextDisplay>
-														<DiscordButton icon="twemoji:pencil" />
+														<DiscordButton
+															:emoji="EMOJIS.edit"
+															emoji-name="edit"
+														/>
 													</div>
 													<DiscordV2Separator />
 													<div class="showcase-settings-section">
 														<DiscordV2TextDisplay>
 															<strong
-																><ShowcaseTwemojiText
-																	:line="`⚠️ ${activeDisplayCommand.resetTitle}`"
-															/></strong>
+																><img
+																	:src="EMOJIS.warning"
+																	alt=":warning:"
+																	class="showcase-custom-emoji"
+																	draggable="false"
+																/>{{ " "
+																}}{{
+																	activeDisplayCommand.resetTitle
+																}}</strong
+															>
 															<div>
 																{{
 																	activeDisplayCommand.resetDescription
@@ -205,7 +216,7 @@
 													<DiscordV2TextDisplay>
 														<small class="showcase-settings-expires"
 															><img
-																:src="HOURGLASS_EMOJI"
+																:src="EMOJIS.hourglass"
 																alt=":hourglass:"
 																class="showcase-custom-emoji"
 																draggable="false"
@@ -407,9 +418,18 @@ const CHANNEL_NAME = "mod-commands";
 
 const commands = useShowcaseCommands();
 
-/** WolfStar's own emojis, from Discord's CDN as the client loads them. */
-const GREEN_TICK_EMOJI = "https://cdn.discordapp.com/emojis/1043562833905987685.webp?size=44";
-const HOURGLASS_EMOJI = "https://cdn.discordapp.com/emojis/1262391693823578245.webp?size=44";
+/**
+ * WolfStar's own emojis, exported from the brand's icon file in Figma
+ * ("Icons (Brand WolfStar)", Emoji Collection) and Discord's icon kit; the
+ * hourglass is not in either, so it comes from the bot's emoji on Discord's CDN.
+ */
+const EMOJIS = {
+	edit: "/emojis/edit.svg",
+	greenTick: "/emojis/green-tick.svg",
+	hourglass: "https://cdn.discordapp.com/emojis/1262391693823578245.webp?size=44",
+	reload: "/emojis/reload.svg",
+	warning: "/emojis/warning.svg",
+} as const;
 
 /**
  * "Created case 3 | `baddie`." around the target, which is set as inline code:

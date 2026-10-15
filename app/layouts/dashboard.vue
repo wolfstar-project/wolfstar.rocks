@@ -9,7 +9,7 @@
 		/>
 
 		<aside v-if="guildId" class="console-sidebar" :aria-label="ts('dashboard.nav_aria')">
-			<DashboardSidebar />
+			<DashboardSidebar floating />
 		</aside>
 
 		<div class="console-main">
@@ -194,7 +194,9 @@ watch(
 	{ immediate: true },
 );
 
-const { data, error } = useAsyncData(
+// Kept in the browser, so a reload opens on the server as it was last seen
+// while it is fetched again.
+const { data, error } = usePersistedAsyncData(
 	() => `dashboard:guild:${guildId.value ?? "none"}`,
 	() => {
 		if (!guildId.value) {
@@ -498,8 +500,27 @@ watch(guildId, (newGuildId, oldGuildId) => {
 }
 
 .console {
-	@apply flex h-dvh min-h-0 w-full overflow-hidden;
+	@apply relative flex h-dvh min-h-0 w-full overflow-hidden;
 	background-color: var(--console-main);
+
+	/* The server rail and the sidebar read these; the account card floating
+	   over both is as wide as their sum. */
+	--console-rail-width: 3.75rem;
+	--console-sidebar-width: 12.25rem;
+}
+
+@variant md {
+	.console {
+		--console-rail-width: 4rem;
+		--console-sidebar-width: 13.25rem;
+	}
+}
+
+@variant lg {
+	.console {
+		--console-rail-width: 4.25rem;
+		--console-sidebar-width: 14.75rem;
+	}
 }
 
 /* The drawer is portaled out of `.console`, so it carries the tokens itself. */
@@ -523,7 +544,8 @@ watch(guildId, (newGuildId, oldGuildId) => {
 }
 
 .console-sidebar {
-	@apply hidden h-full w-49 shrink-0 sm:block md:w-53 lg:w-59;
+	@apply hidden h-full shrink-0 sm:block;
+	width: var(--console-sidebar-width);
 	background-color: var(--console-surface);
 	border-right: 1px solid var(--home-border-subtle);
 }

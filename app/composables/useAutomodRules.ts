@@ -54,12 +54,11 @@ export function useAutomodRules(guildId: MaybeRefOrGetter<string | null | undefi
 	const id = computed(() => toValue(guildId) ?? null);
 	const base = computed(() => `/api/guilds/${id.value}/automod/rules`);
 
-	const asyncData = useLazyAsyncData(
+	const asyncData = usePersistedAsyncData(
 		() => `guild:${id.value ?? "none"}:automod:rules`,
 		() => (id.value ? $fetch<AutoModerationRule[]>(base.value) : Promise.resolve([])),
 		{
 			default: (): AutoModerationRule[] => [],
-			server: false,
 			watch: [id],
 		},
 	);

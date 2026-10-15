@@ -17,7 +17,7 @@ export function useReports({
 	const resolvedStatus = computed(() => (status === undefined ? undefined : toValue(status)));
 	const resolvedLimit = computed(() => (limit === undefined ? undefined : toValue(limit)));
 
-	const asyncData = useLazyAsyncData(
+	const asyncData = usePersistedAsyncData(
 		() =>
 			`guild:${toValue(guildId)}:reports:${resolvedStatus.value ?? "all"}:${resolvedLimit.value ?? "default"}`,
 		() => {
@@ -28,10 +28,7 @@ export function useReports({
 			if (resolvedLimit.value !== undefined) query.limit = resolvedLimit.value;
 			return $fetch<ReportListResponse>(`/api/guilds/${id}/reports`, { query });
 		},
-		{
-			server: false,
-			watch: [resolvedStatus, resolvedLimit],
-		},
+		{ watch: [resolvedStatus, resolvedLimit] },
 	);
 
 	const entries = computed(() => asyncData.data.value?.entries ?? []);

@@ -80,7 +80,11 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 @reference "@/assets/css/main.css";
 
 .guild-rail {
-	@apply w-15 shrink-0 flex-col items-center gap-2 overflow-x-hidden overflow-y-auto py-3 md:w-16 lg:w-17;
+	@apply shrink-0 flex-col items-center gap-2 overflow-x-hidden overflow-y-auto pt-3;
+	/* As wide as the layout says, and open at the foot for the account card
+	   floating over it (the drawer's rail is as tall as the screen anyway). */
+	width: var(--console-rail-width, 3.75rem);
+	padding-bottom: 4.75rem;
 	background-color: var(--console-rail);
 }
 

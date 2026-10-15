@@ -3,7 +3,8 @@
 		<div class="mb-3.5 flex items-center justify-between gap-3">
 			<div class="flex min-w-0 items-center gap-2.5">
 				<h3 class="truncate text-[1.0625rem] font-semibold">{{ title }}</h3>
-				<span class="activity-count">{{ total }}</span>
+				<USkeleton v-if="isLoading" class="h-5.5 w-7 rounded-full" />
+				<span v-else class="activity-count">{{ total }}</span>
 			</div>
 			<UButton
 				color="neutral"
@@ -16,7 +17,7 @@
 			/>
 		</div>
 
-		<LoadingSpinner v-if="status === 'pending' && itemCount === 0" />
+		<DashboardSkeleton v-if="isLoading" kind="table" bare />
 		<!-- Quiet is worth a glance, not an alarm: nothing changed, and the line
 		     under it says when something last did. -->
 		<div v-else-if="itemCount === 0" class="activity-quiet" role="status">
@@ -56,6 +57,9 @@ const { title, total, status, itemCount, emptyTitle, emptyDescription, emptyNote
 const emit = defineEmits<{
 	refresh: [];
 }>();
+
+// Only a first load is drawn as a skeleton: a refresh keeps the rows on screen.
+const isLoading = computed(() => status === "pending" && itemCount === 0);
 </script>
 
 <style scoped>

@@ -24,7 +24,7 @@
 						{{ ts("profile.settings_title") }}
 					</p>
 					<button
-						v-for="item in sections"
+						v-for="item in pageSections"
 						:key="item.id"
 						type="button"
 						class="settings-nav-item"
@@ -40,8 +40,29 @@
 							aria-hidden="true"
 						/>
 					</button>
+					<div class="mx-2 my-2.5 h-px bg-(--home-border-subtle)"></div>
+					<!-- Reporting a bug and leaving sit together, apart from the pages. -->
+					<button
+						v-if="reportSection"
+						type="button"
+						class="settings-nav-item"
+						:class="{ 'settings-nav-item--current': section === 'report' }"
+						:aria-current="section === 'report' ? 'page' : undefined"
+						@click="openSection('report')"
+					>
+						<UIcon
+							:name="reportSection.icon"
+							class="size-4.25 shrink-0"
+							aria-hidden="true"
+						/>
+						<span class="grow">{{ reportSection.label }}</span>
+						<UIcon
+							name="ic:round-chevron-right"
+							class="size-4.5 text-muted md:hidden"
+							aria-hidden="true"
+						/>
+					</button>
 					<template v-if="account">
-						<div class="mx-2 my-2.5 h-px bg-(--home-border-subtle)"></div>
 						<button type="button" class="settings-nav-item text-error!" @click="logOut">
 							<UIcon
 								name="ic:round-logout"
@@ -300,6 +321,10 @@ const sections = computed(() => {
 				["appearance", "accessibility", "language", "report"].includes(item.id),
 			);
 });
+
+// The pages, in the list; the bug report has a place of its own under them.
+const pageSections = computed(() => sections.value.filter((item) => item.id !== "report"));
+const reportSection = computed(() => sections.value.find((item) => item.id === "report"));
 
 const section = ref<SettingsSection>("appearance");
 // On a phone the dialog is one column: the list first, then the page picked.

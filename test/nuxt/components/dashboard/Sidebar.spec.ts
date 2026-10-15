@@ -1,6 +1,7 @@
+import type { DiscordProfileUser } from "#shared/types/discord";
 import type { DOMWrapper } from "@vue/test-utils";
 import { AppPreferencesDialog, DashboardSidebar } from "#components";
-import { mountSuspended } from "@nuxt/test-utils/runtime";
+import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, h, nextTick } from "vue";
 import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
@@ -8,6 +9,26 @@ import { createMockGuildData } from "~~/test/mocks/guildData";
 import { mockAuth } from "../../utils/auth";
 
 mockAuth({ name: "Wolf" });
+
+// The Discord account behind the session, wearing a nameplate and a frame.
+const discordUser = ref<DiscordProfileUser | null>({
+	avatar: null,
+	avatar_decoration_data: { asset: "a_frame", sku_id: "2" },
+	collectibles: {
+		nameplate: {
+			asset: "nameplates/nameplates/twilight/",
+			label: "",
+			palette: "violet",
+			sku_id: "1",
+		},
+	},
+	discriminator: "0",
+	global_name: "Wolf",
+	id: "987654321098765432",
+	name: "Wolf",
+	username: "wolf",
+} as DiscordProfileUser);
+mockNuxtImport("useUser", () => () => ({ user: discordUser }));
 
 const GUILD_ID = "123456789012345678";
 
@@ -162,5 +183,17 @@ describe("DashboardSidebar", () => {
 		});
 
 		usePreferencesDialog().isOpen.value = false;
+	});
+
+	it("wears the account's nameplate and avatar frame from Discord's CDN", async () => {
+		const wrapper = await mountSidebar();
+
+		const plate = wrapper.get(".dashboard-nameplate");
+		expect(plate.attributes("src") ?? plate.attributes("poster")).toContain(
+			"/assets/collectibles/nameplates/nameplates/twilight/",
+		);
+		expect(wrapper.get(".dashboard-avatar-decoration").attributes("src")).toContain(
+			"/avatar-decoration-presets/a_frame.png",
+		);
 	});
 });

@@ -40,6 +40,8 @@ useHead({
 		lang: () => locale.value,
 		dir: () => localeMap.value[locale.value] ?? "ltr",
 	},
+	// Picks the header's account skeleton before the first paint (`auth-hint.ts`).
+	script: [{ innerHTML: AUTH_HINT_SCRIPT, key: "auth-hint", tagPosition: "head" }],
 });
 
 // Watch for route changes to update appName

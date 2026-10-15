@@ -57,6 +57,7 @@
 		"x_aria": "Follow WolfStar on X - opens in new tab"
 	},
 	"header": {
+		"account_loading": "Loading your account",
 		"add_app": "Add App",
 		"brand": "WolfStar",
 		"dashboard": "Dashboard",

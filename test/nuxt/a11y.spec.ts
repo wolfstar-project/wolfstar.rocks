@@ -2,6 +2,7 @@ import {
 	AppFooter,
 	AppHeader,
 	AppHeaderAuth,
+	AppHeaderAuthSkeleton,
 	AppLogoMark,
 	AppPreferences,
 
@@ -797,6 +798,14 @@ describe("component accessibility audits", () => {
 			const wrapper = await mountSuspended(AppHeaderAuth);
 			const settingsButtons = wrapper.findAll('button[aria-label="Settings"]');
 			expect(settingsButtons.length).toBeGreaterThan(0);
+		});
+	});
+
+	describe("AppHeaderAuthSkeleton", () => {
+		it.each([false, true])("has no axe-core violations (mobile: %s)", async (mobile) => {
+			const wrapper = await mountSuspended(AppHeaderAuthSkeleton, { props: { mobile } });
+			const results = await runAxe(wrapper);
+			expect(results.violations).toEqual([]);
 		});
 	});
 

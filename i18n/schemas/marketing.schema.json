@@ -499,7 +499,7 @@
 								"action_warning": {
 									"type": "string"
 								},
-								"button_stop": {
+								"button_reset": {
 									"type": "string"
 								},
 								"channel_create_action": {
@@ -547,9 +547,6 @@
 								"cmd_case_delete_tooltip": {
 									"type": "string"
 								},
-								"cmd_case_description": {
-									"type": "string"
-								},
 								"cmd_case_edit_description": {
 									"type": "string"
 								},
@@ -562,43 +559,10 @@
 								"cmd_case_list_tooltip": {
 									"type": "string"
 								},
-								"cmd_case_tooltip": {
-									"type": "string"
-								},
 								"cmd_case_view_description": {
 									"type": "string"
 								},
 								"cmd_case_view_tooltip": {
-									"type": "string"
-								},
-								"cmd_conf_menu_description": {
-									"type": "string"
-								},
-								"cmd_conf_menu_tooltip": {
-									"type": "string"
-								},
-								"cmd_conf_remove_description": {
-									"type": "string"
-								},
-								"cmd_conf_remove_tooltip": {
-									"type": "string"
-								},
-								"cmd_conf_reset_description": {
-									"type": "string"
-								},
-								"cmd_conf_reset_tooltip": {
-									"type": "string"
-								},
-								"cmd_conf_set_description": {
-									"type": "string"
-								},
-								"cmd_conf_set_tooltip": {
-									"type": "string"
-								},
-								"cmd_conf_show_description": {
-									"type": "string"
-								},
-								"cmd_conf_show_tooltip": {
 									"type": "string"
 								},
 								"cmd_kick_description": {
@@ -611,6 +575,30 @@
 									"type": "string"
 								},
 								"cmd_mute_tooltip": {
+									"type": "string"
+								},
+								"cmd_settings_export_description": {
+									"type": "string"
+								},
+								"cmd_settings_export_tooltip": {
+									"type": "string"
+								},
+								"cmd_settings_menu_description": {
+									"type": "string"
+								},
+								"cmd_settings_menu_tooltip": {
+									"type": "string"
+								},
+								"cmd_slowmode_description": {
+									"type": "string"
+								},
+								"cmd_slowmode_tooltip": {
+									"type": "string"
+								},
+								"cmd_timeout_description": {
+									"type": "string"
+								},
+								"cmd_timeout_tooltip": {
 									"type": "string"
 								},
 								"cmd_warn_description": {
@@ -691,10 +679,28 @@
 								"member_leave_tooltip": {
 									"type": "string"
 								},
-								"menu_currently_at": {
+								"menu_expires": {
 									"type": "string"
 								},
-								"menu_navigate": {
+								"menu_heading": {
+									"type": "string"
+								},
+								"menu_intro": {
+									"type": "string"
+								},
+								"menu_language": {
+									"type": "string"
+								},
+								"menu_reset_description": {
+									"type": "string"
+								},
+								"menu_reset_title": {
+									"type": "string"
+								},
+								"menu_time_zone": {
+									"type": "string"
+								},
+								"menu_updates_channel": {
 									"type": "string"
 								},
 								"message_delete_action": {
@@ -715,10 +721,19 @@
 								"message_edit_tooltip": {
 									"type": "string"
 								},
-								"reply_case_archived": {
+								"reason_excessive_noise": {
 									"type": "string"
 								},
-								"reply_case_created": {
+								"reason_flooding": {
+									"type": "string"
+								},
+								"reason_ignoring_warnings": {
+									"type": "string"
+								},
+								"reason_repeated_infractions": {
+									"type": "string"
+								},
+								"reply_case_archived": {
 									"type": "string"
 								},
 								"reply_case_deleted": {
@@ -727,16 +742,19 @@
 								"reply_case_edited": {
 									"type": "string"
 								},
-								"reply_key_reset": {
+								"reply_moderation": {
 									"type": "string"
 								},
-								"reply_key_updated": {
-									"type": "string"
-								},
-								"reply_key_value": {
+								"reply_moderation_reason": {
 									"type": "string"
 								},
 								"reply_no_cases": {
+									"type": "string"
+								},
+								"reply_settings_exported": {
+									"type": "string"
+								},
+								"reply_slowmode_set": {
 									"type": "string"
 								},
 								"role_create_action": {
@@ -793,7 +811,13 @@
 								"text_warning": {
 									"type": "string"
 								},
+								"value_in_fifteen_minutes": {
+									"type": "string"
+								},
 								"value_not_set": {
+									"type": "string"
+								},
+								"value_ten_seconds": {
 									"type": "string"
 								}
 							},

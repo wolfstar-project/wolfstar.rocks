@@ -63,15 +63,7 @@
 			</div>
 		</template>
 		<template #placeholder>
-			<div class="flex items-center gap-2" :class="mobile ? 'justify-center' : undefined">
-				<template v-if="mobile">
-					<USkeleton class="h-10 w-36 rounded-lg" />
-				</template>
-				<template v-else>
-					<USkeleton class="size-6 rounded-full" />
-					<USkeleton class="hidden h-4 w-16 sm:block" />
-				</template>
-			</div>
+			<AppHeaderAuthSkeleton :mobile />
 		</template>
 	</BetterAuthState>
 </template>

@@ -105,15 +105,7 @@
 				<ClientOnly>
 					<LazyAppHeaderAuth />
 					<template #fallback>
-						<UButton
-							:label="ts('header.sign_in')"
-							size="md"
-							color="primary"
-							variant="soft"
-							class="invisible rounded-lg"
-							icon="ic:round-discord"
-							tabindex="-1"
-						/>
+						<AppHeaderAuthSkeleton />
 					</template>
 				</ClientOnly>
 			</div>
@@ -145,17 +137,7 @@
 					<ClientOnly>
 						<LazyAppHeaderAuth mobile />
 						<template #fallback>
-							<div class="flex justify-center">
-								<UButton
-									:label="ts('header.sign_in')"
-									size="md"
-									color="primary"
-									variant="soft"
-									class="invisible rounded-lg"
-									icon="ic:round-discord"
-									tabindex="-1"
-								/>
-							</div>
+							<AppHeaderAuthSkeleton mobile />
 						</template>
 					</ClientOnly>
 				</div>

@@ -175,6 +175,9 @@
 		"header": {
 			"type": "object",
 			"properties": {
+				"account_loading": {
+					"type": "string"
+				},
 				"add_app": {
 					"type": "string"
 				},

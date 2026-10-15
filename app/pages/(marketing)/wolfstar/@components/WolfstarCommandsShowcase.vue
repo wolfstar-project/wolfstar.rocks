@@ -52,9 +52,11 @@
 												subcommand: activeDisplayCommand.subcommand,
 											}"
 										>
+											<!-- /case view: the moderator as author, the case in ❯ lines. -->
 											<DiscordEmbed
 												v-if="activeDisplayCommand.responseType === 'embed'"
 												:color="activeDisplayCommand.embedColor"
+												:author="activeDisplayCommand.embedAuthor"
 												:footer="{
 													icon: '/avatars/wolfstar.png',
 													text: activeDisplayCommand.embedFooter,
@@ -82,6 +84,32 @@
 													><br />
 												</span>
 											</DiscordEmbed>
+											<!-- A moderation action: the green embed, the target as inline code. -->
+											<DiscordEmbed
+												v-else-if="
+													activeDisplayCommand.responseType ===
+													'moderation'
+												"
+												:color="Colors.Green"
+											>
+												<img
+													:src="GREEN_TICK_EMOJI"
+													alt=":greenTick:"
+													class="showcase-custom-emoji"
+													draggable="false"
+												/>{{ " " }}{{ moderationReply.before
+												}}<code class="showcase-inline-code">{{
+													activeDisplayCommand.target
+												}}</code
+												>{{ moderationReply.after }}<br />{{
+													ts(
+														"marketing.wolfstar.fixtures.reply_moderation_reason",
+														{
+															reason: activeDisplayCommand.reason,
+														},
+													)
+												}}
+											</DiscordEmbed>
 											<span
 												v-else-if="
 													activeDisplayCommand.responseType === 'text'
@@ -91,54 +119,104 @@
 												<ShowcaseTwemojiText
 													:line="activeDisplayCommand.content"
 												/>
-												<DiscordMention
-													v-if="activeDisplayCommand.mentionUser"
-													kind="mention"
-													:avatar="activeDisplayCommand.mentionAvatar"
-													>{{
-														activeDisplayCommand.mentionUser
-													}}</DiscordMention
-												>
 											</span>
-											<DiscordV2Container
-												v-else
-												:accent-color="activeDisplayCommand.accentColor"
-											>
-												<DiscordV2TextDisplay>
-													<div
-														v-for="(
-															line, lineIdx
-														) in activeDisplayCommand.lines"
-														:key="lineIdx"
-													>
-														<ShowcaseTwemojiText :line="line" />
+											<!-- /settings server menu: two Components V2 containers. -->
+											<div v-else class="showcase-settings-menu">
+												<DiscordV2Container
+													:accent-color="activeDisplayCommand.accentColor"
+												>
+													<div class="showcase-settings-section">
+														<DiscordV2TextDisplay>
+															<div class="showcase-settings-heading">
+																{{ activeDisplayCommand.heading }}
+															</div>
+															<div>
+																{{ activeDisplayCommand.intro }}
+															</div>
+														</DiscordV2TextDisplay>
+														<DiscordButton
+															icon="twemoji:counterclockwise-arrows-button"
+														/>
 													</div>
-												</DiscordV2TextDisplay>
-												<DiscordV2Separator />
-												<DiscordActionRow>
-													<DiscordStringSelectMenu
-														:options="
-															activeDisplayCommand.selectOptions
-														"
-														:placeholder="
-															activeDisplayCommand.selectPlaceholder
-														"
-														:aria-label="
-															ts(
-																'marketing.wolfstar.commands_showcase.select_aria',
-															)
-														"
-													/>
-												</DiscordActionRow>
-												<DiscordV2Separator />
-												<DiscordActionRow>
-													<DiscordButton
-														variant="danger"
-														icon="ph:stop-fill"
-														:label="activeDisplayCommand.buttonLabel"
-													/>
-												</DiscordActionRow>
-											</DiscordV2Container>
+													<DiscordActionRow>
+														<DiscordStringSelectMenu
+															:options="
+																activeDisplayCommand.selectOptions
+															"
+															:placeholder="
+																activeDisplayCommand.selectPlaceholder
+															"
+															:aria-label="
+																ts(
+																	'marketing.wolfstar.commands_showcase.select_aria',
+																)
+															"
+														/>
+													</DiscordActionRow>
+												</DiscordV2Container>
+												<DiscordV2Container
+													:accent-color="activeDisplayCommand.accentColor"
+												>
+													<div
+														v-for="row in activeDisplayCommand.rows"
+														:key="row.label"
+														class="showcase-settings-section"
+													>
+														<DiscordV2TextDisplay>
+															<strong>{{ row.label }}</strong>
+															<div>
+																<template v-if="row.value">{{
+																	row.value
+																}}</template
+																><template
+																	v-if="row.value && row.code"
+																>
+																	(</template
+																><code
+																	v-if="row.code"
+																	class="showcase-inline-code"
+																	>{{ row.code }}</code
+																><template
+																	v-if="row.value && row.code"
+																	>)</template
+																>
+															</div>
+														</DiscordV2TextDisplay>
+														<DiscordButton icon="twemoji:pencil" />
+													</div>
+													<DiscordV2Separator />
+													<div class="showcase-settings-section">
+														<DiscordV2TextDisplay>
+															<strong
+																><ShowcaseTwemojiText
+																	:line="`⚠️ ${activeDisplayCommand.resetTitle}`"
+															/></strong>
+															<div>
+																{{
+																	activeDisplayCommand.resetDescription
+																}}
+															</div>
+														</DiscordV2TextDisplay>
+														<DiscordButton
+															variant="danger"
+															:label="activeDisplayCommand.resetLabel"
+														/>
+													</div>
+													<DiscordV2TextDisplay>
+														<small class="showcase-settings-expires"
+															><img
+																:src="HOURGLASS_EMOJI"
+																alt=":hourglass:"
+																class="showcase-custom-emoji"
+																draggable="false"
+															/>{{ " "
+															}}{{
+																activeDisplayCommand.expires
+															}}</small
+														>
+													</DiscordV2TextDisplay>
+												</DiscordV2Container>
+											</div>
 										</DiscordMessage>
 									</div>
 								</template>
@@ -320,6 +398,7 @@ import type {
 	DiscordAppLauncherSheetSnap,
 	DiscordChatMessage,
 } from "~/types/discord";
+import { Colors } from "~/types/constants";
 import ShowcaseTwemojiText from "./WolfstarShowcaseTwemojiText.vue";
 
 const { ts } = useI18n();
@@ -327,6 +406,25 @@ const { ts } = useI18n();
 const CHANNEL_NAME = "mod-commands";
 
 const commands = useShowcaseCommands();
+
+/** WolfStar's own emojis, from Discord's CDN as the client loads them. */
+const GREEN_TICK_EMOJI = "https://cdn.discordapp.com/emojis/1043562833905987685.webp?size=44";
+const HOURGLASS_EMOJI = "https://cdn.discordapp.com/emojis/1262391693823578245.webp?size=44";
+
+/**
+ * "Created case 3 | `baddie`." around the target, which is set as inline code:
+ * the sentence is translated whole, then cut where the name goes.
+ */
+const moderationReply = computed(() => {
+	const command = activeDisplayCommand.value;
+	const marker = "\u0000";
+	const sentence = ts("marketing.wolfstar.fixtures.reply_moderation", {
+		id: command.responseType === "moderation" ? command.caseId : 0,
+		user: marker,
+	});
+	const [before = "", after = ""] = sentence.split(marker);
+	return { after, before };
+});
 
 /** Shared channel topic for header chrome and welcome start copy. */
 const channelTopic = computed(() => ts("marketing.wolfstar.commands_showcase.channel_topic"));
@@ -1306,5 +1404,35 @@ onMounted(() => {
 	.showcase-discord-shell :deep(.showcase-discord-channel-info) {
 		display: none;
 	}
+}
+
+/* Custom emojis sit on the text line at its height, as in Discord. */
+.showcase-custom-emoji {
+	@apply inline-block size-[1.375em] object-contain align-[-0.3em];
+}
+
+/* Discord's inline code: a darker chip with a hairline border. */
+.showcase-inline-code {
+	@apply rounded px-1 py-0.5 font-mono text-[0.85em];
+	background-color: var(--showcase-discord-sidebar);
+	border: 1px solid var(--showcase-discord-server);
+}
+
+.showcase-settings-menu {
+	@apply flex max-w-130 flex-col gap-2;
+}
+
+/* A Components V2 section: text on the left, its button as the accessory. */
+.showcase-settings-section {
+	@apply flex items-center justify-between gap-3;
+}
+
+.showcase-settings-heading {
+	@apply text-xl leading-tight font-bold;
+}
+
+.showcase-settings-expires {
+	@apply text-xs;
+	color: var(--showcase-discord-muted-text);
 }
 </style>

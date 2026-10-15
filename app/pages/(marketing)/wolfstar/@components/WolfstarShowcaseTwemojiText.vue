@@ -25,6 +25,7 @@ const SHOWCASE_TWEMOJI_MAP: Record<string, string> = {
 	"✅": "twemoji:check-mark",
 	"📁": "twemoji:file-folder",
 	"⚙️": "twemoji:gear",
+	"⚠️": "twemoji:warning",
 };
 
 interface TextPart {
@@ -38,7 +39,7 @@ interface IconPart {
 type LinePart = TextPart | IconPart;
 
 const parts = computed((): LinePart[] => {
-	const emojiPattern = /(✅|📁|⚙️)/g;
+	const emojiPattern = /(✅|📁|⚙️|⚠️)/g;
 	const segments = line.split(emojiPattern);
 	const result: LinePart[] = [];
 

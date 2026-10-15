@@ -615,7 +615,7 @@ describe("component accessibility audits", () => {
 	});
 
 	describe("DashboardSkeleton", () => {
-		it.each(["overview", "table", "form"] as const)(
+		it.each(["overview", "modules", "table", "form"] as const)(
 			"should have no accessibility violations as a %s",
 			async (kind) => {
 				const component = await mountSuspended(DashboardSkeleton, { props: { kind } });

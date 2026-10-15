@@ -98,14 +98,16 @@ export function findDashboardNavItem(slug: string): DashboardNavItem | undefined
 }
 
 /** The shape a section's loading skeleton takes. */
-export type DashboardSkeletonKind = "overview" | "table" | "form";
+export type DashboardSkeletonKind = "overview" | "modules" | "table" | "form";
 
 /**
- * Which skeleton stands in for a section while it loads: the overview its own,
- * the logs and the rule list a table, every settings page a form.
+ * Which skeleton stands in for a section while it loads: the overview and the
+ * modules grid their own, the logs and the rule list a table, every other
+ * settings page a form.
  */
 export function dashboardSkeletonKind(slug: string): DashboardSkeletonKind {
 	if (slug === "") return "overview";
+	if (slug === "modules") return "modules";
 	if (slug === "logs" || slug === "automod") return "table";
 	return "form";
 }

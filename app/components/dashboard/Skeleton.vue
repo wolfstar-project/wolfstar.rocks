@@ -73,6 +73,37 @@
 			</div>
 		</div>
 
+		<!-- Modules: the heading with its count and buttons, then a card per
+		     module with its tile and switch, its name and description, and a
+		     button at the foot. -->
+		<div v-else-if="kind === 'modules'" class="flex flex-col gap-5" aria-hidden="true">
+			<div class="flex flex-wrap items-start gap-4">
+				<div class="flex min-w-0 grow flex-col gap-2.5">
+					<USkeleton class="h-5.5 w-55 shrink-0 rounded-[6px]" />
+					<USkeleton class="h-3.25 w-[min(420px,90%)] shrink-0 rounded-[5px]" />
+				</div>
+				<div class="flex items-center gap-2">
+					<USkeleton class="h-7 w-28 shrink-0 rounded-full" />
+					<USkeleton class="h-8 w-22 shrink-0 rounded-[6px]" />
+					<USkeleton class="h-8 w-22 shrink-0 rounded-[6px]" />
+				</div>
+			</div>
+			<div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+				<div v-for="card in MODULE_CARDS" :key="card" class="console-card flex flex-col">
+					<div class="flex items-start justify-between gap-3">
+						<USkeleton class="size-11 shrink-0 rounded-lg" />
+						<USkeleton class="h-5.5 w-10 shrink-0 rounded-full" />
+					</div>
+					<USkeleton class="mt-3 h-4 w-[45%] shrink-0 rounded-[6px]" />
+					<USkeleton class="mt-2 h-3 w-[90%] shrink-0 rounded-[5px]" />
+					<USkeleton class="mt-1.5 h-3 w-[65%] shrink-0 rounded-[5px]" />
+					<div class="mt-4 flex justify-end">
+						<USkeleton class="h-8 w-24 shrink-0 rounded-[6px]" />
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<!-- A log or a rule list: the toolbar, then a bordered table. `bare`
 		     keeps the table alone, for a page that already shows its toolbar. -->
 		<div v-else-if="kind === 'table'" class="flex flex-col gap-4.5" aria-hidden="true">
@@ -150,7 +181,8 @@
 /**
  * What a dashboard section looks like while its data loads: `USkeleton` blocks
  * where the headings, fields and rows will be, so the page does not jump when
- * they arrive. `kind` picks the overview, a table (logs, rules) or a settings form.
+ * they arrive. `kind` picks the overview, the modules grid, a table (logs,
+ * rules) or a settings form.
  */
 const { kind = "form", bare = false } = defineProps<{
 	kind?: DashboardSkeletonKind;
@@ -161,6 +193,8 @@ const { kind = "form", bare = false } = defineProps<{
 const { ts } = useI18n();
 
 const BAR_HEIGHTS = ["62%", "88%", "48%", "100%", "70%", "84%", "44%"];
+// The modules that can be switched, then the ones announced as coming soon.
+const MODULE_CARDS = GUILD_MODULES.length + DASHBOARD_NAV.filter((item) => item.comingSoon).length;
 </script>
 
 <style scoped>

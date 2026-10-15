@@ -117,7 +117,7 @@ const asyncComponentMap: Record<string, ReturnType<typeof defineAsyncComponent>>
 		() => import("~/components/guild/settings/Moderation.vue"),
 		"form",
 	),
-	modules: sectionComponent(() => import("~/components/guild/settings/Modules.vue"), "form"),
+	modules: sectionComponent(() => import("~/components/guild/settings/Modules.vue"), "modules"),
 	roles: sectionComponent(() => import("~/components/guild/settings/Roles.vue"), "form"),
 };
 const comingSoonComponent = defineAsyncComponent(

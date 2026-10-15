@@ -45,6 +45,7 @@ describe("DASHBOARD_NAV", () => {
 describe("dashboardSkeletonKind", () => {
 	it("draws the overview, the tables and the settings pages each in their shape", () => {
 		expect(dashboardSkeletonKind("")).toBe("overview");
+		expect(dashboardSkeletonKind("modules")).toBe("modules");
 		expect(dashboardSkeletonKind("logs")).toBe("table");
 		expect(dashboardSkeletonKind("automod")).toBe("table");
 		expect(dashboardSkeletonKind("moderation")).toBe("form");

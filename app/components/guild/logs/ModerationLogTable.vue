@@ -72,7 +72,7 @@ const { warningsOnly } = defineProps<{
 
 const { guildData } = useGuildData();
 const { ts } = useI18n();
-const { locale } = useAppLocale();
+const { timeLocale } = useAppLocale();
 
 const page = ref(1);
 const limit = ref(LOGS_PAGE_SIZE);
@@ -150,11 +150,11 @@ const rows = computed(() =>
 			// A case that reverses another one (an unban, an unmute) carries the
 			// same type with the undo flag, so it is told apart here.
 			action: metadata.undo ? ts("guild_logs.undo_action", { action: typeName }) : typeName,
-			at: created ? formatActivityTime(created, now, locale.value) : "\u2013",
+			at: created ? formatActivityTime(created, now, timeLocale.value) : "\u2013",
 			caseId: entry.caseId,
 			datetime: entry.createdAt ?? undefined,
 			duration: durationLabel(entry),
-			fullDate: created?.toLocaleString(locale.value),
+			fullDate: created?.toLocaleString(timeLocale.value),
 			moderator: entry.moderatorMember
 				? auditLogMemberName(entry.moderatorMember)
 				: ts("guild_logs.unknown"),

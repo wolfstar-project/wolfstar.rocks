@@ -52,7 +52,7 @@ const tabs = computed(() => [
 		icon: "ic:round-person",
 		id: "you",
 		label: ts("dashboard.nav_you"),
-		pick: openPreferences,
+		pick: () => openPreferences(),
 	},
 ]);
 </script>

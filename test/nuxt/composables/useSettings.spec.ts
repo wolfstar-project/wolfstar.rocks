@@ -80,6 +80,7 @@ describe("useSettings", () => {
 			logDensity: "cozy",
 			reduceMotion: false,
 			selectedLocale: null,
+			timeFormat: "auto",
 		});
 		await nextTick();
 		expect(lastPersistedSettings()).toEqual(settings.value);
@@ -97,6 +98,7 @@ describe("useSettings", () => {
 			logDensity: "cozy",
 			reduceMotion: true,
 			selectedLocale: "it-IT",
+			timeFormat: "auto",
 		});
 		expect(localStorage.getItem("user-prefers-reduced-motion")).toBeNull();
 		expect(localStorage.getItem("user-prefers-locale")).toBeNull();

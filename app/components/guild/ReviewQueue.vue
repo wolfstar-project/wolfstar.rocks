@@ -120,7 +120,7 @@ import { REPORT_STATUSES } from "#shared/schemas";
  * status. It only reads: a report is actioned or dismissed from Discord.
  */
 const { ts } = useI18n();
-const { locale } = useAppLocale();
+const { timeLocale } = useAppLocale();
 const { guildData } = useGuildData();
 
 const QUEUE_LIMIT = 25;
@@ -172,9 +172,9 @@ const rows = computed(() =>
 	entries.value.map((report) => {
 		const filed = new Date(report.createdAt);
 		return {
-			at: formatActivityTime(filed, now, locale.value),
+			at: formatActivityTime(filed, now, timeLocale.value),
 			datetime: filed.toISOString(),
-			fullDate: filed.toLocaleString(locale.value),
+			fullDate: filed.toLocaleString(timeLocale.value),
 			id: report.id,
 			reason: report.reason,
 			statusLabel: ts(STATUS_LABEL_KEYS[report.status]),

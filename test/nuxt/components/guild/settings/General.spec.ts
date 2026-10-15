@@ -165,19 +165,30 @@ describe("general guild settings", () => {
 
 		await nextTick();
 
-		// The select shows each language by its English name, with the native
-		// name and the tag the bot stores set beside it.
+		// The select shows each language by its English name and flag, with the
+		// native name and the tag the bot stores set beside it.
 		const select = wrapper.findComponent({ name: "SelectBase" });
 
 		expect(select.exists()).toBeTruthy();
 		expect(select.props("options")).toStrictEqual([
 			{
+				flag: "/flags/en-US.svg",
 				label: "English, United States",
 				note: "American English \u00B7 en-US",
 				value: "en-US",
 			},
-			{ label: "Spanish", note: "Espa\u00F1ol \u00B7 es-ES", value: "es-ES" },
-			{ label: "German", note: "Deutsch \u00B7 de-DE", value: "de-DE" },
+			{
+				flag: "/flags/es-ES.svg",
+				label: "Spanish",
+				note: "Espa\u00F1ol \u00B7 es-ES",
+				value: "es-ES",
+			},
+			{
+				flag: "/flags/de.svg",
+				label: "German",
+				note: "Deutsch \u00B7 de-DE",
+				value: "de-DE",
+			},
 		]);
 	});
 

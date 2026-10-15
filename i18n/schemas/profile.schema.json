@@ -55,18 +55,6 @@
 				"from_discord": {
 					"type": "string"
 				},
-				"language_description": {
-					"type": "string"
-				},
-				"language_help": {
-					"type": "string"
-				},
-				"loading_servers": {
-					"type": "string"
-				},
-				"members": {
-					"type": "string"
-				},
 				"message_display": {
 					"type": "string"
 				},
@@ -103,10 +91,13 @@
 				"sections_aria": {
 					"type": "string"
 				},
-				"servers": {
+				"select_language": {
 					"type": "string"
 				},
-				"servers_list_aria": {
+				"select_language_description": {
+					"type": "string"
+				},
+				"servers": {
 					"type": "string"
 				},
 				"settings_tagline": {
@@ -128,6 +119,24 @@
 					"type": "string"
 				},
 				"theme_sync_system": {
+					"type": "string"
+				},
+				"time_format": {
+					"type": "string"
+				},
+				"time_format_12h": {
+					"type": "string"
+				},
+				"time_format_24h": {
+					"type": "string"
+				},
+				"time_format_auto": {
+					"type": "string"
+				},
+				"time_format_auto_hint": {
+					"type": "string"
+				},
+				"time_format_description": {
 					"type": "string"
 				},
 				"username": {

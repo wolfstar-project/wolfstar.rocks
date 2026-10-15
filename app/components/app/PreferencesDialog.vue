@@ -268,17 +268,10 @@
 </template>
 
 <script setup lang="ts">
-type SettingsSection =
-	| "account"
-	| "appearance"
-	| "accessibility"
-	| "notifications"
-	| "language"
-	| "connections"
-	| "report";
+import type { PreferencesSection as SettingsSection } from "~/composables/usePreferencesDialog";
 
 const { ts } = useI18n();
-const { isOpen } = usePreferencesDialog();
+const { isOpen, requestedSection } = usePreferencesDialog();
 const { user: authUser, signOut } = useUserSession();
 const { user: discordUser, status: discordStatus, refresh: refreshDiscordUser } = useUser(authUser);
 const { data: userSettings, setReport, refresh: refreshUserSettings } = useUserSettings();
@@ -342,12 +335,7 @@ const sections = computed(() => {
 			label: ts("profile.accessibility"),
 		},
 		{ icon: "ic:round-notifications", id: "notifications", label: ts("profile.notifications") },
-		{
-			description: ts("profile.language_description"),
-			icon: "ic:round-language",
-			id: "language",
-			label: ts("common.language"),
-		},
+		{ icon: "ic:round-language", id: "language", label: ts("common.language") },
 		{ icon: "ic:round-link", id: "connections", label: ts("profile.connections") },
 		{
 			description: ts("feedback.description"),
@@ -388,8 +376,12 @@ watch(
 	isOpen,
 	(open) => {
 		if (!open) return;
-		section.value = account.value ? "account" : "appearance";
-		detailOpen.value = false;
+		// A page asked for opens straight away, past the list on a phone.
+		const requested = requestedSection.value;
+		requestedSection.value = null;
+		const available = requested && sections.value.some((item) => item.id === requested);
+		section.value = available ? requested : account.value ? "account" : "appearance";
+		detailOpen.value = Boolean(available);
 		if (!account.value) return;
 		// The account page needs the Discord account; ask for it again if an
 		// earlier request failed (the route is rate limited).

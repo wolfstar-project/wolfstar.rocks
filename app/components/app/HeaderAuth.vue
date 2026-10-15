@@ -45,7 +45,7 @@
 					:class="mobile ? 'rounded-lg' : 'hidden rounded-lg md:inline-flex'"
 					icon="lucide:sliders-horizontal"
 					:aria-label="ts('header.settings')"
-					@click="openPreferences"
+					@click="openPreferences()"
 				/>
 				<UButton
 					:label="ts('header.sign_in')"

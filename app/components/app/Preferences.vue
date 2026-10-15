@@ -84,51 +84,72 @@
 			</ClientOnly>
 		</div>
 
-		<!-- Language -->
-		<UCard v-if="shows('language')" class="border border-base-200/60 bg-base-100 shadow-sm">
-			<template #header>
-				<div class="flex items-center gap-3">
-					<div class="flex size-7 items-center justify-center rounded-full bg-primary/10">
-						<UIcon name="lucide:languages" class="size-4 text-primary" />
-					</div>
-					<div>
-						<h3 class="text-lg font-semibold text-base-content">
-							{{ ts("common.language") }}
-						</h3>
-						<p class="text-sm text-base-content/60">
-							{{ ts("profile.language_description") }}
-						</p>
-					</div>
-				</div>
-			</template>
-
-			<div
-				class="flex flex-col gap-3 rounded-lg border border-base-300 bg-base-200/50 p-4 sm:flex-row sm:items-center sm:justify-between"
-			>
-				<div>
-					<h4 class="font-medium text-base-content">
-						{{ ts("common.language") }}
-					</h4>
-					<p class="mt-1 text-sm text-base-content/60">
-						{{ ts("profile.language_help") }}
-					</p>
-				</div>
+		<!-- Language: which one, then the clock times are read on. -->
+		<div v-if="shows('language')" class="flex max-w-140 flex-col gap-7">
+			<section>
+				<h3 :id="languageLabelId" class="prefs-heading">
+					{{ ts("profile.select_language") }}
+				</h3>
+				<p :id="languageHelpId" class="prefs-description">
+					{{ ts("profile.select_language_description") }}
+				</p>
 				<ClientOnly>
-					<ULocaleSelect
+					<SelectBase
 						v-model="currentLocale"
-						:locales="uiLocales"
-						color="neutral"
-						variant="outline"
-						class="w-48"
-						:ui="{ content: 'min-w-fit' }"
-						@update:model-value="selectLocale"
+						:options="languageOptions"
+						:clearable="false"
+						variant="field"
+						class="w-full"
+						:aria-label="ts('profile.select_language')"
+						:aria-describedby="languageHelpId"
 					/>
 					<template #fallback>
-						<USkeleton class="h-8 w-48" />
+						<USkeleton class="h-12 w-full rounded-[6px]" />
 					</template>
 				</ClientOnly>
-			</div>
-		</UCard>
+			</section>
+
+			<section>
+				<h3 :id="timeFormatLabelId" class="prefs-heading">
+					{{ ts("profile.time_format") }}
+				</h3>
+				<p class="prefs-description">{{ ts("profile.time_format_description") }}</p>
+				<ClientOnly>
+					<div
+						role="radiogroup"
+						:aria-labelledby="timeFormatLabelId"
+						class="flex flex-col gap-0.5"
+					>
+						<label
+							v-for="option in timeFormatOptions"
+							:key="option.id"
+							class="time-format"
+							:class="{ 'time-format--on': timeFormat === option.id }"
+						>
+							<input
+								v-model="timeFormat"
+								type="radio"
+								:name="timeFormatLabelId"
+								:value="option.id"
+								class="sr-only"
+							/>
+							<span class="time-format-radio" aria-hidden="true"></span>
+							<span>{{ option.label }}</span>
+							<span class="font-mono text-xs text-muted">{{ option.sample }}</span>
+						</label>
+					</div>
+					<template #fallback>
+						<div class="flex flex-col gap-0.5">
+							<USkeleton
+								v-for="option in timeFormatOptions"
+								:key="option.id"
+								class="my-2 h-7 w-48"
+							/>
+						</div>
+					</template>
+				</ClientOnly>
+			</section>
+		</div>
 
 		<!-- Accessibility: motion, with what the system already asks for. -->
 		<div v-if="shows('accessibility')" class="flex max-w-155 flex-col gap-4">
@@ -182,8 +203,8 @@
 </template>
 
 <script setup lang="ts">
-import type { ColorModePreference, LogDensity } from "~/composables/useSettings";
-import { getNuxtUiLocales } from "~/utils/nuxt-ui-locales";
+import type { SelectOption } from "~/components/select/Base.vue";
+import type { ColorModePreference, LogDensity, TimeFormat } from "~/composables/useSettings";
 
 type PreferenceGroup = "appearance" | "accessibility" | "language";
 
@@ -205,7 +226,7 @@ function shows(group: PreferenceGroup) {
 }
 
 const { ts } = useI18n();
-const { locale, selectLocale } = useAppLocale();
+const { locale, locales, localeLabel, selectLocale } = useAppLocale();
 const { reduceMotionEnabled, effectiveReduceMotion, setReduceMotion, systemPreferenceActive } =
 	useReduceMotion();
 
@@ -214,6 +235,9 @@ const logDensity = useLogDensity();
 
 const themeLabelId = useId();
 const densityLabelId = useId();
+const languageLabelId = useId();
+const languageHelpId = useId();
+const timeFormatLabelId = useId();
 
 // The design's three choices, then the experimental midnight theme the app also has.
 const themeCards = computed<{ id: ColorModePreference; label: string }[]>(() => [
@@ -236,12 +260,45 @@ const densityOptions = computed<{ id: LogDensity; label: string; hint: string }[
 	},
 ]);
 
-const uiLocales = getNuxtUiLocales();
-const currentLocale = computed({
+// Each language by its own name, with its name in the language on screen at
+// the far end, as Discord lists them.
+const languageOptions = computed<SelectOption[]>(() => {
+	const names = new Intl.DisplayNames([locale.value], { type: "language" });
+	return locales.value.map((entry) => {
+		const language = names.of(entry.code.split("-")[0] ?? entry.code) ?? entry.code;
+		return {
+			aside: `${language.charAt(0).toLocaleUpperCase(locale.value)}${language.slice(1)}`,
+			flag: localeFlagSrc(entry.code),
+			label: localeLabel(entry),
+			value: entry.code,
+		};
+	});
+});
+const currentLocale = computed<string | string[] | null>({
 	get: () => locale.value,
-	set: (code: string) => {
-		void selectLocale(code);
+	set: (code) => {
+		if (typeof code === "string") void selectLocale(code);
 	},
+});
+
+const timeFormat = useTimeFormat();
+// 14:05 on each clock, in the language on screen.
+const timeFormatOptions = computed<{ id: TimeFormat; label: string; sample: string }[]>(() => {
+	const sample = new Date(2026, 0, 1, 14, 5);
+	const format = (id: TimeFormat) =>
+		sample.toLocaleTimeString(withHourCycle(locale.value, id), {
+			hour: "numeric",
+			minute: "2-digit",
+		});
+	return [
+		{
+			id: "auto",
+			label: ts("profile.time_format_auto"),
+			sample: ts("profile.time_format_auto_hint"),
+		},
+		{ id: "12h", label: ts("profile.time_format_12h"), sample: format("12h") },
+		{ id: "24h", label: ts("profile.time_format_24h"), sample: format("24h") },
+	];
 });
 
 function handleSetReduceMotion(value: boolean) {
@@ -262,6 +319,38 @@ function handleSetReduceMotion(value: boolean) {
 .prefs-label {
 	@apply mb-2.5 text-[0.6875rem] font-bold tracking-[0.04em] uppercase;
 	color: var(--ui-text-muted);
+}
+
+.prefs-heading {
+	@apply text-base font-bold text-highlighted;
+}
+
+.prefs-description {
+	@apply mt-1 mb-3 text-sm leading-normal text-muted;
+}
+
+/* A row of the time format's radio group: a 24px ring, filled when picked. */
+.time-format {
+	@apply flex min-h-11 cursor-pointer items-center gap-3.5 rounded-[6px] px-1 text-base text-highlighted;
+}
+
+.time-format:has(input:focus-visible) {
+	outline: 2px solid var(--color-primary);
+	outline-offset: 2px;
+}
+
+.time-format-radio {
+	@apply flex size-6 shrink-0 items-center justify-center rounded-full border-2;
+	border-color: var(--field-border);
+}
+
+.time-format--on .time-format-radio {
+	@apply border-primary bg-primary;
+}
+
+.time-format--on .time-format-radio::after {
+	@apply size-2 rounded-full bg-white;
+	content: "";
 }
 
 /* The radio of a card or an option, drawn: a ring, filled in when picked. */

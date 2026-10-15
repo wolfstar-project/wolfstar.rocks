@@ -187,9 +187,9 @@
 							<time
 								class="font-mono text-xs whitespace-nowrap text-toned"
 								:datetime="new Date(entry.timestamp).toISOString()"
-								:title="new Date(entry.timestamp).toLocaleString(locale)"
+								:title="new Date(entry.timestamp).toLocaleString(timeLocale)"
 							>
-								{{ formatActivityTime(entry.timestamp, now, locale) }}
+								{{ formatActivityTime(entry.timestamp, now, timeLocale) }}
 							</time>
 						</td>
 						<td>
@@ -295,7 +295,7 @@ const { total: commandTotal } = useCommandLog({
 	filters: computed(() => ({ from: activityFrom.value })),
 });
 
-const { locale } = useAppLocale();
+const { locale, timeLocale } = useAppLocale();
 const activityDays = computed(() =>
 	bucketModerationActivity(moderationEntries.value, {
 		days: CHART_DAYS,
@@ -433,6 +433,7 @@ const items = computed(() =>
 		const englishName = mapping[1];
 
 		return {
+			flag: localeFlagSrc(langKey),
 			label: englishName ?? nativeName,
 			// The name speakers use, then the tag the bot stores.
 			note: `${nativeName} \u00B7 ${langKey}`,

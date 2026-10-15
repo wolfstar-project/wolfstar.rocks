@@ -9,13 +9,14 @@
 		/>
 
 		<aside v-if="guildId" class="console-sidebar" :aria-label="ts('dashboard.nav_aria')">
-			<DashboardSidebar />
+			<DashboardSidebar floating />
 		</aside>
 
 		<div class="console-main">
-			<slot v-if="!guildId || isReadyToRender"></slot>
+			<!-- The page shows its own skeleton until the server's data is in. -->
+			<slot v-if="!guildId || !nuxtError"></slot>
 			<div
-				v-else-if="nuxtError"
+				v-else
 				class="flex w-full flex-1 flex-col items-center justify-center space-y-4 px-4 text-center"
 				role="alert"
 				:aria-label="ts('dashboard.error_aria')"
@@ -33,40 +34,6 @@
 					</p>
 				</div>
 			</div>
-			<div
-				v-else
-				class="flex w-full flex-1 flex-col items-center justify-center space-y-4 px-4"
-				role="status"
-				:aria-label="ts('dashboard.loading_aria')"
-			>
-				<div class="flex flex-col items-center space-y-4">
-					<UIcon
-						name="ph:warning-duotone"
-						class="size-12 text-primary"
-						aria-hidden="true"
-					/>
-					<div class="space-y-2 text-center">
-						<h2 class="text-xl font-semibold text-base-content">
-							{{ ts("dashboard.loading_title") }}
-						</h2>
-						<p class="text-sm text-base-content/60">
-							{{ ts("dashboard.loading_description") }}
-						</p>
-					</div>
-					<div class="flex items-center space-x-2">
-						<div
-							class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary"
-						></div>
-						<div
-							class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary [animation-delay:200ms]"
-						></div>
-						<div
-							class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary [animation-delay:400ms]"
-						></div>
-					</div>
-				</div>
-			</div>
-
 			<div
 				v-if="showSaveChangesBar"
 				style="view-transition-name: save-changes-bar"
@@ -130,7 +97,12 @@
 		>
 			<template #footer>
 				<div class="flex justify-end gap-2">
-					<UButton color="neutral" variant="ghost" @click="stayOnPage">
+					<UButton
+						color="neutral"
+						variant="outline"
+						class="dialog-cancel"
+						@click="stayOnPage"
+					>
 						{{ ts("dashboard.stay_on_page") }}
 					</UButton>
 					<UButton color="error" @click="discardAndLeave">
@@ -144,7 +116,7 @@
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
-import { isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
+import { objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { objectToTuples } from "@sapphire/utilities/objectToTuples";
 import { parseError } from "evlog";
@@ -181,7 +153,7 @@ const toast = useToast();
 const router = useRouter();
 const { close: closeDrawer, open: drawerOpen } = useDashboardDrawer();
 const nuxtError = useError();
-const { setGuildData, guildData } = useGuildData();
+const { setGuildData } = useGuildData();
 const { setGuildSettings, guildSettings } = useGuildSettings();
 const { setGuildSettingsChanges, guildSettingsChanges, resetGuildSettingsChanges } =
 	useGuildSettingsChanges();
@@ -222,11 +194,9 @@ watch(
 	{ immediate: true },
 );
 
-const {
-	data,
-	pending: isLoading,
-	error,
-} = useAsyncData(
+// Kept in the browser, so a reload opens on the server as it was last seen
+// while it is fetched again.
+const { data, error } = usePersistedAsyncData(
 	() => `dashboard:guild:${guildId.value ?? "none"}`,
 	() => {
 		if (!guildId.value) {
@@ -370,16 +340,6 @@ watch(
 );
 
 const { effectiveReduceMotion } = useReduceMotion();
-
-const isReadyToRender = computed(
-	() =>
-		!nuxtError.value &&
-		!isLoading.value &&
-		!isNullOrUndefined(guildData.value) &&
-		!isNullOrUndefined(guildSettings.value) &&
-		!isNullOrUndefinedOrZero(objectValues(guildData.value).length) &&
-		!isNullOrUndefinedOrZero(objectValues(guildSettings.value).length),
-);
 
 const isReadyToSubmit = computed(
 	() =>
@@ -540,8 +500,27 @@ watch(guildId, (newGuildId, oldGuildId) => {
 }
 
 .console {
-	@apply flex h-dvh min-h-0 w-full overflow-hidden;
+	@apply relative flex h-dvh min-h-0 w-full overflow-hidden;
 	background-color: var(--console-main);
+
+	/* The server rail and the sidebar read these; the account card floating
+	   over both is as wide as their sum. */
+	--console-rail-width: 3.75rem;
+	--console-sidebar-width: 12.25rem;
+}
+
+@variant md {
+	.console {
+		--console-rail-width: 4rem;
+		--console-sidebar-width: 13.25rem;
+	}
+}
+
+@variant lg {
+	.console {
+		--console-rail-width: 4.25rem;
+		--console-sidebar-width: 14.75rem;
+	}
 }
 
 /* The drawer is portaled out of `.console`, so it carries the tokens itself. */
@@ -565,7 +544,8 @@ watch(guildId, (newGuildId, oldGuildId) => {
 }
 
 .console-sidebar {
-	@apply hidden h-full w-49 shrink-0 sm:block md:w-53 lg:w-59;
+	@apply hidden h-full shrink-0 sm:block;
+	width: var(--console-sidebar-width);
 	background-color: var(--console-surface);
 	border-right: 1px solid var(--home-border-subtle);
 }

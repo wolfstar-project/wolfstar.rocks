@@ -85,6 +85,9 @@
 			</section>
 		</div>
 	</GuildSettingsForm>
+
+	<!-- Not a setting: the reports those settings route, to review. -->
+	<GuildReviewQueue />
 </template>
 
 <script setup lang="ts">

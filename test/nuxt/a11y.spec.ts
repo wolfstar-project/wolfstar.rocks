@@ -43,9 +43,12 @@ import {
 	DashboardBottomNav,
 	DashboardPageHeader,
 	DashboardSidebar,
+	DashboardSkeleton,
 	ErrorPage,
 	OauthStatusPanel,
+	GuildAuditChanges,
 	GuildAutomodDurationInput,
+	GuildReviewQueue,
 	GuildServerRail,
 	GuildSettingsSection,
 	GuildSettingsToggleRow,
@@ -62,9 +65,10 @@ import {
 	StarylProductProofSection,
 	// #endregion
 } from "#components";
-import { mountSuspended } from "@nuxt/test-utils/runtime";
+import { mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
 import { createError } from "h3";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { MOCK_AUDIT_ENTRY } from "~~/test/mocks/auditLogs";
 import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 import { runAxe } from "./utils/axe";
 
@@ -605,6 +609,67 @@ describe("component accessibility audits", () => {
 				createMockOauthFlattenedGuild({ id: "123456789012345678", name: "WolfStar HQ" }),
 			);
 			const component = await mountSuspended(DashboardSidebar);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("DashboardSkeleton", () => {
+		it.each(["overview", "modules", "table", "form"] as const)(
+			"should have no accessibility violations as a %s",
+			async (kind) => {
+				const component = await mountSuspended(DashboardSkeleton, { props: { kind } });
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			},
+		);
+	});
+
+	describe("GuildReviewQueue", () => {
+		it("should have no accessibility violations", async () => {
+			registerEndpoint("/api/guilds/123456789012345678/reports", {
+				method: "GET",
+				handler: () => ({
+					entries: [
+						{
+							closedAt: null,
+							createdAt: "2026-10-14T12:32:00.000Z",
+							id: "412",
+							reason: "Spamming the same link in #general",
+							status: "Open",
+							targetId: "223456789012345678",
+							targetTag: "loud-user",
+						},
+					],
+					total: 1,
+				}),
+			});
+			useActiveGuild().selectGuild("123456789012345678");
+			useGuildData().setGuildData(
+				createMockOauthFlattenedGuild({ id: "123456789012345678", name: "WolfStar HQ" }),
+			);
+			const component = await mountSuspended(GuildReviewQueue);
+			await vi.waitFor(() => expect(component.find("tbody tr").exists()).toBe(true));
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildAuditChanges", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildAuditChanges, {
+				props: {
+					entry: {
+						...MOCK_AUDIT_ENTRY,
+						changes: {
+							changed: {
+								language: { from: "en-US", to: "it-IT" },
+								modulesAutomod: { from: false, to: true },
+							},
+						},
+					},
+				},
+			});
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
 		});

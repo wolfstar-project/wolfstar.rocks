@@ -5,48 +5,15 @@
 		:description="ts('feedback.description')"
 	>
 		<template #body>
-			<UForm
-				id="feedback-form"
-				ref="formRef"
-				:schema
-				:state
-				class="space-y-4"
-				@submit="onSubmit"
-				@error="onError"
-			>
-				<UFormField v-if="!isDashboard" name="name" :label="ts('feedback.name')" required>
-					<UInput
-						v-model="state.name"
-						:placeholder="ts('feedback.name_placeholder')"
-						class="w-full"
-					/>
-				</UFormField>
-
-				<UFormField v-if="!isDashboard" name="email" :label="ts('feedback.email')" required>
-					<UInput
-						v-model="state.email"
-						type="email"
-						:placeholder="ts('feedback.email_placeholder')"
-						class="w-full"
-					/>
-				</UFormField>
-
-				<UFormField name="message" :label="ts('feedback.message')" required>
-					<UTextarea
-						v-model="state.message"
-						:placeholder="ts('feedback.message_placeholder')"
-						:rows="4"
-						class="w-full"
-					/>
-				</UFormField>
-			</UForm>
+			<FeedbackForm :id="formId" v-model:submitting="isSubmitting" @sent="open = false" />
 		</template>
 
 		<template #footer>
-			<UFieldGroup class="justify-end">
+			<div class="flex w-full justify-end gap-2.5">
 				<UButton
 					color="neutral"
-					variant="ghost"
+					variant="outline"
+					class="dialog-cancel"
 					:disabled="isSubmitting"
 					@click="open = false"
 				>
@@ -54,85 +21,21 @@
 				</UButton>
 				<UButton
 					type="submit"
-					form="feedback-form"
+					:form="formId"
 					color="primary"
 					:loading="isSubmitting"
 					icon="i-lucide-send"
 				>
 					{{ ts("feedback.send") }}
 				</UButton>
-			</UFieldGroup>
+			</div>
 		</template>
 	</UModal>
 </template>
 
 <script setup lang="ts">
-import type { FormErrorEvent } from "@nuxt/ui";
-import { FeedbackSchema as schema, type FeedbackState as Schema } from "#shared/schemas";
-
 const open = defineModel<boolean>("open", { default: false });
 const { ts } = useI18n();
-const toast = useToast();
-const route = useRoute();
-const { user } = useUserSession();
+const formId = useId();
 const isSubmitting = ref(false);
-const { effectiveReduceMotion } = useReduceMotion();
-
-const isDashboard = computed(
-	() =>
-		route.path === "/app" ||
-		(route.path.startsWith("/guilds/") && route.path.includes("/manage")),
-);
-
-const state = reactive<Schema>({
-	name: user.value?.name ?? "",
-	email: user.value?.email ?? "",
-	message: "",
-});
-
-async function onSubmit() {
-	if (!import.meta.client) return;
-
-	isSubmitting.value = true;
-	try {
-		// Loaded on submit: the SDK is not needed to render the form, and the
-		// component test runner cannot import it at module load.
-		const { captureFeedback } = await import("@sentry/nuxt");
-		captureFeedback({
-			name: state.name,
-			email: state.email,
-			message: state.message,
-		});
-
-		state.message = "";
-		open.value = false;
-
-		toast.add({
-			color: "success",
-			description: ts("feedback.sent_toast_description"),
-			icon: "heroicons:check-circle",
-			title: ts("feedback.sent_title"),
-		});
-	} finally {
-		isSubmitting.value = false;
-	}
-}
-
-async function onError(event: FormErrorEvent) {
-	const element =
-		event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
-	element?.scrollIntoView({
-		behavior: effectiveReduceMotion.value ? "auto" : "smooth",
-		block: "center",
-	});
-	const errorMessage = event.errors[0]?.message;
-	toast.add({
-		color: "error",
-		description: ts("feedback.send_failed_description", {
-			message: errorMessage ?? ts("common.please_try_again"),
-		}),
-		icon: "heroicons:x-circle",
-		title: ts("feedback.send_failed_title"),
-	});
-}
 </script>

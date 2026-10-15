@@ -21,7 +21,9 @@ export default {
 			variant: "dash",
 		},
 		{
-			class: `disabled:btn-disabled aria-disabled:btn-disabled`,
+			// Discord's quiet button: a tinted rounded square on hover, a little
+			// smaller under the pointer, never a frame or a shadow.
+			class: `disabled:btn-disabled aria-disabled:btn-disabled hover:bg-base-content/10 active:bg-base-content/15 active:scale-[0.97] transition-[background-color,color,transform] duration-150`,
 			color: "neutral",
 			variant: "ghost",
 		},
@@ -174,7 +176,9 @@ export default {
 		},
 		variant: {
 			dash: "btn-dash",
-			ghost: "btn-ghost",
+			// `btn-neutral` repaints `--btn-border` after `btn-ghost` cleared it;
+			// the border is made transparent here so no dark line shows.
+			ghost: "btn-ghost rounded-[6px] border-transparent",
 			link: "btn-link",
 			outline: "btn-outline",
 			soft: "btn-ghost",

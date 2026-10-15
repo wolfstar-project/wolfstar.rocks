@@ -165,22 +165,19 @@ describe("general guild settings", () => {
 
 		await nextTick();
 
-		const selectMenu = wrapper.findComponent({ name: "USelectMenu" });
+		// The select shows each language by its English name, with the native
+		// name and the tag the bot stores set beside it.
+		const select = wrapper.findComponent({ name: "SelectBase" });
 
-		expect(selectMenu.exists()).toBeTruthy();
-		expect(selectMenu.props("items")).toStrictEqual([
+		expect(select.exists()).toBeTruthy();
+		expect(select.props("options")).toStrictEqual([
 			{
 				label: "English, United States",
+				note: "American English \u00B7 en-US",
 				value: "en-US",
 			},
-			{
-				label: "Spanish",
-				value: "es-ES",
-			},
-			{
-				label: "German",
-				value: "de-DE",
-			},
+			{ label: "Spanish", note: "Espa\u00F1ol \u00B7 es-ES", value: "es-ES" },
+			{ label: "German", note: "Deutsch \u00B7 de-DE", value: "de-DE" },
 		]);
 	});
 

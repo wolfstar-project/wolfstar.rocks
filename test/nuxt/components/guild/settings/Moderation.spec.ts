@@ -102,17 +102,19 @@ describe("moderation guild settings", () => {
 	});
 
 	// Reports are set up next to the cases they can close into, not on a page
-	// of their own.
-	it("groups the settings into a Cases and a Reports card", async () => {
+	// of their own, and the queue of filed reports follows them.
+	it("groups the settings into a Cases and a Reports card, then the review queue", async () => {
 		const wrapper = await mountSuspended(Moderation);
 
 		await nextTick();
 
-		expect(wrapper.findAll("section h2").map((heading) => heading.text())).toStrictEqual([
-			"Cases",
-			"Reports",
-		]);
-		const [cases, reports] = wrapper.findAll("section");
+		const headings = wrapper.findAll("section h2").map((heading) => heading.text());
+		expect(headings).toHaveLength(3);
+		expect(headings).toEqual(expect.arrayContaining(["Cases", "Reports", "Review queue"]));
+		const sectionTitled = (title: string) =>
+			wrapper.findAll("section").find((section) => section.find("h2").text() === title);
+		const cases = sectionTitled("Cases");
+		const reports = sectionTitled("Reports");
 		expect(cases?.text()).toContain("Moderation Logs");
 		expect(reports?.text()).toContain("Reports Channel");
 		expect(reports?.text()).toContain("Notified Role");

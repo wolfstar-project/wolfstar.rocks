@@ -104,11 +104,7 @@
 		"title": "Estado de las traducciones"
 	},
 	"user_menu": {
-		"account_menu": "Menú de cuenta de usuario",
-		"avatar_alt": "Avatar de {name}",
-		"avatar_fallback": "Avatar de usuario",
 		"report_bug": "Informar de un error",
-		"sign_out": "Cerrar sesión",
-		"user_menu_for": "Menú de usuario de {name}"
+		"sign_out": "Cerrar sesión"
 	}
 }

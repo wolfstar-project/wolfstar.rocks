@@ -104,11 +104,7 @@
 		"title": "Translation Status"
 	},
 	"user_menu": {
-		"account_menu": "User account menu",
-		"avatar_alt": "{name}'s avatar",
-		"avatar_fallback": "User avatar",
 		"report_bug": "Report a Bug",
-		"sign_out": "Sign out",
-		"user_menu_for": "User menu for {name}"
+		"sign_out": "Sign out"
 	}
 }

@@ -41,6 +41,13 @@
 			"rules": {
 				"action": "",
 				"count": "",
+				"defaults": {
+					"description": "",
+					"escalation_title": "",
+					"rule_title": "",
+					"save": "",
+					"saved": ""
+				},
 				"delete": "",
 				"delete_aria": "",
 				"delete_description": "",
@@ -49,10 +56,10 @@
 				"edit_aria": "",
 				"editor": {
 					"action": "",
+					"back": "",
 					"cancel": "",
 					"create": "",
 					"create_title": "",
-					"description": "",
 					"duration": "",
 					"duration_unit_aria": "",
 					"edit_title": "",
@@ -87,6 +94,7 @@
 				},
 				"empty_description": "",
 				"empty_title": "",
+				"enabled_count": "",
 				"errors": {
 					"generic": "",
 					"invalid": "",
@@ -101,9 +109,11 @@
 				"load_failed": "",
 				"loading_aria": "",
 				"new": "",
+				"no_match": "",
 				"nothing": "",
 				"on_hit": "",
 				"retry": "",
+				"search_placeholder": "",
 				"soft_alert_short": "",
 				"soft_delete_short": "",
 				"soft_log_short": "",
@@ -115,7 +125,13 @@
 					"deleted": "",
 					"saved": ""
 				},
-				"toggle_aria": ""
+				"toggle_aria": "",
+				"type_picker": {
+					"content_filters": "",
+					"description": "",
+					"rate_limits": "",
+					"title": ""
+				}
 			},
 			"subtitle": "",
 			"title": "",
@@ -207,7 +223,7 @@
 			}
 		},
 		"channels": {
-			"excluded_channels": "Excluded Channels",
+			"excluded_channels": "",
 			"excluded_channels_help": "Select channels that should be ignored for specific logging events. Messages and events in these channels won't be logged.",
 			"form_aria": "Channel settings form",
 			"groups": {
@@ -219,10 +235,14 @@
 				"roles": "",
 				"server": ""
 			},
+			"ignore_dialog_title": "",
+			"ignored_count": "",
 			"logging_channels": "Logging Channels",
 			"logging_channels_help": "Select which channels should receive specific log events. Leave empty to disable logging for that event.",
 			"not_logged": "",
+			"nothing_ignored": "",
 			"routed_count": "",
+			"search_text_channels": "",
 			"subtitle": "Choose where WolfStar posts logs and which channels to ignore.",
 			"title": ""
 		},
@@ -249,13 +269,16 @@
 			"language_aria": "Select bot language",
 			"language_description": "The language WolfStar uses for responses in this server.",
 			"language_placeholder": "Select language...",
+			"last_change": "",
 			"mod_actions_aria": "",
 			"mod_actions_partial": "",
 			"mod_actions_title": "",
 			"mod_actions_total": "",
 			"need_help": "Need Help?",
-			"no_activity": "No settings changes yet",
-			"no_activity_description": "Changes you make to this server's settings will appear here so you can track who changed what.",
+			"no_activity": "",
+			"no_activity_description": "",
+			"no_activity_yet": "",
+			"no_activity_yet_description": "",
 			"overview_subtitle": "",
 			"overview_title": "",
 			"recent_activity": "Recent Activity",
@@ -309,6 +332,28 @@
 		},
 		"please_try_again": "Please try again.",
 		"reports": {
+			"queue": {
+				"columns": {
+					"filed": "",
+					"reason": "",
+					"status": "",
+					"target": ""
+				},
+				"empty_description": "",
+				"empty_status_description": "",
+				"empty_status_title": "",
+				"empty_title": "",
+				"filter_aria": "",
+				"refresh": "",
+				"status": {
+					"actioned": "",
+					"all": "",
+					"dismissed": "",
+					"open": ""
+				},
+				"table_aria": "",
+				"title": ""
+			},
 			"subtitle": "",
 			"title": ""
 		},

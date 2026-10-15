@@ -1,5 +1,5 @@
 <template>
-	<div class="dashboard-sidebar">
+	<div class="dashboard-sidebar" :class="{ 'dashboard-sidebar--floating': floating }">
 		<div class="dashboard-sidebar-header">
 			<template v-if="guildData">
 				<UAvatar
@@ -19,7 +19,7 @@
 		</div>
 
 		<nav
-			class="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto px-2 py-2.5"
+			class="dashboard-nav flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto px-2 py-2.5"
 			:aria-label="ts('dashboard.nav_aria')"
 		>
 			<template v-for="group of groups" :key="group.id">
@@ -47,7 +47,7 @@
 				<template v-if="group.id === 'overview' || isGroupOpen(group.id)">
 					<div
 						v-if="group.recent.length > 0"
-						class="flex flex-wrap items-center gap-1.5 pt-0.5 pr-1.5 pb-2 pl-2.5"
+						class="flex flex-wrap items-center gap-1.5 pt-0.5 pr-1.5 pb-1 pl-2.5"
 					>
 						<UIcon
 							name="ic:round-access-time"
@@ -135,9 +135,36 @@
 		</nav>
 
 		<footer class="dashboard-sidebar-footer">
-			<div class="dashboard-user min-w-0 flex-1">
-				<UserMenu />
-			</div>
+			<!-- The nameplate the account bought on Discord, painted behind it. -->
+			<video
+				v-if="nameplate && animateCollectibles"
+				:src="nameplate.clip"
+				:poster="nameplate.still"
+				class="dashboard-nameplate"
+				autoplay
+				loop
+				muted
+				playsinline
+				aria-hidden="true"
+			></video>
+			<img v-else-if="nameplate" :src="nameplate.still" alt="" class="dashboard-nameplate" />
+			<button
+				type="button"
+				class="dashboard-user"
+				:aria-label="ts('dashboard.user_settings_for', { name: account.name })"
+				@click="openSettings"
+			>
+				<span class="relative shrink-0">
+					<UAvatar :src="account.avatar" alt="" size="md" icon="ic:round-person" />
+					<img
+						v-if="avatarDecoration"
+						:src="avatarDecoration"
+						alt=""
+						class="dashboard-avatar-decoration"
+					/>
+				</span>
+				<span class="truncate">{{ account.name }}</span>
+			</button>
 			<UButton
 				color="neutral"
 				variant="ghost"
@@ -145,7 +172,7 @@
 				icon="ic:round-settings"
 				:aria-label="ts('dashboard.user_preferences')"
 				:title="ts('dashboard.user_preferences')"
-				@click="openPreferences"
+				@click="openSettings"
 			/>
 			<UButton
 				color="neutral"
@@ -169,6 +196,14 @@ import {
 } from "~/utils/dashboard-nav";
 import { resolveGuildIconSrc } from "~/utils/guild-dashboard";
 
+const { floating = false } = defineProps<{
+	/**
+	 * Lays the account card over the server rail and the foot of the sidebar,
+	 * as the console design does; in the drawer it stays in the flow.
+	 */
+	floating?: boolean;
+}>();
+
 const emit = defineEmits<{
 	/** A section was opened, so a drawer holding the sidebar can close. */
 	navigate: [];
@@ -178,8 +213,39 @@ const { ts } = useI18n();
 const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();
 const { goToSection, section } = useDashboardNavigation();
-const { signOut } = useUserSession();
+const { user: authUser, signOut } = useUserSession();
+// The session carries no picture of its own; the Discord account does.
+const { user: discordUser } = useUser(authUser);
+const account = computed(() => ({
+	avatar:
+		authUser.value?.image ??
+		(discordUser.value ? avatarURL(discordUser.value, { size: 64 }) : undefined),
+	name: discordUser.value?.global_name ?? authUser.value?.name ?? "",
+}));
+// What the account wears on Discord: the frame around the avatar and the
+// nameplate behind the name. Both are still when motion is reduced.
+const { effectiveReduceMotion } = useReduceMotion();
+const animateCollectibles = computed(() => !effectiveReduceMotion.value);
+const avatarDecoration = computed(() => {
+	const decoration = discordUser.value?.avatar_decoration_data;
+	return decoration
+		? avatarDecorationURL(decoration, { animated: animateCollectibles.value })
+		: null;
+});
+const nameplate = computed(() => {
+	const plate = discordUser.value?.collectibles?.nameplate;
+	return plate
+		? { clip: nameplateURL(plate, { animated: true }), still: nameplateURL(plate) }
+		: null;
+});
 const { open: openPreferences } = usePreferencesDialog();
+
+// In the drawer the sidebar sits in a dialog of its own: it is closed first, so
+// the settings do not open stacked on top of it.
+function openSettings() {
+	emit("navigate");
+	openPreferences();
+}
 const { isGroupOpen, isPinned, recent, recordVisit, toggleGroup, togglePin } =
 	useDashboardNavPrefs();
 
@@ -267,19 +333,53 @@ const groups = computed(() =>
 	box-shadow: var(--console-shadow-low);
 }
 
+/* The account sits in a card of its own, held off the sidebar's edges, so it
+   reads as the person using the dashboard rather than part of the server. */
 .dashboard-sidebar-footer {
-	@apply flex shrink-0 items-center gap-1 p-2;
-	border-top: 1px solid var(--home-border-subtle);
+	@apply relative m-2 flex shrink-0 items-center gap-1 overflow-hidden rounded-[10px] p-1.5;
 	background-color: var(--console-rail);
+	border: 1px solid var(--console-border);
+	box-shadow: var(--console-shadow-low);
 }
 
-.dashboard-user :deep(button) {
-	@apply min-h-11 gap-2.5 px-2 py-1 text-sm font-semibold;
+/* Over the rail and the sidebar's foot, as wide as both less the margins. The
+   widths are the layout's variables, so the card follows every breakpoint. */
+.dashboard-sidebar-footer--floating {
+	@apply absolute bottom-2 left-2 z-30 m-0;
+	width: calc(var(--console-rail-width) + var(--console-sidebar-width) - 1rem);
+	box-shadow: var(--popover-shadow);
+}
+
+/* The list scrolls out above the floating card, never under it. */
+.dashboard-sidebar--floating .dashboard-nav {
+	padding-bottom: 4.75rem;
+}
+
+.dashboard-nameplate {
+	@apply pointer-events-none absolute inset-0 h-full w-full object-cover object-right;
+}
+
+.dashboard-sidebar-footer > :not(.dashboard-nameplate) {
+	@apply relative;
+}
+
+/* The frame sits a little outside the avatar, as on Discord. */
+.dashboard-avatar-decoration {
+	@apply pointer-events-none absolute -inset-[10%] h-[120%] w-[120%] max-w-none;
+}
+
+.dashboard-user {
+	@apply flex min-h-11 min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded-[6px] border-0 bg-transparent px-1.5 py-1 text-left text-sm font-semibold;
 	color: var(--ui-text-highlighted);
 }
 
-.dashboard-user :deep(button:hover) {
+.dashboard-user:hover {
 	background-color: var(--console-hover);
+}
+
+.dashboard-user:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: -2px;
 }
 
 .dashboard-nav-label {
@@ -296,7 +396,7 @@ const groups = computed(() =>
 }
 
 .dashboard-nav-divider {
-	@apply mx-2.5 my-1.5 h-px;
+	@apply mx-2.5 my-0.5 h-px;
 	background-color: var(--home-border-subtle);
 }
 

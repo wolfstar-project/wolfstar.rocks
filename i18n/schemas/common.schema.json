@@ -316,22 +316,10 @@
 		"user_menu": {
 			"type": "object",
 			"properties": {
-				"account_menu": {
-					"type": "string"
-				},
-				"avatar_alt": {
-					"type": "string"
-				},
-				"avatar_fallback": {
-					"type": "string"
-				},
 				"report_bug": {
 					"type": "string"
 				},
 				"sign_out": {
-					"type": "string"
-				},
-				"user_menu_for": {
 					"type": "string"
 				}
 			},

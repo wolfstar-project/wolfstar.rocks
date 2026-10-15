@@ -41,6 +41,13 @@
 			"rules": {
 				"action": "",
 				"count": "",
+				"defaults": {
+					"description": "",
+					"escalation_title": "",
+					"rule_title": "",
+					"save": "",
+					"saved": ""
+				},
 				"delete": "",
 				"delete_aria": "",
 				"delete_description": "",
@@ -49,10 +56,10 @@
 				"edit_aria": "",
 				"editor": {
 					"action": "",
+					"back": "",
 					"cancel": "",
 					"create": "",
 					"create_title": "",
-					"description": "",
 					"duration": "",
 					"duration_unit_aria": "",
 					"edit_title": "",
@@ -87,6 +94,7 @@
 				},
 				"empty_description": "",
 				"empty_title": "",
+				"enabled_count": "",
 				"errors": {
 					"generic": "",
 					"invalid": "",
@@ -101,9 +109,11 @@
 				"load_failed": "",
 				"loading_aria": "",
 				"new": "",
+				"no_match": "",
 				"nothing": "",
 				"on_hit": "",
 				"retry": "",
+				"search_placeholder": "",
 				"soft_alert_short": "",
 				"soft_delete_short": "",
 				"soft_log_short": "",
@@ -115,7 +125,13 @@
 					"deleted": "",
 					"saved": ""
 				},
-				"toggle_aria": ""
+				"toggle_aria": "",
+				"type_picker": {
+					"content_filters": "",
+					"description": "",
+					"rate_limits": "",
+					"title": ""
+				}
 			},
 			"subtitle": "",
 			"title": "",
@@ -219,10 +235,14 @@
 				"roles": "",
 				"server": ""
 			},
+			"ignore_dialog_title": "",
+			"ignored_count": "",
 			"logging_channels": "",
 			"logging_channels_help": "",
 			"not_logged": "",
+			"nothing_ignored": "",
 			"routed_count": "",
+			"search_text_channels": "",
 			"subtitle": "",
 			"title": ""
 		},
@@ -249,6 +269,7 @@
 			"language_aria": "",
 			"language_description": "",
 			"language_placeholder": "",
+			"last_change": "",
 			"mod_actions_aria": "",
 			"mod_actions_partial": "",
 			"mod_actions_title": "",
@@ -256,6 +277,8 @@
 			"need_help": "",
 			"no_activity": "",
 			"no_activity_description": "",
+			"no_activity_yet": "",
+			"no_activity_yet_description": "",
 			"overview_subtitle": "",
 			"overview_title": "",
 			"recent_activity": "",
@@ -309,6 +332,28 @@
 		},
 		"please_try_again": "",
 		"reports": {
+			"queue": {
+				"columns": {
+					"filed": "",
+					"reason": "",
+					"status": "",
+					"target": ""
+				},
+				"empty_description": "",
+				"empty_status_description": "",
+				"empty_status_title": "",
+				"empty_title": "",
+				"filter_aria": "",
+				"refresh": "",
+				"status": {
+					"actioned": "",
+					"all": "",
+					"dismissed": "",
+					"open": ""
+				},
+				"table_aria": "",
+				"title": ""
+			},
 			"subtitle": "",
 			"title": ""
 		},

@@ -53,7 +53,24 @@ describe("GuildAutomodRules", () => {
 		expect(items[0]!.text()).toContain("Bad words");
 		expect(items[0]!.text()).toContain("Filtered words");
 		expect(items[0]!.text()).toContain("Warning");
-		expect(wrapper.text()).toContain("2 / 25 rules");
+		expect(wrapper.text()).toMatch(/\d of 2 enabled/);
+	});
+
+	it("narrows the list to the rules a search matches by name or type", async () => {
+		const wrapper = await mountSuspended(Rules);
+		const search = wrapper.get('input[placeholder="Search rules by name or type…"]');
+
+		await search.setValue("quiet");
+		const byName = wrapper.findAll("ul > li.console-card");
+		expect(byName).toHaveLength(1);
+		expect(byName[0]!.text()).toContain("Quiet rule");
+
+		// Both rules are word filters, so the name of their type matches both.
+		await search.setValue("filtered words");
+		expect(wrapper.findAll("ul > li.console-card")).toHaveLength(2);
+
+		await search.setValue("nothing like this");
+		expect(wrapper.text()).toContain("No rule matches that search.");
 	});
 
 	it("shows placeholders while the rules load", async () => {
@@ -108,13 +125,44 @@ describe("GuildAutomodRules", () => {
 		);
 	});
 
+	// A rule keeps the type it is created with, so the type is asked for first.
+	it("asks for the type of a new rule before opening its form", async () => {
+		const wrapper = await mountSuspended(Rules, { attachTo: document.body });
+
+		const create = wrapper.findAll("button").find((button) => button.text() === "Create rule");
+		await create!.trigger("click");
+
+		await vi.waitFor(() => {
+			expect(document.body.querySelector('[role="dialog"]')?.textContent).toContain(
+				"Pick a rule type",
+			);
+		});
+		const groups = Array.from(document.body.querySelectorAll('[role="dialog"] h3'), (heading) =>
+			heading.textContent?.trim(),
+		);
+		expect(groups).toStrictEqual(["Content filters", "Rate limits"]);
+
+		const card = [...document.body.querySelectorAll<HTMLButtonElement>(".type-card")].find(
+			(button) => button.textContent?.includes("MessageSpam"),
+		);
+		card!.click();
+
+		await vi.waitFor(() => {
+			const dialog = document.body.querySelector('[role="dialog"]');
+			expect(dialog?.textContent).toContain("New rule");
+			expect(dialog?.textContent).toContain("Message spam");
+		});
+
+		wrapper.unmount();
+	});
+
 	it("stops offering new rules at the limit", async () => {
 		mockRules.value = Array.from({ length: 25 }, (_, index) =>
 			makeRule(String(index + 1), `Rule ${index + 1}`),
 		);
 		const wrapper = await mountSuspended(Rules);
 
-		const create = wrapper.findAll("button").find((button) => button.text() === "New rule");
+		const create = wrapper.findAll("button").find((button) => button.text() === "Create rule");
 		expect(create!.attributes("disabled")).toBeDefined();
 	});
 });

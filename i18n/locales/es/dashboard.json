@@ -26,8 +26,6 @@
 		"invalid_guild_message": "El ID de servidor proporcionado no es válido.",
 		"invalid_guild_why": "Los IDs de servidor deben ser números de 17-19 dígitos.",
 		"loading_aria": "Cargando panel de control",
-		"loading_description": "Cargando configuración del servidor...",
-		"loading_title": "Cargando panel de control",
 		"nav": {
 			"autodelete": "",
 			"automod": "",
@@ -83,11 +81,19 @@
 		"update_failed_message": "Error al actualizar la configuración del servidor",
 		"update_failed_why": "Algo salió mal al guardar tu configuración.",
 		"user_preferences": "",
+		"user_settings_for": "",
 		"user_sign_out": ""
 	},
 	"guild_logs": {
 		"all_actions": "Todas las acciones",
 		"by_moderator": "",
+		"changes": {
+			"close": "",
+			"none": "",
+			"show_all": "",
+			"title": "",
+			"to": ""
+		},
 		"columns": {
 			"action": "Acción",
 			"case": "Caso",

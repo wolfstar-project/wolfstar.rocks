@@ -1,7 +1,7 @@
 import type { ImageURLOptions, MakeURLOptions } from "@discordjs/rest";
-import type { APIUser } from "discord-api-types/v10";
+import type { APIAvatarDecorationData, APINameplateData, APIUser } from "discord-api-types/v10";
 import type { OauthFlattenedGuild } from "../types/discord";
-import { ALLOWED_EXTENSIONS, ALLOWED_SIZES, DefaultRestOptions } from "@discordjs/rest";
+import { ALLOWED_EXTENSIONS, ALLOWED_SIZES, CDN, DefaultRestOptions } from "@discordjs/rest";
 import { isNullOrUndefined } from "@sapphire/utilities";
 
 /**
@@ -98,4 +98,30 @@ export function guildIconURL(
 	}
 
 	return dynamicMakeURL(`/icons/${guild.id}/${guild.icon}`, guild.icon, options);
+}
+
+const cdn = new CDN();
+
+/**
+ * The frame a user wears around their avatar. The preset is an animated PNG;
+ * `animated: false` asks the CDN for its first frame only.
+ */
+export function avatarDecorationURL(
+	decoration: APIAvatarDecorationData,
+	{ animated = true }: { animated?: boolean } = {},
+): string {
+	const url = cdn.avatarDecoration(decoration.asset);
+	return animated ? url : `${url}?passthrough=false`;
+}
+
+/**
+ * The picture a nameplate paints behind a member's name: its still frame, or
+ * the clip (a WebM with transparency) when motion is welcome. The asset is a
+ * folder, `nameplates/nameplates/<name>/`, holding both.
+ */
+export function nameplateURL(
+	nameplate: APINameplateData,
+	{ animated = false }: { animated?: boolean } = {},
+): string {
+	return `${DefaultRestOptions.cdn}/assets/collectibles/${nameplate.asset}${animated ? "asset.webm" : "static.png"}`;
 }

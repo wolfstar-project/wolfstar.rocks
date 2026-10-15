@@ -24,7 +24,7 @@
 						{{ ts("profile.settings_title") }}
 					</p>
 					<button
-						v-for="item in sections"
+						v-for="item in pageSections"
 						:key="item.id"
 						type="button"
 						class="settings-nav-item"
@@ -40,8 +40,29 @@
 							aria-hidden="true"
 						/>
 					</button>
+					<div class="mx-2 my-2.5 h-px bg-(--home-border-subtle)"></div>
+					<!-- Reporting a bug and leaving sit together, apart from the pages. -->
+					<button
+						v-if="reportSection"
+						type="button"
+						class="settings-nav-item"
+						:class="{ 'settings-nav-item--current': section === 'report' }"
+						:aria-current="section === 'report' ? 'page' : undefined"
+						@click="openSection('report')"
+					>
+						<UIcon
+							:name="reportSection.icon"
+							class="size-4.25 shrink-0"
+							aria-hidden="true"
+						/>
+						<span class="grow">{{ reportSection.label }}</span>
+						<UIcon
+							name="ic:round-chevron-right"
+							class="size-4.5 text-muted md:hidden"
+							aria-hidden="true"
+						/>
+					</button>
 					<template v-if="account">
-						<div class="mx-2 my-2.5 h-px bg-(--home-border-subtle)"></div>
 						<button type="button" class="settings-nav-item text-error!" @click="logOut">
 							<UIcon
 								name="ic:round-logout"
@@ -161,7 +182,29 @@
 						</template>
 
 						<AppPreferences v-else-if="section === 'appearance'" only="appearance" />
+						<AppPreferences
+							v-else-if="section === 'accessibility'"
+							only="accessibility"
+						/>
 						<AppPreferences v-else-if="section === 'language'" only="language" />
+
+						<div v-else-if="section === 'report'" class="settings-card">
+							<FeedbackForm
+								:id="feedbackFormId"
+								v-model:submitting="isSendingFeedback"
+							/>
+							<div class="mt-5 flex justify-end">
+								<UButton
+									type="submit"
+									:form="feedbackFormId"
+									color="primary"
+									:loading="isSendingFeedback"
+									icon="i-lucide-send"
+								>
+									{{ ts("feedback.send") }}
+								</UButton>
+							</div>
+						</div>
 
 						<div
 							v-else
@@ -188,7 +231,14 @@
 </template>
 
 <script setup lang="ts">
-type SettingsSection = "account" | "appearance" | "notifications" | "language" | "connections";
+type SettingsSection =
+	| "account"
+	| "appearance"
+	| "accessibility"
+	| "notifications"
+	| "language"
+	| "connections"
+	| "report";
 
 const { ts } = useI18n();
 const { isOpen } = usePreferencesDialog();
@@ -197,6 +247,8 @@ const { user: discordUser } = useUser(authUser);
 const { copy, copied } = useClipboard();
 
 const headingId = useId();
+const feedbackFormId = useId();
+const isSendingFeedback = ref(false);
 
 /** The signed-in admin, as Discord describes them. A guest has no account page. */
 const account = computed(() => {
@@ -240,6 +292,12 @@ const sections = computed(() => {
 			label: ts("profile.my_account"),
 		},
 		{ icon: "ic:round-palette", id: "appearance", label: ts("common.appearance") },
+		{
+			description: ts("profile.accessibility_description"),
+			icon: "ic:round-accessibility-new",
+			id: "accessibility",
+			label: ts("profile.accessibility"),
+		},
 		{ icon: "ic:round-notifications", id: "notifications", label: ts("profile.notifications") },
 		{
 			description: ts("profile.language_description"),
@@ -248,12 +306,25 @@ const sections = computed(() => {
 			label: ts("common.language"),
 		},
 		{ icon: "ic:round-link", id: "connections", label: ts("profile.connections") },
+		{
+			description: ts("feedback.description"),
+			icon: "ic:round-bug-report",
+			id: "report",
+			label: ts("user_menu.report_bug"),
+		},
 	];
-	// A guest only has what the browser stores: the look and the language.
+	// A guest only has what the browser stores (the look, motion and the
+	// language) and can still report a bug.
 	return account.value
 		? all
-		: all.filter((item) => item.id === "appearance" || item.id === "language");
+		: all.filter((item) =>
+				["appearance", "accessibility", "language", "report"].includes(item.id),
+			);
 });
+
+// The pages, in the list; the bug report has a place of its own under them.
+const pageSections = computed(() => sections.value.filter((item) => item.id !== "report"));
+const reportSection = computed(() => sections.value.find((item) => item.id === "report"));
 
 const section = ref<SettingsSection>("appearance");
 // On a phone the dialog is one column: the list first, then the page picked.

@@ -3,7 +3,7 @@
  *
  * The dialog is mounted once in `app/app.vue` and opened from wherever a
  * "Preferences" control lives: the header for guests and signed-in users, and
- * the user menu of the dashboard.
+ * the account card and the gear of the dashboard sidebar.
  */
 export function usePreferencesDialog() {
 	const isOpen = useState("app:preferences-dialog", () => false);

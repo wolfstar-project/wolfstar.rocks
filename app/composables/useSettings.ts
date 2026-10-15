@@ -5,8 +5,12 @@ import { isAppLocaleCode } from "~/utils/is-app-locale";
 
 export type ColorModePreference = "system" | "light" | "dark" | "midnight";
 
+/** How the log tables lay their rows out: roomy with avatars, or one tight line. */
+export type LogDensity = "cozy" | "compact";
+
 export interface AppSettings {
 	colorMode: ColorModePreference;
+	logDensity: LogDensity;
 	reduceMotion: boolean;
 	selectedLocale: AppLocaleCode | null;
 }
@@ -23,6 +27,7 @@ const LEGACY_LOCALE_KEY = "user-prefers-locale";
 const LEGACY_REDUCE_MOTION_KEY = "user-prefers-reduced-motion";
 const DEFAULT_SETTINGS: AppSettings = {
 	colorMode: "system",
+	logDensity: "cozy",
 	reduceMotion: false,
 	selectedLocale: null,
 };
@@ -67,6 +72,7 @@ function applyLegacySettingsMigration(settings: RemovableRef<AppSettings>) {
 
 	settings.value = {
 		colorMode: legacyColorMode ?? DEFAULT_SETTINGS.colorMode,
+		logDensity: DEFAULT_SETTINGS.logDensity,
 		reduceMotion: legacyReduceMotion ?? DEFAULT_SETTINGS.reduceMotion,
 		selectedLocale: legacyLocale ?? DEFAULT_SETTINGS.selectedLocale,
 	};
@@ -119,6 +125,20 @@ export function useSettings() {
 	return {
 		settings: settingsRef,
 	};
+}
+
+/** The log tables' row density, kept with the other preferences of this browser. */
+export function useLogDensity() {
+	const { settings } = useSettings();
+
+	return computed<LogDensity>({
+		// Settings stored before the preference existed have no value for it.
+		get: () => settings.value.logDensity ?? DEFAULT_SETTINGS.logDensity,
+		set: (value) => {
+			// Replace the object so useLocalStorage reliably persists nested updates.
+			settings.value = { ...settings.value, logDensity: value };
+		},
+	});
 }
 
 export function useReduceMotion() {

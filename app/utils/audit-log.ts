@@ -220,6 +220,12 @@ export function auditLogActionDescription(
 		.join("");
 }
 
+/** `17 days ago`, `yesterday`, `today`: how many calendar days back something was. */
+export function formatDaysAgo(timestamp: string | Date, now: Date, locale: string): string {
+	const daysAgo = Math.round((startOfDay(now) - startOfDay(new Date(timestamp))) / MS_DAY);
+	return new Intl.RelativeTimeFormat(locale, { numeric: "auto" }).format(-daysAgo, "day");
+}
+
 function startOfDay(date: Date): number {
 	return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
 }

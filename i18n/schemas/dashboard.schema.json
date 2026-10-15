@@ -82,12 +82,6 @@
 				"loading_aria": {
 					"type": "string"
 				},
-				"loading_description": {
-					"type": "string"
-				},
-				"loading_title": {
-					"type": "string"
-				},
 				"nav": {
 					"type": "object",
 					"properties": {
@@ -253,6 +247,9 @@
 				"user_preferences": {
 					"type": "string"
 				},
+				"user_settings_for": {
+					"type": "string"
+				},
 				"user_sign_out": {
 					"type": "string"
 				}
@@ -267,6 +264,27 @@
 				},
 				"by_moderator": {
 					"type": "string"
+				},
+				"changes": {
+					"type": "object",
+					"properties": {
+						"close": {
+							"type": "string"
+						},
+						"none": {
+							"type": "string"
+						},
+						"show_all": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						},
+						"to": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
 				},
 				"columns": {
 					"type": "object",

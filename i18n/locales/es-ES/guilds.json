@@ -41,6 +41,13 @@
 			"rules": {
 				"action": "",
 				"count": "",
+				"defaults": {
+					"description": "",
+					"escalation_title": "",
+					"rule_title": "",
+					"save": "",
+					"saved": ""
+				},
 				"delete": "",
 				"delete_aria": "",
 				"delete_description": "",
@@ -49,10 +56,10 @@
 				"edit_aria": "",
 				"editor": {
 					"action": "",
+					"back": "",
 					"cancel": "",
 					"create": "",
 					"create_title": "",
-					"description": "",
 					"duration": "",
 					"duration_unit_aria": "",
 					"edit_title": "",
@@ -87,6 +94,7 @@
 				},
 				"empty_description": "",
 				"empty_title": "",
+				"enabled_count": "",
 				"errors": {
 					"generic": "",
 					"invalid": "",
@@ -101,9 +109,11 @@
 				"load_failed": "",
 				"loading_aria": "",
 				"new": "",
+				"no_match": "",
 				"nothing": "",
 				"on_hit": "",
 				"retry": "",
+				"search_placeholder": "",
 				"soft_alert_short": "",
 				"soft_delete_short": "",
 				"soft_log_short": "",
@@ -115,7 +125,13 @@
 					"deleted": "",
 					"saved": ""
 				},
-				"toggle_aria": ""
+				"toggle_aria": "",
+				"type_picker": {
+					"content_filters": "",
+					"description": "",
+					"rate_limits": "",
+					"title": ""
+				}
 			},
 			"subtitle": "",
 			"title": "",
@@ -207,7 +223,7 @@
 			}
 		},
 		"channels": {
-			"excluded_channels": "Canales excluidos",
+			"excluded_channels": "",
 			"excluded_channels_help": "Canales omitidos por tipos específicos de registro.",
 			"form_aria": "Formulario de configuración de canales",
 			"groups": {
@@ -219,10 +235,14 @@
 				"roles": "",
 				"server": ""
 			},
+			"ignore_dialog_title": "",
+			"ignored_count": "",
 			"logging_channels": "Canales de registro",
 			"logging_channels_help": "Elige dónde WolfStar publica cada tipo de registro.",
 			"not_logged": "",
+			"nothing_ignored": "",
 			"routed_count": "",
+			"search_text_channels": "",
 			"subtitle": "Elige dónde publica WolfStar los registros y qué canales ignorar.",
 			"title": ""
 		},
@@ -249,13 +269,16 @@
 			"language_aria": "Idioma del bot",
 			"language_description": "Idioma de las respuestas del bot en este servidor.",
 			"language_placeholder": "Seleccionar idioma",
+			"last_change": "",
 			"mod_actions_aria": "",
 			"mod_actions_partial": "",
 			"mod_actions_title": "",
 			"mod_actions_total": "",
 			"need_help": "¿Necesitas ayuda?",
-			"no_activity": "Aún no hay cambios en la configuración",
-			"no_activity_description": "Los cambios de configuración aparecerán aquí.",
+			"no_activity": "",
+			"no_activity_description": "",
+			"no_activity_yet": "",
+			"no_activity_yet_description": "",
 			"overview_subtitle": "",
 			"overview_title": "",
 			"recent_activity": "Actividad reciente",
@@ -309,6 +332,28 @@
 		},
 		"please_try_again": "Por favor, inténtalo de nuevo.",
 		"reports": {
+			"queue": {
+				"columns": {
+					"filed": "",
+					"reason": "",
+					"status": "",
+					"target": ""
+				},
+				"empty_description": "",
+				"empty_status_description": "",
+				"empty_status_title": "",
+				"empty_title": "",
+				"filter_aria": "",
+				"refresh": "",
+				"status": {
+					"actioned": "",
+					"all": "",
+					"dismissed": "",
+					"open": ""
+				},
+				"table_aria": "",
+				"title": ""
+			},
 			"subtitle": "",
 			"title": ""
 		},

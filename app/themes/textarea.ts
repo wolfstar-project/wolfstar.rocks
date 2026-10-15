@@ -1,0 +1,15 @@
+// The design system's text field: the input surface with a hairline border,
+// 6px corners and a 40px line, matching the selects next to it.
+export default {
+	slots: {
+		base: "rounded-[6px] placeholder:text-muted",
+	},
+	variants: {
+		size: {
+			md: { base: "px-3 py-2 text-sm" },
+		},
+		variant: {
+			outline: "bg-(--field-surface) text-highlighted ring-(--field-border)",
+		},
+	},
+};

@@ -77,6 +77,7 @@ describe("useSettings", () => {
 
 		expect(settings.value).toEqual({
 			colorMode: "system",
+			logDensity: "cozy",
 			reduceMotion: false,
 			selectedLocale: null,
 		});
@@ -93,6 +94,7 @@ describe("useSettings", () => {
 
 		expect(settings.value).toEqual({
 			colorMode: "dark",
+			logDensity: "cozy",
 			reduceMotion: true,
 			selectedLocale: "it-IT",
 		});

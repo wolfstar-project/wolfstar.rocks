@@ -34,7 +34,7 @@ export function useCommandLog({
 		return value ? { ...value } : undefined;
 	});
 
-	const asyncData = useLazyAsyncData(
+	const asyncData = usePersistedAsyncData(
 		() =>
 			`guild:${toValue(guildId)}:logs:commands:${resolvedLimit.value ?? "default"}:${resolvedOffset.value ?? 0}:${JSON.stringify(resolvedFilters.value || {})}`,
 		() => {
@@ -60,12 +60,6 @@ export function useCommandLog({
 		{
 			immediate: immediate !== false,
 			watch: [resolvedLimit, resolvedOffset, resolvedFilters],
-			getCachedData: (key, nuxt, { cause }) => {
-				if (cause === "refresh:manual" || cause === "refresh:hook") return undefined;
-				return (nuxt.isHydrating ? nuxt.payload.data[key] : nuxt.static.data[key]) as
-					| CommandLogResponse
-					| undefined;
-			},
 		},
 	);
 

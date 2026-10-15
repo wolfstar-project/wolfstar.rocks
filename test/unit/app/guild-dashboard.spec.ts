@@ -217,14 +217,14 @@ describe("selectDashboardRailGuilds", () => {
 	const guild = (overrides: Partial<OauthFlattenedGuild>) =>
 		createMockOauthFlattenedGuild(overrides);
 
-	it("keeps only guilds the viewer manages and WolfStar has joined", () => {
+	it("keeps every guild the viewer manages, with WolfStar or without", () => {
 		const rail = selectDashboardRailGuilds([
 			guild({ id: "1", name: "Alpha", manageable: true, wolfstarIsIn: true }),
 			guild({ id: "2", name: "Beta", manageable: false, wolfstarIsIn: true }),
 			guild({ id: "3", name: "Gamma", manageable: true, wolfstarIsIn: false }),
 		]);
 
-		expect(rail.map((entry) => entry.id)).toStrictEqual(["1"]);
+		expect(rail.map((entry) => entry.id)).toStrictEqual(["1", "3"]);
 	});
 
 	it("sorts entries by name so the rail order stays stable", () => {

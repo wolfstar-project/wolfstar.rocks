@@ -10,27 +10,51 @@
 
 		<span class="guild-rail-divider" aria-hidden="true" />
 
-		<button
-			v-for="server of servers"
-			:key="server.id"
-			type="button"
-			class="guild-rail-item"
-			:class="server.id === currentGuildId ? 'guild-rail-item--active' : undefined"
-			:aria-current="server.id === currentGuildId ? 'page' : undefined"
-			:aria-label="server.name"
-			:title="server.name"
-			@click="emit('select', server.id)"
-		>
-			<img
-				v-if="resolveGuildIconSrc(server, { size: 128 })"
-				:src="resolveGuildIconSrc(server, { size: 128 })"
-				alt=""
-				class="size-full object-cover"
-				width="48"
-				height="48"
-			/>
-			<span v-else aria-hidden="true">{{ server.acronym }}</span>
-		</button>
+		<template v-for="server of servers" :key="server.id">
+			<button
+				v-if="server.wolfstarIsIn"
+				type="button"
+				class="guild-rail-item"
+				:class="server.id === currentGuildId ? 'guild-rail-item--active' : undefined"
+				:aria-current="server.id === currentGuildId ? 'page' : undefined"
+				:aria-label="server.name"
+				:title="server.name"
+				@click="emit('select', server.id)"
+			>
+				<img
+					v-if="resolveGuildIconSrc(server, { size: 128 })"
+					:src="resolveGuildIconSrc(server, { size: 128 })"
+					alt=""
+					class="size-full object-cover"
+					width="48"
+					height="48"
+				/>
+				<span v-else aria-hidden="true">{{ server.acronym }}</span>
+			</button>
+			<!-- A server without WolfStar: faded, with a "+", and it invites the bot. -->
+			<a
+				v-else
+				:href="guildAddURL(server.id)"
+				class="guild-rail-invite"
+				:aria-label="ts('guild_card.invite_bot_aria', { name: server.name })"
+				:title="ts('guild_card.invite_bot_aria', { name: server.name })"
+			>
+				<span class="guild-rail-item">
+					<img
+						v-if="resolveGuildIconSrc(server, { size: 128 })"
+						:src="resolveGuildIconSrc(server, { size: 128 })"
+						alt=""
+						class="size-full object-cover"
+						width="48"
+						height="48"
+					/>
+					<span v-else aria-hidden="true">{{ server.acronym }}</span>
+				</span>
+				<span class="guild-rail-invite-badge" aria-hidden="true">
+					<UIcon name="ic:round-add" class="size-3" />
+				</span>
+			</a>
+		</template>
 
 		<USkeleton
 			v-for="n of pending && servers.length === 0 ? 3 : 0"
@@ -126,6 +150,35 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 .guild-rail-item:has(img),
 .guild-rail-item:has(img):hover {
 	background-color: transparent;
+}
+
+/* Not joined yet: the icon faded, a "+" on its corner, both clear on hover. */
+.guild-rail-invite {
+	@apply relative flex shrink-0;
+}
+
+.guild-rail-invite .guild-rail-item {
+	@apply opacity-50 grayscale;
+	transition:
+		border-radius 170ms cubic-bezier(0.3, 0, 0.2, 1),
+		opacity 170ms,
+		filter 170ms;
+}
+
+.guild-rail-invite:hover .guild-rail-item,
+.guild-rail-invite:focus-visible .guild-rail-item {
+	@apply rounded-lg opacity-100 grayscale-0;
+}
+
+.guild-rail-invite-badge {
+	@apply absolute -right-0.5 -bottom-0.5 flex size-4.5 items-center justify-center rounded-full bg-success text-success-content;
+	box-shadow: 0 0 0 3px var(--console-rail);
+}
+
+.guild-rail-invite:focus-visible {
+	@apply rounded-lg;
+	outline: 2px solid var(--color-primary);
+	outline-offset: 2px;
 }
 
 .guild-rail-add {

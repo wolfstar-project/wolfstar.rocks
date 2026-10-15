@@ -1445,7 +1445,8 @@ onMounted(() => {
 
 /* Discord's inline code: a lighter, slightly blue chip without a border. */
 .showcase-inline-code {
-	@apply rounded px-1 py-0.5 font-mono text-[0.85em];
+	/* line-height 1 keeps the mono chip from making its line taller. */
+	@apply rounded px-1 py-0.5 font-mono text-[0.85em] leading-none;
 	background-color: oklch(from var(--showcase-discord-chrome) calc(l + 0.05) calc(c + 0.02) 280);
 }
 

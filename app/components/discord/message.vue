@@ -109,6 +109,9 @@ const profile = computed(() => Profiles[name.value]);
 	@apply grid items-start;
 	grid-template-columns: auto minmax(0, 1fr);
 	grid-template-rows: auto auto;
+	/* The "used /command" line sits right above the author line, as in Discord;
+	   the message's gap stays between the avatar and the content. */
+	row-gap: 0.375rem;
 }
 
 @media (width >= 48rem) {

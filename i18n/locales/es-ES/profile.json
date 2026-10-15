@@ -22,6 +22,9 @@
 		"loading_servers": "Cargando servidores...",
 		"members": "Miembros",
 		"message_display": "",
+		"moderation_dms": "",
+		"moderation_dms_description": "",
+		"moderation_dms_failed": "",
 		"motion_enabled": "Movimiento activado",
 		"motion_reduced": "Movimiento reducido",
 		"my_account": "",
@@ -39,6 +42,8 @@
 		"theme": "Theme",
 		"theme_menu_aria": "Choose color theme",
 		"theme_sync_system": "",
-		"username": ""
+		"username": "",
+		"your_settings": "",
+		"your_settings_description": ""
 	}
 }

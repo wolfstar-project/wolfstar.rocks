@@ -70,6 +70,15 @@
 				"message_display": {
 					"type": "string"
 				},
+				"moderation_dms": {
+					"type": "string"
+				},
+				"moderation_dms_description": {
+					"type": "string"
+				},
+				"moderation_dms_failed": {
+					"type": "string"
+				},
 				"motion_enabled": {
 					"type": "string"
 				},
@@ -122,6 +131,12 @@
 					"type": "string"
 				},
 				"username": {
+					"type": "string"
+				},
+				"your_settings": {
+					"type": "string"
+				},
+				"your_settings_description": {
 					"type": "string"
 				}
 			},

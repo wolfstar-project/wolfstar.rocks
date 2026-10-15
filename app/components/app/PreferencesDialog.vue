@@ -134,9 +134,13 @@
 										<p class="truncate text-xl font-bold">
 											{{ account.display }}
 										</p>
-										<p class="truncate text-[0.8125rem] text-muted">
+										<p
+											v-if="account.username"
+											class="truncate text-[0.8125rem] text-muted"
+										>
 											@{{ account.username }}
 										</p>
+										<USkeleton v-else class="mt-1 h-3.5 w-28 rounded" />
 									</div>
 									<UButton
 										color="neutral"
@@ -154,14 +158,19 @@
 									<div v-for="row in accountRows" :key="row.label">
 										<div class="min-w-0 grow">
 											<dt>{{ row.label }}</dt>
-											<dd class="truncate">{{ row.value }}</dd>
+											<dd v-if="row.value" class="truncate">
+												{{ row.value }}
+											</dd>
+											<!-- The Discord account is still on its way: no stand-in value. -->
+											<USkeleton v-else class="mt-1 h-4 w-40 rounded" />
 										</div>
 										<UButton
-											v-if="row.copy"
+											v-if="row.copy !== undefined"
+											:disabled="!row.copy"
 											color="neutral"
 											variant="ghost"
 											size="sm"
-											@click="copy(row.copy)"
+											@click="row.copy && copy(row.copy)"
 										>
 											{{ copied ? ts("common.copied") : ts("profile.copy") }}
 										</UButton>
@@ -178,6 +187,34 @@
 										</span>
 									</div>
 								</dl>
+							</div>
+
+							<!-- What WolfStar keeps about the user, the same in every server. -->
+							<h3 class="settings-section-label">
+								{{ ts("profile.your_settings") }}
+							</h3>
+							<p class="mb-3 text-[0.8125rem] text-muted">
+								{{ ts("profile.your_settings_description") }}
+							</p>
+							<div class="settings-card flex items-center gap-4 px-5! py-4!">
+								<div class="min-w-0 grow">
+									<p class="text-sm font-semibold">
+										{{ ts("profile.moderation_dms") }}
+									</p>
+									<p class="mt-0.5 text-xs leading-normal text-muted">
+										{{ ts("profile.moderation_dms_description") }}
+									</p>
+								</div>
+								<USkeleton
+									v-if="!userSettings"
+									class="h-6 w-11 shrink-0 rounded-full"
+								/>
+								<USwitch
+									v-else
+									:model-value="userSettings.report"
+									:aria-label="ts('profile.moderation_dms')"
+									@update:model-value="saveReport"
+								/>
 							</div>
 						</template>
 
@@ -243,7 +280,9 @@ type SettingsSection =
 const { ts } = useI18n();
 const { isOpen } = usePreferencesDialog();
 const { user: authUser, signOut } = useUserSession();
-const { user: discordUser } = useUser(authUser);
+const { user: discordUser, status: discordStatus, refresh: refreshDiscordUser } = useUser(authUser);
+const { data: userSettings, setReport, refresh: refreshUserSettings } = useUserSettings();
+const toast = useToast();
 const { copy, copied } = useClipboard();
 
 const headingId = useId();
@@ -257,10 +296,11 @@ const account = computed(() => {
 	const discord = discordUser.value;
 	return {
 		avatar: session.image ?? undefined,
-		display: discord?.global_name ?? session.name,
+		display: discord?.global_name ?? discord?.username ?? session.name,
 		email: session.email,
-		id: discord?.id,
-		username: discord?.username ?? session.name,
+		// Only Discord knows these; the session's name is the display name.
+		id: discord?.id ?? "",
+		username: discord?.username ?? "",
 	};
 });
 
@@ -277,11 +317,14 @@ const accountRows = computed(() => {
 		{ label: ts("profile.display_name"), value: current.display },
 		{ label: ts("profile.username"), value: current.username },
 		...(current.email ? [{ label: ts("profile.email"), value: maskEmail(current.email) }] : []),
-		...(current.id
-			? [{ copy: current.id, label: ts("profile.discord_id"), value: current.id }]
-			: []),
+		{ copy: current.id, label: ts("profile.discord_id"), value: current.id },
 	] satisfies { label: string; value: string; copy?: string }[];
 });
+
+async function saveReport(report: boolean) {
+	if (await setReport(report)) return;
+	toast.add({ color: "error", title: ts("profile.moderation_dms_failed") });
+}
 
 const sections = computed(() => {
 	const all: { id: SettingsSection; icon: string; label: string; description?: string }[] = [
@@ -347,6 +390,11 @@ watch(
 		if (!open) return;
 		section.value = account.value ? "account" : "appearance";
 		detailOpen.value = false;
+		if (!account.value) return;
+		// The account page needs the Discord account; ask for it again if an
+		// earlier request failed (the route is rate limited).
+		if (!discordUser.value && discordStatus.value !== "pending") void refreshDiscordUser();
+		void refreshUserSettings();
 	},
 	{ immediate: true },
 );
@@ -422,6 +470,11 @@ async function logOut() {
 
 .settings-close:hover {
 	color: var(--ui-text-highlighted);
+}
+
+.settings-section-label {
+	@apply mt-8 mb-1.5 text-[0.6875rem] font-bold tracking-[0.04em] uppercase;
+	color: var(--ui-text-muted);
 }
 
 .settings-card {

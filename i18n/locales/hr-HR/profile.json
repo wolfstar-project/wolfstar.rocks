@@ -22,6 +22,9 @@
 		"loading_servers": "",
 		"members": "",
 		"message_display": "",
+		"moderation_dms": "",
+		"moderation_dms_description": "",
+		"moderation_dms_failed": "",
 		"motion_enabled": "",
 		"motion_reduced": "",
 		"my_account": "",
@@ -39,6 +42,8 @@
 		"theme": "",
 		"theme_menu_aria": "",
 		"theme_sync_system": "",
-		"username": ""
+		"username": "",
+		"your_settings": "",
+		"your_settings_description": ""
 	}
 }

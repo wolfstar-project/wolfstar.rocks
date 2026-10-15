@@ -171,6 +171,8 @@ interface ShowcaseCommandComponentsResponse {
 	resetDescription: string;
 	resetLabel: string;
 	expires: string;
+	/** The relative time inside `expires`, drawn as Discord's timestamp chip. */
+	expiresTime: string;
 }
 
 export type ShowcaseCommand = ShowcaseCommandBase &

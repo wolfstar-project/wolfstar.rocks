@@ -70,8 +70,9 @@ const ariaLabel = computed(() => {
 	--message-reply-spine-width: 2px;
 	--message-reply-spine-color: oklch(from var(--color-base-content) l c h / 0.2);
 	--message-reply-roundness: 0px;
-	--discord-command-chip-bg: oklch(57.7% 0.209 273.88 / 0.15);
-	--discord-command-chip-text: oklch(93.89% 0.027 281.72);
+	/* Discord's command chip: link-blue text on a blurple wash. */
+	--discord-command-chip-bg: oklch(57.7% 0.209 273.88 / 0.24);
+	--discord-command-chip-text: oklch(70.5% 0.155 252);
 	--discord-interaction-muted: oklch(73.06% 0.0048 264.53);
 
 	@apply relative mb-0 flex min-w-0 flex-nowrap items-center gap-x-1 font-whitney text-xs leading-4;

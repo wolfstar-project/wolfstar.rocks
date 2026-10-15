@@ -120,27 +120,27 @@
 													:line="activeDisplayCommand.content"
 												/>
 											</span>
-											<!-- /settings server menu: two Components V2 containers. -->
+											<!-- /settings server menu: two Components V2 containers, sized as
+											     Discord draws them (16px padding, 8px between components). -->
 											<div v-else class="showcase-settings-menu">
 												<DiscordV2Container
 													:accent-color="activeDisplayCommand.accentColor"
 												>
 													<div class="showcase-settings-section">
-														<DiscordV2TextDisplay>
-															<div class="showcase-settings-heading">
+														<div class="showcase-settings-text">
+															<h3 class="showcase-settings-heading">
 																{{ activeDisplayCommand.heading }}
-															</div>
-															<div>
-																{{ activeDisplayCommand.intro }}
-															</div>
-														</DiscordV2TextDisplay>
+															</h3>
+															<p>{{ activeDisplayCommand.intro }}</p>
+														</div>
 														<DiscordButton
-															:emoji="EMOJIS.reload"
-															emoji-name="reload"
+															:disabled="false"
+															icon="twemoji:counterclockwise-arrows-button"
 														/>
 													</div>
 													<DiscordActionRow>
 														<DiscordStringSelectMenu
+															v-model="settingsModule"
 															:options="
 																activeDisplayCommand.selectOptions
 															"
@@ -163,9 +163,9 @@
 														:key="row.label"
 														class="showcase-settings-section"
 													>
-														<DiscordV2TextDisplay>
+														<div class="showcase-settings-text">
 															<strong>{{ row.label }}</strong>
-															<div>
+															<p>
 																<template v-if="row.value">{{
 																	row.value
 																}}</template
@@ -181,16 +181,17 @@
 																	v-if="row.value && row.code"
 																	>)</template
 																>
-															</div>
-														</DiscordV2TextDisplay>
+															</p>
+														</div>
 														<DiscordButton
+															:disabled="false"
 															:emoji="EMOJIS.edit"
 															emoji-name="edit"
 														/>
 													</div>
 													<DiscordV2Separator />
 													<div class="showcase-settings-section">
-														<DiscordV2TextDisplay>
+														<div class="showcase-settings-text">
 															<strong
 																><img
 																	:src="EMOJIS.warning"
@@ -202,30 +203,30 @@
 																	activeDisplayCommand.resetTitle
 																}}</strong
 															>
-															<div>
+															<p>
 																{{
 																	activeDisplayCommand.resetDescription
 																}}
-															</div>
-														</DiscordV2TextDisplay>
+															</p>
+														</div>
 														<DiscordButton
+															:disabled="false"
 															variant="danger"
 															:label="activeDisplayCommand.resetLabel"
 														/>
 													</div>
-													<DiscordV2TextDisplay>
-														<small class="showcase-settings-expires"
-															><img
-																:src="EMOJIS.hourglass"
-																alt=":hourglass:"
-																class="showcase-custom-emoji"
-																draggable="false"
-															/>{{ " "
-															}}{{
-																activeDisplayCommand.expires
-															}}</small
-														>
-													</DiscordV2TextDisplay>
+													<p class="showcase-settings-expires">
+														<img
+															:src="EMOJIS.hourglass"
+															alt=":hourglass:"
+															class="showcase-custom-emoji"
+															draggable="false"
+														/>{{ " " }}{{ settingsExpires.before
+														}}<span class="showcase-timestamp">{{
+															activeDisplayCommand.expiresTime
+														}}</span
+														>{{ settingsExpires.after }}
+													</p>
 												</DiscordV2Container>
 											</div>
 										</DiscordMessage>
@@ -420,16 +421,27 @@ const commands = useShowcaseCommands();
 
 /**
  * WolfStar's own emojis, exported from the brand's icon file in Figma
- * ("Icons (Brand WolfStar)", Emoji Collection) and Discord's icon kit; the
- * hourglass is not in either, so it comes from the bot's emoji on Discord's CDN.
+ * ("Icons (Brand WolfStar)", Emoji Collection) and Discord's icon kit, the
+ * glyphs only; the hourglass is not in either, so it comes from the bot's emoji
+ * on Discord's CDN. The menu's refresh button is the Unicode 🔄, as in the bot.
  */
 const EMOJIS = {
 	edit: "/emojis/edit.svg",
 	greenTick: "/emojis/green-tick.svg",
 	hourglass: "https://cdn.discordapp.com/emojis/1262391693823578245.webp?size=44",
-	reload: "/emojis/reload.svg",
 	warning: "/emojis/warning.svg",
 } as const;
+
+/** The settings menu opens on its root module, General, as the bot's does. */
+const settingsModule = ref<string | undefined>("general");
+
+/** "This menu closes `in 15 minutes` if it is not used.": the time is a timestamp chip. */
+const settingsExpires = computed(() => {
+	const command = activeDisplayCommand.value;
+	if (command.responseType !== "components") return { after: "", before: "" };
+	const [before = "", after = ""] = command.expires.split(command.expiresTime);
+	return { after, before };
+});
 
 /**
  * "Created case 3 | `baddie`." around the target, which is set as inline code:
@@ -1431,28 +1443,101 @@ onMounted(() => {
 	@apply inline-block size-[1.375em] object-contain align-[-0.3em];
 }
 
-/* Discord's inline code: a darker chip with a hairline border. */
+/* Discord's inline code: a lighter, slightly blue chip without a border. */
 .showcase-inline-code {
 	@apply rounded px-1 py-0.5 font-mono text-[0.85em];
-	background-color: var(--showcase-discord-sidebar);
-	border: 1px solid var(--showcase-discord-server);
+	background-color: oklch(from var(--showcase-discord-chrome) calc(l + 0.05) calc(c + 0.02) 280);
 }
 
+/*
+ * The settings menu, measured on Discord (Components V2, 100% zoom): containers
+ * 8px apart, 16px padding behind a 4px accent and 8px corners, 8px between
+ * components; a section is two 20px lines beside a 60×32 button. The surfaces
+ * are the channel made lighter as Discord does (OKLCH lightness): the container
+ * +0.035, the select +0.022, the buttons +0.083, the separator and timestamp +0.1.
+ */
 .showcase-settings-menu {
-	@apply flex max-w-130 flex-col gap-2;
+	--showcase-v2-container: oklch(from var(--showcase-discord-chrome) calc(l + 0.035) c h);
+	--showcase-v2-select: oklch(from var(--showcase-discord-chrome) calc(l + 0.022) c h);
+	--showcase-v2-button: oklch(from var(--showcase-discord-chrome) calc(l + 0.083) c h);
+	--showcase-v2-line: oklch(from var(--showcase-discord-chrome) calc(l + 0.1) c h);
+
+	@apply mt-1 flex max-w-125 flex-col gap-2;
 }
 
-/* A Components V2 section: text on the left, its button as the accessory. */
+.showcase-settings-menu :deep(.discord-v2-container) {
+	@apply m-0 max-w-none gap-2 p-4 text-base leading-5;
+	border-left-width: 4px;
+	border-radius: 8px;
+	background-color: var(--showcase-v2-container);
+}
+
+/* A section: its text on the left, its button as the accessory. */
 .showcase-settings-section {
 	@apply flex items-center justify-between gap-3;
 }
 
-.showcase-settings-heading {
-	@apply text-xl leading-tight font-bold;
+.showcase-settings-text {
+	@apply min-w-0 flex-1 leading-5;
 }
 
+.showcase-settings-text p {
+	@apply m-0;
+}
+
+/* Discord's "## heading": 20px bold on a 24px line. */
+.showcase-settings-heading {
+	@apply m-0 mb-1 text-xl leading-6 font-bold;
+	color: var(--showcase-discord-primary-text);
+}
+
+.showcase-settings-menu :deep(.discord-button) {
+	@apply m-0 h-8 min-w-15 shrink-0 rounded-[8px] px-4;
+}
+
+.showcase-settings-menu :deep(.discord-button-secondary) {
+	background-color: var(--showcase-v2-button);
+}
+
+.showcase-settings-menu :deep(.discord-button-emoji) {
+	@apply mr-0 size-5;
+}
+
+.showcase-settings-menu :deep(.discord-action-row) {
+	@apply gap-0;
+}
+
+.showcase-settings-menu :deep(.discord-string-select-menu-trigger) {
+	@apply h-10 min-h-10 rounded-[8px] px-3 text-base font-normal;
+	--discord-string-select-menu-bg: var(--showcase-v2-select);
+	--discord-string-select-menu-border: var(--showcase-v2-line);
+}
+
+.showcase-settings-menu :deep(.discord-string-select-menu-value-emoji) {
+	@apply size-6;
+}
+
+.showcase-settings-menu :deep(.discord-v2-separator) {
+	@apply py-0;
+}
+
+.showcase-settings-menu :deep(.discord-v2-separator-line) {
+	border-color: var(--showcase-v2-line);
+}
+
+/* "-# ⏳ This menu closes in 15 minutes if it is not used.": Discord's subtext. */
 .showcase-settings-expires {
-	@apply text-xs;
+	@apply m-0 text-[0.8125rem] leading-4;
 	color: var(--showcase-discord-muted-text);
+}
+
+.showcase-settings-expires .showcase-custom-emoji {
+	@apply size-4 align-[-0.2em];
+}
+
+/* A <t:…:R> timestamp: the time on a faint chip. */
+.showcase-timestamp {
+	@apply rounded-[3px] px-0.5;
+	background-color: var(--showcase-v2-line);
 }
 </style>

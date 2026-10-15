@@ -287,6 +287,7 @@ export function useShowcaseCommands() {
 						expires: ts("marketing.wolfstar.fixtures.menu_expires", {
 							time: ts("marketing.wolfstar.fixtures.value_in_fifteen_minutes"),
 						}),
+						expiresTime: ts("marketing.wolfstar.fixtures.value_in_fifteen_minutes"),
 						heading: ts("marketing.wolfstar.fixtures.menu_heading"),
 						intro: ts("marketing.wolfstar.fixtures.menu_intro", {
 							guild: "WolfStar HQ",

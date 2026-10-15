@@ -483,6 +483,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		resetDescription: "Resets the settings of this module to their defaults.",
 		resetLabel: "Reset",
 		expires: "This menu closes in 15 minutes if it is not used.",
+		expiresTime: "in 15 minutes",
 	},
 	{
 		id: "case_view",

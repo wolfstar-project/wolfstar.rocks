@@ -15,6 +15,26 @@
 			:disabled="disabled"
 			@click="toggle"
 		>
+			<!-- The chosen option keeps its emoji in the trigger, as in Discord. -->
+			<img
+				v-if="selectedEmoji?.kind === 'image'"
+				:src="selectedEmoji.value"
+				alt=""
+				draggable="false"
+				class="discord-string-select-menu-value-emoji"
+			/>
+			<UIcon
+				v-else-if="selectedEmoji?.kind === 'icon'"
+				:name="selectedEmoji.value"
+				class="discord-string-select-menu-value-emoji"
+				aria-hidden="true"
+			/>
+			<span
+				v-else-if="selectedEmoji"
+				class="discord-string-select-menu-value-emoji"
+				aria-hidden="true"
+				>{{ selectedEmoji.value }}</span
+			>
 			<span
 				class="discord-string-select-menu-value"
 				:class="{ 'discord-string-select-menu-placeholder': !selectedOption }"
@@ -122,6 +142,16 @@ const activeIndex = ref(-1);
 const selectedOption = computed(() =>
 	options.find((option) => option.value === selectedValue.value),
 );
+
+/** The chosen option's emoji: an image path, an Iconify name, or Unicode text. */
+const selectedEmoji = computed(() => {
+	const emoji = selectedOption.value?.emoji;
+	if (!emoji) return null;
+	if (emoji.includes("http") || emoji.startsWith("/") || emoji.startsWith("./")) {
+		return { kind: "image" as const, value: emoji };
+	}
+	return { kind: emoji.includes(":") ? ("icon" as const) : ("text" as const), value: emoji };
+});
 
 const activeDescendant = computed(() =>
 	isOpen.value && activeIndex.value >= 0 ? optionId(activeIndex.value) : undefined,
@@ -349,6 +379,10 @@ useEventListener(
 
 .discord-string-select-menu-value {
 	@apply min-w-0 truncate;
+}
+
+.discord-string-select-menu-value-emoji {
+	@apply size-[1.375em] shrink-0 object-contain;
 }
 
 .discord-string-select-menu-placeholder {

@@ -161,6 +161,10 @@
 						</template>
 
 						<AppPreferences v-else-if="section === 'appearance'" only="appearance" />
+						<AppPreferences
+							v-else-if="section === 'accessibility'"
+							only="accessibility"
+						/>
 						<AppPreferences v-else-if="section === 'language'" only="language" />
 
 						<div v-else-if="section === 'report'" class="settings-card">
@@ -209,6 +213,7 @@
 type SettingsSection =
 	| "account"
 	| "appearance"
+	| "accessibility"
 	| "notifications"
 	| "language"
 	| "connections"
@@ -266,6 +271,12 @@ const sections = computed(() => {
 			label: ts("profile.my_account"),
 		},
 		{ icon: "ic:round-palette", id: "appearance", label: ts("common.appearance") },
+		{
+			description: ts("profile.accessibility_description"),
+			icon: "ic:round-accessibility-new",
+			id: "accessibility",
+			label: ts("profile.accessibility"),
+		},
 		{ icon: "ic:round-notifications", id: "notifications", label: ts("profile.notifications") },
 		{
 			description: ts("profile.language_description"),
@@ -281,11 +292,13 @@ const sections = computed(() => {
 			label: ts("user_menu.report_bug"),
 		},
 	];
-	// A guest only has what the browser stores (the look and the language) and
-	// can still report a bug.
+	// A guest only has what the browser stores (the look, motion and the
+	// language) and can still report a bug.
 	return account.value
 		? all
-		: all.filter((item) => ["appearance", "language", "report"].includes(item.id));
+		: all.filter((item) =>
+				["appearance", "accessibility", "language", "report"].includes(item.id),
+			);
 });
 
 const section = ref<SettingsSection>("appearance");

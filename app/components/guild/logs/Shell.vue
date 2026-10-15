@@ -1,5 +1,5 @@
 <template>
-	<div class="logs-shell">
+	<div class="logs-shell" :class="{ 'logs-shell--compact': logDensity === 'compact' }">
 		<div class="flex flex-wrap items-center gap-2.5">
 			<label class="logs-search">
 				<UIcon
@@ -113,6 +113,8 @@ const emit = defineEmits<{
 }>();
 
 const { ts } = useI18n();
+// "Compact" in the settings' Message display: one tight line per entry.
+const logDensity = useLogDensity();
 </script>
 
 <style scoped>
@@ -207,5 +209,20 @@ const { ts } = useI18n();
 
 .logs-shell :deep(.logs-case) {
 	@apply font-mono text-[0.8125rem] text-primary theme-light:text-default;
+}
+
+/* Compact rows: shorter, without avatars or the second line under a name. */
+.logs-shell--compact :deep(td) {
+	@apply h-8 py-0.5;
+}
+
+.logs-shell--compact :deep(td .avatar),
+.logs-shell--compact :deep(td p + p),
+.logs-shell--compact :deep(.logs-card .avatar) {
+	@apply hidden;
+}
+
+.logs-shell--compact :deep(.logs-card) {
+	@apply gap-1 py-2;
 }
 </style>

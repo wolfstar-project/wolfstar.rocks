@@ -13,9 +13,6 @@
 				"accessibility_description": {
 					"type": "string"
 				},
-				"appearance_description": {
-					"type": "string"
-				},
 				"back": {
 					"type": "string"
 				},
@@ -29,6 +26,18 @@
 					"type": "string"
 				},
 				"current_status": {
+					"type": "string"
+				},
+				"density_compact": {
+					"type": "string"
+				},
+				"density_compact_hint": {
+					"type": "string"
+				},
+				"density_cozy": {
+					"type": "string"
+				},
+				"density_cozy_hint": {
 					"type": "string"
 				},
 				"discord_id": {
@@ -56,6 +65,9 @@
 					"type": "string"
 				},
 				"members": {
+					"type": "string"
+				},
+				"message_display": {
 					"type": "string"
 				},
 				"motion_enabled": {
@@ -103,10 +115,10 @@
 				"theme": {
 					"type": "string"
 				},
-				"theme_description": {
+				"theme_menu_aria": {
 					"type": "string"
 				},
-				"theme_menu_aria": {
+				"theme_sync_system": {
 					"type": "string"
 				},
 				"username": {

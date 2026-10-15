@@ -218,6 +218,20 @@
 		--ink-400: oklch(38% 0.012 273.1);
 		--ink-300: oklch(44.7% 0.014 252.2);
 
+		/* The miniature windows of the theme picker in the settings dialog. Each
+		   one shows its own theme whatever the page is in, so they are fixed:
+		   the ink scale for dark, Discord's light greys (#E3E5E8, #F2F3F5,
+		   #C4C9CE) for light, near-black for midnight. */
+		--theme-preview-light-app: oklch(100% 0 0);
+		--theme-preview-light-rail: oklch(91.6% 0.004 264.5);
+		--theme-preview-light-side: oklch(96.4% 0.002 247.8);
+		--theme-preview-light-line: oklch(83.4% 0.008 236.6);
+		--theme-preview-midnight-app: oklch(0% 0 0);
+		--theme-preview-midnight-rail: oklch(10% 0 0);
+		--theme-preview-midnight-side: oklch(16% 0 0);
+		--theme-preview-midnight-line: oklch(32% 0 0);
+		--theme-preview-system-line: oklch(64.6% 0.006 247.9);
+
 		/* Form fields and the popovers they open (selects, menus): the design
 		   system's `surface-input`, `border-default`, `surface-raised` and
 		   `shadow-high`. Light values here, dark ones in the theme blocks below. */

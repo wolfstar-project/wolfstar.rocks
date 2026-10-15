@@ -42,6 +42,8 @@ import {
 	// #endregion
 
 	DashboardBottomNav,
+	DashboardDirectMessageThread,
+	DashboardDirectMessages,
 	DashboardPageHeader,
 	DashboardSidebar,
 	DashboardSkeleton,
@@ -610,6 +612,22 @@ describe("component accessibility audits", () => {
 				createMockOauthFlattenedGuild({ id: "123456789012345678", name: "WolfStar HQ" }),
 			);
 			const component = await mountSuspended(DashboardSidebar);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("DashboardDirectMessages", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(DashboardDirectMessages);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("DashboardDirectMessageThread", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(DashboardDirectMessageThread);
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
 		});

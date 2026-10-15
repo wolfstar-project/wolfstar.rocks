@@ -7,34 +7,7 @@
 		"guild_card": {
 			"type": "object",
 			"properties": {
-				"invite_aria": {
-					"type": "string"
-				},
-				"invite_bot": {
-					"type": "string"
-				},
 				"invite_bot_aria": {
-					"type": "string"
-				},
-				"manage_aria": {
-					"type": "string"
-				},
-				"manage_server": {
-					"type": "string"
-				},
-				"manage_server_aria": {
-					"type": "string"
-				},
-				"members_online": {
-					"type": "string"
-				},
-				"no_permission": {
-					"type": "string"
-				},
-				"no_permission_aria": {
-					"type": "string"
-				},
-				"total_members": {
 					"type": "string"
 				}
 			},

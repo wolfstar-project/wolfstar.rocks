@@ -58,6 +58,84 @@
 				"discard_changes": {
 					"type": "string"
 				},
+				"dm": {
+					"type": "object",
+					"properties": {
+						"bot_tag": {
+							"type": "string"
+						},
+						"direct_message": {
+							"type": "string"
+						},
+						"home_aria": {
+							"type": "string"
+						},
+						"intro": {
+							"type": "string"
+						},
+						"log_aria": {
+							"type": "string"
+						},
+						"news": {
+							"type": "object",
+							"properties": {
+								"automod_body": {
+									"type": "string"
+								},
+								"automod_title": {
+									"type": "string"
+								},
+								"console_body": {
+									"type": "string"
+								},
+								"console_text": {
+									"type": "string"
+								},
+								"console_title": {
+									"type": "string"
+								},
+								"language_action": {
+									"type": "string"
+								},
+								"language_body": {
+									"type": "string"
+								},
+								"language_title": {
+									"type": "string"
+								},
+								"rail_text": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"no_messages": {
+							"type": "string"
+						},
+						"no_reply": {
+							"type": "string"
+						},
+						"react": {
+							"type": "string"
+						},
+						"search": {
+							"type": "string"
+						},
+						"staryl_intro": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						},
+						"unread": {
+							"type": "string"
+						},
+						"wolfstar_intro": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"error_aria": {
 					"type": "string"
 				},
@@ -181,16 +259,10 @@
 				"picker": {
 					"type": "object",
 					"properties": {
-						"description": {
-							"type": "string"
-						},
 						"empty": {
 							"type": "string"
 						},
 						"error": {
-							"type": "string"
-						},
-						"title": {
 							"type": "string"
 						}
 					},
@@ -202,7 +274,7 @@
 				"save_changes": {
 					"type": "string"
 				},
-				"server_rail_all": {
+				"server_rail_add": {
 					"type": "string"
 				},
 				"server_rail_aria": {

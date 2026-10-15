@@ -1,16 +1,7 @@
 {
 	"$schema": "../../schemas/guilds.schema.json",
 	"guild_card": {
-		"invite_aria": "",
-		"invite_bot": "",
-		"invite_bot_aria": "",
-		"manage_aria": "",
-		"manage_server": "",
-		"manage_server_aria": "",
-		"members_online": "",
-		"no_permission": "",
-		"no_permission_aria": "",
-		"total_members": ""
+		"invite_bot_aria": ""
 	},
 	"guild_settings": {
 		"automod": {

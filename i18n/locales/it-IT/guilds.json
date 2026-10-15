@@ -1,16 +1,7 @@
 {
 	"$schema": "../../schemas/guilds.schema.json",
 	"guild_card": {
-		"invite_aria": "Invita il bot su {name}",
-		"invite_bot": "Invita bot",
-		"invite_bot_aria": "Invita bot su {name}",
-		"manage_aria": "Gestisci {name}",
-		"manage_server": "Gestisci server",
-		"manage_server_aria": "Gestisci server {name}",
-		"members_online": "Membri online",
-		"no_permission": "Nessun permesso",
-		"no_permission_aria": "Nessun permesso per gestire {name}",
-		"total_members": "Membri totali: {count}"
+		"invite_bot_aria": "Invita bot su {name}"
 	},
 	"guild_settings": {
 		"automod": {

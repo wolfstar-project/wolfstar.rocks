@@ -18,6 +18,32 @@
 			"title": ""
 		},
 		"discard_changes": "Elimina modifiche",
+		"dm": {
+			"bot_tag": "",
+			"direct_message": "",
+			"home_aria": "",
+			"intro": "",
+			"log_aria": "",
+			"news": {
+				"automod_body": "",
+				"automod_title": "",
+				"console_body": "",
+				"console_text": "",
+				"console_title": "",
+				"language_action": "",
+				"language_body": "",
+				"language_title": "",
+				"rail_text": ""
+			},
+			"no_messages": "",
+			"no_reply": "",
+			"react": "",
+			"search": "",
+			"staryl_intro": "",
+			"title": "",
+			"unread": "",
+			"wolfstar_intro": ""
+		},
 		"error_aria": "Errore nel caricamento della dashboard",
 		"error_fallback": "Qualcosa è andato storto durante il caricamento della dashboard. Riprova, o contatta il supporto se il problema persiste.",
 		"error_forbidden": "Non hai il permesso di accedere alla dashboard di questo server. Assicurati di avere il permesso Gestisci server e riprova.",
@@ -59,14 +85,12 @@
 		"nav_unpin": "",
 		"nav_you": "",
 		"picker": {
-			"description": "",
 			"empty": "",
-			"error": "",
-			"title": ""
+			"error": ""
 		},
 		"reset_changes": "Reimposta modifiche",
 		"save_changes": "Salva modifiche",
-		"server_rail_all": "",
+		"server_rail_add": "",
 		"server_rail_aria": "",
 		"settings_saved_description": "Le impostazioni del server sono state salvate.",
 		"settings_saved_title": "Impostazioni salvate",

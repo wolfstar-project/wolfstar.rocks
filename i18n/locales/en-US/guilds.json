@@ -1,16 +1,7 @@
 {
 	"$schema": "../../schemas/guilds.schema.json",
 	"guild_card": {
-		"invite_aria": "Invite bot to {name}",
-		"invite_bot": "Invite Bot",
-		"invite_bot_aria": "Invite WolfStar bot to {name}",
-		"manage_aria": "Manage {name}",
-		"manage_server": "Manage Server",
-		"manage_server_aria": "Manage {name} server settings",
-		"members_online": "Members online",
-		"no_permission": "No Permission",
-		"no_permission_aria": "{name} - No permission",
-		"total_members": "Total members: {count}"
+		"invite_bot_aria": "Invite WolfStar bot to {name}"
 	},
 	"guild_settings": {
 		"automod": {

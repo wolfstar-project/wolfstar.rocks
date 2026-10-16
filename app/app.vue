@@ -38,11 +38,20 @@ const localeMap = computed(() =>
 	Object.fromEntries(locales.value.map((entry) => [entry.code, entry.dir ?? "ltr"])),
 );
 
+// Site config's locale feeds the SEO defaults (`og:locale`, and a `<html lang>`
+// of its own); it only follows @nuxtjs/i18n by itself, so it is handed ours.
+updateSiteConfig({ currentLocale: locale });
+
+// `<html lang>` and `dir` follow the active locale. They are refs, which unhead
+// watches, rather than getters, which it only reads on the next render. The
+// entry is `low` priority on purpose: for `<html>` attributes the entry sorted
+// last wins, and nuxt-seo-utils sets its own `lang` at `low` priority, so an
+// entry of normal priority lost to it and a language switch left `lang` on
+// en-US. Pushed later, this one sorts after it.
+const htmlDir = computed(() => localeMap.value[locale.value] ?? "ltr");
+useHead({ htmlAttrs: { dir: htmlDir, lang: locale } }, { tagPriority: "low" });
+
 useHead({
-	htmlAttrs: {
-		lang: () => locale.value,
-		dir: () => localeMap.value[locale.value] ?? "ltr",
-	},
 	// Picks the header's account skeleton before the first paint (`auth-hint.ts`).
 	script: [{ innerHTML: AUTH_HINT_SCRIPT, key: "auth-hint", tagPosition: "head" }],
 });

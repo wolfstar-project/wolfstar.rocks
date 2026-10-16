@@ -84,5 +84,9 @@ savePrefix: ""
 
 shellEmulator: true
 
+# `@i18n-micro/path-strategy`: with the `no_prefix` strategy a language switch
+# keeps the current path. Upstream navigates to the route by name, which turned
+# an alias such as "/" into "/wolfstar" (see modules/i18n-no-prefix-aliases.ts).
 patchedDependencies:
+    "@i18n-micro/path-strategy@1.3.10": patches/@i18n-micro__path-strategy@1.3.10.patch
     prisma-orm-extension-typed-json: patches/prisma-orm-extension-typed-json.patch

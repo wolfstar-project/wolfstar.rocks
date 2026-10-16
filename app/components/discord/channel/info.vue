@@ -3,14 +3,14 @@
 		class="discord-channel-info"
 		role="dialog"
 		aria-modal="true"
-		:aria-label="`Channel information for #${name}`"
+		:aria-label="ts('discord.channel_info.label', { name })"
 	>
 		<div class="discord-channel-info-toolbar">
 			<button
 				ref="backButton"
 				type="button"
 				class="discord-channel-info-toolbar-btn"
-				aria-label="Back to channel"
+				:aria-label="ts('discord.channel_info.back')"
 				@click="emit('close')"
 			>
 				<UIcon name="ph:arrow-left-bold" class="size-5" aria-hidden="true" />
@@ -35,14 +35,16 @@
 			</div>
 			<div class="discord-channel-info-identity-text">
 				<div class="discord-channel-info-name">{{ name }}</div>
-				<div class="discord-channel-info-type">Text Channel</div>
+				<div class="discord-channel-info-type">
+					{{ ts("discord.channel_info.text_channel") }}
+				</div>
 			</div>
 		</div>
 
 		<div
 			class="discord-channel-info-tabs"
 			role="tablist"
-			aria-label="Channel information sections"
+			:aria-label="ts('discord.channel_info.sections')"
 		>
 			<button
 				v-for="tab of ChannelInfoTabs"
@@ -58,7 +60,7 @@
 				@click="activeTab = tab.id"
 				@keydown="onTabKeydown($event, tab.id)"
 			>
-				{{ tab.label }}
+				{{ ts(tab.labelKey) }}
 			</button>
 		</div>
 
@@ -74,7 +76,7 @@
 				:online
 				:offline
 				show-roles
-				:label="`Members in #${name}`"
+				:label="ts('discord.channel_info.members_in', { name })"
 			/>
 
 			<div
@@ -84,12 +86,14 @@
 				<div class="discord-channel-info-empty-icon" aria-hidden="true">
 					<UIcon name="discord:threads" class="size-8" />
 				</div>
-				<p class="discord-channel-info-empty-title">There are no threads.</p>
+				<p class="discord-channel-info-empty-title">
+					{{ ts("discord.channel_info.no_threads") }}
+				</p>
 				<p class="discord-channel-info-empty-body">
 					Stay focused on a conversation with a thread - a temporary text channel.
 				</p>
 				<button type="button" class="discord-channel-info-create-thread" disabled>
-					Create Thread
+					{{ ts("discord.channel_info.create_thread") }}
 				</button>
 			</div>
 
@@ -110,7 +114,7 @@ type ChannelInfoTabId = "members" | "media" | "pins" | "threads" | "links" | "fi
 
 interface ChannelInfoTab {
 	id: ChannelInfoTabId;
-	label: string;
+	labelKey: string;
 }
 
 interface ChannelInfoProps {
@@ -122,12 +126,12 @@ interface ChannelInfoProps {
 }
 
 const ChannelInfoTabs = [
-	{ id: "members", label: "Members" },
-	{ id: "media", label: "Media" },
-	{ id: "pins", label: "Pins" },
-	{ id: "threads", label: "Threads" },
-	{ id: "links", label: "Links" },
-	{ id: "files", label: "Files" },
+	{ id: "members", labelKey: "discord.channel_info.tabs.members" },
+	{ id: "media", labelKey: "discord.channel_info.tabs.media" },
+	{ id: "pins", labelKey: "discord.channel_info.tabs.pins" },
+	{ id: "threads", labelKey: "discord.channel_info.tabs.threads" },
+	{ id: "links", labelKey: "discord.channel_info.tabs.links" },
+	{ id: "files", labelKey: "discord.channel_info.tabs.files" },
 ] as const satisfies readonly ChannelInfoTab[];
 
 interface ChannelInfoEmits {
@@ -136,6 +140,7 @@ interface ChannelInfoEmits {
 </script>
 
 <script setup lang="ts">
+const { ts } = useI18n();
 const { name, online, offline, initialTab = "members" } = defineProps<ChannelInfoProps>();
 
 const emit = defineEmits<ChannelInfoEmits>();

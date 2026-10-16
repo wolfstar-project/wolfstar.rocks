@@ -1,5 +1,6 @@
 <template>
 	<UApp
+		:locale="uiLocale"
 		:toaster="{
 			expand: true,
 			duration: 5000,
@@ -30,6 +31,8 @@ watch(preferencesOpen, (isOpen) => {
 const router = useRouter();
 const appName = ref<"wolfstar" | "staryl">("wolfstar");
 const { locale, locales } = useAppLocale();
+// Nuxt UI's own strings follow the language on screen too.
+const uiLocale = computed(() => getNuxtUiLocale(locale.value));
 
 const localeMap = computed(() =>
 	Object.fromEntries(locales.value.map((entry) => [entry.code, entry.dir ?? "ltr"])),

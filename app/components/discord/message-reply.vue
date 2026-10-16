@@ -29,6 +29,7 @@ import type { MessageReplyComponentProps } from "~/types/discord";
 </script>
 
 <script setup lang="ts">
+const { ts } = useI18n();
 const { kind, user, commandName, subcommand, subcommandGroup, content } =
 	defineProps<MessageReplyComponentProps>();
 
@@ -56,10 +57,16 @@ const previewContent = computed(() => {
 
 const ariaLabel = computed(() => {
 	if (kind === "command") {
-		return `${profile.value.name} used the ${formattedCommandName.value} slash command`;
+		return ts("discord.reply.used_command", {
+			command: formattedCommandName.value,
+			name: profile.value.name,
+		});
 	}
 
-	return `Replying to ${profile.value.name}: ${previewContent.value}`;
+	return ts("discord.reply.replying_to", {
+		name: profile.value.name,
+		preview: previewContent.value,
+	});
 });
 </script>
 

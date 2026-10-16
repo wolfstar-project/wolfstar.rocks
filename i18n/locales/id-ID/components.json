@@ -1,5 +1,116 @@
 {
 	"$schema": "../../schemas/components.schema.json",
+	"discord": {
+		"channel_info": {
+			"back": "",
+			"create_thread": "",
+			"label": "",
+			"members_in": "",
+			"no_threads": "",
+			"sections": "",
+			"tabs": {
+				"files": "",
+				"links": "",
+				"media": "",
+				"members": "",
+				"pins": "",
+				"threads": ""
+			},
+			"text_channel": ""
+		},
+		"chat": {
+			"messages_in": ""
+		},
+		"command": {
+			"label": "",
+			"matched": "",
+			"suggestion": ""
+		},
+		"composer": {
+			"close_apps": "",
+			"label": "",
+			"open_apps": "",
+			"placeholder": "",
+			"send": ""
+		},
+		"embed": {
+			"footer_icon": "",
+			"from": "",
+			"generic": "",
+			"titled": ""
+		},
+		"header": {
+			"hide_members": "",
+			"notifications": "",
+			"open_info": "",
+			"pins": "",
+			"search": "",
+			"search_plain": "",
+			"show_members": "",
+			"threads": ""
+		},
+		"launcher": {
+			"apps": "",
+			"back": "",
+			"collapse": "",
+			"commands": "",
+			"expand": "",
+			"help_body": "",
+			"help_title": "",
+			"in_server": "",
+			"learn_more": "",
+			"promoted": "",
+			"search": "",
+			"view_all": "",
+			"view_more": "",
+			"views": {
+				"action-games": "",
+				"bot-games": "",
+				"card-games": "",
+				"chill-together": "",
+				"puzzle-games": "",
+				"recents": "",
+				"server-apps": "",
+				"social-activities": "",
+				"strategy-games": ""
+			}
+		},
+		"member_list": {
+			"app": "",
+			"label": "",
+			"offline": "",
+			"online": "",
+			"verified_app": ""
+		},
+		"message": {
+			"dismiss": "",
+			"dismiss_aria": "",
+			"ephemeral_notice": "",
+			"from": "",
+			"only_you": "",
+			"verified_badge": ""
+		},
+		"reply": {
+			"replying_to": "",
+			"used_command": ""
+		},
+		"select": {
+			"aria": "",
+			"placeholder": ""
+		},
+		"suggestions": {
+			"for_prefix": "",
+			"frequently_used": "",
+			"listbox": "",
+			"matched": "",
+			"rail": ""
+		},
+		"welcome": {
+			"edit": "",
+			"start": "",
+			"title": ""
+		}
+	},
 	"feedback": {
 		"description": "",
 		"email": "",

@@ -32,6 +32,7 @@ interface SlashCommandSuggestionMatchedEmits {
 </script>
 
 <script setup lang="ts">
+const { ts } = useI18n();
 const {
 	active = false,
 	name,
@@ -54,7 +55,9 @@ const ariaLabel = computed(() => {
 			return `${option.name}: ${valueText}`;
 		})
 		.join(" ");
-	return `Slash command: /${path}${optionText ? ` ${optionText}` : ""}`;
+	return ts("discord.command.matched", {
+		command: `/${path}${optionText ? ` ${optionText}` : ""}`,
+	});
 });
 </script>
 

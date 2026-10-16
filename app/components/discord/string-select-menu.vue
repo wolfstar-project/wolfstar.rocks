@@ -11,7 +11,7 @@
 			:aria-expanded="isOpen"
 			:aria-controls="listboxId"
 			:aria-activedescendant="activeDescendant"
-			:aria-label="ariaLabel"
+			:aria-label="ariaLabel ?? ts('discord.select.aria')"
 			:disabled="disabled"
 			@click="toggle"
 		>
@@ -39,7 +39,7 @@
 				class="discord-string-select-menu-value"
 				:class="{ 'discord-string-select-menu-placeholder': !selectedOption }"
 			>
-				{{ selectedOption?.label ?? placeholder }}
+				{{ selectedOption?.label ?? placeholder ?? ts("discord.select.placeholder") }}
 			</span>
 			<!-- Skyra ExpandMore chevron: points down when closed, rotates -180deg when open. -->
 			<svg
@@ -79,7 +79,7 @@
 						:id="listboxId"
 						class="discord-string-select-menu-listbox"
 						role="listbox"
-						:aria-label="ariaLabel"
+						:aria-label="ariaLabel ?? ts('discord.select.aria')"
 					>
 						<DiscordStringSelectMenuOption
 							v-for="(option, index) in options"
@@ -116,12 +116,8 @@ interface StringSelectMenuEmits {
 </script>
 
 <script setup lang="ts">
-const {
-	options,
-	placeholder = "Make a selection",
-	disabled = false,
-	ariaLabel = "Select an option",
-} = defineProps<StringSelectMenuProps>();
+const { ts } = useI18n();
+const { options, placeholder, disabled = false, ariaLabel } = defineProps<StringSelectMenuProps>();
 
 const emit = defineEmits<StringSelectMenuEmits>();
 

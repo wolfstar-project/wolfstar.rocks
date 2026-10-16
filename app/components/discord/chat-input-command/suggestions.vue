@@ -24,7 +24,7 @@
 						>
 							<div
 								role="listbox"
-								:aria-label="listboxLabel"
+								:aria-label="listboxText"
 								class="discord-slash-command-suggestions-list"
 							>
 								<!-- Default rail: continuous scroll (FU header + rows + bot groups). -->
@@ -41,7 +41,7 @@
 											class="discord-slash-command-suggestions-header-icon"
 											aria-hidden="true"
 										/>
-										Frequently Used
+										{{ ts("discord.suggestions.frequently_used") }}
 									</p>
 									<slot name="frequently-used" />
 								</section>
@@ -52,7 +52,7 @@
 								<!-- Mobile DOM: list above rail; desktop CSS orders rail left of list. -->
 								<nav
 									class="discord-slash-command-suggestions-sidebar-scroll no-scrollbar"
-									:aria-label="railLabel"
+									:aria-label="railText"
 								>
 									<div class="discord-slash-command-suggestions-sidebar">
 										<button
@@ -63,8 +63,8 @@
 													selectedApp === null,
 											}"
 											:aria-pressed="selectedApp === null"
-											title="Frequently Used"
-											aria-label="Frequently Used"
+											:title="ts('discord.suggestions.frequently_used')"
+											:aria-label="ts('discord.suggestions.frequently_used')"
 											@click="selectedApp = null"
 										>
 											<span
@@ -104,7 +104,7 @@
 				<div
 					v-if="slots['frequently-used'] && slots.matched"
 					role="listbox"
-					:aria-label="matchedLabel"
+					:aria-label="matchedText"
 					class="discord-slash-command-suggestions-matched"
 				>
 					<slot name="matched" />
@@ -118,7 +118,7 @@
 				>
 					<div
 						role="listbox"
-						:aria-label="listboxLabel"
+						:aria-label="listboxText"
 						class="discord-slash-command-suggestions-list"
 					>
 						<slot name="matched" />
@@ -131,7 +131,7 @@
 					:max-thumb-height="40"
 					class="discord-slash-command-suggestions-scroll"
 				>
-					<div role="listbox" :aria-label="listboxLabel">
+					<div role="listbox" :aria-label="listboxText">
 						<slot />
 					</div>
 				</DiscordScrollbar>
@@ -158,21 +158,21 @@ interface SlashCommandSuggestionsSlots {
 </script>
 
 <script setup lang="ts">
+const { ts } = useI18n();
 defineSlots<SlashCommandSuggestionsSlots>();
 
-const {
-	listboxLabel = "Slash command suggestions",
-	matchedLabel = "Matched slash command",
-	prefix,
-	railLabel = "Applications",
-} = defineProps<SlashCommandSuggestionsProps>();
+const { listboxLabel, matchedLabel, prefix, railLabel } =
+	defineProps<SlashCommandSuggestionsProps>();
 
 /** `null` shows the frequently used list; an app name filters to that app's commands. */
 const selectedApp = defineModel<SlashCommandAppName | null>("selectedApp", { default: null });
 
 const slots = useSlots();
 
-const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
+const ariaLabel = computed(() => ts("discord.suggestions.for_prefix", { prefix }));
+const listboxText = computed(() => listboxLabel ?? ts("discord.suggestions.listbox"));
+const matchedText = computed(() => matchedLabel ?? ts("discord.suggestions.matched"));
+const railText = computed(() => railLabel ?? ts("discord.suggestions.rail"));
 </script>
 
 <style scoped>

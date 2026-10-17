@@ -14,6 +14,11 @@ export const AUTH_HINT_STORAGE_KEY = "wolfstar-auth-hint";
  */
 export const AUTH_HINT_SCRIPT = `(function(){try{var h=JSON.parse(localStorage.getItem("${AUTH_HINT_STORAGE_KEY}")||"null");if(h&&typeof h.name==="string"){var r=document.documentElement;r.setAttribute("data-auth","user");r.style.setProperty("--auth-name",JSON.stringify(h.name));}}catch(e){}})();`;
 
+/** Whether this browser remembers someone signed in, as `AUTH_HINT_SCRIPT` marked it. */
+export function hasAuthHint(): boolean {
+	return document.documentElement.getAttribute("data-auth") === "user";
+}
+
 /** Records the account the header shows now, or that nobody is signed in. */
 export function writeAuthHint(name: string | null): void {
 	const root = document.documentElement;

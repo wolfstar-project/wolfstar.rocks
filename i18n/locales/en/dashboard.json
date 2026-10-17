@@ -110,7 +110,35 @@
 	},
 	"guild_logs": {
 		"all_actions": "All actions",
+		"all_statuses": "All statuses",
 		"by_moderator": "by {name}",
+		"case": {
+			"created": "Created",
+			"description": "Everything WolfStar recorded for this case.",
+			"duration": "Duration",
+			"edit_hint": "To change the reason or the duration, use /case edit in Discord.",
+			"ended": "Ended",
+			"ends": "Ends",
+			"message": "Message",
+			"moderator": "Moderator",
+			"no_nickname": "No nickname",
+			"open_message": "Open message in Discord",
+			"open_message_aria": "Open the message of case {id} in Discord, opens in new tab",
+			"previous_nickname": "Previous nickname",
+			"reason": "Reason",
+			"role": "Role",
+			"roles_had": "Roles the member had",
+			"show_member_cases": "Show this member's cases",
+			"show_moderator_cases": "Show this moderator's cases",
+			"title": "Case {id}",
+			"unknown_role": "Unknown role",
+			"user": "Member"
+		},
+		"case_status": {
+			"archived": "Archived",
+			"completed": "Completed",
+			"open": "Open"
+		},
 		"changes": {
 			"close": "Close",
 			"none": "None",
@@ -130,6 +158,7 @@
 			"outcome": "Outcome",
 			"reason": "Reason",
 			"result": "Result",
+			"status": "Status",
 			"type": "Type",
 			"user": "User"
 		},
@@ -139,6 +168,9 @@
 			"user": "User menu"
 		},
 		"filter_action": "Filter by action type",
+		"filter_case_status": "Filter by case status",
+		"filter_member": "Member: {name}",
+		"filter_moderator": "Moderator: {name}",
 		"filter_status": "Filter by status",
 		"no_activity_filter_match": "No activity matches the current filters.",
 		"no_commands_filter_match": "No commands match the current filters.",
@@ -147,6 +179,7 @@
 		"no_moderation_cases": "No moderation cases found",
 		"no_reason": "No reason provided",
 		"no_warnings": "No warnings found",
+		"open_case": "Open case {id}",
 		"outcomes": {
 			"denied": "Denied",
 			"failure": "Failed",
@@ -159,6 +192,7 @@
 		"refresh_audit": "Refresh audit log",
 		"refresh_command": "Refresh command log",
 		"refresh_moderation": "Refresh moderation log",
+		"remove_filter": "Remove filter {filter}",
 		"result_succeeded": "Succeeded",
 		"search_aria": "Search logs",
 		"search_placeholder": "Search logs...",

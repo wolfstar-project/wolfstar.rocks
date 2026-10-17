@@ -334,8 +334,92 @@
 				"all_actions": {
 					"type": "string"
 				},
+				"all_statuses": {
+					"type": "string"
+				},
 				"by_moderator": {
 					"type": "string"
+				},
+				"case": {
+					"type": "object",
+					"properties": {
+						"created": {
+							"type": "string"
+						},
+						"description": {
+							"type": "string"
+						},
+						"duration": {
+							"type": "string"
+						},
+						"edit_hint": {
+							"type": "string"
+						},
+						"ended": {
+							"type": "string"
+						},
+						"ends": {
+							"type": "string"
+						},
+						"message": {
+							"type": "string"
+						},
+						"moderator": {
+							"type": "string"
+						},
+						"no_nickname": {
+							"type": "string"
+						},
+						"open_message": {
+							"type": "string"
+						},
+						"open_message_aria": {
+							"type": "string"
+						},
+						"previous_nickname": {
+							"type": "string"
+						},
+						"reason": {
+							"type": "string"
+						},
+						"role": {
+							"type": "string"
+						},
+						"roles_had": {
+							"type": "string"
+						},
+						"show_member_cases": {
+							"type": "string"
+						},
+						"show_moderator_cases": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						},
+						"unknown_role": {
+							"type": "string"
+						},
+						"user": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"case_status": {
+					"type": "object",
+					"properties": {
+						"archived": {
+							"type": "string"
+						},
+						"completed": {
+							"type": "string"
+						},
+						"open": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
 				},
 				"changes": {
 					"type": "object",
@@ -394,6 +478,9 @@
 						"result": {
 							"type": "string"
 						},
+						"status": {
+							"type": "string"
+						},
 						"type": {
 							"type": "string"
 						},
@@ -421,6 +508,15 @@
 				"filter_action": {
 					"type": "string"
 				},
+				"filter_case_status": {
+					"type": "string"
+				},
+				"filter_member": {
+					"type": "string"
+				},
+				"filter_moderator": {
+					"type": "string"
+				},
 				"filter_status": {
 					"type": "string"
 				},
@@ -443,6 +539,9 @@
 					"type": "string"
 				},
 				"no_warnings": {
+					"type": "string"
+				},
+				"open_case": {
 					"type": "string"
 				},
 				"outcomes": {
@@ -479,6 +578,9 @@
 					"type": "string"
 				},
 				"refresh_moderation": {
+					"type": "string"
+				},
+				"remove_filter": {
 					"type": "string"
 				},
 				"result_succeeded": {

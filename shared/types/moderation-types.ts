@@ -151,23 +151,64 @@ export function decodeModerationRecord(
 }
 
 /**
- * What selects the rows of one case type without decoding in SQL: every
- * `metadata` value the encoder can produce for it, and the actions that imply
- * it on a row written without the marker.
+ * Where a case stands, as the bot reads it: archived (`/case archive`), else
+ * completed (its time ran out, or it was undone), else open. The bot treats a
+ * case that is neither archived nor completed as the open one
+ * (`retrieveLastModerationEntryFromUser()` in
+ * `projects/bot/src/lib/moderation/actions/base/ModerationAction.ts`), so the
+ * three states cover every case and never overlap.
  */
-export function moderationRecordFilter(type: ModerationTypeName): {
+export const MODERATION_CASE_STATUSES = ["open", "completed", "archived"] as const;
+
+export type ModerationCaseStatus = (typeof MODERATION_CASE_STATUSES)[number];
+
+/** Names the state of a case from its decoded flags. */
+export function moderationCaseStatus(metadata: ModerationMetadata): ModerationCaseStatus {
+	if (metadata.archived) return "archived";
+	if (metadata.completed) return "completed";
+	return "open";
+}
+
+/** The flag combinations the bot can write that leave a case in `status`, or all of them. */
+function flagsWithStatus(status: ModerationCaseStatus | undefined): number[] {
+	const all = Array.from({ length: FLAG_COMBINATIONS }, (_, flags) => flags);
+	if (status === undefined) return all;
+	return all.filter((flags) => moderationCaseStatus(decodeModerationMetadata(flags)) === status);
+}
+
+/**
+ * What selects the rows of one case type, in one state, without decoding in
+ * SQL: every `metadata` value the encoder can produce for them, and, for the
+ * rows written without the marker, the actions that imply the type and the
+ * flag values that give the state.
+ *
+ * `legacyActions` is `null` when any action will do (no type was asked for),
+ * and empty when no unmarked row can hold the type. `legacyMetadata` is `null`
+ * when any value below the marker will do (no state was asked for).
+ */
+export function moderationRecordFilter(
+	type: ModerationTypeName | undefined,
+	status?: ModerationCaseStatus,
+): {
 	encodedMetadata: number[];
-	legacyActions: ModerationActionName[];
+	legacyActions: ModerationActionName[] | null;
+	legacyMetadata: number[] | null;
 } {
-	const encodedType =
-		MODERATION_TYPE_ENCODED_MARKER | (MODERATION_CASE_TYPES.indexOf(type) << TYPE_SHIFT);
+	const flags = flagsWithStatus(status);
+	const types = type === undefined ? MODERATION_CASE_TYPES : [type];
 
 	return {
-		encodedMetadata: Array.from(
-			{ length: FLAG_COMBINATIONS },
-			(_, flags) => encodedType | flags,
-		),
-		legacyActions: MODERATION_ACTIONS.filter((action) => ACTION_TO_TYPE[action][0] === type),
+		encodedMetadata: types.flatMap((name) => {
+			const encodedType =
+				MODERATION_TYPE_ENCODED_MARKER |
+				(MODERATION_CASE_TYPES.indexOf(name) << TYPE_SHIFT);
+			return flags.map((value) => encodedType | value);
+		}),
+		legacyActions:
+			type === undefined
+				? null
+				: MODERATION_ACTIONS.filter((action) => ACTION_TO_TYPE[action][0] === type),
+		legacyMetadata: status === undefined ? null : flags,
 	};
 }
 

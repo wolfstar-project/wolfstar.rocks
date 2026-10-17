@@ -110,7 +110,35 @@
 	},
 	"guild_logs": {
 		"all_actions": "Todas las acciones",
+		"all_statuses": "",
 		"by_moderator": "",
+		"case": {
+			"created": "",
+			"description": "",
+			"duration": "",
+			"edit_hint": "",
+			"ended": "",
+			"ends": "",
+			"message": "",
+			"moderator": "",
+			"no_nickname": "",
+			"open_message": "",
+			"open_message_aria": "",
+			"previous_nickname": "",
+			"reason": "",
+			"role": "",
+			"roles_had": "",
+			"show_member_cases": "",
+			"show_moderator_cases": "",
+			"title": "",
+			"unknown_role": "",
+			"user": ""
+		},
+		"case_status": {
+			"archived": "",
+			"completed": "",
+			"open": ""
+		},
 		"changes": {
 			"close": "",
 			"none": "",
@@ -130,6 +158,7 @@
 			"outcome": "",
 			"reason": "Motivo",
 			"result": "",
+			"status": "",
 			"type": "",
 			"user": "Usuario"
 		},
@@ -139,6 +168,9 @@
 			"user": ""
 		},
 		"filter_action": "Filtrar por tipo de acción",
+		"filter_case_status": "",
+		"filter_member": "",
+		"filter_moderator": "",
 		"filter_status": "Filtrar por estado",
 		"no_activity_filter_match": "No activity matches the current filters.",
 		"no_commands_filter_match": "No commands match the current filters.",
@@ -147,6 +179,7 @@
 		"no_moderation_cases": "No moderation cases found",
 		"no_reason": "No se proporcionó motivo",
 		"no_warnings": "No warnings found",
+		"open_case": "",
 		"outcomes": {
 			"denied": "",
 			"failure": "",
@@ -159,6 +192,7 @@
 		"refresh_audit": "Actualizar registro de auditoría",
 		"refresh_command": "Actualizar registro de comandos",
 		"refresh_moderation": "Actualizar registro de moderación",
+		"remove_filter": "",
 		"result_succeeded": "",
 		"search_aria": "Buscar registros",
 		"search_placeholder": "Buscar registros...",

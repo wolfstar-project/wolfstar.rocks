@@ -214,6 +214,23 @@
 			}
 		},
 		"channels": {
+			"bulk": {
+				"all_help": "",
+				"all_label": "",
+				"cancel_selection": "",
+				"group_help": "",
+				"group_label": "",
+				"mixed": "",
+				"no_logs_selected": "",
+				"remove_channel": "",
+				"select_group": "",
+				"select_log": "",
+				"select_logs": "",
+				"selected_count": "",
+				"selection_help": "",
+				"selection_label": "",
+				"selection_region": ""
+			},
 			"excluded_channels": "",
 			"excluded_channels_help": "Select channels that should be ignored for specific logging events. Messages and events in these channels won't be logged.",
 			"form_aria": "Channel settings form",

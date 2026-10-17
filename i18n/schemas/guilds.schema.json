@@ -646,6 +646,57 @@
 				"channels": {
 					"type": "object",
 					"properties": {
+						"bulk": {
+							"type": "object",
+							"properties": {
+								"all_help": {
+									"type": "string"
+								},
+								"all_label": {
+									"type": "string"
+								},
+								"cancel_selection": {
+									"type": "string"
+								},
+								"group_help": {
+									"type": "string"
+								},
+								"group_label": {
+									"type": "string"
+								},
+								"mixed": {
+									"type": "string"
+								},
+								"no_logs_selected": {
+									"type": "string"
+								},
+								"remove_channel": {
+									"type": "string"
+								},
+								"select_group": {
+									"type": "string"
+								},
+								"select_log": {
+									"type": "string"
+								},
+								"select_logs": {
+									"type": "string"
+								},
+								"selected_count": {
+									"type": "string"
+								},
+								"selection_help": {
+									"type": "string"
+								},
+								"selection_label": {
+									"type": "string"
+								},
+								"selection_region": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
 						"excluded_channels": {
 							"type": "string"
 						},

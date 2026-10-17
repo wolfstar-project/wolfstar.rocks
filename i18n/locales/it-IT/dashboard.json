@@ -110,7 +110,35 @@
 	},
 	"guild_logs": {
 		"all_actions": "Tutte le azioni",
+		"all_statuses": "Tutti gli stati",
 		"by_moderator": "da {name}",
+		"case": {
+			"created": "Creato",
+			"description": "Tutto ciò che WolfStar ha registrato per questo caso.",
+			"duration": "Durata",
+			"edit_hint": "Per cambiare il motivo o la durata, usa /case edit su Discord.",
+			"ended": "Terminato",
+			"ends": "Termina",
+			"message": "Messaggio",
+			"moderator": "Moderatore",
+			"no_nickname": "Nessun nickname",
+			"open_message": "Apri il messaggio su Discord",
+			"open_message_aria": "Apri il messaggio del caso {id} su Discord, si apre in una nuova scheda",
+			"previous_nickname": "Nickname precedente",
+			"reason": "Motivo",
+			"role": "Ruolo",
+			"roles_had": "Ruoli che aveva il membro",
+			"show_member_cases": "Mostra i casi di questo membro",
+			"show_moderator_cases": "Mostra i casi di questo moderatore",
+			"title": "Caso {id}",
+			"unknown_role": "Ruolo sconosciuto",
+			"user": "Membro"
+		},
+		"case_status": {
+			"archived": "Archiviato",
+			"completed": "Concluso",
+			"open": "In corso"
+		},
 		"changes": {
 			"close": "Chiudi",
 			"none": "Nessuno",
@@ -130,6 +158,7 @@
 			"outcome": "Esito",
 			"reason": "Motivo",
 			"result": "Risultato",
+			"status": "Stato",
 			"type": "Tipo",
 			"user": "Utente"
 		},
@@ -139,6 +168,9 @@
 			"user": "Menu utente"
 		},
 		"filter_action": "Filtra per tipo di azione",
+		"filter_case_status": "Filtra per stato del caso",
+		"filter_member": "Membro: {name}",
+		"filter_moderator": "Moderatore: {name}",
 		"filter_status": "Filtra per stato",
 		"no_activity_filter_match": "Nessuna attività corrisponde ai filtri attuali.",
 		"no_commands_filter_match": "Nessun comando corrisponde ai filtri attuali.",
@@ -147,6 +179,7 @@
 		"no_moderation_cases": "Nessun caso di moderazione trovato",
 		"no_reason": "Nessun motivo fornito",
 		"no_warnings": "Nessun avvertimento trovato",
+		"open_case": "Apri il caso {id}",
 		"outcomes": {
 			"denied": "Negato",
 			"failure": "Non riuscito",
@@ -159,6 +192,7 @@
 		"refresh_audit": "Aggiorna log di audit",
 		"refresh_command": "Aggiorna log dei comandi",
 		"refresh_moderation": "Aggiorna log di moderazione",
+		"remove_filter": "Rimuovi il filtro {filter}",
 		"result_succeeded": "Riuscito",
 		"search_aria": "Cerca nei log",
 		"search_placeholder": "Cerca nei log...",

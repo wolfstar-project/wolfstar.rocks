@@ -51,6 +51,7 @@ import {
 	OauthStatusPanel,
 	GuildAuditChanges,
 	GuildAutomodDurationInput,
+	GuildLogsCaseDetail,
 	GuildReviewQueue,
 	GuildServerRail,
 	GuildSettingsLogsBulkChannel,
@@ -73,7 +74,7 @@ import {
 import { mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
 import { createError } from "h3";
 import { describe, expect, it, vi } from "vitest";
-import { MOCK_AUDIT_ENTRY } from "~~/test/mocks/auditLogs";
+import { MOCK_AUDIT_ENTRY, MOCK_MODERATION_ENTRY } from "~~/test/mocks/auditLogs";
 import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 import { runAxe } from "./utils/axe";
 
@@ -715,6 +716,34 @@ describe("component accessibility audits", () => {
 								language: { from: "en-US", to: "it-IT" },
 								modulesAutomod: { from: false, to: true },
 							},
+						},
+					},
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildLogsCaseDetail", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildLogsCaseDetail, {
+				props: {
+					entry: {
+						...MOCK_MODERATION_ENTRY,
+						typeName: "Mute",
+						duration: 3600,
+						metadata: {
+							archived: false,
+							completed: true,
+							temporary: true,
+							undo: false,
+						},
+						status: "completed",
+						extra: { kind: "roles", roleIds: ["333333333333333333"] },
+						message: {
+							channelId: "444444444444444444",
+							messageId: "555555555555555555",
 						},
 					},
 				},

@@ -72,5 +72,8 @@ export const MOCK_MODERATION_ENTRY: ModerationLogEntry = {
 	referenceId: null,
 	duration: 0,
 	metadata: { archived: false, completed: false, temporary: false, undo: false },
+	status: "open",
+	extra: null,
+	message: null,
 	createdAt: "2026-05-15T00:00:00.000Z",
 };

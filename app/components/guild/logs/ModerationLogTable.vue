@@ -14,13 +14,35 @@
 		:empty-description="isFiltered ? ts('guild_logs.no_filter_match') : undefined"
 		@refresh="refresh()"
 	>
-		<template v-if="!warningsOnly" #filter>
+		<template #filter>
 			<USelect
+				v-if="!warningsOnly"
 				v-model="selectedTypeCode"
 				:items="actionTypeItems"
 				:aria-label="ts('guild_logs.filter_action')"
 				:ui="LOGS_FILTER_UI"
 			/>
+			<USelect
+				v-model="selectedStatus"
+				:items="statusItems"
+				:aria-label="ts('guild_logs.filter_case_status')"
+				:ui="LOGS_FILTER_UI"
+			/>
+			<div ref="memberFiltersRoot" class="contents">
+				<UButton
+					v-for="chip in memberChips"
+					:key="chip.key"
+					color="neutral"
+					variant="outline"
+					size="sm"
+					trailing-icon="ic:round-close"
+					class="h-10 rounded-[6px]"
+					:aria-label="ts('guild_logs.remove_filter', { filter: chip.label })"
+					@click="clearMemberFilter(chip.key)"
+				>
+					{{ chip.label }}
+				</UButton>
+			</div>
 		</template>
 
 		<UTable
@@ -34,7 +56,15 @@
 		<ul class="logs-table md:hidden" :aria-label="tableLabel">
 			<li v-for="row in rows" :key="row.caseId" class="logs-card">
 				<div class="logs-line">
-					<span class="logs-case">#{{ row.caseId }}</span>
+					<button
+						type="button"
+						class="logs-case case-open"
+						aria-haspopup="dialog"
+						:aria-label="ts('guild_logs.open_case', { id: row.caseId })"
+						@click="openCase(row.caseId, $event)"
+					>
+						#{{ row.caseId }}
+					</button>
 					<div class="logs-member">
 						<UAvatar v-bind="row.targetAvatar" size="xs" class="shrink-0" />
 						<span class="truncate text-sm font-semibold">{{ row.target }}</span>
@@ -50,6 +80,7 @@
 						{{ ts("guild_logs.by_moderator", { name: row.moderator }) }}
 					</span>
 					<span class="grow"></span>
+					<GuildLogsPill :tone="row.statusTone">{{ row.statusLabel }}</GuildLogsPill>
 					<span v-if="!warningsOnly" class="logs-mono">{{ row.duration }}</span>
 					<time class="logs-mono" :datetime="row.datetime" :title="row.fullDate">
 						{{ row.at }}
@@ -58,13 +89,33 @@
 			</li>
 		</ul>
 	</GuildLogsShell>
+
+	<USlideover
+		v-model:open="caseOpen"
+		:title="selectedCase ? ts('guild_logs.case.title', { id: selectedCase.caseId }) : ''"
+		:description="ts('guild_logs.case.description')"
+		:content="{ onCloseAutoFocus: returnFocus }"
+		:ui="{ content: 'max-w-md' }"
+	>
+		<template #body>
+			<GuildLogsCaseDetail
+				v-if="selectedCase"
+				:entry="selectedCase"
+				@filter-member="(id, name) => applyMemberFilter('userId', id, name)"
+				@filter-moderator="(id, name) => applyMemberFilter('moderatorId', id, name)"
+			/>
+		</template>
+	</USlideover>
 </template>
 
 <script setup lang="ts">
 import type { ModerationLogEntry } from "#shared/types/moderation-log";
+import type { ModerationCaseStatus } from "#shared/types/moderation-types";
 import type { TableColumn } from "@nuxt/ui";
-import type { LogsPillTone } from "./Pill.vue";
-import { MODERATION_TYPE_FILTER_VALUES } from "#shared/types/moderation-types";
+import {
+	MODERATION_CASE_STATUSES,
+	MODERATION_TYPE_FILTER_VALUES,
+} from "#shared/types/moderation-types";
 
 const { warningsOnly } = defineProps<{
 	warningsOnly?: boolean;
@@ -78,7 +129,15 @@ const page = ref(1);
 const limit = ref(LOGS_PAGE_SIZE);
 const offset = computed(() => (page.value - 1) * limit.value);
 
-const filters = ref<{ q?: string; typeCode?: number }>({});
+type MemberFilterKey = "userId" | "moderatorId";
+
+const filters = ref<{
+	q?: string;
+	typeCode?: number;
+	status?: ModerationCaseStatus;
+	userId?: string;
+	moderatorId?: string;
+}>({});
 if (warningsOnly) {
 	filters.value.typeCode = 1;
 }
@@ -94,6 +153,43 @@ watch(selectedTypeCode, (value) => {
 	page.value = 1;
 });
 
+const selectedStatus = ref<ModerationCaseStatus | null>(null);
+const statusItems = computed(() => [
+	{ label: ts("guild_logs.all_statuses"), value: null },
+	...MODERATION_CASE_STATUSES.map((value) => ({
+		label: ts(MODERATION_CASE_STATUS_KEY[value]),
+		value,
+	})),
+]);
+
+watch(selectedStatus, (value) => {
+	filters.value.status = value ?? undefined;
+	page.value = 1;
+});
+
+// The member filters are set from a case's detail, with the name it showed,
+// and each one is a removable button in the toolbar.
+const memberFilterNames = ref<Partial<Record<MemberFilterKey, string>>>({});
+const memberChips = computed(() =>
+	(["userId", "moderatorId"] as const).flatMap((key) => {
+		const name = memberFilterNames.value[key];
+		if (!filters.value[key] || name === undefined) return [];
+		const label =
+			key === "userId"
+				? ts("guild_logs.filter_member", { name })
+				: ts("guild_logs.filter_moderator", { name });
+		return [{ key, label }];
+	}),
+);
+
+const memberFiltersRoot = useTemplateRef<HTMLElement>("memberFiltersRoot");
+
+function clearMemberFilter(key: MemberFilterKey) {
+	filters.value[key] = undefined;
+	memberFilterNames.value = { ...memberFilterNames.value, [key]: undefined };
+	page.value = 1;
+}
+
 const query = ref("");
 const debouncedQuery = refDebounced(query, 300);
 watch(debouncedQuery, (value) => {
@@ -101,7 +197,13 @@ watch(debouncedQuery, (value) => {
 	page.value = 1;
 });
 
-const isFiltered = computed(() => Boolean(debouncedQuery.value) || selectedTypeCode.value !== null);
+const isFiltered = computed(
+	() =>
+		Boolean(debouncedQuery.value) ||
+		selectedTypeCode.value !== null ||
+		selectedStatus.value !== null ||
+		memberChips.value.length > 0,
+);
 
 const guildId = computed(() => guildData.value?.id);
 const { entries, total, status, refresh } = useModerationLog({
@@ -111,32 +213,53 @@ const { entries, total, status, refresh } = useModerationLog({
 	filters,
 });
 
+// The case shown in the slideover. It stays set while the slideover closes,
+// so its content does not empty out during the transition.
+const selectedCase = ref<ModerationLogEntry | null>(null);
+const caseOpen = ref(false);
+// Opened by code rather than through a trigger, the dialog has nothing to give
+// focus back to on its own: the button that opened it is kept for that.
+let opener: HTMLElement | null = null;
+let focusFiltersOnClose = false;
+
+function openCase(caseId: number, event: Event) {
+	const entry = entries.value.find((item) => item.caseId === caseId);
+	if (!entry) return;
+	opener = event.currentTarget instanceof HTMLElement ? event.currentTarget : null;
+	selectedCase.value = entry;
+	caseOpen.value = true;
+}
+
+function applyMemberFilter(key: MemberFilterKey, id: string, name: string) {
+	filters.value[key] = id;
+	memberFilterNames.value = { ...memberFilterNames.value, [key]: name };
+	page.value = 1;
+	// The rows change under the filter, so focus lands on the filter it added.
+	focusFiltersOnClose = true;
+	caseOpen.value = false;
+}
+
+function returnFocus(event: Event) {
+	event.preventDefault();
+	const target = focusFiltersOnClose
+		? memberFiltersRoot.value?.querySelector<HTMLElement>("button")
+		: opener;
+	focusFiltersOnClose = false;
+	if (target?.isConnected) target.focus();
+}
+
 const tableLabel = computed(() =>
 	warningsOnly ? ts("guild_logs.tab_warnings") : ts("guild_logs.tab_moderation"),
 );
 
 const tableStyle = computed(() => ({
-	"--logs-min-width": warningsOnly ? "51.25rem" : "56.25rem",
+	"--logs-min-width": warningsOnly ? "58.25rem" : "63.25rem",
 }));
 
-// Punishments that hold until someone lifts them when no duration was given.
-const OPEN_ENDED_TYPES = new Set<string>([
-	"Ban",
-	"Mute",
-	"VoiceMute",
-	"RestrictedReaction",
-	"RestrictedEmbed",
-	"RestrictedAttachment",
-	"RestrictedVoice",
-	"RestrictedEmoji",
-]);
-
 function durationLabel(entry: ModerationLogEntry): string {
-	// The table stores seconds, and `0` for a case that is not temporary.
-	if (entry.duration > 0) return formatCompactDuration(entry.duration * 1000);
-	return !entry.metadata.undo && OPEN_ENDED_TYPES.has(entry.typeName)
-		? ts("guild_logs.permanent")
-		: "\u2013";
+	const duration = moderationCaseDuration(entry);
+	if (duration.kind === "timed") return duration.label;
+	return duration.kind === "permanent" ? ts("guild_logs.permanent") : "–";
 }
 
 const now = new Date();
@@ -150,7 +273,7 @@ const rows = computed(() =>
 			// A case that reverses another one (an unban, an unmute) carries the
 			// same type with the undo flag, so it is told apart here.
 			action: metadata.undo ? ts("guild_logs.undo_action", { action: typeName }) : typeName,
-			at: created ? formatActivityTime(created, now, timeLocale.value) : "\u2013",
+			at: created ? formatActivityTime(created, now, timeLocale.value) : "–",
 			caseId: entry.caseId,
 			datetime: entry.createdAt ?? undefined,
 			duration: durationLabel(entry),
@@ -160,9 +283,11 @@ const rows = computed(() =>
 				: ts("guild_logs.unknown"),
 			moderatorAvatar: auditLogMemberAvatar(entry.moderatorMember),
 			reason: entry.reason ?? ts("guild_logs.no_reason"),
+			statusLabel: ts(MODERATION_CASE_STATUS_KEY[entry.status]),
+			statusTone: MODERATION_CASE_STATUS_TONE[entry.status],
 			target: target ? `@${target}` : ts("guild_logs.unknown"),
 			targetAvatar: auditLogMemberAvatar(entry.targetMember),
-			tone: (metadata.undo ? "success" : moderationActionVariant(typeName)) as LogsPillTone,
+			tone: moderationCaseTone(entry),
 		};
 	}),
 );
@@ -183,6 +308,20 @@ function memberCell(avatar: Row["targetAvatar"], name: string, strong: boolean) 
 	]);
 }
 
+function caseCell(row: Row) {
+	return h(
+		"button",
+		{
+			"type": "button",
+			"class": "logs-case case-open",
+			"aria-haspopup": "dialog",
+			"aria-label": ts("guild_logs.open_case", { id: row.caseId }),
+			"onClick": (event: Event) => openCase(row.caseId, event),
+		},
+		`#${row.caseId}`,
+	);
+}
+
 function dateCell(row: Row) {
 	return h("time", { class: "logs-mono", datetime: row.datetime, title: row.fullDate }, row.at);
 }
@@ -192,7 +331,7 @@ const columns = computed<TableColumn<Row>[]>(() => [
 		accessorKey: "caseId",
 		header: ts("guild_logs.columns.case"),
 		meta: logsColumnWidth("w-16"),
-		cell: ({ row }) => h("span", { class: "logs-case" }, `#${row.original.caseId}`),
+		cell: ({ row }) => caseCell(row.original),
 	},
 	{
 		accessorKey: "target",
@@ -211,9 +350,16 @@ const columns = computed<TableColumn<Row>[]>(() => [
 		cell: ({ row }) => h(GuildLogsPill, { tone: row.original.tone }, () => row.original.action),
 	},
 	{
+		accessorKey: "statusLabel",
+		header: ts("guild_logs.columns.status"),
+		meta: logsColumnWidth("w-28"),
+		cell: ({ row }) =>
+			h(GuildLogsPill, { tone: row.original.statusTone }, () => row.original.statusLabel),
+	},
+	{
 		accessorKey: "reason",
 		header: ts("guild_logs.columns.reason"),
-		meta: logsColumnWidth("w-[28%]"),
+		meta: logsColumnWidth("w-[24%]"),
 		cell: ({ row }) =>
 			h("span", { class: "block truncate", title: row.original.reason }, row.original.reason),
 	},
@@ -236,3 +382,18 @@ const columns = computed<TableColumn<Row>[]>(() => [
 	},
 ]);
 </script>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+/* The case number opens the case: it keeps its look in the row, and shows
+   it is a control on hover and on keyboard focus. */
+.case-open {
+	@apply cursor-pointer rounded-[3px] underline-offset-2 hover:underline;
+}
+
+.case-open:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: 2px;
+}
+</style>

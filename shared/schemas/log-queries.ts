@@ -14,6 +14,7 @@ import {
 	trim,
 	unknown,
 } from "valibot";
+import { MODERATION_CASE_STATUSES } from "../types/moderation-types";
 import { isSnowflake } from "../utils/snowflake";
 
 const coercedNumber = (min = 0) =>
@@ -70,6 +71,8 @@ export const ModerationLogQuerySchema = object({
 	userId: optionalSnowflake,
 	moderatorId: optionalSnowflake,
 	typeCode: optional(coercedNumber(0)),
+	/** Where the cases stand; absent for every state. */
+	status: optional(picklist(MODERATION_CASE_STATUSES)),
 	from: optionalIsoDate,
 	to: optionalIsoDate,
 	q: optionalString(200),

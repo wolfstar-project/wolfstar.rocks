@@ -1,9 +1,11 @@
 import {
 	decodeModerationMetadata,
 	decodeModerationRecord,
+	MODERATION_CASE_STATUSES,
 	MODERATION_CASE_TYPES,
 	MODERATION_TYPE_CODE,
 	MODERATION_TYPE_ENCODED_MARKER,
+	moderationCaseStatus,
 	moderationRecordFilter,
 	moderationTypeFromCode,
 } from "#shared/types/moderation-types";
@@ -105,5 +107,97 @@ describe("moderationRecordFilter", () => {
 				expect(decodeModerationRecord("Kick", metadata).type).toBe(type);
 			}
 		}
+	});
+});
+
+// The bot's `TypeMetadata` flags.
+const UNDO = 1 << 0;
+const TEMPORARY = 1 << 1;
+const ARCHIVED = 1 << 3;
+const COMPLETED = 1 << 4;
+
+describe("moderationCaseStatus", () => {
+	const status = (flags: number) => moderationCaseStatus(decodeModerationMetadata(flags));
+
+	it("reads a case that is neither archived nor completed as open", () => {
+		expect(status(0)).toBe("open");
+		expect(status(TEMPORARY)).toBe("open");
+		expect(status(UNDO)).toBe("open");
+	});
+
+	it("reads the completed flag", () => {
+		expect(status(COMPLETED)).toBe("completed");
+		expect(status(COMPLETED | TEMPORARY)).toBe("completed");
+	});
+
+	// `/case archive` sets the flag on any case, a completed one included.
+	it("puts archived before completed", () => {
+		expect(status(ARCHIVED)).toBe("archived");
+		expect(status(ARCHIVED | COMPLETED)).toBe("archived");
+	});
+
+	it("names the states the query string accepts", () => {
+		expect(MODERATION_CASE_STATUSES).toStrictEqual(["open", "completed", "archived"]);
+	});
+});
+
+describe("moderationRecordFilter with a status", () => {
+	it("selects every type in the state when no type is asked for", () => {
+		const { encodedMetadata, legacyActions, legacyMetadata } = moderationRecordFilter(
+			undefined,
+			"archived",
+		);
+
+		expect(legacyActions).toBeNull();
+		expect(encodedMetadata).toContain(encode("Ban", ARCHIVED));
+		expect(encodedMetadata).toContain(encode("Timeout", ARCHIVED | COMPLETED));
+		expect(encodedMetadata).not.toContain(encode("Ban", COMPLETED));
+		expect(legacyMetadata).toContain(ARCHIVED | TEMPORARY);
+		expect(legacyMetadata).not.toContain(0);
+	});
+
+	it("selects one type in one state", () => {
+		const { encodedMetadata, legacyActions, legacyMetadata } = moderationRecordFilter(
+			"Warning",
+			"open",
+		);
+
+		expect(legacyActions).toStrictEqual(["AddWarning", "RemoveWarning"]);
+		expect(encodedMetadata).toContain(encode("Warning"));
+		expect(encodedMetadata).toContain(encode("Warning", TEMPORARY | UNDO));
+		expect(encodedMetadata).not.toContain(encode("Warning", COMPLETED));
+		expect(encodedMetadata).not.toContain(encode("Ban"));
+		expect(legacyMetadata).toContain(0);
+		expect(legacyMetadata).not.toContain(COMPLETED);
+	});
+
+	it("leaves any value below the marker when no state is asked for", () => {
+		expect(moderationRecordFilter("Ban").legacyMetadata).toBeNull();
+	});
+
+	// Every value it selects decodes to the type and the state it was asked for.
+	it("round-trips every type and state", () => {
+		for (const status of MODERATION_CASE_STATUSES) {
+			const { encodedMetadata, legacyMetadata } = moderationRecordFilter(undefined, status);
+			for (const metadata of encodedMetadata) {
+				expect(
+					moderationCaseStatus(decodeModerationRecord("Kick", metadata).metadata),
+				).toBe(status);
+			}
+			for (const metadata of legacyMetadata ?? []) {
+				expect(
+					moderationCaseStatus(decodeModerationRecord("Kick", metadata).metadata),
+				).toBe(status);
+			}
+		}
+	});
+
+	// The three states split the cases: no value is in two of them, none is in none.
+	it("partitions every encoded value", () => {
+		const all = moderationRecordFilter(undefined).encodedMetadata;
+		const split = MODERATION_CASE_STATUSES.flatMap(
+			(status) => moderationRecordFilter(undefined, status).encodedMetadata,
+		);
+		expect(split.toSorted((a, b) => a - b)).toStrictEqual(all.toSorted((a, b) => a - b));
 	});
 });

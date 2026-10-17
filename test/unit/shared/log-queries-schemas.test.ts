@@ -62,6 +62,22 @@ describe("ModerationLogQuerySchema", () => {
 		expect(result.success).toBe(false);
 	});
 
+	it("accepts the case states the bot knows, and leaves the state out by default", () => {
+		for (const status of ["open", "completed", "archived"]) {
+			expect(safeParse(ModerationLogQuerySchema, { status })).toMatchObject({
+				success: true,
+				output: { status },
+			});
+		}
+		const result = safeParse(ModerationLogQuerySchema, {});
+		expect(result.success && result.output.status).toBeUndefined();
+	});
+
+	it("rejects a case state the bot does not know", () => {
+		expect(safeParse(ModerationLogQuerySchema, { status: "all" }).success).toBe(false);
+		expect(safeParse(ModerationLogQuerySchema, { status: "Active" }).success).toBe(false);
+	});
+
 	it("rejects q longer than 200 chars", () => {
 		const result = safeParse(ModerationLogQuerySchema, { q: "a".repeat(201) });
 		expect(result.success).toBe(false);

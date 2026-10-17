@@ -1,4 +1,5 @@
 import type { ModerationLogEntry } from "#shared/types/moderation-log";
+import type { ModerationCaseStatus } from "#shared/types/moderation-types";
 import type { MaybeRefOrGetter } from "vue";
 
 interface ModerationLogResponse {
@@ -21,6 +22,7 @@ export function useModerationLog({
 		userId?: string;
 		moderatorId?: string;
 		typeCode?: number;
+		status?: ModerationCaseStatus;
 		from?: string;
 		to?: string;
 		q?: string;
@@ -49,6 +51,7 @@ export function useModerationLog({
 				if (f.userId) query.userId = f.userId;
 				if (f.moderatorId) query.moderatorId = f.moderatorId;
 				if (f.typeCode !== undefined) query.typeCode = f.typeCode;
+				if (f.status) query.status = f.status;
 				if (f.from) query.from = f.from;
 				if (f.to) query.to = f.to;
 				if (f.q) query.q = f.q;

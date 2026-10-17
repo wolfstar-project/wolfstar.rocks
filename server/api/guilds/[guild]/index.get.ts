@@ -1,5 +1,5 @@
 import type { RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
-import { readSettings } from "#server/database";
+import { isGuildUnconfigured, readSettings } from "#server/database";
 import { GuildQuerySchema } from "#shared/schemas";
 import { createError, useLogger } from "evlog";
 import { parse } from "valibot";
@@ -63,7 +63,7 @@ export default defineWrappedResponseHandler(
 		log.set({
 			result: { channelCount: channels.length, serialized: Boolean(shouldSerialize) },
 		});
-		return result;
+		return isGuildUnconfigured(guild.id) ? { ...result, setupPending: true } : result;
 	},
 	{
 		auth: true,

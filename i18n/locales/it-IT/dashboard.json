@@ -70,9 +70,7 @@
 		"nav_aria": "Impostazioni del server",
 		"nav_current_group": "La pagina aperta è in questo gruppo",
 		"nav_groups": {
-			"management": "Gestione",
 			"modules": "Moduli",
-			"records": "Registri",
 			"resources": "Risorse"
 		},
 		"nav_menu": "Server e sezioni",

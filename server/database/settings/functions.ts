@@ -11,6 +11,9 @@ import { Collection } from "@discordjs/collection";
 import { AsyncQueue } from "@sapphire/async-queue";
 
 const cache = new Collection<string, GuildData>();
+// The guilds whose last read found no rows at all: the bot writes a guild's rows
+// on its first setting, so these were never set up.
+const unconfigured = new Set<string>();
 const queue = new Collection<string, Promise<GuildData>>();
 const locks = new Collection<string, AsyncQueue>();
 
@@ -24,6 +27,15 @@ export function serializeSettings(data: ReadonlyGuildData, space?: string | numb
 
 export function readSettings(guildId: string): Awaitable<ReadonlyGuildData> {
 	return cache.get(guildId) ?? processFetch(guildId);
+}
+
+/**
+ * Whether the guild has no settings stored yet, as of its last read: nobody
+ * changed a setting for it, here or through the bot. The dashboard offers the
+ * setup of such a guild.
+ */
+export function isGuildUnconfigured(guildId: string): boolean {
+	return unconfigured.has(guildId);
 }
 
 export function readSettingsPermissionNodes(settings: ReadonlyGuildData) {
@@ -77,6 +89,7 @@ class Transaction {
 			// carry every column and not just the changes:
 			await writeGuildData(db, { ...this.settings, ...this.#changes }, this.#changes);
 
+			unconfigured.delete(this.settings.id);
 			Object.assign(this.settings, this.#changes);
 			this.#hasChanges = false;
 			updateSettingsContext(this.settings, this.#changes);
@@ -144,8 +157,12 @@ async function processFetch(id: string, fresh = false): Promise<ReadonlyGuildDat
 
 async function fetch(id: string): Promise<GuildData> {
 	// A guild without rows reads as the defaults; its rows are created by the first write:
+	const stored = await fetchGuildData(db.orm, id);
+	if (stored === null) unconfigured.add(id);
+	else unconfigured.delete(id);
+
 	const data =
-		(await fetchGuildData(db.orm, id)) ??
+		stored ??
 		(Object.assign(Object.create(null), getDefaultGuildSettings(), { id }) as GuildData);
 	cache.set(id, data);
 	return data;

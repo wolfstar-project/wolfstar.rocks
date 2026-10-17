@@ -318,7 +318,6 @@
 			"configure": "",
 			"descriptions": {
 				"automod": "",
-				"commands": "",
 				"logs": "",
 				"moderation": "",
 				"roles": ""
@@ -383,6 +382,87 @@
 			"title": ""
 		},
 		"save_failed": "",
+		"setup": {
+			"back": "",
+			"channels": {
+				"automod_help": "",
+				"automod_label": "",
+				"description": "",
+				"events_help": "",
+				"events_label": "",
+				"moderation_help": "",
+				"moderation_label": "",
+				"none": "",
+				"note": "",
+				"title": ""
+			},
+			"close_aria": "",
+			"description": "",
+			"done_description": "",
+			"done_title": "",
+			"finish": "",
+			"language": {
+				"description": "",
+				"help": "",
+				"label": "",
+				"title": ""
+			},
+			"modules": {
+				"description": "",
+				"recommended": "",
+				"title": "",
+				"turn_on": ""
+			},
+			"next": "",
+			"rail_note": "",
+			"rail_title": "",
+			"resume_action": "",
+			"resume_description": "",
+			"resume_title": "",
+			"review": {
+				"description": "",
+				"edit": "",
+				"edit_aria": "",
+				"none": "",
+				"none_on": "",
+				"not_set": "",
+				"rows": {
+					"admin": "",
+					"automod_log": "",
+					"event_log": "",
+					"language": "",
+					"moderation_log": "",
+					"moderator": "",
+					"modules": "",
+					"muted": ""
+				},
+				"title": ""
+			},
+			"roles": {
+				"admin_help": "",
+				"admin_label": "",
+				"description": "",
+				"moderator_help": "",
+				"moderator_label": "",
+				"muted_help": "",
+				"muted_label": "",
+				"none": "",
+				"title": ""
+			},
+			"skip": "",
+			"skipped_description": "",
+			"skipped_title": "",
+			"step_names": {
+				"channels": "",
+				"language": "",
+				"modules": "",
+				"review": "",
+				"roles": ""
+			},
+			"step_of": "",
+			"steps_aria": "",
+			"title": ""
+		},
 		"toggle_aria": ""
 	},
 	"settings": {

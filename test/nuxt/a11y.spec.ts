@@ -56,6 +56,7 @@ import {
 	GuildSettingsLogsBulkChannel,
 	GuildSettingsLogsSelectionBar,
 	GuildSettingsSection,
+	GuildSetupWizard,
 	GuildSettingsToggleRow,
 	IconsApp,
 	IconsWolfstar,
@@ -75,6 +76,7 @@ import { createError } from "h3";
 import { describe, expect, it, vi } from "vitest";
 import { MOCK_AUDIT_ENTRY } from "~~/test/mocks/auditLogs";
 import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
+import { createMockGuildData } from "~~/test/mocks/guildData";
 import { runAxe } from "./utils/axe";
 
 const inviteUrl =
@@ -672,6 +674,34 @@ describe("component accessibility audits", () => {
 				expect(results.violations).toEqual([]);
 			},
 		);
+	});
+
+	describe("GuildSetupWizard", () => {
+		it("should have no accessibility violations on each step", async () => {
+			localStorage.clear();
+			useActiveGuild().selectGuild("123456789012345678");
+			useGuildData().setGuildData(
+				createMockOauthFlattenedGuild({
+					id: "123456789012345678",
+					name: "Pixel Parlor",
+					setupPending: true,
+				}),
+			);
+			useGuildSettings().setGuildSettings(createMockGuildData("123456789012345678"));
+			const component = await mountSuspended(GuildSetupWizard, { attachTo: document.body });
+			await vi.waitFor(() =>
+				expect(document.querySelector('[role="dialog"]')).not.toBeNull(),
+			);
+			const setup = useGuildSetup();
+
+			for (const step of [1, 2, 3, 5]) {
+				setup.goTo(step);
+				await nextTick();
+				const panel = document.querySelector('[role="dialog"]');
+				const results = await runAxe(component, { include: panel ? [panel] : [] });
+				expect(results.violations).toEqual([]);
+			}
+		});
 	});
 
 	describe("GuildReviewQueue", () => {

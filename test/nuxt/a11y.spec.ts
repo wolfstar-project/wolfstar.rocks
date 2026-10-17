@@ -53,6 +53,8 @@ import {
 	GuildAutomodDurationInput,
 	GuildReviewQueue,
 	GuildServerRail,
+	GuildSettingsLogsBulkChannel,
+	GuildSettingsLogsSelectionBar,
 	GuildSettingsSection,
 	GuildSettingsToggleRow,
 	IconsApp,
@@ -582,6 +584,34 @@ describe("component accessibility audits", () => {
 					modelValue: true,
 					name: "moderationTrackBans",
 					title: "Track Manual Bans",
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildSettingsLogsBulkChannel", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildSettingsLogsBulkChannel, {
+				props: {
+					help: "Sets the channel of every log in this group.",
+					keys: ["logsRoleCreate", "logsRoleUpdate"],
+					label: "All Roles logs",
+					values: { logsRoleCreate: "234567890123456789", logsRoleUpdate: null },
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildSettingsLogsSelectionBar", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildSettingsLogsSelectionBar, {
+				props: {
+					keys: ["logsMessageDelete", "logsRoleCreate"],
+					values: { logsMessageDelete: null, logsRoleCreate: null },
 				},
 			});
 			const results = await runAxe(component);

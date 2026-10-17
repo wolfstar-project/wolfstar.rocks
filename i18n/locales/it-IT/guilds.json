@@ -214,6 +214,23 @@
 			}
 		},
 		"channels": {
+			"bulk": {
+				"all_help": "Imposta il canale di tutti i log in una volta.",
+				"all_label": "Ogni log",
+				"cancel_selection": "Annulla selezione",
+				"group_help": "Imposta il canale di tutti i log di questo gruppo.",
+				"group_label": "Tutti i log: {group}",
+				"mixed": "canali diversi",
+				"no_logs_selected": "nessun log selezionato",
+				"remove_channel": "Rimuovi canale",
+				"select_group": "Seleziona tutti i log di {group}",
+				"select_log": "Seleziona {name}",
+				"select_logs": "Seleziona log",
+				"selected_count": "Nessun log selezionato | 1 log selezionato | {count} log selezionati",
+				"selection_help": "Imposta il canale di tutti i log selezionati.",
+				"selection_label": "Log selezionati",
+				"selection_region": "Azioni sui log selezionati"
+			},
 			"excluded_channels": "Canali ignorati",
 			"excluded_channels_help": "Canali esclusi da tipi specifici di registro.",
 			"form_aria": "Modulo impostazioni canali",

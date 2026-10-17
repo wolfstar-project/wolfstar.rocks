@@ -214,6 +214,23 @@
 			}
 		},
 		"channels": {
+			"bulk": {
+				"all_help": "Sets the channel of every log at once.",
+				"all_label": "Every log",
+				"cancel_selection": "Cancel selection",
+				"group_help": "Sets the channel of every log in this group.",
+				"group_label": "All {group} logs",
+				"mixed": "mixed channels",
+				"no_logs_selected": "no logs selected",
+				"remove_channel": "Remove channel",
+				"select_group": "Select every log in {group}",
+				"select_log": "Select {name}",
+				"select_logs": "Select logs",
+				"selected_count": "No logs selected | 1 log selected | {count} logs selected",
+				"selection_help": "Sets the channel of every selected log.",
+				"selection_label": "Selected logs",
+				"selection_region": "Selected logs actions"
+			},
 			"excluded_channels": "Ignored channels",
 			"excluded_channels_help": "Select channels that should be ignored for specific logging events. Messages and events in these channels won't be logged.",
 			"form_aria": "Channel settings form",

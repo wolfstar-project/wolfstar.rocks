@@ -1,6 +1,11 @@
 import type { GuildModuleEntry } from "#shared/utils/guild-modules";
 
-export type DashboardNavGroup = "overview" | "modules" | "records";
+/**
+ * `overview` and `tools` have no title: the overview holds the two pages about
+ * the server, `modules` the feature modules, and `tools` what is not a module,
+ * the commands and the logs.
+ */
+export type DashboardNavGroup = "overview" | "modules" | "tools";
 
 export interface DashboardNavItem {
 	/** Section slug the item opens; `""` is the overview. */
@@ -57,13 +62,6 @@ export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
 	},
 	{
 		group: "modules",
-		icon: "ic:round-terminal",
-		labelKey: "dashboard.nav.commands",
-		moduleKey: "modulesCommands",
-		slug: "commands",
-	},
-	{
-		group: "modules",
 		icon: "ic:round-people",
 		labelKey: "dashboard.nav.roles",
 		moduleKey: "modulesRoles",
@@ -86,7 +84,13 @@ export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
 		slug: "autopurge",
 	},
 	{
-		group: "records",
+		group: "tools",
+		icon: "ic:round-terminal",
+		labelKey: "dashboard.nav.commands",
+		slug: "commands",
+	},
+	{
+		group: "tools",
 		icon: "ic:round-description",
 		labelKey: "dashboard.nav.logs",
 		slug: "logs",

@@ -22,9 +22,14 @@
 			class="dashboard-nav flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto px-2 py-2.5"
 			:aria-label="ts('dashboard.nav_aria')"
 		>
-			<template v-for="group of groups" :key="group.id">
+			<template v-for="(group, groupIndex) of groups" :key="group.id">
+				<div
+					v-if="!group.titled && groupIndex > 0"
+					class="dashboard-nav-divider"
+					aria-hidden="true"
+				></div>
 				<button
-					v-if="group.id !== 'overview'"
+					v-if="group.titled"
 					type="button"
 					class="dashboard-nav-label dashboard-nav-label--toggle"
 					:aria-expanded="isGroupOpen(group.id)"
@@ -36,7 +41,7 @@
 						:class="isGroupOpen(group.id) ? undefined : '-rotate-90'"
 						aria-hidden="true"
 					/>
-					<span class="min-w-0 flex-1 text-left">{{ ts(group.labelKey) }}</span>
+					<span class="min-w-0 flex-1 text-left">{{ ts(group.labelKey ?? "") }}</span>
 					<span
 						v-if="!isGroupOpen(group.id) && group.hasCurrent"
 						class="size-1.5 shrink-0 rounded-full bg-primary"
@@ -44,7 +49,7 @@
 					></span>
 				</button>
 
-				<template v-if="group.id === 'overview' || isGroupOpen(group.id)">
+				<template v-if="!group.titled || isGroupOpen(group.id)">
 					<div
 						v-if="group.recent.length > 0"
 						class="flex flex-wrap items-center gap-1.5 pt-0.5 pr-1.5 pb-1 pl-2.5"
@@ -169,10 +174,9 @@ const { isGroupOpen, isPinned, recent, recordVisit, toggleGroup, togglePin } =
 
 const guildIconSrc = computed(() => resolveGuildIconSrc(guildData.value, { size: 64 }));
 
-const GROUP_LABEL_KEYS: Record<DashboardNavGroup, string> = {
+// Only the modules have a title, and fold away under it.
+const GROUP_LABEL_KEYS: Partial<Record<DashboardNavGroup, string>> = {
 	modules: "dashboard.nav_groups.modules",
-	overview: "dashboard.nav_groups.management",
-	records: "dashboard.nav_groups.records",
 };
 
 function open(slug: string) {
@@ -206,7 +210,7 @@ function toRow(item: DashboardNavItem) {
 }
 
 const groups = computed(() =>
-	(["overview", "modules", "records"] as const).map((id) => {
+	(["overview", "modules", "tools"] as const).map((id) => {
 		const items = DASHBOARD_NAV.filter((item) => item.group === id).map(toRow);
 		const pinned = items.filter((item) => item.pinnable && item.pinned);
 		const rest = items.filter((item) => !(item.pinnable && item.pinned));
@@ -222,6 +226,7 @@ const groups = computed(() =>
 			id,
 			labelKey: GROUP_LABEL_KEYS[id],
 			parts,
+			titled: GROUP_LABEL_KEYS[id] !== undefined,
 			// Chips repeat sections the list already shows, so only unpinned,
 			// non-current ones are offered.
 			recent:

@@ -75,7 +75,7 @@ const SLOW_LATENCY_MS = 300;
 
 const { guildData } = useGuildData();
 const { ts } = useI18n();
-const { locale } = useAppLocale();
+const { timeLocale } = useAppLocale();
 
 const page = ref(1);
 const limit = ref(LOGS_PAGE_SIZE);
@@ -143,11 +143,11 @@ const rows = computed(() =>
 			? `${entry.commandName} ${entry.subcommand}`
 			: entry.commandName;
 		return {
-			at: formatActivityTime(executed, now, locale.value),
+			at: formatActivityTime(executed, now, timeLocale.value),
 			avatar: auditLogMemberAvatar(member),
 			channel: channel ? `#${channel.name}` : "\u2013",
 			datetime: entry.executedAt,
-			fullDate: executed.toLocaleString(locale.value),
+			fullDate: executed.toLocaleString(timeLocale.value),
 			id: entry.id,
 			latency: entry.latencyMs === null ? "\u2013" : `${entry.latencyMs}ms`,
 			latencyClass: latencyClass(entry.latencyMs),

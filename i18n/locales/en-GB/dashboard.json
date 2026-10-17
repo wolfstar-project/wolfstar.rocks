@@ -18,6 +18,32 @@
 			"title": ""
 		},
 		"discard_changes": "Discard Changes",
+		"dm": {
+			"bot_tag": "",
+			"direct_message": "",
+			"home_aria": "",
+			"intro": "",
+			"log_aria": "",
+			"news": {
+				"automod_body": "",
+				"automod_title": "",
+				"console_body": "",
+				"console_text": "",
+				"console_title": "",
+				"language_action": "",
+				"language_body": "",
+				"language_title": "",
+				"rail_text": ""
+			},
+			"no_messages": "",
+			"no_reply": "",
+			"react": "",
+			"search": "",
+			"staryl_intro": "",
+			"title": "",
+			"unread": "",
+			"wolfstar_intro": ""
+		},
 		"error_aria": "Error loading dashboard",
 		"error_fallback": "Something went wrong while loading the dashboard. Please try again, or contact support if the problem continues.",
 		"error_forbidden": "You don't have permission to access this server's dashboard. Make sure you have the Manage Server permission and try again.",
@@ -59,14 +85,12 @@
 		"nav_unpin": "",
 		"nav_you": "",
 		"picker": {
-			"description": "",
 			"empty": "",
-			"error": "",
-			"title": ""
+			"error": ""
 		},
 		"reset_changes": "Reset Changes",
 		"save_changes": "Save Changes",
-		"server_rail_all": "",
+		"server_rail_add": "",
 		"server_rail_aria": "",
 		"settings_saved_description": "Your server settings have been saved.",
 		"settings_saved_title": "Settings Saved",

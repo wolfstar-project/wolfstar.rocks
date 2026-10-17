@@ -11,7 +11,7 @@
 			<button
 				type="button"
 				class="discord-channel-header-mobile-title"
-				:aria-label="`Open channel info for #${name}`"
+				:aria-label="ts('discord.header.open_info', { name })"
 				@click="emit('open-channel-info')"
 			>
 				<span class="discord-channel-header-mobile-name-row">
@@ -66,7 +66,7 @@
 						'discord-channel-header-action-active':
 							action.id === 'members' && membersOpen,
 					}"
-					:aria-label="action.id === 'members' ? membersToggleLabel : action.label"
+					:aria-label="action.id === 'members' ? membersToggleLabel : ts(action.labelKey)"
 					:aria-pressed="action.id === 'members' ? membersOpen : undefined"
 					@click="action.id === 'members' ? toggleMembers() : undefined"
 				>
@@ -113,7 +113,7 @@ type ToolbarActionId = "threads" | "notifications" | "pins" | "members";
 interface ToolbarAction {
 	id: ToolbarActionId;
 	icon: string;
-	label: string;
+	labelKey: string;
 }
 
 const TypeIcons = {
@@ -125,10 +125,14 @@ const TypeIcons = {
  * threads → notifications → pins → members, then search.
  */
 const ToolbarActions = [
-	{ id: "threads", icon: "discord:threads", label: "Threads" },
-	{ id: "notifications", icon: "discord:notifications", label: "Notification settings" },
-	{ id: "pins", icon: "discord:pins", label: "Pinned messages" },
-	{ id: "members", icon: "discord:members", label: "Show member list" },
+	{ id: "threads", icon: "discord:threads", labelKey: "discord.header.threads" },
+	{
+		id: "notifications",
+		icon: "discord:notifications",
+		labelKey: "discord.header.notifications",
+	},
+	{ id: "pins", icon: "discord:pins", labelKey: "discord.header.pins" },
+	{ id: "members", icon: "discord:members", labelKey: "discord.header.show_members" },
 ] as const satisfies readonly ToolbarAction[];
 
 interface ChannelHeaderEmits {
@@ -140,11 +144,12 @@ interface ChannelHeaderEmits {
 </script>
 
 <script setup lang="ts">
+const { ts } = useI18n();
 const {
 	name,
 	type = "text",
 	topic,
-	searchPlaceholder = "Search",
+	searchPlaceholder,
 	guildName,
 	onlineCount,
 	notificationCount = 0,
@@ -157,12 +162,14 @@ const typeIcon = computed(() => TypeIcons[type]);
 
 const searchPlaceholderText = computed(() => {
 	if (guildName) {
-		return `Search ${guildName}`;
+		return ts("discord.header.search", { name: guildName });
 	}
-	return searchPlaceholder;
+	return searchPlaceholder ?? ts("discord.header.search_plain");
 });
 
-const membersToggleLabel = computed(() => (membersOpen ? "Hide member list" : "Show member list"));
+const membersToggleLabel = computed(() =>
+	ts(membersOpen ? "discord.header.hide_members" : "discord.header.show_members"),
+);
 
 function toggleMembers() {
 	emit("toggle-members");

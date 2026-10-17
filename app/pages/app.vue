@@ -16,10 +16,10 @@
 					{{ navbarTitle }}
 				</h1>
 				<p
-					v-if="activeGuildId && guildData?.name"
+					v-if="navbarSubtitle"
 					class="truncate text-xs leading-tight text-muted sm:text-[0.8125rem]"
 				>
-					<span class="hidden sm:inline" aria-hidden="true">· </span>{{ guildData.name }}
+					<span class="hidden sm:inline" aria-hidden="true">· </span>{{ navbarSubtitle }}
 				</p>
 			</div>
 			<span class="flex-1"></span>
@@ -33,11 +33,18 @@
 			</span>
 		</header>
 
-		<div class="console-content">
+		<!-- The Home is a conversation: it scrolls its own log above the footer. -->
+		<ClientOnly v-if="!activeGuildId">
+			<DashboardDirectMessageThread>
+				<template #notice>
+					<DashboardServersNotice />
+				</template>
+			</DashboardDirectMessageThread>
+		</ClientOnly>
+		<div v-else class="console-content">
 			<ClientOnly>
 				<div class="flex flex-col gap-5">
-					<GuildPicker v-if="!activeGuildId" />
-					<DashboardSkeleton v-else-if="!isGuildLoaded" :kind="skeletonKind" />
+					<DashboardSkeleton v-if="!isGuildLoaded" :kind="skeletonKind" />
 					<GuildLogsPanel v-else-if="isLogsSection" />
 					<component
 						:is="renderComponent"
@@ -149,13 +156,17 @@ const sectionProps = computed(() => {
 	return section.value === "commands" ? { commands: commands.value } : {};
 });
 
+const { thread } = useDirectMessages();
 const navbarTitle = computed(() =>
-	activeGuildId.value ? sectionLabel.value : ts("dashboard.picker.title"),
+	activeGuildId.value ? sectionLabel.value : (thread.value?.name ?? ts("dashboard.dm.title")),
+);
+const navbarSubtitle = computed(() =>
+	activeGuildId.value ? guildData.value?.name : ts("dashboard.dm.direct_message"),
 );
 const title = computed(() =>
 	activeGuildId.value
 		? `${sectionLabel.value} · ${guildData.value?.name ?? ""}`
-		: ts("dashboard.picker.title"),
+		: `${navbarTitle.value} · ${ts("dashboard.dm.title")}`,
 );
 
 // Fetch only the data required by the active section.

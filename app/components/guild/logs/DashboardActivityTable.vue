@@ -61,7 +61,7 @@ const TABLE_STYLE = { "--logs-min-width": "47.5rem" };
 
 const { guildData } = useGuildData();
 const { ts } = useI18n();
-const { locale } = useAppLocale();
+const { timeLocale } = useAppLocale();
 
 const page = ref(1);
 const limit = ref(LOGS_PAGE_SIZE);
@@ -108,11 +108,11 @@ const rows = computed(() =>
 		const happened = new Date(entry.timestamp);
 		const result = outcome(entry.outcome);
 		return {
-			at: formatActivityTime(happened, now, locale.value),
+			at: formatActivityTime(happened, now, timeLocale.value),
 			avatar: auditLogMemberAvatar(entry.member),
 			datetime: happened.toISOString(),
 			entry,
-			fullDate: happened.toLocaleString(locale.value),
+			fullDate: happened.toLocaleString(timeLocale.value),
 			id: entry.id,
 			name: auditLogMemberName(entry.member),
 			outcome: result.label,

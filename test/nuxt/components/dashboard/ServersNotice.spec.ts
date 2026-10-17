@@ -1,7 +1,7 @@
-import { GuildPicker, UApp } from "#components";
+import { DashboardServersNotice } from "#components";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { defineComponent, h, ref } from "vue";
+import { ref } from "vue";
 import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 
 const state = vi.hoisted(() => ({
@@ -22,33 +22,29 @@ function setUser(overrides: Record<string, unknown>) {
 	};
 }
 
-describe("GuildPicker", () => {
+describe("DashboardServersNotice", () => {
 	beforeEach(() => {
 		setUser({});
 	});
 
-	it("lists the servers the admin can manage", async () => {
+	it("stays quiet while there is a server to manage", async () => {
 		setUser({
 			guilds: ref([
 				createMockOauthFlattenedGuild({ id: "111111111111111111", name: "Alpha" }),
-				createMockOauthFlattenedGuild({
-					id: "222222222222222222",
-					manageable: false,
-					name: "Beta",
-				}),
 			]),
 		});
-		// The cards need the tooltip provider `UApp` gives the real page.
-		const wrapper = await mountSuspended(
-			defineComponent({ setup: () => () => h(UApp, null, () => h(GuildPicker)) }),
-		);
+		const wrapper = await mountSuspended(DashboardServersNotice);
 
-		expect(wrapper.findAll('[role="listitem"]')).toHaveLength(1);
-		expect(wrapper.text()).toContain("Alpha");
+		expect(wrapper.text()).toBe("");
 	});
 
 	it("says so when the admin manages no server", async () => {
-		const wrapper = await mountSuspended(GuildPicker);
+		setUser({
+			guilds: ref([
+				createMockOauthFlattenedGuild({ id: "2", manageable: false, name: "Beta" }),
+			]),
+		});
+		const wrapper = await mountSuspended(DashboardServersNotice);
 
 		expect(wrapper.text()).toContain("No servers you can manage yet");
 		expect(wrapper.find('[role="alert"]').exists()).toBe(false);
@@ -58,7 +54,7 @@ describe("GuildPicker", () => {
 	// servers" would point the admin at a permission problem they do not have.
 	it("reports a failed load and retries it", async () => {
 		setUser({ error: ref(new Error("Network error")), status: ref("error") });
-		const wrapper = await mountSuspended(GuildPicker);
+		const wrapper = await mountSuspended(DashboardServersNotice);
 
 		const alert = wrapper.get('[role="alert"]');
 		expect(alert.text()).toContain("Your servers could not be loaded");

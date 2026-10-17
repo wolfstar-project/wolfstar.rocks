@@ -40,7 +40,7 @@
 						class="discord-embed-footer-image"
 						width="16"
 						height="16"
-						:alt="`Footer icon for ${footer.text}`"
+						:alt="ts('discord.embed.footer_icon', { text: footer.text })"
 						decoding="async"
 					/>
 					<span class="discord-embed-footer-content">
@@ -89,6 +89,7 @@ interface EmbedSlots {
 </script>
 
 <script setup lang="ts">
+const { ts } = useI18n();
 defineSlots<EmbedSlots>();
 
 const { title, color, author, footer, timestamp, theme } = defineProps<EmbedProps>();
@@ -100,22 +101,22 @@ const timestampDate = computed(() => {
 
 const timestampIso = computed(() => timestampDate.value?.toISOString());
 
-const dtf = new Intl.DateTimeFormat("en-US", {
-	dateStyle: "short",
-	timeStyle: "short",
-});
+const { timeLocale } = useAppLocale();
 
 const formattedTimestamp = computed(() => {
 	const date = timestampDate.value;
 	if (!date || Number.isNaN(date.getTime())) return "";
-	return dtf.format(date);
+	return new Intl.DateTimeFormat(timeLocale.value, {
+		dateStyle: "short",
+		timeStyle: "short",
+	}).format(date);
 });
 
 const embedAriaLabel = computed(() => {
-	if (title) return `Embed: ${title}`;
-	if (author?.name) return `Embed from ${author.name}`;
-	if (footer?.text) return `Embed: ${footer.text}`;
-	return "Discord embed";
+	if (title) return ts("discord.embed.titled", { title });
+	if (author?.name) return ts("discord.embed.from", { name: author.name });
+	if (footer?.text) return ts("discord.embed.titled", { title: footer.text });
+	return ts("discord.embed.generic");
 });
 </script>
 

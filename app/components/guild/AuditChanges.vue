@@ -79,7 +79,7 @@ const { entry, resolver } = defineProps<{
 }>();
 
 const { ts } = useI18n();
-const { locale } = useAppLocale();
+const { timeLocale } = useAppLocale();
 
 const open = ref(false);
 
@@ -89,7 +89,7 @@ const lines = computed(() =>
 const title = computed(() => ts("guild_logs.changes.title", { count: lines.value.length }));
 const avatar = computed(() => auditLogMemberAvatar(entry.member));
 const username = computed(() => entry.member.user?.username ?? auditLogMemberName(entry.member));
-const when = computed(() => formatActivityTime(entry.timestamp, new Date(), locale.value));
+const when = computed(() => formatActivityTime(entry.timestamp, new Date(), timeLocale.value));
 </script>
 
 <style scoped>

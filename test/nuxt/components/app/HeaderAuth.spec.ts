@@ -1,4 +1,4 @@
-import { AppHeaderAuth, AppPreferencesDialog } from "#components";
+import { AppHeaderAuth, AppPreferencesQuickDialog } from "#components";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { describe, expect, it, vi } from "vitest";
 import { defineComponent, h } from "vue";
@@ -46,7 +46,7 @@ describe("AppHeaderAuth", () => {
 	// `/profile` is deprecated: the local preferences open in a dialog, so a
 	// guest never leaves the page they are on to change the theme or language.
 	describe("guest settings button", () => {
-		it("opens the preferences dialog instead of navigating", async () => {
+		it("opens the compact preferences dialog instead of navigating", async () => {
 			usePreferencesDialog().isOpen.value = false;
 			const wrapper = await mountSuspended(AppHeaderAuth);
 			const settings = wrapper.get('button[aria-label="Settings"]');
@@ -57,6 +57,7 @@ describe("AppHeaderAuth", () => {
 			await settings.trigger("click");
 
 			expect(usePreferencesDialog().isOpen.value).toBe(true);
+			expect(usePreferencesDialog().variant.value).toBe("quick");
 		});
 
 		// The dialog is mounted by `app.vue`, apart from the button. Checking the
@@ -65,7 +66,7 @@ describe("AppHeaderAuth", () => {
 			usePreferencesDialog().isOpen.value = false;
 			const wrapper = await mountSuspended(
 				defineComponent({
-					setup: () => () => [h(AppHeaderAuth), h(AppPreferencesDialog)],
+					setup: () => () => [h(AppHeaderAuth), h(AppPreferencesQuickDialog)],
 				}),
 				{ attachTo: document.body },
 			);
@@ -77,6 +78,9 @@ describe("AppHeaderAuth", () => {
 				const dialog = document.body.querySelector('[role="dialog"]');
 				expect(dialog?.textContent).toContain("Settings");
 				expect(dialog?.textContent).toContain("Theme");
+				expect(dialog?.textContent).toContain("Reduce Motion");
+				// The dashboard's log density has no place on the pages around it.
+				expect(dialog?.textContent).not.toContain("Cozy");
 			});
 
 			usePreferencesDialog().isOpen.value = false;

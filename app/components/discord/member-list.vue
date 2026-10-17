@@ -1,5 +1,5 @@
 <template>
-	<aside class="discord-member-list" :aria-label="label">
+	<aside class="discord-member-list" :aria-label="label ?? ts('discord.member_list.label')">
 		<DiscordScrollbar class="discord-member-list-scrollbar">
 			<div class="discord-member-list-content">
 				<section
@@ -59,7 +59,11 @@
 										class="discord-member-list-app"
 										role="img"
 										:aria-label="
-											member.verified ? 'Verified application' : 'Application'
+											ts(
+												member.verified
+													? 'discord.member_list.verified_app'
+													: 'discord.member_list.app',
+											)
 										"
 									>
 										<UIcon
@@ -112,12 +116,8 @@ interface PinnedRoleGroup {
 </script>
 
 <script setup lang="ts">
-const {
-	online,
-	offline,
-	label = "Server members",
-	showRoles = false,
-} = defineProps<MemberListProps>();
+const { ts } = useI18n();
+const { online, offline, label, showRoles = false } = defineProps<MemberListProps>();
 
 const sections = computed<MemberSection[]>(() => {
 	const pinnedGroups = new Map<string, PinnedRoleGroup>();
@@ -154,7 +154,7 @@ const sections = computed<MemberSection[]>(() => {
 	if (onlineRest.length > 0) {
 		next.push({
 			id: "online",
-			label: "Online",
+			label: ts("discord.member_list.online"),
 			members: onlineRest,
 			offline: false,
 			pinned: false,
@@ -164,7 +164,7 @@ const sections = computed<MemberSection[]>(() => {
 	if (offline.length > 0) {
 		next.push({
 			id: "offline",
-			label: "Offline",
+			label: ts("discord.member_list.offline"),
 			members: offline,
 			offline: true,
 			pinned: false,

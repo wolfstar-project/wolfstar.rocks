@@ -218,6 +218,14 @@
 		--ink-400: oklch(38% 0.012 273.1);
 		--ink-300: oklch(44.7% 0.014 252.2);
 
+		/* Discord's desktop chrome, which the marketing demos are drawn in:
+		   the channel, the edge under its header, and the header's hairline
+		   shadow. Light Discord here, dark (#313338, #1E1F22) in the theme blocks. */
+		--discord-chrome: oklch(98.17% 0.002 264);
+		--discord-chrome-border: oklch(92.64% 0.006 264);
+		--discord-chrome-edge: oklch(21.15% 0.009 264 / 0.08);
+		--discord-chrome-text: oklch(21.15% 0.009 264);
+
 		/* The miniature windows of the theme picker in the settings dialog. Each
 		   one shows its own theme whatever the page is in, so they are fixed:
 		   the ink scale for dark, Discord's light greys (#E3E5E8, #F2F3F5,
@@ -309,6 +317,10 @@
 	   attribute, the dark class, and the attribute-less system-preference state. */
 	:root {
 		@variant theme-dark {
+			--discord-chrome: oklch(26.65% 0.006 272.93);
+			--discord-chrome-border: oklch(19.34% 0.004 273.16);
+			--discord-chrome-edge: oklch(0% 0 0 / 0.2);
+			--discord-chrome-text: oklch(91.56% 0.004 272.93);
 			--field-surface: var(--ink-500);
 			--field-border: var(--ink-400);
 			--popover-surface: var(--ink-600);
@@ -342,6 +354,10 @@
 
 	[data-theme="midnight"],
 	.midnight {
+		--discord-chrome: oklch(26.65% 0.006 272.93);
+		--discord-chrome-border: oklch(19.34% 0.004 273.16);
+		--discord-chrome-edge: oklch(0% 0 0 / 0.2);
+		--discord-chrome-text: oklch(91.56% 0.004 272.93);
 		--field-surface: var(--ink-500);
 		--field-border: var(--ink-400);
 		--popover-surface: var(--ink-600);

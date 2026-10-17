@@ -5,11 +5,15 @@
 			:guilds="userGuilds"
 			:pending="userGuildsPending"
 			@select="goToGuild"
-			@browse="goToGuild(null)"
+			@home="goToGuild(null)"
 		/>
 
 		<aside v-if="guildId" class="console-sidebar" :aria-label="ts('dashboard.nav_aria')">
 			<DashboardSidebar floating />
+		</aside>
+		<!-- No server open: the Home, with the bots' direct messages. -->
+		<aside v-else class="console-sidebar" :aria-label="ts('dashboard.dm.title')">
+			<DashboardDirectMessages floating />
 		</aside>
 
 		<div class="console-main">
@@ -80,10 +84,11 @@
 						:guilds="userGuilds"
 						:pending="userGuildsPending"
 						@select="selectFromDrawer"
-						@browse="browseFromDrawer"
+						@home="selectFromDrawer(null)"
 					/>
 					<div class="min-w-0 flex-1">
 						<DashboardSidebar v-if="guildId" @navigate="closeDrawer" />
+						<DashboardDirectMessages v-else @navigate="closeDrawer" />
 					</div>
 				</div>
 			</template>
@@ -385,14 +390,10 @@ function discardAndLeave() {
 	confirmLeave();
 }
 
-function selectFromDrawer(id: string) {
+// A server or the Home picked in the phone drawer closes it, so what opens is in view.
+function selectFromDrawer(id: string | null) {
 	closeDrawer();
 	goToGuild(id);
-}
-
-function browseFromDrawer() {
-	closeDrawer();
-	goToGuild(null);
 }
 
 async function submitChanges() {

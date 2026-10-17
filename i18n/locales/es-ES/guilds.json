@@ -1,16 +1,7 @@
 {
 	"$schema": "../../schemas/guilds.schema.json",
 	"guild_card": {
-		"invite_aria": "Invitar el bot a {name}",
-		"invite_bot": "Invitar bot",
-		"invite_bot_aria": "Invitar bot a {name}",
-		"manage_aria": "Administrar {name}",
-		"manage_server": "Gestionar servidor",
-		"manage_server_aria": "Administrar servidor {name}",
-		"members_online": "Miembros en línea",
-		"no_permission": "Sin permiso",
-		"no_permission_aria": "Sin permiso para administrar {name}",
-		"total_members": "Total de miembros: {count}"
+		"invite_bot_aria": "Invitar bot a {name}"
 	},
 	"guild_settings": {
 		"automod": {
@@ -223,6 +214,23 @@
 			}
 		},
 		"channels": {
+			"bulk": {
+				"all_help": "",
+				"all_label": "",
+				"cancel_selection": "",
+				"group_help": "",
+				"group_label": "",
+				"mixed": "",
+				"no_logs_selected": "",
+				"remove_channel": "",
+				"select_group": "",
+				"select_log": "",
+				"select_logs": "",
+				"selected_count": "",
+				"selection_help": "",
+				"selection_label": "",
+				"selection_region": ""
+			},
 			"excluded_channels": "",
 			"excluded_channels_help": "Canales omitidos por tipos específicos de registro.",
 			"form_aria": "Formulario de configuración de canales",

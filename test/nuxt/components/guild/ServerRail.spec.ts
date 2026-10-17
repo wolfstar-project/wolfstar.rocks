@@ -59,17 +59,22 @@ describe("GuildServerRail", () => {
 		expect(wrapper.findAll("button.guild-rail-item")).toHaveLength(0);
 	});
 
-	// The rail used to link to /profile for the full list; that page is gone and
-	// the list is the dashboard's own picker.
-	it("asks for the server list instead of leaving the dashboard", async () => {
+	// The rail's top button is the Home with the direct messages, not a way
+	// out of the dashboard; its foot invites WolfStar to another server.
+	it("opens the Home and invites WolfStar elsewhere", async () => {
 		const wrapper = await mountSuspended(GuildServerRail, {
-			props: { guilds: [createMockOauthFlattenedGuild()] },
+			props: { currentGuildId: "1", guilds: [createMockOauthFlattenedGuild()] },
 		});
 
-		expect(wrapper.find('a[href="/profile"]').exists()).toBe(false);
-		await wrapper.get('button[aria-label="All your servers"]').trigger("click");
+		expect(wrapper.find('a[href="/"]').exists()).toBe(false);
+		const home = wrapper.get("button.guild-rail-home");
+		expect(home.attributes("aria-current")).toBeUndefined();
+		await home.trigger("click");
 
-		expect(wrapper.emitted("browse")).toHaveLength(1);
+		expect(wrapper.emitted("home")).toHaveLength(1);
+		expect(wrapper.get("a.guild-rail-add").attributes("href")).toContain(
+			"discord.com/oauth2/authorize",
+		);
 	});
 
 	it("holds the rail open with placeholders while the guilds load", async () => {

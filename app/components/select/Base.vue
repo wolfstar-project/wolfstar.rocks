@@ -13,7 +13,12 @@
 		:placeholder
 		:aria-label="ariaLabel"
 		:aria-describedby="ariaDescribedby"
-		:ui="{ base: multipleBase, itemTrailingIcon: multiple ? 'hidden' : undefined }"
+		:ui="{
+			base: baseClass,
+			content:
+				variant === 'field' ? 'w-(--reka-combobox-trigger-width) max-w-none' : undefined,
+			itemTrailingIcon: multiple ? 'hidden' : undefined,
+		}"
 	>
 		<template v-if="hasValue" #default>
 			<span v-if="multiple" class="flex min-w-0 flex-wrap gap-1">
@@ -25,9 +30,21 @@
 					+{{ hiddenChips }}
 				</span>
 			</span>
-			<span v-else-if="first" class="flex min-w-0 items-center gap-2">
+			<span v-else-if="first" class="flex min-w-0 grow items-center gap-2">
+				<img
+					v-if="first.flag"
+					:src="first.flag"
+					alt=""
+					width="22"
+					height="15"
+					class="select-flag"
+					:class="{ 'select-flag--field': variant === 'field' }"
+				/>
 				<SelectOptionMark :kind :color="first.color" />
 				<span class="truncate">{{ first.label }}</span>
+				<span v-if="first.aside" class="ms-auto max-w-2/5 truncate ps-2 text-toned">
+					{{ first.aside }}
+				</span>
 			</span>
 		</template>
 
@@ -40,6 +57,14 @@
 			>
 				<UIcon v-if="isSelected(item)" name="ic:round-check" class="size-3" />
 			</span>
+			<img
+				v-if="optionOf(item)?.flag"
+				:src="optionOf(item)?.flag"
+				alt=""
+				width="22"
+				height="15"
+				class="select-flag"
+			/>
 			<SelectOptionMark :kind :color="optionOf(item)?.color" />
 		</template>
 
@@ -63,6 +88,10 @@ export interface SelectOption {
 	note?: string;
 	/** CSS colour of a role's dot. */
 	color?: string;
+	/** Image of the flag shown before a language's name. */
+	flag?: string;
+	/** Text set at the far end of the chosen value, such as a language's name in English. */
+	aside?: string;
 }
 
 /** What the options are, which decides the mark shown in front of each one. */
@@ -85,6 +114,7 @@ const {
 	disabled = false,
 	clearable = true,
 	size = "md",
+	variant = "default",
 	placeholder,
 	id,
 	ariaLabel,
@@ -97,6 +127,8 @@ const {
 	/** Shows a button that empties the field while it holds a value. */
 	clearable?: boolean;
 	size?: "sm" | "md";
+	/** `field` is the 48px select of a settings page, whose list is as wide as it. */
+	variant?: "default" | "field";
 	placeholder?: string;
 	id?: string;
 	ariaLabel?: string;
@@ -107,9 +139,9 @@ const { ts } = useI18n();
 
 // Chips may wrap, so a multi-select grows from its size's height instead of
 // being held to it.
-const multipleBase = computed(() => {
-	if (!multiple) return undefined;
-	return size === "sm" ? "h-auto min-h-8 py-0.75" : "h-auto min-h-10 py-1";
+const baseClass = computed(() => {
+	if (multiple) return size === "sm" ? "h-auto min-h-8 py-0.75" : "h-auto min-h-10 py-1";
+	return variant === "field" ? "h-12 ps-2.5 text-base" : undefined;
 });
 
 const selected = computed(() => {
@@ -184,6 +216,14 @@ function isSelected(item: unknown): boolean {
 
 .select-chip {
 	@apply inline-flex h-5.5 max-w-full items-center gap-1.25 rounded-full bg-base-content/8 px-2 text-xs font-semibold;
+}
+
+.select-flag {
+	@apply h-3.75 w-5.5 shrink-0 rounded-[3px] object-cover ring-1 ring-base-content/14;
+}
+
+.select-flag--field {
+	@apply h-4.75 w-7 rounded-[4px];
 }
 
 .select-check {

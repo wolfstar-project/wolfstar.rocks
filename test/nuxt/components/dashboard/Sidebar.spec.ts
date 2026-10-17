@@ -164,7 +164,7 @@ describe("DashboardSidebar", () => {
 
 		// `useUserSession()` cannot be mocked in browser mode, so the card is
 		// found by its class and the session's name is not checked.
-		const account = wrapper.get("button.dashboard-user");
+		const account = wrapper.get("button.account-user");
 		expect(account.attributes("aria-label")).toMatch(/^User settings for/);
 		await account.trigger("click");
 
@@ -188,11 +188,11 @@ describe("DashboardSidebar", () => {
 	it("wears the account's nameplate and avatar frame from Discord's CDN", async () => {
 		const wrapper = await mountSidebar();
 
-		const plate = wrapper.get(".dashboard-nameplate");
+		const plate = wrapper.get(".account-nameplate");
 		expect(plate.attributes("src") ?? plate.attributes("poster")).toContain(
 			"/assets/collectibles/nameplates/nameplates/twilight/",
 		);
-		expect(wrapper.get(".dashboard-avatar-decoration").attributes("src")).toContain(
+		expect(wrapper.get(".account-avatar-decoration").attributes("src")).toContain(
 			"/avatar-decoration-presets/a_frame.png",
 		);
 	});

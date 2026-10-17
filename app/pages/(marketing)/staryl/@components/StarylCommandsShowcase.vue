@@ -246,11 +246,15 @@ const timestamp = ref(0);
 const composerText = ref("");
 
 const channelNow = new Date();
-const channelDateLabel = new Intl.DateTimeFormat("en-US", {
-	month: "long",
-	day: "numeric",
-	year: "numeric",
-}).format(channelNow);
+const { locale: appLocale } = useAppLocale();
+// The channel's first day, in the language on screen.
+const channelDateLabel = computed(() =>
+	new Intl.DateTimeFormat(appLocale.value, {
+		month: "long",
+		day: "numeric",
+		year: "numeric",
+	}).format(channelNow),
+);
 const channelDateTime = [
 	String(channelNow.getFullYear()),
 	String(channelNow.getMonth() + 1).padStart(2, "0"),

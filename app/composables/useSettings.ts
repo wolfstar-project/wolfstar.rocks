@@ -8,11 +8,15 @@ export type ColorModePreference = "system" | "light" | "dark" | "midnight";
 /** How the log tables lay their rows out: roomy with avatars, or one tight line. */
 export type LogDensity = "cozy" | "compact";
 
+/** How times read: as the language writes them, or always on a 12- or 24-hour clock. */
+export type TimeFormat = "auto" | "12h" | "24h";
+
 export interface AppSettings {
 	colorMode: ColorModePreference;
 	logDensity: LogDensity;
 	reduceMotion: boolean;
 	selectedLocale: AppLocaleCode | null;
+	timeFormat: TimeFormat;
 }
 
 export const COLOR_MODE_PREFERENCES = [
@@ -30,6 +34,7 @@ const DEFAULT_SETTINGS: AppSettings = {
 	logDensity: "cozy",
 	reduceMotion: false,
 	selectedLocale: null,
+	timeFormat: "auto",
 };
 
 let settingsScope: EffectScope | null = null;
@@ -75,6 +80,7 @@ function applyLegacySettingsMigration(settings: RemovableRef<AppSettings>) {
 		logDensity: DEFAULT_SETTINGS.logDensity,
 		reduceMotion: legacyReduceMotion ?? DEFAULT_SETTINGS.reduceMotion,
 		selectedLocale: legacyLocale ?? DEFAULT_SETTINGS.selectedLocale,
+		timeFormat: DEFAULT_SETTINGS.timeFormat,
 	};
 
 	localStorage.removeItem(LEGACY_REDUCE_MOTION_KEY);
@@ -137,6 +143,19 @@ export function useLogDensity() {
 		set: (value) => {
 			// Replace the object so useLocalStorage reliably persists nested updates.
 			settings.value = { ...settings.value, logDensity: value };
+		},
+	});
+}
+
+/** The clock times are read on, kept with the other preferences of this browser. */
+export function useTimeFormat() {
+	const { settings } = useSettings();
+
+	return computed<TimeFormat>({
+		// Settings stored before the preference existed have no value for it.
+		get: () => settings.value.timeFormat ?? DEFAULT_SETTINGS.timeFormat,
+		set: (value) => {
+			settings.value = { ...settings.value, timeFormat: value };
 		},
 	});
 }

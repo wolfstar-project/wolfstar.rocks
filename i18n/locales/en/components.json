@@ -1,5 +1,116 @@
 {
 	"$schema": "../../schemas/components.schema.json",
+	"discord": {
+		"channel_info": {
+			"back": "Back to channel",
+			"create_thread": "Create Thread",
+			"label": "Channel information for #{name}",
+			"members_in": "Members in #{name}",
+			"no_threads": "There are no threads.",
+			"sections": "Channel information sections",
+			"tabs": {
+				"files": "Files",
+				"links": "Links",
+				"media": "Media",
+				"members": "Members",
+				"pins": "Pins",
+				"threads": "Threads"
+			},
+			"text_channel": "Text Channel"
+		},
+		"chat": {
+			"messages_in": "Messages in {channel}"
+		},
+		"command": {
+			"label": "Slash command {command}",
+			"matched": "Slash command: {command}",
+			"suggestion": "{app} slash command: {command}"
+		},
+		"composer": {
+			"close_apps": "Close apps and commands",
+			"label": "Message composer for {channel}",
+			"open_apps": "Open apps and commands",
+			"placeholder": "Message #{channel}",
+			"send": "Send message"
+		},
+		"embed": {
+			"footer_icon": "Footer icon for {text}",
+			"from": "Embed from {name}",
+			"generic": "Discord embed",
+			"titled": "Embed: {title}"
+		},
+		"header": {
+			"hide_members": "Hide member list",
+			"notifications": "Notification settings",
+			"open_info": "Open channel info for #{name}",
+			"pins": "Pinned messages",
+			"search": "Search {name}",
+			"search_plain": "Search",
+			"show_members": "Show member list",
+			"threads": "Threads"
+		},
+		"launcher": {
+			"apps": "Apps",
+			"back": "Back to Apps",
+			"collapse": "Collapse Apps sheet",
+			"commands": "Commands",
+			"expand": "Expand Apps sheet",
+			"help_body": "Visit our help center to learn more about using and discovering apps on Discord.",
+			"help_title": "Have Questions?",
+			"in_server": "In This Server",
+			"learn_more": "Learn More",
+			"promoted": "Promoted",
+			"search": "Search Apps & Commands",
+			"view_all": "View All",
+			"view_more": "View More",
+			"views": {
+				"action-games": "Action Games",
+				"bot-games": "Bot Games",
+				"card-games": "Card Games",
+				"chill-together": "Chill Together",
+				"puzzle-games": "Puzzle Games",
+				"recents": "Recents",
+				"server-apps": "Apps in this Server",
+				"social-activities": "Social Activities",
+				"strategy-games": "Strategy and Board Games"
+			}
+		},
+		"member_list": {
+			"app": "Application",
+			"label": "Server members",
+			"offline": "Offline",
+			"online": "Online",
+			"verified_app": "Verified application"
+		},
+		"message": {
+			"dismiss": "Dismiss message",
+			"dismiss_aria": "Dismiss ephemeral message",
+			"ephemeral_notice": "Ephemeral message notice",
+			"from": "Message from {name}",
+			"only_you": "Only you can see this",
+			"verified_badge": "Verified application badge"
+		},
+		"reply": {
+			"replying_to": "Replying to {name}: {preview}",
+			"used_command": "{name} used the {command} slash command"
+		},
+		"select": {
+			"aria": "Select an option",
+			"placeholder": "Make a selection"
+		},
+		"suggestions": {
+			"for_prefix": "Slash command suggestions for {prefix}",
+			"frequently_used": "Frequently Used",
+			"listbox": "Slash command suggestions",
+			"matched": "Matched slash command",
+			"rail": "Applications"
+		},
+		"welcome": {
+			"edit": "Edit Channel",
+			"start": "This is the start of the #{name} channel.",
+			"title": "Welcome to #{name}!"
+		}
+	},
 	"feedback": {
 		"description": "Report a bug or share your thoughts with the WolfStar team.",
 		"email": "Email",

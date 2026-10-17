@@ -16,7 +16,7 @@
 
 		<div class="mt-4">
 			<div
-				class="mb-1 flex flex-wrap gap-2"
+				class="mb-4 flex flex-wrap gap-2"
 				role="group"
 				:aria-label="ts('guild_settings.reports.queue.filter_aria')"
 			>
@@ -32,11 +32,7 @@
 				</button>
 			</div>
 
-			<DashboardSkeleton
-				v-if="status !== 'success' && status !== 'error' && entries.length === 0"
-				kind="table"
-				bare
-			/>
+			<DashboardSkeleton v-if="isLoading" kind="table" bare />
 
 			<div v-else-if="entries.length === 0" class="review-empty" role="status">
 				<span class="review-empty-icon" aria-hidden="true">
@@ -124,7 +120,7 @@ import { REPORT_STATUSES } from "#shared/schemas";
  * status. It only reads: a report is actioned or dismissed from Discord.
  */
 const { ts } = useI18n();
-const { locale } = useAppLocale();
+const { timeLocale } = useAppLocale();
 const { guildData } = useGuildData();
 
 const QUEUE_LIMIT = 25;
@@ -155,14 +151,30 @@ const filters = computed(() => [
 	...REPORT_STATUSES.map((value) => ({ label: ts(STATUS_LABEL_KEYS[value]), value })),
 ]);
 
+// A first load, or a change of filter, draws the table's skeleton, so rows of
+// the last status never pass for this one; a refresh behind rows kept from
+// the last visit leaves them on screen.
+const switchingFilter = ref(false);
+watch(selected, () => {
+	switchingFilter.value = true;
+});
+watch(status, (current) => {
+	if (current === "success" || current === "error") switchingFilter.value = false;
+});
+const isLoading = computed(
+	() =>
+		(switchingFilter.value && status.value === "pending") ||
+		((status.value === "pending" || status.value === "idle") && entries.value.length === 0),
+);
+
 const now = new Date();
 const rows = computed(() =>
 	entries.value.map((report) => {
 		const filed = new Date(report.createdAt);
 		return {
-			at: formatActivityTime(filed, now, locale.value),
+			at: formatActivityTime(filed, now, timeLocale.value),
 			datetime: filed.toISOString(),
-			fullDate: filed.toLocaleString(locale.value),
+			fullDate: filed.toLocaleString(timeLocale.value),
 			id: report.id,
 			reason: report.reason,
 			statusLabel: ts(STATUS_LABEL_KEYS[report.status]),

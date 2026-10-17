@@ -1,16 +1,7 @@
 {
 	"$schema": "../../schemas/guilds.schema.json",
 	"guild_card": {
-		"invite_aria": "Invite bot to {name}",
-		"invite_bot": "Invite Bot",
-		"invite_bot_aria": "Invite WolfStar bot to {name}",
-		"manage_aria": "Manage {name}",
-		"manage_server": "Manage Server",
-		"manage_server_aria": "Manage {name} server settings",
-		"members_online": "Members online",
-		"no_permission": "No Permission",
-		"no_permission_aria": "{name} - No permission",
-		"total_members": "Total members: {count}"
+		"invite_bot_aria": "Invite WolfStar bot to {name}"
 	},
 	"guild_settings": {
 		"automod": {
@@ -223,6 +214,23 @@
 			}
 		},
 		"channels": {
+			"bulk": {
+				"all_help": "",
+				"all_label": "",
+				"cancel_selection": "",
+				"group_help": "",
+				"group_label": "",
+				"mixed": "",
+				"no_logs_selected": "",
+				"remove_channel": "",
+				"select_group": "",
+				"select_log": "",
+				"select_logs": "",
+				"selected_count": "",
+				"selection_help": "",
+				"selection_label": "",
+				"selection_region": ""
+			},
 			"excluded_channels": "",
 			"excluded_channels_help": "Select channels that should be ignored for specific logging events. Messages and events in these channels won't be logged.",
 			"form_aria": "Channel settings form",

@@ -18,6 +18,32 @@
 			"title": ""
 		},
 		"discard_changes": "Descartar cambios",
+		"dm": {
+			"bot_tag": "",
+			"direct_message": "",
+			"home_aria": "",
+			"intro": "",
+			"log_aria": "",
+			"news": {
+				"automod_body": "",
+				"automod_title": "",
+				"console_body": "",
+				"console_text": "",
+				"console_title": "",
+				"language_action": "",
+				"language_body": "",
+				"language_title": "",
+				"rail_text": ""
+			},
+			"no_messages": "",
+			"no_reply": "",
+			"react": "",
+			"search": "",
+			"staryl_intro": "",
+			"title": "",
+			"unread": "",
+			"wolfstar_intro": ""
+		},
 		"error_aria": "Error al cargar el panel de control",
 		"error_fallback": "Algo salió mal al cargar el panel de control. Por favor, inténtalo de nuevo, o contacta con soporte si el problema persiste.",
 		"error_forbidden": "No tienes permiso para acceder al panel de control de este servidor. Asegúrate de tener el permiso Gestionar servidor e inténtalo de nuevo.",
@@ -59,14 +85,12 @@
 		"nav_unpin": "",
 		"nav_you": "",
 		"picker": {
-			"description": "",
 			"empty": "",
-			"error": "",
-			"title": ""
+			"error": ""
 		},
 		"reset_changes": "Deshacer cambios",
 		"save_changes": "Guardar cambios",
-		"server_rail_all": "",
+		"server_rail_add": "",
 		"server_rail_aria": "",
 		"settings_saved_description": "La configuración del servidor se ha guardado.",
 		"settings_saved_title": "Configuración guardada",

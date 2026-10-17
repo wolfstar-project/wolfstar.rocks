@@ -22,7 +22,67 @@
 		"blog": {
 			"type": "object",
 			"properties": {
+				"article_links": {
+					"type": "string"
+				},
+				"avatar_alt": {
+					"type": "string"
+				},
+				"back": {
+					"type": "string"
+				},
+				"copy_url": {
+					"type": "string"
+				},
+				"edit_article": {
+					"type": "string"
+				},
+				"image_alt": {
+					"type": "string"
+				},
+				"join_support": {
+					"type": "string"
+				},
+				"link_copied": {
+					"type": "string"
+				},
+				"links": {
+					"type": "string"
+				},
+				"on_platform": {
+					"type": "string"
+				},
 				"rss": {
+					"type": "string"
+				},
+				"star_github": {
+					"type": "string"
+				},
+				"toc": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"changelog": {
+			"type": "object",
+			"properties": {
+				"back": {
+					"type": "string"
+				},
+				"cover_alt": {
+					"type": "string"
+				},
+				"description": {
+					"type": "string"
+				},
+				"empty": {
+					"type": "string"
+				},
+				"github_releases": {
+					"type": "string"
+				},
+				"title": {
 					"type": "string"
 				}
 			},
@@ -175,6 +235,9 @@
 		"header": {
 			"type": "object",
 			"properties": {
+				"account_loading": {
+					"type": "string"
+				},
 				"add_app": {
 					"type": "string"
 				},

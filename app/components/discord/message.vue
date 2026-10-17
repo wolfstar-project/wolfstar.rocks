@@ -5,7 +5,7 @@
 			'discord-message-ephemeral': ephemeral,
 			'discord-message-with-reply': reply,
 		}"
-		:aria-label="`Message from ${profile.name}`"
+		:aria-label="ts('discord.message.from', { name: profile.name })"
 	>
 		<DiscordAvatar :user="name" size="medium" class="discord-message-avatar" />
 		<DiscordMessageReply v-if="reply" v-bind="reply" class="discord-message-reply-slot" />
@@ -16,7 +16,7 @@
 					v-if="profile.app"
 					class="app-badge"
 					role="img"
-					aria-label="Verified application badge"
+					:aria-label="ts('discord.message.verified_badge')"
 				>
 					<UIcon
 						v-if="profile.verified"
@@ -35,15 +35,16 @@
 				v-if="ephemeral"
 				class="discord-message-ephemeral-footer"
 				role="status"
-				aria-label="Ephemeral message notice"
+				:aria-label="ts('discord.message.ephemeral_notice')"
 			>
-				<UIcon name="ph:eye-duotone" aria-hidden="true" /> Only you can see this •
+				<UIcon name="ph:eye-duotone" aria-hidden="true" />
+				{{ ts("discord.message.only_you") }} •
 				<button
 					class="discord-message-link"
 					type="button"
-					aria-label="Dismiss ephemeral message"
+					:aria-label="ts('discord.message.dismiss_aria')"
 				>
-					Dismiss message
+					{{ ts("discord.message.dismiss") }}
 				</button>
 			</div>
 		</div>
@@ -68,6 +69,7 @@ interface MessageSlots {
 </script>
 
 <script setup lang="ts">
+const { ts } = useI18n();
 defineSlots<MessageSlots>();
 
 const props = defineProps<MessageProps>();
@@ -109,6 +111,9 @@ const profile = computed(() => Profiles[name.value]);
 	@apply grid items-start;
 	grid-template-columns: auto minmax(0, 1fr);
 	grid-template-rows: auto auto;
+	/* The "used /command" line sits right above the author line, as in Discord;
+	   the message's gap stays between the avatar and the content. */
+	row-gap: 0.375rem;
 }
 
 @media (width >= 48rem) {

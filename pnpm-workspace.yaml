@@ -87,6 +87,10 @@ shellEmulator: true
 # `@i18n-micro/path-strategy`: with the `no_prefix` strategy a language switch
 # keeps the current path. Upstream navigates to the route by name, which turned
 # an alias such as "/" into "/wolfstar" (see modules/i18n-no-prefix-aliases.ts).
+# nuxt-seo-utils' absoluteImageUrls plugin declares its `tags:resolve` hook
+# `async` with no await; unhead v3 ignores the promise and warns in dev
+# ("promise ignored: tags:resolve"). The patch drops the `async`.
 patchedDependencies:
     "@i18n-micro/path-strategy@1.3.10": patches/@i18n-micro__path-strategy@1.3.10.patch
+    nuxt-seo-utils@8.3.3: patches/nuxt-seo-utils@8.3.3.patch
     prisma-orm-extension-typed-json: patches/prisma-orm-extension-typed-json.patch

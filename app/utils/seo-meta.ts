@@ -34,6 +34,8 @@ export function useSeoMetadata({
 		});
 	}
 
+	// X reads the title and description from the Open Graph tags; only the
+	// card's layout has no Open Graph equivalent, so `twitter:card` stays.
 	useSeoMeta({
 		description,
 		ogDescription: description,
@@ -43,8 +45,6 @@ export function useSeoMetadata({
 		ogUrl,
 		title,
 		twitterCard,
-		twitterDescription: description,
 		twitterSite,
-		twitterTitle: title,
 	});
 }

@@ -14,6 +14,10 @@ const { resolve } = createResolver(import.meta.url);
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+	// The dev validator of unhead is registered by `app/plugins/unhead-validate.client.ts`,
+	// which sets the rules Nuxt's own injection cannot.
+	unhead: { vite: { validate: false } },
+
 	// Modules configuration
 	modules: [
 		"@nuxt/ui",

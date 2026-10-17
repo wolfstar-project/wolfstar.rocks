@@ -50,38 +50,44 @@
 				</template>
 			</ClientOnly>
 
-			<div class="my-7 h-px bg-(--home-border-subtle)"></div>
+			<template v-if="!quick">
+				<div class="my-7 h-px bg-(--home-border-subtle)"></div>
 
-			<h3 :id="densityLabelId" class="prefs-label">{{ ts("profile.message_display") }}</h3>
-			<ClientOnly>
-				<div
-					role="radiogroup"
-					:aria-labelledby="densityLabelId"
-					class="flex max-w-130 flex-col gap-2.5"
-				>
-					<label
-						v-for="option in densityOptions"
-						:key="option.id"
-						class="prefs-option"
-						:class="{ 'prefs-option--on': logDensity === option.id }"
+				<h3 :id="densityLabelId" class="prefs-label">
+					{{ ts("profile.message_display") }}
+				</h3>
+				<ClientOnly>
+					<div
+						role="radiogroup"
+						:aria-labelledby="densityLabelId"
+						class="flex max-w-130 flex-col gap-2.5"
 					>
-						<input
-							v-model="logDensity"
-							type="radio"
-							:name="densityLabelId"
-							:value="option.id"
-							class="sr-only"
-						/>
-						<span class="prefs-dot" aria-hidden="true"></span>
-						<span class="grow">
-							<span class="block text-sm font-semibold text-highlighted">{{
-								option.label
-							}}</span>
-							<span class="mt-0.5 block text-xs text-muted">{{ option.hint }}</span>
-						</span>
-					</label>
-				</div>
-			</ClientOnly>
+						<label
+							v-for="option in densityOptions"
+							:key="option.id"
+							class="prefs-option"
+							:class="{ 'prefs-option--on': logDensity === option.id }"
+						>
+							<input
+								v-model="logDensity"
+								type="radio"
+								:name="densityLabelId"
+								:value="option.id"
+								class="sr-only"
+							/>
+							<span class="prefs-dot" aria-hidden="true"></span>
+							<span class="grow">
+								<span class="block text-sm font-semibold text-highlighted">{{
+									option.label
+								}}</span>
+								<span class="mt-0.5 block text-xs text-muted">{{
+									option.hint
+								}}</span>
+							</span>
+						</label>
+					</div>
+				</ClientOnly>
+			</template>
 		</div>
 
 		<!-- Language: which one, then the clock times are read on. -->
@@ -109,7 +115,7 @@
 				</ClientOnly>
 			</section>
 
-			<section>
+			<section v-if="!quick">
 				<h3 :id="timeFormatLabelId" class="prefs-heading">
 					{{ ts("profile.time_format") }}
 				</h3>
@@ -213,12 +219,18 @@ type PreferenceGroup = "appearance" | "accessibility" | "language";
  * log density, reduced motion and language. They are stored through
  * `useSettings()`, so this component only renders the controls.
  */
-const { only } = defineProps<{
+const { only, quick = false } = defineProps<{
 	/**
 	 * Shows one group instead of all of them, for the settings dialog, which
 	 * gives each its own page.
 	 */
 	only?: PreferenceGroup;
+	/**
+	 * The compact set of the pages around the dashboard: the three base themes,
+	 * the language, and reduced motion. Row density and the clock belong to the
+	 * dashboard's logs, so they stay out.
+	 */
+	quick?: boolean;
 }>();
 
 function shows(group: PreferenceGroup) {
@@ -239,13 +251,18 @@ const languageLabelId = useId();
 const languageHelpId = useId();
 const timeFormatLabelId = useId();
 
-// The design's three choices, then the experimental midnight theme the app also has.
-const themeCards = computed<{ id: ColorModePreference; label: string }[]>(() => [
-	{ id: "dark", label: ts("common.dark") },
-	{ id: "light", label: ts("common.light") },
-	{ id: "system", label: ts("profile.theme_sync_system") },
-	{ id: "midnight", label: ts("common.midnight_experimental") },
-]);
+// The design's three choices, then the experimental midnight theme the app also
+// has. The compact set lists midnight only while it is the one in use, so the
+// current choice never goes missing from the picker.
+const themeCards = computed<{ id: ColorModePreference; label: string }[]>(() => {
+	const base: { id: ColorModePreference; label: string }[] = [
+		{ id: "dark", label: ts("common.dark") },
+		{ id: "light", label: ts("common.light") },
+		{ id: "system", label: ts("profile.theme_sync_system") },
+	];
+	if (quick && preference.value !== "midnight") return base;
+	return [...base, { id: "midnight", label: ts("common.midnight_experimental") }];
+});
 const themeChoice = computed({
 	get: () => preference.value,
 	set: (value: ColorModePreference) => setColorMode(value),

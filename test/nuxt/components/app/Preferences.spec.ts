@@ -28,6 +28,38 @@ describe("AppPreferences", () => {
 		expect(useAppColorMode().preference.value).toBe("light");
 	});
 
+	it("offers the three base themes in the compact set", async () => {
+		const wrapper = await mountSuspended(AppPreferences, {
+			props: { only: "appearance", quick: true },
+		});
+
+		const labels = wrapper
+			.findAll('[role="radiogroup"]')
+			.map((group) => group.findAll("label").length);
+		expect(labels).toStrictEqual([3]);
+		expect(wrapper.text()).not.toContain("Midnight");
+		expect(wrapper.text()).not.toContain("Cozy");
+	});
+
+	it("keeps midnight in the compact set while it is the theme in use", async () => {
+		useAppColorMode().setColorMode("midnight");
+		const wrapper = await mountSuspended(AppPreferences, {
+			props: { only: "appearance", quick: true },
+		});
+
+		expect(wrapper.text()).toContain("Midnight (experimental)");
+	});
+
+	it("leaves the clock to the dashboard in the compact set", async () => {
+		const full = await mountSuspended(AppPreferences, { props: { only: "language" } });
+		expect(full.find('[role="radiogroup"]').exists()).toBe(true);
+
+		const quick = await mountSuspended(AppPreferences, {
+			props: { only: "language", quick: true },
+		});
+		expect(quick.find('[role="radiogroup"]').exists()).toBe(false);
+	});
+
 	it("switches the log tables to compact rows", async () => {
 		const wrapper = await mountSuspended(AppPreferences, { props: { only: "appearance" } });
 

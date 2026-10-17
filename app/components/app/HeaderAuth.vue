@@ -78,7 +78,7 @@ const { mobile = false } = defineProps<{
 
 const { ts } = useI18n();
 const { signOut } = useUserSession();
-const { open: openPreferences } = usePreferencesDialog();
+const { openQuick: openPreferences } = usePreferencesDialog();
 
 const items = computed<DropdownMenuItem[]>(() => [
 	{

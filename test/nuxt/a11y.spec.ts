@@ -833,6 +833,12 @@ describe("component accessibility audits", () => {
 			const results = await runAxe(wrapper);
 			expect(results.violations).toEqual([]);
 		});
+
+		it("has no axe-core violations in the compact set", async () => {
+			const wrapper = await mountSuspended(AppPreferences, { props: { quick: true } });
+			const results = await runAxe(wrapper);
+			expect(results.violations).toEqual([]);
+		});
 	});
 
 	describe("AppLogoMark", () => {

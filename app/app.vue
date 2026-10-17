@@ -12,7 +12,8 @@
 		<NuxtLayout>
 			<NuxtPage />
 		</NuxtLayout>
-		<LazyAppPreferencesDialog v-if="preferencesRequested" />
+		<LazyAppPreferencesDialog v-if="consoleDialogRequested" />
+		<LazyAppPreferencesQuickDialog v-if="quickDialogRequested" />
 	</UApp>
 </template>
 
@@ -20,12 +21,15 @@
 useSessionRefresh();
 useAuthIdentity();
 
-// The dialog's chunk is only fetched once someone opens it, and it then stays
+// A dialog's chunk is only fetched once someone opens it, and it then stays
 // mounted so closing it can animate out.
-const { isOpen: preferencesOpen } = usePreferencesDialog();
-const preferencesRequested = ref(preferencesOpen.value);
-watch(preferencesOpen, (isOpen) => {
-	if (isOpen) preferencesRequested.value = true;
+const { isOpen: preferencesOpen, variant: preferencesVariant } = usePreferencesDialog();
+const consoleDialogRequested = ref(preferencesOpen.value && preferencesVariant.value === "console");
+const quickDialogRequested = ref(preferencesOpen.value && preferencesVariant.value === "quick");
+watch([preferencesOpen, preferencesVariant], ([isOpen, variant]) => {
+	if (!isOpen) return;
+	if (variant === "quick") quickDialogRequested.value = true;
+	else consoleDialogRequested.value = true;
 });
 
 const router = useRouter();

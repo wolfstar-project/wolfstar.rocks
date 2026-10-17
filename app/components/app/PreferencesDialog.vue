@@ -284,7 +284,15 @@
 import type { PreferencesSection as SettingsSection } from "~/composables/usePreferencesDialog";
 
 const { ts } = useI18n();
-const { isOpen, requestedSection } = usePreferencesDialog();
+const { isOpen: dialogOpen, requestedSection, variant } = usePreferencesDialog();
+// The compact dialog of the other pages shares the open state; this one only
+// shows for its own variant.
+const isOpen = computed({
+	get: () => dialogOpen.value && variant.value === "console",
+	set: (value: boolean) => {
+		dialogOpen.value = value;
+	},
+});
 const { user: authUser, signOut } = useUserSession();
 const { user: discordUser, status: discordStatus, refresh: refreshDiscordUser } = useUser(authUser);
 const {

@@ -6,9 +6,14 @@
  */
 const OPTIONAL_PAGE_TITLE_KEY = /^pages\.[^.]+\.title$/;
 
+// Installed right after Nuxt I18n Micro and before every other plugin: the
+// fallback title is worked out while the plugins run, so a later handler would
+// miss some of the lookups (about one visit in two).
 export default defineNuxtPlugin({
-	enforce: "post",
+	dependsOn: ["i18n-plugin-loader"],
+	enforce: "pre",
 	env: { islands: false },
+	name: "wolfstar:i18n-missing-keys",
 	setup(nuxtApp) {
 		if (!import.meta.dev) return;
 

@@ -1,6 +1,8 @@
 import type { RemovableRef } from "@vueuse/core";
 import type { EffectScope } from "vue";
+import type { CustomColorTheme } from "~/utils/color-themes";
 import type { AppLocaleCode } from "~/utils/is-app-locale";
+import { customColorTheme, DEFAULT_CUSTOM_THEME, findColorTheme } from "~/utils/color-themes";
 import { isAppLocaleCode } from "~/utils/is-app-locale";
 
 export type ColorModePreference = "system" | "light" | "dark" | "midnight";
@@ -11,8 +13,15 @@ export type LogDensity = "cozy" | "compact";
 /** How times read: as the language writes them, or always on a 12- or 24-hour clock. */
 export type TimeFormat = "auto" | "12h" | "24h";
 
+/** Which of Discord's two dark themes the dark mode draws: Ash, or the darker Dark. */
+export type DarkShade = "ash" | "dark";
+
 export interface AppSettings {
 	colorMode: ColorModePreference;
+	/** A colour theme painted over the dashboard (`utils/color-themes.ts`), or none. */
+	colorTheme: string | null;
+	customTheme: CustomColorTheme;
+	darkShade: DarkShade;
 	logDensity: LogDensity;
 	reduceMotion: boolean;
 	selectedLocale: AppLocaleCode | null;
@@ -31,6 +40,9 @@ const LEGACY_LOCALE_KEY = "user-prefers-locale";
 const LEGACY_REDUCE_MOTION_KEY = "user-prefers-reduced-motion";
 const DEFAULT_SETTINGS: AppSettings = {
 	colorMode: "system",
+	colorTheme: null,
+	customTheme: DEFAULT_CUSTOM_THEME,
+	darkShade: "ash",
 	logDensity: "cozy",
 	reduceMotion: false,
 	selectedLocale: null,
@@ -77,6 +89,9 @@ function applyLegacySettingsMigration(settings: RemovableRef<AppSettings>) {
 
 	settings.value = {
 		colorMode: legacyColorMode ?? DEFAULT_SETTINGS.colorMode,
+		colorTheme: DEFAULT_SETTINGS.colorTheme,
+		customTheme: DEFAULT_SETTINGS.customTheme,
+		darkShade: DEFAULT_SETTINGS.darkShade,
 		logDensity: DEFAULT_SETTINGS.logDensity,
 		reduceMotion: legacyReduceMotion ?? DEFAULT_SETTINGS.reduceMotion,
 		selectedLocale: legacyLocale ?? DEFAULT_SETTINGS.selectedLocale,
@@ -158,6 +173,58 @@ export function useTimeFormat() {
 			settings.value = { ...settings.value, timeFormat: value };
 		},
 	});
+}
+
+/** The themes Discord lists first: its four bases and following the device. */
+export type BaseThemeChoice = "light" | "ash" | "dark" | "onyx" | "system";
+
+const BASE_THEMES: Record<BaseThemeChoice, { mode: ColorModePreference; shade: DarkShade }> = {
+	ash: { mode: "dark", shade: "ash" },
+	dark: { mode: "dark", shade: "dark" },
+	light: { mode: "light", shade: "ash" },
+	onyx: { mode: "midnight", shade: "ash" },
+	system: { mode: "system", shade: "ash" },
+};
+
+/**
+ * The theme picker of the settings, as Discord's: one of the base themes, or a
+ * colour theme (a preset or the custom one) on its light or dark base.
+ */
+export function useThemeChoice() {
+	const { settings } = useSettings();
+	const { setColorMode } = useAppColorMode();
+
+	const colorTheme = computed(() => settings.value.colorTheme ?? null);
+	const customTheme = computed(() => settings.value.customTheme ?? DEFAULT_CUSTOM_THEME);
+	const baseTheme = computed<BaseThemeChoice | null>(() => {
+		if (colorTheme.value) return null;
+		const mode = settings.value.colorMode;
+		if (mode === "light") return "light";
+		if (mode === "midnight") return "onyx";
+		if (mode === "system") return "system";
+		return (settings.value.darkShade ?? "ash") === "dark" ? "dark" : "ash";
+	});
+
+	function selectBase(choice: BaseThemeChoice) {
+		const { mode, shade } = BASE_THEMES[choice];
+		settings.value = { ...settings.value, colorTheme: null, darkShade: shade };
+		setColorMode(mode);
+	}
+
+	function selectColorTheme(id: string) {
+		const theme = id === "custom" ? customColorTheme(customTheme.value) : findColorTheme(id);
+		if (!theme) return;
+		settings.value = { ...settings.value, colorTheme: id, darkShade: "ash" };
+		setColorMode(theme.base === "light" ? "light" : "dark");
+	}
+
+	function updateCustomTheme(patch: Partial<CustomColorTheme>) {
+		const next = { ...customTheme.value, ...patch };
+		settings.value = { ...settings.value, colorTheme: "custom", customTheme: next };
+		setColorMode(next.base === "light" ? "light" : "dark");
+	}
+
+	return { baseTheme, colorTheme, customTheme, selectBase, selectColorTheme, updateCustomTheme };
 }
 
 export function useReduceMotion() {

@@ -2,50 +2,107 @@
 	<div class="space-y-6">
 		<!-- Appearance: the theme, then how dense the log tables are. -->
 		<div v-if="shows('appearance')">
-			<h3 :id="themeLabelId" class="prefs-label">{{ ts("profile.theme") }}</h3>
+			<!-- Discord's theme picker: its base themes, then the colour themes
+			     painted behind the dashboard, all one choice. -->
+			<h3 class="prefs-label">{{ ts("profile.theme") }}</h3>
 			<ClientOnly>
-				<div role="radiogroup" :aria-labelledby="themeLabelId" class="flex flex-wrap gap-3">
-					<label
-						v-for="card in themeCards"
-						:key="card.id"
-						class="theme-card"
-						:class="{ 'theme-card--on': themeChoice === card.id }"
-					>
-						<input
-							v-model="themeChoice"
-							type="radio"
-							:name="themeLabelId"
-							:value="card.id"
-							class="sr-only"
-						/>
-						<span
-							class="theme-card-preview"
-							:class="`theme-card-preview--${card.id}`"
-							aria-hidden="true"
+				<div class="flex flex-col gap-5">
+					<div>
+						<p :id="baseThemesLabelId" class="prefs-sublabel">
+							{{ ts("profile.themes.default") }}
+						</p>
+						<div
+							role="radiogroup"
+							:aria-labelledby="baseThemesLabelId"
+							class="theme-swatches"
 						>
-							<span class="theme-card-rail"></span>
-							<span class="theme-card-side"></span>
-							<span class="theme-card-body">
-								<span class="theme-card-line w-[70%]"></span>
-								<span class="theme-card-line w-[90%]"></span>
+							<label
+								v-for="theme in baseThemes"
+								:key="theme.id"
+								class="theme-swatch"
+								:class="[
+									`theme-swatch--${theme.id}`,
+									{ 'theme-swatch--on': baseTheme === theme.id },
+								]"
+								:title="theme.label"
+							>
+								<input
+									type="radio"
+									:name="themeGroupName"
+									:value="theme.id"
+									:checked="baseTheme === theme.id"
+									:aria-label="theme.label"
+									class="sr-only"
+									@change="selectBase(theme.id)"
+								/>
+								<UIcon
+									v-if="theme.id === 'system'"
+									name="ic:round-sync"
+									class="size-6"
+									aria-hidden="true"
+								/>
 								<span
-									class="theme-card-line theme-card-line--accent w-[55%]"
-								></span>
-							</span>
-						</span>
-						<span class="theme-card-label">
-							<span class="prefs-dot" aria-hidden="true"></span>
-							{{ card.label }}
-						</span>
-					</label>
+									v-if="baseTheme === theme.id"
+									class="theme-swatch-check"
+									aria-hidden="true"
+								>
+									<UIcon name="ic:round-check" class="size-3" />
+								</span>
+							</label>
+						</div>
+					</div>
+
+					<div v-if="!quick">
+						<p :id="colorThemesLabelId" class="prefs-sublabel">
+							{{ ts("profile.themes.color") }}
+						</p>
+						<div
+							role="radiogroup"
+							:aria-labelledby="colorThemesLabelId"
+							class="theme-swatches"
+						>
+							<label
+								v-for="theme in colorThemes"
+								:key="theme.id"
+								class="theme-swatch"
+								:class="{ 'theme-swatch--on': colorTheme === theme.id }"
+								:style="{ backgroundImage: theme.swatch }"
+								:title="theme.label"
+							>
+								<input
+									type="radio"
+									:name="themeGroupName"
+									:value="theme.id"
+									:checked="colorTheme === theme.id"
+									:aria-label="theme.label"
+									class="sr-only"
+									@change="selectColorTheme(theme.id)"
+								/>
+								<UIcon
+									v-if="theme.id === 'custom'"
+									name="ic:round-palette"
+									class="size-6 text-white"
+									aria-hidden="true"
+								/>
+								<span
+									v-if="colorTheme === theme.id"
+									class="theme-swatch-check"
+									aria-hidden="true"
+								>
+									<UIcon name="ic:round-check" class="size-3" />
+								</span>
+							</label>
+						</div>
+						<p class="mt-2 text-xs text-muted">
+							{{ ts("profile.themes.color_hint") }}
+						</p>
+					</div>
+
+					<AppCustomThemeEditor v-if="!quick && colorTheme === 'custom'" />
 				</div>
 				<template #fallback>
-					<div class="flex flex-wrap gap-3">
-						<USkeleton
-							v-for="card in themeCards"
-							:key="card.id"
-							class="h-36.5 w-47.5 rounded-[10px]"
-						/>
+					<div class="flex flex-wrap gap-2">
+						<USkeleton v-for="n in 12" :key="n" class="size-12 rounded-[8px]" />
 					</div>
 				</template>
 			</ClientOnly>
@@ -210,7 +267,8 @@
 
 <script setup lang="ts">
 import type { SelectOption } from "~/components/select/Base.vue";
-import type { ColorModePreference, LogDensity, TimeFormat } from "~/composables/useSettings";
+import type { BaseThemeChoice, LogDensity, TimeFormat } from "~/composables/useSettings";
+import { COLOR_THEMES, colorThemeSwatch, customColorTheme } from "~/utils/color-themes";
 
 type PreferenceGroup = "appearance" | "accessibility" | "language";
 
@@ -226,8 +284,8 @@ const { only, quick = false } = defineProps<{
 	 */
 	only?: PreferenceGroup;
 	/**
-	 * The compact set of the pages around the dashboard: the three base themes,
-	 * the language, and reduced motion. Row density and the clock belong to the
+	 * The compact set of the pages around the dashboard: the base themes, the
+	 * language, and reduced motion. Row density and the clock belong to the
 	 * dashboard's logs, so they stay out.
 	 */
 	quick?: boolean;
@@ -242,31 +300,64 @@ const { locale, locales, localeLabel, selectLocale } = useAppLocale();
 const { reduceMotionEnabled, effectiveReduceMotion, setReduceMotion, systemPreferenceActive } =
 	useReduceMotion();
 
-const { preference, setColorMode } = useAppColorMode();
+const { baseTheme, colorTheme, customTheme, selectBase, selectColorTheme } = useThemeChoice();
 const logDensity = useLogDensity();
 
-const themeLabelId = useId();
+const themeGroupName = useId();
+const baseThemesLabelId = useId();
+const colorThemesLabelId = useId();
 const densityLabelId = useId();
 const languageLabelId = useId();
 const languageHelpId = useId();
 const timeFormatLabelId = useId();
 
-// The design's three choices, then the experimental midnight theme the app also
-// has. The compact set lists midnight only while it is the one in use, so the
-// current choice never goes missing from the picker.
-const themeCards = computed<{ id: ColorModePreference; label: string }[]>(() => {
-	const base: { id: ColorModePreference; label: string }[] = [
-		{ id: "dark", label: ts("common.dark") },
-		{ id: "light", label: ts("common.light") },
-		{ id: "system", label: ts("profile.theme_sync_system") },
-	];
-	if (quick && preference.value !== "midnight") return base;
-	return [...base, { id: "midnight", label: ts("common.midnight_experimental") }];
-});
-const themeChoice = computed({
-	get: () => preference.value,
-	set: (value: ColorModePreference) => setColorMode(value),
-});
+// Discord's four themes and following the device, in its order.
+const baseThemes = computed<{ id: BaseThemeChoice; label: string }[]>(() => [
+	{ id: "light", label: ts("profile.themes.light") },
+	{ id: "ash", label: ts("profile.themes.ash") },
+	{ id: "dark", label: ts("profile.themes.dark") },
+	{ id: "onyx", label: ts("profile.themes.onyx") },
+	{ id: "system", label: ts("profile.theme_sync_system") },
+]);
+
+// The custom theme first, as its own gradient, then Discord's presets.
+const COLOR_THEME_LABEL_KEYS: Record<string, string> = {
+	"aurora": "profile.themes.presets.aurora",
+	"blurple-twilight": "profile.themes.presets.blurple_twilight",
+	"candyfloss": "profile.themes.presets.candyfloss",
+	"chroma-glow": "profile.themes.presets.chroma_glow",
+	"citrus-sherbert": "profile.themes.presets.citrus_sherbert",
+	"crimson-moon": "profile.themes.presets.crimson_moon",
+	"desert-khaki": "profile.themes.presets.desert_khaki",
+	"dusk": "profile.themes.presets.dusk",
+	"forest": "profile.themes.presets.forest",
+	"hanami": "profile.themes.presets.hanami",
+	"lofi-vibes": "profile.themes.presets.lofi_vibes",
+	"mars": "profile.themes.presets.mars",
+	"memory-lane": "profile.themes.presets.memory_lane",
+	"midnight-blurple": "profile.themes.presets.midnight_blurple",
+	"mint-apple": "profile.themes.presets.mint_apple",
+	"neon-nights": "profile.themes.presets.neon_nights",
+	"retro-raincloud": "profile.themes.presets.retro_raincloud",
+	"retro-storm": "profile.themes.presets.retro_storm",
+	"sepia": "profile.themes.presets.sepia",
+	"strawberry-lemonade": "profile.themes.presets.strawberry_lemonade",
+	"sunrise": "profile.themes.presets.sunrise",
+	"sunset": "profile.themes.presets.sunset",
+	"under-the-sea": "profile.themes.presets.under_the_sea",
+};
+const colorThemes = computed(() => [
+	{
+		id: "custom",
+		label: ts("profile.themes.custom"),
+		swatch: colorThemeSwatch(customColorTheme(customTheme.value)),
+	},
+	...COLOR_THEMES.map((theme) => ({
+		id: theme.id,
+		label: ts(COLOR_THEME_LABEL_KEYS[theme.id] ?? "profile.themes.custom"),
+		swatch: colorThemeSwatch(theme),
+	})),
+]);
 
 const densityOptions = computed<{ id: LogDensity; label: string; hint: string }[]>(() => [
 	{ hint: ts("profile.density_cozy_hint"), id: "cozy", label: ts("profile.density_cozy") },
@@ -376,98 +467,75 @@ function handleSetReduceMotion(value: boolean) {
 	border-color: var(--field-border);
 }
 
-.theme-card--on .prefs-dot,
 .prefs-option--on .prefs-dot {
 	border-color: var(--color-primary);
 }
 
-.theme-card--on .prefs-dot::after,
 .prefs-option--on .prefs-dot::after {
 	@apply size-1.75 rounded-full bg-primary;
 	content: "";
 }
 
-.theme-card {
-	@apply w-47.5 cursor-pointer overflow-hidden rounded-[10px] border-2 text-left;
-	border-color: var(--field-border);
-	background-color: var(--ink-700);
+/* Discord's theme swatches: 48px tiles, the picked one ringed in blurple with
+   a check on its corner. */
+.prefs-sublabel {
+	@apply mb-2 text-sm font-semibold text-highlighted;
 }
 
-.theme-card--on {
-	border-color: var(--color-primary);
+.theme-swatches {
+	@apply flex flex-wrap gap-2;
 }
 
-.theme-card:has(input:focus-visible),
+.theme-swatch {
+	@apply relative flex size-12 cursor-pointer items-center justify-center rounded-[8px] bg-cover;
+	box-shadow: inset 0 0 0 1px var(--field-border);
+}
+
+.theme-swatch--on {
+	box-shadow:
+		inset 0 0 0 2px var(--color-primary),
+		inset 0 0 0 4px var(--console-surface, var(--color-base-100));
+}
+
+.theme-swatch:has(input:focus-visible),
 .prefs-option:has(input:focus-visible) {
 	outline: 2px solid var(--color-primary);
 	outline-offset: 2px;
 }
 
-.theme-card-preview {
-	@apply flex h-23;
-	background: var(--preview-app);
+.theme-swatch-check {
+	@apply absolute -top-1.5 -right-1.5 flex size-5 items-center justify-center rounded-full bg-primary text-primary-content;
 }
 
-.theme-card-rail {
-	@apply w-5;
-	background: var(--preview-rail);
+/* Discord's own base colours: Light, Ash, Dark, Onyx, and the device's. */
+.theme-swatch--light {
+	--swatch: #ffffff;
+	background-color: var(--swatch);
+	color: var(--ink-600);
 }
 
-.theme-card-side {
-	@apply w-11;
-	background: var(--preview-side);
+.theme-swatch--ash {
+	--swatch: #323339;
+	background-color: var(--swatch);
 }
 
-.theme-card-body {
-	@apply flex grow flex-col gap-1.5 px-2 py-2.5;
+.theme-swatch--dark {
+	--swatch: #1d1d21;
+	background-color: var(--swatch);
 }
 
-.theme-card-line {
-	@apply h-2 rounded-[3px];
-	background-color: var(--preview-line);
+.theme-swatch--onyx {
+	--swatch: #000000;
+	background-color: var(--swatch);
 }
 
-.theme-card-line--accent {
-	@apply bg-primary;
-}
-
-.theme-card-preview--dark {
-	--preview-app: var(--ink-600);
-	--preview-rail: var(--ink-800);
-	--preview-side: var(--ink-700);
-	--preview-line: var(--ink-300);
-}
-
-.theme-card-preview--light {
-	--preview-app: var(--theme-preview-light-app);
-	--preview-rail: var(--theme-preview-light-rail);
-	--preview-side: var(--theme-preview-light-side);
-	--preview-line: var(--theme-preview-light-line);
-}
-
-/* Half dark, half light, split on the same slant as the design. */
-.theme-card-preview--system {
-	--preview-app: linear-gradient(115deg, var(--ink-600) 52%, var(--theme-preview-light-app) 52%);
-	--preview-rail: var(--ink-800);
-	--preview-side: linear-gradient(
-		115deg,
-		var(--ink-700) 60%,
-		var(--theme-preview-light-side) 60%
-	);
-	--preview-line: var(--theme-preview-system-line);
-}
-
-.theme-card-preview--midnight {
-	--preview-app: var(--theme-preview-midnight-app);
-	--preview-rail: var(--theme-preview-midnight-rail);
-	--preview-side: var(--theme-preview-midnight-side);
-	--preview-line: var(--theme-preview-midnight-line);
-}
-
-.theme-card-label {
-	@apply flex items-center gap-2 px-3 py-2.5 text-sm font-semibold;
-	color: var(--ui-text-highlighted);
-	border-top: 1px solid var(--home-border-subtle);
+/* Half light, half Ash: it follows the device. */
+.theme-swatch--system {
+	--swatch-light: #ffffff;
+	--swatch-dark: #323339;
+	--swatch-icon: #949ba4;
+	background-image: linear-gradient(135deg, var(--swatch-light) 50%, var(--swatch-dark) 50%);
+	color: var(--swatch-icon);
 }
 
 .prefs-option {
@@ -497,7 +565,6 @@ function handleSetReduceMotion(value: boolean) {
 
 /* The dialog is portaled out of the dashboard; its cards follow its own colours. */
 @variant theme-light {
-	.theme-card,
 	.prefs-rows {
 		background-color: var(--color-base-100);
 	}

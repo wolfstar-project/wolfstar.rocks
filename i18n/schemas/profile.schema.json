@@ -121,6 +121,147 @@
 				"theme_sync_system": {
 					"type": "string"
 				},
+				"themes": {
+					"type": "object",
+					"properties": {
+						"add_color": {
+							"type": "string"
+						},
+						"appearance": {
+							"type": "string"
+						},
+						"ash": {
+							"type": "string"
+						},
+						"base_dark": {
+							"type": "string"
+						},
+						"base_light": {
+							"type": "string"
+						},
+						"color": {
+							"type": "string"
+						},
+						"color_aria": {
+							"type": "string"
+						},
+						"color_hint": {
+							"type": "string"
+						},
+						"colors": {
+							"type": "string"
+						},
+						"custom": {
+							"type": "string"
+						},
+						"customize": {
+							"type": "string"
+						},
+						"dark": {
+							"type": "string"
+						},
+						"default": {
+							"type": "string"
+						},
+						"direction": {
+							"type": "string"
+						},
+						"intensity": {
+							"type": "string"
+						},
+						"light": {
+							"type": "string"
+						},
+						"onyx": {
+							"type": "string"
+						},
+						"presets": {
+							"type": "object",
+							"properties": {
+								"aurora": {
+									"type": "string"
+								},
+								"blurple_twilight": {
+									"type": "string"
+								},
+								"candyfloss": {
+									"type": "string"
+								},
+								"chroma_glow": {
+									"type": "string"
+								},
+								"citrus_sherbert": {
+									"type": "string"
+								},
+								"crimson_moon": {
+									"type": "string"
+								},
+								"desert_khaki": {
+									"type": "string"
+								},
+								"dusk": {
+									"type": "string"
+								},
+								"forest": {
+									"type": "string"
+								},
+								"hanami": {
+									"type": "string"
+								},
+								"lofi_vibes": {
+									"type": "string"
+								},
+								"mars": {
+									"type": "string"
+								},
+								"memory_lane": {
+									"type": "string"
+								},
+								"midnight_blurple": {
+									"type": "string"
+								},
+								"mint_apple": {
+									"type": "string"
+								},
+								"neon_nights": {
+									"type": "string"
+								},
+								"retro_raincloud": {
+									"type": "string"
+								},
+								"retro_storm": {
+									"type": "string"
+								},
+								"sepia": {
+									"type": "string"
+								},
+								"strawberry_lemonade": {
+									"type": "string"
+								},
+								"sunrise": {
+									"type": "string"
+								},
+								"sunset": {
+									"type": "string"
+								},
+								"under_the_sea": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"remove_color": {
+							"type": "string"
+						},
+						"reset": {
+							"type": "string"
+						},
+						"surprise": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"time_format": {
 					"type": "string"
 				},

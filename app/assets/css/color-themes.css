@@ -1,0 +1,64 @@
+/*
+ * Discord's themes beyond light and dark (see `app/utils/color-themes.ts` and
+ * `useAppliedTheme()`).
+ *
+ * `data-shade="dark"` is Discord's "Dark": darker than the default dark theme,
+ * whose ink scale is Discord's "Ash". The values are Discord's own surfaces.
+ */
+:root[data-shade="dark"][data-theme="dark"] {
+	--ink-900: lab(3.36% 0.24 -0.9);
+	--ink-800: lab(5.52% 0.32 -1.19);
+	--ink-700: lab(9.39% 0.8 -2.79);
+	--ink-600: lab(13.73% 0.3 -2.85);
+	--ink-500: lab(16.27% 0.94 -3.28);
+	--ink-400: lab(18.52% 0.48 -3.39);
+	--ink-300: lab(27.23% 0.99 -5.04);
+	--color-base-100: lab(13.73% 0.3 -2.85);
+	--color-base-200: lab(9.39% 0.8 -2.79);
+	--color-base-300: lab(5.52% 0.32 -1.19);
+}
+
+/*
+ * A colour theme paints its gradient behind the dashboard, and the dashboard's
+ * surfaces turn into veils over it: black on a dark base, white on a light
+ * one, more opaque the lower `--ct-mix` (the theme's intensity) is. The other
+ * surfaces (dialogs, menus) take the theme's tint, as Discord mixes it in.
+ * Only while the dashboard is on the page: the marketing pages keep their look.
+ */
+:root[data-color-theme]:has(.console) {
+	--ct-veil: 0 0 0;
+	--ct-main: calc(0.48 + var(--ct-mix) * 0.32);
+	--ct-surface: calc(0.45 + var(--ct-mix) * 0.3);
+	--ct-rail: calc(0.42 + var(--ct-mix) * 0.28);
+	--ct-line: rgb(255 255 255 / 0.08);
+
+	--ink-900: color-mix(in oklab, oklch(21.4% 0.006 271.1) 100%, var(--ct-tint) 80%);
+	--ink-800: color-mix(in oklab, oklch(25.1% 0.006 258.4) 100%, var(--ct-tint) 80%);
+	--ink-700: color-mix(in oklab, oklch(29.7% 0.008 264.4) 100%, var(--ct-tint) 80%);
+	--ink-600: color-mix(in oklab, oklch(32.1% 0.009 268.4) 100%, var(--ct-tint) 80%);
+	--ink-500: color-mix(in oklab, oklch(34.9% 0.011 271.1) 100%, var(--ct-tint) 80%);
+	--ink-400: color-mix(in oklab, oklch(38% 0.012 273.1) 100%, var(--ct-tint) 80%);
+	--ink-300: color-mix(in oklab, oklch(44.7% 0.014 252.2) 100%, var(--ct-tint) 80%);
+}
+
+:root[data-color-theme][data-theme="light"]:has(.console) {
+	--ct-veil: 255 255 255;
+	--ct-main: calc(0.95 * (0.6 + var(--ct-mix) * 0.4));
+	--ct-surface: calc(0.9 * (0.6 + var(--ct-mix) * 0.4));
+	--ct-rail: calc(0.85 * (0.6 + var(--ct-mix) * 0.4));
+	--ct-line: rgb(0 0 0 / 0.08);
+
+	--color-base-100: color-mix(in oklab, oklch(100% 0 0) 100%, var(--ct-tint) 20%);
+	--color-base-200: color-mix(in oklab, oklch(96.4% 0.002 247.8) 100%, var(--ct-tint) 20%);
+	--color-base-300: color-mix(in oklab, oklch(91.6% 0.004 264.5) 100%, var(--ct-tint) 20%);
+}
+
+:root[data-color-theme] :is(.console, .console-drawer) {
+	--console-main: rgb(var(--ct-veil) / var(--ct-main));
+	--console-surface: rgb(var(--ct-veil) / var(--ct-surface));
+	--console-rail: rgb(var(--ct-veil) / var(--ct-rail));
+	--console-input: rgb(var(--ct-veil) / 0.3);
+	--console-border: var(--ct-line);
+
+	background: var(--ct-gradient) fixed 0 0 / cover;
+}

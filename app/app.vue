@@ -56,9 +56,14 @@ const htmlDir = computed(() => localeMap.value[locale.value] ?? "ltr");
 useHead({ htmlAttrs: { dir: htmlDir, lang: locale } }, { tagPriority: "low" });
 
 useHead({
-	// Picks the header's account skeleton before the first paint (`auth-hint.ts`).
-	script: [{ innerHTML: AUTH_HINT_SCRIPT, key: "auth-hint", tagPosition: "head" }],
+	script: [
+		// Picks the header's account skeleton before the first paint (`auth-hint.ts`).
+		{ innerHTML: AUTH_HINT_SCRIPT, key: "auth-hint", tagPosition: "head" },
+		// Applies Discord's darker dark theme before the first paint (`theme-shade.ts`).
+		{ innerHTML: THEME_SHADE_SCRIPT, key: "theme-shade", tagPosition: "head" },
+	],
 });
+useAppliedTheme();
 
 // Watch for route changes to update appName
 watch(

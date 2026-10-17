@@ -12,9 +12,11 @@
 			<div class="settings" :class="{ 'settings--detail': detailOpen }">
 				<nav class="settings-nav" :aria-label="ts('profile.sections_aria')">
 					<div v-if="account" class="flex items-center gap-2.5 px-2 pt-1.5 pb-3">
-						<UAvatar :src="account.avatar" alt="" size="md" icon="ic:round-person" />
+						<AppUserAvatar :src="discordAvatar" :decoration size="md" />
 						<div class="min-w-0">
-							<p class="truncate text-[0.8125rem] font-bold">{{ account.display }}</p>
+							<p class="flex min-w-0 text-[0.8125rem] font-bold">
+								<AppDisplayName :name="account.display" :styles="nameStyles" />
+							</p>
 							<p class="truncate text-[0.6875rem] text-muted">
 								@{{ account.username }}
 							</p>
@@ -124,15 +126,18 @@
 							<div class="settings-card overflow-hidden p-0!">
 								<div class="settings-banner" aria-hidden="true"></div>
 								<div class="flex flex-wrap items-end gap-x-4 gap-y-2 px-5 pb-4">
-									<UAvatar
-										:src="account.avatar"
-										alt=""
-										icon="ic:round-person"
-										class="-mt-9 size-20 ring-6 ring-(--console-surface,var(--ink-700))"
+									<AppUserAvatar
+										:src="discordAvatar"
+										:decoration
+										class="-mt-9"
+										avatar-class="size-20 ring-6 ring-(--console-surface,var(--ink-700))"
 									/>
 									<div class="min-w-0 grow pb-1">
-										<p class="truncate text-xl font-bold">
-											{{ account.display }}
+										<p class="flex min-w-0 text-xl font-bold">
+											<AppDisplayName
+												:name="account.display"
+												:styles="nameStyles"
+											/>
 										</p>
 										<p
 											v-if="account.username"
@@ -303,6 +308,7 @@ const {
 } = useUserSettings();
 const toast = useToast();
 const { copy, copied } = useClipboard();
+const { avatar: discordAvatar, decoration, nameStyles } = useDiscordAccount();
 
 const headingId = useId();
 const feedbackFormId = useId();
@@ -315,7 +321,6 @@ const account = computed(() => {
 	if (!session) return null;
 	const discord = discordUser.value;
 	return {
-		avatar: session.image ?? undefined,
 		display: discord?.global_name ?? discord?.username ?? session.name,
 		email: session.email,
 		// Only Discord knows these; the session's name is the display name.

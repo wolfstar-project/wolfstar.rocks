@@ -13,6 +13,27 @@ interface PersistedAsyncDataOptions<DefaultT> {
 let testAccount: string | null = null;
 
 /**
+ * The keys being fetched again behind a kept answer, for each app. Every caller
+ * of a key finds that answer; if each queued its own fetch, one page load would
+ * make a request per caller (the account's list is read in half a dozen places)
+ * and run into the API's rate limit, two requests in five seconds.
+ */
+const refreshingBehind = new WeakMap<NuxtApp, Set<string>>();
+
+/** Takes the right to fetch `dataKey` again behind its kept answer, or `null` if it is taken. */
+function claimRefreshBehind(nuxt: NuxtApp, dataKey: string): (() => void) | null {
+	let keys = refreshingBehind.get(nuxt);
+	if (!keys) {
+		keys = new Set();
+		refreshingBehind.set(nuxt, keys);
+	}
+	if (keys.has(dataKey)) return null;
+	keys.add(dataKey);
+	const claimed = keys;
+	return () => void claimed.delete(dataKey);
+}
+
+/**
  * The browser's store is left alone under test, where every file shares one
  * localStorage and the session cannot be mocked; the composable's own tests
  * switch it on, under an account of their choosing.
@@ -41,7 +62,7 @@ export function usePersistedAsyncData<T, DefaultT = undefined>(
 		return canPersist && id ? `${id}:${dataKey}` : null;
 	}
 
-	let refreshBehind: (() => void) | undefined;
+	let refreshBehind: (() => Promise<void>) | undefined;
 
 	const asyncData = useLazyAsyncData(key, handler, {
 		...options,
@@ -56,11 +77,22 @@ export function usePersistedAsyncData<T, DefaultT = undefined>(
 			const answer = stored === null ? undefined : readPersistedCache<T>(stored);
 			// Nuxt takes this as the answer and asks no further; the fetch is
 			// queued here, once `asyncData` exists, to replace it behind the scenes.
-			if (answer !== undefined) void nextTick(() => refreshBehind?.());
+			if (answer !== undefined) {
+				const release = claimRefreshBehind(nuxt, dataKey);
+				if (release) {
+					void nextTick(async () => {
+						try {
+							await refreshBehind?.();
+						} finally {
+							release();
+						}
+					});
+				}
+			}
 			return answer;
 		},
 	});
-	refreshBehind = () => void asyncData.refresh();
+	refreshBehind = () => asyncData.refresh();
 
 	// Only an answer the server gave is kept; the default a key change resets
 	// `data` to is not one.

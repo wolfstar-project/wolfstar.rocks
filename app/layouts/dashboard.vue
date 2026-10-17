@@ -84,7 +84,7 @@
 						:guilds="userGuilds"
 						:pending="userGuildsPending"
 						@select="selectFromDrawer"
-						@home="goToGuild(null)"
+						@home="selectFromDrawer(null)"
 					/>
 					<div class="min-w-0 flex-1">
 						<DashboardSidebar v-if="guildId" @navigate="closeDrawer" />
@@ -390,7 +390,8 @@ function discardAndLeave() {
 	confirmLeave();
 }
 
-function selectFromDrawer(id: string) {
+// A server or the Home picked in the phone drawer closes it, so what opens is in view.
+function selectFromDrawer(id: string | null) {
 	closeDrawer();
 	goToGuild(id);
 }

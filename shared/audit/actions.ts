@@ -4,6 +4,7 @@ import { defineAuditAction } from "evlog";
 const ACTION_NAMES = {
 	guildSettingsUpdate: "guild.settings.update",
 	guildSettingsAccessDenied: "guild.settings.access-denied",
+	userSettingsUpdate: "user.settings.update",
 	userLogin: "user.login",
 	userLogout: "user.logout",
 	sessionRefresh: "session.refresh",
@@ -20,6 +21,7 @@ export const DASHBOARD_AUDIT_ACTIONS: readonly DashboardAuditAction[] = [
 
 export const guildSettingsUpdate = defineAuditAction(ACTION_NAMES.guildSettingsUpdate);
 export const guildSettingsAccessDenied = defineAuditAction(ACTION_NAMES.guildSettingsAccessDenied);
+export const userSettingsUpdate = defineAuditAction(ACTION_NAMES.userSettingsUpdate);
 export const userLogin = defineAuditAction(ACTION_NAMES.userLogin);
 export const userLogout = defineAuditAction(ACTION_NAMES.userLogout);
 export const sessionRefresh = defineAuditAction(ACTION_NAMES.sessionRefresh);

@@ -1,6 +1,6 @@
 import { mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
 import { createError } from "h3";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { defineComponent, h } from "vue";
 
 function deferred() {
@@ -26,11 +26,47 @@ async function setup() {
 }
 
 describe("useUserSettings", () => {
-	// Switching twice quickly sends two requests; the first one failing last
-	// must not bring back what was shown before either of them.
-	it("keeps the newest change when an older save settles later", async () => {
+	// Switching quickly must leave the newest choice saved: the saves go out
+	// in order, and one overtaken while it waited is never sent.
+	it("saves quick changes in order, the newest last", async () => {
 		const firstHeld = deferred();
-		const secondDone = deferred();
+		let patches = 0;
+		let firstDone = false;
+		let secondAfterFirst = false;
+		registerEndpoint("/api/users/settings", {
+			method: "PATCH",
+			handler: async () => {
+				patches += 1;
+				if (patches === 1) {
+					await firstHeld.promise;
+					firstDone = true;
+				} else {
+					secondAfterFirst = firstDone;
+				}
+				return { report: false };
+			},
+		});
+		const { settings } = await setup();
+
+		const first = settings.setReport(false);
+		await vi.waitFor(() => expect(patches).toBe(1));
+		const overtaken = settings.setReport(true);
+		const newest = settings.setReport(false);
+		expect(settings.data.value).toEqual({ report: false });
+
+		firstHeld.resolve();
+		expect(await Promise.all([first, overtaken, newest])).toEqual([true, true, true]);
+
+		// The overtaken change is never sent, and the newest goes out last.
+		expect(patches).toBe(2);
+		expect(secondAfterFirst).toBe(true);
+		expect(settings.data.value).toEqual({ report: false });
+	});
+
+	// The first save failing after a newer change must not bring back what was
+	// shown before either of them.
+	it("keeps the newest change when an older save fails", async () => {
+		const firstHeld = deferred();
 		let patches = 0;
 		registerEndpoint("/api/users/settings", {
 			method: "PATCH",
@@ -40,18 +76,17 @@ describe("useUserSettings", () => {
 					await firstHeld.promise;
 					throw createError({ statusCode: 503 });
 				}
-				secondDone.resolve();
 				return { report: true };
 			},
 		});
 		const { settings } = await setup();
 
 		const off = settings.setReport(false);
+		await vi.waitFor(() => expect(patches).toBe(1));
 		const on = settings.setReport(true);
-		await secondDone.promise;
-		expect(await on).toBe(true);
 		firstHeld.resolve();
 		expect(await off).toBe(false);
+		expect(await on).toBe(true);
 
 		expect(settings.data.value).toEqual({ report: true });
 	});

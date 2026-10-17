@@ -349,7 +349,7 @@ function handleSetReduceMotion(value: boolean) {
 }
 
 .time-format--on .time-format-radio::after {
-	@apply size-2 rounded-full bg-white;
+	@apply size-2 rounded-full bg-primary-content;
 	content: "";
 }
 

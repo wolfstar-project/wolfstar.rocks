@@ -21,7 +21,6 @@
 		"moderation_dms": "Messaggi diretti di moderazione",
 		"moderation_dms_description": "Se WolfStar ti manda un messaggio diretto quando un moderatore, o la moderazione automatica, prende un provvedimento nei tuoi confronti.",
 		"moderation_dms_failed": "Non è stato possibile salvare l'impostazione. Riprova.",
-		"moderation_dms_retry": "Carica di nuovo l'impostazione dei messaggi diretti di moderazione",
 		"motion_enabled": "Movimento attivato",
 		"motion_reduced": "Movimento ridotto",
 		"my_account": "Il mio account",

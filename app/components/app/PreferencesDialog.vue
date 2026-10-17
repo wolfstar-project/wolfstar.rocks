@@ -198,7 +198,7 @@
 							</p>
 							<div class="settings-card flex items-center gap-4 px-5! py-4!">
 								<div class="min-w-0 grow">
-									<p class="text-sm font-semibold">
+									<p :id="moderationDmsLabelId" class="text-sm font-semibold">
 										{{ ts("profile.moderation_dms") }}
 									</p>
 									<p class="mt-0.5 text-xs leading-normal text-muted">
@@ -213,7 +213,7 @@
 									variant="outline"
 									size="sm"
 									icon="ic:round-refresh"
-									:aria-label="ts('profile.moderation_dms_retry')"
+									:aria-describedby="moderationDmsLabelId"
 									@click="refreshUserSettings()"
 								>
 									{{ ts("common.retry") }}
@@ -298,6 +298,7 @@ const { copy, copied } = useClipboard();
 
 const headingId = useId();
 const feedbackFormId = useId();
+const moderationDmsLabelId = useId();
 const isSendingFeedback = ref(false);
 
 /** The signed-in admin, as Discord describes them. A guest has no account page. */

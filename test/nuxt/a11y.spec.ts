@@ -1,4 +1,5 @@
 import {
+	AppCustomThemeEditor,
 	AppFooter,
 	AppHeader,
 	AppHeaderAuth,
@@ -896,6 +897,14 @@ describe("component accessibility audits", () => {
 
 		it("has no axe-core violations in the compact set", async () => {
 			const wrapper = await mountSuspended(AppPreferences, { props: { quick: true } });
+			const results = await runAxe(wrapper);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("AppCustomThemeEditor", () => {
+		it("has no axe-core violations", async () => {
+			const wrapper = await mountSuspended(AppCustomThemeEditor);
 			const results = await runAxe(wrapper);
 			expect(results.violations).toEqual([]);
 		});

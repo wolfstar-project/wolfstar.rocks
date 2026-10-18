@@ -151,6 +151,9 @@
 						"colors": {
 							"type": "string"
 						},
+						"controls": {
+							"type": "string"
+						},
 						"custom": {
 							"type": "string"
 						},
@@ -166,6 +169,12 @@
 						"direction": {
 							"type": "string"
 						},
+						"eyedropper": {
+							"type": "string"
+						},
+						"hex_label": {
+							"type": "string"
+						},
 						"intensity": {
 							"type": "string"
 						},
@@ -173,6 +182,15 @@
 							"type": "string"
 						},
 						"onyx": {
+							"type": "string"
+						},
+						"picker_area": {
+							"type": "string"
+						},
+						"picker_area_value": {
+							"type": "string"
+						},
+						"picker_hue": {
 							"type": "string"
 						},
 						"presets": {

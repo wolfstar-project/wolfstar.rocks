@@ -58,6 +58,11 @@
 				</template>
 			</ClientOnly>
 		</div>
+
+		<!-- A server with no settings yet is set up in a dialog over whatever is open. -->
+		<ClientOnly>
+			<GuildSetupWizard v-if="activeGuildId" />
+		</ClientOnly>
 	</main>
 </template>
 

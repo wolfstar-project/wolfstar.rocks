@@ -214,6 +214,23 @@
 			}
 		},
 		"channels": {
+			"bulk": {
+				"all_help": "Sets the channel of every log at once.",
+				"all_label": "Every log",
+				"cancel_selection": "Cancel selection",
+				"group_help": "Sets the channel of every log in this group.",
+				"group_label": "All {group} logs",
+				"mixed": "mixed channels",
+				"no_logs_selected": "no logs selected",
+				"remove_channel": "Remove channel",
+				"select_group": "Select every log in {group}",
+				"select_log": "Select {name}",
+				"select_logs": "Select logs",
+				"selected_count": "No logs selected | 1 log selected | {count} logs selected",
+				"selection_help": "Sets the channel of every selected log.",
+				"selection_label": "Selected logs",
+				"selection_region": "Selected logs actions"
+			},
 			"excluded_channels": "Ignored channels",
 			"excluded_channels_help": "Select channels that should be ignored for specific logging events. Messages and events in these channels won't be logged.",
 			"form_aria": "Channel settings form",
@@ -301,7 +318,6 @@
 			"configure": "Configure",
 			"descriptions": {
 				"automod": "Message filters and their escalation rules.",
-				"commands": "Command handling, including per-server command availability.",
 				"logs": "Server event logging.",
 				"moderation": "Manual moderation actions and their case history.",
 				"roles": "Role automation: initial roles and sticky roles."
@@ -366,6 +382,87 @@
 			"title": "Roles"
 		},
 		"save_failed": "Save Failed",
+		"setup": {
+			"back": "Back to {step}",
+			"channels": {
+				"automod_help": "Every message a filter deletes or flags shows up here.",
+				"automod_label": "Auto-moderation log",
+				"description": "Choose the channels for the modules you turned on. Leave one empty and that log stays off.",
+				"events_help": "Joins, leaves, deleted and edited messages, role and channel changes. Each event can get its own channel later, in Events.",
+				"events_label": "Event log",
+				"moderation_help": "Bans, kicks, timeouts and warnings are posted here as cases.",
+				"moderation_label": "Moderation log",
+				"none": "None of the modules you chose post to a channel. Go back to turn one on, or continue.",
+				"note": "Keep these channels for staff. WolfStar needs View Channel and Send Messages in each one.",
+				"title": "Where should WolfStar post?"
+			},
+			"close_aria": "Skip setup for now",
+			"description": "Choose the modules, channels, roles and language WolfStar starts with in this server.",
+			"done_description": "Your choices are saved. Everything stays editable in the dashboard.",
+			"done_title": "WolfStar is set up on {name}",
+			"finish": "Finish setup",
+			"language": {
+				"description": "The language WolfStar answers in on this server.",
+				"help": "This is the server language, set for the whole server. It is not the language of the dashboard.",
+				"label": "Server language",
+				"title": "Pick a language"
+			},
+			"modules": {
+				"description": "Pick what WolfStar should do here. Every module is a switch you can flip later, so nothing below is permanent.",
+				"recommended": "Recommended",
+				"title": "Let's set up {name}",
+				"turn_on": "Turn on {name}"
+			},
+			"next": "Continue to {step}",
+			"rail_note": "Skip any step. Every setting here stays in the dashboard afterwards.",
+			"rail_title": "WolfStar setup",
+			"resume_action": "Resume setup",
+			"resume_description": "You skipped the setup. Pick up where you left off, it takes a minute.",
+			"resume_title": "Finish setting up {name}",
+			"review": {
+				"description": "This is what WolfStar will set up on {name}. It is saved as one entry in settings activity.",
+				"edit": "Edit",
+				"edit_aria": "Edit {label}",
+				"none": "None",
+				"none_on": "None on",
+				"not_set": "Not set",
+				"rows": {
+					"admin": "Administrator roles",
+					"automod_log": "Auto-moderation log",
+					"event_log": "Event log",
+					"language": "Server language",
+					"moderation_log": "Moderation log",
+					"moderator": "Moderator roles",
+					"modules": "Modules",
+					"muted": "Muted role"
+				},
+				"title": "Ready when you are"
+			},
+			"roles": {
+				"admin_help": "Administrators can use every moderation and management command. With none set, anyone with Manage Server is one.",
+				"admin_label": "Administrator roles",
+				"description": "WolfStar uses these roles to decide who can run its staff commands.",
+				"moderator_help": "Moderators can use almost every moderation command. With none set, anyone who can ban members is one.",
+				"moderator_label": "Moderator roles",
+				"muted_help": "Given to muted members. With none set, WolfStar offers to create one the first time you mute someone.",
+				"muted_label": "Muted role",
+				"none": "No roles",
+				"title": "Who runs this server?"
+			},
+			"skip": "Skip for now",
+			"skipped_description": "You can pick it up again from the overview.",
+			"skipped_title": "Setup skipped",
+			"step_names": {
+				"channels": "Channels",
+				"language": "Language",
+				"modules": "Modules",
+				"review": "Review",
+				"roles": "Roles"
+			},
+			"step_of": "Step {step} of {total}",
+			"steps_aria": "Setup steps",
+			"title": "Set up WolfStar on {name}"
+		},
 		"toggle_aria": "Toggle {title}"
 	},
 	"settings": {

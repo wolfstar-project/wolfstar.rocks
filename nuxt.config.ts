@@ -14,6 +14,10 @@ const { resolve } = createResolver(import.meta.url);
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+	// The dev validator of unhead is registered by `app/plugins/unhead-validate.client.ts`,
+	// which sets the rules Nuxt's own injection cannot.
+	unhead: { vite: { validate: false } },
+
 	// Modules configuration
 	modules: [
 		"@nuxt/ui",
@@ -538,6 +542,23 @@ export default defineNuxtConfig({
 				weights: [400, 500, 600, 700],
 				display: "swap",
 			},
+			// Display name styles (`AppDisplayName`): the open-source typefaces
+			// Discord's name fonts come from, one weight each as Discord ships
+			// them. Self-hosted at build time and only fetched by a page that
+			// draws a name in one of them.
+			{ display: "swap", name: "Bangers", provider: "google", weights: [400] },
+			{ display: "swap", name: "BioRhyme", provider: "google", weights: [400] },
+			{ display: "swap", name: "Cherry Bomb One", provider: "google", weights: [400] },
+			{ display: "swap", name: "Chicle", provider: "google", weights: [400] },
+			{ display: "swap", name: "MuseoModerno", provider: "google", weights: [500] },
+			{ display: "swap", name: "Pirata One", provider: "google", weights: [400] },
+			{ display: "swap", name: "Pixelify Sans", provider: "google", weights: [400] },
+			{ display: "swap", name: "Grenze Gotisch", provider: "google", weights: [400] },
+			{ display: "swap", name: "Zilla Slab", provider: "google", weights: [600] },
+			{ display: "swap", name: "Playpen Sans", provider: "google", weights: [700] },
+			{ display: "swap", name: "Orbitron", provider: "google", weights: [700] },
+			{ display: "swap", name: "New Rocker", provider: "google", weights: [400] },
+			{ display: "swap", name: "Kalam", provider: "google", weights: [700] },
 		],
 	},
 

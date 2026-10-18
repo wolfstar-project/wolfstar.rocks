@@ -2,6 +2,7 @@ import avatar from "./avatar";
 import badge from "./badge";
 import button from "./button";
 import container from "./container";
+import drawer from "./drawer";
 import dropdownMenu from "./dropdown-menu";
 import fieldGroup from "./field-group";
 import footer from "./footer";
@@ -16,6 +17,7 @@ import navigationMenu from "./navigation-menu";
 import select from "./select";
 import selectMenu from "./select-menu";
 import skeleton from "./skeleton";
+import slideover from "./slideover";
 import switchTheme from "./switch";
 import tabs from "./tabs";
 import textarea from "./textarea";
@@ -27,6 +29,7 @@ const ui = {
 	badge,
 	button,
 	container,
+	drawer,
 	fieldGroup,
 	dropdownMenu,
 	footer,
@@ -40,6 +43,7 @@ const ui = {
 	navigationMenu,
 	select,
 	selectMenu,
+	slideover,
 	skeleton,
 	switch: switchTheme,
 	tabs,

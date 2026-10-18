@@ -1,5 +1,10 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { AUTH_HINT_SCRIPT, AUTH_HINT_STORAGE_KEY, writeAuthHint } from "~/utils/auth-hint";
+import {
+	AUTH_HINT_SCRIPT,
+	AUTH_HINT_STORAGE_KEY,
+	hasAuthHint,
+	writeAuthHint,
+} from "~/utils/auth-hint";
 
 const root = document.documentElement;
 
@@ -34,6 +39,16 @@ describe("auth hint", () => {
 		localStorage.setItem(AUTH_HINT_STORAGE_KEY, "{broken");
 		expect(() => runHintScript()).not.toThrow();
 		expect(root.hasAttribute("data-auth")).toBe(false);
+	});
+
+	it("tells whether the browser remembers a signed-in account", () => {
+		expect(hasAuthHint()).toBe(false);
+
+		writeAuthHint("RedStar");
+		expect(hasAuthHint()).toBe(true);
+
+		writeAuthHint(null);
+		expect(hasAuthHint()).toBe(false);
 	});
 
 	it("forgets the account on sign-out", () => {

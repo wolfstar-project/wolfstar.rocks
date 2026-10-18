@@ -2,6 +2,7 @@ import type { MockInstance } from "vitest";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, nextTick } from "vue";
+import { DEFAULT_CUSTOM_THEME } from "~/utils/color-themes";
 
 const mockColorMode = {
 	preference: "system" as "system" | "light" | "dark",
@@ -77,6 +78,9 @@ describe("useSettings", () => {
 
 		expect(settings.value).toEqual({
 			colorMode: "system",
+			colorTheme: null,
+			customTheme: DEFAULT_CUSTOM_THEME,
+			darkShade: "ash",
 			logDensity: "cozy",
 			reduceMotion: false,
 			selectedLocale: null,
@@ -95,6 +99,9 @@ describe("useSettings", () => {
 
 		expect(settings.value).toEqual({
 			colorMode: "dark",
+			colorTheme: null,
+			customTheme: DEFAULT_CUSTOM_THEME,
+			darkShade: "ash",
 			logDensity: "cozy",
 			reduceMotion: true,
 			selectedLocale: "it-IT",

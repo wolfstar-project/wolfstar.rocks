@@ -1,4 +1,5 @@
 import {
+	AppCustomThemeEditor,
 	AppFooter,
 	AppHeader,
 	AppHeaderAuth,
@@ -54,7 +55,10 @@ import {
 	GuildLogsCaseDetail,
 	GuildReviewQueue,
 	GuildServerRail,
+	GuildSettingsLogsBulkChannel,
+	GuildSettingsLogsSelectionBar,
 	GuildSettingsSection,
+	GuildSetupWizard,
 	GuildSettingsToggleRow,
 	IconsApp,
 	IconsWolfstar,
@@ -74,6 +78,7 @@ import { createError } from "h3";
 import { describe, expect, it, vi } from "vitest";
 import { MOCK_AUDIT_ENTRY, MOCK_MODERATION_ENTRY } from "~~/test/mocks/auditLogs";
 import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
+import { createMockGuildData } from "~~/test/mocks/guildData";
 import { runAxe } from "./utils/axe";
 
 const inviteUrl =
@@ -590,6 +595,34 @@ describe("component accessibility audits", () => {
 		});
 	});
 
+	describe("GuildSettingsLogsBulkChannel", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildSettingsLogsBulkChannel, {
+				props: {
+					help: "Sets the channel of every log in this group.",
+					keys: ["logsRoleCreate", "logsRoleUpdate"],
+					label: "All Roles logs",
+					values: { logsRoleCreate: "234567890123456789", logsRoleUpdate: null },
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildSettingsLogsSelectionBar", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildSettingsLogsSelectionBar, {
+				props: {
+					keys: ["logsMessageDelete", "logsRoleCreate"],
+					values: { logsMessageDelete: null, logsRoleCreate: null },
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
 	describe("GuildServerRail", () => {
 		it("should have no accessibility violations", async () => {
 			const component = await mountSuspended(GuildServerRail, {
@@ -643,6 +676,34 @@ describe("component accessibility audits", () => {
 				expect(results.violations).toEqual([]);
 			},
 		);
+	});
+
+	describe("GuildSetupWizard", () => {
+		it("should have no accessibility violations on each step", async () => {
+			localStorage.clear();
+			useActiveGuild().selectGuild("123456789012345678");
+			useGuildData().setGuildData(
+				createMockOauthFlattenedGuild({
+					id: "123456789012345678",
+					name: "Pixel Parlor",
+					setupPending: true,
+				}),
+			);
+			useGuildSettings().setGuildSettings(createMockGuildData("123456789012345678"));
+			const component = await mountSuspended(GuildSetupWizard, { attachTo: document.body });
+			await vi.waitFor(() =>
+				expect(document.querySelector('[role="dialog"]')).not.toBeNull(),
+			);
+			const setup = useGuildSetup();
+
+			for (const step of [1, 2, 3, 5]) {
+				setup.goTo(step);
+				await nextTick();
+				const panel = document.querySelector('[role="dialog"]');
+				const results = await runAxe(component, { include: panel ? [panel] : [] });
+				expect(results.violations).toEqual([]);
+			}
+		});
 	});
 
 	describe("GuildReviewQueue", () => {
@@ -859,6 +920,20 @@ describe("component accessibility audits", () => {
 	describe("AppPreferences", () => {
 		it("has no axe-core violations", async () => {
 			const wrapper = await mountSuspended(AppPreferences);
+			const results = await runAxe(wrapper);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("has no axe-core violations in the compact set", async () => {
+			const wrapper = await mountSuspended(AppPreferences, { props: { quick: true } });
+			const results = await runAxe(wrapper);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("AppCustomThemeEditor", () => {
+		it("has no axe-core violations", async () => {
+			const wrapper = await mountSuspended(AppCustomThemeEditor);
 			const results = await runAxe(wrapper);
 			expect(results.violations).toEqual([]);
 		});

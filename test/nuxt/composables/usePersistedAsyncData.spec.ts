@@ -23,6 +23,14 @@ const Probe = defineComponent({
 	},
 });
 
+// The account's list is read by several components at once; each one finds the
+// kept answer, and together they must fetch behind it once, not once each.
+const Readers = defineComponent({
+	setup() {
+		return () => h("div", [h(Probe), h(Probe), h(Probe)]);
+	},
+});
+
 describe("usePersistedAsyncData", () => {
 	beforeEach(() => {
 		answers = 0;
@@ -54,5 +62,19 @@ describe("usePersistedAsyncData", () => {
 			data: { answer: 2 },
 		});
 		second.unmount();
+	});
+
+	it("fetches behind a kept answer once, however many components read the key", async () => {
+		const first = await mountSuspended(Probe);
+		await vi.waitFor(() => expect(first.text()).toBe("1"));
+		first.unmount();
+		clearNuxtData();
+
+		const readers = await mountSuspended(Readers);
+
+		await vi.waitFor(() => expect(readers.text()).toBe("222"));
+		await new Promise((resolve) => setTimeout(resolve, 250));
+		expect(answers).toBe(2);
+		readers.unmount();
 	});
 });

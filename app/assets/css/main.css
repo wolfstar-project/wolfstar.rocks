@@ -4,6 +4,7 @@
 @import "./keyframes.css";
 @import "./utilities.css";
 @import "./view-transitions.css";
+@import "./color-themes.css";
 
 /* nuxt-og-image resolves custom properties from :root and @property only,
    and Tailwind registers this one in a layer the renderer does not read, so
@@ -226,20 +227,6 @@
 		--discord-chrome-edge: oklch(21.15% 0.009 264 / 0.08);
 		--discord-chrome-text: oklch(21.15% 0.009 264);
 
-		/* The miniature windows of the theme picker in the settings dialog. Each
-		   one shows its own theme whatever the page is in, so they are fixed:
-		   the ink scale for dark, Discord's light greys (#E3E5E8, #F2F3F5,
-		   #C4C9CE) for light, near-black for midnight. */
-		--theme-preview-light-app: oklch(100% 0 0);
-		--theme-preview-light-rail: oklch(91.6% 0.004 264.5);
-		--theme-preview-light-side: oklch(96.4% 0.002 247.8);
-		--theme-preview-light-line: oklch(83.4% 0.008 236.6);
-		--theme-preview-midnight-app: oklch(0% 0 0);
-		--theme-preview-midnight-rail: oklch(10% 0 0);
-		--theme-preview-midnight-side: oklch(16% 0 0);
-		--theme-preview-midnight-line: oklch(32% 0 0);
-		--theme-preview-system-line: oklch(64.6% 0.006 247.9);
-
 		/* Form fields and the popovers they open (selects, menus): the design
 		   system's `surface-input`, `border-default`, `surface-raised` and
 		   `shadow-high`. Light values here, dark ones in the theme blocks below. */
@@ -247,6 +234,10 @@
 		--field-border: oklch(91% 0.006 275);
 		--popover-surface: var(--color-base-100);
 		--popover-shadow: 0 8px 16px oklch(0% 0 0 / 0.12);
+
+		/* What dims the page behind a dialog, drawer or sheet: Discord's scrim,
+		   black at 52% in every theme. */
+		--scrim: oklch(0% 0 0 / 0.52);
 
 		/* WolfStar home redesign aliases (from _ds/tokens/colors.css + spacing.css) */
 		--home-border-subtle: oklch(from var(--color-base-content) l c h / 0.05);

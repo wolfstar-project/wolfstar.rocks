@@ -25,6 +25,35 @@
 			{{ ts("guild_settings.channels.logging_channels_help") }}
 		</p>
 
+		<div class="console-card flex flex-wrap items-center gap-x-6 gap-y-3">
+			<GuildSettingsLogsBulkChannel
+				class="min-w-0 flex-1"
+				:keys="LOG_KEYS"
+				:values="state"
+				:label="ts('guild_settings.channels.bulk.all_label')"
+				:help="ts('guild_settings.channels.bulk.all_help')"
+				@apply="applyChannel(LOG_KEYS, $event)"
+			/>
+			<UButton
+				:id="selectToggleId"
+				color="neutral"
+				:variant="selecting ? 'soft' : 'outline'"
+				icon="heroicons:check-circle"
+				:aria-pressed="selecting"
+				@click="toggleSelecting"
+			>
+				{{ ts("guild_settings.channels.bulk.select_logs") }}
+			</UButton>
+		</div>
+
+		<GuildSettingsLogsSelectionBar
+			v-if="selecting"
+			:keys="selectedKeys"
+			:values="state"
+			@apply="applyChannel(selectedKeys, $event)"
+			@cancel="stopSelecting"
+		/>
+
 		<div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
 			<section
 				v-for="group in loggingGroups"
@@ -32,18 +61,53 @@
 				class="console-card"
 				:aria-labelledby="`channels-${group.id}`"
 			>
-				<h3 :id="`channels-${group.id}`" class="mb-3 console-label">{{ group.title }}</h3>
+				<div class="mb-3 flex items-center gap-2.5">
+					<UCheckbox
+						v-if="selecting"
+						:model-value="groupTicked(group.keys)"
+						:aria-label="
+							ts('guild_settings.channels.bulk.select_group', { group: group.title })
+						"
+						:ui="{ base: 'size-4.5 rounded-[4px]' }"
+						@update:model-value="setTicked(group.keys, $event === true)"
+					/>
+					<h3 :id="`channels-${group.id}`" class="console-label">{{ group.title }}</h3>
+				</div>
+				<GuildSettingsLogsBulkChannel
+					class="mb-2 border-b border-(--home-border-subtle) pb-2"
+					:keys="group.keys"
+					:values="state"
+					:label="ts('guild_settings.channels.bulk.group_label', { group: group.title })"
+					:help="ts('guild_settings.channels.bulk.group_help')"
+					@apply="applyChannel(group.keys, $event)"
+				/>
 				<div class="space-y-2">
-					<SelectChannel
+					<div
 						v-for="config in group.entries"
 						:key="config.key"
-						v-model="state[config.key]"
-						layout="row"
-						:empty-label="ts('guild_settings.channels.not_logged')"
-						:guild="guildData"
-						:label="translateEntry(config, 'name')"
-						:tooltip-title="translateEntry(config, 'description')"
-					/>
+						class="flex items-center gap-3"
+					>
+						<UCheckbox
+							v-if="selecting"
+							:model-value="selected.has(config.key)"
+							:aria-label="
+								ts('guild_settings.channels.bulk.select_log', {
+									name: translateEntry(config, 'name'),
+								})
+							"
+							:ui="{ base: 'size-4.5 rounded-[4px]' }"
+							@update:model-value="setTicked([config.key], $event === true)"
+						/>
+						<SelectChannel
+							v-model="state[config.key]"
+							class="min-w-0 flex-1"
+							layout="row"
+							:empty-label="ts('guild_settings.channels.not_logged')"
+							:guild="guildData"
+							:label="translateEntry(config, 'name')"
+							:tooltip-title="translateEntry(config, 'description')"
+						/>
+					</div>
 				</div>
 				<div v-if="group.toggles.length > 0" class="mt-3">
 					<GuildSettingsToggleRow
@@ -88,6 +152,7 @@
 </template>
 
 <script setup lang="ts">
+import type { SingleSettingKey } from "#shared/types";
 // Explicit import: unimport misses identifiers referenced only inside nested
 // functions and the template, leaving them unbound in the compiled module.
 import {
@@ -95,6 +160,7 @@ import {
 	ConfigurableLoggingChannels,
 	ConfigurableLogToggles,
 } from "#shared/utils/settingsDataEntries";
+import { logChannelChanges, logSelectionState, toggleLogSelection } from "~/utils/log-channels";
 
 const { tc, ts } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
@@ -105,6 +171,8 @@ const { mapToGuildData, onError, schema, state } = useSettingsForm({
 	many: ConfigurableIgnoreChannels.map((entry) => entry.key),
 	toggles: ConfigurableLogToggles.map((entry) => entry.key),
 });
+
+const LOG_KEYS: readonly SingleSettingKey[] = ConfigurableLoggingChannels.map((entry) => entry.key);
 
 // One card per kind of event, in the order the events are written to the log.
 const LOGGING_GROUPS = [
@@ -121,10 +189,46 @@ const loggingGroups = computed(() =>
 	LOGGING_GROUPS.map((group) => ({
 		entries: ConfigurableLoggingChannels.filter((entry) => group.pattern.test(entry.key)),
 		id: group.id,
+		keys: LOG_KEYS.filter((key) => group.pattern.test(key)),
 		title: ts(`guild_settings.channels.groups.${group.id}`),
 		toggles: ConfigurableLogToggles.filter((entry) => group.pattern.test(entry.key)),
 	})).filter((group) => group.entries.length > 0),
 );
+
+/** Sets the channel of every log of `keys` through the form, so it is staged like any edit. */
+function applyChannel(keys: readonly SingleSettingKey[], channel: string | null) {
+	Object.assign(state, logChannelChanges(state, keys, channel));
+}
+
+// Mass edit: tick logs, then set or remove their channel from the selection bar.
+const selectToggleId = useId();
+const selecting = ref(false);
+const selected = shallowRef<ReadonlySet<SingleSettingKey>>(new Set());
+// In page order, whatever order the logs were ticked in.
+const selectedKeys = computed(() => LOG_KEYS.filter((key) => selected.value.has(key)));
+
+function setTicked(keys: readonly SingleSettingKey[], ticked: boolean) {
+	selected.value = toggleLogSelection(selected.value, keys, ticked);
+}
+
+function groupTicked(keys: readonly SingleSettingKey[]): boolean | "indeterminate" {
+	const ticked = logSelectionState(selected.value, keys);
+	return ticked === "some" ? "indeterminate" : ticked === "all";
+}
+
+function toggleSelecting() {
+	if (selecting.value) void stopSelecting();
+	else selecting.value = true;
+}
+
+async function stopSelecting() {
+	selecting.value = false;
+	selected.value = new Set();
+	// The selection bar may have held the focus: hand it back to the button
+	// that opened the mode instead of dropping it on the page.
+	await nextTick();
+	document.getElementById(selectToggleId)?.focus();
+}
 
 const routedCount = computed(
 	() => ConfigurableLoggingChannels.filter((entry) => state[entry.key]).length,

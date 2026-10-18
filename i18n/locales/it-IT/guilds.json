@@ -214,6 +214,23 @@
 			}
 		},
 		"channels": {
+			"bulk": {
+				"all_help": "Imposta il canale di tutti i log in una volta.",
+				"all_label": "Ogni log",
+				"cancel_selection": "Annulla selezione",
+				"group_help": "Imposta il canale di tutti i log di questo gruppo.",
+				"group_label": "Tutti i log: {group}",
+				"mixed": "canali diversi",
+				"no_logs_selected": "nessun log selezionato",
+				"remove_channel": "Rimuovi canale",
+				"select_group": "Seleziona tutti i log di {group}",
+				"select_log": "Seleziona {name}",
+				"select_logs": "Seleziona log",
+				"selected_count": "Nessun log selezionato | 1 log selezionato | {count} log selezionati",
+				"selection_help": "Imposta il canale di tutti i log selezionati.",
+				"selection_label": "Log selezionati",
+				"selection_region": "Azioni sui log selezionati"
+			},
 			"excluded_channels": "Canali ignorati",
 			"excluded_channels_help": "Canali esclusi da tipi specifici di registro.",
 			"form_aria": "Modulo impostazioni canali",
@@ -301,7 +318,6 @@
 			"configure": "Configura",
 			"descriptions": {
 				"automod": "Filtri dei messaggi e le loro regole di inasprimento.",
-				"commands": "Gestione dei comandi, compresa la disponibilità dei comandi per server.",
 				"logs": "Registrazione degli eventi del server.",
 				"moderation": "Azioni di moderazione manuali e la cronologia dei loro casi.",
 				"roles": "Automazione dei ruoli: ruoli iniziali e ruoli persistenti."
@@ -366,6 +382,87 @@
 			"title": "Ruoli"
 		},
 		"save_failed": "Salvataggio non riuscito",
+		"setup": {
+			"back": "Torna a {step}",
+			"channels": {
+				"automod_help": "Qui compare ogni messaggio che un filtro elimina o segnala.",
+				"automod_label": "Log dell'auto-moderazione",
+				"description": "Scegli i canali dei moduli che hai attivato. Lascia vuoto un campo e quel log resta spento.",
+				"events_help": "Ingressi, uscite, messaggi eliminati e modificati, cambiamenti di ruoli e canali. Ogni evento potrà avere un canale tutto suo, più tardi, in Eventi.",
+				"events_label": "Log degli eventi",
+				"moderation_help": "Ban, kick, timeout e avvisi vengono pubblicati qui come casi.",
+				"moderation_label": "Log della moderazione",
+				"none": "Nessuno dei moduli che hai scelto pubblica in un canale. Torna indietro per attivarne uno, oppure continua.",
+				"note": "Tieni questi canali per lo staff. WolfStar ha bisogno di Visualizzare il canale e Inviare messaggi in ognuno.",
+				"title": "Dove deve pubblicare WolfStar?"
+			},
+			"close_aria": "Salta la configurazione per ora",
+			"description": "Scegli i moduli, i canali, i ruoli e la lingua con cui WolfStar parte in questo server.",
+			"done_description": "Le tue scelte sono salvate. Tutto resta modificabile nella dashboard.",
+			"done_title": "WolfStar è configurato su {name}",
+			"finish": "Termina la configurazione",
+			"language": {
+				"description": "La lingua in cui WolfStar risponde su questo server.",
+				"help": "È la lingua del server, valida per tutto il server. Non è la lingua della dashboard.",
+				"label": "Lingua del server",
+				"title": "Scegli una lingua"
+			},
+			"modules": {
+				"description": "Scegli cosa deve fare WolfStar qui. Ogni modulo è un interruttore che potrai cambiare più tardi, quindi nulla di ciò che segue è definitivo.",
+				"recommended": "Consigliato",
+				"title": "Configuriamo {name}",
+				"turn_on": "Attiva {name}"
+			},
+			"next": "Continua con {step}",
+			"rail_note": "Salta qualsiasi passaggio. Ogni impostazione resta poi nella dashboard.",
+			"rail_title": "Configurazione di WolfStar",
+			"resume_action": "Riprendi la configurazione",
+			"resume_description": "Hai saltato la configurazione. Riparti da dove eri, ci vuole un minuto.",
+			"resume_title": "Termina la configurazione di {name}",
+			"review": {
+				"description": "Ecco cosa WolfStar configurerà su {name}. Viene salvato come un'unica voce nell'attività delle impostazioni.",
+				"edit": "Modifica",
+				"edit_aria": "Modifica {label}",
+				"none": "Nessuno",
+				"none_on": "Nessuno attivo",
+				"not_set": "Non impostato",
+				"rows": {
+					"admin": "Ruoli amministratore",
+					"automod_log": "Log dell'auto-moderazione",
+					"event_log": "Log degli eventi",
+					"language": "Lingua del server",
+					"moderation_log": "Log della moderazione",
+					"moderator": "Ruoli moderatore",
+					"modules": "Moduli",
+					"muted": "Ruolo di silenziamento"
+				},
+				"title": "Quando vuoi, è tutto pronto"
+			},
+			"roles": {
+				"admin_help": "Gli amministratori possono usare ogni comando di moderazione e gestione. Se non ne imposti, lo è chiunque abbia Gestire il server.",
+				"admin_label": "Ruoli amministratore",
+				"description": "WolfStar usa questi ruoli per decidere chi può eseguire i suoi comandi per lo staff.",
+				"moderator_help": "I moderatori possono usare quasi ogni comando di moderazione. Se non ne imposti, lo è chiunque possa bannare i membri.",
+				"moderator_label": "Ruoli moderatore",
+				"muted_help": "Assegnato ai membri silenziati. Se non ne imposti uno, WolfStar propone di crearlo la prima volta che silenzi qualcuno.",
+				"muted_label": "Ruolo di silenziamento",
+				"none": "Nessun ruolo",
+				"title": "Chi gestisce questo server?"
+			},
+			"skip": "Salta per ora",
+			"skipped_description": "Potrai riprenderla dalla panoramica.",
+			"skipped_title": "Configurazione saltata",
+			"step_names": {
+				"channels": "Canali",
+				"language": "Lingua",
+				"modules": "Moduli",
+				"review": "Riepilogo",
+				"roles": "Ruoli"
+			},
+			"step_of": "Passaggio {step} di {total}",
+			"steps_aria": "Passaggi della configurazione",
+			"title": "Configura WolfStar su {name}"
+		},
 		"toggle_aria": "Attiva o disattiva {title}"
 	},
 	"settings": {

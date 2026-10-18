@@ -1,34 +1,30 @@
 <template>
-	<footer class="account-card" :class="{ 'account-card--floating': floating }">
-		<!-- The nameplate the account bought on Discord, painted behind it. -->
-		<video
-			v-if="nameplate && animateCollectibles"
-			:src="nameplate.clip"
-			:poster="nameplate.still"
-			class="account-nameplate"
-			autoplay
-			loop
-			muted
-			playsinline
-			aria-hidden="true"
-		></video>
-		<img v-else-if="nameplate" :src="nameplate.still" alt="" class="account-nameplate" />
+	<footer ref="card" class="account-card" :class="{ 'account-card--floating': floating }">
+		<!-- The nameplate the account bought on Discord, painted behind it the way
+		     Discord does: over its palette's gradient, faded under the name. -->
+		<div v-if="nameplate" class="account-nameplate" :style="nameplateStyle" aria-hidden="true">
+			<video
+				v-if="animate"
+				:src="nameplate.clip"
+				:poster="nameplate.still"
+				class="account-nameplate-art"
+				autoplay
+				loop
+				muted
+				playsinline
+			></video>
+			<img v-else :src="nameplate.still" alt="" class="account-nameplate-art" />
+		</div>
 		<button
 			type="button"
 			class="account-user"
-			:aria-label="ts('dashboard.user_settings_for', { name: account.name })"
+			:aria-label="ts('dashboard.user_settings_for', { name })"
 			@click="openSettings"
 		>
-			<span class="relative shrink-0">
-				<UAvatar :src="account.avatar" alt="" size="md" icon="ic:round-person" />
-				<img
-					v-if="avatarDecoration"
-					:src="avatarDecoration"
-					alt=""
-					class="account-avatar-decoration"
-				/>
+			<span ref="nameBlock" class="flex min-w-0 items-center gap-2.5">
+				<AppUserAvatar :src="avatar" :decoration size="md" />
+				<AppDisplayName :name :styles="nameStyles" class="min-w-0" />
 			</span>
-			<span class="truncate">{{ account.name }}</span>
 		</button>
 		<UButton
 			color="neutral"
@@ -70,30 +66,28 @@ const emit = defineEmits<{
 }>();
 
 const { ts } = useI18n();
-const { user: authUser, signOut } = useUserSession();
-// The session carries no picture of its own; the Discord account does.
-const { user: discordUser } = useUser(authUser);
-const account = computed(() => ({
-	avatar:
-		authUser.value?.image ??
-		(discordUser.value ? avatarURL(discordUser.value, { size: 64 }) : undefined),
-	name: discordUser.value?.global_name ?? authUser.value?.name ?? "",
-}));
-// What the account wears on Discord: the frame around the avatar and the
-// nameplate behind the name. Both are still when motion is reduced.
-const { effectiveReduceMotion } = useReduceMotion();
-const animateCollectibles = computed(() => !effectiveReduceMotion.value);
-const avatarDecoration = computed(() => {
-	const decoration = discordUser.value?.avatar_decoration_data;
-	return decoration
-		? avatarDecorationURL(decoration, { animated: animateCollectibles.value })
-		: null;
-});
-const nameplate = computed(() => {
-	const plate = discordUser.value?.collectibles?.nameplate;
-	return plate
-		? { clip: nameplateURL(plate, { animated: true }), still: nameplateURL(plate) }
-		: null;
+const { signOut } = useUserSession();
+const colorMode = useColorMode();
+// What the account wears on Discord; animated pieces go still when motion is reduced.
+const { animate, avatar, decoration, name, nameStyles, nameplate } = useDiscordAccount();
+
+// Discord fades the nameplate to 30% under the avatar and the name, measured
+// from the card's edge as they lay out, and tints it with its palette.
+const card = useTemplateRef<HTMLElement>("card");
+const nameBlock = useTemplateRef<HTMLElement>("nameBlock");
+const { left: cardLeft } = useElementBounding(card);
+const { right: nameRight } = useElementBounding(nameBlock);
+const nameplateStyle = computed(() => {
+	const plate = nameplate.value;
+	if (!plate) return undefined;
+	const mask = nameplateMask(nameRight.value - cardLeft.value);
+	return {
+		background:
+			nameplateBackground(plate.palette, colorMode.value === "light" ? "light" : "dark") ??
+			undefined,
+		maskImage: mask,
+		WebkitMaskImage: mask,
+	};
 });
 const { open: openPreferences } = usePreferencesDialog();
 
@@ -113,7 +107,8 @@ function openSettings() {
    the conversation beside it. */
 .account-card {
 	@apply relative m-2 flex shrink-0 items-center gap-1 overflow-hidden rounded-[10px] p-1.5;
-	background-color: var(--console-rail);
+	/* Solid: the card floats over the rail and the sidebar, which must not show through it. */
+	background-color: var(--console-solid);
 	border: 1px solid var(--console-border);
 	box-shadow: var(--console-shadow-low);
 }
@@ -127,16 +122,15 @@ function openSettings() {
 }
 
 .account-nameplate {
-	@apply pointer-events-none absolute inset-0 h-full w-full object-cover object-right;
+	@apply pointer-events-none absolute inset-0;
+}
+
+.account-nameplate-art {
+	@apply h-full w-full object-cover object-right;
 }
 
 .account-card > :not(.account-nameplate) {
 	@apply relative;
-}
-
-/* The frame sits a little outside the avatar, as on Discord. */
-.account-avatar-decoration {
-	@apply pointer-events-none absolute -inset-[10%] h-[120%] w-[120%] max-w-none;
 }
 
 .account-user {

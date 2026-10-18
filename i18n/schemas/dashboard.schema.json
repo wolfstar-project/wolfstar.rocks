@@ -214,13 +214,7 @@
 				"nav_groups": {
 					"type": "object",
 					"properties": {
-						"management": {
-							"type": "string"
-						},
 						"modules": {
-							"type": "string"
-						},
-						"records": {
 							"type": "string"
 						},
 						"resources": {

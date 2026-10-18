@@ -36,8 +36,28 @@ describe("DASHBOARD_NAV", () => {
 		expect(missing).toStrictEqual([]);
 	});
 
+	it("keeps Commands and Logs out of the modules", () => {
+		const modules = DASHBOARD_NAV.filter((item) => item.group === "modules").map(
+			(item) => item.slug,
+		);
+		const tools = DASHBOARD_NAV.filter((item) => item.group === "tools").map(
+			(item) => item.slug,
+		);
+
+		expect(modules).toStrictEqual([
+			"automod",
+			"moderation",
+			"channels",
+			"roles",
+			"autodelete",
+			"autopurge",
+		]);
+		expect(tools).toStrictEqual(["commands", "logs"]);
+		expect(findDashboardNavItem("commands")?.moduleKey).toBeUndefined();
+	});
+
 	it("finds a section by its slug", () => {
-		expect(findDashboardNavItem("logs")?.group).toBe("records");
+		expect(findDashboardNavItem("logs")?.group).toBe("tools");
 		expect(findDashboardNavItem("nowhere")).toBeUndefined();
 	});
 });

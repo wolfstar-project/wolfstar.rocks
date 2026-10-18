@@ -49,7 +49,7 @@
 										aria-hidden="true"
 									/>
 								</span>
-								<span class="flex flex-col gap-0.5">
+								<span class="flex min-w-0 flex-col gap-0.5">
 									<span class="text-sm font-semibold text-base-content">
 										{{ feature.label }}
 									</span>
@@ -77,7 +77,7 @@
 									alt=""
 									class="size-8 shrink-0 rounded-lg"
 								/>
-								<span class="flex flex-col">
+								<span class="flex min-w-0 flex-col">
 									<span class="text-sm font-semibold text-base-content">
 										{{ application.label }}
 									</span>

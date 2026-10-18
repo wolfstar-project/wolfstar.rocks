@@ -491,6 +491,9 @@ watch(guildId, (newGuildId, oldGuildId) => {
 	--console-surface: var(--ink-700);
 	--console-rail: var(--ink-800);
 	--console-input: var(--ink-500);
+	/* What floats or must not show through: the account card, the save bar, the
+	   server tiles. A colour theme turns the others into veils over its gradient. */
+	--console-solid: var(--ink-700);
 	--console-border: var(--ink-400);
 	--console-hover: oklch(100% 0 0 / 0.04);
 	--console-active: oklch(100% 0 0 / 0.08);
@@ -537,6 +540,7 @@ watch(guildId, (newGuildId, oldGuildId) => {
 		--console-surface: var(--color-base-100);
 		--console-rail: oklch(92.1% 0.005 258.3);
 		--console-input: oklch(94.5% 0.003 247.9);
+		--console-solid: oklch(94.5% 0.003 247.9);
 		--console-border: oklch(91% 0.006 275);
 		--console-hover: oklch(0% 0 0 / 0.03);
 		--console-active: oklch(0% 0 0 / 0.07);
@@ -561,7 +565,7 @@ watch(guildId, (newGuildId, oldGuildId) => {
    which gets room to scroll clear of it (see below). */
 .console-savebar {
 	@apply z-10 mx-3 my-2 flex shrink-0 items-center gap-2.5 rounded-[10px] py-2.5 pr-3 pl-4 sm:absolute sm:inset-x-4 sm:bottom-4 sm:m-0;
-	background-color: var(--console-rail);
+	background-color: var(--console-solid);
 	border: 1px solid var(--console-border);
 	box-shadow:
 		0 8px 24px oklch(0% 0 0 / 0.28),

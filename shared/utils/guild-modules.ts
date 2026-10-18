@@ -7,6 +7,11 @@ import type { ToggleSettingKey } from "../types/configurableData";
  * Each entry maps a `modules*` setting to the sidebar label, the `/app`
  * section where the subsystem is configured, and the help copy shown on the
  * module card. Keep this list in step with the `Modules` model of the contract.
+ *
+ * `modulesCommands` is in the table but is not listed: Commands is a section of
+ * its own, not a module, and the bot declares the flag without reading it
+ * anywhere. Neither is Logs, the records of what happened, which sits next to
+ * Commands in the sidebar.
  */
 export const GUILD_MODULES = [
 	{
@@ -29,13 +34,6 @@ export const GUILD_MODULES = [
 		key: "modulesLogs",
 		labelKey: "dashboard.nav.channels",
 		section: "channels",
-	},
-	{
-		descriptionKey: "guild_settings.modules.descriptions.commands",
-		icon: "lucide:terminal",
-		key: "modulesCommands",
-		labelKey: "dashboard.nav.commands",
-		section: "commands",
 	},
 	{
 		descriptionKey: "guild_settings.modules.descriptions.roles",

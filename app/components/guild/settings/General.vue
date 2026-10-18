@@ -34,6 +34,22 @@
 		</div>
 	</header>
 
+	<!-- Setup was skipped: it is offered again here, not in the admin's way. -->
+	<div v-if="setupSkipped" role="status" class="setup-resume">
+		<UIcon name="ic:round-star" class="size-5 shrink-0 text-primary" aria-hidden="true" />
+		<div class="min-w-0 grow basis-55">
+			<p class="text-sm font-bold">
+				{{ ts("guild_settings.setup.resume_title", { name: guildData?.name ?? "" }) }}
+			</p>
+			<p class="mt-0.5 text-[0.8125rem] leading-normal text-toned">
+				{{ ts("guild_settings.setup.resume_description") }}
+			</p>
+		</div>
+		<UButton color="primary" @click="startSetup">
+			{{ ts("guild_settings.setup.resume_action") }}
+		</UButton>
+	</div>
+
 	<dl
 		class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5 2xl:grid-cols-7"
 		:aria-label="ts('guild_settings.general.server_stats_aria')"
@@ -242,6 +258,7 @@ import {
 	type GeneralSettingsSchemaType as Schema,
 } from "#shared/schemas";
 import { ChannelType } from "discord-api-types/v10";
+import { guildLanguageOptions, mapLanguageKeysToNames } from "~/utils/guild-languages";
 
 const { languages } = defineProps<{
 	languages: string[];
@@ -250,6 +267,7 @@ const { languages } = defineProps<{
 const { tc, ts } = useI18n();
 const { guildSettings } = useGuildSettings();
 const { guildData } = useGuildData();
+const { skipped: setupSkipped, start: startSetup } = useGuildSetup();
 
 const toast = useToast();
 
@@ -402,45 +420,7 @@ function copyServerId() {
 	}
 }
 
-function mapLanguageKeysToNames(langKey: string): [string] | [string, string] {
-	const supportedLanguagesMap: Record<string, [string] | [string, string]> = {
-		"ckb-IR": ["Kurdîya Navîn (Iran)", "Kurdish"],
-		"de-DE": ["Deutsch", "German"],
-		"en-GB": ["British English", "English, United Kingdom"],
-		"en-US": ["American English", "English, United States"],
-		"es-ES": ["Español", "Spanish"],
-		"fa-IR": ["فارسی", "Persian"],
-		"fr-FR": ["Français", "French"],
-		"hi-IN": ["हिंदी", "Hindi"],
-		"hi-Latn-IN": ["Hinglish", "Hindi (Latin Alphabet)"],
-		"it-IT": ["Italiano", "Italian"],
-		"ja-JP": ["日本語", "Japanese"],
-		"nb-NO": ["Bokmål", "Norwegian Bokmål"],
-		"nl-NL": ["Nederlands", "Dutch"],
-		"pt-BR": ["Português Brasileiro", "Portuguese, Brazilian"],
-		"ro-RO": ["Română", "Romanian"],
-		"ru-RU": ["Русский", "Russian"],
-		"sl-SI": ["Slovenščina", "Slovenian"],
-		"tr-TR": ["Türkçe", "Turkish"],
-	};
-	return supportedLanguagesMap[langKey] ?? [langKey];
-}
-
-const items = computed(() =>
-	languages.map((langKey) => {
-		const mapping = mapLanguageKeysToNames(langKey);
-		const nativeName = mapping[0];
-		const englishName = mapping[1];
-
-		return {
-			flag: localeFlagSrc(langKey),
-			label: englishName ?? nativeName,
-			// The name speakers use, then the tag the bot stores.
-			note: `${nativeName} \u00B7 ${langKey}`,
-			value: langKey,
-		};
-	}),
-);
+const items = computed(() => guildLanguageOptions(languages));
 
 const state = reactive<Schema>({
 	language: (() => {
@@ -490,6 +470,12 @@ async function onError(event: FormErrorEvent) {
 
 <style scoped>
 @reference "@/assets/css/main.css";
+
+.setup-resume {
+	@apply flex flex-wrap items-center gap-3 rounded-[10px] px-3.5 py-3;
+	background-color: color-mix(in oklab, var(--color-primary) 12%, transparent);
+	border: 1px solid var(--color-primary);
+}
 
 .stat-card--placeholder {
 	border-style: dashed;

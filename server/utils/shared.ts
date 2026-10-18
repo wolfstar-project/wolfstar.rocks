@@ -1,4 +1,3 @@
-import type { RESTOptions } from "@discordjs/rest";
 import type { H3Event } from "h3";
 import { runtimeConfig } from "#server/utils/runtimeConfig";
 import { API } from "@discordjs/core/http-only";
@@ -12,11 +11,17 @@ export function useApi(rest?: REST) {
 	return new API(rest);
 }
 
-function useRest(options?: Partial<RESTOptions>) {
+// One client per process: Discord's rate limits (per route and the global
+// one) are tracked inside a client, so a client per call would learn each
+// limit only by running into a 429 and waiting it out.
+let sharedRest: REST | undefined;
+
+function useRest() {
 	if (!runtimeConfig.discord.botToken) {
 		throw new Error("'NUXT_OAUTH_DISCORD_BOT_TOKEN' env is not defined");
 	}
-	return new REST(options).setToken(runtimeConfig.discord.botToken);
+	sharedRest ??= new REST().setToken(runtimeConfig.discord.botToken);
+	return sharedRest;
 }
 
 export function getGuildParam(event: H3Event) {

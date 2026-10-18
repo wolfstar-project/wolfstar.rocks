@@ -398,6 +398,9 @@ Product terms and the words they replace ("server" not "guild", "Sign in" not "L
   capabilities. Do not invent testimonials, usage metrics, member data, or reliability claims.
 - Homepage hierarchy is editorial rather than card-led: ruled rows, direct product language, and
   controlled asymmetry take priority over badge clusters, stat strips, and generic bento grids.
+  The one exception is the product proof section under the hero (`WolfstarProductProofSection`,
+  `StarylProductProofSection`): three numbered step cards (icon, `01`–`03`, title, one sentence,
+  optional link) in a three-column grid. Every other homepage section lists its items as ruled rows.
 - One prominent CTA per decision point is enough. Secondary actions answer a distinct question
   (inspect the product, read the source, or ask support) rather than repeating the primary action.
 

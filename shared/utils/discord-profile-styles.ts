@@ -96,7 +96,7 @@ interface Hsl {
 }
 
 export function intToHex(value: number): string {
-	return `#${(value & 0xFFFFFF).toString(16).padStart(6, "0")}`;
+	return `#${(value & 0xffffff).toString(16).padStart(6, "0")}`;
 }
 
 function hexToRgb(hex: string): [number, number, number] {

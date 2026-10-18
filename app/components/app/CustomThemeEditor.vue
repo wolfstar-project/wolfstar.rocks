@@ -259,7 +259,7 @@ function removeColor(index: number) {
 }
 
 function randomColor(): string {
-	return `#${Math.floor(Math.random() * 0xFF_FF_FF)
+	return `#${Math.floor(Math.random() * 0xff_ff_ff)
 		.toString(16)
 		.padStart(6, "0")
 		.toUpperCase()}`;

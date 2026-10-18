@@ -4,6 +4,7 @@ import { ChannelType } from "discord-api-types/v10";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 import General from "~/components/guild/settings/General.vue";
+import { mapLanguageKeysToNames } from "~/utils/guild-languages";
 import {
 	createMockChannel,
 	createMockOauthFlattenedGuild,
@@ -67,7 +68,6 @@ mockNuxtImport("useToast", () => () => ({
 
 function getSetupState(wrapper: Awaited<ReturnType<typeof mountSuspended>>) {
 	return (wrapper.vm.$ as any).setupState as {
-		mapLanguageKeysToNames: (langKey: string) => [string] | [string, string];
 		mapToGuildData: (formState: {
 			language: { label: string; value: string };
 		}) => Partial<GuildData>;
@@ -137,17 +137,7 @@ describe("general guild settings", () => {
 		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({ language: "de-DE" });
 	});
 
-	it("maps language keys to display names correctly", async () => {
-		const wrapper = await mountSuspended(General, {
-			props: {
-				languages: ["en-US", "de-DE", "unknown-key"],
-			},
-		});
-
-		await nextTick();
-
-		const { mapLanguageKeysToNames } = getSetupState(wrapper);
-
+	it("maps language keys to display names correctly", () => {
 		expect(mapLanguageKeysToNames("en-US")).toStrictEqual([
 			"American English",
 			"English, United States",

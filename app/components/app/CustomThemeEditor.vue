@@ -1,8 +1,8 @@
 <template>
 	<section class="custom-theme" :aria-labelledby="headingId">
-		<h4 :id="headingId" class="text-sm font-semibold text-highlighted">
+		<p :id="headingId" class="text-sm font-semibold text-highlighted">
 			{{ ts("profile.themes.customize") }}
-		</h4>
+		</p>
 
 		<div>
 			<p :id="baseLabelId" class="custom-theme-label">
@@ -259,7 +259,7 @@ function removeColor(index: number) {
 }
 
 function randomColor(): string {
-	return `#${Math.floor(Math.random() * 0xff_ff_ff)
+	return `#${Math.floor(Math.random() * 16_777_215)
 		.toString(16)
 		.padStart(6, "0")
 		.toUpperCase()}`;

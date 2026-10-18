@@ -50,26 +50,17 @@ describe("AppPreferences", () => {
 		expect(useAppColorMode().preference.value).toBe("midnight");
 	});
 
-	it("offers the three base themes in the compact set", async () => {
+	it("offers only the base themes in the compact set", async () => {
 		const wrapper = await mountSuspended(AppPreferences, {
 			props: { only: "appearance", quick: true },
 		});
 
-		const labels = wrapper
-			.findAll('[role="radiogroup"]')
-			.map((group) => group.findAll("label").length);
-		expect(labels).toStrictEqual([3]);
-		expect(wrapper.text()).not.toContain("Midnight");
+		const groups = wrapper.findAll('[role="radiogroup"]');
+		expect(groups).toHaveLength(1);
+		expect(
+			swatches(groups[0]?.element).map((input) => input.getAttribute("aria-label")),
+		).toStrictEqual(["Light", "Ash", "Dark", "Onyx", "Sync with system"]);
 		expect(wrapper.text()).not.toContain("Cozy");
-	});
-
-	it("keeps midnight in the compact set while it is the theme in use", async () => {
-		useAppColorMode().setColorMode("midnight");
-		const wrapper = await mountSuspended(AppPreferences, {
-			props: { only: "appearance", quick: true },
-		});
-
-		expect(wrapper.text()).toContain("Midnight (experimental)");
 	});
 
 	it("leaves the clock to the dashboard in the compact set", async () => {

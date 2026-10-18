@@ -107,7 +107,8 @@ function openSettings() {
    the conversation beside it. */
 .account-card {
 	@apply relative m-2 flex shrink-0 items-center gap-1 overflow-hidden rounded-[10px] p-1.5;
-	background-color: var(--console-rail);
+	/* Solid: the card floats over the rail and the sidebar, which must not show through it. */
+	background-color: var(--console-solid);
 	border: 1px solid var(--console-border);
 	box-shadow: var(--console-shadow-low);
 }

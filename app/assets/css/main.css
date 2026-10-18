@@ -235,6 +235,10 @@
 		--popover-surface: var(--color-base-100);
 		--popover-shadow: 0 8px 16px oklch(0% 0 0 / 0.12);
 
+		/* What dims the page behind a dialog, drawer or sheet: Discord's scrim,
+		   black at 52% in every theme. */
+		--scrim: oklch(0% 0 0 / 0.52);
+
 		/* WolfStar home redesign aliases (from _ds/tokens/colors.css + spacing.css) */
 		--home-border-subtle: oklch(from var(--color-base-content) l c h / 0.05);
 		--home-blurple-soft: oklch(from var(--color-primary) l c h / 0.12);

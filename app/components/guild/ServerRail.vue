@@ -175,7 +175,7 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 
 .guild-rail-item {
 	@apply rounded-full;
-	background-color: var(--console-surface);
+	background-color: var(--console-solid);
 	color: var(--ui-text-toned);
 }
 
@@ -199,22 +199,14 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 	background-color: transparent;
 }
 
-/* Not joined yet: the icon faded, a "+" on its corner, both clear on hover. */
+/* Not joined yet: the icon as any other, with a "+" on its corner. */
 .guild-rail-invite {
 	@apply relative flex shrink-0;
 }
 
-.guild-rail-invite .guild-rail-item {
-	@apply opacity-50 grayscale;
-	transition:
-		border-radius 170ms cubic-bezier(0.3, 0, 0.2, 1),
-		opacity 170ms,
-		filter 170ms;
-}
-
 .guild-rail-invite:hover .guild-rail-item,
 .guild-rail-invite:focus-visible .guild-rail-item {
-	@apply rounded-lg opacity-100 grayscale-0;
+	@apply rounded-lg;
 }
 
 .guild-rail-invite-badge {
@@ -230,7 +222,7 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 
 .guild-rail-add {
 	@apply rounded-full text-success;
-	background-color: var(--console-surface);
+	background-color: var(--console-solid);
 }
 
 .guild-rail-add:hover {

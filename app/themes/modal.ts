@@ -1,7 +1,10 @@
 // The design system's dialog: a raised panel with 12px corners, a compact
 // header whose close button is a small ghost icon, and a tinted action bar.
+// The scrim behind it is black, as Discord's: Nuxt UI's grey one lightens a
+// page that is darker than it (Onyx, Dark) instead of dimming it.
 export default {
 	slots: {
+		overlay: "bg-(--scrim)",
 		content: "divide-(--home-border-subtle) bg-(--popover-surface) ring-(--field-border)",
 		header: "min-h-0 px-5 pt-4 pb-3.5",
 		title: "text-[1.0625rem] font-bold",

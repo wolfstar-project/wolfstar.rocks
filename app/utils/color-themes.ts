@@ -35,11 +35,11 @@ export const DEFAULT_CUSTOM_THEME: CustomColorTheme = {
 	angle: 56,
 	base: "dark",
 	colors: ["#3208CB", "#1572B8", "#7B6BCC"],
-	intensity: 35,
+	intensity: 56,
 };
 
-// Discord's presets let 35% of the gradient through.
-const PRESET_INTENSITY = 35;
+// The intensity Discord's presets are made at.
+const PRESET_INTENSITY = 50;
 
 const stops = (...pairs: [string, number][]): ColorThemeStop[] =>
 	pairs.map(([color, at]) => ({ at, color }));
@@ -221,32 +221,72 @@ export function colorThemeSwatch(theme: ColorTheme): string {
 	return `linear-gradient(rgb(0 0 0 / 0.4), rgb(0 0 0 / 0.4)), ${colorThemeGradient(theme)}`;
 }
 
-function hue(hex: string): number {
+function rgb(hex: string): [number, number, number] {
 	const value = Number.parseInt(hex.slice(1, 7), 16);
-	const [r, g, b] = [(value >> 16) & 255, (value >> 8) & 255, value & 255].map(
-		(c) => c / 255,
-	) as [number, number, number];
-	const max = Math.max(r, g, b);
-	const d = max - Math.min(r, g, b);
-	if (d === 0) return 0;
-	const h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
-	return Math.round((((h * 60) % 360) + 360) % 360);
+	return [(value >> 16) & 255, (value >> 8) & 255, value & 255];
 }
 
+/** The hue (degrees) and saturation (percent) of a colour, as HSL gives them. */
+function hueAndSaturation(hex: string): { hue: number; saturation: number } {
+	const [r, g, b] = rgb(hex).map((channel) => channel / 255) as [number, number, number];
+	const max = Math.max(r, g, b);
+	const min = Math.min(r, g, b);
+	const delta = max - min;
+	if (delta === 0) return { hue: 0, saturation: 0 };
+
+	const lightness = (max + min) / 2;
+	const raw =
+		max === r ? ((g - b) / delta) % 6 : max === g ? (b - r) / delta + 2 : (r - g) / delta + 4;
+	return {
+		hue: (((raw * 60) % 360) + 360) % 360,
+		saturation: (delta / (1 - Math.abs(2 * lightness - 1))) * 100,
+	};
+}
+
+/** How bright a colour is to the eye (relative luminance, 0–1). */
+function luminance(hex: string): number {
+	const [r, g, b] = rgb(hex).map((channel) => {
+		const value = channel / 255;
+		return value <= 0.039_28 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+	}) as [number, number, number];
+	return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+const round = (value: number, digits = 2) => Number(value.toFixed(digits));
+
 /**
- * The CSS custom properties a theme sets on the page: its gradient, the tint
- * its surfaces are mixed with (from the first colour on a dark base, the last
- * on a light one, as Discord does) and how much of the gradient shows through.
+ * The CSS custom properties a theme sets on the page, worked out as Discord
+ * does (checked against its 23 presets, `test/unit/app/utils/color-themes.test.ts`):
+ *
+ * - the gradient, and `--ct-mix`, how much of the surfaces' veil is left over
+ *   it: 1 with no intensity, 0.3 at the full 100;
+ * - the tint surfaces are mixed with, `--ct-base`: on a dark base the hue of the
+ *   darkest colour at 5% lightness, on a light base the hue of the lightest at
+ *   90% (fully saturated, unless that colour is a grey), taking
+ *   `--ct-base-amount` of the mix (dark: 100 − 0.4·intensity, light:
+ *   30 − 0.2·intensity);
+ * - the text colour the interface's text is tinted with, `--ct-text`, from the
+ *   same two colours, taking 30% (dark) or 40% (light).
  */
 export function colorThemeVars(theme: ColorTheme, intensity = PRESET_INTENSITY) {
-	const first = theme.stops[0]?.color ?? "#000000";
-	const last = theme.stops.at(-1)?.color ?? first;
-	const tint =
-		theme.base === "dark" ? `hsl(${hue(first)} 100% 5%)` : `hsl(${hue(last)} 100% 90%)`;
-	const mix = Math.min(1, Math.max(0, 1 - intensity / 100));
+	const colors = theme.stops.map((stop) => stop.color);
+	const first = colors[0] ?? "#000000";
+	const ranked = colors.toSorted((a, b) => luminance(a) - luminance(b));
+	const darkest = hueAndSaturation(ranked[0] ?? first);
+	const lightest = hueAndSaturation(ranked.at(-1) ?? first);
+	const level = Math.min(100, Math.max(0, intensity));
+	const dark = theme.base === "dark";
+
 	return {
+		"--ct-base": dark
+			? `hsl(${round(darkest.hue)} ${darkest.saturation === 0 ? 0 : 100}% 5%)`
+			: `hsl(${round(lightest.hue)} ${lightest.saturation === 0 ? 0 : 100}% 90%)`,
+		"--ct-base-amount": `${round(dark ? 100 - 0.4 * level : 30 - 0.2 * level, 1)}%`,
 		"--ct-gradient": colorThemeGradient(theme),
-		"--ct-mix": mix.toFixed(2),
-		"--ct-tint": tint,
+		"--ct-mix": round(1 - 0.7 * (level / 100)).toFixed(2),
+		"--ct-text": dark
+			? `hsl(${round(darkest.hue)} ${round(darkest.saturation)}% 95%)`
+			: `hsl(${round(lightest.hue)} ${round(lightest.saturation)}% 3%)`,
+		"--ct-text-amount": dark ? "30%" : "40%",
 	};
 }

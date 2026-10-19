@@ -27,6 +27,14 @@ describe("useInvites", () => {
 		expect(invites.WolfStar).toContain("permissions=534185897078");
 	});
 
+	it("should send the admin to the invited server through the guild page", () => {
+		const url = new URL(useInvites().WolfStar);
+
+		expect(url.searchParams.get("redirect_uri")).toBe(guildRedirectURI());
+		expect(url.searchParams.get("response_type")).toBe("code");
+		expect(url.searchParams.has("prompt")).toBe(false);
+	});
+
 	it("should include scope in WolfStar invite", () => {
 		const invites = useInvites();
 		expect(invites.WolfStar).toContain("scope=bot%20applications.commands");

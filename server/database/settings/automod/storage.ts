@@ -130,3 +130,36 @@ export async function removeAutoModerationRule(
 	}).deleteAndCount();
 	return Number(count) > 0;
 }
+
+/** What an import changes in the rules of a guild, by the ID of the rule. */
+export interface AutoModerationRulePlan {
+	remove: string[];
+	update: { id: string; data: Partial<AutoModerationRuleData> }[];
+	create: AutoModerationRuleData[];
+}
+
+/**
+ * Writes a plan to the rules of a guild: the rules are deleted first, so a
+ * rule that is made again can take the name of the one it replaces, then edited,
+ * then created in order, which gives them the IDs the order is read by.
+ *
+ * The writes belong together, so `orm` is a transaction's `tx.orm`.
+ *
+ * @param language The language a `Guild` row is created with.
+ * @returns The rules that were created.
+ */
+export async function writeAutoModerationRulePlan(
+	orm: Orm,
+	guildId: Snowflake,
+	plan: AutoModerationRulePlan,
+	language = "en-US",
+): Promise<AutoModerationRule[]> {
+	for (const id of plan.remove) await removeAutoModerationRule(orm, guildId, id);
+	for (const { id, data } of plan.update) await patchAutoModerationRule(orm, guildId, id, data);
+
+	const created: AutoModerationRule[] = [];
+	for (const data of plan.create) {
+		created.push(await insertAutoModerationRule(orm, guildId, data, language));
+	}
+	return created;
+}

@@ -79,15 +79,21 @@ class Transaction {
 		return this;
 	}
 
-	public async submit() {
-		if (!this.#hasChanges) {
+	/**
+	 * Writes the changes.
+	 *
+	 * @param extra Other writes that belong with them, made in the same database transaction, so they are all written
+	 * or none is: the rules of an import. They run even when no setting changes.
+	 */
+	public async submit(extra?: Parameters<typeof writeGuildData>[3]) {
+		if (!this.#hasChanges && !extra) {
 			return;
 		}
 
 		try {
 			// Write the merged settings, so the rows created for the first time
 			// carry every column and not just the changes:
-			await writeGuildData(db, { ...this.settings, ...this.#changes }, this.#changes);
+			await writeGuildData(db, { ...this.settings, ...this.#changes }, this.#changes, extra);
 
 			unconfigured.delete(this.settings.id);
 			Object.assign(this.settings, this.#changes);

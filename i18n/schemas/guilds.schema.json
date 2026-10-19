@@ -921,6 +921,96 @@
 						},
 						"title": {
 							"type": "string"
+						},
+						"transfer": {
+							"type": "object",
+							"properties": {
+								"becomes": {
+									"type": "string"
+								},
+								"cancel": {
+									"type": "string"
+								},
+								"confirm": {
+									"type": "string"
+								},
+								"description": {
+									"type": "string"
+								},
+								"export": {
+									"type": "string"
+								},
+								"export_failed": {
+									"type": "string"
+								},
+								"exported": {
+									"type": "string"
+								},
+								"import": {
+									"type": "string"
+								},
+								"import_failed": {
+									"type": "string"
+								},
+								"imported": {
+									"type": "string"
+								},
+								"issues_aria": {
+									"type": "string"
+								},
+								"nothing": {
+									"type": "string"
+								},
+								"refused_description": {
+									"type": "string"
+								},
+								"refused_title": {
+									"type": "string"
+								},
+								"review_description": {
+									"type": "string"
+								},
+								"review_title": {
+									"type": "string"
+								},
+								"rules_created": {
+									"type": "string"
+								},
+								"rules_heading": {
+									"type": "string"
+								},
+								"rules_moved": {
+									"type": "string"
+								},
+								"rules_removed": {
+									"type": "string"
+								},
+								"rules_updated": {
+									"type": "string"
+								},
+								"rules_warning": {
+									"type": "string"
+								},
+								"settings_heading": {
+									"type": "string"
+								},
+								"stale": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"too_big": {
+									"type": "string"
+								},
+								"unsaved": {
+									"type": "string"
+								},
+								"unsupported": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
 						}
 					},
 					"additionalProperties": false

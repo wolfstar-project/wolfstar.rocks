@@ -118,11 +118,13 @@ export async function fetchGuildData(orm: Orm, id: Snowflake): Promise<GuildData
  * @param db The database to write through.
  * @param settings The settings the changes apply to, with the changes already merged in.
  * @param changes The changed keys and their new values.
+ * @param extra Other writes that belong with the changes: they run in the same transaction, after them.
  */
 export async function writeGuildData(
 	db: Database,
 	settings: ReadonlyGuildData,
 	changes: Partial<ReadonlyGuildData>,
+	extra?: (tx: Parameters<Parameters<Database["transaction"]>[0]>[0]) => Promise<void>,
 ): Promise<void> {
 	const id = BigInt(settings.id);
 	const changedKeys = Object.keys(changes) as GuildDataKey[];
@@ -134,11 +136,13 @@ export async function writeGuildData(
 		else touched.add(ColumnsByKey[key].table);
 	}
 
-	if (touched.size === 0) return;
+	if (touched.size === 0 && !extra) return;
 
 	// Every table references the chain above it, so the whole chain has to exist first:
-	touched.add("Guild");
-	if (touched.size > 1) touched.add("Modules");
+	if (touched.size > 0) {
+		touched.add("Guild");
+		if (touched.size > 1) touched.add("Modules");
+	}
 
 	await db.transaction(async (tx) => {
 		for (const name of Tables) {
@@ -175,5 +179,7 @@ export async function writeGuildData(
 				);
 			}
 		}
+
+		await extra?.(tx);
 	});
 }

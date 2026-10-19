@@ -75,7 +75,7 @@ const RULES_LOCK_KEY_RANGE = 2_147_483_647n;
  * the other instances of the dashboard, which share no memory. The bot does
  * not take that lock: against it, the unique index on the name is what holds.
  */
-async function write<T>(
+export async function writeAutoModerationRules<T>(
 	guildId: Snowflake,
 	callback: (rules: readonly AutoModerationRule[], orm: Orm) => Promise<T>,
 ): Promise<T> {
@@ -132,7 +132,7 @@ export function createAutoModerationRule(
 	type: AutoModerationRuleType,
 	data: Partial<Omit<AutoModerationRuleData, "name" | "type">> = {},
 ): Promise<AutoModerationRule> {
-	return write(guildId, async (rules, orm) => {
+	return writeAutoModerationRules(guildId, async (rules, orm) => {
 		if (rules.length >= MaximumAutoModerationRules) throw new AutoModerationRuleError("limit");
 
 		return insertAutoModerationRule(orm, guildId, {
@@ -170,7 +170,7 @@ export function updateAutoModerationRule(
 	ruleId: string,
 	resolve: (rule: AutoModerationRule) => AutoModerationRuleUpdate | null,
 ): Promise<AutoModerationRuleChange> {
-	return write(guildId, async (rules, orm) => {
+	return writeAutoModerationRules(guildId, async (rules, orm) => {
 		const rule = rules.find((entry) => entry.id === ruleId);
 		if (!rule) throw new AutoModerationRuleError("unknown");
 
@@ -202,7 +202,7 @@ export function deleteAutoModerationRule(
 	guildId: Snowflake,
 	ruleId: string,
 ): Promise<AutoModerationRule> {
-	return write(guildId, async (rules, orm) => {
+	return writeAutoModerationRules(guildId, async (rules, orm) => {
 		const rule = rules.find((entry) => entry.id === ruleId);
 		if (!rule || !(await removeAutoModerationRule(orm, guildId, ruleId))) {
 			throw new AutoModerationRuleError("unknown");

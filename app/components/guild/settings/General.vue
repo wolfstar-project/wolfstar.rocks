@@ -78,37 +78,19 @@
 					{{ ts("guild_settings.general.mod_actions_total", { count: moderationTotal }) }}
 				</span>
 			</div>
-			<div
-				role="img"
+			<UChart
+				type="bar"
+				:data="activityDays"
+				index="label"
+				:categories="[
+					{ key: 'count', label: ts('guild_settings.general.mod_actions_title') },
+				]"
+				:colors="['var(--color-primary)']"
+				:legend="false"
+				:height="180"
+				:format="formatCount"
 				:aria-label="chartAria"
-				class="flex h-30 items-end gap-1.5 border-b border-base-content/15 pb-2 lg:h-45 lg:gap-3.5"
-			>
-				<div
-					v-for="day in activityDays"
-					:key="day.key"
-					class="flex h-full flex-1 flex-col items-center justify-end gap-1.5"
-				>
-					<span class="font-mono text-[0.6875rem] text-toned">{{ day.count }}</span>
-					<div
-						class="w-full max-w-11 rounded-t-[4px] transition-[height]"
-						:class="
-							day.count === peakCount && day.count > 0
-								? 'bg-primary'
-								: 'bg-primary/45'
-						"
-						:style="{ height: `${barHeight(day.count)}%` }"
-					></div>
-				</div>
-			</div>
-			<div class="flex gap-1.5 pt-2 lg:gap-3.5" aria-hidden="true">
-				<span
-					v-for="day in activityDays"
-					:key="day.key"
-					class="flex-1 text-center font-mono text-[0.6875rem] text-muted"
-				>
-					{{ day.label }}
-				</span>
-			</div>
+			/>
 			<p v-if="isChartPartial" class="mt-3 text-xs text-muted">
 				{{ ts("guild_settings.general.mod_actions_partial", { count: CHART_ENTRY_LIMIT }) }}
 			</p>
@@ -168,6 +150,8 @@
 			</UFormField>
 		</GuildSettingsForm>
 	</section>
+
+	<GuildSettingsTransfer />
 
 	<ActivitySection
 		:title="ts('guild_settings.general.recent_activity')"
@@ -321,12 +305,13 @@ const activityDays = computed(() =>
 		now: now.value,
 	}),
 );
-const peakCount = computed(() => Math.max(0, ...activityDays.value.map((day) => day.count)));
 const isChartPartial = computed(() => moderationTotal.value > moderationEntries.value.length);
 
-function barHeight(count: number) {
-	return peakCount.value === 0 ? 0 : Math.max(4, Math.round((count / peakCount.value) * 100));
-}
+// The y axis picks its own ticks; a count of actions is never fractional.
+const countFormat = computed(
+	() => new Intl.NumberFormat(locale.value, { maximumFractionDigits: 0 }),
+);
+const formatCount = (value: number) => countFormat.value.format(value);
 
 // A server nobody has changed yet reads differently from a quiet week.
 const hasNoActivityEver = computed(

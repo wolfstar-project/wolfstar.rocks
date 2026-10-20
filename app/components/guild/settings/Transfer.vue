@@ -122,7 +122,7 @@
 						<ul class="space-y-1.5">
 							<li v-for="line in rulesSummary" :key="line.key">
 								<span :class="line.tone">{{ line.label }}</span>
-								<span class="text-muted"> {{ line.names }}</span>
+								<span class="text-muted">{{ " " + line.names }}</span>
 							</li>
 						</ul>
 						<p

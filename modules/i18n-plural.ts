@@ -1,5 +1,5 @@
 import { defineNuxtModule } from "nuxt/kit";
-import { plural } from "../config/i18n-plural";
+import { plural } from "../config/i18n-plural.ts";
 
 /**
  * Nuxt I18n Micro turns its `plural` option into `.nuxt/i18n.plural.mjs` by

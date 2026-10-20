@@ -1,7 +1,7 @@
-import type { BuildInfo, EnvType } from "../shared/types";
+import type { BuildInfo, EnvType } from "../shared/types/env.ts";
 import { createResolver, defineNuxtModule } from "nuxt/kit";
 import { isCI, isTest } from "std-env";
-import { getEnv, getFileLastUpdated } from "../config/env";
+import { getEnv, getFileLastUpdated } from "../config/env.ts";
 
 const { resolve } = createResolver(import.meta.url);
 /**

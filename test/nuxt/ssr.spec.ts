@@ -1055,7 +1055,7 @@ describe("component SSR rendering", () => {
 				"WolfStar moderation commands — try a slash command below.",
 			);
 			expect(wrapper.find(".discord-channel-header-search-placeholder").text()).toBe(
-				"Search Wolfstar HQ",
+				"Search WolfStar HQ",
 			);
 			expect(wrapper.find(".discord-chat-messages[role='log']").exists()).toBe(true);
 			expect(wrapper.find(".discord-message-composer").exists()).toBe(true);

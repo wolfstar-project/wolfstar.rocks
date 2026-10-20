@@ -98,9 +98,9 @@ describe("guild settings transfer", () => {
 		await chooseFile(wrapper, "{}");
 		await vi.waitFor(() => expect(dialogText()).toContain("modules.automod"));
 
-		expect(dialogText()).toContain("Created (1):");
-		expect(dialogText()).toContain("Fresh");
-		expect(dialogText()).toContain("Deleted (1):");
+		// The label and the names stay apart, as Vue drops a space that opens an element:
+		expect(dialogText()).toContain("Created (1): Fresh");
+		expect(dialogText()).toContain("Deleted (1): Old");
 		expect(dialogText()).toContain("timezone");
 		expect(mockSetGuildSettings).not.toHaveBeenCalled();
 	});

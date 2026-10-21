@@ -11,7 +11,6 @@ import { createMockGuildData } from "~~/test/mocks/guildData";
 const createInitialGuildSettings = () =>
 	createMockGuildData("123456789012345678", {
 		modulesAutomod: false,
-		modulesLogs: false,
 	});
 
 const mockGuildSettings = ref<GuildData | undefined>(createInitialGuildSettings());

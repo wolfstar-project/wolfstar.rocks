@@ -18,7 +18,6 @@ describe("createSetupDraft", () => {
 		expect(draft).toMatchObject({ language: "it-IT", reached: 1, step: 1 });
 		expect(draft.modules).toStrictEqual({
 			modulesAutomod: true,
-			modulesLogs: true,
 			modulesModeration: true,
 			modulesRoles: false,
 		});
@@ -43,7 +42,6 @@ describe("setupChanges", () => {
 		expect(setupChanges(createSetupDraft("en-US"))).toStrictEqual({
 			language: "en-US",
 			modulesAutomod: true,
-			modulesLogs: true,
 			modulesModeration: true,
 			modulesRoles: false,
 		});
@@ -75,15 +73,23 @@ describe("setupChanges", () => {
 	it("leaves out the channel of a module that was turned off", () => {
 		const draft = createSetupDraft("en-US");
 		draft.modules.modulesModeration = false;
-		draft.modules.modulesLogs = false;
 		draft.moderationChannel = CHANNEL;
-		draft.eventsChannel = CHANNEL;
 
 		const changes = setupChanges(draft);
 
 		expect(changes).not.toHaveProperty("moderationChannel");
-		expect(changes).not.toHaveProperty("logsMemberAdd");
 		expect(changes.modulesModeration).toBe(false);
+	});
+
+	it("writes the event log channel whatever the modules, as the logs are not one", () => {
+		const draft = createSetupDraft("en-US");
+		for (const key of Object.keys(draft.modules) as (keyof typeof draft.modules)[]) {
+			draft.modules[key] = false;
+		}
+		draft.eventsChannel = CHANNEL;
+
+		expect(setupChannelFields(draft).events).toBe(true);
+		expect(setupChanges(draft).logsMemberAdd).toBe(CHANNEL);
 	});
 });
 

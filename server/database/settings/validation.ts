@@ -1,17 +1,21 @@
-import type {
-	GuildData,
-	PermissionsNode,
-	StickyRole,
-	UniqueRoleSet,
-} from "#server/database/settings/types";
 import { Columns, isStoredKey, type StoredKey } from "#server/database/settings/columns";
 import { getDefaultGuildSettings } from "#server/database/settings/constants";
+import {
+	HoneypotActions,
+	MessageUpdateStyles,
+	type GuildData,
+	type PermissionsNode,
+	type StickyRole,
+	type UniqueRoleSet,
+} from "#server/database/settings/types";
 import { isSnowflake } from "#shared/utils/snowflake";
 
 /** The most entries a list setting holds (roles, channels, commands, nodes). */
 export const MAXIMUM_SETTING_LIST_LENGTH = 250;
 const MAXIMUM_COMMAND_NAME_LENGTH = 32;
 const MAXIMUM_UNIQUE_ROLE_SET_NAME_LENGTH = 32;
+/** The longest a recent case asks for a confirmation, as the bot's `moderation.confirm-recent`. */
+const MAXIMUM_CONFIRM_RECENT_MINUTES = 60;
 
 // BCP 47 tags as the bot ships them: `en-US`, `es-419`, `pt-BR`, …
 const LANGUAGE_PATTERN = /^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/u;
@@ -50,6 +54,40 @@ const validateLanguage: Validator = (value) =>
 	typeof value === "string" && LANGUAGE_PATTERN.test(value)
 		? value
 		: fail("Expected a language tag.");
+
+let timeZones: ReadonlySet<string> | null = null;
+
+// The IANA names the runtime knows, and `UTC`, as the bot's `isTimeZone()` reads them:
+const validateTimeZone: Validator = (value) => {
+	timeZones ??= new Set(["UTC", ...Intl.supportedValuesOf("timeZone")]);
+	return typeof value === "string" && timeZones.has(value)
+		? value
+		: fail("Expected the name of a time zone, such as Europe/Rome.");
+};
+
+function oneOf(values: readonly string[]): Validator {
+	return (value) =>
+		typeof value === "string" && values.includes(value)
+			? value
+			: fail(`Expected one of ${values.join(", ")}.`);
+}
+
+const validateConfirmRecentMinutes: Validator = (value) =>
+	Number.isInteger(value) &&
+	(value as number) >= 0 &&
+	(value as number) <= MAXIMUM_CONFIRM_RECENT_MINUTES
+		? value
+		: fail(`Expected a whole number of minutes from 0 to ${MAXIMUM_CONFIRM_RECENT_MINUTES}.`);
+
+// Any text, as the bot's `appeals.questions` takes it: the bot trims them and
+// asks the first five when it opens a form, so a longer or blank one is kept.
+const validateAppealQuestions: Validator = (value) => [
+	...new Set(
+		list(value, (item) =>
+			typeof item === "string" ? item : fail("Expected questions as text."),
+		),
+	),
+];
 
 const validateCommandNames: Validator = (value) => [
 	...new Set(
@@ -105,13 +143,34 @@ const validateStickyRoles: Validator = (value) =>
  */
 const ValueValidators: Partial<Record<StoredKey, Validator>> = {
 	language: validateLanguage,
+	timezone: validateTimeZone,
 	commandsDisabled: validateCommandNames,
+	honeypotAction: oneOf(HoneypotActions),
+	logsMessageUpdateStyle: oneOf(MessageUpdateStyles),
+	moderationConfirmRecentMinutes: validateConfirmRecentMinutes,
+	appealsQuestions: validateAppealQuestions,
 	permissionsUsers: validatePermissionNodes,
 	permissionsRoles: validatePermissionNodes,
 	rolesUniqueRoleSets: validateUniqueRoleSets,
 };
 
+/**
+ * Settings only the bot edits, so a write, a `null` reset included, is
+ * refused: the `/commands` modal owns `commandsRestrictions`, in a shape this
+ * dashboard does not check, and a change of `updatesChannel` has to move the
+ * follow of the support server's announcements, which only the bot does
+ * (`syncUpdatesChannelFollow`).
+ */
+export const BOT_ONLY_SETTINGS: ReadonlySet<string> = new Set<StoredKey>([
+	"commandsRestrictions",
+	"updatesChannel",
+]);
+
+const refuse: Validator = () => fail("This setting cannot be changed from the dashboard.");
+
 function validatorFor(key: StoredKey): Validator {
+	if (BOT_ONLY_SETTINGS.has(key)) return refuse;
+
 	const { kind } = Columns[key];
 	if (kind === "snowflake") return validateSnowflake;
 	if (kind === "snowflakes") return validateSnowflakes;
@@ -120,7 +179,7 @@ function validatorFor(key: StoredKey): Validator {
 	if (explicit) return explicit;
 
 	if (typeof getDefaultGuildSettings()[key] === "boolean") return validateBoolean;
-	return () => fail("This setting cannot be changed from the dashboard.");
+	return refuse;
 }
 
 export type SettingsChangesResult =
@@ -154,7 +213,8 @@ export function parseSettingsChanges(
 			continue;
 		}
 
-		if (value === null) {
+		// A setting the dashboard cannot change cannot be reset from it either:
+		if (value === null && validate !== refuse) {
 			data[key] = structuredClone(defaults[key]);
 			continue;
 		}

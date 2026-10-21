@@ -390,6 +390,7 @@ const OPTION_LABEL_KEYS: Record<string, string> = {
 	maximum: "guild_settings.automod.options.maximum",
 	mentionsAllowed: "guild_settings.automod.options.mentionsAllowed",
 	minimum: "guild_settings.automod.options.minimum",
+	perChannel: "guild_settings.automod.options.perChannel",
 	timePeriod: "guild_settings.automod.options.timePeriod",
 	words: "guild_settings.automod.options.words",
 };

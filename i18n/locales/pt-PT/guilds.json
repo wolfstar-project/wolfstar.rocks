@@ -26,6 +26,7 @@
 				"maximum": "",
 				"mentionsAllowed": "",
 				"minimum": "",
+				"perChannel": "",
 				"timePeriod": "",
 				"words": ""
 			},
@@ -191,6 +192,10 @@
 					"description": "",
 					"name": ""
 				},
+				"Polls": {
+					"description": "",
+					"name": ""
+				},
 				"Spoilers": {
 					"description": "",
 					"name": ""
@@ -348,7 +353,6 @@
 			"configure": "",
 			"descriptions": {
 				"automod": "",
-				"logs": "",
 				"moderation": "",
 				"roles": ""
 			},
@@ -521,10 +525,6 @@
 				"description": "",
 				"name": ""
 			},
-			"logsCommand": {
-				"description": "",
-				"name": ""
-			},
 			"logsEmojiCreate": {
 				"description": "",
 				"name": ""
@@ -534,6 +534,14 @@
 				"name": ""
 			},
 			"logsEmojiUpdate": {
+				"description": "",
+				"name": ""
+			},
+			"logsEvents": {
+				"description": "",
+				"name": ""
+			},
+			"logsExpressions": {
 				"description": "",
 				"name": ""
 			},
@@ -550,6 +558,14 @@
 				"name": ""
 			},
 			"logsImage": {
+				"description": "",
+				"name": ""
+			},
+			"logsIntegrations": {
+				"description": "",
+				"name": ""
+			},
+			"logsInvites": {
 				"description": "",
 				"name": ""
 			},
@@ -617,7 +633,7 @@
 				"description": "",
 				"name": ""
 			},
-			"logsSettings": {
+			"logsThreads": {
 				"description": "",
 				"name": ""
 			},

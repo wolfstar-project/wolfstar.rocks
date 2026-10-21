@@ -13,9 +13,12 @@ import type { Snowflake } from "discord-api-types/v10";
 export const Tables = [
 	"Guild",
 	"Modules",
+	"GuildAppeals",
 	"GuildAutoModeration",
 	"GuildCommands",
+	"GuildHoneypot",
 	"GuildLogs",
+	"GuildLogsOptions",
 	"GuildModeration",
 	"GuildPermissions",
 	"GuildReports",
@@ -96,12 +99,14 @@ function columns<const Table extends TableName, const Entries extends ColumnEntr
  * column here and its default in `./constants.ts`.
  */
 export const Columns = {
-	...columns("Guild", { language: ["language", "value"] }),
+	...columns("Guild", {
+		language: ["language", "value"],
+		timezone: ["timezone", "value"],
+		updatesChannel: ["updatesChannelId", "snowflake"],
+	}),
 	...columns("Modules", {
 		modulesAutomod: ["automod", "value"],
 		modulesModeration: ["moderation", "value"],
-		modulesLogs: ["logs", "value"],
-		modulesCommands: ["commands", "value"],
 		modulesRoles: ["roles", "value"],
 	}),
 	...columns("GuildAutoModeration", {
@@ -111,6 +116,16 @@ export const Columns = {
 	...columns("GuildCommands", {
 		commandsDisabled: ["disabled", "value"],
 		commandsDisabledChannels: ["disabledChannels", "snowflakes"],
+		commandsRestrictions: ["disabledInChannels", "value"],
+	}),
+	...columns("GuildHoneypot", {
+		honeypotChannel: ["channelId", "snowflake"],
+		honeypotLogChannel: ["logChannelId", "snowflake"],
+		honeypotAction: ["action", "value"],
+		honeypotDirectMessage: ["directMessage", "value"],
+		honeypotWarning: ["warning", "value"],
+		honeypotRandomName: ["randomName", "value"],
+		honeypotKeepActive: ["keepActive", "value"],
 	}),
 	...columns("GuildLogs", {
 		logsMemberAdd: ["memberAdd", "snowflake"],
@@ -136,16 +151,34 @@ export const Columns = {
 		logsEmojiUpdate: ["emojiUpdate", "snowflake"],
 		logsEmojiDelete: ["emojiDelete", "snowflake"],
 		logsServerUpdate: ["serverUpdate", "snowflake"],
-		logsCommand: ["command", "snowflake"],
-		logsSettings: ["settings", "snowflake"],
+		logsInvites: ["invites", "snowflake"],
+		logsThreads: ["threads", "snowflake"],
+		logsEvents: ["events", "snowflake"],
+		logsExpressions: ["expressions", "snowflake"],
+		logsIntegrations: ["integrations", "snowflake"],
 		logsIgnoreAll: ["ignoreAll", "snowflakes"],
 		logsIgnoreMessages: ["ignoreMessages", "snowflakes"],
 		logsIgnoreReactions: ["ignoreReactions", "snowflakes"],
+	}),
+	...columns("GuildLogsOptions", {
+		logsMessageUpdateStyle: ["messageUpdateStyle", "value"],
+		logsWebhooks: ["webhooks", "value"],
 	}),
 	...columns("GuildModeration", {
 		moderationChannel: ["channelId", "snowflake"],
 		moderationTrackBans: ["trackBans", "value"],
 		moderationTrackTimeouts: ["trackTimeouts", "value"],
+		moderationTrackRoles: ["trackRoles", "value"],
+		moderationTrackKicks: ["trackKicks", "value"],
+		moderationConfirmRecentMinutes: ["confirmRecentMinutes", "value"],
+	}),
+	...columns("GuildAppeals", {
+		appealsEnabled: ["enabled", "value"],
+		appealsChannel: ["channelId", "snowflake"],
+		appealsBans: ["bans", "value"],
+		appealsMutes: ["mutes", "value"],
+		appealsTimeouts: ["timeouts", "value"],
+		appealsQuestions: ["questions", "value"],
 	}),
 	...columns("GuildPermissions", {
 		permissionsUsers: ["users", "value"],

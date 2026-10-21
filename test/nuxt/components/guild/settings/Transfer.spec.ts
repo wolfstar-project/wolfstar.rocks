@@ -89,7 +89,7 @@ describe("guild settings transfer", () => {
 					removed: ["Old"],
 					unchanged: 0,
 				},
-				unsupported: ["timezone"],
+				unsupported: ["music.volume"],
 				isEmpty: false,
 			},
 		};
@@ -101,7 +101,7 @@ describe("guild settings transfer", () => {
 		// The label and the names stay apart, as Vue drops a space that opens an element:
 		expect(dialogText()).toContain("Created (1): Fresh");
 		expect(dialogText()).toContain("Deleted (1): Old");
-		expect(dialogText()).toContain("timezone");
+		expect(dialogText()).toContain("music.volume");
 		expect(mockSetGuildSettings).not.toHaveBeenCalled();
 	});
 

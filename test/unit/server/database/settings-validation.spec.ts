@@ -1,6 +1,7 @@
 import { Columns } from "#server/database/settings/columns";
 import { getDefaultGuildSettings } from "#server/database/settings/constants";
 import {
+	BOT_ONLY_SETTINGS,
 	MAXIMUM_SETTING_LIST_LENGTH,
 	parseSettingsChanges,
 } from "#server/database/settings/validation";
@@ -108,9 +109,21 @@ describe("parseSettingsChanges", () => {
 	it("has a validator for every stored key", () => {
 		const defaults = getDefaultGuildSettings() as Record<string, unknown>;
 		for (const key of Object.keys(Columns)) {
+			if (BOT_ONLY_SETTINGS.has(key)) continue;
 			const result = parseSettingsChanges([[key, defaults[key]]]);
 			// `null` defaults reset rather than validate, which is also fine.
 			expect(result.errors).toBeUndefined();
+		}
+	});
+
+	it("refuses the settings only the bot edits, a reset included", () => {
+		expect([...BOT_ONLY_SETTINGS]).toContain("updatesChannel");
+		for (const key of BOT_ONLY_SETTINGS) {
+			for (const value of [[], null, CHANNEL]) {
+				expect(parseSettingsChanges([[key, value]]).errors).toStrictEqual([
+					`${key}: This setting cannot be changed from the dashboard.`,
+				]);
+			}
 		}
 	});
 });

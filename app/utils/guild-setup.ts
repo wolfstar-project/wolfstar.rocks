@@ -12,7 +12,6 @@ type ModuleKey = GuildModuleEntry["key"];
 export const SETUP_RECOMMENDED_MODULES: readonly ModuleKey[] = [
 	"modulesAutomod",
 	"modulesModeration",
-	"modulesLogs",
 ];
 
 /**
@@ -73,7 +72,8 @@ export function createSetupDraft(language: string): SetupDraft {
 export function setupChannelFields(draft: SetupDraft) {
 	return {
 		automod: draft.modules.modulesAutomod,
-		events: draft.modules.modulesLogs,
+		// The logs are not a module, so setup always offers their channel:
+		events: true,
 		moderation: draft.modules.modulesModeration,
 	};
 }
@@ -94,7 +94,7 @@ export function setupChanges(draft: SetupDraft): Partial<GuildData> {
 	if (draft.modules.modulesAutomod && draft.automodChannel) {
 		changes.automodChannel = draft.automodChannel;
 	}
-	if (draft.modules.modulesLogs && draft.eventsChannel) {
+	if (draft.eventsChannel) {
 		for (const key of SETUP_EVENT_LOG_KEYS) {
 			changes[key] = draft.eventsChannel;
 		}

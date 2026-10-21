@@ -8,23 +8,38 @@ import { ConfigurationFileVersion } from "#shared/utils/settings-transfer";
  *
  * A setting names something of the server it was written in (a role, a
  * channel, a user, a set of them) unless it is of a kind that is the same in
- * every server, so only those are in the file. The bot has more of them than
- * this dashboard stores yet (`timezone`, `honeypot.*`, `appeals.*`, …): a file
- * that holds one is read, and the setting is left out.
+ * every server, so only those are in the file. A setting of a file that is not
+ * listed here is read, and left out.
  *
  * @remarks Mirrors `getPortableKeys()` in the bot, which is built from its
  * schema: add a setting here when its column is added to `columns.ts`.
  */
 export const TransferableSettings = [
 	["language", "language"],
+	["timezone", "timezone"],
 	["modules.automod", "modulesAutomod"],
 	["modules.moderation", "modulesModeration"],
 	["modules.roles", "modulesRoles"],
 	["automod.track-native", "automodTrackNative"],
 	["commands.disabled", "commandsDisabled"],
+	["honeypot.action", "honeypotAction"],
+	["honeypot.direct-message", "honeypotDirectMessage"],
+	["honeypot.warning", "honeypotWarning"],
+	["honeypot.random-name", "honeypotRandomName"],
+	["honeypot.keep-active", "honeypotKeepActive"],
+	["appeals.enabled", "appealsEnabled"],
+	["appeals.bans", "appealsBans"],
+	["appeals.mutes", "appealsMutes"],
+	["appeals.timeouts", "appealsTimeouts"],
+	["appeals.questions", "appealsQuestions"],
+	["logs.message-update-style", "logsMessageUpdateStyle"],
 	["logs.reaction-emoji-include-twemoji", "logsReactionEmojiIncludeTwemoji"],
+	["logs.webhooks", "logsWebhooks"],
 	["moderation.track-bans", "moderationTrackBans"],
 	["moderation.track-timeouts", "moderationTrackTimeouts"],
+	["moderation.track-roles", "moderationTrackRoles"],
+	["moderation.track-kicks", "moderationTrackKicks"],
+	["moderation.confirm-recent", "moderationConfirmRecentMinutes"],
 	["reports.anonymous", "reportsAnonymous"],
 	["reports.notify", "reportsNotify"],
 	["roles.remove-initial", "rolesRemoveInitial"],

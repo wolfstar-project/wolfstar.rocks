@@ -57,7 +57,6 @@ export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
 		group: "modules",
 		icon: "ic:round-notifications",
 		labelKey: "dashboard.nav.channels",
-		moduleKey: "modulesLogs",
 		slug: "channels",
 	},
 	{

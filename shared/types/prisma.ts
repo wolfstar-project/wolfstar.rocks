@@ -7,6 +7,20 @@ import type {
 type StoredAuditEventChanges = AuditEventChanges;
 type StoredAutoModerationRuleOptions = AutoModerationRuleOptions;
 
+/**
+ * A message the bot saved in a member's history (`MessageHistory`), as it was
+ * when the history was made. Mirrors `MessageHistoryMessage` in the bot's
+ * `settings/histories/storage.ts`.
+ */
+interface StoredMessageHistoryMessage {
+	id: string;
+	channelId: string;
+	content: string;
+	/** When it was sent, in milliseconds. */
+	createdAt: number;
+	attachments: string[];
+}
+
 declare global {
 	/**
 	 * The types the contract's `typed.Json(...)` columns name. The emitter
@@ -24,5 +38,6 @@ declare global {
 		type AuditEventChanges = StoredAuditEventChanges;
 		type AutoModerationRuleOptions = StoredAutoModerationRuleOptions;
 		type AutoModerationRuleEscalation = AutoModerationRuleEscalationStep[];
+		type MessageHistoryMessages = StoredMessageHistoryMessage[];
 	}
 }

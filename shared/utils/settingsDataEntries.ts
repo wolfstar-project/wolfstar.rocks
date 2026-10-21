@@ -278,14 +278,33 @@ export const ConfigurableLoggingChannels: SettingEntry<SingleSettingKey>[] = [
 			"Receives a log message when the server settings are updated, including the changes made.",
 	},
 	{
-		key: "logsCommand",
-		name: "Command Logs",
-		description: "Receives a log message when a member runs a WolfStar command.",
+		key: "logsInvites",
+		name: "Invite Logs",
+		description: "Receives a log message when an invite is created or deleted.",
 	},
 	{
-		key: "logsSettings",
-		name: "Settings Logs",
-		description: "Receives a log message when WolfStar's settings for this server change.",
+		key: "logsThreads",
+		name: "Thread Logs",
+		description:
+			"Receives a log message when a thread is created, deleted, renamed, archived or locked.",
+	},
+	{
+		key: "logsEvents",
+		name: "Event Logs",
+		description:
+			"Receives a log message when a scheduled event is created, changed, started, ended or deleted.",
+	},
+	{
+		key: "logsExpressions",
+		name: "Sticker and Sound Logs",
+		description:
+			"Receives a log message when a sticker or a soundboard sound is created, changed or deleted.",
+	},
+	{
+		key: "logsIntegrations",
+		name: "App and Webhook Logs",
+		description:
+			"Receives a log message when an app is added or removed, and when the webhooks of a channel change.",
 	},
 ];
 

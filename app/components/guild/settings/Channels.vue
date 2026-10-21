@@ -180,9 +180,9 @@ const LOGGING_GROUPS = [
 	{ id: "messages", pattern: /^logs(Message|Image)/ },
 	{ id: "reactions", pattern: /^logsReaction/ },
 	{ id: "roles", pattern: /^logsRole/ },
-	{ id: "channels", pattern: /^logsChannel/ },
-	{ id: "emojis", pattern: /^logsEmoji/ },
-	{ id: "server", pattern: /^logs(Server|Command|Settings)/ },
+	{ id: "channels", pattern: /^logs(Channel|Threads)/ },
+	{ id: "emojis", pattern: /^logs(Emoji|Expressions)/ },
+	{ id: "server", pattern: /^logs(Server|Invites|Events|Integrations)/ },
 ] as const;
 
 const loggingGroups = computed(() =>

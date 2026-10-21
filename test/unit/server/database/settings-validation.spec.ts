@@ -1,6 +1,7 @@
 import { Columns } from "#server/database/settings/columns";
 import { getDefaultGuildSettings } from "#server/database/settings/constants";
 import {
+	BOT_ONLY_SETTINGS,
 	MAXIMUM_SETTING_LIST_LENGTH,
 	parseSettingsChanges,
 } from "#server/database/settings/validation";
@@ -8,9 +9,6 @@ import { describe, expect, it } from "vitest";
 
 const CHANNEL = "123456789012345678";
 const ROLE = "234567890123456789";
-
-// The `/commands` modal of the bot edits them, in a shape the dashboard does not check yet:
-const BOT_ONLY_KEYS: ReadonlySet<string> = new Set(["commandsRestrictions"]);
 
 describe("parseSettingsChanges", () => {
 	it("accepts a value of each kind and returns it as the change", () => {
@@ -111,18 +109,20 @@ describe("parseSettingsChanges", () => {
 	it("has a validator for every stored key", () => {
 		const defaults = getDefaultGuildSettings() as Record<string, unknown>;
 		for (const key of Object.keys(Columns)) {
-			if (BOT_ONLY_KEYS.has(key)) continue;
+			if (BOT_ONLY_SETTINGS.has(key)) continue;
 			const result = parseSettingsChanges([[key, defaults[key]]]);
 			// `null` defaults reset rather than validate, which is also fine.
 			expect(result.errors).toBeUndefined();
 		}
 	});
 
-	it("refuses the settings only the bot edits", () => {
-		for (const key of BOT_ONLY_KEYS) {
-			expect(parseSettingsChanges([[key, []]]).errors).toStrictEqual([
-				`${key}: This setting cannot be changed from the dashboard.`,
-			]);
+	it("refuses the settings only the bot edits, a reset included", () => {
+		for (const key of BOT_ONLY_SETTINGS) {
+			for (const value of [[], null]) {
+				expect(parseSettingsChanges([[key, value]]).errors).toStrictEqual([
+					`${key}: This setting cannot be changed from the dashboard.`,
+				]);
+			}
 		}
 	});
 });

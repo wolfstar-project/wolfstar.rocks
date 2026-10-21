@@ -159,7 +159,18 @@ const ValueValidators: Partial<Record<StoredKey, Validator>> = {
 	rolesUniqueRoleSets: validateUniqueRoleSets,
 };
 
+/**
+ * Settings only the bot edits: the `/commands` modal owns
+ * `commandsRestrictions`, in a shape this dashboard does not check. A write,
+ * including a `null` reset, is refused.
+ */
+export const BOT_ONLY_SETTINGS: ReadonlySet<string> = new Set<StoredKey>(["commandsRestrictions"]);
+
+const refuse: Validator = () => fail("This setting cannot be changed from the dashboard.");
+
 function validatorFor(key: StoredKey): Validator {
+	if (BOT_ONLY_SETTINGS.has(key)) return refuse;
+
 	const { kind } = Columns[key];
 	if (kind === "snowflake") return validateSnowflake;
 	if (kind === "snowflakes") return validateSnowflakes;
@@ -168,7 +179,7 @@ function validatorFor(key: StoredKey): Validator {
 	if (explicit) return explicit;
 
 	if (typeof getDefaultGuildSettings()[key] === "boolean") return validateBoolean;
-	return () => fail("This setting cannot be changed from the dashboard.");
+	return refuse;
 }
 
 export type SettingsChangesResult =
@@ -202,7 +213,8 @@ export function parseSettingsChanges(
 			continue;
 		}
 
-		if (value === null) {
+		// A setting the dashboard cannot change cannot be reset from it either:
+		if (value === null && validate !== refuse) {
 			data[key] = structuredClone(defaults[key]);
 			continue;
 		}

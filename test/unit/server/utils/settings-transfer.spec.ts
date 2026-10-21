@@ -136,7 +136,7 @@ describe("parseConfigurationFile", () => {
 				"honeypot.action": "Ban",
 				"logs.message-update-style": "Separate",
 				"moderation.confirm-recent": 10,
-				"appeals.questions": ["  Why?  ", ""],
+				"appeals.questions": ["Why?", "Why?", " "],
 			},
 		});
 
@@ -148,7 +148,8 @@ describe("parseConfigurationFile", () => {
 			honeypotAction: "Ban",
 			logsMessageUpdateStyle: "Separate",
 			moderationConfirmRecentMinutes: 10,
-			appealsQuestions: ["Why?"],
+			// The bot drops the copies only, and trims when it opens a form:
+			appealsQuestions: ["Why?", " "],
 		});
 		expect(
 			issuesOf({
@@ -157,7 +158,7 @@ describe("parseConfigurationFile", () => {
 					"timezone": "Mars/Olympus",
 					"honeypot.action": "Mute",
 					"moderation.confirm-recent": 61,
-					"appeals.questions": ["1", "2", "3", "4", "5", "6"],
+					"appeals.questions": "Why?",
 				},
 			}).map((issue) => issue.path),
 		).toStrictEqual([
@@ -166,6 +167,15 @@ describe("parseConfigurationFile", () => {
 			"settings.moderation.confirm-recent",
 			"settings.appeals.questions",
 		]);
+	});
+
+	it("imports the appeal questions it exports, however long, as the bot does", () => {
+		const questions = ["x".repeat(1001), "1", "2", "3", "4", "5"];
+		const parsed = read(createConfigurationFile(settings({ appealsQuestions: questions }), []));
+
+		expect(parsed.settings.find(({ key }) => key === "appealsQuestions")?.value).toStrictEqual(
+			questions,
+		);
 	});
 
 	it("leaves the rules alone when the file has no automod section", () => {

@@ -117,8 +117,9 @@ describe("parseSettingsChanges", () => {
 	});
 
 	it("refuses the settings only the bot edits, a reset included", () => {
+		expect([...BOT_ONLY_SETTINGS]).toContain("updatesChannel");
 		for (const key of BOT_ONLY_SETTINGS) {
-			for (const value of [[], null]) {
+			for (const value of [[], null, CHANNEL]) {
 				expect(parseSettingsChanges([[key, value]]).errors).toStrictEqual([
 					`${key}: This setting cannot be changed from the dashboard.`,
 				]);

@@ -14,9 +14,6 @@ import { isSnowflake } from "#shared/utils/snowflake";
 export const MAXIMUM_SETTING_LIST_LENGTH = 250;
 const MAXIMUM_COMMAND_NAME_LENGTH = 32;
 const MAXIMUM_UNIQUE_ROLE_SET_NAME_LENGTH = 32;
-/** The most questions an appeal form asks, as the bot's `MaximumAppealQuestions`. */
-const MAXIMUM_APPEAL_QUESTIONS = 5;
-const MAXIMUM_APPEAL_QUESTION_LENGTH = 1000;
 /** The longest a recent case asks for a confirmation, as the bot's `moderation.confirm-recent`. */
 const MAXIMUM_CONFIRM_RECENT_MINUTES = 60;
 
@@ -82,17 +79,15 @@ const validateConfirmRecentMinutes: Validator = (value) =>
 		? value
 		: fail(`Expected a whole number of minutes from 0 to ${MAXIMUM_CONFIRM_RECENT_MINUTES}.`);
 
-const validateAppealQuestions: Validator = (value) => {
-	const questions = list(value, (item) =>
-		typeof item === "string" && item.length <= MAXIMUM_APPEAL_QUESTION_LENGTH
-			? item.trim()
-			: fail(`Expected questions of at most ${MAXIMUM_APPEAL_QUESTION_LENGTH} characters.`),
-	).filter((question) => question !== "");
-	if (questions.length > MAXIMUM_APPEAL_QUESTIONS) {
-		fail(`Expected at most ${MAXIMUM_APPEAL_QUESTIONS} questions.`);
-	}
-	return questions;
-};
+// Any text, as the bot's `appeals.questions` takes it: the bot trims them and
+// asks the first five when it opens a form, so a longer or blank one is kept.
+const validateAppealQuestions: Validator = (value) => [
+	...new Set(
+		list(value, (item) =>
+			typeof item === "string" ? item : fail("Expected questions as text."),
+		),
+	),
+];
 
 const validateCommandNames: Validator = (value) => [
 	...new Set(
@@ -160,11 +155,16 @@ const ValueValidators: Partial<Record<StoredKey, Validator>> = {
 };
 
 /**
- * Settings only the bot edits: the `/commands` modal owns
- * `commandsRestrictions`, in a shape this dashboard does not check. A write,
- * including a `null` reset, is refused.
+ * Settings only the bot edits, so a write, a `null` reset included, is
+ * refused: the `/commands` modal owns `commandsRestrictions`, in a shape this
+ * dashboard does not check, and a change of `updatesChannel` has to move the
+ * follow of the support server's announcements, which only the bot does
+ * (`syncUpdatesChannelFollow`).
  */
-export const BOT_ONLY_SETTINGS: ReadonlySet<string> = new Set<StoredKey>(["commandsRestrictions"]);
+export const BOT_ONLY_SETTINGS: ReadonlySet<string> = new Set<StoredKey>([
+	"commandsRestrictions",
+	"updatesChannel",
+]);
 
 const refuse: Validator = () => fail("This setting cannot be changed from the dashboard.");
 

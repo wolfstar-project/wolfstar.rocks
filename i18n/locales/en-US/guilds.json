@@ -26,6 +26,7 @@
 				"maximum": "",
 				"mentionsAllowed": "",
 				"minimum": "",
+				"perChannel": "",
 				"timePeriod": "",
 				"words": ""
 			},
@@ -191,6 +192,10 @@
 					"description": "",
 					"name": ""
 				},
+				"Polls": {
+					"description": "",
+					"name": ""
+				},
 				"Spoilers": {
 					"description": "",
 					"name": ""
@@ -348,7 +353,6 @@
 			"configure": "",
 			"descriptions": {
 				"automod": "",
-				"logs": "",
 				"moderation": "",
 				"roles": ""
 			},
@@ -521,10 +525,6 @@
 				"description": "Receives a log message when any channel is updated, including the changes made.",
 				"name": "Channel Update Logs"
 			},
-			"logsCommand": {
-				"description": "",
-				"name": ""
-			},
 			"logsEmojiCreate": {
 				"description": "Receives a log message when a new emoji is created.",
 				"name": "Emoji Create Logs"
@@ -536,6 +536,14 @@
 			"logsEmojiUpdate": {
 				"description": "Receives a log message when an emoji is updated, including the changes made.",
 				"name": "Emoji Update Logs"
+			},
+			"logsEvents": {
+				"description": "",
+				"name": ""
+			},
+			"logsExpressions": {
+				"description": "",
+				"name": ""
 			},
 			"logsIgnoreAll": {
 				"description": "Channels excluded from all types of logging.",
@@ -552,6 +560,14 @@
 			"logsImage": {
 				"description": "Receives re-uploaded copies of images posted in the server.",
 				"name": "Image Logs"
+			},
+			"logsIntegrations": {
+				"description": "",
+				"name": ""
+			},
+			"logsInvites": {
+				"description": "",
+				"name": ""
 			},
 			"logsMemberAdd": {
 				"description": "Receives a log message when a member joins the server.",
@@ -617,7 +633,7 @@
 				"description": "Receives a log message when the server settings are updated, including the changes made.",
 				"name": "Server Update Logs"
 			},
-			"logsSettings": {
+			"logsThreads": {
 				"description": "",
 				"name": ""
 			},

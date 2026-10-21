@@ -121,11 +121,51 @@ describe("parseConfigurationFile", () => {
 	it("leaves out a setting this dashboard does not manage and says so, and ignores a removed one", () => {
 		const parsed = read({
 			version: 1,
-			settings: { "timezone": "Europe/Rome", "modules.logs": false, "language": "it-IT" },
+			settings: { "music.volume": 50, "modules.logs": false, "language": "it-IT" },
 		});
 
-		expect(parsed.unsupported).toStrictEqual(["timezone"]);
+		expect(parsed.unsupported).toStrictEqual(["music.volume"]);
 		expect(parsed.settings.map(({ name }) => name)).toStrictEqual(["language"]);
+	});
+
+	it("reads the settings the bot added, and checks their values", () => {
+		const parsed = read({
+			version: 1,
+			settings: {
+				"timezone": "Europe/Rome",
+				"honeypot.action": "Ban",
+				"logs.message-update-style": "Separate",
+				"moderation.confirm-recent": 10,
+				"appeals.questions": ["  Why?  ", ""],
+			},
+		});
+
+		expect(parsed.unsupported).toStrictEqual([]);
+		expect(
+			Object.fromEntries(parsed.settings.map(({ key, value }) => [key, value])),
+		).toStrictEqual({
+			timezone: "Europe/Rome",
+			honeypotAction: "Ban",
+			logsMessageUpdateStyle: "Separate",
+			moderationConfirmRecentMinutes: 10,
+			appealsQuestions: ["Why?"],
+		});
+		expect(
+			issuesOf({
+				version: 1,
+				settings: {
+					"timezone": "Mars/Olympus",
+					"honeypot.action": "Mute",
+					"moderation.confirm-recent": 61,
+					"appeals.questions": ["1", "2", "3", "4", "5", "6"],
+				},
+			}).map((issue) => issue.path),
+		).toStrictEqual([
+			"settings.timezone",
+			"settings.honeypot.action",
+			"settings.moderation.confirm-recent",
+			"settings.appeals.questions",
+		]);
 	});
 
 	it("leaves the rules alone when the file has no automod section", () => {

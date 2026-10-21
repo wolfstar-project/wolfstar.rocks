@@ -82,6 +82,9 @@
 								"minimum": {
 									"type": "string"
 								},
+								"perChannel": {
+									"type": "string"
+								},
 								"timePeriod": {
 									"type": "string"
 								},
@@ -577,6 +580,18 @@
 									},
 									"additionalProperties": false
 								},
+								"Polls": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
 								"Spoilers": {
 									"type": "object",
 									"properties": {
@@ -1046,9 +1061,6 @@
 							"type": "object",
 							"properties": {
 								"automod": {
-									"type": "string"
-								},
-								"logs": {
 									"type": "string"
 								},
 								"moderation": {
@@ -1567,18 +1579,6 @@
 							},
 							"additionalProperties": false
 						},
-						"logsCommand": {
-							"type": "object",
-							"properties": {
-								"description": {
-									"type": "string"
-								},
-								"name": {
-									"type": "string"
-								}
-							},
-							"additionalProperties": false
-						},
 						"logsEmojiCreate": {
 							"type": "object",
 							"properties": {
@@ -1604,6 +1604,30 @@
 							"additionalProperties": false
 						},
 						"logsEmojiUpdate": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"logsEvents": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"logsExpressions": {
 							"type": "object",
 							"properties": {
 								"description": {
@@ -1652,6 +1676,30 @@
 							"additionalProperties": false
 						},
 						"logsImage": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"logsIntegrations": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"logsInvites": {
 							"type": "object",
 							"properties": {
 								"description": {
@@ -1855,7 +1903,7 @@
 							},
 							"additionalProperties": false
 						},
-						"logsSettings": {
+						"logsThreads": {
 							"type": "object",
 							"properties": {
 								"description": {

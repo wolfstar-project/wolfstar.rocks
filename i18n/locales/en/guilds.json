@@ -26,6 +26,7 @@
 				"maximum": "Maximum",
 				"mentionsAllowed": "Mention points allowed",
 				"minimum": "Minimum length",
+				"perChannel": "Count everyone in the channel together",
 				"timePeriod": "Time period (seconds)",
 				"words": "Words"
 			},
@@ -191,6 +192,10 @@
 					"description": "Links to known phishing domains, except the allowed ones.",
 					"name": "Phishing links"
 				},
+				"Polls": {
+					"description": "Every message with a native Discord poll breaks the rule.",
+					"name": "Polls"
+				},
 				"Spoilers": {
 					"description": "Messages with a spoiler, in their text or as an attachment.",
 					"name": "Spoilers"
@@ -236,12 +241,12 @@
 			"form_aria": "Channel settings form",
 			"groups": {
 				"channels": "Channels",
-				"emojis": "Emojis",
+				"emojis": "Emojis & stickers",
 				"members": "Members",
 				"messages": "Messages",
 				"reactions": "Reactions",
 				"roles": "Roles",
-				"server": "Server & bot"
+				"server": "Server"
 			},
 			"ignore_dialog_title": "Ignore channels",
 			"ignored_count": "No channels ignored | 1 channel ignored | {count} channels ignored",
@@ -348,7 +353,6 @@
 			"configure": "Configure",
 			"descriptions": {
 				"automod": "Message filters and their escalation rules.",
-				"logs": "Server event logging.",
 				"moderation": "Manual moderation actions and their case history.",
 				"roles": "Role automation: initial roles and sticky roles."
 			},
@@ -521,10 +525,6 @@
 				"description": "Receives a log message when any channel is updated, including the changes made.",
 				"name": "Channel Update Logs"
 			},
-			"logsCommand": {
-				"description": "Receives a log message when a member runs a WolfStar command.",
-				"name": "Command Logs"
-			},
 			"logsEmojiCreate": {
 				"description": "Receives a log message when a new emoji is created.",
 				"name": "Emoji Create Logs"
@@ -536,6 +536,14 @@
 			"logsEmojiUpdate": {
 				"description": "Receives a log message when an emoji is updated, including the changes made.",
 				"name": "Emoji Update Logs"
+			},
+			"logsEvents": {
+				"description": "Receives a log message when a scheduled event is created, changed, started, ended or deleted.",
+				"name": "Event Logs"
+			},
+			"logsExpressions": {
+				"description": "Receives a log message when a sticker or a soundboard sound is created, changed or deleted.",
+				"name": "Sticker and Sound Logs"
 			},
 			"logsIgnoreAll": {
 				"description": "Channels excluded from all types of logging.",
@@ -552,6 +560,14 @@
 			"logsImage": {
 				"description": "Receives re-uploaded copies of images posted in the server.",
 				"name": "Image Logs"
+			},
+			"logsIntegrations": {
+				"description": "Receives a log message when an app is added or removed, and when the webhooks of a channel change.",
+				"name": "App and Webhook Logs"
+			},
+			"logsInvites": {
+				"description": "Receives a log message when an invite is created or deleted.",
+				"name": "Invite Logs"
 			},
 			"logsMemberAdd": {
 				"description": "Receives a log message when a member joins the server.",
@@ -617,9 +633,9 @@
 				"description": "Receives a log message when the server settings are updated, including the changes made.",
 				"name": "Server Update Logs"
 			},
-			"logsSettings": {
-				"description": "Receives a log message when WolfStar's settings for this server change.",
-				"name": "Settings Logs"
+			"logsThreads": {
+				"description": "Receives a log message when a thread is created, deleted, renamed, archived or locked.",
+				"name": "Thread Logs"
 			},
 			"moderationChannel": {
 				"description": "Receives all moderation case logs. Required for the options below to work.",

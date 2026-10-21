@@ -93,8 +93,8 @@ describe("DashboardSidebar", () => {
 	it("counts the enabled modules and flags a module that is off", async () => {
 		const wrapper = await mountSidebar();
 
-		// Automod, Moderation and Events are on; Roles is off. Commands is not a module.
-		expect(rowFor(wrapper, "Modules").find(".dashboard-nav-count").text()).toBe("3");
+		// Automod and Moderation are on; Roles is off. Commands and Events are not modules.
+		expect(rowFor(wrapper, "Modules").find(".dashboard-nav-count").text()).toBe("2");
 		expect(rowFor(wrapper, "Roles").find('[title="Module is off"]').exists()).toBe(true);
 		expect(rowFor(wrapper, "Moderation").find('[title="Module is off"]').exists()).toBe(false);
 	});

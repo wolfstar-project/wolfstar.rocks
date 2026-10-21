@@ -100,7 +100,14 @@ describe("fetchGuildData", () => {
 	});
 
 	it("keeps the defaults for the tables that have no row", async () => {
-		const { orm } = createOrm({ Guild: { id: BigInt(GUILD_ID), language: "en-US" } });
+		const { orm } = createOrm({
+			Guild: {
+				id: BigInt(GUILD_ID),
+				language: "en-US",
+				timezone: "UTC",
+				updatesChannelId: null,
+			},
+		});
 
 		const data = await fetchGuildData(orm, GUILD_ID);
 
@@ -168,7 +175,13 @@ describe("writeGuildData", () => {
 		expect(upserts).toStrictEqual([
 			{
 				table: "Guild",
-				create: { id: BigInt(GUILD_ID), language: "de-DE" },
+				// A created row starts from the defaults of its other columns:
+				create: {
+					id: BigInt(GUILD_ID),
+					language: "de-DE",
+					timezone: "UTC",
+					updatesChannelId: null,
+				},
 				update: { language: "de-DE" },
 			},
 		]);

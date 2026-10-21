@@ -54,16 +54,18 @@ function fields(
 /** English labels of the module flags, which have no entry list of their own. */
 const MODULE_LABELS: Record<(typeof GUILD_MODULES)[number]["key"], string> = {
 	modulesAutomod: "Auto-moderation Module",
-	modulesLogs: "Logs Module",
 	modulesModeration: "Moderation Module",
 	modulesRoles: "Roles Module",
 };
 
 /**
- * `modulesCommands` is no longer a module of the dashboard, but audit rows that
- * changed it stay in the activity feed.
+ * `modulesCommands` and `modulesLogs` are no longer settings, but audit rows
+ * that changed them stay in the activity feed.
  */
-const LEGACY_MODULE_LABELS = { modulesCommands: "Commands Module" } as const;
+const LEGACY_MODULE_LABELS = {
+	modulesCommands: "Commands Module",
+	modulesLogs: "Logs Module",
+} as const;
 
 export const AUDIT_FIELD_METADATA: Readonly<Record<string, AuditFieldMetadata>> =
 	Object.fromEntries([
@@ -133,9 +135,11 @@ const LEGACY_AUDIT_FIELD_ALIASES: Readonly<Record<string, string>> = {
 	rolesInitialBots: "rolesInitialRobots",
 };
 
-/** V6 settings the V7 schema has no column for, kept so old rows stay readable. */
+/** Settings the schema no longer has, kept so old rows stay readable. */
 const LEGACY_AUDIT_FIELD_METADATA: Readonly<Record<string, AuditFieldMetadata>> = {
 	prefix: { label: "Prefix", type: "string", array: false },
+	logsCommand: { label: "Command Logs", type: "channel", array: false },
+	logsSettings: { label: "Settings Logs", type: "channel", array: false },
 };
 
 export function humanizeKey(key: string): string {

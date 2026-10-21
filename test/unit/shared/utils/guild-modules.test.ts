@@ -8,26 +8,27 @@ describe("guild modules registry", () => {
 
 		expect(keys.toSorted()).toStrictEqual([
 			"modulesAutomod",
-			"modulesLogs",
 			"modulesModeration",
 			"modulesRoles",
 		]);
 		expect(new Set(sections).size).toBe(GUILD_MODULES.length);
 	});
 
-	it("leaves Commands out: it is a section, not a module", () => {
-		expect(GUILD_MODULES.map((module) => module.key)).not.toContain("modulesCommands");
+	it("leaves Commands and Logs out: the bot dropped them, they are sections, not modules", () => {
+		const keys: readonly string[] = GUILD_MODULES.map((module) => module.key);
+
+		expect(keys).not.toContain("modulesCommands");
+		expect(keys).not.toContain("modulesLogs");
 		expect(GUILD_MODULES.map((module) => module.section)).not.toContain("commands");
 	});
 
 	it("counts only modules whose flag is exactly true", () => {
 		expect(countEnabledModules(undefined)).toBe(0);
 		expect(countEnabledModules({})).toBe(0);
-		// Whole settings carry `modulesCommands` too; it is not a module here.
+		// Files and audit rows written before can still carry `modulesLogs`; it is not a module.
 		const settings = {
 			modulesAutomod: true,
-			modulesCommands: true,
-			modulesLogs: false,
+			modulesLogs: true,
 			modulesRoles: true,
 		};
 

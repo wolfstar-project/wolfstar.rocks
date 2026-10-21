@@ -26,6 +26,7 @@
 				"maximum": "",
 				"mentionsAllowed": "",
 				"minimum": "",
+				"perChannel": "",
 				"timePeriod": "",
 				"words": ""
 			},
@@ -191,6 +192,10 @@
 					"description": "",
 					"name": ""
 				},
+				"Polls": {
+					"description": "",
+					"name": ""
+				},
 				"Spoilers": {
 					"description": "",
 					"name": ""
@@ -348,7 +353,6 @@
 			"configure": "",
 			"descriptions": {
 				"automod": "",
-				"logs": "",
 				"moderation": "",
 				"roles": ""
 			},
@@ -521,10 +525,6 @@
 				"description": "Recibe un mensaje de registro cuando se actualiza cualquier canal, incluyendo los cambios realizados.",
 				"name": "Registros de canal actualizado"
 			},
-			"logsCommand": {
-				"description": "",
-				"name": ""
-			},
 			"logsEmojiCreate": {
 				"description": "Recibe un mensaje de registro cuando se crea un nuevo emoji.",
 				"name": "Registros de emoji creado"
@@ -536,6 +536,14 @@
 			"logsEmojiUpdate": {
 				"description": "Recibe un mensaje de registro cuando se actualiza un emoji, incluyendo los cambios realizados.",
 				"name": "Registros de emoji actualizado"
+			},
+			"logsEvents": {
+				"description": "",
+				"name": ""
+			},
+			"logsExpressions": {
+				"description": "",
+				"name": ""
 			},
 			"logsIgnoreAll": {
 				"description": "Canales excluidos de todos los tipos de registro.",
@@ -552,6 +560,14 @@
 			"logsImage": {
 				"description": "Recibe copias resubidas de las imágenes publicadas en el servidor.",
 				"name": "Registros de imágenes"
+			},
+			"logsIntegrations": {
+				"description": "",
+				"name": ""
+			},
+			"logsInvites": {
+				"description": "",
+				"name": ""
 			},
 			"logsMemberAdd": {
 				"description": "Recibe un mensaje de registro cuando un miembro se une al servidor.",
@@ -617,7 +633,7 @@
 				"description": "Recibe un mensaje de registro cuando se actualiza la configuración del servidor, incluyendo los cambios realizados.",
 				"name": "Registros de servidor actualizado"
 			},
-			"logsSettings": {
+			"logsThreads": {
 				"description": "",
 				"name": ""
 			},

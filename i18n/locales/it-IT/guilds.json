@@ -26,6 +26,7 @@
 				"maximum": "Massimo",
 				"mentionsAllowed": "Punti menzione consentiti",
 				"minimum": "Lunghezza minima",
+				"perChannel": "",
 				"timePeriod": "Intervallo di tempo (secondi)",
 				"words": "Parole"
 			},
@@ -191,6 +192,10 @@
 					"description": "Link a domini di phishing noti, tranne quelli consentiti.",
 					"name": "Link di phishing"
 				},
+				"Polls": {
+					"description": "",
+					"name": ""
+				},
 				"Spoilers": {
 					"description": "Messaggi con uno spoiler, nel testo o come allegato.",
 					"name": "Spoiler"
@@ -348,7 +353,6 @@
 			"configure": "Configura",
 			"descriptions": {
 				"automod": "Filtri dei messaggi e le loro regole di inasprimento.",
-				"logs": "Registrazione degli eventi del server.",
 				"moderation": "Azioni di moderazione manuali e la cronologia dei loro casi.",
 				"roles": "Automazione dei ruoli: ruoli iniziali e ruoli persistenti."
 			},
@@ -521,10 +525,6 @@
 				"description": "Riceve un messaggio di log quando un canale viene aggiornato, incluse le modifiche apportate.",
 				"name": "Log aggiornamento canale"
 			},
-			"logsCommand": {
-				"description": "Riceve un messaggio di log quando un membro usa un comando di WolfStar.",
-				"name": "Log dei comandi"
-			},
 			"logsEmojiCreate": {
 				"description": "Riceve un messaggio di log quando viene creata una nuova emoji.",
 				"name": "Log creazione emoji"
@@ -536,6 +536,14 @@
 			"logsEmojiUpdate": {
 				"description": "Riceve un messaggio di log quando un'emoji viene aggiornata, incluse le modifiche apportate.",
 				"name": "Log aggiornamento emoji"
+			},
+			"logsEvents": {
+				"description": "",
+				"name": ""
+			},
+			"logsExpressions": {
+				"description": "",
+				"name": ""
 			},
 			"logsIgnoreAll": {
 				"description": "Canali esclusi da tutti i tipi di registrazione.",
@@ -552,6 +560,14 @@
 			"logsImage": {
 				"description": "Riceve copie ricaricate delle immagini pubblicate nel server.",
 				"name": "Log immagini"
+			},
+			"logsIntegrations": {
+				"description": "",
+				"name": ""
+			},
+			"logsInvites": {
+				"description": "",
+				"name": ""
 			},
 			"logsMemberAdd": {
 				"description": "Riceve un messaggio di log quando un membro si unisce al server.",
@@ -617,9 +633,9 @@
 				"description": "Riceve un messaggio di log quando le impostazioni del server vengono aggiornate, incluse le modifiche apportate.",
 				"name": "Log aggiornamento server"
 			},
-			"logsSettings": {
-				"description": "Riceve un messaggio di log quando cambiano le impostazioni di WolfStar per questo server.",
-				"name": "Log delle impostazioni"
+			"logsThreads": {
+				"description": "",
+				"name": ""
 			},
 			"moderationChannel": {
 				"description": "Riceve tutti i log dei casi di moderazione. Necessario perché le opzioni qui sotto funzionino.",

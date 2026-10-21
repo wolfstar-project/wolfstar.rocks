@@ -1,17 +1,24 @@
-import type {
-	GuildData,
-	PermissionsNode,
-	StickyRole,
-	UniqueRoleSet,
-} from "#server/database/settings/types";
 import { Columns, isStoredKey, type StoredKey } from "#server/database/settings/columns";
 import { getDefaultGuildSettings } from "#server/database/settings/constants";
+import {
+	HoneypotActions,
+	MessageUpdateStyles,
+	type GuildData,
+	type PermissionsNode,
+	type StickyRole,
+	type UniqueRoleSet,
+} from "#server/database/settings/types";
 import { isSnowflake } from "#shared/utils/snowflake";
 
 /** The most entries a list setting holds (roles, channels, commands, nodes). */
 export const MAXIMUM_SETTING_LIST_LENGTH = 250;
 const MAXIMUM_COMMAND_NAME_LENGTH = 32;
 const MAXIMUM_UNIQUE_ROLE_SET_NAME_LENGTH = 32;
+/** The most questions an appeal form asks, as the bot's `MaximumAppealQuestions`. */
+const MAXIMUM_APPEAL_QUESTIONS = 5;
+const MAXIMUM_APPEAL_QUESTION_LENGTH = 1000;
+/** The longest a recent case asks for a confirmation, as the bot's `moderation.confirm-recent`. */
+const MAXIMUM_CONFIRM_RECENT_MINUTES = 60;
 
 // BCP 47 tags as the bot ships them: `en-US`, `es-419`, `pt-BR`, …
 const LANGUAGE_PATTERN = /^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/u;
@@ -50,6 +57,42 @@ const validateLanguage: Validator = (value) =>
 	typeof value === "string" && LANGUAGE_PATTERN.test(value)
 		? value
 		: fail("Expected a language tag.");
+
+let timeZones: ReadonlySet<string> | null = null;
+
+// The IANA names the runtime knows, and `UTC`, as the bot's `isTimeZone()` reads them:
+const validateTimeZone: Validator = (value) => {
+	timeZones ??= new Set(["UTC", ...Intl.supportedValuesOf("timeZone")]);
+	return typeof value === "string" && timeZones.has(value)
+		? value
+		: fail("Expected the name of a time zone, such as Europe/Rome.");
+};
+
+function oneOf(values: readonly string[]): Validator {
+	return (value) =>
+		typeof value === "string" && values.includes(value)
+			? value
+			: fail(`Expected one of ${values.join(", ")}.`);
+}
+
+const validateConfirmRecentMinutes: Validator = (value) =>
+	Number.isInteger(value) &&
+	(value as number) >= 0 &&
+	(value as number) <= MAXIMUM_CONFIRM_RECENT_MINUTES
+		? value
+		: fail(`Expected a whole number of minutes from 0 to ${MAXIMUM_CONFIRM_RECENT_MINUTES}.`);
+
+const validateAppealQuestions: Validator = (value) => {
+	const questions = list(value, (item) =>
+		typeof item === "string" && item.length <= MAXIMUM_APPEAL_QUESTION_LENGTH
+			? item.trim()
+			: fail(`Expected questions of at most ${MAXIMUM_APPEAL_QUESTION_LENGTH} characters.`),
+	).filter((question) => question !== "");
+	if (questions.length > MAXIMUM_APPEAL_QUESTIONS) {
+		fail(`Expected at most ${MAXIMUM_APPEAL_QUESTIONS} questions.`);
+	}
+	return questions;
+};
 
 const validateCommandNames: Validator = (value) => [
 	...new Set(
@@ -105,7 +148,12 @@ const validateStickyRoles: Validator = (value) =>
  */
 const ValueValidators: Partial<Record<StoredKey, Validator>> = {
 	language: validateLanguage,
+	timezone: validateTimeZone,
 	commandsDisabled: validateCommandNames,
+	honeypotAction: oneOf(HoneypotActions),
+	logsMessageUpdateStyle: oneOf(MessageUpdateStyles),
+	moderationConfirmRecentMinutes: validateConfirmRecentMinutes,
+	appealsQuestions: validateAppealQuestions,
 	permissionsUsers: validatePermissionNodes,
 	permissionsRoles: validatePermissionNodes,
 	rolesUniqueRoleSets: validateUniqueRoleSets,

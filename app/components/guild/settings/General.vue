@@ -134,19 +134,31 @@
 					<p class="text-sm text-error">{{ error }}</p>
 				</template>
 			</UFormField>
-			<UFormField :label="ts('dashboard.coming_soon.time_zone')">
+			<UFormField :label="ts('guild_settings.general.time_zone')" name="timezone">
 				<template #description>
-					<p class="text-[0.8125rem] text-muted">
-						{{ ts("dashboard.coming_soon.time_zone_description") }}
+					<p id="timezone-description" class="text-[0.8125rem] text-muted">
+						{{ ts("guild_settings.general.time_zone_description") }}
 					</p>
 				</template>
-				<UInput
-					disabled
+				<SelectBase
+					id="timezone"
+					v-model="timeZoneValue"
+					:options="timeZoneItems"
+					:clearable="false"
 					class="w-full"
-					icon="ic:round-access-time"
-					:model-value="ts('dashboard.coming_soon.badge')"
-					:aria-label="ts('dashboard.coming_soon.time_zone')"
+					:aria-label="ts('guild_settings.general.time_zone')"
+					aria-describedby="timezone-description timezone-now"
 				/>
+				<!-- No error slot here: Nuxt UI shows the help only while it has none. -->
+				<template #help>
+					<p id="timezone-now" class="text-[0.8125rem] text-muted">
+						{{
+							zoneTime
+								? ts("guild_settings.general.time_zone_now", { time: zoneTime })
+								: ""
+						}}
+					</p>
+				</template>
 			</UFormField>
 		</GuildSettingsForm>
 	</section>
@@ -243,6 +255,7 @@ import {
 } from "#shared/schemas";
 import { ChannelType } from "discord-api-types/v10";
 import { guildLanguageOptions, mapLanguageKeysToNames } from "~/utils/guild-languages";
+import { DEFAULT_TIME_ZONE, timeInZone, timeZoneOptions } from "~/utils/time-zones";
 
 const { languages } = defineProps<{
 	languages: string[];
@@ -291,6 +304,13 @@ const { entries: moderationEntries, total: moderationTotal } = useModerationLog(
 	limit: CHART_ENTRY_LIMIT,
 	filters: computed(() => ({ from: activityFrom.value })),
 });
+// Only the count is read: one report is the smallest page the route serves.
+const { total: openReportTotal } = useReports({
+	guildId: () => guildData.value?.id,
+	limit: 1,
+	status: "Open",
+});
+
 const { total: commandTotal } = useCommandLog({
 	guildId: () => guildData.value?.id,
 	limit: 1,
@@ -370,10 +390,9 @@ const serverStats = computed(() => {
 			value: STAT_PLACEHOLDER,
 		},
 		{
-			label: ts("dashboard.coming_soon.stat_open_reports"),
-			note: ts("dashboard.coming_soon.badge"),
-			placeholder: true,
-			value: STAT_PLACEHOLDER,
+			label: ts("guild_settings.general.stat_open_reports"),
+			note: ts("guild_settings.general.stat_open_reports_note"),
+			value: openReportTotal.value.toLocaleString(),
 		},
 		{
 			label: ts("guild_settings.general.stat_commands"),
@@ -416,7 +435,23 @@ const state = reactive<Schema>({
 			value: currentLangKey,
 		};
 	})(),
+	timezone: guildSettings.value?.timezone ?? DEFAULT_TIME_ZONE,
 });
+
+// The offsets are read once: a zone changes its offset twice a year at most.
+const timeZoneItems = timeZoneOptions(new Date());
+const timeZoneValue = computed<string | string[] | null>({
+	get: () => state.timezone ?? DEFAULT_TIME_ZONE,
+	set: (value) => {
+		if (typeof value === "string" && value !== "") state.timezone = value;
+	},
+});
+
+// The clock of the chosen zone, so a wrong pick shows at a glance.
+const clock = useNow({ interval: 30_000 });
+const zoneTime = computed(() =>
+	timeInZone(state.timezone ?? DEFAULT_TIME_ZONE, clock.value, timeLocale.value),
+);
 
 // The form keeps the chosen option; the select works with its tag.
 const languageValue = computed<string | string[] | null>({
@@ -432,6 +467,9 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 
 	if (formState.language) {
 		changes.language = formState.language.value;
+	}
+	if (formState.timezone) {
+		changes.timezone = formState.timezone;
 	}
 
 	return changes;

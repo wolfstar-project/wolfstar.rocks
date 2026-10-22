@@ -119,6 +119,7 @@ const MEMBER_LOGS = [
 	"logsMemberRemove",
 	"logsMemberNicknameUpdate",
 	"logsMemberUsernameUpdate",
+	"logsBoosts",
 	"logsPrune",
 ] as const;
 
@@ -306,6 +307,41 @@ describe("channels guild settings", () => {
 
 			await startSelecting(wrapper);
 			expect(wrapper.find('[role="status"]').text()).toBe("No logs selected");
+		});
+	});
+
+	describe("delivery", () => {
+		it("shows how the logs reach their channels, from the saved settings", async () => {
+			mockGuildSettings.value = createMockGuildData(GUILD_ID, {
+				logsMessageUpdateStyle: "Separate",
+				logsWebhooks: true,
+			});
+			const wrapper = await mountReady();
+
+			const delivery = wrapper.find('[aria-labelledby="channels-delivery"]');
+			expect(delivery.find("h3").text()).toBe("Delivery");
+			expect(
+				delivery
+					.find('[aria-label="Toggle Send Through Webhooks"]')
+					.attributes("aria-checked"),
+			).toBe("true");
+			expect(
+				delivery.find('[role="radio"][value="Separate"]').attributes("aria-checked"),
+			).toBe("true");
+			expect(delivery.text()).toContain(
+				"One text: what was removed struck through, what was added in bold.",
+			);
+		});
+
+		it("stages the style of edited messages that is picked", async () => {
+			const wrapper = await mountReady();
+
+			await wrapper.find('[role="radio"][value="Separate"]').trigger("click");
+			await flushPromises();
+
+			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+				logsMessageUpdateStyle: "Separate",
+			});
 		});
 	});
 });

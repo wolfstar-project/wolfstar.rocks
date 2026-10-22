@@ -119,7 +119,17 @@ function sectionComponent(loader: () => Promise<Component>, kind: DashboardSkele
 // Pre-define async components outside of computed to avoid re-creating
 // wrapper instances on every reactive update, which would unmount/remount.
 const asyncComponentMap: Record<string, ReturnType<typeof defineAsyncComponent>> = {
+	appeals: sectionComponent(() => import("~/components/guild/settings/Appeals.vue"), "form"),
+	autodelete: sectionComponent(
+		() => import("~/components/guild/settings/AutoDelete.vue"),
+		"table",
+	),
+	automessage: sectionComponent(
+		() => import("~/components/guild/settings/AutoMessage.vue"),
+		"form",
+	),
 	automod: sectionComponent(() => import("~/components/guild/settings/Automod.vue"), "table"),
+	autopurge: sectionComponent(() => import("~/components/guild/settings/AutoPurge.vue"), "table"),
 	channels: sectionComponent(() => import("~/components/guild/settings/Channels.vue"), "form"),
 	commands: sectionComponent(
 		() => import("~/components/guild/settings/DisabledCommands.vue"),
@@ -129,6 +139,7 @@ const asyncComponentMap: Record<string, ReturnType<typeof defineAsyncComponent>>
 		() => import("~/components/guild/settings/Moderation.vue"),
 		"form",
 	),
+	honeypot: sectionComponent(() => import("~/components/guild/settings/Honeypot.vue"), "form"),
 	modules: sectionComponent(() => import("~/components/guild/settings/Modules.vue"), "modules"),
 	roles: sectionComponent(() => import("~/components/guild/settings/Roles.vue"), "form"),
 };

@@ -5,6 +5,7 @@ import type {
 	SingleSettingKey,
 	ToggleSettingKey,
 } from "../types/configurableData";
+import type { ChoiceSettingKey, NumberSettingKey } from "./settings-choices";
 
 /**
  * The dashboard-managed settings of the V7 contract, grouped the way the
@@ -138,6 +139,33 @@ export const ConfigurableModerationToggles: SettingEntry<ToggleSettingKey>[] = [
 		name: "Track Manual Timeouts",
 		description: "Opens a moderation case when a member is timed out by hand.",
 	},
+	{
+		key: "moderationTrackKicks",
+		name: "Track Manual Kicks",
+		description:
+			"Opens a moderation case when a member is kicked by hand. WolfStar reads the audit log for every member who leaves, so it needs View Audit Log.",
+	},
+	{
+		key: "moderationTrackRoles",
+		name: "Track Manual Roles",
+		description:
+			"Mutes or restricts a member, as the commands do, when someone gives them the muted role or a restriction role by hand.",
+	},
+	{
+		key: "moderationDehoist",
+		name: "Dehoist Names",
+		description:
+			"Cleans the names of the members when they join or change them: what lists a name above the others goes, and fancy fonts, symbols and emojis become plain letters. Accents stay, and sticky nicknames and members who can manage nicknames are left alone.",
+	},
+];
+
+export const ConfigurableModerationNumbers: SettingEntry<NumberSettingKey>[] = [
+	{
+		key: "moderationConfirmRecentMinutes",
+		name: "Confirm a Second Action",
+		description:
+			"Asks before acting on a member who got a case within these minutes, so two moderators do not punish twice. 0 never asks.",
+	},
 ];
 
 // #endregion
@@ -184,6 +212,12 @@ export const ConfigurableLoggingChannels: SettingEntry<SingleSettingKey>[] = [
 		key: "logsMemberUsernameUpdate",
 		name: "Member Username Update Logs",
 		description: "Receives a log message when a member changes their username.",
+	},
+	{
+		key: "logsBoosts",
+		name: "Boost Logs",
+		description:
+			"Receives a log message when a member starts boosting the server and when they stop, with how long they boosted for.",
 	},
 	{
 		key: "logsMessageDelete",
@@ -335,6 +369,24 @@ export const ConfigurableLogToggles: SettingEntry<ToggleSettingKey>[] = [
 	},
 ];
 
+/** How the logs reach their channels, whatever the event. */
+export const ConfigurableLogDeliveryToggles: SettingEntry<ToggleSettingKey>[] = [
+	{
+		key: "logsWebhooks",
+		name: "Send Through Webhooks",
+		description:
+			"WolfStar creates a webhook in each log channel, whose name and avatar you can change. Without Manage Webhooks a channel gets the logs as before; the moderation log and the reports are always WolfStar's own messages.",
+	},
+];
+
+export const ConfigurableLogChoices: SettingEntry<Extract<ChoiceSettingKey, `logs${string}`>>[] = [
+	{
+		key: "logsMessageUpdateStyle",
+		name: "Edited Messages",
+		description: "How the log of an edited message shows what changed.",
+	},
+];
+
 // #endregion
 
 // #region Commands
@@ -377,6 +429,113 @@ export const ConfigurableReportToggles: SettingEntry<ToggleSettingKey>[] = [
 		key: "reportsNotify",
 		name: "Notify Reporter",
 		description: "Tells the reporter when a moderator acts on or dismisses their report.",
+	},
+];
+
+// #endregion
+
+// #region Honeypot
+
+/**
+ * The honeypot settings only `/honeypot` in Discord changes: the bot posts,
+ * rewrites or takes down the warning in the channel as they change, and checks
+ * its permissions there. The dashboard shows them.
+ */
+export const BotManagedHoneypotSettings = {
+	honeypotAction: {
+		key: "honeypotAction",
+		name: "Action",
+		description: "What WolfStar does to who writes in the honeypot channel.",
+	},
+	honeypotChannel: {
+		key: "honeypotChannel",
+		name: "Honeypot Channel",
+		description: "Nobody is caught while it is not set.",
+	},
+	honeypotWarning: {
+		key: "honeypotWarning",
+		name: "Keep a Warning in the Channel",
+		description:
+			"Without it the channel says nothing, which is harder for a bot to learn to avoid, and for a member too.",
+	},
+} as const satisfies {
+	[Key in "honeypotAction" | "honeypotChannel" | "honeypotWarning"]: SettingEntry<Key>;
+};
+
+export const ConfigurableHoneypotChannels: SettingEntry<SingleSettingKey>[] = [
+	{
+		key: "honeypotLogChannel",
+		name: "Report Catches To",
+		description:
+			"Every member it caught, with what they sent. The case still goes to the moderation logs.",
+	},
+];
+
+export const ConfigurableHoneypotToggles: SettingEntry<ToggleSettingKey>[] = [
+	{
+		key: "honeypotDirectMessage",
+		name: "Tell Them Why",
+		description:
+			"Tells the member it caught why, in a direct message. A hacked account that is softbanned can come back once its owner has it again.",
+	},
+	{
+		key: "honeypotRandomName",
+		name: "Rename It Every Day",
+		description: "The bots cannot avoid the channel by its name.",
+	},
+	{
+		key: "honeypotKeepActive",
+		name: "Keep It Active",
+		description:
+			"WolfStar sends a message there every day, so the channel does not look abandoned.",
+	},
+];
+
+// #endregion
+
+// #region Appeals
+
+/** The switch of the appeals, shown as the module's own. */
+export const ConfigurableAppealSwitch: SettingEntry<ToggleSettingKey>[] = [
+	{
+		key: "appealsEnabled",
+		name: "Appeals",
+		description: "Lets the members appeal their bans, mutes and timeouts.",
+	},
+];
+
+export const ConfigurableAppealChannels: SettingEntry<SingleSettingKey>[] = [
+	{
+		key: "appealsChannel",
+		name: "Appeals Channel",
+		description:
+			"Where the moderators accept or deny them. An appeal sent while it is not set never reaches them.",
+	},
+];
+
+export const ConfigurableAppealToggles: SettingEntry<ToggleSettingKey>[] = [
+	{
+		key: "appealsBans",
+		name: "Bans",
+		description: "Banned members can appeal; they do not need to be in the server.",
+	},
+	{
+		key: "appealsMutes",
+		name: "Mutes",
+		description: "Muted members can appeal their mute.",
+	},
+	{
+		key: "appealsTimeouts",
+		name: "Timeouts",
+		description: "Members can appeal a timeout while it lasts.",
+	},
+];
+
+export const ConfigurableAppealQuestions: SettingEntry<ListSettingKey>[] = [
+	{
+		key: "appealsQuestions",
+		name: "Form Questions",
+		description: "One question per field of the form. WolfStar asks the first five.",
 	},
 ];
 

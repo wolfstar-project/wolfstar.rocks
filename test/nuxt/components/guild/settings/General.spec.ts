@@ -1,5 +1,5 @@
 import type { GuildData } from "#server/database";
-import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
+import { mockNuxtImport, mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
 import { ChannelType } from "discord-api-types/v10";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
@@ -32,6 +32,9 @@ const mockGuildData = ref(
 		roles: [createMockRole({ id: "r1" }), createMockRole({ id: "r2" })],
 	}),
 );
+// Two members' reports wait for a moderator; the tile reads only the count.
+registerEndpoint("/api/guilds/123456789012345678/reports", () => ({ entries: [], total: 2 }));
+
 // UChart's tooltip needs the UApp provider the real app wraps every page in.
 const chartStub = { stubs: { UChart: true } };
 
@@ -139,7 +142,11 @@ describe("general guild settings", () => {
 		setupState.state.language = { label: "German", value: "de-DE" };
 		await nextTick();
 
-		expect(setupState.mapToGuildData(setupState.state)).toStrictEqual({ language: "de-DE" });
+		// The form owns both settings, and stages only the one that changed.
+		expect(setupState.mapToGuildData(setupState.state)).toStrictEqual({
+			language: "de-DE",
+			timezone: "UTC",
+		});
 		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({ language: "de-DE" });
 	});
 
@@ -228,13 +235,41 @@ describe("general guild settings", () => {
 				"Roles",
 			]);
 			expect(stats.find((stat) => stat.label === "Members")?.value).toBe("42");
-			// Nothing counts these yet, so they say so instead of showing a number.
+			// Nothing counts these yet, so it says so instead of showing a number.
 			expect(stats.find((stat) => stat.label === "AutoMod hits")?.value).toBe("—");
-			expect(stats.find((stat) => stat.label === "Open reports")?.value).toBe("—");
+			await vi.waitFor(() => {
+				const openReports = wrapper
+					.findAll("dl > div")
+					.find((card) => card.find("dt").text() === "Open reports");
+				expect(openReports?.find("dd").text()).toBe("2");
+			});
 			// Three channels besides the category, which has its own note.
 			expect(stats.find((stat) => stat.label === "Channels")?.value).toBe("3");
 			expect(wrapper.text()).toContain("1 category");
 			expect(stats.find((stat) => stat.label === "Roles")?.value).toBe("2");
+		});
+
+		it("edits the time zone of the server and tells the time it is there", async () => {
+			const wrapper = await mountSuspended(General, {
+				global: chartStub,
+				props: { languages: ["en-US"] },
+			});
+
+			await nextTick();
+
+			const timeZone = wrapper
+				.findAllComponents({ name: "SelectBase" })
+				.find((select) => select.props("ariaLabel") === "Time zone");
+			expect(timeZone?.props("modelValue")).toBe("UTC");
+			expect(wrapper.find("#timezone-now").text()).toContain("there now.");
+
+			timeZone?.vm.$emit("update:modelValue", "Europe/Rome");
+			await nextTick();
+			await nextTick();
+
+			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+				timezone: "Europe/Rome",
+			});
 		});
 
 		it("calls copy with server id and toast options when Copy Server ID is clicked", async () => {

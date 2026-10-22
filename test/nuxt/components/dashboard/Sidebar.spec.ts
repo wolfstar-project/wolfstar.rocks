@@ -129,14 +129,14 @@ describe("DashboardSidebar", () => {
 	it("offers the modules opened last as shortcuts", async () => {
 		const wrapper = await mountSidebar();
 
-		await rowFor(wrapper, "Events").find(".dashboard-nav-button").trigger("click");
+		await rowFor(wrapper, "Honeypot").find(".dashboard-nav-button").trigger("click");
 		await nextTick();
 		await rowFor(wrapper, "Roles").find(".dashboard-nav-button").trigger("click");
 		await nextTick();
 
 		const chips = wrapper.findAll(".dashboard-nav-chip").map((chip) => chip.text());
 		// The open section is not repeated as a shortcut.
-		expect(chips).toStrictEqual(["Events"]);
+		expect(chips).toStrictEqual(["Honeypot"]);
 	});
 
 	it("folds the modules away and leaves Commands and Logs", async () => {
@@ -153,13 +153,31 @@ describe("DashboardSidebar", () => {
 		expect(rowFor(wrapper, "Logs").exists()).toBe(true);
 	});
 
-	it("keeps Commands and Logs out of the modules, in a group of their own", async () => {
+	it("flags the honeypot without a channel and the appeals while they are off", async () => {
 		const wrapper = await mountSidebar();
 
-		// Only the modules have a title and fold; Commands and Logs sit below a divider.
+		expect(rowFor(wrapper, "Honeypot").find('[title="Module is off"]').exists()).toBe(true);
+		expect(rowFor(wrapper, "Appeals").find('[title="Module is off"]').exists()).toBe(true);
+
+		useGuildSettings().setGuildSettings(
+			createMockGuildData(GUILD_ID, {
+				appealsEnabled: true,
+				honeypotChannel: "234567890123456789",
+			}),
+		);
+		await nextTick();
+
+		expect(rowFor(wrapper, "Honeypot").find('[title="Module is off"]').exists()).toBe(false);
+		expect(rowFor(wrapper, "Appeals").find('[title="Module is off"]').exists()).toBe(false);
+	});
+
+	it("keeps the event logs, Commands and Logs out of the modules, in a group of their own", async () => {
+		const wrapper = await mountSidebar();
+
+		// Only the modules have a title and fold; the tools sit below a divider.
 		expect(wrapper.findAll(".dashboard-nav-label--toggle")).toHaveLength(1);
 		expect(wrapper.findAll(".dashboard-nav-divider").length).toBeGreaterThan(0);
-		for (const label of ["Commands", "Logs"]) {
+		for (const label of ["Events", "Commands", "Logs"]) {
 			const row = rowFor(wrapper, label);
 			expect(row.find(".dashboard-nav-pin").exists()).toBe(false);
 			expect(row.find('[title="Module is off"]').exists()).toBe(false);

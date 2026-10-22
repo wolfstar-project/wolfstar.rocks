@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { countEnabledModules, GUILD_MODULES } from "../../../../shared/utils/guild-modules";
+import {
+	countEnabledModules,
+	GUILD_MODULES,
+	MODULE_SWITCH_KEYS,
+} from "../../../../shared/utils/guild-modules";
 
 describe("guild modules registry", () => {
 	it("lists the modules of the V7 Modules table the dashboard shows, once", () => {
@@ -33,5 +37,17 @@ describe("guild modules registry", () => {
 		};
 
 		expect(countEnabledModules(settings)).toBe(2);
+	});
+
+	// The appeals have no flag in `Modules`, but a switch of their own that the
+	// dashboard shows with the others.
+	it("counts the switch of the appeals with the module flags", () => {
+		expect(MODULE_SWITCH_KEYS).toStrictEqual([
+			"modulesAutomod",
+			"modulesModeration",
+			"modulesRoles",
+			"appealsEnabled",
+		]);
+		expect(countEnabledModules({ appealsEnabled: true, modulesModeration: true })).toBe(2);
 	});
 });

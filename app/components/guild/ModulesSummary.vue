@@ -11,7 +11,7 @@
 				{{
 					ts("guild_settings.modules.enabled_count", {
 						enabled: enabledCount,
-						total: GUILD_MODULES.length,
+						total: MODULE_SWITCH_KEYS.length,
 					})
 				}}
 			</UBadge>
@@ -26,11 +26,7 @@
 					></span>
 					<span class="flex-1 text-sm text-toned">{{ ts(module.labelKey) }}</span>
 					<span class="text-xs text-muted">
-						{{
-							module.enabled
-								? ts("guild_settings.modules.on")
-								: ts("guild_settings.modules.off")
-						}}
+						{{ module.state }}
 					</span>
 				</button>
 			</li>
@@ -49,9 +45,13 @@
 </template>
 
 <script setup lang="ts">
-import { countEnabledModules, GUILD_MODULES } from "#shared/utils/guild-modules";
+import {
+	countEnabledModules,
+	GUILD_MODULES,
+	MODULE_SWITCH_KEYS,
+} from "#shared/utils/guild-modules";
 
-const { ts } = useI18n();
+const { tc, ts } = useI18n();
 const { guildSettings } = useGuildSettings();
 const { goToSection } = useDashboardNavigation();
 
@@ -59,14 +59,61 @@ const announcedModules = DASHBOARD_NAV.filter((item) => item.comingSoon);
 
 const enabledCount = computed(() => countEnabledModules(guildSettings.value));
 
-const modules = computed(() =>
-	GUILD_MODULES.map((module) => ({
-		enabled: guildSettings.value?.[module.key] === true,
-		key: module.key,
-		labelKey: module.labelKey,
-		section: module.section,
-	})),
-);
+// The lists of channels are read for their counts; their sections share the cache.
+const { activeGuildId } = useActiveGuild();
+const lists = {
+	autodelete: useAutoChannels("autodelete", activeGuildId),
+	autopurge: useAutoChannels("autopurge", activeGuildId),
+	automessage: useAutoChannels("automessage", activeGuildId),
+};
+
+// The `Modules` flags, then the modules that live in a table of their own:
+// the honeypot is on once the bot has its channel, the appeals with their
+// switch, and the lists of channels while they have one.
+const modules = computed(() => {
+	const settings = guildSettings.value;
+	const honeypot = Boolean(settings?.honeypotChannel);
+	const appeals = settings?.appealsEnabled === true;
+	const onOff = (enabled: boolean) =>
+		enabled ? ts("guild_settings.modules.on") : ts("guild_settings.modules.off");
+	return [
+		...GUILD_MODULES.map((module) => {
+			const enabled = settings?.[module.key] === true;
+			return {
+				enabled,
+				key: module.key,
+				labelKey: module.labelKey,
+				section: module.section,
+				state: onOff(enabled),
+			};
+		}),
+		{
+			enabled: honeypot,
+			key: "honeypot",
+			labelKey: "dashboard.nav.honeypot",
+			section: "honeypot",
+			state: honeypot
+				? ts("guild_settings.modules.set_up")
+				: ts("guild_settings.modules.not_set_up"),
+		},
+		{
+			enabled: appeals,
+			key: "appeals",
+			labelKey: "dashboard.nav.appeals",
+			section: "appeals",
+			state: onOff(appeals),
+		},
+		...(
+			Object.entries(lists) as [keyof typeof lists, (typeof lists)[keyof typeof lists]][]
+		).map(([slug, list]) => ({
+			enabled: list.rows.value.length > 0,
+			key: slug,
+			labelKey: `dashboard.nav.${slug}`,
+			section: slug,
+			state: tc("guild_settings.modules.channel_count", list.rows.value.length),
+		})),
+	];
+});
 </script>
 
 <style scoped>

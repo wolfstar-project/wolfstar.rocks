@@ -46,13 +46,29 @@ export const GUILD_MODULES = [
 export type GuildModuleEntry = (typeof GUILD_MODULES)[number];
 type GuildModuleKey = GuildModuleEntry["key"];
 
-export type GuildModuleFlags = Partial<Record<GuildModuleKey, boolean | null | undefined>>;
+/**
+ * The switches of the modules that have a table of their own rather than a
+ * flag of `Modules`. They are shown, counted and flipped with the flags.
+ */
+export const OWN_TABLE_MODULE_SWITCHES = [
+	"appealsEnabled",
+] as const satisfies readonly ToggleSettingKey[];
 
-/** Counts the modules whose flag is set in `settings`. */
+type ModuleSwitchKey = GuildModuleKey | (typeof OWN_TABLE_MODULE_SWITCHES)[number];
+
+/** Every module switch: the `Modules` flags, then the switches of the other modules. */
+export const MODULE_SWITCH_KEYS: readonly ModuleSwitchKey[] = [
+	...GUILD_MODULES.map((module) => module.key),
+	...OWN_TABLE_MODULE_SWITCHES,
+];
+
+export type GuildModuleFlags = Partial<Record<ModuleSwitchKey, boolean | null | undefined>>;
+
+/** Counts the module switches that are on in `settings`. */
 export function countEnabledModules(settings: GuildModuleFlags | null | undefined): number {
 	if (!settings) {
 		return 0;
 	}
 
-	return GUILD_MODULES.filter((module) => settings[module.key] === true).length;
+	return MODULE_SWITCH_KEYS.filter((key) => settings[key] === true).length;
 }

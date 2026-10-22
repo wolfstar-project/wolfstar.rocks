@@ -40,6 +40,7 @@ export const TransferableSettings = [
 	["moderation.track-roles", "moderationTrackRoles"],
 	["moderation.track-kicks", "moderationTrackKicks"],
 	["moderation.confirm-recent", "moderationConfirmRecentMinutes"],
+	["moderation.dehoist", "moderationDehoist"],
 	["reports.anonymous", "reportsAnonymous"],
 	["reports.notify", "reportsNotify"],
 	["roles.remove-initial", "rolesRemoveInitial"],

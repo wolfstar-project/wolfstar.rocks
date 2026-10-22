@@ -10,6 +10,7 @@
 			<USwitch
 				v-model="enabled"
 				class="shrink-0"
+				:disabled="disabled"
 				:aria-label="ts('guild_settings.toggle_aria', { title })"
 			/>
 		</div>
@@ -19,11 +20,18 @@
 <script setup lang="ts">
 const enabled = defineModel<boolean>({ required: true });
 
-const { name, title, description } = defineProps<{
+const {
+	name,
+	title,
+	description,
+	disabled = false,
+} = defineProps<{
 	/** The `GuildData` key the switch edits, used as the form field name. */
 	name: string;
 	title: string;
 	description: string;
+	/** Shows the value without letting it change, for a setting only the bot edits. */
+	disabled?: boolean;
 }>();
 
 const { ts } = useI18n();

@@ -27,6 +27,23 @@ const Harness = defineComponent({
 	`,
 });
 
+// A number and a choice between words, the kinds that are neither a picker nor a switch.
+const NumberAndChoiceHarness = defineComponent({
+	components: { GuildSettingsForm },
+	setup() {
+		const form = useSettingsForm({
+			choices: ["logsMessageUpdateStyle"],
+			numbers: ["moderationConfirmRecentMinutes"],
+		});
+		return { ...form };
+	},
+	template: `
+		<GuildSettingsForm :schema="schema" :state="state" :map-to-guild-data="mapToGuildData">
+			<span />
+		</GuildSettingsForm>
+	`,
+});
+
 async function settle() {
 	// Enough ticks for form -> draft -> merged settings -> form to go round.
 	for (let index = 0; index < 5; index++) {
@@ -116,5 +133,27 @@ describe("useSettingsForm", () => {
 		expect(wrapper.vm.state.logsIgnoreAll).toStrictEqual([CHANNEL_B]);
 		expect(wrapper.vm.state.logsMemberAdd).toBeNull();
 		expect(useGuildSettingsChanges().guildSettingsChanges.value).toBeUndefined();
+	});
+
+	it("starts a number and a choice from the saved settings and stages their edits", async () => {
+		useGuildSettings().setGuildSettings(
+			createMockGuildData(GUILD_ID, { moderationConfirmRecentMinutes: 5 }),
+		);
+		const wrapper = await mountSuspended(NumberAndChoiceHarness);
+		await settle();
+
+		expect(wrapper.vm.state).toStrictEqual({
+			logsMessageUpdateStyle: "Difference",
+			moderationConfirmRecentMinutes: 5,
+		});
+
+		wrapper.vm.state.moderationConfirmRecentMinutes = 10;
+		wrapper.vm.state.logsMessageUpdateStyle = "Separate";
+		await settle();
+
+		expect(useGuildSettingsChanges().guildSettingsChanges.value).toStrictEqual({
+			logsMessageUpdateStyle: "Separate",
+			moderationConfirmRecentMinutes: 10,
+		});
 	});
 });

@@ -4,6 +4,175 @@
 		"invite_bot_aria": "Invita bot su {name}"
 	},
 	"guild_settings": {
+		"appeals": {
+			"add_question": "",
+			"appealable_title": "",
+			"form_aria": "",
+			"form_notice": "",
+			"form_notice_title": "",
+			"off_body": "",
+			"off_summary": "",
+			"off_title": "",
+			"on_summary": "",
+			"question_aria": "",
+			"question_placeholder": "",
+			"questions_count": "",
+			"questions_empty": "",
+			"questions_extra": "",
+			"questions_full": "",
+			"questions_help": "",
+			"questions_title": "",
+			"remove_question": "",
+			"settings_title": "",
+			"subtitle": "",
+			"switch_aria": "",
+			"title": ""
+		},
+		"auto": {
+			"allow": {
+				"embeds": "",
+				"embeds_help": "",
+				"images": "",
+				"images_help": "",
+				"invites": "",
+				"invites_help": "",
+				"links": "",
+				"links_help": "",
+				"mentions": "",
+				"mentions_help": "",
+				"text": "",
+				"text_help": ""
+			},
+			"columns": {
+				"actions": "",
+				"channel": ""
+			},
+			"count": "",
+			"editor": {
+				"automessage_interval_help": "",
+				"automessage_subtitle": "",
+				"autodelete_subtitle": "",
+				"autopurge_interval_help": "",
+				"autopurge_subtitle": "",
+				"bots": "",
+				"bots_help": "",
+				"cancel": "",
+				"channel": "",
+				"channel_locked": "",
+				"channel_placeholder": "",
+				"delete_after": "",
+				"delete_after_help": "",
+				"delete_at_once": "",
+				"edit_title": "",
+				"enable": "",
+				"filter": "",
+				"filter_help": "",
+				"keep": "",
+				"keep_help": "",
+				"mentions": "",
+				"mentions_help": "",
+				"message": "",
+				"message_placeholder": "",
+				"new_title": "",
+				"preview": "",
+				"preview_empty": "",
+				"purge_every": "",
+				"save": "",
+				"send_every": "",
+				"value_help": "",
+				"value_text": "",
+				"value_text_placeholder": "",
+				"value_user": "",
+				"value_user_placeholder": ""
+			},
+			"errors": {
+				"channel": "",
+				"channel_taken": "",
+				"content": "",
+				"content_length": "",
+				"delay": "",
+				"message_interval": "",
+				"needs_text": "",
+				"needs_user": "",
+				"purge_interval": "",
+				"value_length": ""
+			},
+			"filters": {
+				"any": "",
+				"bots": "",
+				"contains": "",
+				"embeds": "",
+				"endsWith": "",
+				"humans": "",
+				"images": "",
+				"invites": "",
+				"links": "",
+				"mentions": "",
+				"notContains": "",
+				"startsWith": "",
+				"text": "",
+				"user": ""
+			},
+			"load_failed": "",
+			"removed_title": "",
+			"retry": "",
+			"saved_title": "",
+			"server_errors": {
+				"channel": "",
+				"generic": "",
+				"invalid": "",
+				"limit": "",
+				"unknown": ""
+			}
+		},
+		"autodelete": {
+			"add": "",
+			"at_once": "",
+			"bots_deleted": "",
+			"bots_kept": "",
+			"channels_title": "",
+			"columns": {
+				"bots": "",
+				"delay": "",
+				"kept": ""
+			},
+			"edit_aria": "",
+			"empty_body": "",
+			"empty_title": "",
+			"footnote": "",
+			"nothing_kept": "",
+			"remove": "",
+			"remove_aria": "",
+			"remove_description": "",
+			"remove_title": "",
+			"removed_description": "",
+			"restart_body": "",
+			"restart_title": "",
+			"saved_description": "",
+			"subtitle": "",
+			"table_aria": ""
+		},
+		"automessage": {
+			"add": "",
+			"edit_aria": "",
+			"empty_body": "",
+			"empty_title": "",
+			"every": "",
+			"list_aria": "",
+			"mentions_aria": "",
+			"mentions_off": "",
+			"mentions_on": "",
+			"mentions_saved_off": "",
+			"mentions_saved_on": "",
+			"next": "",
+			"remove": "",
+			"remove_aria": "",
+			"remove_description": "",
+			"remove_title": "",
+			"removed_description": "",
+			"saved_description": "",
+			"subtitle": ""
+		},
 		"automod": {
 			"form_aria": "Modulo impostazioni dell'Automoderazione",
 			"hard_actions": {
@@ -218,6 +387,27 @@
 				}
 			}
 		},
+		"autopurge": {
+			"add": "",
+			"columns": {
+				"every": "",
+				"filter": "",
+				"next": ""
+			},
+			"edit_aria": "",
+			"empty_body": "",
+			"empty_title": "",
+			"footnote": "",
+			"remove": "",
+			"remove_aria": "",
+			"remove_description": "",
+			"remove_title": "",
+			"removed_description": "",
+			"saved_description": "",
+			"schedules_title": "",
+			"subtitle": "",
+			"table_aria": ""
+		},
 		"channels": {
 			"bulk": {
 				"all_help": "Imposta il canale di tutti i log in una volta.",
@@ -235,6 +425,15 @@
 				"selection_help": "Imposta il canale di tutti i log selezionati.",
 				"selection_label": "Log selezionati",
 				"selection_region": "Azioni sui log selezionati"
+			},
+			"delivery": {
+				"edit_style": {
+					"difference": "",
+					"difference_help": "",
+					"separate": "",
+					"separate_help": ""
+				},
+				"title": ""
 			},
 			"excluded_channels": "Canali ignorati",
 			"excluded_channels_help": "Canali esclusi da tipi specifici di registro.",
@@ -308,8 +507,13 @@
 			"stat_last_days": "ultimi {count} giorni",
 			"stat_members": "Membri",
 			"stat_online": "{count} online",
+			"stat_open_reports": "",
+			"stat_open_reports_note": "",
 			"stat_roles": "Ruoli",
 			"subtitle": "Configura le impostazioni di base del server per WolfStar.",
+			"time_zone": "",
+			"time_zone_description": "",
+			"time_zone_now": "",
 			"title": "Impostazioni generali",
 			"transfer": {
 				"becomes": "diventa",
@@ -342,17 +546,53 @@
 				"unsupported": "Lasciate fuori, perché questa dashboard non le gestisce: {names}"
 			}
 		},
+		"honeypot": {
+			"action_help": "",
+			"action_title": "",
+			"actions": {
+				"ban": "",
+				"ban_help": "",
+				"kick": "",
+				"kick_help": "",
+				"softban": "",
+				"softban_help": ""
+			},
+			"active": "",
+			"behaviour_title": "",
+			"catching": "",
+			"channel_help": "",
+			"channels_title": "",
+			"copied_description": "",
+			"copied_title": "",
+			"copy_setup": "",
+			"form_aria": "",
+			"not_reported": "",
+			"not_set_up": "",
+			"off_body": "",
+			"off_summary": "",
+			"off_title": "",
+			"subtitle": "",
+			"title": "",
+			"warning_help": ""
+		},
 		"moderation": {
 			"cases_title": "Casi",
 			"form_aria": "Modulo impostazioni moderazione",
+			"minutes": "",
 			"subtitle": "Dove vengono registrati i casi, quali azioni manuali ne aprono uno e come vengono esaminate le segnalazioni dei membri.",
 			"title": "Moderazione"
 		},
 		"modules": {
 			"active_hint": "Il modulo è attivo su questo server.",
+			"channel_count": "",
 			"configure": "Configura",
 			"descriptions": {
+				"appeals": "",
+				"autodelete": "",
+				"automessage": "",
 				"automod": "Filtri dei messaggi e le loro regole di inasprimento.",
+				"autopurge": "",
+				"honeypot": "",
 				"moderation": "Azioni di moderazione manuali e la cronologia dei loro casi.",
 				"roles": "Automazione dei ruoli: ruoli iniziali e ruoli persistenti."
 			},
@@ -364,8 +604,10 @@
 			"hint": "Attiva un modulo, poi configuralo.",
 			"inactive_hint": "Attivalo per configurarlo.",
 			"manage": "Gestisci i moduli",
+			"not_set_up": "",
 			"off": "Disattivato",
 			"on": "Attivo",
+			"set_up": "",
 			"subtitle": "Attiva o disattiva i moduli di WolfStar per questo server, uno alla volta o tutti insieme.",
 			"summary_aria": "Panoramica dei moduli",
 			"title": "Moduli",
@@ -501,6 +743,30 @@
 	},
 	"settings": {
 		"entries": {
+			"appealsBans": {
+				"description": "",
+				"name": ""
+			},
+			"appealsChannel": {
+				"description": "",
+				"name": ""
+			},
+			"appealsEnabled": {
+				"description": "",
+				"name": ""
+			},
+			"appealsMutes": {
+				"description": "",
+				"name": ""
+			},
+			"appealsQuestions": {
+				"description": "",
+				"name": ""
+			},
+			"appealsTimeouts": {
+				"description": "",
+				"name": ""
+			},
 			"automodChannel": {
 				"description": "Riceve un messaggio di log quando una regola della moderazione automatica agisce su un messaggio.",
 				"name": "Log dell'automoderazione"
@@ -512,6 +778,38 @@
 			"commandsDisabledChannels": {
 				"description": "Canali in cui i membri non possono usare nessun comando di WolfStar.",
 				"name": "Canali disattivati"
+			},
+			"honeypotAction": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotChannel": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotDirectMessage": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotKeepActive": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotLogChannel": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotRandomName": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotWarning": {
+				"description": "",
+				"name": ""
+			},
+			"logsBoosts": {
+				"description": "",
+				"name": ""
 			},
 			"logsChannelCreate": {
 				"description": "Riceve un messaggio di log quando viene creato un nuovo canale.",
@@ -601,6 +899,10 @@
 				"description": "Riceve un messaggio di log quando un messaggio da un canale NSFW viene modificato.",
 				"name": "Log messaggi NSFW modificati"
 			},
+			"logsMessageUpdateStyle": {
+				"description": "",
+				"name": ""
+			},
 			"logsPrune": {
 				"description": "Riceve un messaggio di log quando i messaggi vengono eliminati in blocco.",
 				"name": "Log eliminazione in blocco"
@@ -637,13 +939,33 @@
 				"description": "",
 				"name": ""
 			},
+			"logsWebhooks": {
+				"description": "",
+				"name": ""
+			},
 			"moderationChannel": {
 				"description": "Riceve tutti i log dei casi di moderazione. Necessario perché le opzioni qui sotto funzionino.",
 				"name": "Log di moderazione"
 			},
+			"moderationConfirmRecentMinutes": {
+				"description": "",
+				"name": ""
+			},
+			"moderationDehoist": {
+				"description": "",
+				"name": ""
+			},
 			"moderationTrackBans": {
 				"description": "Apre un caso di moderazione quando un membro viene bannato o sbannato manualmente.",
 				"name": "Registra i ban manuali"
+			},
+			"moderationTrackKicks": {
+				"description": "",
+				"name": ""
+			},
+			"moderationTrackRoles": {
+				"description": "",
+				"name": ""
 			},
 			"moderationTrackTimeouts": {
 				"description": "Apre un caso di moderazione quando un membro viene messo in timeout manualmente.",

@@ -24,6 +24,7 @@ const {
 	disabled = false,
 	layout = "field",
 	emptyLabel,
+	exclude = [],
 } = defineProps<{
 	/** The label of the field */
 	label: string;
@@ -39,6 +40,8 @@ const {
 	layout?: "field" | "row";
 	/** Text shown while nothing is selected */
 	emptyLabel?: string;
+	/** Channels the setting cannot take, left out of the list. */
+	exclude?: readonly string[];
 }>();
 
 const emit = defineEmits<{
@@ -46,5 +49,7 @@ const emit = defineEmits<{
 	"change": [value: string | null];
 }>();
 
-const options = computed(() => channelOptions(guild));
+const options = computed(() =>
+	channelOptions(guild).filter((option) => !exclude.includes(option.value)),
+);
 </script>

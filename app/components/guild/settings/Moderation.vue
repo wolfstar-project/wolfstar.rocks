@@ -28,6 +28,15 @@
 						:label="translateEntry(config, 'name')"
 						:tooltip-title="translateEntry(config, 'description')"
 					/>
+					<GuildSettingsNumberField
+						v-for="config in ConfigurableModerationNumbers"
+						:key="config.key"
+						v-model="state[config.key]"
+						:name="config.key"
+						:label="translateEntry(config, 'name')"
+						:description="translateEntry(config, 'description')"
+						:unit="ts('guild_settings.moderation.minutes')"
+					/>
 				</div>
 
 				<div class="mt-3">
@@ -93,6 +102,7 @@
 <script setup lang="ts">
 import {
 	ConfigurableModerationChannels,
+	ConfigurableModerationNumbers,
 	ConfigurableModerationToggles,
 	ConfigurableReportChannels,
 	ConfigurableReportRoles,
@@ -118,6 +128,7 @@ const { mapToGuildData, onError, schema, state } = useSettingsForm({
 		...ConfigurableModerationToggles.map((entry) => entry.key),
 		...ConfigurableReportToggles.map((entry) => entry.key),
 	],
+	numbers: ConfigurableModerationNumbers.map((entry) => entry.key),
 });
 </script>
 

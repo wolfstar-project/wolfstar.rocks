@@ -156,6 +156,7 @@ export const Columns = {
 		logsEvents: ["events", "snowflake"],
 		logsExpressions: ["expressions", "snowflake"],
 		logsIntegrations: ["integrations", "snowflake"],
+		logsBoosts: ["boosts", "snowflake"],
 		logsIgnoreAll: ["ignoreAll", "snowflakes"],
 		logsIgnoreMessages: ["ignoreMessages", "snowflakes"],
 		logsIgnoreReactions: ["ignoreReactions", "snowflakes"],
@@ -171,6 +172,7 @@ export const Columns = {
 		moderationTrackRoles: ["trackRoles", "value"],
 		moderationTrackKicks: ["trackKicks", "value"],
 		moderationConfirmRecentMinutes: ["confirmRecentMinutes", "value"],
+		moderationDehoist: ["dehoist", "value"],
 	}),
 	...columns("GuildAppeals", {
 		appealsEnabled: ["enabled", "value"],

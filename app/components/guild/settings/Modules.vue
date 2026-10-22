@@ -7,7 +7,7 @@
 			{{
 				ts("guild_settings.modules.enabled_count", {
 					enabled: enabledCount,
-					total: GUILD_MODULES.length,
+					total: MODULE_SWITCH_KEYS.length,
 				})
 			}}
 		</UBadge>
@@ -28,9 +28,9 @@
 	>
 		<div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
 			<UFormField
-				v-for="module in GUILD_MODULES"
-				:key="module.key"
-				:name="module.key"
+				v-for="module in moduleCards"
+				:key="module.section"
+				:name="module.kind === 'switch' ? module.key : undefined"
 				class="console-card flex flex-col transition-opacity"
 				:ui="{ container: 'flex h-full flex-1 flex-col' }"
 			>
@@ -38,7 +38,7 @@
 					<span
 						class="flex size-11 shrink-0 items-center justify-center rounded-lg"
 						:class="
-							state[module.key]
+							isOn(module)
 								? 'bg-primary/15 text-primary'
 								: 'bg-base-content/8 text-muted'
 						"
@@ -47,6 +47,7 @@
 						<UIcon :name="module.icon" class="size-5.5" />
 					</span>
 					<USwitch
+						v-if="module.kind === 'switch'"
 						v-model="state[module.key]"
 						class="shrink-0"
 						:aria-label="
@@ -55,8 +56,19 @@
 							})
 						"
 					/>
+					<UBadge
+						v-else
+						:color="isOn(module) ? 'success' : 'neutral'"
+						variant="subtle"
+						class="shrink-0 font-semibold"
+					>
+						{{ statusLabel(module) }}
+					</UBadge>
 				</div>
-				<div class="mt-3 min-w-0 flex-1" :class="{ 'opacity-60': !state[module.key] }">
+				<div
+					class="mt-3 min-w-0 flex-1"
+					:class="{ 'opacity-60': module.kind === 'switch' && !isOn(module) }"
+				>
 					<p class="text-base font-bold">{{ ts(module.labelKey) }}</p>
 					<p class="mt-1 text-[0.8125rem] leading-snug text-muted">
 						{{ ts(module.descriptionKey) }}
@@ -67,13 +79,13 @@
 						color="neutral"
 						variant="ghost"
 						size="sm"
-						:disabled="!state[module.key]"
+						:disabled="module.kind === 'switch' && !isOn(module)"
 						@click="goToSection(module.section)"
 					>
 						{{
-							state[module.key]
-								? ts("guild_settings.modules.configure")
-								: ts("guild_settings.modules.enable_first")
+							module.kind === "switch" && !isOn(module)
+								? ts("guild_settings.modules.enable_first")
+								: ts("guild_settings.modules.configure")
 						}}
 					</UButton>
 				</div>
@@ -121,14 +133,117 @@
 </template>
 
 <script setup lang="ts">
-import { GUILD_MODULES } from "#shared/utils/guild-modules";
+import type { AutoChannelSlug } from "~/composables/useAutoChannels";
+import { GUILD_MODULES, MODULE_SWITCH_KEYS } from "#shared/utils/guild-modules";
 
-const { ts } = useI18n();
+const { tc, ts } = useI18n();
 const { goToSection } = useDashboardNavigation();
+const { guildSettings } = useGuildSettings();
 
-const moduleKeys = GUILD_MODULES.map((module) => module.key);
+const { mapToGuildData, onError, schema, state } = useSettingsForm({
+	toggles: MODULE_SWITCH_KEYS,
+});
 
-const { mapToGuildData, onError, schema, state } = useSettingsForm({ toggles: moduleKeys });
+interface ModuleCard {
+	descriptionKey: string;
+	icon: string;
+	labelKey: string;
+	section: string;
+}
+
+/** A module switched here: a flag of `Modules`, or the switch of its own table. */
+interface SwitchModuleCard extends ModuleCard {
+	kind: "switch";
+	key: (typeof MODULE_SWITCH_KEYS)[number];
+}
+
+/** A module the bot sets up in Discord, on once it has what it needs. */
+interface SetupModuleCard extends ModuleCard {
+	kind: "setup";
+}
+
+/** A module that is a list of channels, on while it has one. */
+interface ListModuleCard extends ModuleCard {
+	kind: "list";
+	section: AutoChannelSlug;
+}
+
+type AnyModuleCard = SwitchModuleCard | SetupModuleCard | ListModuleCard;
+
+// In the order of the sidebar: the `Modules` flags, then the modules with a
+// table of their own.
+const moduleCards: AnyModuleCard[] = [
+	...GUILD_MODULES.map(
+		(module): SwitchModuleCard => ({
+			descriptionKey: module.descriptionKey,
+			icon: module.icon,
+			key: module.key,
+			kind: "switch",
+			labelKey: module.labelKey,
+			section: module.section,
+		}),
+	),
+	{
+		descriptionKey: "guild_settings.modules.descriptions.honeypot",
+		icon: "lucide:hexagon",
+		kind: "setup",
+		labelKey: "dashboard.nav.honeypot",
+		section: "honeypot",
+	},
+	{
+		descriptionKey: "guild_settings.modules.descriptions.appeals",
+		icon: "lucide:scale",
+		key: "appealsEnabled",
+		kind: "switch",
+		labelKey: "dashboard.nav.appeals",
+		section: "appeals",
+	},
+	{
+		descriptionKey: "guild_settings.modules.descriptions.autodelete",
+		icon: "lucide:timer",
+		kind: "list",
+		labelKey: "dashboard.nav.autodelete",
+		section: "autodelete",
+	},
+	{
+		descriptionKey: "guild_settings.modules.descriptions.autopurge",
+		icon: "lucide:eraser",
+		kind: "list",
+		labelKey: "dashboard.nav.autopurge",
+		section: "autopurge",
+	},
+	{
+		descriptionKey: "guild_settings.modules.descriptions.automessage",
+		icon: "lucide:message-square-reply",
+		kind: "list",
+		labelKey: "dashboard.nav.automessage",
+		section: "automessage",
+	},
+];
+
+// The lists are read here for their counts; their sections share the cache.
+const { activeGuildId } = useActiveGuild();
+const lists = {
+	autodelete: useAutoChannels("autodelete", activeGuildId),
+	automessage: useAutoChannels("automessage", activeGuildId),
+	autopurge: useAutoChannels("autopurge", activeGuildId),
+} satisfies Record<AutoChannelSlug, { rows: Ref<readonly unknown[]> }>;
+
+function isOn(module: AnyModuleCard): boolean {
+	// The honeypot is the one module set up in Discord: it is on with a channel.
+	if (module.kind === "setup") return Boolean(guildSettings.value?.honeypotChannel);
+	if (module.kind === "list") return lists[module.section].rows.value.length > 0;
+	return state[module.key] === true;
+}
+
+function statusLabel(module: SetupModuleCard | ListModuleCard): string {
+	if (module.kind === "list") {
+		return tc("guild_settings.modules.channel_count", lists[module.section].rows.value.length);
+	}
+	return isOn(module)
+		? ts("guild_settings.modules.set_up")
+		: ts("guild_settings.modules.not_set_up");
+}
 
 // Modules the bot has and the dashboard cannot configure yet.
 const announcedModules = DASHBOARD_NAV.filter((item) => item.comingSoon);
@@ -136,7 +251,7 @@ const announcedModules = DASHBOARD_NAV.filter((item) => item.comingSoon);
 const enabledCount = computed(() => countEnabledModules(state));
 
 function setAll(enabled: boolean) {
-	for (const key of moduleKeys) {
+	for (const key of MODULE_SWITCH_KEYS) {
 		state[key] = enabled;
 	}
 }

@@ -36,7 +36,7 @@ describe("DASHBOARD_NAV", () => {
 		expect(missing).toStrictEqual([]);
 	});
 
-	it("keeps Commands and Logs out of the modules", () => {
+	it("keeps the event logs, Commands and Logs out of the modules", () => {
 		const modules = DASHBOARD_NAV.filter((item) => item.group === "modules").map(
 			(item) => item.slug,
 		);
@@ -47,13 +47,26 @@ describe("DASHBOARD_NAV", () => {
 		expect(modules).toStrictEqual([
 			"automod",
 			"moderation",
-			"channels",
 			"roles",
+			"honeypot",
+			"appeals",
 			"autodelete",
 			"autopurge",
+			"automessage",
 		]);
-		expect(tools).toStrictEqual(["commands", "logs"]);
+		expect(tools).toStrictEqual(["channels", "commands", "logs"]);
 		expect(findDashboardNavItem("commands")?.moduleKey).toBeUndefined();
+	});
+
+	// Neither has a flag in the `Modules` table: the appeals have a switch of
+	// their own, and the honeypot is on once the bot has its channel.
+	it("knows what turns the honeypot and the appeals on", () => {
+		expect(findDashboardNavItem("appeals")?.moduleKey).toBe("appealsEnabled");
+		expect(findDashboardNavItem("honeypot")?.requiredKey).toBe("honeypotChannel");
+	});
+
+	it("opens a page for every section, none of them announced only", () => {
+		expect(DASHBOARD_NAV.filter((item) => item.comingSoon)).toStrictEqual([]);
 	});
 
 	it("finds a section by its slug", () => {
@@ -68,6 +81,9 @@ describe("dashboardSkeletonKind", () => {
 		expect(dashboardSkeletonKind("modules")).toBe("modules");
 		expect(dashboardSkeletonKind("logs")).toBe("table");
 		expect(dashboardSkeletonKind("automod")).toBe("table");
+		expect(dashboardSkeletonKind("autodelete")).toBe("table");
+		expect(dashboardSkeletonKind("autopurge")).toBe("table");
+		expect(dashboardSkeletonKind("automessage")).toBe("form");
 		expect(dashboardSkeletonKind("moderation")).toBe("form");
 		expect(dashboardSkeletonKind("roles")).toBe("form");
 	});

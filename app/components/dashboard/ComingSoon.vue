@@ -20,11 +20,18 @@
 </template>
 
 <script setup lang="ts">
+import type { DashboardNavItem } from "~/utils/dashboard-nav";
+
+const { item: announced } = defineProps<{
+	/** The announced section to describe; the open one when not given. */
+	item?: DashboardNavItem;
+}>();
+
 const { ts } = useI18n();
 const { section } = useDashboardNavigation();
 
 // The page describes whichever announced section is open.
-const item = computed(() => findDashboardNavItem(section.value));
+const item = computed(() => announced ?? findDashboardNavItem(section.value));
 const title = computed(() => ts(item.value?.labelKey ?? "dashboard.coming_soon.title"));
 const description = computed(() =>
 	item.value?.descriptionKey ? ts(item.value.descriptionKey) : undefined,

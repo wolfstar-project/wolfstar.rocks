@@ -1,9 +1,10 @@
+import type { SingleSettingKey } from "#shared/types";
 import type { GuildModuleEntry } from "#shared/utils/guild-modules";
 
 /**
  * `overview` and `tools` have no title: the overview holds the two pages about
- * the server, `modules` the feature modules, and `tools` what is not a module,
- * the commands and the logs.
+ * the server, `modules` the feature modules, and `tools` what is not a module:
+ * the event logs, the commands and the logs.
  */
 export type DashboardNavGroup = "overview" | "modules" | "tools";
 
@@ -15,8 +16,13 @@ export interface DashboardNavItem {
 	shortLabelKey?: string;
 	icon: string;
 	group: DashboardNavGroup;
-	/** The `modules*` flag the section configures, when it configures one. */
-	moduleKey?: GuildModuleEntry["key"];
+	/**
+	 * The switch that turns the section's feature on, when it has one: a flag
+	 * of the `Modules` table, or the switch of the feature's own table.
+	 */
+	moduleKey?: GuildModuleEntry["key"] | "appealsEnabled";
+	/** A setting the feature does nothing without, such as the honeypot's channel. */
+	requiredKey?: SingleSettingKey;
 	/**
 	 * The section is announced but not built: the bot has the feature, the
 	 * dashboard has no routes for it yet, so it opens a placeholder page.
@@ -55,32 +61,48 @@ export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
 	},
 	{
 		group: "modules",
-		icon: "ic:round-notifications",
-		labelKey: "dashboard.nav.channels",
-		slug: "channels",
-	},
-	{
-		group: "modules",
 		icon: "ic:round-people",
 		labelKey: "dashboard.nav.roles",
 		moduleKey: "modulesRoles",
 		slug: "roles",
 	},
 	{
-		comingSoon: true,
-		descriptionKey: "dashboard.coming_soon.autodelete",
+		group: "modules",
+		icon: "ic:round-hive",
+		labelKey: "dashboard.nav.honeypot",
+		requiredKey: "honeypotChannel",
+		slug: "honeypot",
+	},
+	{
+		group: "modules",
+		icon: "ic:round-rate-review",
+		labelKey: "dashboard.nav.appeals",
+		moduleKey: "appealsEnabled",
+		slug: "appeals",
+	},
+	{
 		group: "modules",
 		icon: "ic:round-timer",
 		labelKey: "dashboard.nav.autodelete",
 		slug: "autodelete",
 	},
 	{
-		comingSoon: true,
-		descriptionKey: "dashboard.coming_soon.autopurge",
 		group: "modules",
 		icon: "ic:round-cleaning-services",
 		labelKey: "dashboard.nav.autopurge",
 		slug: "autopurge",
+	},
+	{
+		group: "modules",
+		icon: "ic:round-schedule-send",
+		labelKey: "dashboard.nav.automessage",
+		slug: "automessage",
+	},
+	{
+		group: "tools",
+		icon: "ic:round-notifications",
+		labelKey: "dashboard.nav.channels",
+		slug: "channels",
 	},
 	{
 		group: "tools",
@@ -103,14 +125,17 @@ export function findDashboardNavItem(slug: string): DashboardNavItem | undefined
 /** The shape a section's loading skeleton takes. */
 export type DashboardSkeletonKind = "overview" | "modules" | "table" | "form";
 
+// The sections whose page is a list of rows rather than a form.
+const TABLE_SECTIONS: ReadonlySet<string> = new Set(["automod", "autodelete", "autopurge", "logs"]);
+
 /**
  * Which skeleton stands in for a section while it loads: the overview and the
- * modules grid their own, the logs and the rule list a table, every other
+ * modules grid their own, the logs and the lists of rows a table, every other
  * settings page a form.
  */
 export function dashboardSkeletonKind(slug: string): DashboardSkeletonKind {
 	if (slug === "") return "overview";
 	if (slug === "modules") return "modules";
-	if (slug === "logs" || slug === "automod") return "table";
+	if (TABLE_SECTIONS.has(slug)) return "table";
 	return "form";
 }

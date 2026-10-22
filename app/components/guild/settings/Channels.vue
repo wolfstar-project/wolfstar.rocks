@@ -122,6 +122,34 @@
 			</section>
 		</div>
 
+		<section class="console-card" aria-labelledby="channels-delivery">
+			<div class="flex items-center gap-3">
+				<h3 id="channels-delivery" class="text-[1.0625rem] font-semibold whitespace-nowrap">
+					{{ ts("guild_settings.channels.delivery.title") }}
+				</h3>
+				<span class="h-px flex-1 bg-(--field-border)" aria-hidden="true"></span>
+			</div>
+			<div class="mt-2">
+				<GuildSettingsToggleRow
+					v-for="config in ConfigurableLogDeliveryToggles"
+					:key="config.key"
+					v-model="state[config.key]"
+					:name="config.key"
+					:title="translateEntry(config, 'name')"
+					:description="translateEntry(config, 'description')"
+				/>
+			</div>
+			<GuildSettingsChoiceCards
+				v-for="config in ConfigurableLogChoices"
+				:key="config.key"
+				v-model="state[config.key]"
+				class="mt-3"
+				:name="config.key"
+				:label="translateEntry(config, 'name')"
+				:options="choiceOptions[config.key]"
+			/>
+		</section>
+
 		<section class="console-card" aria-labelledby="channels-excluded">
 			<div class="flex items-center gap-3">
 				<h3 id="channels-excluded" class="text-[1.0625rem] font-semibold whitespace-nowrap">
@@ -157,6 +185,8 @@ import type { SingleSettingKey } from "#shared/types";
 // functions and the template, leaving them unbound in the compiled module.
 import {
 	ConfigurableIgnoreChannels,
+	ConfigurableLogChoices,
+	ConfigurableLogDeliveryToggles,
 	ConfigurableLoggingChannels,
 	ConfigurableLogToggles,
 } from "#shared/utils/settingsDataEntries";
@@ -169,14 +199,32 @@ const { guildData } = useGuildData();
 const { mapToGuildData, onError, schema, state } = useSettingsForm({
 	one: ConfigurableLoggingChannels.map((entry) => entry.key),
 	many: ConfigurableIgnoreChannels.map((entry) => entry.key),
-	toggles: ConfigurableLogToggles.map((entry) => entry.key),
+	toggles: [...ConfigurableLogToggles, ...ConfigurableLogDeliveryToggles].map(
+		(entry) => entry.key,
+	),
+	choices: ConfigurableLogChoices.map((entry) => entry.key),
 });
+
+const choiceOptions = computed(() => ({
+	logsMessageUpdateStyle: [
+		{
+			description: ts("guild_settings.channels.delivery.edit_style.difference_help"),
+			label: ts("guild_settings.channels.delivery.edit_style.difference"),
+			value: "Difference" as const,
+		},
+		{
+			description: ts("guild_settings.channels.delivery.edit_style.separate_help"),
+			label: ts("guild_settings.channels.delivery.edit_style.separate"),
+			value: "Separate" as const,
+		},
+	],
+}));
 
 const LOG_KEYS: readonly SingleSettingKey[] = ConfigurableLoggingChannels.map((entry) => entry.key);
 
 // One card per kind of event, in the order the events are written to the log.
 const LOGGING_GROUPS = [
-	{ id: "members", pattern: /^logs(Member|Prune)/ },
+	{ id: "members", pattern: /^logs(Member|Boosts|Prune)/ },
 	{ id: "messages", pattern: /^logs(Message|Image)/ },
 	{ id: "reactions", pattern: /^logsReaction/ },
 	{ id: "roles", pattern: /^logsRole/ },

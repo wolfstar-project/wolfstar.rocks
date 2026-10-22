@@ -8,6 +8,7 @@ import {
 	type StickyRole,
 	type UniqueRoleSet,
 } from "#server/database/settings/types";
+import { SETTING_NUMBER_RANGES } from "#shared/utils/settings-choices";
 import { isSnowflake } from "#shared/utils/snowflake";
 
 /** The most entries a list setting holds (roles, channels, commands, nodes). */
@@ -15,7 +16,7 @@ export const MAXIMUM_SETTING_LIST_LENGTH = 250;
 const MAXIMUM_COMMAND_NAME_LENGTH = 32;
 const MAXIMUM_UNIQUE_ROLE_SET_NAME_LENGTH = 32;
 /** The longest a recent case asks for a confirmation, as the bot's `moderation.confirm-recent`. */
-const MAXIMUM_CONFIRM_RECENT_MINUTES = 60;
+const MAXIMUM_CONFIRM_RECENT_MINUTES = SETTING_NUMBER_RANGES.moderationConfirmRecentMinutes.maximum;
 
 // BCP 47 tags as the bot ships them: `en-US`, `es-419`, `pt-BR`, …
 const LANGUAGE_PATTERN = /^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/u;

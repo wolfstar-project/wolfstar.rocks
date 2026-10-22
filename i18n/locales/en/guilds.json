@@ -4,6 +4,175 @@
 		"invite_bot_aria": "Invite WolfStar bot to {name}"
 	},
 	"guild_settings": {
+		"appeals": {
+			"add_question": "Add question",
+			"appealable_title": "What can be appealed",
+			"form_aria": "Appeals settings form",
+			"form_notice": "The direct message of a punishment links to an appeal page on WolfStar.rocks that does not open a form yet. What you set here applies once it does.",
+			"form_notice_title": "The appeal form is in development",
+			"off_body": "Turn them on and the direct message of a ban, a mute or a timeout links to the appeal page of this server.",
+			"off_summary": "Nobody can appeal a case.",
+			"off_title": "Appeals are off",
+			"on_summary": "Members can appeal the cases chosen below.",
+			"question_aria": "New question",
+			"question_placeholder": "e.g. What will you do differently?",
+			"questions_count": "{count} / {maximum}",
+			"questions_empty": "No questions: the form asks why the case should be undone.",
+			"questions_extra": "WolfStar asks the first five; the others are kept, but not asked.",
+			"questions_full": "Five questions is the most a form asks.",
+			"questions_help": "One question per field of the form. A waiting appeal shows its answers under the questions of the moment, so change them when none is pending.",
+			"questions_title": "Form questions",
+			"remove_question": "Remove the question {question}",
+			"settings_title": "Settings",
+			"subtitle": "Members appeal their bans, mutes and timeouts on WolfStar.rocks, from the link in the direct message of the punishment.",
+			"switch_aria": "Let the members appeal",
+			"title": "Appeals"
+		},
+		"auto": {
+			"allow": {
+				"embeds": "Embeds",
+				"embeds_help": "Keep the messages that have an embed.",
+				"images": "Images",
+				"images_help": "Keep the messages that have an image.",
+				"invites": "Invites",
+				"invites_help": "Keep the messages that have an invite.",
+				"links": "Links",
+				"links_help": "Keep the messages that have a link.",
+				"mentions": "Mentions",
+				"mentions_help": "Keep the messages that mention somebody.",
+				"text": "Only text",
+				"text_help": "Keep the messages that are only text, without attachments."
+			},
+			"columns": {
+				"actions": "Actions",
+				"channel": "Channel"
+			},
+			"count": "{count} / {maximum}",
+			"editor": {
+				"automessage_interval_help": "Every {duration}. From 10 minutes to 14 days.",
+				"automessage_subtitle": "Send a message in a channel every interval.",
+				"autodelete_subtitle": "Delete the messages sent in a channel, at once or a delay after.",
+				"autopurge_interval_help": "Every {duration}. From 5 minutes to 14 days.",
+				"autopurge_subtitle": "Purge a channel every interval, of every message or of the ones a filter looks for.",
+				"bots": "Bots and webhooks too",
+				"bots_help": "Delete their messages too, they are kept otherwise. WolfStar's own are never deleted.",
+				"cancel": "Cancel",
+				"channel": "Channel",
+				"channel_locked": "A channel has one at most: to move it, stop this one and add the other channel.",
+				"channel_placeholder": "Pick a channel",
+				"delete_after": "Delete after",
+				"delete_after_help": "A message stays {duration}. 0 deletes it at once, 24 hours at most.",
+				"delete_at_once": "Deleted at once. 24 hours at most.",
+				"edit_title": "{name} · {channel}",
+				"enable": "Enable",
+				"filter": "Delete",
+				"filter_help": "Up to 1,000 messages each time, but the pinned ones and the ones older than 14 days.",
+				"keep": "Keep",
+				"keep_help": "The messages that match one of them stay. The pinned ones always do.",
+				"mentions": "Mentions ping",
+				"mentions_help": "Whether the mentions of the message ping who they mention. They do not when this is off.",
+				"message": "Message",
+				"message_placeholder": "What WolfStar sends",
+				"new_title": "New {name}",
+				"preview": "Preview",
+				"preview_empty": "The message shows up here.",
+				"purge_every": "Purge every",
+				"save": "Save",
+				"send_every": "Send every",
+				"value_help": "{maximum} characters at most.",
+				"value_text": "Text",
+				"value_text_placeholder": "e.g. [LFG]",
+				"value_user": "User",
+				"value_user_placeholder": "@member or user ID"
+			},
+			"errors": {
+				"channel": "Pick a channel.",
+				"channel_taken": "{channel} already has one. Edit it instead, a channel has one at most.",
+				"content": "The message cannot be empty.",
+				"content_length": "A message is {maximum} characters at most.",
+				"delay": "A message stays 24 hours at most.",
+				"message_interval": "A message is sent every 10 minutes at least and every 14 days at most.",
+				"needs_text": "This filter needs a text.",
+				"needs_user": "This filter needs a user.",
+				"purge_interval": "A channel is purged every 5 minutes at least and every 14 days at most.",
+				"value_length": "The text is {maximum} characters at most."
+			},
+			"filters": {
+				"any": "Every message",
+				"bots": "Messages of bots",
+				"contains": "Messages that contain a text",
+				"embeds": "Messages with embeds",
+				"endsWith": "Messages that end with a text",
+				"humans": "Messages of humans",
+				"images": "Messages with images",
+				"invites": "Messages with invites",
+				"links": "Messages with links",
+				"mentions": "Messages with mentions",
+				"notContains": "Messages that do not contain a text",
+				"startsWith": "Messages that start with a text",
+				"text": "Messages that are only text",
+				"user": "Messages of a user"
+			},
+			"load_failed": "Couldn't load the channels. Check your connection and retry.",
+			"removed_title": "Stopped",
+			"retry": "Retry",
+			"saved_title": "Saved",
+			"server_errors": {
+				"channel": "Pick a text or announcement channel of this server.",
+				"generic": "Couldn't save. Check your connection and try again.",
+				"invalid": "WolfStar refused these values. Check them and try again.",
+				"limit": "This server already has the most it can have. Stop one first.",
+				"unknown": "This channel has none any more. Close the editor and try again."
+			}
+		},
+		"autodelete": {
+			"add": "Add channel",
+			"at_once": "at once",
+			"bots_deleted": "Deleted",
+			"bots_kept": "Kept",
+			"channels_title": "Channels",
+			"columns": {
+				"bots": "Bots",
+				"delay": "Delay",
+				"kept": "Kept"
+			},
+			"edit_aria": "Edit the deletion in {channel}",
+			"empty_body": "Add a channel and WolfStar deletes its messages as they are sent, or a delay after.",
+			"empty_title": "No channel yet",
+			"footnote": "Kept messages stay in the channel, and so do the pinned ones. Bots decides whether the messages of bots and webhooks go too.",
+			"nothing_kept": "Nothing",
+			"remove": "Stop deleting",
+			"remove_aria": "Stop deleting the messages of {channel}",
+			"remove_description": "WolfStar stops deleting the messages of {channel}. The messages it already deleted stay deleted.",
+			"remove_title": "Stop deleting the messages of this channel?",
+			"removed_description": "The messages of {channel} are no longer deleted.",
+			"restart_body": "WolfStar reads these channels when it starts, and when /autodelete changes them in Discord. A change made here applies once WolfStar restarts.",
+			"restart_title": "Changes apply after a restart of WolfStar",
+			"saved_description": "WolfStar deletes the messages of {channel}.",
+			"subtitle": "Messages in these channels are deleted after a delay.",
+			"table_aria": "Channels whose messages are deleted"
+		},
+		"automessage": {
+			"add": "Add message",
+			"edit_aria": "Edit the message of {channel}",
+			"empty_body": "Add a channel, the message WolfStar sends there, and how often.",
+			"empty_title": "No message yet",
+			"every": "every {duration}",
+			"list_aria": "Messages WolfStar sends again and again",
+			"mentions_aria": "Let the mentions of the message in {channel} ping",
+			"mentions_off": "Mentions do not ping",
+			"mentions_on": "Mentions ping",
+			"mentions_saved_off": "The mentions of the message in {channel} no longer ping.",
+			"mentions_saved_on": "The mentions of the message in {channel} ping who they mention.",
+			"next": "next {when}",
+			"remove": "Stop sending",
+			"remove_aria": "Stop sending the message of {channel}",
+			"remove_description": "WolfStar stops sending its message in {channel}. The messages it already sent stay.",
+			"remove_title": "Stop sending this message?",
+			"removed_description": "WolfStar no longer sends a message in {channel}.",
+			"saved_description": "WolfStar sends the message in {channel} on its schedule.",
+			"subtitle": "WolfStar sends a message in a channel again and again, from every 10 minutes to every 14 days. When the last message of the channel is still its own, it skips that round."
+		},
 		"automod": {
 			"form_aria": "Auto Moderation settings form",
 			"hard_actions": {
@@ -218,6 +387,27 @@
 				}
 			}
 		},
+		"autopurge": {
+			"add": "Add channel",
+			"columns": {
+				"every": "Every",
+				"filter": "Filter",
+				"next": "Next run"
+			},
+			"edit_aria": "Edit the purge of {channel}",
+			"empty_body": "Add a channel and WolfStar purges it of its messages every so often.",
+			"empty_title": "No channel yet",
+			"footnote": "The filter decides what goes: every message, or only the ones it looks for. Up to 1,000 messages each time; pinned messages and the ones older than 14 days stay.",
+			"remove": "Stop purging",
+			"remove_aria": "Stop purging {channel}",
+			"remove_description": "WolfStar stops purging {channel}. Nothing is deleted when you confirm.",
+			"remove_title": "Stop purging this channel?",
+			"removed_description": "{channel} is no longer purged.",
+			"saved_description": "WolfStar purges {channel} on its schedule.",
+			"schedules_title": "Schedules",
+			"subtitle": "These channels are cleared on a schedule.",
+			"table_aria": "Channels that are purged"
+		},
 		"channels": {
 			"bulk": {
 				"all_help": "Sets the channel of every log at once.",
@@ -235,6 +425,15 @@
 				"selection_help": "Sets the channel of every selected log.",
 				"selection_label": "Selected logs",
 				"selection_region": "Selected logs actions"
+			},
+			"delivery": {
+				"edit_style": {
+					"difference": "Difference",
+					"difference_help": "One text: what was removed struck through, what was added in bold.",
+					"separate": "Separate",
+					"separate_help": "The content before and the content after, each in a block of its own."
+				},
+				"title": "Delivery"
 			},
 			"excluded_channels": "Ignored channels",
 			"excluded_channels_help": "Select channels that should be ignored for specific logging events. Messages and events in these channels won't be logged.",
@@ -308,8 +507,13 @@
 			"stat_last_days": "last {count} days",
 			"stat_members": "Members",
 			"stat_online": "{count} online",
+			"stat_open_reports": "Open reports",
+			"stat_open_reports_note": "awaiting review",
 			"stat_roles": "Roles",
 			"subtitle": "Configure basic server settings for WolfStar.",
+			"time_zone": "Time zone",
+			"time_zone_description": "The time zone of your server, UTC until you set one.",
+			"time_zone_now": "It is {time} there now.",
 			"title": "General Settings",
 			"transfer": {
 				"becomes": "becomes",
@@ -342,17 +546,53 @@
 				"unsupported": "Left out, since this dashboard does not manage them: {names}"
 			}
 		},
+		"honeypot": {
+			"action_help": "What WolfStar does to who writes in the honeypot channel. Change it with /honeypot edit in Discord, which rewrites the warning to match.",
+			"action_title": "Action",
+			"actions": {
+				"ban": "Ban",
+				"ban_help": "They cannot come back until they are unbanned.",
+				"kick": "Kick",
+				"kick_help": "They can join again with an invite.",
+				"softban": "Softban",
+				"softban_help": "A ban and an unban: it also deletes what they sent in the other channels in the last hour."
+			},
+			"active": "Active",
+			"behaviour_title": "Behaviour",
+			"catching": "Catching who writes in #{channel}, but the moderators.",
+			"channel_help": "Set in Discord: /honeypot setup moves the trap to another channel and /honeypot disable turns it off. WolfStar posts the warning there itself.",
+			"channels_title": "Channels",
+			"copied_description": "Paste it in any channel of the server.",
+			"copied_title": "Command copied",
+			"copy_setup": "Copy /honeypot setup",
+			"form_aria": "Honeypot settings form",
+			"not_reported": "Not reported",
+			"not_set_up": "Not set up",
+			"off_body": "Run /honeypot setup in Discord: WolfStar creates a channel no member has a reason to write in, posts a warning there and starts catching. Move the channel to the top of the list, where the bots look first.",
+			"off_summary": "Nobody is caught while it has no channel.",
+			"off_title": "The honeypot is off",
+			"subtitle": "A trap for spam bots: no member has a reason to write in its channel, so WolfStar acts on whoever does and deletes what they sent. The moderators are never caught.",
+			"title": "Honeypot",
+			"warning_help": "Without it the channel says nothing, which is harder for a bot to learn to avoid, and for a member too. Only WolfStar posts or takes down the warning: change it with /honeypot edit."
+		},
 		"moderation": {
 			"cases_title": "Cases",
 			"form_aria": "Moderation settings form",
+			"minutes": "minutes",
 			"subtitle": "Where cases are logged, which manual actions open one, and how member reports are reviewed.",
 			"title": "Moderation"
 		},
 		"modules": {
 			"active_hint": "Module is active on this server.",
+			"channel_count": "No channel | 1 channel | {count} channels",
 			"configure": "Configure",
 			"descriptions": {
+				"appeals": "Members appeal their bans, mutes and timeouts on WolfStar.rocks.",
+				"autodelete": "Delete the messages of a channel as they are sent, or a delay after.",
+				"automessage": "Send a message in a channel again and again.",
 				"automod": "Message filters and their escalation rules.",
+				"autopurge": "Purge a channel of its messages every so often.",
+				"honeypot": "A channel no member has a reason to write in: WolfStar acts on the spam bots that do.",
 				"moderation": "Manual moderation actions and their case history.",
 				"roles": "Role automation: initial roles and sticky roles."
 			},
@@ -364,8 +604,10 @@
 			"hint": "Turn a module on, then configure it.",
 			"inactive_hint": "Enable to configure.",
 			"manage": "Manage modules",
+			"not_set_up": "Not set up",
 			"off": "Off",
 			"on": "Enabled",
+			"set_up": "Set up",
 			"subtitle": "Turn WolfStar's feature modules on or off for this server, one at a time or all at once.",
 			"summary_aria": "Modules overview",
 			"title": "Modules",
@@ -501,6 +743,30 @@
 	},
 	"settings": {
 		"entries": {
+			"appealsBans": {
+				"description": "Banned members can appeal; they do not need to be in the server.",
+				"name": "Bans"
+			},
+			"appealsChannel": {
+				"description": "Where the moderators accept or deny them. An appeal sent while it is not set never reaches them.",
+				"name": "Appeals Channel"
+			},
+			"appealsEnabled": {
+				"description": "Lets the members appeal their bans, mutes and timeouts.",
+				"name": "Appeals"
+			},
+			"appealsMutes": {
+				"description": "Muted members can appeal their mute.",
+				"name": "Mutes"
+			},
+			"appealsQuestions": {
+				"description": "One question per field of the form. WolfStar asks the first five.",
+				"name": "Form Questions"
+			},
+			"appealsTimeouts": {
+				"description": "Members can appeal a timeout while it lasts.",
+				"name": "Timeouts"
+			},
 			"automodChannel": {
 				"description": "Receives a log message when an auto-moderation rule acts on a message.",
 				"name": "Auto Moderation Logs"
@@ -512,6 +778,38 @@
 			"commandsDisabledChannels": {
 				"description": "Channels where members cannot use any WolfStar command.",
 				"name": "Disabled Channels"
+			},
+			"honeypotAction": {
+				"description": "What WolfStar does to who writes in the honeypot channel.",
+				"name": "Action"
+			},
+			"honeypotChannel": {
+				"description": "Nobody is caught while it is not set.",
+				"name": "Honeypot Channel"
+			},
+			"honeypotDirectMessage": {
+				"description": "Tells the member it caught why, in a direct message. A hacked account that is softbanned can come back once its owner has it again.",
+				"name": "Tell Them Why"
+			},
+			"honeypotKeepActive": {
+				"description": "WolfStar sends a message there every day, so the channel does not look abandoned.",
+				"name": "Keep It Active"
+			},
+			"honeypotLogChannel": {
+				"description": "Every member it caught, with what they sent. The case still goes to the moderation logs.",
+				"name": "Report Catches To"
+			},
+			"honeypotRandomName": {
+				"description": "The bots cannot avoid the channel by its name.",
+				"name": "Rename It Every Day"
+			},
+			"honeypotWarning": {
+				"description": "Without it the channel says nothing, which is harder for a bot to learn to avoid, and for a member too.",
+				"name": "Keep a Warning in the Channel"
+			},
+			"logsBoosts": {
+				"description": "Receives a log message when a member starts boosting the server and when they stop, with how long they boosted for.",
+				"name": "Boost Logs"
 			},
 			"logsChannelCreate": {
 				"description": "Receives a log message when a new channel is created.",
@@ -601,6 +899,10 @@
 				"description": "Receives a log message when a message from an NSFW channel is edited.",
 				"name": "NSFW Message Update Logs"
 			},
+			"logsMessageUpdateStyle": {
+				"description": "How the log of an edited message shows what changed.",
+				"name": "Edited Messages"
+			},
 			"logsPrune": {
 				"description": "Receives a log message when messages are bulk-deleted (pruned).",
 				"name": "Prune Logs"
@@ -637,13 +939,33 @@
 				"description": "Receives a log message when a thread is created, deleted, renamed, archived or locked.",
 				"name": "Thread Logs"
 			},
+			"logsWebhooks": {
+				"description": "WolfStar creates a webhook in each log channel, whose name and avatar you can change. Without Manage Webhooks a channel gets the logs as before; the moderation log and the reports are always WolfStar's own messages.",
+				"name": "Send Through Webhooks"
+			},
 			"moderationChannel": {
 				"description": "Receives all moderation case logs. Required for the options below to work.",
 				"name": "Moderation Logs"
 			},
+			"moderationConfirmRecentMinutes": {
+				"description": "Asks before acting on a member who got a case within these minutes, so two moderators do not punish twice. 0 never asks.",
+				"name": "Confirm a Second Action"
+			},
+			"moderationDehoist": {
+				"description": "Cleans the names of the members when they join or change them: what lists a name above the others goes, and fancy fonts, symbols and emojis become plain letters. Accents stay, and sticky nicknames and members who can manage nicknames are left alone.",
+				"name": "Dehoist Names"
+			},
 			"moderationTrackBans": {
 				"description": "Opens a moderation case when a member is banned or unbanned by hand.",
 				"name": "Track Manual Bans"
+			},
+			"moderationTrackKicks": {
+				"description": "Opens a moderation case when a member is kicked by hand. WolfStar reads the audit log for every member who leaves, so it needs View Audit Log.",
+				"name": "Track Manual Kicks"
+			},
+			"moderationTrackRoles": {
+				"description": "Mutes or restricts a member, as the commands do, when someone gives them the muted role or a restriction role by hand.",
+				"name": "Track Manual Roles"
 			},
 			"moderationTrackTimeouts": {
 				"description": "Opens a moderation case when a member is timed out by hand.",

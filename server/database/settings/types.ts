@@ -2,6 +2,7 @@ import type { Models } from "#server/database/generated/prisma/contract";
 import type { StoredGuildData } from "#server/database/settings/columns";
 import type { DeepReadonly } from "@sapphire/utilities";
 import type { Snowflake } from "discord-api-types/v10";
+import { SETTING_CHOICES } from "#shared/utils/settings-choices";
 
 /**
  * The settings of a guild, flattened from the normalized Prisma 8 tables
@@ -42,11 +43,7 @@ export type CommandLogData = Models.public_CommandLog;
 export type HoneypotAction = Models.public_GuildHoneypot["action"];
 
 /** The values of {@link HoneypotAction}, the mildest first, in the order the settings offer them. */
-export const HoneypotActions = [
-	"Kick",
-	"Softban",
-	"Ban",
-] as const satisfies readonly HoneypotAction[];
+export const HoneypotActions = SETTING_CHOICES.honeypotAction satisfies readonly HoneypotAction[];
 
 /**
  * How the log of an edited message shows the change, as the
@@ -57,10 +54,8 @@ export const HoneypotActions = [
 export type MessageUpdateStyle = Models.public_GuildLogsOptions["messageUpdateStyle"];
 
 /** The values of {@link MessageUpdateStyle}, in the order the settings offer them. */
-export const MessageUpdateStyles = [
-	"Difference",
-	"Separate",
-] as const satisfies readonly MessageUpdateStyle[];
+export const MessageUpdateStyles =
+	SETTING_CHOICES.logsMessageUpdateStyle satisfies readonly MessageUpdateStyle[];
 
 export interface PermissionsNode {
 	allow: readonly Snowflake[];

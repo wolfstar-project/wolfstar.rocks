@@ -4,6 +4,7 @@ import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 import Moderation from "~/components/guild/settings/Moderation.vue";
+import NumberField from "~/components/guild/settings/NumberField.vue";
 import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 import { createMockGuildData } from "~~/test/mocks/guildData";
 
@@ -174,5 +175,36 @@ describe("moderation guild settings", () => {
 			expect(switchElement.exists()).toBeTruthy();
 			expect(switchElement.attributes("aria-label")).toBe(`Toggle ${setting.name}`);
 		}
+	});
+
+	it("asks for the confirm window of a recent case in minutes, from the saved settings", async () => {
+		mockGuildSettings.value = createMockGuildData("123456789012345678", {
+			moderationConfirmRecentMinutes: 5,
+		});
+		const wrapper = await mountSuspended(Moderation);
+
+		await nextTick();
+		await nextTick();
+
+		const field = wrapper.findComponent(NumberField);
+		expect(field.text()).toContain("Confirm a Second Action");
+		expect(field.text()).toContain("minutes");
+		expect(field.find("input").element.value).toBe("5");
+	});
+
+	it("holds a confirm window past the range to its end before staging it", async () => {
+		const wrapper = await mountSuspended(Moderation);
+
+		await nextTick();
+		await nextTick();
+
+		const input = wrapper.findComponent(NumberField).findComponent({ name: "UInputNumber" });
+		input.vm.$emit("update:modelValue", 99);
+		await nextTick();
+		await nextTick();
+
+		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+			moderationConfirmRecentMinutes: 60,
+		});
 	});
 });

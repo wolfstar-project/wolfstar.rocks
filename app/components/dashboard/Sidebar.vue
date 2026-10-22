@@ -194,8 +194,15 @@ watch(
 	{ immediate: true },
 );
 
+// A feature is off when its switch is off, or when a setting it needs is unset.
+function isOff(item: DashboardNavItem): boolean {
+	const settings = guildSettings.value;
+	if (!settings) return false;
+	if (item.moduleKey !== undefined && settings[item.moduleKey] === false) return true;
+	return item.requiredKey !== undefined && !settings[item.requiredKey];
+}
+
 function toRow(item: DashboardNavItem) {
-	const enabled = item.moduleKey ? guildSettings.value?.[item.moduleKey] : undefined;
 	return {
 		...item,
 		count:
@@ -203,7 +210,7 @@ function toRow(item: DashboardNavItem) {
 				? countEnabledModules(guildSettings.value)
 				: null,
 		current: section.value === item.slug,
-		off: item.moduleKey !== undefined && enabled === false,
+		off: isOff(item),
 		pinnable: item.group === "modules" && !item.comingSoon,
 		pinned: isPinned(item.slug),
 	};

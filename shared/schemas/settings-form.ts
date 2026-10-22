@@ -1,13 +1,25 @@
 import {
 	array,
 	boolean,
+	integer,
+	maxValue,
+	minValue,
 	nullable,
+	number,
 	object,
 	optional,
+	picklist,
+	pipe,
 	string,
 	type GenericSchema,
 	type ObjectSchema,
 } from "valibot";
+import {
+	SETTING_CHOICES,
+	SETTING_NUMBER_RANGES,
+	type ChoiceSettingKey,
+	type NumberSettingKey,
+} from "../utils/settings-choices";
 
 export interface SettingsFormSpec {
 	/** Settings that hold one channel or role, or nothing. */
@@ -16,6 +28,10 @@ export interface SettingsFormSpec {
 	many?: readonly string[];
 	/** Settings that are switched on or off. */
 	toggles?: readonly string[];
+	/** Settings that hold a whole number, in the range the bot accepts. */
+	numbers?: readonly NumberSettingKey[];
+	/** Settings that hold one word of a fixed set. */
+	choices?: readonly ChoiceSettingKey[];
 }
 
 /**
@@ -36,6 +52,13 @@ export function buildSettingsFormSchema(
 	}
 	for (const key of spec.toggles ?? []) {
 		shape[key] = optional(boolean(), false);
+	}
+	for (const key of spec.numbers ?? []) {
+		const { maximum, minimum } = SETTING_NUMBER_RANGES[key];
+		shape[key] = pipe(number(), integer(), minValue(minimum), maxValue(maximum));
+	}
+	for (const key of spec.choices ?? []) {
+		shape[key] = picklist(SETTING_CHOICES[key]);
 	}
 
 	return object(shape);

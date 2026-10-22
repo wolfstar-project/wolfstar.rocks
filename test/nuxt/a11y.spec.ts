@@ -55,6 +55,11 @@ import {
 	GuildLogsCaseDetail,
 	GuildReviewQueue,
 	GuildServerRail,
+	GuildSettingsAppeals,
+	GuildSettingsAutoDelete,
+	GuildSettingsAutoMessage,
+	GuildSettingsAutoPurge,
+	GuildSettingsHoneypot,
 	GuildSettingsLogsBulkChannel,
 	GuildSettingsLogsSelectionBar,
 	GuildSettingsSection,
@@ -703,6 +708,105 @@ describe("component accessibility audits", () => {
 				const results = await runAxe(component, { include: panel ? [panel] : [] });
 				expect(results.violations).toEqual([]);
 			}
+		});
+	});
+
+	describe("GuildSettingsHoneypot", () => {
+		const GUILD_ID = "123456789012345678";
+
+		it.each([
+			["set up", { honeypotChannel: "234567890123456789" }],
+			["not set up", {}],
+		])("should have no accessibility violations while %s", async (_state, settings) => {
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+			useGuildSettings().setGuildSettings(createMockGuildData(GUILD_ID, settings));
+			const component = await mountSuspended(GuildSettingsHoneypot);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildSettingsAppeals", () => {
+		it("should have no accessibility violations with the questions open", async () => {
+			const GUILD_ID = "123456789012345678";
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+			useGuildSettings().setGuildSettings(
+				createMockGuildData(GUILD_ID, {
+					appealsEnabled: true,
+					appealsQuestions: ["Why were you punished?"],
+				}),
+			);
+			const component = await mountSuspended(GuildSettingsAppeals);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("automatic channel sections", () => {
+		const GUILD_ID = "123456789012345678";
+		const CHANNEL = "234567890123456789";
+
+		function prepare() {
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+		}
+
+		it("should have no accessibility violations on Auto-Delete", async () => {
+			registerEndpoint(`/api/guilds/${GUILD_ID}/autodelete`, {
+				method: "GET",
+				handler: () => [
+					{ allow: ["links"], bots: true, channelId: CHANNEL, delay: 60, id: "1" },
+				],
+			});
+			prepare();
+			const component = await mountSuspended(GuildSettingsAutoDelete);
+			await vi.waitFor(() => expect(component.find("tbody tr").exists()).toBe(true));
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("should have no accessibility violations on Auto-Purge", async () => {
+			registerEndpoint(`/api/guilds/${GUILD_ID}/autopurge`, {
+				method: "GET",
+				handler: () => [
+					{
+						channelId: CHANNEL,
+						filter: "contains",
+						id: "1",
+						interval: 86_400,
+						nextRunAt: "2026-10-23T04:00:00.000Z",
+						value: "discord.gg/",
+					},
+				],
+			});
+			prepare();
+			const component = await mountSuspended(GuildSettingsAutoPurge);
+			await vi.waitFor(() => expect(component.find("tbody tr").exists()).toBe(true));
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("should have no accessibility violations on Auto-Message", async () => {
+			registerEndpoint(`/api/guilds/${GUILD_ID}/automessage`, {
+				method: "GET",
+				handler: () => [
+					{
+						channelId: CHANNEL,
+						content: "Read the rules before posting.",
+						id: "1",
+						interval: 86_400,
+						mentions: false,
+						nextRunAt: "2026-10-23T09:00:00.000Z",
+					},
+				],
+			});
+			prepare();
+			const component = await mountSuspended(GuildSettingsAutoMessage);
+			await vi.waitFor(() => expect(component.find("li").exists()).toBe(true));
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
 		});
 	});
 

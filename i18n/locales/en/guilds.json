@@ -53,7 +53,7 @@
 				"automessage_subtitle": "Send a message in a channel every interval.",
 				"autodelete_subtitle": "Delete the messages sent in a channel, at once or a delay after.",
 				"autopurge_interval_help": "Every {duration}. From 5 minutes to 14 days.",
-				"autopurge_subtitle": "Purge a channel every interval, of every message or of the ones a filter looks for.",
+				"autopurge_subtitle": "Purge a channel every interval, of every message or of the ones that match.",
 				"bots": "Bots and webhooks too",
 				"bots_help": "Delete their messages too, they are kept otherwise. WolfStar's own are never deleted.",
 				"cancel": "Cancel",
@@ -65,7 +65,7 @@
 				"delete_at_once": "Deleted at once. 24 hours at most.",
 				"edit_title": "{name} · {channel}",
 				"enable": "Enable",
-				"filter": "Delete",
+				"filter": "Messages to purge",
 				"filter_help": "Up to 1,000 messages each time, but the pinned ones and the ones older than 14 days.",
 				"keep": "Keep",
 				"keep_help": "The messages that match one of them stay. The pinned ones always do.",
@@ -391,7 +391,7 @@
 			"add": "Add channel",
 			"columns": {
 				"every": "Every",
-				"filter": "Filter",
+				"filter": "Messages to purge",
 				"next": "Next run"
 			},
 			"edit_aria": "Edit the purge of {channel}",
@@ -745,7 +745,7 @@
 		"entries": {
 			"appealsBans": {
 				"description": "Banned members can appeal; they do not need to be in the server.",
-				"name": "Bans"
+				"name": "Appealable Bans"
 			},
 			"appealsChannel": {
 				"description": "Where the moderators accept or deny them. An appeal sent while it is not set never reaches them.",
@@ -757,15 +757,15 @@
 			},
 			"appealsMutes": {
 				"description": "Muted members can appeal their mute.",
-				"name": "Mutes"
+				"name": "Appealable Mutes"
 			},
 			"appealsQuestions": {
 				"description": "One question per field of the form. WolfStar asks the first five.",
-				"name": "Form Questions"
+				"name": "Appeal Form Questions"
 			},
 			"appealsTimeouts": {
 				"description": "Members can appeal a timeout while it lasts.",
-				"name": "Timeouts"
+				"name": "Appealable Timeouts"
 			},
 			"automodChannel": {
 				"description": "Receives a log message when an auto-moderation rule acts on a message.",
@@ -781,7 +781,7 @@
 			},
 			"honeypotAction": {
 				"description": "What WolfStar does to who writes in the honeypot channel.",
-				"name": "Action"
+				"name": "Honeypot Action"
 			},
 			"honeypotChannel": {
 				"description": "Nobody is caught while it is not set.",
@@ -789,23 +789,23 @@
 			},
 			"honeypotDirectMessage": {
 				"description": "Tells the member it caught why, in a direct message. A hacked account that is softbanned can come back once its owner has it again.",
-				"name": "Tell Them Why"
+				"name": "Tell Caught Members Why"
 			},
 			"honeypotKeepActive": {
 				"description": "WolfStar sends a message there every day, so the channel does not look abandoned.",
-				"name": "Keep It Active"
+				"name": "Keep Honeypot Active"
 			},
 			"honeypotLogChannel": {
 				"description": "Every member it caught, with what they sent. The case still goes to the moderation logs.",
-				"name": "Report Catches To"
+				"name": "Honeypot Catches Channel"
 			},
 			"honeypotRandomName": {
 				"description": "The bots cannot avoid the channel by its name.",
-				"name": "Rename It Every Day"
+				"name": "Rename Honeypot Daily"
 			},
 			"honeypotWarning": {
 				"description": "Without it the channel says nothing, which is harder for a bot to learn to avoid, and for a member too.",
-				"name": "Keep a Warning in the Channel"
+				"name": "Honeypot Warning"
 			},
 			"logsBoosts": {
 				"description": "Receives a log message when a member starts boosting the server and when they stop, with how long they boosted for.",

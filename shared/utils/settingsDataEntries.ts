@@ -444,7 +444,7 @@ export const ConfigurableReportToggles: SettingEntry<ToggleSettingKey>[] = [
 export const BotManagedHoneypotSettings = {
 	honeypotAction: {
 		key: "honeypotAction",
-		name: "Action",
+		name: "Honeypot Action",
 		description: "What WolfStar does to who writes in the honeypot channel.",
 	},
 	honeypotChannel: {
@@ -454,7 +454,7 @@ export const BotManagedHoneypotSettings = {
 	},
 	honeypotWarning: {
 		key: "honeypotWarning",
-		name: "Keep a Warning in the Channel",
+		name: "Honeypot Warning",
 		description:
 			"Without it the channel says nothing, which is harder for a bot to learn to avoid, and for a member too.",
 	},
@@ -465,7 +465,7 @@ export const BotManagedHoneypotSettings = {
 export const ConfigurableHoneypotChannels: SettingEntry<SingleSettingKey>[] = [
 	{
 		key: "honeypotLogChannel",
-		name: "Report Catches To",
+		name: "Honeypot Catches Channel",
 		description:
 			"Every member it caught, with what they sent. The case still goes to the moderation logs.",
 	},
@@ -474,18 +474,18 @@ export const ConfigurableHoneypotChannels: SettingEntry<SingleSettingKey>[] = [
 export const ConfigurableHoneypotToggles: SettingEntry<ToggleSettingKey>[] = [
 	{
 		key: "honeypotDirectMessage",
-		name: "Tell Them Why",
+		name: "Tell Caught Members Why",
 		description:
 			"Tells the member it caught why, in a direct message. A hacked account that is softbanned can come back once its owner has it again.",
 	},
 	{
 		key: "honeypotRandomName",
-		name: "Rename It Every Day",
+		name: "Rename Honeypot Daily",
 		description: "The bots cannot avoid the channel by its name.",
 	},
 	{
 		key: "honeypotKeepActive",
-		name: "Keep It Active",
+		name: "Keep Honeypot Active",
 		description:
 			"WolfStar sends a message there every day, so the channel does not look abandoned.",
 	},
@@ -516,17 +516,17 @@ export const ConfigurableAppealChannels: SettingEntry<SingleSettingKey>[] = [
 export const ConfigurableAppealToggles: SettingEntry<ToggleSettingKey>[] = [
 	{
 		key: "appealsBans",
-		name: "Bans",
+		name: "Appealable Bans",
 		description: "Banned members can appeal; they do not need to be in the server.",
 	},
 	{
 		key: "appealsMutes",
-		name: "Mutes",
+		name: "Appealable Mutes",
 		description: "Muted members can appeal their mute.",
 	},
 	{
 		key: "appealsTimeouts",
-		name: "Timeouts",
+		name: "Appealable Timeouts",
 		description: "Members can appeal a timeout while it lasts.",
 	},
 ];
@@ -534,7 +534,7 @@ export const ConfigurableAppealToggles: SettingEntry<ToggleSettingKey>[] = [
 export const ConfigurableAppealQuestions: SettingEntry<ListSettingKey>[] = [
 	{
 		key: "appealsQuestions",
-		name: "Form Questions",
+		name: "Appeal Form Questions",
 		description: "One question per field of the form. WolfStar asks the first five.",
 	},
 ];

@@ -113,7 +113,7 @@ describe("honeypot guild settings", () => {
 			// One picker, for the reports: the trap itself is no field.
 			const pickers = wrapper.findAllComponents(SelectChannel);
 			expect(pickers).toHaveLength(1);
-			expect(pickers[0]!.props("label")).toBe("Report Catches To");
+			expect(pickers[0]!.props("label")).toBe("Honeypot Catches Channel");
 		});
 
 		it("cannot report the catches to the trap itself", async () => {
@@ -131,16 +131,14 @@ describe("honeypot guild settings", () => {
 			expect(ban.attributes("aria-checked")).toBe("true");
 			expect(ban.attributes("disabled")).toBeDefined();
 			expect(
-				wrapper
-					.find('[aria-label="Toggle Keep a Warning in the Channel"]')
-					.attributes("disabled"),
+				wrapper.find('[aria-label="Toggle Honeypot Warning"]').attributes("disabled"),
 			).toBeDefined();
 		});
 
 		it("stages the switches the dashboard edits", async () => {
 			const wrapper = await mountReady();
 
-			await wrapper.find('[aria-label="Toggle Tell Them Why"]').trigger("click");
+			await wrapper.find('[aria-label="Toggle Tell Caught Members Why"]').trigger("click");
 			await nextTick();
 
 			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({

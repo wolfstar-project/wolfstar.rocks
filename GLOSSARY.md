@@ -45,6 +45,8 @@ Collisions
 - "Moderation history" is the dashboard view of cases. A "moderation log channel" is a Discord channel that
   receives live messages. One is a place to search, the other a place to watch.
 - "Alert" is a filter's soft action. See the open questions for how it meets Staryl's notifications.
+- An Auto-Purge's "messages to purge" picks which messages a channel clears. It is not a filter: a filter
+  is an Auto Moderation rule with soft and hard actions.
 - An appeal is about a case and is not one. Accepting it makes a new case (an unban, an unmute, a timeout
   end) that undoes the first.
 - "Language" names the dashboard's own language. A bot's server language is a separate setting. Always say
@@ -164,6 +166,8 @@ warning.
 **Use for:** the "Honeypot" section and module, "the honeypot channel". "Trap" may explain it in a
 sentence; it is not its name.
 
+**Caught:** a member WolfStar acted on after they wrote in the honeypot channel.
+
 **Never:** trap channel, bait channel, spam trap.
 
 **Casing:** `Honeypot` as the section and module name, `honeypot` in prose.
@@ -181,10 +185,10 @@ invites, images, mentions, embeds, only text) and the pinned ones. Set with `/au
 
 ### Auto-Purge
 
-**Is:** a channel cleared of its messages every interval, of every message or of the ones a filter looks
-for. Set with `/autopurge`, one per channel.
+**Is:** a channel cleared of its messages every interval, of every message or of the ones that match.
+Set with `/autopurge`, one per channel.
 
-**Use for:** the "Auto-Purge" section and module, "purge every".
+**Use for:** the "Auto-Purge" section and module, "purge every", "messages to purge".
 
 **Never:** cleanup, wipe, scheduled delete (that reads as Auto-Delete).
 

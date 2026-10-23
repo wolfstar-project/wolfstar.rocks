@@ -11,8 +11,9 @@ import type { ToggleSettingKey } from "../types/configurableData";
  * `logs` is the switch of the Events, the logs of what happens in the server.
  * The bot does not read it yet: it dropped it from its settings with
  * `commands`, so until it reads it again the switch is kept but turns nothing
- * off. Commands is a section of its own, and so is Logs, the records of what
- * happened, which sits next to it in the sidebar.
+ * off, and the `noteKey` line of its card says so. Commands is a section of its
+ * own, and so is Logs, the records of what happened, which sits next to it in
+ * the sidebar.
  */
 export const GUILD_MODULES = [
 	{
@@ -41,6 +42,7 @@ export const GUILD_MODULES = [
 		icon: "lucide:bell",
 		key: "modulesLogs",
 		labelKey: "dashboard.nav.channels",
+		noteKey: "guild_settings.modules.notes.channels",
 		section: "channels",
 	},
 ] as const satisfies readonly {
@@ -48,6 +50,8 @@ export const GUILD_MODULES = [
 	icon: string;
 	key: Extract<ToggleSettingKey, `modules${string}`>;
 	labelKey: string;
+	/** A line under the description, for what the switch does not do yet. */
+	noteKey?: string;
 	section: string;
 }[];
 

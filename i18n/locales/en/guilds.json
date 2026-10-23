@@ -606,6 +606,9 @@
 			"inactive_hint": "Enable to configure.",
 			"manage": "Manage modules",
 			"not_set_up": "Not set up",
+			"notes": {
+				"channels": "WolfStar does not read this switch yet: while it is off, the log events still reach their logging channels."
+			},
 			"off": "Off",
 			"on": "Enabled",
 			"set_up": "Set up",

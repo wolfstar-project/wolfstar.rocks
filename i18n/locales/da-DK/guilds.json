@@ -606,6 +606,9 @@
 			"inactive_hint": "",
 			"manage": "",
 			"not_set_up": "",
+			"notes": {
+				"channels": ""
+			},
 			"off": "",
 			"on": "",
 			"set_up": "",

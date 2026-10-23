@@ -606,6 +606,9 @@
 			"inactive_hint": "Attivalo per configurarlo.",
 			"manage": "Gestisci i moduli",
 			"not_set_up": "",
+			"notes": {
+				"channels": ""
+			},
 			"off": "Disattivato",
 			"on": "Attivo",
 			"set_up": "",

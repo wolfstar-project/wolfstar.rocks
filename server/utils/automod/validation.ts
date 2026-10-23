@@ -1,6 +1,7 @@
 import {
 	AutoModerationHardActions,
 	AutoModerationRuleLimits,
+	getDefaultAutoModerationRule,
 	MaximumAutoModerationRuleEscalationSteps,
 	MaximumAutoModerationRuleListLength,
 	MaximumAutoModerationRuleNameLength,
@@ -42,19 +43,23 @@ export type AutoModerationRulePatch = Partial<Omit<AutoModerationRuleData, "type
  * Reads what a rule is created or edited with from data that is not trusted, the body of a request.
  *
  * @remarks Only the fields that are given are read, so the result is a patch. The options are read with
- * `normalizeAutoModerationRuleOptions`, on top of `currentOptions`, so a request can give only the ones that change.
+ * `normalizeAutoModerationRuleOptions`, on top of the current ones, so a request can give only the ones that change.
  *
  * @param type - The type of the rule, which its options depend on.
  * @param input - The data to read.
- * @param currentOptions - The options the rule has, when it exists.
+ * @param current - What the patch applies to: the options the rule has, when it exists, and its hard action and
+ * duration, which a patch that changes either is checked with. A new rule has the hard action of the defaults.
  * @returns The patch, or what is wrong with the data, one message per field.
  */
 export function parseAutoModerationRulePatch(
 	type: AutoModerationRuleType,
 	input: unknown,
-	currentOptions: object = {},
+	current: Partial<
+		Pick<AutoModerationRuleData, "hardAction" | "hardActionDuration" | "options">
+	> = {},
 ): { data: AutoModerationRulePatch; errors?: undefined } | { data?: undefined; errors: string[] } {
 	if (!isObject(input)) return { errors: ["Invalid body."] };
+	const currentOptions: object = current.options ?? {};
 
 	const body = input as Record<string, unknown>;
 	const data: AutoModerationRulePatch = {};
@@ -103,6 +108,20 @@ export function parseAutoModerationRulePatch(
 			errors.push(
 				`hardActionDuration: Expected null or an integer between ${minimum} and ${maximum}.`,
 			);
+	}
+
+	// Checked when the request changes the action or its duration, so a rule
+	// saved as a Timeout without one before can still be renamed or switched off.
+	const touchesHardAction =
+		body.hardAction !== undefined || body.hardActionDuration !== undefined;
+	const hardActionRead =
+		(body.hardAction === undefined || data.hardAction !== undefined) &&
+		(body.hardActionDuration === undefined || data.hardActionDuration !== undefined);
+	if (touchesHardAction && hardActionRead && isPermanentTimeout(type, data, current)) {
+		const { maximum } = AutoModerationRuleLimits.hardActionDuration;
+		errors.push(
+			`hardActionDuration: Expected an integer between 1 and ${maximum}, which a Timeout requires.`,
+		);
 	}
 
 	for (const key of ["thresholdMaximum", "thresholdDuration"] as const) {
@@ -185,6 +204,24 @@ export function parseAutoModerationRulePatch(
 	}
 
 	return errors.length === 0 ? { data } : { errors };
+}
+
+/**
+ * Whether a rule would be a Timeout without a duration once the patch applies. The bot does nothing, and counts
+ * nothing, for one: Discord takes no timeout without an end.
+ */
+function isPermanentTimeout(
+	type: AutoModerationRuleType,
+	patch: AutoModerationRulePatch,
+	current: Partial<Pick<AutoModerationRuleData, "hardAction" | "hardActionDuration">>,
+): boolean {
+	const defaults = getDefaultAutoModerationRule(type);
+	const action = patch.hardAction ?? current.hardAction ?? defaults.hardAction;
+	const duration =
+		patch.hardActionDuration === undefined
+			? (current.hardActionDuration ?? defaults.hardActionDuration)
+			: patch.hardActionDuration;
+	return action === "Timeout" && !duration;
 }
 
 /**

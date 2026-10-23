@@ -252,7 +252,9 @@ function parseRule(
 		};
 	}
 
-	const parsed = parseAutoModerationRulePatch(type, fields, existing?.options);
+	// The file replaces the rule with the defaults and what it gives, so only
+	// the options are read against the rule of the guild:
+	const parsed = parseAutoModerationRulePatch(type, fields, { options: existing?.options });
 	if (parsed.errors) {
 		report(parsed.errors);
 		return null;

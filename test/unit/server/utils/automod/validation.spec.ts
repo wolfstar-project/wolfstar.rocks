@@ -58,7 +58,7 @@ describe("parseAutoModerationRulePatch", () => {
 		const result = parseAutoModerationRulePatch(
 			"Capitals",
 			{ options: { maximum: 80 } },
-			{ minimum: 30, maximum: 50 },
+			{ options: { minimum: 30, maximum: 50 } },
 		);
 		expect(result.data).toStrictEqual({ options: { minimum: 30, maximum: 80 } });
 	});
@@ -79,16 +79,63 @@ describe("parseAutoModerationRulePatch", () => {
 			parseAutoModerationRulePatch(
 				"Links",
 				{ options: { allowed: existing } },
-				{ allowed: existing },
+				{ options: { allowed: existing } },
 			).errors,
 		).toBeUndefined();
 		expect(
 			parseAutoModerationRulePatch(
 				"Links",
 				{ options: { allowed: [...existing, "one-more.example"] } },
-				{ allowed: existing },
+				{ options: { allowed: existing } },
 			).errors,
 		).toHaveLength(1);
+	});
+
+	// The bot does nothing, and counts nothing, for a Timeout without a
+	// duration: Discord takes none without an end.
+	it.each([
+		["a new Timeout rule without a duration", { hardAction: "Timeout" }, undefined],
+		[
+			"turning a rule into a Timeout without a duration",
+			{ hardAction: "Timeout" },
+			{ hardAction: "Warning", hardActionDuration: null },
+		],
+		[
+			"clearing the duration of a Timeout",
+			{ hardActionDuration: null },
+			{ hardAction: "Timeout", hardActionDuration: 60_000 },
+		],
+	] as const)("refuses %s", (_case, body, current) => {
+		const { errors } = parseAutoModerationRulePatch("Words", body, current);
+		expect(errors).toHaveLength(1);
+		expect(errors?.[0]).toMatch(/^hardActionDuration: /);
+	});
+
+	it("takes a Timeout with a duration, given or kept from the rule", () => {
+		expect(
+			parseAutoModerationRulePatch("Words", {
+				hardAction: "Timeout",
+				hardActionDuration: 60_000,
+			}).data,
+		).toStrictEqual({ hardAction: "Timeout", hardActionDuration: 60_000 });
+		expect(
+			parseAutoModerationRulePatch(
+				"Words",
+				{ hardAction: "Timeout" },
+				{ hardAction: "Ban", hardActionDuration: 60_000 },
+			).data,
+		).toStrictEqual({ hardAction: "Timeout" });
+	});
+
+	// A rule saved before the check can still be switched off or renamed.
+	it("leaves alone the action of a rule the patch does not change", () => {
+		expect(
+			parseAutoModerationRulePatch(
+				"Words",
+				{ enabled: false },
+				{ hardAction: "Timeout", hardActionDuration: null },
+			).data,
+		).toStrictEqual({ enabled: false });
 	});
 
 	it("refuses a permanent timeout in the escalation", () => {

@@ -25,7 +25,7 @@ export default defineWrappedResponseHandler(
 		// copy another request may have changed meanwhile.
 		let errors: string[] | undefined;
 		const change = await updateAutoModerationRule(guild.id, ruleId, (current) => {
-			const parsed = parseAutoModerationRulePatch(current.type, body, current.options);
+			const parsed = parseAutoModerationRulePatch(current.type, body, current);
 			errors = parsed.errors;
 			return parsed.data ?? null;
 		}).catch(throwAutoModerationRuleError);

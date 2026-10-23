@@ -18,6 +18,7 @@ describe("createSetupDraft", () => {
 		expect(draft).toMatchObject({ language: "it-IT", reached: 1, step: 1 });
 		expect(draft.modules).toStrictEqual({
 			modulesAutomod: true,
+			modulesLogs: true,
 			modulesModeration: true,
 			modulesRoles: false,
 		});
@@ -28,10 +29,11 @@ describe("setupChannelFields", () => {
 	it("asks for the channels of the modules that are on", () => {
 		const draft = createSetupDraft("en-US");
 		draft.modules.modulesAutomod = false;
+		draft.modules.modulesLogs = false;
 
 		expect(setupChannelFields(draft)).toStrictEqual({
 			automod: false,
-			events: true,
+			events: false,
 			moderation: true,
 		});
 	});
@@ -42,6 +44,7 @@ describe("setupChanges", () => {
 		expect(setupChanges(createSetupDraft("en-US"))).toStrictEqual({
 			language: "en-US",
 			modulesAutomod: true,
+			modulesLogs: true,
 			modulesModeration: true,
 			modulesRoles: false,
 		});
@@ -81,15 +84,17 @@ describe("setupChanges", () => {
 		expect(changes.modulesModeration).toBe(false);
 	});
 
-	it("writes the event log channel whatever the modules, as the logs are not one", () => {
+	it("leaves out the event log channel when the Events were turned off", () => {
 		const draft = createSetupDraft("en-US");
-		for (const key of Object.keys(draft.modules) as (keyof typeof draft.modules)[]) {
-			draft.modules[key] = false;
-		}
+		draft.modules.modulesLogs = false;
 		draft.eventsChannel = CHANNEL;
 
-		expect(setupChannelFields(draft).events).toBe(true);
-		expect(setupChanges(draft).logsMemberAdd).toBe(CHANNEL);
+		const changes = setupChanges(draft);
+
+		for (const key of SETUP_EVENT_LOG_KEYS) {
+			expect(changes).not.toHaveProperty(key);
+		}
+		expect(changes.modulesLogs).toBe(false);
 	});
 });
 

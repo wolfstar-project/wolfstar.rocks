@@ -17,6 +17,7 @@ export function getDefaultGuildSettings(): DefaultGuildData {
 			modulesAutomod: true,
 			modulesModeration: true,
 			modulesRoles: true,
+			modulesLogs: true,
 			automodChannel: null,
 			automodTrackNative: false,
 			commandsDisabled: [],

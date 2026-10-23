@@ -93,8 +93,8 @@ describe("DashboardSidebar", () => {
 	it("counts the enabled modules and flags a module that is off", async () => {
 		const wrapper = await mountSidebar();
 
-		// Automod and Moderation are on; Roles is off. Commands and Events are not modules.
-		expect(rowFor(wrapper, "Modules").find(".dashboard-nav-count").text()).toBe("2");
+		// Automod, Moderation and the Events are on; Roles is off. Commands is not a module.
+		expect(rowFor(wrapper, "Modules").find(".dashboard-nav-count").text()).toBe("3");
 		expect(rowFor(wrapper, "Roles").find('[title="Module is off"]').exists()).toBe(true);
 		expect(rowFor(wrapper, "Moderation").find('[title="Module is off"]').exists()).toBe(false);
 	});
@@ -171,13 +171,28 @@ describe("DashboardSidebar", () => {
 		expect(rowFor(wrapper, "Appeals").find('[title="Module is off"]').exists()).toBe(false);
 	});
 
-	it("keeps the event logs, Commands and Logs out of the modules, in a group of their own", async () => {
+	it("flags the Events while their switch is off", async () => {
+		const wrapper = await mountSidebar();
+
+		expect(rowFor(wrapper, "Events").find('[title="Module is off"]').exists()).toBe(false);
+
+		useGuildSettings().setGuildSettings(createMockGuildData(GUILD_ID, { modulesLogs: false }));
+		await nextTick();
+
+		expect(rowFor(wrapper, "Events").find('[title="Module is off"]').exists()).toBe(true);
+	});
+
+	it("lists the events with the modules, and Commands and Logs in a group of their own", async () => {
 		const wrapper = await mountSidebar();
 
 		// Only the modules have a title and fold; the tools sit below a divider.
 		expect(wrapper.findAll(".dashboard-nav-label--toggle")).toHaveLength(1);
 		expect(wrapper.findAll(".dashboard-nav-divider").length).toBeGreaterThan(0);
-		for (const label of ["Events", "Commands", "Logs"]) {
+
+		// The events are a module, so they can be pinned.
+		expect(rowFor(wrapper, "Events").find(".dashboard-nav-pin").exists()).toBe(true);
+
+		for (const label of ["Commands", "Logs"]) {
 			const row = rowFor(wrapper, label);
 			expect(row.find(".dashboard-nav-pin").exists()).toBe(false);
 			expect(row.find('[title="Module is off"]').exists()).toBe(false);

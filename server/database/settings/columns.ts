@@ -108,6 +108,7 @@ export const Columns = {
 		modulesAutomod: ["automod", "value"],
 		modulesModeration: ["moderation", "value"],
 		modulesRoles: ["roles", "value"],
+		modulesLogs: ["logs", "value"],
 	}),
 	...columns("GuildAutoModeration", {
 		automodChannel: ["channelId", "snowflake"],

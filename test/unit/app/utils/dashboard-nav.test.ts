@@ -36,7 +36,7 @@ describe("DASHBOARD_NAV", () => {
 		expect(missing).toStrictEqual([]);
 	});
 
-	it("keeps the event logs, Commands and Logs out of the modules", () => {
+	it("lists the events among the modules and keeps Commands and Logs out of them", () => {
 		const modules = DASHBOARD_NAV.filter((item) => item.group === "modules").map(
 			(item) => item.slug,
 		);
@@ -48,19 +48,22 @@ describe("DASHBOARD_NAV", () => {
 			"automod",
 			"moderation",
 			"roles",
+			"channels",
 			"honeypot",
 			"appeals",
 			"autodelete",
 			"autopurge",
 			"automessage",
 		]);
-		expect(tools).toStrictEqual(["channels", "commands", "logs"]);
+		expect(tools).toStrictEqual(["commands", "logs"]);
 		expect(findDashboardNavItem("commands")?.moduleKey).toBeUndefined();
 	});
 
-	// Neither has a flag in the `Modules` table: the appeals have a switch of
-	// their own, and the honeypot is on once the bot has its channel.
-	it("knows what turns the honeypot and the appeals on", () => {
+	// The events are switched by the `logs` flag of `Modules`. Neither of the
+	// others has one: the appeals have a switch of their own, and the honeypot
+	// is on once the bot has its channel.
+	it("knows what turns the events, the honeypot and the appeals on", () => {
+		expect(findDashboardNavItem("channels")?.moduleKey).toBe("modulesLogs");
 		expect(findDashboardNavItem("appeals")?.moduleKey).toBe("appealsEnabled");
 		expect(findDashboardNavItem("honeypot")?.requiredKey).toBe("honeypotChannel");
 	});

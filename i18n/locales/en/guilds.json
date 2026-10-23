@@ -592,6 +592,7 @@
 				"automessage": "Send a message in a channel again and again.",
 				"automod": "Message filters and their escalation rules.",
 				"autopurge": "Purge a channel of its messages every so often.",
+				"channels": "Pick the channel where WolfStar logs each event in the server.",
 				"honeypot": "A channel no member has a reason to write in: WolfStar acts on the spam bots that do.",
 				"moderation": "Manual moderation actions and their case history.",
 				"roles": "Role automation: initial roles and sticky roles."

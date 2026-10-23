@@ -4,7 +4,7 @@ import type { GuildModuleEntry } from "#shared/utils/guild-modules";
 /**
  * `overview` and `tools` have no title: the overview holds the two pages about
  * the server, `modules` the feature modules, and `tools` what is not a module:
- * the event logs, the commands and the logs.
+ * the commands and the logs.
  */
 export type DashboardNavGroup = "overview" | "modules" | "tools";
 
@@ -68,6 +68,13 @@ export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
 	},
 	{
 		group: "modules",
+		icon: "ic:round-notifications",
+		labelKey: "dashboard.nav.channels",
+		moduleKey: "modulesLogs",
+		slug: "channels",
+	},
+	{
+		group: "modules",
 		icon: "ic:round-hive",
 		labelKey: "dashboard.nav.honeypot",
 		requiredKey: "honeypotChannel",
@@ -97,12 +104,6 @@ export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
 		icon: "ic:round-schedule-send",
 		labelKey: "dashboard.nav.automessage",
 		slug: "automessage",
-	},
-	{
-		group: "tools",
-		icon: "ic:round-notifications",
-		labelKey: "dashboard.nav.channels",
-		slug: "channels",
 	},
 	{
 		group: "tools",

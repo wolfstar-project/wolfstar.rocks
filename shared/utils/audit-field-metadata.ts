@@ -66,15 +66,15 @@ const MODULE_LABELS: Record<(typeof GUILD_MODULES)[number]["key"], string> = {
 	modulesAutomod: "Auto-moderation Module",
 	modulesModeration: "Moderation Module",
 	modulesRoles: "Roles Module",
+	modulesLogs: "Events Module",
 };
 
 /**
- * `modulesCommands` and `modulesLogs` are no longer settings, but audit rows
- * that changed them stay in the activity feed.
+ * `modulesCommands` is no longer a setting, but audit rows that changed it stay
+ * in the activity feed.
  */
 const LEGACY_MODULE_LABELS = {
 	modulesCommands: "Commands Module",
-	modulesLogs: "Logs Module",
 } as const;
 
 export const AUDIT_FIELD_METADATA: Readonly<Record<string, AuditFieldMetadata>> =

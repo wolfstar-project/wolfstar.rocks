@@ -139,6 +139,7 @@ describe("GuildSetupWizard", () => {
 				logsMemberAdd: CHANNEL_ID,
 				moderationChannel: CHANNEL_ID,
 				modulesAutomod: true,
+				modulesLogs: true,
 				modulesRoles: false,
 			}),
 		);

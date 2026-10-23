@@ -592,6 +592,7 @@
 				"automessage": "",
 				"automod": "",
 				"autopurge": "",
+				"channels": "",
 				"honeypot": "",
 				"moderation": "",
 				"roles": ""

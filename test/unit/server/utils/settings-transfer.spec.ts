@@ -63,7 +63,12 @@ function issuesOf(file: unknown, rules: readonly AutoModerationRule[] = []) {
 describe("createConfigurationFile", () => {
 	it("holds the settings that do not depend on the server, by the bot's names, and the rules without what is the server's", () => {
 		const file = createConfigurationFile(
-			settings({ language: "it-IT", modulesAutomod: false, rolesAdmin: [ROLE] }),
+			settings({
+				language: "it-IT",
+				modulesAutomod: false,
+				modulesLogs: false,
+				rolesAdmin: [ROLE],
+			}),
 			[rule("Too many lines", "Newlines", { ignoredRoles: [ROLE] })],
 			new Date("2026-10-18T10:00:00.000Z"),
 		);
@@ -72,6 +77,7 @@ describe("createConfigurationFile", () => {
 		expect(file.exportedAt).toBe("2026-10-18T10:00:00.000Z");
 		expect(file.settings.language).toBe("it-IT");
 		expect(file.settings["modules.automod"]).toBe(false);
+		expect(file.settings["modules.logs"]).toBe(false);
 		expect(Object.keys(file.settings)).toHaveLength(TransferableSettings.length);
 		// A role names something of the server, so it stays out:
 		expect(JSON.stringify(file)).not.toContain(ROLE);
@@ -121,7 +127,7 @@ describe("parseConfigurationFile", () => {
 	it("leaves out a setting this dashboard does not manage and says so, and ignores a removed one", () => {
 		const parsed = read({
 			version: 1,
-			settings: { "music.volume": 50, "modules.logs": false, "language": "it-IT" },
+			settings: { "music.volume": 50, "modules.commands": false, "language": "it-IT" },
 		});
 
 		expect(parsed.unsupported).toStrictEqual(["music.volume"]);

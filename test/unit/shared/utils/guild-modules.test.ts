@@ -12,27 +12,34 @@ describe("guild modules registry", () => {
 
 		expect(keys.toSorted()).toStrictEqual([
 			"modulesAutomod",
+			"modulesLogs",
 			"modulesModeration",
 			"modulesRoles",
 		]);
 		expect(new Set(sections).size).toBe(GUILD_MODULES.length);
 	});
 
-	it("leaves Commands and Logs out: the bot dropped them, they are sections, not modules", () => {
+	// `logs` is the switch of the Events, whose section is `channels`; the Logs
+	// section is the records of what happened.
+	it("switches the Events with `logs`, and leaves Commands and Logs out", () => {
 		const keys: readonly string[] = GUILD_MODULES.map((module) => module.key);
+		const sections: readonly string[] = GUILD_MODULES.map((module) => module.section);
 
+		expect(GUILD_MODULES.find((module) => module.key === "modulesLogs")?.section).toBe(
+			"channels",
+		);
 		expect(keys).not.toContain("modulesCommands");
-		expect(keys).not.toContain("modulesLogs");
-		expect(GUILD_MODULES.map((module) => module.section)).not.toContain("commands");
+		expect(sections).not.toContain("commands");
+		expect(sections).not.toContain("logs");
 	});
 
 	it("counts only modules whose flag is exactly true", () => {
 		expect(countEnabledModules(undefined)).toBe(0);
 		expect(countEnabledModules({})).toBe(0);
-		// Files and audit rows written before can still carry `modulesLogs`; it is not a module.
+		// Files and audit rows written before can still carry `modulesCommands`; it is not a module.
 		const settings = {
 			modulesAutomod: true,
-			modulesLogs: true,
+			modulesCommands: true,
 			modulesRoles: true,
 		};
 
@@ -46,6 +53,7 @@ describe("guild modules registry", () => {
 			"modulesAutomod",
 			"modulesModeration",
 			"modulesRoles",
+			"modulesLogs",
 			"appealsEnabled",
 		]);
 		expect(countEnabledModules({ appealsEnabled: true, modulesModeration: true })).toBe(2);

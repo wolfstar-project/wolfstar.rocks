@@ -20,6 +20,7 @@ export const TransferableSettings = [
 	["modules.automod", "modulesAutomod"],
 	["modules.moderation", "modulesModeration"],
 	["modules.roles", "modulesRoles"],
+	["modules.logs", "modulesLogs"],
 	["automod.track-native", "automodTrackNative"],
 	["commands.disabled", "commandsDisabled"],
 	["honeypot.action", "honeypotAction"],
@@ -62,7 +63,7 @@ export function getTransferableSettingName(key: TransferableSettingKey): string 
  * The settings the bot no longer has, which a file exported before may still
  * hold: an import leaves them out instead of reporting them.
  */
-export const RemovedSettings: ReadonlySet<string> = new Set(["modules.logs", "modules.commands"]);
+export const RemovedSettings: ReadonlySet<string> = new Set(["modules.commands"]);
 
 /**
  * The fields of a rule of the file. What names something of the server

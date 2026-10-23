@@ -592,6 +592,7 @@
 				"automessage": "",
 				"automod": "Filtri dei messaggi e le loro regole di inasprimento.",
 				"autopurge": "",
+				"channels": "",
 				"honeypot": "",
 				"moderation": "Azioni di moderazione manuali e la cronologia dei loro casi.",
 				"roles": "Automazione dei ruoli: ruoli iniziali e ruoli persistenti."

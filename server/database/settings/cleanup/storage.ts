@@ -69,7 +69,8 @@ export async function fetchAutoPurges(orm: Orm, guildId: Snowflake): Promise<Aut
  * the guild has none yet. The writes belong together, so `orm` is a
  * transaction's `tx.orm`.
  *
- * @param nextRunAt When it runs next, in milliseconds.
+ * @param nextRunAt When it runs next, in milliseconds, or `null` to keep the
+ * time the row has: the bot moves it after each run, under no lock of ours.
  * @param language The language a `Guild` row is created with.
  */
 export async function upsertAutoPurge(
@@ -77,22 +78,25 @@ export async function upsertAutoPurge(
 	guildId: Snowflake,
 	channelId: Snowflake,
 	data: AutoPurgeData,
-	nextRunAt: number,
+	nextRunAt: number | null,
 	language = "en-US",
 ): Promise<AutoPurge> {
 	const id = BigInt(guildId);
 	const channel = BigInt(channelId);
-	const columns = {
-		filter: data.filter,
-		interval: data.interval,
-		nextRunAt: asTimestampString(new Date(nextRunAt).toISOString()),
-		value: data.value,
-	};
+	const columns = { filter: data.filter, interval: data.interval, value: data.value };
+	// A new row, or one that went away since it was read, runs an interval from now.
+	const nextRun = asTimestampString(
+		new Date(nextRunAt ?? Date.now() + data.interval * 1000).toISOString(),
+	);
 
 	await orm.public.Guild.upsert({ create: { id, language }, update: { id } });
 	const purges = orm.public.GuildAutoPurge;
-	const count = await purges.where({ channelId: channel, guildId: id }).updateAndCount(columns);
-	if (Number(count) === 0) await purges.create({ channelId: channel, guildId: id, ...columns });
+	const count = await purges
+		.where({ channelId: channel, guildId: id })
+		.updateAndCount(nextRunAt === null ? columns : { ...columns, nextRunAt: nextRun });
+	if (Number(count) === 0) {
+		await purges.create({ channelId: channel, guildId: id, ...columns, nextRunAt: nextRun });
+	}
 
 	const row = await purges.first({ channelId: channel, guildId: id });
 	if (!row) throw new Error(`The purge of channel ${channelId} was not written`);

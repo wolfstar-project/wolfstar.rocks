@@ -81,12 +81,12 @@ describe("automatic channel writes", () => {
 				_guild: string,
 				channelId: string,
 				data: object,
-				next: number,
+				next: number | null,
 			) => ({
 				...data,
 				channelId,
 				id: "9",
-				nextRunAt: new Date(next).toISOString(),
+				nextRunAt: next === null ? null : new Date(next).toISOString(),
 			}),
 		);
 		messages.upsertAutoMessage.mockImplementation(
@@ -95,12 +95,12 @@ describe("automatic channel writes", () => {
 				_guild: string,
 				channelId: string,
 				data: object,
-				next: number,
+				next: number | null,
 			) => ({
 				...data,
 				channelId,
 				id: "9",
-				nextRunAt: new Date(next).toISOString(),
+				nextRunAt: next === null ? null : new Date(next).toISOString(),
 			}),
 		);
 	});
@@ -172,23 +172,49 @@ describe("automatic channel writes", () => {
 			expect(change.after?.nextRunAt).toBe("2026-10-22T13:00:00.000Z");
 		});
 
+		// The bot moves the next run after each run, so a write that keeps the
+		// interval leaves the time in the row (`null`) rather than the one it read.
 		it("keeps the next run while the interval stays, and moves it when the interval does", async () => {
-			const next = "2026-10-25T04:00:00.000Z";
 			cleanup.fetchAutoPurges.mockResolvedValue([
-				autoPurge("111111111111111111", 86_400, next),
+				autoPurge("111111111111111111", 86_400, "2026-10-25T04:00:00.000Z"),
 			]);
 
-			const kept = await setAutoPurge(GUILD_ID, "111111111111111111", {
+			await setAutoPurge(GUILD_ID, "111111111111111111", {
 				filter: "bots",
 				interval: 86_400,
 				value: null,
 			});
-			expect(kept.after?.nextRunAt).toBe(next);
+			expect(cleanup.upsertAutoPurge.mock.lastCall?.[4]).toBeNull();
 
 			const moved = await setAutoPurge(GUILD_ID, "111111111111111111", {
 				filter: "bots",
 				interval: 600,
 				value: null,
+			});
+			expect(moved.after?.nextRunAt).toBe("2026-10-22T12:10:00.000Z");
+		});
+	});
+
+	describe("setAutoMessage", () => {
+		it("keeps the next send while the interval stays, and moves it when the interval does", async () => {
+			messages.fetchAutoMessages.mockResolvedValue([
+				{
+					channelId: "111111111111111111",
+					content: "Hi",
+					id: "1",
+					interval: 3600,
+					mentions: false,
+					nextRunAt: "2026-10-22T12:30:00.000Z",
+				},
+			]);
+			const data = { content: "Hello", interval: 3600, mentions: false };
+
+			await setAutoMessage(GUILD_ID, "111111111111111111", data);
+			expect(messages.upsertAutoMessage.mock.lastCall?.[4]).toBeNull();
+
+			const moved = await setAutoMessage(GUILD_ID, "111111111111111111", {
+				...data,
+				interval: 600,
 			});
 			expect(moved.after?.nextRunAt).toBe("2026-10-22T12:10:00.000Z");
 		});

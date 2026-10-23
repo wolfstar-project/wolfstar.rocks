@@ -117,9 +117,14 @@ export async function assertGuildTextChannel(guildId: Snowflake, channelId: stri
 	if (!channel || !TEXT_CHANNEL_TYPES.has(channel.type)) throw new AutoChannelError("channel");
 }
 
-/** When a schedule runs next: as it was while its interval stays, else an interval from now. */
-function nextRun(before: { interval: number; nextRunAt: string } | null, interval: number): number {
-	if (before && before.interval === interval) return Date.parse(before.nextRunAt);
+/**
+ * When a schedule runs next: an interval from now when its interval changes,
+ * else `null`, which keeps the time in the row. Writing back the time read
+ * here would undo the bot's move after a run that happened meanwhile, and the
+ * schedule would run again at once.
+ */
+function nextRun(before: { interval: number } | null, interval: number): number | null {
+	if (before && before.interval === interval) return null;
 	return Date.now() + interval * 1000;
 }
 

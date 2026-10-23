@@ -142,6 +142,9 @@
 				"invalid_guild_why": {
 					"type": "string"
 				},
+				"loading": {
+					"type": "string"
+				},
 				"loading_aria": {
 					"type": "string"
 				},

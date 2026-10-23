@@ -46,6 +46,7 @@
 		"invalid_guild_fix": "Por favor, comprueba la URL y asegúrate de que el ID del servidor es correcto.",
 		"invalid_guild_message": "El ID de servidor proporcionado no es válido.",
 		"invalid_guild_why": "Los IDs de servidor deben ser números de 17-19 dígitos.",
+		"loading": "",
 		"loading_aria": "Cargando panel de control",
 		"nav": {
 			"appeals": "",

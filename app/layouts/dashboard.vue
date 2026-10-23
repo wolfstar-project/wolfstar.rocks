@@ -116,6 +116,10 @@
 				</div>
 			</template>
 		</UModal>
+
+		<Transition name="dashboard-loader">
+			<DashboardLoader v-if="booting" />
+		</Transition>
 	</div>
 </template>
 
@@ -219,6 +223,20 @@ const { data, error } = usePersistedAsyncData(
 		]);
 	},
 	{ watch: [guildId] },
+);
+
+// The first entry shows the bot's mark until the server list and the open
+// server are in, or the server failed to load. It does not come back when the
+// admin switches servers: the page shows its skeleton for that.
+const booting = ref(true);
+watch(
+	[userGuildsPending, guildId, () => data.value, () => error.value],
+	([pending, id, loaded, failed]) => {
+		if (!pending && (!id || loaded || failed)) {
+			booting.value = false;
+		}
+	},
+	{ immediate: true },
 );
 
 watch(

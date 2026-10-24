@@ -114,6 +114,7 @@
 				"user": ""
 			},
 			"load_failed": "",
+			"module_hint": "È attivo finché ha un canale. Non ha un interruttore suo: ferma un canale qui sotto per spegnerlo lì.",
 			"removed_title": "",
 			"retry": "",
 			"saved_title": "",
@@ -579,6 +580,7 @@
 			"cases_title": "Casi",
 			"form_aria": "Modulo impostazioni moderazione",
 			"minutes": "",
+			"module_hint": "Disattivandolo WolfStar rifiuta i comandi di moderazione, come /ban e /warn. Le impostazioni qui sotto si possono comunque cambiare.",
 			"subtitle": "Dove vengono registrati i casi, quali azioni manuali ne aprono uno e come vengono esaminate le segnalazioni dei membri.",
 			"title": "Moderazione"
 		},

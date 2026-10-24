@@ -12,26 +12,19 @@
 		class="space-y-4"
 		@error="onError"
 	>
-		<section class="console-card flex items-center gap-3.5 border-l-[3px] border-l-primary">
-			<span
-				class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary"
-				aria-hidden="true"
-			>
-				<UIcon name="ic:round-shield" class="size-5.5" />
-			</span>
-			<div class="min-w-0 flex-1">
-				<h3 class="text-base font-bold">{{ ts("dashboard.nav.automod") }}</h3>
-				<p class="text-[0.8125rem] text-muted">
-					{{ ts("guild_settings.automod.module_hint") }}
-				</p>
-			</div>
+		<GuildModuleBanner
+			icon="ic:round-shield"
+			:title="ts('dashboard.nav.automod')"
+			:hint="ts('guild_settings.automod.module_hint')"
+			:on="state.modulesAutomod === true"
+		>
 			<USwitch
 				v-model="state.modulesAutomod"
 				:aria-label="
 					ts('guild_settings.modules.toggle_aria', { title: ts('dashboard.nav.automod') })
 				"
 			/>
-		</section>
+		</GuildModuleBanner>
 
 		<section class="console-card" aria-labelledby="automod-settings">
 			<div class="flex items-center gap-3">

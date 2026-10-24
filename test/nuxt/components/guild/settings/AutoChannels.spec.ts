@@ -4,6 +4,7 @@ import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { flushPromises } from "@vue/test-utils";
 import { ChannelType } from "discord-api-types/v10";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 import Editor from "~/components/guild/auto/Editor.vue";
 import AutoDeleteSection from "~/components/guild/settings/AutoDelete.vue";
 import AutoMessageSection from "~/components/guild/settings/AutoMessage.vue";
@@ -119,6 +120,23 @@ describe("automatic channel sections", () => {
 			expect(row.text()).toContain("Deleted");
 			expect(row.text()).toContain("Links");
 			expect(row.text()).toContain("Images");
+		});
+
+		// The bot has no switch for it: the card tells whether a channel keeps it on.
+		it("tells whether the module is on, from its channels", async () => {
+			const wrapper = await mountAttached(AutoDeleteSection);
+			const card = () =>
+				wrapper.findAll("section").find((section) => section.text().includes("no switch"));
+
+			expect(card()?.text()).toContain("Off");
+
+			mockRows.autodelete.value = [
+				{ allow: [], bots: false, channelId: GENERAL, delay: 60, id: "1" },
+			];
+			await nextTick();
+
+			expect(card()?.text()).toContain("Enabled");
+			expect(card()?.find('[role="switch"]').exists()).toBe(false);
 		});
 
 		it("offers no new channel once the server has 25", async () => {

@@ -17,6 +17,23 @@
 		</UButton>
 	</DashboardPageHeader>
 
+	<!-- The bot has no switch for these: a table is on while it has a channel. -->
+	<GuildModuleBanner
+		v-if="!isLoading && !error"
+		:icon="MODULE_ICONS[slug]"
+		:title="ts(`dashboard.nav.${slug}`)"
+		:hint="ts('guild_settings.auto.module_hint')"
+		:on="rows.length > 0"
+	>
+		<UBadge
+			:color="rows.length > 0 ? 'success' : 'neutral'"
+			variant="subtle"
+			class="shrink-0 font-semibold"
+		>
+			{{ ts(rows.length > 0 ? "guild_settings.modules.on" : "guild_settings.modules.off") }}
+		</UBadge>
+	</GuildModuleBanner>
+
 	<slot name="notice"></slot>
 
 	<DashboardSkeleton v-if="isLoading" kind="table" bare />
@@ -122,6 +139,12 @@ const toast = useToast();
 const { activeGuildId } = useActiveGuild();
 const { guildData } = useGuildData();
 const { clearRow, error, refresh, rows, setRow, status } = useAutoChannels(slug, activeGuildId);
+
+const MODULE_ICONS: Record<AutoChannelSlug, string> = {
+	autodelete: "lucide:timer",
+	automessage: "lucide:message-square-reply",
+	autopurge: "lucide:eraser",
+};
 
 const emptyHeadingId = useId();
 const maximum = AUTO_CHANNEL_MAXIMUMS[slug];

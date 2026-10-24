@@ -113,7 +113,11 @@ describe("moderation guild settings", () => {
 		expect(headings).toHaveLength(3);
 		expect(headings).toEqual(expect.arrayContaining(["Cases", "Reports", "Review queue"]));
 		const sectionTitled = (title: string) =>
-			wrapper.findAll("section").find((section) => section.find("h2").text() === title);
+			wrapper
+				.findAll("section")
+				.find(
+					(section) => section.find("h2").exists() && section.find("h2").text() === title,
+				);
 		const cases = sectionTitled("Cases");
 		const reports = sectionTitled("Reports");
 		expect(cases?.text()).toContain("Moderation Logs");
@@ -146,6 +150,20 @@ describe("moderation guild settings", () => {
 
 		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
 			moderationTrackBans: true,
+		});
+	});
+
+	it("switches the moderation module from the card at the top", async () => {
+		const wrapper = await mountSuspended(Moderation);
+
+		await nextTick();
+		await nextTick();
+
+		await getSwitch(wrapper, "Toggle Moderation").trigger("click");
+		await nextTick();
+
+		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+			modulesModeration: false,
 		});
 	});
 

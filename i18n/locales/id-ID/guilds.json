@@ -114,6 +114,7 @@
 				"user": ""
 			},
 			"load_failed": "",
+			"module_hint": "",
 			"removed_title": "",
 			"retry": "",
 			"saved_title": "",
@@ -579,6 +580,7 @@
 			"cases_title": "",
 			"form_aria": "",
 			"minutes": "",
+			"module_hint": "",
 			"subtitle": "",
 			"title": ""
 		},

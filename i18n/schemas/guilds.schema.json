@@ -346,6 +346,9 @@
 						"load_failed": {
 							"type": "string"
 						},
+						"module_hint": {
+							"type": "string"
+						},
 						"removed_title": {
 							"type": "string"
 						},
@@ -1739,6 +1742,9 @@
 							"type": "string"
 						},
 						"minutes": {
+							"type": "string"
+						},
+						"module_hint": {
 							"type": "string"
 						},
 						"subtitle": {

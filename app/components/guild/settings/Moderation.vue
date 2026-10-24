@@ -12,6 +12,22 @@
 		@error="onError"
 	>
 		<div class="flex flex-col gap-5">
+			<GuildModuleBanner
+				icon="lucide:gavel"
+				:title="ts('dashboard.nav.moderation')"
+				:hint="ts('guild_settings.moderation.module_hint')"
+				:on="state.modulesModeration === true"
+			>
+				<USwitch
+					v-model="state.modulesModeration"
+					:aria-label="
+						ts('guild_settings.modules.toggle_aria', {
+							title: ts('dashboard.nav.moderation'),
+						})
+					"
+				/>
+			</GuildModuleBanner>
+
 			<section class="console-card" :aria-labelledby="casesHeadingId">
 				<div class="moderation-card-heading">
 					<h2 :id="casesHeadingId">{{ ts("guild_settings.moderation.cases_title") }}</h2>
@@ -125,6 +141,7 @@ const { mapToGuildData, onError, schema, state } = useSettingsForm({
 		...ConfigurableReportRoles.map((entry) => entry.key),
 	],
 	toggles: [
+		"modulesModeration",
 		...ConfigurableModerationToggles.map((entry) => entry.key),
 		...ConfigurableReportToggles.map((entry) => entry.key),
 	],

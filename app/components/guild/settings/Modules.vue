@@ -73,17 +73,6 @@
 					<p class="mt-1 text-[0.8125rem] leading-snug text-muted">
 						{{ ts(module.descriptionKey) }}
 					</p>
-					<p
-						v-if="module.noteKey"
-						class="mt-2 flex items-start gap-1.5 text-xs leading-snug text-muted"
-					>
-						<UIcon
-							name="lucide:info"
-							class="mt-px size-3.5 shrink-0"
-							aria-hidden="true"
-						/>
-						<span>{{ ts(module.noteKey) }}</span>
-					</p>
 				</div>
 				<div class="mt-4 flex justify-end">
 					<UButton
@@ -159,8 +148,6 @@ interface ModuleCard {
 	descriptionKey: string;
 	icon: string;
 	labelKey: string;
-	/** A line under the description, for what the switch does not do yet. */
-	noteKey?: string;
 	section: string;
 }
 
@@ -193,7 +180,6 @@ const moduleCards: AnyModuleCard[] = [
 			key: module.key,
 			kind: "switch",
 			labelKey: module.labelKey,
-			noteKey: "noteKey" in module ? module.noteKey : undefined,
 			section: module.section,
 		}),
 	),

@@ -107,20 +107,6 @@ describe("modules guild settings", () => {
 		expect(getSetupState(wrapper).enabledCount).toBe(2);
 	});
 
-	it("says on the Events card that the bot does not read their switch yet", async () => {
-		const wrapper = await mountSuspended(Modules);
-		await nextTick();
-
-		const cards = wrapper.findAll(".console-card");
-		const events = cards.find((card) => card.find('[aria-label="Toggle Events"]').exists());
-
-		expect(events?.text()).toContain("WolfStar does not read this switch yet");
-		// The other switches work, so their cards carry no such line.
-		expect(
-			cards.filter((card) => card.text().includes("does not read this switch")),
-		).toHaveLength(1);
-	});
-
 	it("switches the appeals like a module, Disable all included", async () => {
 		const wrapper = await mountSuspended(Modules);
 		await nextTick();

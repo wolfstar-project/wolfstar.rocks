@@ -1828,15 +1828,6 @@
 						"not_set_up": {
 							"type": "string"
 						},
-						"notes": {
-							"type": "object",
-							"properties": {
-								"channels": {
-									"type": "string"
-								}
-							},
-							"additionalProperties": false
-						},
 						"off": {
 							"type": "string"
 						},

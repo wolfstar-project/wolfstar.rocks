@@ -43,13 +43,18 @@ export const GUILD_MODULES = [
 		labelKey: "dashboard.nav.channels",
 		section: "channels",
 	},
-] as const satisfies readonly {
+] as const satisfies readonly GuildModuleDefinition[];
+
+/** What an entry of `GUILD_MODULES` holds. */
+export interface GuildModuleDefinition {
 	descriptionKey: string;
 	icon: string;
 	key: Extract<ToggleSettingKey, `modules${string}`>;
 	labelKey: string;
+	/** A line under the description, for what the switch does not do yet. */
+	noteKey?: string;
 	section: string;
-}[];
+}
 
 export type GuildModuleEntry = (typeof GUILD_MODULES)[number];
 type GuildModuleKey = GuildModuleEntry["key"];

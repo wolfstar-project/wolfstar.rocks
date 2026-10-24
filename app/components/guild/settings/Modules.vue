@@ -73,6 +73,17 @@
 					<p class="mt-1 text-[0.8125rem] leading-snug text-muted">
 						{{ ts(module.descriptionKey) }}
 					</p>
+					<p
+						v-if="module.noteKey"
+						class="mt-2 flex items-start gap-1.5 text-xs leading-snug text-muted"
+					>
+						<UIcon
+							name="lucide:info"
+							class="mt-px size-3.5 shrink-0"
+							aria-hidden="true"
+						/>
+						<span>{{ ts(module.noteKey) }}</span>
+					</p>
 				</div>
 				<div class="mt-4 flex justify-end">
 					<UButton
@@ -133,6 +144,7 @@
 </template>
 
 <script setup lang="ts">
+import type { GuildModuleDefinition, GuildModuleEntry } from "#shared/utils/guild-modules";
 import type { AutoChannelSlug } from "~/composables/useAutoChannels";
 import { GUILD_MODULES, MODULE_SWITCH_KEYS } from "#shared/utils/guild-modules";
 
@@ -148,6 +160,8 @@ interface ModuleCard {
 	descriptionKey: string;
 	icon: string;
 	labelKey: string;
+	/** A line under the description, for what the switch does not do yet. */
+	noteKey?: string;
 	section: string;
 }
 
@@ -174,12 +188,14 @@ type AnyModuleCard = SwitchModuleCard | SetupModuleCard | ListModuleCard;
 // table of their own.
 const moduleCards: AnyModuleCard[] = [
 	...GUILD_MODULES.map(
-		(module): SwitchModuleCard => ({
+		// No entry has a note today, so the entries' own type has no `noteKey`.
+		(module: GuildModuleEntry & Pick<GuildModuleDefinition, "noteKey">): SwitchModuleCard => ({
 			descriptionKey: module.descriptionKey,
 			icon: module.icon,
 			key: module.key,
 			kind: "switch",
 			labelKey: module.labelKey,
+			noteKey: module.noteKey,
 			section: module.section,
 		}),
 	),

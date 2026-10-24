@@ -6,7 +6,27 @@
 		"skip_to_content": "Skip to main content"
 	},
 	"blog": {
-		"rss": "RSS"
+		"article_links": "",
+		"avatar_alt": "",
+		"back": "",
+		"copy_url": "",
+		"edit_article": "",
+		"image_alt": "",
+		"join_support": "",
+		"link_copied": "",
+		"links": "",
+		"on_platform": "",
+		"rss": "RSS",
+		"star_github": "",
+		"toc": ""
+	},
+	"changelog": {
+		"back": "",
+		"cover_alt": "",
+		"description": "",
+		"empty": "",
+		"github_releases": "",
+		"title": ""
 	},
 	"common": {
 		"appearance": "Appearance",
@@ -57,10 +77,11 @@
 		"x_aria": "Follow WolfStar on X - opens in new tab"
 	},
 	"header": {
+		"account_loading": "",
 		"add_app": "Add App",
 		"brand": "WolfStar",
+		"dashboard": "",
 		"home": "{name} home",
-		"profile": "Profile",
 		"settings": "Settings",
 		"sign_in": "Sign in",
 		"sign_in_discord": "Sign in with Discord",
@@ -87,7 +108,9 @@
 		"moderation_logs": "Moderation Logs",
 		"moderation_logs_description": "Searchable moderation history for every action",
 		"moderation_tools": "Moderation Tools",
-		"moderation_tools_description": "Tools to help you moderate your server"
+		"moderation_tools_description": "Tools to help you moderate your server",
+		"staryl_description": "",
+		"wolfstar_description": ""
 	},
 	"nuxtSiteConfig": {
 		"description": "",
@@ -102,12 +125,7 @@
 		"title": "Translation Status"
 	},
 	"user_menu": {
-		"account_menu": "User account menu",
-		"avatar_alt": "{name}'s avatar",
-		"avatar_fallback": "User avatar",
-		"profile": "Profile",
 		"report_bug": "Report a Bug",
-		"sign_out": "Sign out",
-		"user_menu_for": "User menu for {name}"
+		"sign_out": "Sign out"
 	}
 }

@@ -14,7 +14,7 @@
 					role="log"
 					aria-live="polite"
 					aria-relevant="additions text"
-					:aria-label="`Messages in ${channelName}`"
+					:aria-label="ts('discord.chat.messages_in', { channel: channelName })"
 				>
 					<template v-for="(message, index) of messages" :key="message.id">
 						<slot name="message" :message :index>
@@ -55,6 +55,7 @@ interface ChatSlots {
 </script>
 
 <script setup lang="ts">
+const { ts } = useI18n();
 defineProps<ChatProps>();
 defineSlots<ChatSlots>();
 </script>

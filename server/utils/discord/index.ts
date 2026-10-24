@@ -1,5 +1,6 @@
 // oxlint-disable no-console
 import type { ReadonlyGuildData } from "#server/database";
+import type { GuildProbe } from "#server/utils/discord/cache";
 import type {
 	FlattenedGuild,
 	LoginData,
@@ -20,6 +21,8 @@ import {
 	CURRENT_USER_CACHE_NAME,
 	GUILD_CACHE_NAME,
 	invalidateGuildCache,
+	rememberGuildProbe,
+	removePersistedGuild,
 	shouldRefreshCurrentUserCache,
 	shouldRefreshGuildCache,
 } from "#server/utils/discord/cache";
@@ -229,13 +232,11 @@ export async function transformOauthGuildsAndUser({
 
 	// Phase 1: Live bot-membership probe for every guild. Cached getGuild can stay
 	// positive for up to an hour after the bot leaves, which caused stale profile lists.
-	const guildData = await mapWithConcurrency(guilds, 16, async (g) => {
-		const { guild, confirmedAbsent } = await probeBotGuildMembership(g.id);
-		if (confirmedAbsent) {
-			await invalidateGuildCache(g.id);
-		}
-		return guild;
-	});
+	const guildData = await mapWithConcurrency(
+		guilds,
+		16,
+		async (g) => (await probeBotGuildMembership(g.id)).guild,
+	);
 
 	// Phase 2: Fetch member data only for bot-present guilds where the user is not owner.
 	// Separates the sequential getGuild→getMember chain into two independent parallel phases.
@@ -441,22 +442,30 @@ export const getGuild = defineCachedFunction(
 
 /**
  * Live-probes bot guild membership. Returns `confirmedAbsent: true` only when
- * Discord responds 404 (bot not in guild). On transient probe failures, falls
- * back to the cached `getGuild` entry so a valid cache is not discarded.
+ * Discord responds 404 (bot not in guild), and then drops the stored
+ * `getGuild` entry. On transient probe failures, falls back to that entry so
+ * a valid cache is not discarded. A live answer is shared for a few seconds
+ * (`rememberGuildProbe()`).
  */
-async function probeBotGuildMembership(
-	guildId: string,
-): Promise<{ guild: APIGuild | null; confirmedAbsent: boolean }> {
-	try {
-		const guild = await fetchBotGuildFromDiscord(guildId);
-		return { guild, confirmedAbsent: guild === null };
-	} catch (error) {
-		console.warn(`[discord] Live guild probe failed for ${guildId}, falling back to cache`, {
-			error,
-		});
-		const guild = await getGuild(guildId).catch(() => null);
-		return { guild, confirmedAbsent: false };
-	}
+function probeBotGuildMembership(guildId: string): Promise<GuildProbe> {
+	return rememberGuildProbe(guildId, async () => {
+		try {
+			const guild = await fetchBotGuildFromDiscord(guildId);
+			if (guild === null) {
+				await removePersistedGuild(guildId);
+			}
+			return { confirmedAbsent: guild === null, guild, live: true };
+		} catch (error) {
+			console.warn(
+				`[discord] Live guild probe failed for ${guildId}, falling back to cache`,
+				{
+					error,
+				},
+			);
+			const guild = await getGuild(guildId).catch(() => null);
+			return { confirmedAbsent: false, guild, live: false };
+		}
+	});
 }
 
 export async function resolveGuildForRequest(event: H3Event, guildId: string) {
@@ -464,11 +473,7 @@ export async function resolveGuildForRequest(event: H3Event, guildId: string) {
 		await invalidateGuildCache(guildId);
 	}
 	const { guild, confirmedAbsent } = await probeBotGuildMembership(guildId);
-	if (confirmedAbsent) {
-		await invalidateGuildCache(guildId);
-		return null;
-	}
-	return guild;
+	return confirmedAbsent ? null : guild;
 }
 
 export const fetchCommands = defineCachedFunction(

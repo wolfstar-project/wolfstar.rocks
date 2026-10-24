@@ -14,6 +14,10 @@ const { resolve } = createResolver(import.meta.url);
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+	// The dev validator of unhead is registered by `app/plugins/unhead-validate.client.ts`,
+	// which sets the rules Nuxt's own injection cannot.
+	unhead: { vite: { validate: false } },
+
 	// Modules configuration
 	modules: [
 		"@nuxt/ui",
@@ -56,10 +60,10 @@ export default defineNuxtConfig({
 			// Aliased to /oauth/login, which immediately hands off to Discord.
 			login: "/login",
 			// Signed-in users who open a guest-only route (the login hand-off).
-			guest: "/profile",
+			guest: "/app",
 			// Fallback landing page after a completed sign-in, used when no safe
 			// `?next=` is present and no explicit onSuccess/callbackURL is given.
-			authenticated: "/profile",
+			authenticated: "/app",
 			logout: "/",
 		},
 		preserveRedirect: true,
@@ -128,12 +132,9 @@ export default defineNuxtConfig({
 			charset: "utf-8",
 			htmlAttrs: { lang: "en-US" },
 			link: [
-				// Preconnect for external domains (faster than dns-prefetch: includes TLS handshake)
+				// Preconnect covers the DNS lookup too, so no dns-prefetch beside it.
 				{ href: "https://cdn.discordapp.com", rel: "preconnect", crossorigin: "anonymous" },
 				{ href: "https://cdn.wolfstar.rocks", rel: "preconnect", crossorigin: "anonymous" },
-				// Fallback dns-prefetch for browsers that don't support preconnect
-				{ href: "https://cdn.discordapp.com", rel: "dns-prefetch" },
-				{ href: "https://cdn.wolfstar.rocks", rel: "dns-prefetch" },
 			],
 			meta: [
 				// Page transitions
@@ -281,30 +282,30 @@ export default defineNuxtConfig({
 		"/oauth/login": {
 			prerender: false,
 			robots: true,
-			auth: { only: "guest", redirectTo: "/profile" },
+			auth: { only: "guest", redirectTo: "/app" },
 		},
 		// `/login` is an alias of `/oauth/login`, but route rules match on the
 		// requested path, so the guest rule has to be repeated here or signed-in
 		// users hitting /login get bounced back to Discord.
 		"/login": {
 			prerender: false,
-			auth: { only: "guest", redirectTo: "/profile" },
+			auth: { only: "guest", redirectTo: "/app" },
 		},
-		"/guilds/**": { auth: { only: "user", redirectTo: "/login" } },
+		// The dashboard is one client-rendered page; the guild it shows is app
+		// state, so nothing about it is prerenderable or worth indexing.
+		"/app": {
+			auth: { only: "user", redirectTo: "/login" },
+			prerender: false,
+			robots: false,
+			ssr: false,
+		},
+		// Legacy entry points that forward into `/app`: sign-in gated, never indexed.
+		"/guilds/**": { auth: { only: "user", redirectTo: "/login" }, robots: false },
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
-		// /profile hosts local UI settings (theme/locale/motion) for guests and the
-		// Discord account/servers view for signed-in users. Never statically prerender
-		// it (crawlLinks would otherwise reach it via links on prerendered pages).
-		"/profile": {
-			appLayout: "default",
-			prerender: false,
-			robots: true,
-		},
-		"/account": {
-			appLayout: "default",
-			prerender: false,
-			robots: true,
-		},
+		// Deprecated: the page moved into `/app` (server list) and the preferences
+		// dialog (theme/locale/motion). Kept as permanent redirects for old links.
+		"/profile": { redirect: { to: "/app", statusCode: 301 }, prerender: false, robots: false },
+		"/account": { redirect: { to: "/app", statusCode: 301 }, prerender: false, robots: false },
 		"/starly": { appLayout: "default", robots: true },
 
 		// Static pages
@@ -365,6 +366,15 @@ export default defineNuxtConfig({
 	nitro: {
 		future: {
 			nativeSWR: true,
+		},
+		// The bot API only allows the production origin, so a browser on
+		// localhost cannot call it directly. In development `$api` goes through
+		// this same-origin path instead (see `app/plugins/api.ts`).
+		devProxy: {
+			"/__bot-api": {
+				target: process.env.NUXT_PUBLIC_API_BASE_URL || "http://localhost:8282",
+				changeOrigin: true,
+			},
 		},
 		esbuild: {
 			options: {
@@ -532,6 +542,23 @@ export default defineNuxtConfig({
 				weights: [400, 500, 600, 700],
 				display: "swap",
 			},
+			// Display name styles (`AppDisplayName`): the open-source typefaces
+			// Discord's name fonts come from, one weight each as Discord ships
+			// them. Self-hosted at build time and only fetched by a page that
+			// draws a name in one of them.
+			{ display: "swap", name: "Bangers", provider: "google", weights: [400] },
+			{ display: "swap", name: "BioRhyme", provider: "google", weights: [400] },
+			{ display: "swap", name: "Cherry Bomb One", provider: "google", weights: [400] },
+			{ display: "swap", name: "Chicle", provider: "google", weights: [400] },
+			{ display: "swap", name: "MuseoModerno", provider: "google", weights: [500] },
+			{ display: "swap", name: "Pirata One", provider: "google", weights: [400] },
+			{ display: "swap", name: "Pixelify Sans", provider: "google", weights: [400] },
+			{ display: "swap", name: "Grenze Gotisch", provider: "google", weights: [400] },
+			{ display: "swap", name: "Zilla Slab", provider: "google", weights: [600] },
+			{ display: "swap", name: "Playpen Sans", provider: "google", weights: [700] },
+			{ display: "swap", name: "Orbitron", provider: "google", weights: [700] },
+			{ display: "swap", name: "New Rocker", provider: "google", weights: [400] },
+			{ display: "swap", name: "Kalam", provider: "google", weights: [700] },
 		],
 	},
 
@@ -719,7 +746,14 @@ export default defineNuxtConfig({
 	},
 
 	sitemap: {
-		exclude: ["/oauth/guild", "/oauth/callback", "/guilds/[...id]"],
+		exclude: [
+			"/app",
+			"/profile",
+			"/account",
+			"/oauth/guild",
+			"/oauth/callback",
+			"/guilds/[...id]",
+		],
 		zeroRuntime: true,
 	},
 

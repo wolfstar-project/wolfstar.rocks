@@ -88,6 +88,9 @@ operating copy of it.
 | Destructive action    | Explicit, one chance to confirm  | "Delete this rule? This cannot be undone."         |
 | Data labels           | Always labeled with context      | "12 cases", never "12". "Updated 3d ago"           |
 
+The one exception to "Loading: Absent" is the dashboard's first entry, which shows the bot's mark turning
+above the word "Loading" (`dashboard.loading`) until the server list and the open server are in.
+
 `.claude/DESIGN.md` links here for voice, tone, and copy patterns, so this file is the only owner of the
 words.
 

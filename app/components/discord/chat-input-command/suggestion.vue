@@ -49,6 +49,7 @@ interface SlashCommandSuggestionEmits {
 </script>
 
 <script setup lang="ts">
+const { ts } = useI18n();
 const {
 	active = false,
 	app = "wolfstar",
@@ -68,7 +69,9 @@ function select() {
 }
 
 const ariaLabel = computed(() => {
-	const parts = [`${resolvedAppLabel.value} slash command: /${name}`];
+	const parts = [
+		ts("discord.command.suggestion", { app: resolvedAppLabel.value, command: `/${name}` }),
+	];
 	if (description) parts.push(description);
 	return parts.join(". ");
 });

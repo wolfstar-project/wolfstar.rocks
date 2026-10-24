@@ -27,6 +27,11 @@ export interface OauthFlattenedGuild extends PartialOauthFlattenedGuild {
 	permissions: number;
 	manageable: boolean;
 	wolfstarIsIn: boolean;
+	/**
+	 * The server has no settings stored yet, so the dashboard offers its setup.
+	 * Only `/api/guilds/:guild` sets it, and only when it is true.
+	 */
+	setupPending?: boolean;
 }
 
 export interface OauthFlattenedUser {

@@ -13,61 +13,58 @@
 				"accessibility_description": {
 					"type": "string"
 				},
-				"account_management": {
+				"back": {
 					"type": "string"
 				},
-				"appearance_description": {
+				"close": {
 					"type": "string"
 				},
-				"applying_filters": {
+				"connections": {
 					"type": "string"
 				},
-				"clear_search": {
+				"copy": {
 					"type": "string"
 				},
 				"current_status": {
 					"type": "string"
 				},
-				"default_avatar": {
+				"density_compact": {
+					"type": "string"
+				},
+				"density_compact_hint": {
+					"type": "string"
+				},
+				"density_cozy": {
+					"type": "string"
+				},
+				"density_cozy_hint": {
+					"type": "string"
+				},
+				"discord_id": {
+					"type": "string"
+				},
+				"display_name": {
+					"type": "string"
+				},
+				"edit_on_discord": {
 					"type": "string"
 				},
 				"email": {
 					"type": "string"
 				},
-				"error_loading_title": {
+				"from_discord": {
 					"type": "string"
 				},
-				"failed_to_load": {
+				"message_display": {
 					"type": "string"
 				},
-				"get_premium": {
+				"moderation_dms": {
 					"type": "string"
 				},
-				"guest_profile": {
+				"moderation_dms_description": {
 					"type": "string"
 				},
-				"guest_tagline": {
-					"type": "string"
-				},
-				"language_description": {
-					"type": "string"
-				},
-				"language_help": {
-					"type": "string"
-				},
-				"loading_more": {
-					"type": "string"
-				},
-				"loading_servers": {
-					"type": "string"
-				},
-				"manageable": {
-					"type": "string"
-				},
-				"members": {
-					"type": "string"
-				},
-				"members_online": {
+				"moderation_dms_failed": {
 					"type": "string"
 				},
 				"motion_enabled": {
@@ -76,19 +73,13 @@
 				"motion_reduced": {
 					"type": "string"
 				},
-				"no_matching_description": {
+				"my_account": {
 					"type": "string"
 				},
-				"no_matching_servers": {
+				"my_account_description": {
 					"type": "string"
 				},
-				"no_servers": {
-					"type": "string"
-				},
-				"no_servers_description": {
-					"type": "string"
-				},
-				"premium": {
+				"notifications": {
 					"type": "string"
 				},
 				"reduce_motion": {
@@ -97,40 +88,16 @@
 				"reduce_motion_description": {
 					"type": "string"
 				},
-				"refresh_servers": {
+				"sections_aria": {
 					"type": "string"
 				},
-				"reload_page": {
+				"select_language": {
 					"type": "string"
 				},
-				"search_matching": {
-					"type": "string"
-				},
-				"search_servers": {
-					"type": "string"
-				},
-				"search_servers_aria": {
-					"type": "string"
-				},
-				"seo_description": {
-					"type": "string"
-				},
-				"server_list_aria": {
+				"select_language_description": {
 					"type": "string"
 				},
 				"servers": {
-					"type": "string"
-				},
-				"servers_count": {
-					"type": "string"
-				},
-				"servers_guest_description": {
-					"type": "string"
-				},
-				"servers_list_aria": {
-					"type": "string"
-				},
-				"servers_sign_in_prompt": {
 					"type": "string"
 				},
 				"settings_tagline": {
@@ -148,22 +115,196 @@
 				"theme": {
 					"type": "string"
 				},
-				"theme_description": {
-					"type": "string"
-				},
 				"theme_menu_aria": {
 					"type": "string"
 				},
-				"title": {
+				"theme_sync_system": {
 					"type": "string"
 				},
-				"user_id": {
+				"themes": {
+					"type": "object",
+					"properties": {
+						"add_color": {
+							"type": "string"
+						},
+						"appearance": {
+							"type": "string"
+						},
+						"ash": {
+							"type": "string"
+						},
+						"base_dark": {
+							"type": "string"
+						},
+						"base_light": {
+							"type": "string"
+						},
+						"color": {
+							"type": "string"
+						},
+						"color_aria": {
+							"type": "string"
+						},
+						"color_hint": {
+							"type": "string"
+						},
+						"colors": {
+							"type": "string"
+						},
+						"controls": {
+							"type": "string"
+						},
+						"custom": {
+							"type": "string"
+						},
+						"customize": {
+							"type": "string"
+						},
+						"dark": {
+							"type": "string"
+						},
+						"default": {
+							"type": "string"
+						},
+						"direction": {
+							"type": "string"
+						},
+						"eyedropper": {
+							"type": "string"
+						},
+						"hex_label": {
+							"type": "string"
+						},
+						"intensity": {
+							"type": "string"
+						},
+						"light": {
+							"type": "string"
+						},
+						"onyx": {
+							"type": "string"
+						},
+						"picker_area": {
+							"type": "string"
+						},
+						"picker_area_value": {
+							"type": "string"
+						},
+						"picker_hue": {
+							"type": "string"
+						},
+						"presets": {
+							"type": "object",
+							"properties": {
+								"aurora": {
+									"type": "string"
+								},
+								"blurple_twilight": {
+									"type": "string"
+								},
+								"candyfloss": {
+									"type": "string"
+								},
+								"chroma_glow": {
+									"type": "string"
+								},
+								"citrus_sherbert": {
+									"type": "string"
+								},
+								"crimson_moon": {
+									"type": "string"
+								},
+								"desert_khaki": {
+									"type": "string"
+								},
+								"dusk": {
+									"type": "string"
+								},
+								"forest": {
+									"type": "string"
+								},
+								"hanami": {
+									"type": "string"
+								},
+								"lofi_vibes": {
+									"type": "string"
+								},
+								"mars": {
+									"type": "string"
+								},
+								"memory_lane": {
+									"type": "string"
+								},
+								"midnight_blurple": {
+									"type": "string"
+								},
+								"mint_apple": {
+									"type": "string"
+								},
+								"neon_nights": {
+									"type": "string"
+								},
+								"retro_raincloud": {
+									"type": "string"
+								},
+								"retro_storm": {
+									"type": "string"
+								},
+								"sepia": {
+									"type": "string"
+								},
+								"strawberry_lemonade": {
+									"type": "string"
+								},
+								"sunrise": {
+									"type": "string"
+								},
+								"sunset": {
+									"type": "string"
+								},
+								"under_the_sea": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"remove_color": {
+							"type": "string"
+						},
+						"reset": {
+							"type": "string"
+						},
+						"surprise": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"time_format": {
 					"type": "string"
 				},
-				"user_id_label": {
+				"time_format_12h": {
 					"type": "string"
 				},
-				"user_profile": {
+				"time_format_24h": {
+					"type": "string"
+				},
+				"time_format_auto": {
+					"type": "string"
+				},
+				"time_format_auto_hint": {
+					"type": "string"
+				},
+				"time_format_description": {
+					"type": "string"
+				},
+				"username": {
+					"type": "string"
+				},
+				"your_settings": {
+					"type": "string"
+				},
+				"your_settings_description": {
 					"type": "string"
 				}
 			},

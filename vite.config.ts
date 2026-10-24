@@ -290,6 +290,8 @@ export default defineConfig({
 			"@typescript-eslint/unbound-method": "off",
 		},
 		ignorePatterns: [
+			/** The bot's repository (git submodule), linted by its own tooling */
+			"vendor/**",
 			".output/**",
 			".data/**",
 			".nuxt/**",
@@ -507,6 +509,7 @@ export default defineConfig({
 			},
 		],
 		ignorePatterns: [
+			"vendor/",
 			".nuxt/",
 			"dist/",
 			"node_modules/",
@@ -570,12 +573,6 @@ export default defineConfig({
 					alias: {
 						"~": `${rootDir}/app`,
 						"~~": `${rootDir}`,
-						// Stub for the Prisma-generated client (not checked in; generated at build time).
-						// vi.mock() in each test overrides the actual values — this stub only satisfies
-						// Vite's module resolution so the test file can be loaded.
-						// NOTE: Must come before the "#server" prefix alias so the more-specific path
-						// wins on first-match alias resolution (Rollup alias plugin processes in order).
-						"#server/database/generated/client": `${rootDir}/test/__stubs__/prisma-generated-client`,
 						"#server": `${rootDir}/server`,
 						"#shared": `${rootDir}/shared`,
 					},

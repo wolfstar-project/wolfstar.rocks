@@ -95,7 +95,7 @@ const { ts } = useI18n();
 const { localizeAuthError } = useAuthErrorMessage();
 
 const route = useRoute();
-const nextParam = useRouteQuery("next", "/", { transform: String });
+const nextParam = computed(() => String(route.query.next ?? "/"));
 const isSessionMissing = ref(false);
 
 // Better Auth has already completed the Discord code exchange and set the

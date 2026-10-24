@@ -19,8 +19,107 @@
 				"changes_reset_title": {
 					"type": "string"
 				},
+				"coming_soon": {
+					"type": "object",
+					"properties": {
+						"badge": {
+							"type": "string"
+						},
+						"body": {
+							"type": "string"
+						},
+						"learn_more": {
+							"type": "string"
+						},
+						"stat_automod_hits": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"discard_changes": {
 					"type": "string"
+				},
+				"dm": {
+					"type": "object",
+					"properties": {
+						"bot_tag": {
+							"type": "string"
+						},
+						"direct_message": {
+							"type": "string"
+						},
+						"home_aria": {
+							"type": "string"
+						},
+						"intro": {
+							"type": "string"
+						},
+						"log_aria": {
+							"type": "string"
+						},
+						"news": {
+							"type": "object",
+							"properties": {
+								"automod_body": {
+									"type": "string"
+								},
+								"automod_title": {
+									"type": "string"
+								},
+								"console_body": {
+									"type": "string"
+								},
+								"console_text": {
+									"type": "string"
+								},
+								"console_title": {
+									"type": "string"
+								},
+								"language_action": {
+									"type": "string"
+								},
+								"language_body": {
+									"type": "string"
+								},
+								"language_title": {
+									"type": "string"
+								},
+								"rail_text": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"no_messages": {
+							"type": "string"
+						},
+						"no_reply": {
+							"type": "string"
+						},
+						"react": {
+							"type": "string"
+						},
+						"search": {
+							"type": "string"
+						},
+						"staryl_intro": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						},
+						"unread": {
+							"type": "string"
+						},
+						"wolfstar_intro": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
 				},
 				"error_aria": {
 					"type": "string"
@@ -43,22 +142,31 @@
 				"invalid_guild_why": {
 					"type": "string"
 				},
+				"loading": {
+					"type": "string"
+				},
 				"loading_aria": {
-					"type": "string"
-				},
-				"loading_description": {
-					"type": "string"
-				},
-				"loading_title": {
 					"type": "string"
 				},
 				"nav": {
 					"type": "object",
 					"properties": {
-						"bad_words": {
+						"appeals": {
 							"type": "string"
 						},
-						"capitals": {
+						"autodelete": {
+							"type": "string"
+						},
+						"automessage": {
+							"type": "string"
+						},
+						"automod": {
+							"type": "string"
+						},
+						"automod_short": {
+							"type": "string"
+						},
+						"autopurge": {
 							"type": "string"
 						},
 						"channels": {
@@ -67,34 +175,85 @@
 						"commands": {
 							"type": "string"
 						},
-						"events": {
-							"type": "string"
-						},
 						"home": {
 							"type": "string"
 						},
-						"invites": {
-							"type": "string"
-						},
-						"line_spam": {
-							"type": "string"
-						},
-						"links": {
+						"honeypot": {
 							"type": "string"
 						},
 						"logs": {
 							"type": "string"
 						},
-						"message_duplication": {
-							"type": "string"
-						},
 						"moderation": {
 							"type": "string"
 						},
-						"reactions": {
+						"modules": {
+							"type": "string"
+						},
+						"overview": {
 							"type": "string"
 						},
 						"roles": {
+							"type": "string"
+						},
+						"support_server": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"nav_aria": {
+					"type": "string"
+				},
+				"nav_current_group": {
+					"type": "string"
+				},
+				"nav_groups": {
+					"type": "object",
+					"properties": {
+						"modules": {
+							"type": "string"
+						},
+						"resources": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"nav_menu": {
+					"type": "string"
+				},
+				"nav_menu_description": {
+					"type": "string"
+				},
+				"nav_module_off": {
+					"type": "string"
+				},
+				"nav_pin": {
+					"type": "string"
+				},
+				"nav_pinned": {
+					"type": "string"
+				},
+				"nav_recent": {
+					"type": "string"
+				},
+				"nav_sections_aria": {
+					"type": "string"
+				},
+				"nav_unpin": {
+					"type": "string"
+				},
+				"nav_you": {
+					"type": "string"
+				},
+				"picker": {
+					"type": "object",
+					"properties": {
+						"empty": {
+							"type": "string"
+						},
+						"error": {
 							"type": "string"
 						}
 					},
@@ -104,6 +263,12 @@
 					"type": "string"
 				},
 				"save_changes": {
+					"type": "string"
+				},
+				"server_rail_add": {
+					"type": "string"
+				},
+				"server_rail_aria": {
 					"type": "string"
 				},
 				"settings_saved_description": {
@@ -121,7 +286,13 @@
 				"unauthorized_title": {
 					"type": "string"
 				},
+				"unsaved_bar": {
+					"type": "string"
+				},
 				"unsaved_description": {
+					"type": "string"
+				},
+				"unsaved_short": {
 					"type": "string"
 				},
 				"unsaved_title": {
@@ -135,6 +306,15 @@
 				},
 				"update_failed_why": {
 					"type": "string"
+				},
+				"user_preferences": {
+					"type": "string"
+				},
+				"user_settings_for": {
+					"type": "string"
+				},
+				"user_sign_out": {
+					"type": "string"
 				}
 			},
 			"additionalProperties": false
@@ -145,6 +325,114 @@
 				"all_actions": {
 					"type": "string"
 				},
+				"all_statuses": {
+					"type": "string"
+				},
+				"by_moderator": {
+					"type": "string"
+				},
+				"case": {
+					"type": "object",
+					"properties": {
+						"created": {
+							"type": "string"
+						},
+						"description": {
+							"type": "string"
+						},
+						"duration": {
+							"type": "string"
+						},
+						"edit_hint": {
+							"type": "string"
+						},
+						"ended": {
+							"type": "string"
+						},
+						"ends": {
+							"type": "string"
+						},
+						"message": {
+							"type": "string"
+						},
+						"moderator": {
+							"type": "string"
+						},
+						"no_nickname": {
+							"type": "string"
+						},
+						"open_message": {
+							"type": "string"
+						},
+						"open_message_aria": {
+							"type": "string"
+						},
+						"previous_nickname": {
+							"type": "string"
+						},
+						"reason": {
+							"type": "string"
+						},
+						"role": {
+							"type": "string"
+						},
+						"roles_had": {
+							"type": "string"
+						},
+						"show_member_cases": {
+							"type": "string"
+						},
+						"show_moderator_cases": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						},
+						"unknown_role": {
+							"type": "string"
+						},
+						"user": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"case_status": {
+					"type": "object",
+					"properties": {
+						"archived": {
+							"type": "string"
+						},
+						"completed": {
+							"type": "string"
+						},
+						"open": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"changes": {
+					"type": "object",
+					"properties": {
+						"close": {
+							"type": "string"
+						},
+						"none": {
+							"type": "string"
+						},
+						"show_all": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						},
+						"to": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"columns": {
 					"type": "object",
 					"properties": {
@@ -152,6 +440,9 @@
 							"type": "string"
 						},
 						"case": {
+							"type": "string"
+						},
+						"channel": {
 							"type": "string"
 						},
 						"command": {
@@ -169,25 +460,52 @@
 						"moderator": {
 							"type": "string"
 						},
+						"outcome": {
+							"type": "string"
+						},
 						"reason": {
+							"type": "string"
+						},
+						"result": {
 							"type": "string"
 						},
 						"status": {
 							"type": "string"
 						},
-						"time": {
+						"type": {
 							"type": "string"
 						},
 						"user": {
 							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"command_types": {
+					"type": "object",
+					"properties": {
+						"message": {
+							"type": "string"
 						},
-						"when": {
+						"slash": {
+							"type": "string"
+						},
+						"user": {
 							"type": "string"
 						}
 					},
 					"additionalProperties": false
 				},
 				"filter_action": {
+					"type": "string"
+				},
+				"filter_case_status": {
+					"type": "string"
+				},
+				"filter_member": {
+					"type": "string"
+				},
+				"filter_moderator": {
 					"type": "string"
 				},
 				"filter_status": {
@@ -214,6 +532,33 @@
 				"no_warnings": {
 					"type": "string"
 				},
+				"open_case": {
+					"type": "string"
+				},
+				"outcomes": {
+					"type": "object",
+					"properties": {
+						"denied": {
+							"type": "string"
+						},
+						"failure": {
+							"type": "string"
+						},
+						"success": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"page_subtitle": {
+					"type": "string"
+				},
+				"page_title": {
+					"type": "string"
+				},
+				"permanent": {
+					"type": "string"
+				},
 				"refresh_activity": {
 					"type": "string"
 				},
@@ -224,6 +569,12 @@
 					"type": "string"
 				},
 				"refresh_moderation": {
+					"type": "string"
+				},
+				"remove_filter": {
+					"type": "string"
+				},
+				"result_succeeded": {
 					"type": "string"
 				},
 				"search_aria": {
@@ -241,9 +592,6 @@
 				"status_failed": {
 					"type": "string"
 				},
-				"status_label": {
-					"type": "string"
-				},
 				"status_success": {
 					"type": "string"
 				},
@@ -259,7 +607,10 @@
 				"tab_warnings": {
 					"type": "string"
 				},
-				"title": {
+				"tabs_aria": {
+					"type": "string"
+				},
+				"undo_action": {
 					"type": "string"
 				},
 				"unknown": {

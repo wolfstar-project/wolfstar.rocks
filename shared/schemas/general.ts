@@ -1,17 +1,9 @@
-import {
-	maxLength,
-	minLength,
-	object,
-	optional,
-	pipe,
-	string,
-	trim,
-	type InferOutput,
-} from "valibot";
+import { object, optional, string, type InferOutput } from "valibot";
 
 /**
- * Schema for the General settings form.
- * Validates the bot command prefix and language selection.
+ * Schema for the General settings form: the language the bot answers in and
+ * the time zone of the server, by its IANA name. The server checks the zone
+ * against the ones its runtime knows.
  */
 export const GeneralSettingsSchema = object({
 	language: optional(
@@ -20,14 +12,7 @@ export const GeneralSettingsSchema = object({
 			value: string(),
 		}),
 	),
-	prefix: optional(
-		pipe(
-			string(),
-			trim(),
-			minLength(1, "Prefix must be at least 1 character"),
-			maxLength(10, "Prefix cannot be longer than 10 characters"),
-		),
-	),
+	timezone: optional(string()),
 });
 
 export type GeneralSettingsSchemaType = InferOutput<typeof GeneralSettingsSchema>;

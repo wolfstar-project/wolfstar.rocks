@@ -25,8 +25,8 @@
 			:aria-label="
 				isBelowMediumScreen
 					? sheetSnap === 'full'
-						? 'Collapse Apps sheet'
-						: 'Expand Apps sheet'
+						? ts('discord.launcher.collapse')
+						: ts('discord.launcher.expand')
 					: undefined
 			"
 			:aria-expanded="isBelowMediumScreen ? sheetSnap === 'full' : undefined"
@@ -49,8 +49,8 @@
 						v-model="searchQuery"
 						type="search"
 						class="discord-app-launcher-search-input"
-						placeholder="Search Apps & Commands"
-						aria-label="Search Apps & Commands"
+						:placeholder="ts('discord.launcher.search')"
+						:aria-label="ts('discord.launcher.search')"
 						autocomplete="off"
 						spellcheck="false"
 						@keydown.enter.prevent="onSearchEnter"
@@ -77,7 +77,7 @@
 									id="discord-app-launcher-commands-heading"
 									class="discord-app-launcher-section-title"
 								>
-									Commands
+									{{ ts("discord.launcher.commands") }}
 								</h2>
 							</div>
 							<div class="discord-app-launcher-server-list">
@@ -108,7 +108,7 @@
 									id="discord-app-launcher-recents-heading"
 									class="discord-app-launcher-section-title"
 								>
-									Recents
+									{{ ts("discord.launcher.views.recents") }}
 									<UIcon
 										name="ph:caret-down-bold"
 										class="discord-app-launcher-section-caret"
@@ -123,11 +123,11 @@
 								>
 									<span
 										class="discord-app-launcher-view-more-desktop max-md:hidden"
-										>View More</span
+										>{{ ts("discord.launcher.view_more") }}</span
 									>
 									<span
 										class="discord-app-launcher-view-more-mobile hidden max-md:inline"
-										>View All</span
+										>{{ ts("discord.launcher.view_all") }}</span
 									>
 								</button>
 							</div>
@@ -250,11 +250,11 @@
 								>
 									<span
 										class="discord-app-launcher-server-title-desktop max-md:hidden"
-										>Apps in this Server</span
+										>{{ ts("discord.launcher.views.server-apps") }}</span
 									>
 									<span
 										class="discord-app-launcher-server-title-mobile hidden max-md:inline"
-										>In This Server</span
+										>{{ ts("discord.launcher.in_server") }}</span
 									>
 								</h2>
 								<button
@@ -265,11 +265,11 @@
 								>
 									<span
 										class="discord-app-launcher-view-more-desktop max-md:hidden"
-										>View More</span
+										>{{ ts("discord.launcher.view_more") }}</span
 									>
 									<span
 										class="discord-app-launcher-view-more-mobile hidden max-md:inline"
-										>View All</span
+										>{{ ts("discord.launcher.view_all") }}</span
 									>
 								</button>
 							</div>
@@ -356,7 +356,7 @@
 									id="discord-app-launcher-promoted-heading"
 									class="discord-app-launcher-section-title"
 								>
-									Promoted
+									{{ ts("discord.launcher.promoted") }}
 								</h2>
 							</div>
 							<div class="discord-app-launcher-promoted-grid">
@@ -513,7 +513,7 @@
 									:id="`discord-app-launcher-${category.id}-heading`"
 									class="discord-app-launcher-section-title"
 								>
-									{{ category.title }}
+									{{ viewTitle(category) }}
 								</h2>
 								<button
 									v-if="shouldShowCategoryViewMore(category)"
@@ -521,7 +521,7 @@
 									class="discord-app-launcher-view-more discord-app-launcher-view-more-header"
 									@click="openListView(category.id)"
 								>
-									View More
+									{{ ts("discord.launcher.view_more") }}
 								</button>
 							</div>
 							<div class="discord-app-launcher-server-list">
@@ -546,20 +546,19 @@
 									class="discord-app-launcher-view-more discord-app-launcher-view-more-footer"
 									@click="openListView(category.id)"
 								>
-									View More
+									{{ ts("discord.launcher.view_more") }}
 								</button>
 							</div>
 						</section>
 
 						<aside v-if="!normalizedQuery" class="discord-app-launcher-help">
 							<span>
-								<strong>Have Questions?</strong>
-								<span
-									>Visit our help center to learn more about using and discovering
-									apps on Discord.</span
-								>
+								<strong>{{ ts("discord.launcher.help_title") }}</strong>
+								<span>{{ ts("discord.launcher.help_body") }}</span>
 							</span>
-							<button type="button" @click="emit('requestHelp')">Learn More</button>
+							<button type="button" @click="emit('requestHelp')">
+								{{ ts("discord.launcher.learn_more") }}
+							</button>
 						</aside>
 					</div>
 				</div>
@@ -572,12 +571,14 @@
 					ref="backRef"
 					type="button"
 					class="discord-app-launcher-back"
-					aria-label="Back to Apps"
+					:aria-label="ts('discord.launcher.back')"
 					@click="returnToMainView"
 				>
 					<UIcon name="ph:caret-left-bold" class="size-4" aria-hidden="true" />
 				</button>
-				<h2 class="discord-app-launcher-list-title">{{ activeListView?.title }}</h2>
+				<h2 class="discord-app-launcher-list-title">
+					{{ activeListView ? viewTitle(activeListView) : "" }}
+				</h2>
 				<span class="discord-app-launcher-back-spacer" aria-hidden="true" />
 			</header>
 
@@ -662,6 +663,7 @@ interface SheetDragSession {
 </script>
 
 <script setup lang="ts">
+const { ts } = useI18n();
 const {
 	recents = discordAppLauncherRecents,
 	serverApps = discordAppLauncherServerApps,
@@ -715,7 +717,27 @@ const activeListView = computed(() => {
 	return listViewById.value.get(activeView.value);
 });
 
-const dialogLabel = computed(() => (activeListView.value ? activeListView.value.title : "Apps"));
+// The list views' titles, by id; an unknown view keeps the title it came with.
+const VIEW_TITLE_KEYS: Record<string, string> = {
+	"action-games": "discord.launcher.views.action-games",
+	"bot-games": "discord.launcher.views.bot-games",
+	"card-games": "discord.launcher.views.card-games",
+	"chill-together": "discord.launcher.views.chill-together",
+	"puzzle-games": "discord.launcher.views.puzzle-games",
+	"recents": "discord.launcher.views.recents",
+	"server-apps": "discord.launcher.views.server-apps",
+	"social-activities": "discord.launcher.views.social-activities",
+	"strategy-games": "discord.launcher.views.strategy-games",
+};
+
+function viewTitle(view: DiscordAppLauncherListView): string {
+	const key = VIEW_TITLE_KEYS[view.id];
+	return key ? ts(key) : view.title;
+}
+
+const dialogLabel = computed(() =>
+	activeListView.value ? viewTitle(activeListView.value) : ts("discord.launcher.apps"),
+);
 
 function matchesQuery(entry: DiscordAppLauncherEntry, query: string): boolean {
 	if (!query) return true;

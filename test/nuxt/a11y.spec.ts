@@ -1,8 +1,11 @@
 import {
+	AppCustomThemeEditor,
 	AppFooter,
 	AppHeader,
 	AppHeaderAuth,
+	AppHeaderAuthSkeleton,
 	AppLogoMark,
+	AppPreferences,
 
 	// #region Wolfstar components
 	WolfstarCommandsSection,
@@ -34,15 +37,34 @@ import {
 	DiscordChatInputCommandSuggestion,
 	DiscordChatInputCommandMatched,
 	DiscordChatInputCommandSuggestions,
-	ProfileHeader,
 	DiscordAppLauncher,
 	DiscordStringSelectMenu,
 
 	// #endregion
 
+	DashboardBottomNav,
+	DashboardDirectMessageThread,
+	DashboardDirectMessages,
+	DashboardPageHeader,
+	DashboardSidebar,
+	DashboardSkeleton,
 	ErrorPage,
 	OauthStatusPanel,
+	GuildAuditChanges,
+	GuildAutomodDurationInput,
+	GuildLogsCaseDetail,
+	GuildReviewQueue,
+	GuildServerRail,
+	GuildSettingsAppeals,
+	GuildSettingsAutoDelete,
+	GuildSettingsAutoMessage,
+	GuildSettingsAutoPurge,
+	GuildSettingsHoneypot,
+	GuildSettingsLogsBulkChannel,
+	GuildSettingsLogsSelectionBar,
 	GuildSettingsSection,
+	GuildSetupWizard,
+	GuildSettingsToggleRow,
 	IconsApp,
 	IconsWolfstar,
 	SectionHeader,
@@ -56,9 +78,12 @@ import {
 	StarylProductProofSection,
 	// #endregion
 } from "#components";
-import { mountSuspended } from "@nuxt/test-utils/runtime";
+import { mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
 import { createError } from "h3";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { MOCK_AUDIT_ENTRY, MOCK_MODERATION_ENTRY } from "~~/test/mocks/auditLogs";
+import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
+import { createMockGuildData } from "~~/test/mocks/guildData";
 import { runAxe } from "./utils/axe";
 
 const inviteUrl =
@@ -550,6 +575,337 @@ describe("component accessibility audits", () => {
 		});
 	});
 
+	describe("GuildAutomodDurationInput", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildAutomodDurationInput, {
+				props: { label: "Duration", modelValue: 600_000 },
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildSettingsToggleRow", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildSettingsToggleRow, {
+				props: {
+					description: "Opens a moderation case when a member is banned by hand.",
+					modelValue: true,
+					name: "moderationTrackBans",
+					title: "Track Manual Bans",
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildSettingsLogsBulkChannel", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildSettingsLogsBulkChannel, {
+				props: {
+					help: "Sets the channel of every log in this group.",
+					keys: ["logsRoleCreate", "logsRoleUpdate"],
+					label: "All Roles logs",
+					values: { logsRoleCreate: "234567890123456789", logsRoleUpdate: null },
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildSettingsLogsSelectionBar", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildSettingsLogsSelectionBar, {
+				props: {
+					keys: ["logsMessageDelete", "logsRoleCreate"],
+					values: { logsMessageDelete: null, logsRoleCreate: null },
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildServerRail", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildServerRail, {
+				props: {
+					currentGuildId: "222222222222222222",
+					guilds: [
+						createMockOauthFlattenedGuild({ id: "111111111111111111", name: "Alpha" }),
+						createMockOauthFlattenedGuild({ id: "222222222222222222", name: "Beta" }),
+					],
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("DashboardSidebar", () => {
+		it("should have no accessibility violations", async () => {
+			useActiveGuild().selectGuild("123456789012345678");
+			useGuildData().setGuildData(
+				createMockOauthFlattenedGuild({ id: "123456789012345678", name: "WolfStar HQ" }),
+			);
+			const component = await mountSuspended(DashboardSidebar);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("DashboardDirectMessages", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(DashboardDirectMessages);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("DashboardDirectMessageThread", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(DashboardDirectMessageThread);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("DashboardSkeleton", () => {
+		it.each(["overview", "modules", "table", "form"] as const)(
+			"should have no accessibility violations as a %s",
+			async (kind) => {
+				const component = await mountSuspended(DashboardSkeleton, { props: { kind } });
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			},
+		);
+	});
+
+	describe("GuildSetupWizard", () => {
+		it("should have no accessibility violations on each step", async () => {
+			localStorage.clear();
+			useActiveGuild().selectGuild("123456789012345678");
+			useGuildData().setGuildData(
+				createMockOauthFlattenedGuild({
+					id: "123456789012345678",
+					name: "Pixel Parlor",
+					setupPending: true,
+				}),
+			);
+			useGuildSettings().setGuildSettings(createMockGuildData("123456789012345678"));
+			const component = await mountSuspended(GuildSetupWizard, { attachTo: document.body });
+			await vi.waitFor(() =>
+				expect(document.querySelector('[role="dialog"]')).not.toBeNull(),
+			);
+			const setup = useGuildSetup();
+
+			for (const step of [1, 2, 3, 5]) {
+				setup.goTo(step);
+				await nextTick();
+				const panel = document.querySelector('[role="dialog"]');
+				const results = await runAxe(component, { include: panel ? [panel] : [] });
+				expect(results.violations).toEqual([]);
+			}
+		});
+	});
+
+	describe("GuildSettingsHoneypot", () => {
+		const GUILD_ID = "123456789012345678";
+
+		it.each([
+			["set up", { honeypotChannel: "234567890123456789" }],
+			["not set up", {}],
+		])("should have no accessibility violations while %s", async (_state, settings) => {
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+			useGuildSettings().setGuildSettings(createMockGuildData(GUILD_ID, settings));
+			const component = await mountSuspended(GuildSettingsHoneypot);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildSettingsAppeals", () => {
+		it("should have no accessibility violations with the questions open", async () => {
+			const GUILD_ID = "123456789012345678";
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+			useGuildSettings().setGuildSettings(
+				createMockGuildData(GUILD_ID, {
+					appealsEnabled: true,
+					appealsQuestions: ["Why were you punished?"],
+				}),
+			);
+			const component = await mountSuspended(GuildSettingsAppeals);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("automatic channel sections", () => {
+		const GUILD_ID = "123456789012345678";
+		const CHANNEL = "234567890123456789";
+
+		function prepare() {
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+		}
+
+		it("should have no accessibility violations on Auto-Delete", async () => {
+			registerEndpoint(`/api/guilds/${GUILD_ID}/autodelete`, {
+				method: "GET",
+				handler: () => [
+					{ allow: ["links"], bots: true, channelId: CHANNEL, delay: 60, id: "1" },
+				],
+			});
+			prepare();
+			const component = await mountSuspended(GuildSettingsAutoDelete);
+			await vi.waitFor(() => expect(component.find("tbody tr").exists()).toBe(true));
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("should have no accessibility violations on Auto-Purge", async () => {
+			registerEndpoint(`/api/guilds/${GUILD_ID}/autopurge`, {
+				method: "GET",
+				handler: () => [
+					{
+						channelId: CHANNEL,
+						filter: "contains",
+						id: "1",
+						interval: 86_400,
+						nextRunAt: "2026-10-23T04:00:00.000Z",
+						value: "discord.gg/",
+					},
+				],
+			});
+			prepare();
+			const component = await mountSuspended(GuildSettingsAutoPurge);
+			await vi.waitFor(() => expect(component.find("tbody tr").exists()).toBe(true));
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("should have no accessibility violations on Auto-Message", async () => {
+			registerEndpoint(`/api/guilds/${GUILD_ID}/automessage`, {
+				method: "GET",
+				handler: () => [
+					{
+						channelId: CHANNEL,
+						content: "Read the rules before posting.",
+						id: "1",
+						interval: 86_400,
+						mentions: false,
+						nextRunAt: "2026-10-23T09:00:00.000Z",
+					},
+				],
+			});
+			prepare();
+			const component = await mountSuspended(GuildSettingsAutoMessage);
+			await vi.waitFor(() => expect(component.find("li").exists()).toBe(true));
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildReviewQueue", () => {
+		it("should have no accessibility violations", async () => {
+			registerEndpoint("/api/guilds/123456789012345678/reports", {
+				method: "GET",
+				handler: () => ({
+					entries: [
+						{
+							closedAt: null,
+							createdAt: "2026-10-14T12:32:00.000Z",
+							id: "412",
+							reason: "Spamming the same link in #general",
+							status: "Open",
+							targetId: "223456789012345678",
+							targetTag: "loud-user",
+						},
+					],
+					total: 1,
+				}),
+			});
+			useActiveGuild().selectGuild("123456789012345678");
+			useGuildData().setGuildData(
+				createMockOauthFlattenedGuild({ id: "123456789012345678", name: "WolfStar HQ" }),
+			);
+			const component = await mountSuspended(GuildReviewQueue);
+			await vi.waitFor(() => expect(component.find("tbody tr").exists()).toBe(true));
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildAuditChanges", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildAuditChanges, {
+				props: {
+					entry: {
+						...MOCK_AUDIT_ENTRY,
+						changes: {
+							changed: {
+								language: { from: "en-US", to: "it-IT" },
+								modulesAutomod: { from: false, to: true },
+							},
+						},
+					},
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildLogsCaseDetail", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildLogsCaseDetail, {
+				props: {
+					entry: {
+						...MOCK_MODERATION_ENTRY,
+						typeName: "Mute",
+						duration: 3600,
+						metadata: {
+							archived: false,
+							completed: true,
+							temporary: true,
+							undo: false,
+						},
+						status: "completed",
+						extra: { kind: "roles", roleIds: ["333333333333333333"] },
+						message: {
+							channelId: "444444444444444444",
+							messageId: "555555555555555555",
+						},
+					},
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("DashboardBottomNav", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(DashboardBottomNav);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("DashboardPageHeader", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(DashboardPageHeader, {
+				props: { description: "Turn modules on or off.", title: "Modules" },
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
 	describe("IconsApp", () => {
 		it("should have no accessibility violations", async () => {
 			const component = await mountSuspended(IconsApp);
@@ -623,7 +979,10 @@ describe("component accessibility audits", () => {
 
 		it("renders the WolfStar logo mark with the resized svg hidden from AT", async () => {
 			const wrapper = await mountAppHeader();
-			const svg = wrapper.find("svg");
+			const brandLink = wrapper.find("a[aria-label='WolfStar home']");
+			expect(brandLink.exists()).toBe(true);
+
+			const svg = brandLink.find("svg");
 			expect(svg.exists()).toBe(true);
 			expect(svg.attributes("aria-hidden")).toBe("true");
 			expect(svg.classes()).toContain("h-20");
@@ -647,39 +1006,40 @@ describe("component accessibility audits", () => {
 			}
 		});
 
-		it("renders a settings link to /profile with an accessible name for guests", async () => {
+		it("renders a settings button with an accessible name for guests", async () => {
 			const wrapper = await mountSuspended(AppHeaderAuth);
-			const settingsLinks = wrapper.findAll("a[href='/profile']");
-			expect(settingsLinks.length).toBeGreaterThan(0);
-			for (const link of settingsLinks) {
-				expect(link.attributes("aria-label")).toBe("Settings");
-			}
+			const settingsButtons = wrapper.findAll('button[aria-label="Settings"]');
+			expect(settingsButtons.length).toBeGreaterThan(0);
 		});
 	});
 
-	describe("ProfileHeader", () => {
-		it("has no axe-core violations in the guest settings state", async () => {
-			const wrapper = await mountSuspended(ProfileHeader, {
-				props: {
-					user: null,
-					pending: false,
-				},
-			});
+	describe("AppHeaderAuthSkeleton", () => {
+		it.each([false, true])("has no axe-core violations (mobile: %s)", async (mobile) => {
+			const wrapper = await mountSuspended(AppHeaderAuthSkeleton, { props: { mobile } });
+			const results = await runAxe(wrapper);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("AppPreferences", () => {
+		it("has no axe-core violations", async () => {
+			const wrapper = await mountSuspended(AppPreferences);
 			const results = await runAxe(wrapper);
 			expect(results.violations).toEqual([]);
 		});
 
-		it("labels the guest section and sign-in CTA accessibly", async () => {
-			const wrapper = await mountSuspended(ProfileHeader, {
-				props: {
-					user: null,
-					pending: false,
-				},
-			});
-			expect(wrapper.get("section").attributes("aria-label")).toBe("Local settings");
-			expect(wrapper.get('a[href="/login?next=/profile"]').attributes("aria-label")).toBe(
-				"Sign in with Discord",
-			);
+		it("has no axe-core violations in the compact set", async () => {
+			const wrapper = await mountSuspended(AppPreferences, { props: { quick: true } });
+			const results = await runAxe(wrapper);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("AppCustomThemeEditor", () => {
+		it("has no axe-core violations", async () => {
+			const wrapper = await mountSuspended(AppCustomThemeEditor);
+			const results = await runAxe(wrapper);
+			expect(results.violations).toEqual([]);
 		});
 	});
 

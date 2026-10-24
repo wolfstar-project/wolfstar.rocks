@@ -1,73 +1,51 @@
 import type { GuildData, ReadonlyGuildData } from "#server/database/settings/types";
-import type { Awaitable, PickByValue } from "@sapphire/utilities";
-import prisma from "#server/database/prisma";
+import type { Awaitable } from "@sapphire/utilities";
+import { db } from "#server/database/prisma";
 import { getDefaultGuildSettings } from "#server/database/settings/constants";
 import {
 	getSettingsContext,
 	updateSettingsContext,
 } from "#server/database/settings/context/functions";
-import { maybeParseNumber } from "#server/utils/shared";
+import { fetchGuildData, writeGuildData } from "#server/database/settings/storage";
 import { Collection } from "@discordjs/collection";
 import { AsyncQueue } from "@sapphire/async-queue";
 
 const cache = new Collection<string, GuildData>();
+// The guilds whose last read found no rows at all: the bot writes a guild's rows
+// on its first setting, so these were never set up.
+const unconfigured = new Set<string>();
 const queue = new Collection<string, Promise<GuildData>>();
 const locks = new Collection<string, AsyncQueue>();
-const WeakMapNotInitialized = new WeakSet<ReadonlyGuildData>();
-
-const transformers = {
-	selfmodAttachmentsHardActionDuration: maybeParseNumber,
-	selfmodCapitalsHardActionDuration: maybeParseNumber,
-	selfmodFilterHardActionDuration: maybeParseNumber,
-	selfmodInvitesHardActionDuration: maybeParseNumber,
-	selfmodLinksHardActionDuration: maybeParseNumber,
-	selfmodMessagesHardActionDuration: maybeParseNumber,
-	selfmodNewlinesHardActionDuration: maybeParseNumber,
-	selfmodReactionsHardActionDuration: maybeParseNumber,
-} satisfies Record<PickByValue<ReadonlyGuildData, bigint | null>, typeof maybeParseNumber>;
-
-export function serializeSettings(data: ReadonlyGuildData, space?: string | number) {
-	return JSON.stringify(
-		data,
-		(key, value) =>
-			key in transformers ? transformers[key as keyof typeof transformers](value) : value,
-		space,
-	);
-}
 
 /**
- * Coerce known BigInt fields from JSON (numbers/strings) to BigInt
- * @param data - Settings data from client
+ * Serializes settings for an API response. Snowflakes are already strings in
+ * `GuildData`, so nothing in it needs a custom replacer.
  */
-export function coerceBigIntFields(data: Record<string, unknown>): void {
-	const bigintFields = [
-		"selfmodLinksHardActionDuration",
-		"selfmodMessagesHardActionDuration",
-		"selfmodNewlinesHardActionDuration",
-		"selfmodInvitesHardActionDuration",
-		"selfmodFilterHardActionDuration",
-		"selfmodReactionsHardActionDuration",
-		"selfmodAttachmentsHardActionDuration",
-		"selfmodCapitalsHardActionDuration",
-	];
-
-	for (const field of bigintFields) {
-		if (field in data && data[field] !== null && data[field] !== undefined) {
-			const value = data[field];
-			if (typeof value === "number" || typeof value === "string") {
-				try {
-					data[field] = BigInt(value);
-				} catch {
-					// If conversion fails, delete the field to prevent Prisma error
-					delete data[field];
-				}
-			}
-		}
-	}
+export function serializeSettings(data: ReadonlyGuildData, space?: string | number) {
+	return JSON.stringify(data, null, space);
 }
 
 export function readSettings(guildId: string): Awaitable<ReadonlyGuildData> {
 	return cache.get(guildId) ?? processFetch(guildId);
+}
+
+/**
+ * Reads the settings of a guild as the database has them now, for what must
+ * not be stale, such as an export: the bot and the other instances of the
+ * dashboard write them too, and this process's cache only learns of its own
+ * writes.
+ */
+export function readFreshSettings(guildId: string): Promise<ReadonlyGuildData> {
+	return processFetch(guildId, true);
+}
+
+/**
+ * Whether the guild has no settings stored yet, as of its last read: nobody
+ * changed a setting for it, here or through the bot. The dashboard offers the
+ * setup of such a guild.
+ */
+export function isGuildUnconfigured(guildId: string): boolean {
+	return unconfigured.has(guildId);
 }
 
 export function readSettingsPermissionNodes(settings: ReadonlyGuildData) {
@@ -75,15 +53,16 @@ export function readSettingsPermissionNodes(settings: ReadonlyGuildData) {
 }
 
 export async function writeSettingsTransaction(id: string) {
-	const queue = locks.ensure(id, () => new AsyncQueue());
+	const lock = locks.ensure(id, () => new AsyncQueue());
 
 	// Acquire a write lock:
-	await queue.wait();
+	await lock.wait();
 
-	// Fetch the entry:
-	const settings = cache.get(id) ?? (await unlockOnThrow(processFetch(id), queue));
+	// The bot writes these tables too, so the write is made on what the
+	// database has now rather than on whatever this process cached earlier.
+	const settings = await unlockOnThrow(processFetch(id, true), lock);
 
-	return new Transaction(settings, queue);
+	return new Transaction(settings, lock);
 }
 
 class Transaction {
@@ -110,26 +89,23 @@ class Transaction {
 		return this;
 	}
 
-	public async submit() {
-		if (!this.#hasChanges) {
+	/**
+	 * Writes the changes.
+	 *
+	 * @param extra Other writes that belong with them, made in the same database transaction, so they are all written
+	 * or none is: the rules of an import. They run even when no setting changes.
+	 */
+	public async submit(extra?: Parameters<typeof writeGuildData>[3]) {
+		if (!this.#hasChanges && !extra) {
 			return;
 		}
 
 		try {
-			if (WeakMapNotInitialized.has(this.settings)) {
-				await prisma.guild.create({
-					// @ts-expect-error readonly data
-					data: { ...this.settings, ...this.#changes },
-				});
-				WeakMapNotInitialized.delete(this.settings);
-			} else {
-				await prisma.guild.update({
-					where: { id: this.settings.id },
-					// @ts-expect-error readonly data
-					data: this.#changes,
-				});
-			}
+			// Write the merged settings, so the rows created for the first time
+			// carry every column and not just the changes:
+			await writeGuildData(db, { ...this.settings, ...this.#changes }, this.#changes, extra);
 
+			unconfigured.delete(this.settings.id);
 			Object.assign(this.settings, this.#changes);
 			this.#hasChanges = false;
 			updateSettingsContext(this.settings, this.#changes);
@@ -171,35 +147,39 @@ async function unlockOnThrow(promise: Promise<ReadonlyGuildData>, lock: AsyncQue
 	}
 }
 
-async function processFetch(id: string): Promise<ReadonlyGuildData> {
+/**
+ * Reads the settings of a guild from the database, once for the callers that
+ * ask at the same time.
+ *
+ * @param fresh - Whether a read that is already running is not enough: it may
+ * have started before a write.
+ */
+async function processFetch(id: string, fresh = false): Promise<ReadonlyGuildData> {
 	const previous = queue.get(id);
-	if (previous) {
+	if (previous && !fresh) {
 		return previous;
 	}
 
+	const promise = fetch(id);
+	queue.set(id, promise);
 	try {
-		const promise = fetch(id);
-		queue.set(id, promise);
 		const value = await promise;
 		getSettingsContext(value);
 		return value;
 	} finally {
-		queue.delete(id);
+		if (queue.get(id) === promise) queue.delete(id);
 	}
 }
 
 async function fetch(id: string): Promise<GuildData> {
-	const { guild } = prisma;
-	const existing = await guild.findUnique({ where: { id } });
-	if (existing) {
-		cache.set(id, existing);
-		return existing;
-	}
+	// A guild without rows reads as the defaults; its rows are created by the first write:
+	const stored = await fetchGuildData(db.orm, id);
+	if (stored === null) unconfigured.add(id);
+	else unconfigured.delete(id);
 
-	const created = Object.assign(Object.create(null), getDefaultGuildSettings(), {
-		id,
-	}) as GuildData;
-	cache.set(id, created);
-	WeakMapNotInitialized.add(created);
-	return created;
+	const data =
+		stored ??
+		(Object.assign(Object.create(null), getDefaultGuildSettings(), { id }) as GuildData);
+	cache.set(id, data);
+	return data;
 }

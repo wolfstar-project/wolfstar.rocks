@@ -6,7 +6,10 @@ import {
 	parseGuildSettings,
 	parseGuildSettingsSaveResponse,
 	resolveGuildIconSrc,
+	resolveLegacyDashboardSection,
+	selectDashboardRailGuilds,
 } from "~/utils/guild-dashboard";
+import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 
 describe("guild-dashboard utilities - guild switch watcher simulation", () => {
 	it("should clear staged changes when guild ID changes", () => {
@@ -207,5 +210,56 @@ describe("parseGuildSettings", () => {
 	it("returns the fallback for non-object JSON (number)", () => {
 		const fallback = { fallback: true };
 		expect(parseGuildSettings("42", fallback)).toBe(fallback);
+	});
+});
+
+describe("selectDashboardRailGuilds", () => {
+	const guild = (overrides: Partial<OauthFlattenedGuild>) =>
+		createMockOauthFlattenedGuild(overrides);
+
+	it("keeps every guild the viewer manages, with WolfStar or without", () => {
+		const rail = selectDashboardRailGuilds([
+			guild({ id: "1", name: "Alpha", manageable: true, wolfstarIsIn: true }),
+			guild({ id: "2", name: "Beta", manageable: false, wolfstarIsIn: true }),
+			guild({ id: "3", name: "Gamma", manageable: true, wolfstarIsIn: false }),
+		]);
+
+		expect(rail.map((entry) => entry.id)).toStrictEqual(["1", "3"]);
+	});
+
+	it("sorts entries by name so the rail order stays stable", () => {
+		const rail = selectDashboardRailGuilds([
+			guild({ id: "1", name: "zeta" }),
+			guild({ id: "2", name: "Alpha" }),
+			guild({ id: "3", name: "mid" }),
+		]);
+
+		expect(rail.map((entry) => entry.name)).toStrictEqual(["Alpha", "mid", "zeta"]);
+	});
+
+	it("returns an empty rail when nothing qualifies", () => {
+		expect(selectDashboardRailGuilds([])).toStrictEqual([]);
+		expect(selectDashboardRailGuilds([guild({ manageable: false })])).toStrictEqual([]);
+	});
+});
+
+describe("resolveLegacyDashboardSection", () => {
+	it("sends the pre-V7 filter pages to auto-moderation", () => {
+		expect(resolveLegacyDashboardSection("moderation/word")).toBe("automod");
+		expect(resolveLegacyDashboardSection("moderation/capitals")).toBe("automod");
+	});
+
+	it("sends the removed Events page to moderation, where its toggles moved", () => {
+		expect(resolveLegacyDashboardSection("events")).toBe("moderation");
+	});
+
+	it("sends the removed Reports page to moderation, which holds its settings now", () => {
+		expect(resolveLegacyDashboardSection("reports")).toBe("moderation");
+	});
+
+	it("leaves the sections that still exist alone", () => {
+		for (const slug of ["", "moderation", "channels", "roles", "commands", "logs"]) {
+			expect(resolveLegacyDashboardSection(slug)).toBe(slug);
+		}
 	});
 });

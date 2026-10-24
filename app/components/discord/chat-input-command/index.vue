@@ -37,6 +37,7 @@ interface SlashCommandSlots {
 </script>
 
 <script setup lang="ts">
+const { ts } = useI18n();
 defineSlots<SlashCommandSlots>();
 
 const { name, subcommand, subcommandGroup, options = [] } = defineProps<SlashCommandProps>();
@@ -66,7 +67,9 @@ const ariaLabel = computed(() => {
 		})
 		.join(" ");
 
-	return `Slash command /${path}${optionText ? ` ${optionText}` : ""}`;
+	return ts("discord.command.label", {
+		command: `/${path}${optionText ? ` ${optionText}` : ""}`,
+	});
 });
 </script>
 

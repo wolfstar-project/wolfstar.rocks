@@ -990,7 +990,7 @@ describe("component SSR rendering", () => {
 				props: { title: "Settings", description: "Configure your guild" },
 				slots: { default: "<p>Form</p>" },
 			});
-			const desc = wrapper.find("p.text-sm");
+			const desc = wrapper.find("p.text-muted");
 			expect(desc.exists()).toBe(true);
 			expect(desc.text()).toBe("Configure your guild");
 		});
@@ -1086,7 +1086,9 @@ describe("component SSR rendering", () => {
 			expect(membersToggle?.attributes("aria-label")).toBe("Hide member list");
 		});
 
-		it("renders a plain-text moderation success reply on desktop", async () => {
+		// WolfStar V7 answers a moderation action with a green embed, the target
+		// as inline code rather than a mention.
+		it("renders the moderation success embed on desktop", async () => {
 			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 
 			// Ensure slash mode is closed so the channel response is visible.
@@ -1100,11 +1102,14 @@ describe("component SSR rendering", () => {
 
 			const desktopResponse = wrapper.find(".showcase-desktop-command-response");
 			expect(desktopResponse.exists()).toBe(true);
-			expect(desktopResponse.find(".discord-embed").exists()).toBe(false);
-			expect(desktopResponse.find(".showcase-desktop-text-response").exists()).toBe(true);
-			expect(desktopResponse.text()).toMatch(/Created case 3\s*\|\s*@?baddie/);
+			const embed = desktopResponse.find(".discord-embed");
+			expect(embed.exists()).toBe(true);
+			expect(embed.text()).toMatch(/Created case 3\s*\|\s*baddie\./);
+			expect(embed.text()).toContain("With the reason of: spam");
+			expect(embed.find(".showcase-inline-code").text()).toBe("baddie");
+			expect(desktopResponse.find(".discord-mention").exists()).toBe(false);
 			expect(desktopResponse.text()).toContain("Stella");
-			expect(desktopResponse.text()).toContain("warn");
+			expect(desktopResponse.text()).toContain("warn add");
 			expect(desktopResponse.text()).not.toContain("❯ Type:");
 			expect(desktopResponse.text()).not.toContain("❯ Reason:");
 		});
@@ -1241,7 +1246,7 @@ describe("component SSR rendering", () => {
 			expect(wrapper.text()).toContain("/ban");
 			expect(wrapper.text()).toContain("/kick");
 			expect(wrapper.text()).toContain("/mute");
-			expect(wrapper.text()).toContain("/conf");
+			expect(wrapper.text()).toContain("/settings server menu");
 			expect(wrapper.text()).toContain("/subscriptions twitch show");
 			expect(wrapper.text()).toContain("/subscriptions twitch add");
 			expect(wrapper.text()).toContain("/addfriend");
@@ -1265,9 +1270,9 @@ describe("component SSR rendering", () => {
 			expect(wrapper.find(".discord-message-reply").attributes("aria-label")).toMatch(
 				/used the kick slash command/i,
 			);
-			expect(wrapper.find(".showcase-desktop-text-response").text()).toMatch(
-				/Created case 5\s*\|\s*@?baddie/,
-			);
+			expect(
+				wrapper.find(".showcase-desktop-command-response .discord-embed").text(),
+			).toMatch(/Created case 5\s*\|\s*baddie\./);
 
 			// Re-open the picker — Discord keeps channel history behind autocomplete.
 			await openSlashCommandPicker(wrapper);
@@ -1277,9 +1282,9 @@ describe("component SSR rendering", () => {
 			expect(wrapper.find(".discord-message-reply").attributes("aria-label")).toMatch(
 				/used the kick slash command/i,
 			);
-			expect(wrapper.find(".showcase-desktop-text-response").text()).toMatch(
-				/Created case 5\s*\|\s*@?baddie/,
-			);
+			expect(
+				wrapper.find(".showcase-desktop-command-response .discord-embed").text(),
+			).toMatch(/Created case 5\s*\|\s*baddie\./);
 			expect(wrapper.text()).toContain(
 				"This is the start of the #mod-commands channel. WolfStar moderation commands — try a slash command below.",
 			);
@@ -1293,18 +1298,20 @@ describe("component SSR rendering", () => {
 			await wrapper.vm.$nextTick();
 
 			const suggestions = wrapper.findAll(".discord-slash-command-suggestion");
-			expect(suggestions).toHaveLength(15);
+			expect(suggestions).toHaveLength(13);
 			for (const command of [
+				"/warn add",
+				"/ban add",
+				"/mute add",
+				"/timeout add",
 				"/case view",
 				"/case list",
 				"/case edit",
 				"/case archive",
 				"/case delete",
-				"/conf menu",
-				"/conf show",
-				"/conf set",
-				"/conf remove",
-				"/conf reset",
+				"/slowmode",
+				"/settings server menu",
+				"/settings server export",
 			]) {
 				expect(wrapper.text()).toContain(command);
 			}
@@ -1351,20 +1358,20 @@ describe("component SSR rendering", () => {
 			expect(wrapper.find(".discord-message-reply").attributes("aria-label")).toMatch(
 				/used the kick slash command/i,
 			);
-			expect(wrapper.find(".showcase-desktop-text-response").text()).toMatch(
-				/Created case 5\s*\|\s*@?baddie/,
-			);
+			expect(
+				wrapper.find(".showcase-desktop-command-response .discord-embed").text(),
+			).toMatch(/Created case 5\s*\|\s*baddie\./);
 		});
 
 		it("executes a subcommand and shows its component response", async () => {
 			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
-			const confSuggestion = wrapper
+			const settingsSuggestion = wrapper
 				.findAll(".discord-slash-command-suggestion")
-				.find((suggestion) => suggestion.text().includes("/conf"));
-			expect(confSuggestion).toBeDefined();
-			await confSuggestion!.trigger("click");
+				.find((suggestion) => suggestion.text().includes("/settings server menu"));
+			expect(settingsSuggestion).toBeDefined();
+			await settingsSuggestion!.trigger("click");
 			await wrapper.vm.$nextTick();
 
 			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(false);
@@ -1374,10 +1381,12 @@ describe("component SSR rendering", () => {
 			expect(
 				wrapper.find(".showcase-desktop-command-response .discord-v2-container").exists(),
 			).toBe(true);
-			// Twemoji strips the folder glyph from plain text(); assert the path label remains.
-			expect(wrapper.text()).toContain("Currently at:");
-			expect(wrapper.text()).toContain("Root");
-			expect(wrapper.text()).toContain("Use the menu below to navigate:");
+			// V7's settings menu: the module select, the root keys, the reset section.
+			expect(wrapper.text()).toContain("Core Configurations");
+			expect(wrapper.text()).toContain("Select a module");
+			expect(wrapper.text()).toContain("Time Zone");
+			expect(wrapper.text()).toContain("Reset Configurations");
+			expect(wrapper.text()).toContain("This menu closes in 15 minutes if it is not used.");
 		});
 
 		it("toggles the App Launcher from the apps control", async () => {
@@ -1469,7 +1478,7 @@ describe("component SSR rendering", () => {
 			expect(wrapper.find(".showcase-desktop-command-response").exists()).toBe(true);
 			expect(wrapper.find(".showcase-typed-command-message").exists()).toBe(false);
 			expect(wrapper.find(".discord-message-reply").attributes("aria-label")).toMatch(
-				/used the warn slash command/i,
+				/used the warn add slash command/i,
 			);
 			expect(wrapper.text()).toContain("Created case 3");
 			expect(
@@ -1534,9 +1543,9 @@ describe("component SSR rendering", () => {
 			await wrapper.find("[aria-label='Open apps and commands']").trigger("click");
 			await wrapper.vm.$nextTick();
 
-			expect(wrapper.find(".showcase-desktop-text-response").text()).toMatch(
-				/Created case 3\s*\|\s*@?baddie/,
-			);
+			expect(
+				wrapper.find(".showcase-desktop-command-response .discord-embed").text(),
+			).toMatch(/Created case 3\s*\|\s*baddie\./);
 		});
 
 		it("shows matched-command chrome while typing and executes on Enter", async () => {
@@ -1564,30 +1573,30 @@ describe("component SSR rendering", () => {
 			expect(wrapper.find(".discord-message-reply").attributes("aria-label")).toMatch(
 				/used the kick slash command/i,
 			);
-			expect(wrapper.find(".showcase-desktop-text-response").text()).toMatch(
-				/Created case 5\s*\|\s*@?baddie/,
-			);
+			expect(
+				wrapper.find(".showcase-desktop-command-response .discord-embed").text(),
+			).toMatch(/Created case 5\s*\|\s*baddie\./);
 		});
 
-		it("executes conf menu from the picker and reveals the channel response", async () => {
+		it("executes the settings menu from the picker and reveals the channel response", async () => {
 			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
-			const confSuggestion = wrapper
+			const settingsSuggestion = wrapper
 				.findAll(".discord-slash-command-suggestion")
-				.find((suggestion) => suggestion.text().includes("/conf"));
-			expect(confSuggestion).toBeDefined();
-			await confSuggestion!.trigger("click");
+				.find((suggestion) => suggestion.text().includes("/settings server menu"));
+			expect(settingsSuggestion).toBeDefined();
+			await settingsSuggestion!.trigger("click");
 			await wrapper.vm.$nextTick();
 
 			expect(
 				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
 			).toBe("");
 			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(false);
-			// No duplicate plain `/conf menu` user bubble — only “used” reply + bot embed.
+			// No duplicate plain `/settings server menu` bubble — only “used” reply + bot menu.
 			expect(wrapper.find(".showcase-typed-command-message").exists()).toBe(false);
 			expect(wrapper.find(".discord-message-reply").attributes("aria-label")).toMatch(
-				/used the conf menu slash command/i,
+				/used the settings server menu slash command/i,
 			);
 			expect(
 				wrapper.find(".showcase-desktop-command-response .discord-v2-container").exists(),

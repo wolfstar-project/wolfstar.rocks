@@ -24,9 +24,16 @@ export function useSeoMetadata({
 }: SiteMetadata) {
 	const { url, name: siteName } = useSiteConfig();
 	const route = useRoute();
-	const ogUrl = `${url}${route.fullPath}`;
+	// The path only, as the canonical link has it: a query such as `?next=/app`
+	// is not part of the page's address.
+	const ogUrl = `${url}${route.path}`;
 
-	if (shouldOgImage) {
+	// A page drawn by the client alone (the `/app` shell handing a signed-out
+	// visitor over to `/login`) has no HTML a crawler could read, and
+	// `defineOgImage()` throws there in dev, taking the page's setup with it.
+	const drawnByClientOnly = import.meta.client && !useNuxtApp().payload.serverRendered;
+
+	if (shouldOgImage && !drawnByClientOnly) {
 		defineOgImage("Page", {
 			description: ogImage?.description ?? description,
 			title: ogImage?.title ?? title,
@@ -34,6 +41,8 @@ export function useSeoMetadata({
 		});
 	}
 
+	// X reads the title and description from the Open Graph tags; only the
+	// card's layout has no Open Graph equivalent, so `twitter:card` stays.
 	useSeoMeta({
 		description,
 		ogDescription: description,
@@ -43,8 +52,6 @@ export function useSeoMetadata({
 		ogUrl,
 		title,
 		twitterCard,
-		twitterDescription: description,
 		twitterSite,
-		twitterTitle: title,
 	});
 }

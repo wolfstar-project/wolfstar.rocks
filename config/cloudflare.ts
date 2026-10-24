@@ -55,6 +55,12 @@ const OBSERVABILITY = {
  * these are not the `NUXT_OAUTH_DISCORD_*` names the build reads.
  */
 export const ALPHA_WORKER = {
+	// The app keeps in-process queues across requests (the rate-limit key
+	// locks, the settings writes, Discord's REST client): a request that waits in
+	// one is let go by another. Workers cancel a continuation resolved from a
+	// request that has ended, which left the waiting request hung; this flag
+	// lets it run. Nitro adds `nodejs_compat` next to it.
+	compatibility_flags: ["no_handle_cross_request_promise_resolution"],
 	d1_databases: [
 		{
 			binding: CLOUDFLARE_BINDINGS.contentDatabase,

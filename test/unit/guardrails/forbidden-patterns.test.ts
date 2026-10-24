@@ -321,6 +321,30 @@ const RULES: Rule[] = [
 		bad: 'import { pwa } from "./config/pwa";',
 		good: 'import { pwa } from "./config/pwa.ts";',
 	},
+	{
+		id: "one-database-client-for-the-server",
+		reason: "server/database/prisma.ts builds the server's only Prisma client. On the Cloudflare build a Worker refuses I/O across requests, so `db` resolves there to the request's own client; a client built anywhere else would carry one request's connection into the next. Import `db` from #server/database/prisma.",
+		roots: [
+			"server/api",
+			"server/auth.config.ts",
+			"server/cloudflare",
+			"server/database/index.ts",
+			"server/database/settings",
+			"server/plugins",
+			"server/routes",
+			"server/utils",
+			"shared",
+		],
+		extensions: [".ts"],
+		violations: (source) =>
+			matches(
+				stripComments(source),
+				/from\s+["']@prisma\/orm-postgres\/(?:runtime|serverless)["']/,
+				"a Prisma client factory import",
+			),
+		bad: 'import postgres from "@prisma/orm-postgres/runtime";',
+		good: 'import { db } from "#server/database/prisma";',
+	},
 ];
 
 describe("forbidden patterns", () => {

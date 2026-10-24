@@ -5,6 +5,7 @@
 .nuxt
 .nitro
 .netlify
+.wrangler
 .cache
 dist
 functions

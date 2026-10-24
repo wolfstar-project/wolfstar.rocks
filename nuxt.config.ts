@@ -2,10 +2,19 @@ import netlifyNuxt from "@netlify/nuxt";
 import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
 import { isCI, isTest, provider } from "std-env";
+import { ALPHA_WORKER, CLOUDFLARE_BINDINGS, isCloudflareBuild } from "./config/cloudflare.ts";
 import { currentLocales, datetimeFormats, numberFormats } from "./config/i18n.ts";
 import { pwa } from "./config/pwa.ts";
 import { LOCALE_BUNDLES_DIR } from "./modules/i18n-locale-bundles.ts";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig.ts";
+
+// The Workers build is the alpha site's. Its public values come from the
+// Worker's own variables, so the prerendered pages and the Worker agree.
+if (isCloudflareBuild) {
+	for (const [name, value] of Object.entries(ALPHA_WORKER.vars)) {
+		process.env[name] ??= value;
+	}
+}
 
 const runtimeConfig = generateRuntimeConfig();
 const isStorybook = process.env.STORYBOOK === "true" || process.env.VITEST_STORYBOOK === "true";
@@ -26,7 +35,7 @@ export default defineNuxtConfig({
 		// Skip it in Vitest/Storybook: its Vite plugins break the rolldown-based
 		// test environment. Studio editor chunks are also excluded from the PWA
 		// precache in config/pwa.ts so multi-MB bundles don't fail the build.
-		...(isTest || isStorybook ? [] : ["nuxt-studio"]),
+		...(isTest || isStorybook || isCloudflareBuild ? [] : ["nuxt-studio"]),
 		"@nuxt/image",
 		"@nuxt/hints",
 		"@nuxt/fonts",
@@ -49,7 +58,7 @@ export default defineNuxtConfig({
 				extends: "auto",
 			},
 		],
-		...(isTest || isCI || isStorybook ? [] : [netlifyNuxt]),
+		...(isTest || isCI || isStorybook || isCloudflareBuild ? [] : [netlifyNuxt]),
 	],
 
 	// @nuxtjs/better-auth. Redirect targets are centralised here so route rules,
@@ -74,6 +83,15 @@ export default defineNuxtConfig({
 	},
 
 	content: {
+		// A Worker has no SQLite file, so there the content is loaded into D1.
+		...(isCloudflareBuild
+			? {
+					database: {
+						bindingName: CLOUDFLARE_BINDINGS.contentDatabase,
+						type: "d1" as const,
+					},
+				}
+			: {}),
 		// Use Node.js built-in sqlite (available in Node v22.5+) to avoid
 		// requiring better-sqlite3 as an additional native dependency.
 		experimental: {
@@ -105,7 +123,9 @@ export default defineNuxtConfig({
 
 	$production: {
 		image: {
-			provider: "netlify",
+			// On the alpha Worker, through the zone's image transformations, which
+			// accept the zone's own images and the origins Netlify allows.
+			provider: isCloudflareBuild ? "cloudflare" : "netlify",
 		},
 		modules: ["nuxt-security"],
 		sentry: {
@@ -309,7 +329,12 @@ export default defineNuxtConfig({
 		"/starly": { appLayout: "default", robots: true },
 
 		// Static pages
-		"/commands": { appLayout: "default", prerender: true, robots: true },
+		// The alpha bot's commands change with each image it runs, so the alpha
+		// Worker renders the page and keeps it an hour instead of freezing it at
+		// build time.
+		"/commands": isCloudflareBuild
+			? { appLayout: "default", robots: true, swr: 60 * 60 }
+			: { appLayout: "default", prerender: true, robots: true },
 		"/staryl": { appLayout: "default", prerender: true, robots: true },
 		"/terms": { appLayout: "default", prerender: true, robots: true },
 		"/wolfstar": { appLayout: "default", prerender: true, robots: true },
@@ -364,6 +389,17 @@ export default defineNuxtConfig({
 	compatibilityDate: "2025-09-20",
 
 	nitro: {
+		...(isCloudflareBuild
+			? {
+					cloudflare: { deployConfig: true, nodeCompat: true, wrangler: ALPHA_WORKER },
+					// A Worker refuses I/O across requests, so the database client is made
+					// per request and found through `useEvent()` (server/database/prisma.ts).
+					experimental: { asyncContext: true },
+					// Sentry's SDK for Workers, in place of the Node one that
+					// `sentry.server.config.ts` sets up.
+					plugins: [resolve("./server/cloudflare/sentry.ts")],
+				}
+			: {}),
 		future: {
 			nativeSWR: true,
 		},
@@ -595,6 +631,10 @@ export default defineNuxtConfig({
 	ogImage: {
 		enabled: !isStorybook,
 		security: {
+			// The module's 15 s unless the build asks for more: on a machine with
+			// little memory the prerender swaps, and each render waits on the
+			// garbage collector far longer than it draws.
+			renderTimeout: Number(process.env.OG_IMAGE_RENDER_TIMEOUT) || undefined,
 			strict: !!process.env.NUXT_IMAGE_PROXY_SECRET,
 			secret: process.env.NUXT_IMAGE_PROXY_SECRET,
 			// HMAC signing is sufficient; origin pinning blocks localhost e2e runs
@@ -606,13 +646,17 @@ export default defineNuxtConfig({
 	skewProtection: {
 		// Same Netlify Blobs backend as the cache/fetch-cache Nitro storage mounts
 		// (see modules/cache.ts); falls back to the module's fs cache elsewhere.
-		storage: {
-			base: "./.cache/skew-protection",
-			// nuxt-skew-protection imports `unstorage/drivers/${driver}` verbatim,
-			// so this must be the kebab-case file name (fs-lite.mjs), unlike the
-			// Nitro storage mounts above where "fsLite" is a registered driver name.
-			driver: "fs-lite",
-		},
+		// The Workers build keeps it in a KV namespace of its own, the way the
+		// module's Cloudflare guide sets it up.
+		storage: isCloudflareBuild
+			? { binding: CLOUDFLARE_BINDINGS.skewProtection, driver: "cloudflare-kv-binding" }
+			: {
+					base: "./.cache/skew-protection",
+					// nuxt-skew-protection imports `unstorage/drivers/${driver}` verbatim,
+					// so this must be the kebab-case file name (fs-lite.mjs), unlike the
+					// Nitro storage mounts above where "fsLite" is a registered driver name.
+					driver: "fs-lite",
+				},
 		updateStrategy: "polling",
 		// Keep the persistent-previous-build-assets feature off: with storage now
 		// always configured, the module's default (true) runs augmentBuildMetadata,
@@ -620,7 +664,11 @@ export default defineNuxtConfig({
 		// patches the Nitro server's embedded size/etag for latest.json. The node
 		// preview server then serves the app manifest with stale content-length,
 		// and clients fail with NUXT_E5004/NUXT_E5002 on client-side navigation.
-		bundleAssets: false,
+		// A Worker serves those files from its asset binding as they are, so there
+		// the assets of past deploys are kept, for clients still on them, by a
+		// build in CI: the module uploads them through `wrangler`, 25 processes at
+		// a time, which a machine with 4 GB of memory does not survive.
+		bundleAssets: isCloudflareBuild && isCI,
 	},
 
 	// PWA configuration
@@ -714,7 +762,9 @@ export default defineNuxtConfig({
 
 	sentry: {
 		...runtimeConfig.sentry,
-		autoInjectServerSentry: "top-level-import",
+		// A Worker gets the Cloudflare SDK from `server/cloudflare/sentry.ts`, so
+		// the Node one is not imported into its entry.
+		autoInjectServerSentry: isCloudflareBuild ? undefined : "top-level-import",
 		// Strips the SDK's debug logging from the bundles. Replay stays
 		// untouched on purpose: sentry.client.config.ts lazy-loads it.
 		bundleSizeOptimizations: { excludeDebugStatements: true },

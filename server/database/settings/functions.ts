@@ -30,6 +30,16 @@ export function readSettings(guildId: string): Awaitable<ReadonlyGuildData> {
 }
 
 /**
+ * Reads the settings of a guild as the database has them now, for what must
+ * not be stale, such as an export: the bot and the other instances of the
+ * dashboard write them too, and this process's cache only learns of its own
+ * writes.
+ */
+export function readFreshSettings(guildId: string): Promise<ReadonlyGuildData> {
+	return processFetch(guildId, true);
+}
+
+/**
  * Whether the guild has no settings stored yet, as of its last read: nobody
  * changed a setting for it, here or through the bot. The dashboard offers the
  * setup of such a guild.

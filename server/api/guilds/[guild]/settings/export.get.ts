@@ -1,4 +1,4 @@
-import { readSettings } from "#server/database";
+import { readFreshSettings } from "#server/database";
 import { authorizeAutoModerationManager, useManagedGuild } from "#server/utils/automod/route";
 import { readAutoModerationRules } from "#server/utils/automod/rules";
 import { createConfigurationFile } from "#server/utils/settings-transfer/format";
@@ -13,8 +13,10 @@ export default defineWrappedResponseHandler(
 	async (event) => {
 		const { guild } = useManagedGuild(event);
 
+		// A backup made of a stale copy would undo, once restored, what the bot or
+		// another instance of the dashboard saved since this process last read.
 		const [settings, rules] = await Promise.all([
-			readSettings(guild.id),
+			readFreshSettings(guild.id),
 			readAutoModerationRules(guild.id),
 		]);
 

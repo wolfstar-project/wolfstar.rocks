@@ -29,6 +29,18 @@ export const CLOUDFLARE_BINDINGS = {
 } as const;
 
 /**
+ * Workers Logs, Traces and Issues, all on. Nitro's copy of Wrangler's types
+ * predates `traces` and `issues`, so the block is kept apart from the literal
+ * that `satisfies` checks.
+ */
+const OBSERVABILITY = {
+	enabled: true,
+	issues: { enabled: true },
+	logs: { enabled: true, invocation_logs: true },
+	traces: { enabled: true },
+};
+
+/**
  * The alpha Worker. It shares the database of the WolfStar Alpha bot, the
  * staging environment on Railway, through a Hyperdrive with query caching off,
  * so a setting read back after a save is the saved one. The ids are of
@@ -57,7 +69,7 @@ export const ALPHA_WORKER = {
 		{ binding: CLOUDFLARE_BINDINGS.skewProtection, id: "9518d22a8f88456e9fcedb50ab30bdfc" },
 	],
 	name: "wolfstar-alpha",
-	observability: { enabled: true },
+	observability: OBSERVABILITY,
 	preview_urls: false,
 	routes: [{ custom_domain: true, pattern: "alpha.wolfstar.rocks" }],
 	vars: {

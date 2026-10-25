@@ -9,7 +9,8 @@ The site can also be built for Cloudflare Workers, which serves alpha.wolfstar.r
 - `NITRO_PRESET=cloudflare_module pnpm build`. Prerendering starts the server, and Better Auth refuses to start in production without a secret, so the build needs some `NUXT_BETTER_AUTH_SECRET`; the Worker's own secret overrides it at run time. Without a Sentry upload token the hidden client source maps stay in `.output/public`, so delete `.output/public/**/*.map` before deploying.
 - `npx wrangler deploy -c .output/server/wrangler.json`. Nitro writes that file from `ALPHA_WORKER` in `config/cloudflare.ts`, and it replaces what the Cloudflare dashboard holds: plain variables live in its `vars`, which the build reads too, so the prerendered pages carry the alpha site's public config. Secrets are set with `npx wrangler secret put <NAME> --name wolfstar-alpha` and outlive each deploy.
 - At run time Nitro overrides a runtime config key from the env var named after its path, so the secrets are `NUXT_BETTER_AUTH_SECRET`, `NUXT_DISCORD_BOT_TOKEN` and `NUXT_DISCORD_CLIENT_SECRET`, not the `NUXT_OAUTH_DISCORD_*` names the build reads.
-- Skew protection writes the new build's assets to its KV namespace through `npx wrangler` during the build, so the build needs Wrangler credentials.
+- Skew protection writes the new build's assets to its KV namespace through `npx wrangler` during a build in CI, and only when `CLOUDFLARE_API_TOKEN` is set: without it the build keeps no past assets.
+- Alpha is built by Workers Builds on Cloudflare (8 GB, 20 minutes): a local build needs more memory than a 4 GB machine has. Build command `pnpm build && find .output/public -name '*.map' -delete`, deploy command `npx wrangler deploy -c .output/server/wrangler.json --autoconfig=false`, build variables `NITRO_PRESET=cloudflare_module`, `NODE_OPTIONS=--max-old-space-size=6144` and the secret `NUXT_BETTER_AUTH_SECRET`.
 
 ## Around the Worker
 

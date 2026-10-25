@@ -6,6 +6,7 @@ import {
 	patchAutoModerationRule,
 	removeAutoModerationRule,
 } from "#server/database/settings/automod/storage";
+import { createKeyedLock } from "#server/utils/keyed-lock";
 import {
 	getDefaultAutoModerationRule,
 	MaximumAutoModerationRuleNameLength,
@@ -14,8 +15,6 @@ import {
 	type AutoModerationRuleData,
 	type AutoModerationRuleType,
 } from "#shared/utils/automod-rules";
-import { Collection } from "@discordjs/collection";
-import { AsyncQueue } from "@sapphire/async-queue";
 
 /**
  * What goes wrong when a rule is created, edited or deleted, to translate for
@@ -57,7 +56,7 @@ function validateName(
 
 type Orm = Database["orm"];
 
-const locks = new Collection<Snowflake, AsyncQueue>();
+const withGuildLock = createKeyedLock<Snowflake>();
 
 // First key of the advisory lock the rule writes of a guild run under; the
 // second is derived from the guild. Arbitrary, and only has to differ from the
@@ -79,12 +78,10 @@ export async function writeAutoModerationRules<T>(
 	guildId: Snowflake,
 	callback: (rules: readonly AutoModerationRule[], orm: Orm) => Promise<T>,
 ): Promise<T> {
-	const lock = locks.ensure(guildId, () => new AsyncQueue());
-	await lock.wait();
-	try {
+	return withGuildLock(guildId, () => {
 		// Two guilds that share a key only wait for each other; nothing breaks.
 		const guildKey = Number(BigInt(guildId) % RULES_LOCK_KEY_RANGE);
-		return await db.transaction(async (tx) => {
+		return db.transaction(async (tx) => {
 			await tx.execute(
 				db.raw.sql`SELECT pg_advisory_xact_lock(${RULES_LOCK_NAMESPACE}, ${guildKey})`
 					.affectedCount()
@@ -92,10 +89,7 @@ export async function writeAutoModerationRules<T>(
 			);
 			return callback(await fetchAutoModerationRules(tx.orm, guildId), tx.orm);
 		});
-	} finally {
-		lock.shift();
-		if (lock.remaining === 0) locks.delete(guildId);
-	}
+	});
 }
 
 /**

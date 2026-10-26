@@ -1,5 +1,6 @@
 import * as Sentry from "@sentry/nuxt";
 import { isDevelopment } from "std-env";
+import { isCloudflareBuild } from "./config/cloudflare";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 import { dropExpectedHttpErrors } from "./server/utils/sentry-expected-errors";
 
@@ -7,7 +8,7 @@ const {
 	public: { sentry, environment },
 } = generateRuntimeConfig();
 
-if (sentry.dsn) {
+if (sentry.dsn && !isCloudflareBuild) {
 	Sentry.init({
 		dsn: sentry.dsn,
 		beforeSend: dropExpectedHttpErrors,

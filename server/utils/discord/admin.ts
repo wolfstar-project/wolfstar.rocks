@@ -29,14 +29,21 @@ export function hasAdminPermissions(
 		);
 	}
 
-	const rawPermissions = cast<{ permissions?: string }>(member).permissions;
-	const memberRolePermissions =
-		rawPermissions !== undefined
-			? BigInt(rawPermissions)
-			: computePermissions(member.roles, guild.roles);
+	const memberRolePermissions = memberPermissions(guild, member);
 
 	return (
 		PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.Administrator) ||
 		PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.ManageGuild)
 	);
+}
+
+/**
+ * A member's server-wide permissions: the ones Discord sends with the member,
+ * or else those of their roles and `@everyone`.
+ */
+export function memberPermissions(guild: APIGuild, member: APIGuildMember): bigint {
+	const rawPermissions = cast<{ permissions?: string }>(member).permissions;
+	return rawPermissions !== undefined
+		? BigInt(rawPermissions)
+		: computePermissions(member.roles, guild.roles);
 }

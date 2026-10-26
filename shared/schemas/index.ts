@@ -9,3 +9,4 @@ export * from "./feedback";
 export * from "./user-settings";
 export * from "./dashboard-access";
 export * from "./member-search";
+export * from "./command-permissions";

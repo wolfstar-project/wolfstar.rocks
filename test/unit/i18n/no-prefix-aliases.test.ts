@@ -25,7 +25,7 @@ describe("dropLocalizedAliasPages", () => {
 	});
 });
 
-// The patch in `patches/@i18n-micro__path-strategy@1.3.10.patch`: a language
+// The patch in `patches/@i18n-micro__path-strategy@1.3.20.patch`: a language
 // switch never moves away from the current path.
 describe("no_prefix language switch", () => {
 	it("stays on the path the visitor is on, an alias included", () => {

@@ -30,6 +30,7 @@
 <script setup lang="ts">
 import type { FlattenedCommand } from "#shared/types/discord";
 import { readCommandRules, type CommandRule } from "#shared/utils/command-rules";
+import { resolveGuildMembers } from "~/composables/useGuildMemberSearch";
 
 const { commands } = defineProps<{ commands: FlattenedCommand[] }>();
 

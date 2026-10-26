@@ -67,7 +67,7 @@ import {
 } from "#shared/utils/command-permissions";
 import { ApplicationCommandPermissionType } from "discord-api-types/v10";
 
-export interface PreviewEntry {
+interface PreviewEntry {
 	commandId: string;
 	title: string;
 	before: readonly Overwrite[];

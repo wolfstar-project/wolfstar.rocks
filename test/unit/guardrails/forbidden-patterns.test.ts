@@ -175,6 +175,20 @@ const RELATIVE_IMPORT = /\bfrom\s+["'](\.{1,2}\/[^"']*)["']/g;
 
 const RULES: Rule[] = [
 	{
+		id: "no-legacy-conf-in-dashboard-access",
+		reason: 'The settings command was renamed from conf. Running the permission nodes on "conf" makes the site\'s matcher ignore every node but *, so canManage() must run them on "settings" (RenamedCommands keeps old nodes on conf working).',
+		roots: ["server/utils/discord"],
+		extensions: [".ts"],
+		violations: (source) =>
+			matches(
+				stripComments(source),
+				/\.run\(\s*[\w.]+\s*,\s*["']conf["']/,
+				'nodes.run(member, "conf")',
+			),
+		bad: 'await nodes.run(member, "conf");',
+		good: 'await nodes.run(member, "settings");',
+	},
+	{
 		id: "no-forced-session-fetch-in-oauth-callback",
 		reason: "fetchSession({ force: true }) bypasses the jwe cookie cache the callback just wrote and races the eventually-consistent KV write, so a successful sign-in shows a false 'session not found'. Use fetchSessionWithRetry() and a plain fetchSession().",
 		roots: ["app/pages/oauth/callback.vue", "app/utils/oauth-session-retry.ts"],

@@ -177,6 +177,32 @@ export interface AuditActionPart {
 
 const MAXIMUM_DESCRIBED_CHANGES = 2;
 
+// The actions that change no setting, so their changes are not setting keys:
+// the removal of the legacy permission nodes keeps how many it removed, a
+// change of Discord's command permissions is keyed by the command's name.
+function ownActionParts(entry: DashboardAuditEntry): AuditActionPart[] | null {
+	switch (entry.action) {
+		case "guild.access.legacy-removed": {
+			const removed = entry.changes.changed?.legacyPermissionNodes?.from;
+			return [
+				{ strong: false, text: "Legacy permission nodes removed: " },
+				{ strong: true, text: String(removed ?? 0) },
+			];
+		}
+		case "guild.command-permissions.update": {
+			const commands = Object.keys(entry.changes.changed ?? {});
+			return [
+				{ strong: false, text: "Command permissions updated: " },
+				{ strong: true, text: commands.join(", ") },
+			];
+		}
+		case "guild.command-permissions.access-denied":
+			return [{ strong: false, text: "Command permissions change refused" }];
+		default:
+			return null;
+	}
+}
+
 /**
  * The sentence describing an entry, split so the activity table can set the
  * setting and its values apart from the words around them.
@@ -185,6 +211,9 @@ export function auditLogActionParts(
 	entry: DashboardAuditEntry,
 	resolver?: AuditChangeResolver,
 ): AuditActionPart[] {
+	const own = ownActionParts(entry);
+	if (own) return own;
+
 	const resolvedResolver = resolver ?? { roles: new Map(), channels: new Map() };
 	const lines = auditLogChangeLines(entry, resolvedResolver);
 

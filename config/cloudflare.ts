@@ -1,4 +1,5 @@
 import type { WranglerConfig } from "nitropack/presets/cloudflare/types";
+import { provider } from "std-env";
 
 /**
  * The build for Cloudflare Workers, which serves alpha.wolfstar.rocks.
@@ -8,7 +9,9 @@ import type { WranglerConfig } from "nitropack/presets/cloudflare/types";
  * `.output/server/wrangler.json` for `npx wrangler deploy`. The Netlify build
  * does not change.
  */
-export const isCloudflareBuild = process.env.NITRO_PRESET?.startsWith("cloudflare") === true;
+export const isCloudflareBuild =
+	process.env.NITRO_PRESET?.startsWith("cloudflare") === true ||
+	provider === "cloudflare_workers";
 
 /** Names of the Worker's bindings, as the server code reads them. */
 export const CLOUDFLARE_BINDINGS = {

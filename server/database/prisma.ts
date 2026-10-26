@@ -1,11 +1,10 @@
 import type { Contract, Models } from "#server/database/generated/prisma/contract";
-import type { H3Event } from "h3";
 import contractJson from "#server/database/generated/prisma/contract.json" with { type: "json" };
 import { lints } from "@prisma/orm-postgres/family-runtime";
 import postgres from "@prisma/orm-postgres/runtime";
 import { useEvent } from "nitropack/runtime";
 import { typedRuntimeDescriptor } from "prisma-orm-extension-typed-json/runtime";
-import { CLOUDFLARE_BINDINGS } from "~~/config/cloudflare";
+import { runtime } from "std-env";
 
 /**
  * Prisma ORM 8 client for the database this app shares with the WolfStar bot.
@@ -14,7 +13,7 @@ import { CLOUDFLARE_BINDINGS } from "~~/config/cloudflare";
  * (wolfstar-project/wolfstar, V7): the same contract, the typed-JSON extension
  * for the columns that hold structured values, and the lint middleware.
  */
-function createDatabase(url: string | undefined, idleTimeoutMillis?: number) {
+export function createDatabase(url: string | undefined, idleTimeoutMillis?: number) {
 	return postgres<Contract>({
 		// `undefined`, never `""`: the factory connects lazily and accepts a missing
 		// URL (it only throws once a query needs a connection), but it rejects an
@@ -33,53 +32,24 @@ export type Database = ReturnType<typeof createDatabase>;
 
 declare module "h3" {
 	interface H3EventContext {
-		/** The request's database client, on Cloudflare Workers. */
+		/** The request's database client, set by `server/plugins/database.ts` on Cloudflare Workers. */
 		database?: Database;
 	}
-}
-
-const isWorkers = globalThis.navigator?.userAgent === "Cloudflare-Workers";
-
-function isHyperdrive(value: unknown): value is { connectionString: string } {
-	return (
-		typeof value === "object" &&
-		value !== null &&
-		"connectionString" in value &&
-		typeof value.connectionString === "string"
-	);
-}
-
-function hyperdriveConnectionString(event: H3Event): string {
-	const cloudflare: unknown = event.context.cloudflare;
-	const env: unknown =
-		typeof cloudflare === "object" && cloudflare !== null && "env" in cloudflare
-			? cloudflare.env
-			: undefined;
-	const binding: unknown =
-		typeof env === "object" && env !== null
-			? Reflect.get(env, CLOUDFLARE_BINDINGS.database)
-			: undefined;
-	if (!isHyperdrive(binding)) {
-		throw new Error(
-			`[database] the Worker has no Hyperdrive binding named ${CLOUDFLARE_BINDINGS.database}`,
-		);
-	}
-	return binding.connectionString;
 }
 
 /**
  * Cloudflare Workers refuse I/O across requests: a connection opened while
  * serving one request cannot be used by the next. There each request gets its
- * own client, made from the Hyperdrive binding the first time the request
- * reaches the database and kept on the event, which `useEvent()` finds through
- * Nitro's async context. Idle connections are never timed out, since that
- * timer would fire during another request; the runtime closes the request's
- * sockets when the request, and what it hands to `waitUntil`, is done.
+ * own client, which `server/plugins/database.ts` makes from the Hyperdrive
+ * binding and keeps on the event, and which `useEvent()` finds here through
+ * Nitro's async context.
  */
 function requestDatabase(): Database {
-	const event = useEvent();
-	event.context.database ??= createDatabase(hyperdriveConnectionString(event), 0);
-	return event.context.database;
+	const { database } = useEvent().context;
+	if (!database) {
+		throw new Error("[database] the request has no database client");
+	}
+	return database;
 }
 
 function requestScopedDatabase(): Database {
@@ -92,8 +62,9 @@ function requestScopedDatabase(): Database {
 	});
 }
 
-export const db: Database = isWorkers
-	? requestScopedDatabase()
-	: createDatabase(process.env.DATABASE_URL || undefined);
+export const db: Database =
+	runtime === "workerd"
+		? requestScopedDatabase()
+		: createDatabase(process.env.DATABASE_URL || undefined);
 
 export type { Contract, Models };

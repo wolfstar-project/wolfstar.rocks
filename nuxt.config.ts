@@ -241,7 +241,7 @@ export default defineNuxtConfig({
 	},
 
 	htmlValidator: {
-		enabled: !isCI || ((provider !== "netlify" || provider !== "cloudflare_workers") && !!process.env.VALIDATE_HTML),
+		enabled: !isCI || ((provider !== "netlify" && provider !== "cloudflare_workers") && !!process.env.VALIDATE_HTML),
 		options: {
 			rules: {
 				"meta-refresh": "off",

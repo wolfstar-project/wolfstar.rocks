@@ -13,8 +13,15 @@ function getNameSpaceDetails(name: string): readonly [string | null, string] {
 	return [name.substring(0, index), name.substring(index + 1)];
 }
 
+// The bot lists every subcommand as an entry of its own (`ban add`) and names
+// its command in `command`, the name permission nodes use; an older bot does
+// not send it, and then `name` is the command.
+function commandName(command: WolfCommand): string {
+	return command.command ?? command.name;
+}
+
 function matchName(name: string, command: WolfCommand): boolean {
-	return command.name === name || command.aliases.includes(name);
+	return commandName(command) === name || command.alias.includes(name);
 }
 
 function matchNameAndCategory(name: string, category: string, command: WolfCommand): boolean {
@@ -30,25 +37,23 @@ function matchNameCategoryAndSubCategory(
 	return command.subCategory === subCategory && matchNameAndCategory(name, category, command);
 }
 
-export async function matchAny(names: Iterable<string>, commandName: string): Promise<boolean> {
+export async function matchAny(names: Iterable<string>, target: string): Promise<boolean> {
 	for (const name of names) {
-		if (await match(name, commandName)) {
+		if (await match(name, target)) {
 			return true;
 		}
 	}
 	return false;
 }
 
-async function match(name: string, commandName: string): Promise<boolean> {
+async function match(name: string, target: string): Promise<boolean> {
 	// Match All:
 	if (name === "*") {
 		return true;
 	}
 
 	const commands = await fetchCommands();
-	const command = commands.find(
-		(cmd) => cmd.name === commandName || cmd.aliases.includes(commandName),
-	);
+	const command = commands.find((cmd) => matchName(target, cmd));
 	if (!command) {
 		return false;
 	}

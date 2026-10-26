@@ -376,6 +376,56 @@ describe("disabledCommands", () => {
 		);
 	});
 
+	it("shows one tile per command and saves the command's settings name", async () => {
+		// The bot lists every subcommand as an entry and names its command in
+		// `command`; the settings turn off the whole command by that name.
+		const entry = (
+			name: string,
+			command: string,
+			category = "Moderation",
+		): FlattenedCommand => ({
+			category,
+			command,
+			description: `${name} description`,
+			extendedHelp: {},
+			guarded: false,
+			name,
+			permissionLevel: 5,
+			preconditions: { entries: [], mode: 0, runCondition: 0 },
+		});
+		const wrapper = await mountSuspended(DisabledCommands, {
+			props: {
+				commands: [
+					entry("ban add", "ban"),
+					entry("ban remove", "ban"),
+					entry("warn-thresholds list", "warnThresholds"),
+				],
+			},
+		});
+
+		const moderationButton = wrapper
+			.findAll("button")
+			.find((btn) => btn.text().includes("Moderation"));
+		await moderationButton!.trigger("click");
+		await nextTick();
+
+		expect(wrapper.findAll("p.font-mono").map((el) => el.text())).toEqual([
+			"ban",
+			"warn-thresholds",
+		]);
+		const banTile = getCommandCard(wrapper, "ban");
+		expect(banTile.textContent).toContain("add, remove");
+		expect(readCommandEnabled(wrapper, "ban")).toBe(false);
+
+		const warnThresholdsSwitch = wrapper.find('[role="switch"][aria-label="warn-thresholds"]');
+		await warnThresholdsSwitch.trigger("click");
+		await nextTick();
+
+		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+			commandsDisabled: ["ban", "warnThresholds"],
+		});
+	});
+
 	it("does not mark form as changed on initial render", async () => {
 		const wrapper = await mountSuspended(DisabledCommands, {
 			props: {

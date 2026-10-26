@@ -146,6 +146,7 @@ const { activeGuildId } = useActiveGuild();
 const { guildData } = useGuildData();
 
 const {
+	baseRows,
 	changedCommandIds,
 	data,
 	discard,
@@ -154,7 +155,6 @@ const {
 	resetToDefault,
 	rowsOf,
 	saveAll,
-	savedRows,
 	setRows,
 } = useCommandPermissions(activeGuildId);
 
@@ -190,8 +190,15 @@ const overLimit = computed(() =>
 	),
 );
 
+const conflictCommandId = ref<string | null>(null);
+
 const canReview = computed(
-	() => canEdit.value && changedCommandIds.value.length > 0 && !overLimit.value,
+	() =>
+		canEdit.value &&
+		changedCommandIds.value.length > 0 &&
+		!overLimit.value &&
+		// A command that changed in Discord is reloaded before anything is sent again.
+		conflictCommandId.value === null,
 );
 
 function titleOf(commandId: string): string {
@@ -206,7 +213,7 @@ const previewEntries = computed(() =>
 	changedCommandIds.value.map((commandId) => ({
 		commandId,
 		title: titleOf(commandId),
-		before: savedRows(commandId),
+		before: baseRows(commandId),
 		after: rowsOf(commandId),
 		appDefault: commandId === data.value?.applicationId,
 	})),
@@ -215,7 +222,6 @@ const previewEntries = computed(() =>
 const previewOpen = ref(false);
 const sending = ref(false);
 const progress = ref<string | undefined>(undefined);
-const conflictCommandId = ref<string | null>(null);
 const failure = ref<{ title: string; description: string; reload: boolean } | null>(null);
 
 const FAILURE_KEYS: Record<string, string> = {

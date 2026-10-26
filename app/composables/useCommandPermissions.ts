@@ -1,5 +1,10 @@
-import { overwritesEqual, snapshotOf, type Overwrite } from "#shared/utils/command-permissions";
-import { runSequentialSaves, type SaveOutcome } from "~/utils/command-permissions-run";
+import { snapshotOf, type Overwrite } from "#shared/utils/command-permissions";
+import {
+	runSequentialSaves,
+	stageRows,
+	type SaveOutcome,
+	type StagedDraft,
+} from "~/utils/command-permissions-run";
 
 export interface RegisteredCommandEntry {
 	/** `null` when Discord has no such command here. */
@@ -33,17 +38,18 @@ export function useCommandPermissions(guildId: MaybeRefOrGetter<string | null>) 
 		},
 	);
 
-	const drafts = ref<Record<string, Overwrite[]>>({});
+	const drafts = ref<Record<string, StagedDraft>>({});
 
 	const savedRows = (commandId: string): Overwrite[] => data.value?.permissions[commandId] ?? [];
 	const rowsOf = (commandId: string): Overwrite[] =>
-		drafts.value[commandId] ?? savedRows(commandId);
+		drafts.value[commandId]?.rows ?? savedRows(commandId);
+
+	/** The rows a command's draft was made on, or Discord's rows without a draft. */
+	const baseRows = (commandId: string): Overwrite[] =>
+		drafts.value[commandId]?.base ?? savedRows(commandId);
 
 	function setRows(commandId: string, rows: Overwrite[]) {
-		const next = { ...drafts.value };
-		if (overwritesEqual(rows, savedRows(commandId))) delete next[commandId];
-		else next[commandId] = rows;
-		drafts.value = next;
+		drafts.value = stageRows(drafts.value, commandId, rows, savedRows(commandId));
 	}
 
 	const resetToDefault = (commandId: string) => setRows(commandId, []);
@@ -61,8 +67,9 @@ export function useCommandPermissions(guildId: MaybeRefOrGetter<string | null>) 
 		if (!id) return { sent: [], failed: null };
 		const list = changedCommandIds.value.map((commandId) => ({
 			commandId,
-			permissions: drafts.value[commandId] ?? [],
-			snapshot: snapshotOf({ [commandId]: savedRows(commandId) }),
+			permissions: drafts.value[commandId]?.rows ?? [],
+			// The rows the edit was made on, not the ones a later reload brought.
+			snapshot: snapshotOf({ [commandId]: drafts.value[commandId]?.base ?? [] }),
 		}));
 		const outcome = await runSequentialSaves(list, async (commandId, body) => {
 			await $fetch(`/api/guilds/${id}/command-permissions/${commandId}`, {
@@ -76,6 +83,7 @@ export function useCommandPermissions(guildId: MaybeRefOrGetter<string | null>) 
 	}
 
 	return {
+		baseRows,
 		changedCommandIds,
 		data,
 		discard,

@@ -132,6 +132,8 @@ describe("GuildCommandsDiscordPermissions", () => {
 		(document.querySelector("button[data-send]") as HTMLButtonElement).click();
 		await vi.waitFor(() => expect(wrapper.text()).toContain("Reload command permissions"));
 		expect(wrapper.text()).toContain("changed in Discord");
+		// Sending again would write the stale draft over the change made in Discord.
+		expect(wrapper.get("button[data-review]").attributes("disabled")).toBeDefined();
 	});
 
 	it("blocks the review past 100 rows", async () => {

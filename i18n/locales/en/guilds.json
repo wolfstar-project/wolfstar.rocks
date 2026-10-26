@@ -29,7 +29,7 @@
 			"legacy_download": "Download legacy nodes as JSON",
 			"legacy_drops": "It no longer applies to {commands}: slash commands never read it.",
 			"legacy_import": "Import rule",
-			"legacy_import_all": "Import every convertible node",
+			"legacy_import_all": "Import every convertible deny",
 			"legacy_import_aria": "Import the legacy node of {name} as a dashboard rule",
 			"legacy_member": "Member {id}",
 			"legacy_not_convertible": "Not convertible: it names neither the settings command nor its category. It still applies to the dashboard until it is removed.",

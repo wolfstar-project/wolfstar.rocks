@@ -93,6 +93,7 @@
 						v-for="node in legacy"
 						:key="`${node.column}:${node.entry.id}`"
 						class="flex flex-wrap items-center gap-3 py-3"
+						:data-legacy="node.entry.id"
 					>
 						<div class="min-w-0 flex-1">
 							<p class="text-sm font-semibold">{{ node.name }}</p>
@@ -113,6 +114,9 @@
 											: "guild_settings.access.legacy_becomes_deny",
 									)
 								}}
+								<template v-if="node.classification.access === 'allow'">
+									{{ ts("guild_settings.access.allow_note") }}
+								</template>
 								<template v-if="node.classification.dropped.length > 0">
 									{{
 										ts("guild_settings.access.legacy_drops", {
@@ -142,10 +146,11 @@
 
 				<div class="flex flex-wrap gap-2">
 					<UButton
-						v-if="hasImportable"
+						v-if="hasImportableDeny"
 						size="sm"
 						variant="soft"
 						icon="ic:round-done-all"
+						data-import-all
 						@click="importAll"
 					>
 						{{ ts("guild_settings.access.legacy_import_all") }}
@@ -332,9 +337,12 @@ const legacy = computed<LegacyRow[]>(() =>
 	),
 );
 
-const hasImportable = computed(() =>
-	legacy.value.some((node) => node.classification.kind === "importable"),
-);
+// An allow node never let anyone in without Manage Server; imported, it does.
+// So only denies are imported in bulk, and each allow takes a click of its own.
+const isImportableDeny = (node: LegacyRow) =>
+	node.classification.kind === "importable" && node.classification.access === "deny";
+
+const hasImportableDeny = computed(() => legacy.value.some(isImportableDeny));
 
 function importNode(column: Column, id: string) {
 	state[column] = plain(importLegacy(state[column], id));
@@ -342,7 +350,7 @@ function importNode(column: Column, id: string) {
 
 function importAll() {
 	for (const node of legacy.value) {
-		if (node.classification.kind === "importable") importNode(node.column, node.entry.id);
+		if (isImportableDeny(node)) importNode(node.column, node.entry.id);
 	}
 }
 

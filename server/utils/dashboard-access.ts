@@ -1,7 +1,7 @@
 import type { GuildData, ReadonlyGuildData } from "#server/database/settings/types";
 import type { APIGuild, APIGuildMember } from "discord-api-types/v10";
 import { hasAdminPermissions } from "#server/utils/discord/admin";
-import { resolveDashboardAccess } from "#shared/utils/dashboard-access";
+import { resolveDashboardAccess, type PermissionEntry } from "#shared/utils/dashboard-access";
 import { createError } from "evlog";
 
 /**
@@ -30,6 +30,16 @@ export function assertCanEditDashboardAccess(
 		});
 	}
 
+	const refused = firstOutrankedRule(guild, member, settings, permissionsUsers, permissionsRoles);
+	if (refused) {
+		throw createError({
+			message: "You cannot change this dashboard access rule",
+			status: 403,
+			why: refused,
+			fix: "Ask the server owner, or someone above that role, to change it",
+		});
+	}
+
 	const access = resolveDashboardAccess(
 		{ userId: member.user.id, roleIds: member.roles },
 		{
@@ -46,4 +56,51 @@ export function assertCanEditDashboardAccess(
 			fix: "Remove the deny that names you or your highest role, or ask the server owner to make it",
 		});
 	}
+}
+
+function changedEntries(
+	next: readonly PermissionEntry[] | undefined,
+	current: readonly PermissionEntry[],
+): PermissionEntry[] {
+	if (next === undefined) return [];
+	const before = new Map(current.map((entry) => [entry.id, JSON.stringify(entry)]));
+	const after = new Set(next.map((entry) => entry.id));
+	return [
+		...next.filter((entry) => before.get(entry.id) !== JSON.stringify(entry)),
+		// A removed rule is a change of its id too.
+		...current.filter((entry) => !after.has(entry.id)),
+	];
+}
+
+/**
+ * Why a writer who is not the owner may not make a change, as the bot's
+ * `/permission-nodes` refused it: a rule on a role at or above their own
+ * highest role, or on the owner. `null` when nothing is out of their reach.
+ */
+function firstOutrankedRule(
+	guild: APIGuild,
+	member: APIGuildMember,
+	settings: ReadonlyGuildData,
+	users: readonly PermissionEntry[] | undefined,
+	roles: readonly PermissionEntry[] | undefined,
+): string | null {
+	if (
+		changedEntries(users, settings.permissionsUsers).some(
+			(entry) => entry.id === guild.owner_id,
+		)
+	) {
+		return "A rule cannot name the server owner, who always opens the dashboard";
+	}
+	const positions = new Map(guild.roles.map((role) => [role.id, role.position]));
+	const held = new Set(member.roles);
+	const highest = guild.roles.reduce(
+		(top, role) => (held.has(role.id) ? Math.max(top, role.position) : top),
+		0,
+	);
+	const outranked = changedEntries(roles, settings.permissionsRoles).find(
+		(entry) => (positions.get(entry.id) ?? -1) >= highest,
+	);
+	return outranked
+		? "The rule names a role at or above your highest role, which only someone above it may rule"
+		: null;
 }

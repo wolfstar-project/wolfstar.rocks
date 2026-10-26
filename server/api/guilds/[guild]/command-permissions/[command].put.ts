@@ -6,6 +6,7 @@ import {
 	loadPermissionSet,
 } from "#server/utils/command-permissions/discord";
 import { checkEditorRequirements } from "#server/utils/command-permissions/requirements";
+import { commandPermissionsRest } from "#server/utils/command-permissions/rest";
 import { hasCommandPermissionsScope } from "#server/utils/discord/token-scopes";
 import { authorizeGuildManager, useManagedGuild } from "#server/utils/guilds/manager";
 import {
@@ -135,7 +136,9 @@ export default defineWrappedResponseHandler(
 		let after: typeof rows;
 		try {
 			after = (
-				await api.applicationCommands.editGuildCommandPermissions(
+				await useApi(
+					commandPermissionsRest(),
+				).applicationCommands.editGuildCommandPermissions(
 					token.access_token,
 					appId,
 					guild.id,

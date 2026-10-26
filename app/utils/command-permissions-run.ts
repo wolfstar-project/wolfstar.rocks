@@ -1,4 +1,9 @@
-import { allChannelsId, everyoneId, type Overwrite } from "#shared/utils/command-permissions";
+import {
+	allChannelsId,
+	everyoneId,
+	overwritesEqual,
+	type Overwrite,
+} from "#shared/utils/command-permissions";
 import { ApplicationCommandPermissionType } from "discord-api-types/v10";
 
 export interface SaveOutcome {
@@ -114,4 +119,28 @@ export function listsToRows(lists: PermissionLists, guildId: string): Overwrite[
 	}
 	push(ApplicationCommandPermissionType.Channel, lists.channels);
 	return rows;
+}
+
+/** A command's edited rows, with Discord's rows the edit was made on. */
+export interface StagedDraft {
+	rows: Overwrite[];
+	base: Overwrite[];
+}
+
+/**
+ * Stages `rows` for a command. A draft keeps the rows it was first made on,
+ * whatever Discord holds since: its snapshot is sent from them, so a set that
+ * changed in Discord after the edit began is refused instead of overwritten.
+ */
+export function stageRows(
+	drafts: Readonly<Record<string, StagedDraft>>,
+	commandId: string,
+	rows: Overwrite[],
+	saved: Overwrite[],
+): Record<string, StagedDraft> {
+	const base = drafts[commandId]?.base ?? saved;
+	const next = { ...drafts };
+	if (overwritesEqual(rows, base)) delete next[commandId];
+	else next[commandId] = { rows, base };
+	return next;
 }

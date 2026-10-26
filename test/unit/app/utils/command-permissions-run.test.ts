@@ -1,7 +1,12 @@
 import type { Overwrite } from "#shared/utils/command-permissions";
 import { ApplicationCommandPermissionType } from "discord-api-types/v10";
 import { describe, expect, it, vi } from "vitest";
-import { listsToRows, rowsToLists, runSequentialSaves } from "~/utils/command-permissions-run";
+import {
+	listsToRows,
+	rowsToLists,
+	runSequentialSaves,
+	stageRows,
+} from "~/utils/command-permissions-run";
 
 const GUILD = "110000000000000000";
 const ROLE = "300000000000000001";
@@ -81,5 +86,23 @@ describe("rowsToLists and listsToRows", () => {
 	it("leaves @everyone out when it is not set", () => {
 		const lists = { ...rowsToLists(rows, GUILD), everyone: null };
 		expect(listsToRows(lists, GUILD).some((entry) => entry.id === GUILD)).toBe(false);
+	});
+});
+
+describe("stageRows", () => {
+	const A = [row(ROLE, ApplicationCommandPermissionType.Role, true)];
+	const B = [row(ROLE, ApplicationCommandPermissionType.Role, false)];
+	const edit = [row(USER, ApplicationCommandPermissionType.User, true)];
+
+	it("keeps the rows a draft was made on when Discord's rows change under it", () => {
+		const first = stageRows({}, "ban", edit, A);
+		// A reload after a stopped run brings Discord's newer rows, B.
+		const again = stageRows(first, "ban", [...edit, ...B], B);
+		expect(again.ban?.base).toEqual(A);
+	});
+
+	it("drops the draft once it matches the rows it was made on", () => {
+		const staged = stageRows({}, "ban", edit, A);
+		expect(stageRows(staged, "ban", A, A)).toEqual({});
 	});
 });

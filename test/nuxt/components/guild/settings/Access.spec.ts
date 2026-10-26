@@ -83,4 +83,19 @@ describe("GuildSettingsAccess", () => {
 		const asAdmin = await mountSuspended(Access);
 		expect(asAdmin.text()).not.toContain("Remove legacy nodes");
 	});
+
+	it("leaves allow imports to a click of their own, with the Manage Server warning", async () => {
+		const DENIED = "300000000000000004";
+		withNodes([
+			{ id: IMPORTABLE, allow: ["*"], deny: [] },
+			{ id: DENIED, allow: [], deny: ["settings"] },
+		]);
+		const wrapper = await mountSuspended(Access);
+		const allowRow = wrapper.get(`[data-legacy="${IMPORTABLE}"]`);
+		expect(allowRow.text()).toContain("without Manage Server");
+
+		await wrapper.get("button[data-import-all]").trigger("click");
+		expect(wrapper.find(`button[data-import="${DENIED}"]`).exists()).toBe(false);
+		expect(wrapper.find(`button[data-import="${IMPORTABLE}"]`).exists()).toBe(true);
+	});
 });

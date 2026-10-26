@@ -1,6 +1,7 @@
 import { serializeSettings, writeSettingsTransaction } from "#server/database";
 import { parseSettingsChanges } from "#server/database/settings/validation";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
+import { assertCanEditDashboardAccess } from "#server/utils/dashboard-access";
 import { guildSettingsAccessDenied, guildSettingsUpdate } from "#shared/audit/actions";
 import { SettingsUpdateSchema } from "#shared/schemas";
 import { isNullOrUndefined, isNullishOrEmpty } from "@sapphire/utilities";
@@ -97,6 +98,9 @@ export default defineWrappedResponseHandler(
 		log.set({ settings: { keysUpdated: Object.keys(settingsData).length } });
 
 		using trx = await writeSettingsTransaction(guild.id);
+
+		// Read inside the transaction, so the check sees what the database has now.
+		assertCanEditDashboardAccess(guild, member, trx.settings, settingsData);
 
 		const beforeSettings = JSON.parse(serializeSettings(trx.settings)) as Record<
 			string,

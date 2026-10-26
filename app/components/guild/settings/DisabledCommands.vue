@@ -61,7 +61,7 @@
 							>
 								<div class="min-w-0 flex-1">
 									<p class="truncate font-mono text-[0.8125rem] font-bold">
-										{{ command.name }}
+										{{ command.label }}
 									</p>
 									<p class="truncate text-xs text-muted">
 										{{ command.description }}
@@ -78,7 +78,7 @@
 											: 'command-state--off'
 									"
 									:aria-checked="getCommand(command.name)?.isEnabled"
-									:aria-label="command.name"
+									:aria-label="command.label"
 									@click="
 										toggleCommand(
 											command.name,
@@ -169,6 +169,7 @@ import type { GuildData } from "#server/database";
 import type { DisableCommands } from "#shared/types";
 import type { FormErrorEvent } from "@nuxt/ui";
 import type * as v from "valibot";
+import type { DisableableCommand } from "~/utils/command-settings";
 // oxlint-disable-next-line typescript/consistent-type-imports
 import { disabledCommandsSchema } from "#shared/schemas";
 import { ConfigurableCommandChannels } from "#shared/utils/settingsDataEntries";
@@ -195,35 +196,31 @@ const {
 
 const expandedCategory = ref<string | undefined>(undefined);
 
-const state = reactive<Schema>(createDefaultState(commands, guildSettings.value?.commandsDisabled));
+// One entry per command: the bot lists each subcommand on its own, but the
+// settings turn off a whole command, by the name in `command`.
+const disableableCommands = computed(() => listDisableableCommands(commands));
+
+const state = reactive<Schema>(
+	createDefaultState(disableableCommands.value, guildSettings.value?.commandsDisabled),
+);
 
 // Loading state
 const loading = computed(() => !commands.length || !guildSettings.value);
 
-const categories = computed(() => {
-	const uniqueCategories = new Set<string>();
-	for (const command of commands) {
-		if (!command.guarded) {
-			uniqueCategories.add(command.category || "General");
-		}
-	}
-	return [...uniqueCategories].toSorted();
-});
+const categories = computed(() =>
+	[...new Set(disableableCommands.value.map((command) => command.category))].toSorted(),
+);
 
 // Helper to create default state from commands and settings
 function createDefaultState(
-	cmdList: FlattenedCommand[],
+	cmdList: DisableableCommand[],
 	disabledCommands: string[] | undefined,
 ): Schema {
 	const result: Record<string, DisableCommands.Command> = {};
 
 	for (const command of cmdList) {
-		if (command.guarded) {
-			continue;
-		}
-
 		result[command.name] = {
-			category: command.category || "General",
+			category: command.category,
 			description: command.description,
 			isEnabled: !disabledCommands?.includes(command.name),
 			name: command.name,
@@ -258,8 +255,8 @@ function getCommand(name: string): DisableCommands.Command | undefined {
 	return cmd ? { ...cmd } : undefined;
 }
 
-function getCommandsByCategory(category: string): FlattenedCommand[] {
-	return commands.filter((cmd) => (cmd.category || "General") === category && !cmd.guarded);
+function getCommandsByCategory(category: string): DisableableCommand[] {
+	return disableableCommands.value.filter((command) => command.category === category);
 }
 
 function toggleAllInCategory(category: string, enable: boolean) {
@@ -316,7 +313,10 @@ watch(
 	loading,
 	(isLoading) => {
 		if (!isLoading && guildSettings.value) {
-			const newValues = createDefaultState(commands, guildSettings.value.commandsDisabled);
+			const newValues = createDefaultState(
+				disableableCommands.value,
+				guildSettings.value.commandsDisabled,
+			);
 
 			// Remove stale keys not in new values
 			for (const key in state) {

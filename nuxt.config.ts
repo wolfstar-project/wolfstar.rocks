@@ -673,10 +673,13 @@ export default defineNuxtConfig({
 		// A Worker serves those files from its asset binding as they are, so there
 		// the assets of past deploys are kept, for clients still on them, by a
 		// build in CI: the module uploads them through `wrangler`, 25 processes at
-		// a time, which a machine with 4 GB of memory does not survive. It needs
-		// an API token to do so, which Workers Builds may not hand to the build
-		// command; without one the build goes on and keeps no past assets.
-		bundleAssets: isCloudflareBuild && isCI && Boolean(process.env.CLOUDFLARE_API_TOKEN),
+		// a time, which a machine with 4 GB of memory does not survive. Workers
+		// Builds hands the build an API token, and there the upload of the 626
+		// assets of each of the last releases outlasted the 30 minute limit, so it
+		// is opt-in with SKEW_PROTECTION_BUNDLE_ASSETS; without it the build keeps
+		// no past assets.
+		bundleAssets:
+			isCloudflareBuild && isCI && process.env.SKEW_PROTECTION_BUNDLE_ASSETS === "true",
 	},
 
 	// PWA configuration

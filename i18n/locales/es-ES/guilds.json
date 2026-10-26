@@ -509,6 +509,23 @@
 			"subtitle": "Elige dónde publica WolfStar los registros y qué canales ignorar.",
 			"title": ""
 		},
+		"command_rules": {
+			"allowed_channels": "",
+			"allowed_roles": "",
+			"allowed_users": "",
+			"empty": "",
+			"ignored_channels": "",
+			"ignored_roles": "",
+			"ignored_users": "",
+			"subtitle": "",
+			"title": ""
+		},
+		"command_tabs": {
+			"aria": "",
+			"disabled": "",
+			"discord": "",
+			"rules": ""
+		},
 		"commands": {
 			"category_reset": "Restablecer categoría",
 			"category_reset_description": "Restablece todos los comandos de esta categoría al valor predeterminado.",

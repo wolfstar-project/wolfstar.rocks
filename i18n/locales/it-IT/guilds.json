@@ -509,6 +509,23 @@
 			"subtitle": "Scegli dove WolfStar pubblica i log e quali canali ignorare.",
 			"title": "Log degli eventi"
 		},
+		"command_rules": {
+			"allowed_channels": "",
+			"allowed_roles": "",
+			"allowed_users": "",
+			"empty": "",
+			"ignored_channels": "",
+			"ignored_roles": "",
+			"ignored_users": "",
+			"subtitle": "",
+			"title": ""
+		},
+		"command_tabs": {
+			"aria": "",
+			"disabled": "",
+			"discord": "",
+			"rules": ""
+		},
 		"commands": {
 			"category_reset": "Reimposta categoria",
 			"category_reset_description": "Reimposta tutti i comandi di questa categoria al valore predefinito.",

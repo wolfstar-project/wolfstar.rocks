@@ -509,6 +509,23 @@
 			"subtitle": "Choose where WolfStar posts logs and which channels to ignore.",
 			"title": "Event Logs"
 		},
+		"command_rules": {
+			"allowed_channels": "Only in",
+			"allowed_roles": "Only for roles",
+			"allowed_users": "Also for members",
+			"empty": "No command has rules. Add them with /commands in Discord.",
+			"ignored_channels": "Not in",
+			"ignored_roles": "Never for roles",
+			"ignored_users": "Never for members",
+			"subtitle": "Where and by whom each command may run, as /commands in Discord sets it. The bot applies these rules to everyone, its administrators included. Edit them with /commands in Discord.",
+			"title": "Command rules"
+		},
+		"command_tabs": {
+			"aria": "Command settings",
+			"disabled": "Disabled commands",
+			"discord": "Discord permissions",
+			"rules": "Command rules"
+		},
 		"commands": {
 			"category_reset": "Category Reset",
 			"category_reset_description": "{category} commands reverted to saved values.",

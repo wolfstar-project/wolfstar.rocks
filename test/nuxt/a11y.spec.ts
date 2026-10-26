@@ -52,6 +52,7 @@ import {
 	OauthStatusPanel,
 	GuildAuditChanges,
 	GuildAutomodDurationInput,
+	GuildCommandsRules,
 	GuildLogsCaseDetail,
 	GuildMemberPicker,
 	GuildReviewQueue,
@@ -751,6 +752,33 @@ describe("component accessibility audits", () => {
 				}),
 			);
 			const component = await mountSuspended(GuildSettingsAccess);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildCommandsRules", () => {
+		const GUILD_ID = "123456789012345678";
+
+		it("should have no accessibility violations with rules", async () => {
+			registerEndpoint(`/api/guilds/${GUILD_ID}/members/search`, {
+				method: "GET",
+				handler: () => [],
+			});
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+			useGuildSettings().setGuildSettings(
+				createMockGuildData(GUILD_ID, {
+					commandsRestrictions: [
+						{
+							command: "ban",
+							allowedRoles: ["300000000000000001"],
+							ignoredUsers: ["200000000000000001"],
+						},
+					],
+				}),
+			);
+			const component = await mountSuspended(GuildCommandsRules, { props: { commands: [] } });
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
 		});

@@ -509,6 +509,23 @@
 			"subtitle": "Choose where WolfStar posts logs and which channels to ignore.",
 			"title": ""
 		},
+		"command_rules": {
+			"allowed_channels": "",
+			"allowed_roles": "",
+			"allowed_users": "",
+			"empty": "",
+			"ignored_channels": "",
+			"ignored_roles": "",
+			"ignored_users": "",
+			"subtitle": "",
+			"title": ""
+		},
+		"command_tabs": {
+			"aria": "",
+			"disabled": "",
+			"discord": "",
+			"rules": ""
+		},
 		"commands": {
 			"category_reset": "Category Reset",
 			"category_reset_description": "{category} commands reverted to saved values.",

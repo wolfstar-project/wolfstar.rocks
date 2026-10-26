@@ -1,5 +1,9 @@
 import type { DiscordProfile } from "better-auth/social-providers";
-import { createDiscordProviderOptions } from "#server/utils/discord/provider";
+import {
+	COMMAND_PERMISSIONS_SCOPE,
+	createDiscordProviderOptions,
+	DISCORD_OAUTH_SCOPES,
+} from "#server/utils/discord/provider";
 import { discord } from "better-auth/social-providers";
 import { describe, expect, it } from "vitest";
 
@@ -109,5 +113,26 @@ describe("createDiscordProviderOptions", () => {
 			email: "wolfstar@example.com",
 			image: "https://cdn.discordapp.com/avatars/242043489611808769/hash.png",
 		});
+	});
+});
+
+describe("command permissions scope", () => {
+	it("is not asked at an ordinary sign-in", async () => {
+		expect(DISCORD_OAUTH_SCOPES).toStrictEqual(["guilds", "guilds.members.read"]);
+		const url = await createAuthorizationURL();
+		expect(url.searchParams.get("scope")?.split(" ")).not.toContain(COMMAND_PERMISSIONS_SCOPE);
+	});
+
+	it("is added to the sign-in that asks for it", async () => {
+		const provider = discord(createDiscordProviderOptions(credentials));
+		const url = await provider.createAuthorizationURL({
+			state: "oauth-state",
+			redirectURI: BETTER_AUTH_DEFAULT_URI,
+			scopes: [COMMAND_PERMISSIONS_SCOPE],
+		});
+		const scopes = url.searchParams.get("scope")?.split(" ") ?? [];
+		expect(COMMAND_PERMISSIONS_SCOPE).toBe("applications.commands.permissions.update");
+		expect(scopes).toContain(COMMAND_PERMISSIONS_SCOPE);
+		expect(scopes).toContain("guilds");
 	});
 });

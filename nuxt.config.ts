@@ -2,19 +2,18 @@ import netlifyNuxt from "@netlify/nuxt";
 import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
 import { isCI, isTest, provider } from "std-env";
-import { ALPHA_WORKER, CLOUDFLARE_BINDINGS, isCloudflareBuild } from "./config/cloudflare.ts";
+import {
+	ALPHA_WORKER,
+	applyAlphaWorkerEnv,
+	CLOUDFLARE_BINDINGS,
+	isCloudflareBuild,
+} from "./config/cloudflare.ts";
 import { currentLocales, datetimeFormats, numberFormats } from "./config/i18n.ts";
 import { pwa } from "./config/pwa.ts";
 import { LOCALE_BUNDLES_DIR } from "./modules/i18n-locale-bundles.ts";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig.ts";
 
-// The Workers build is the alpha site's. Its public values come from the
-// Worker's own variables, so the prerendered pages and the Worker agree.
-if (isCloudflareBuild) {
-	for (const [name, value] of Object.entries(ALPHA_WORKER.vars)) {
-		process.env[name] ??= value;
-	}
-}
+applyAlphaWorkerEnv();
 
 const runtimeConfig = generateRuntimeConfig();
 const isStorybook = process.env.STORYBOOK === "true" || process.env.VITEST_STORYBOOK === "true";

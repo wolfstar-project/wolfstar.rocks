@@ -92,3 +92,17 @@ export const ALPHA_WORKER = {
 	},
 	workers_dev: false,
 } satisfies WranglerConfig;
+
+/**
+ * Fills the env with the Worker's own `vars` on the Workers build, leaving any
+ * value already set. The alpha site's public values then come from one place, so
+ * the prerendered pages and the Worker agree. Call it before the runtime config
+ * is generated, which reads the env when `nuxt.config.ts` loads: a Nuxt module
+ * would run too late.
+ */
+export function applyAlphaWorkerEnv() {
+	if (!isCloudflareBuild) return;
+	for (const [name, value] of Object.entries(ALPHA_WORKER.vars)) {
+		process.env[name] ??= value;
+	}
+}

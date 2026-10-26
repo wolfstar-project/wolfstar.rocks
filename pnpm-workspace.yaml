@@ -94,8 +94,13 @@ shellEmulator: true
 # nuxt-studio 1.8.0 ships an empty `studio.client.d.ts`; the generated plugin
 # injections import it, so every `useNuxtApp().$x` became `unknown`. The patch
 # restores the declaration 1.7.0 shipped.
+# nitropack: a cached function shares the call already running for a key with
+# the callers that come meanwhile. On Cloudflare Workers the runtime cancels
+# those callers as hung, so there the patch lets each call run on its own (see
+# docs/arch/cloudflare-workers.md).
 patchedDependencies:
     "@i18n-micro/path-strategy@1.3.20": patches/@i18n-micro__path-strategy@1.3.20.patch
+    nitropack@2.13.4: patches/nitropack@2.13.4.patch
     nuxt-seo-utils@8.3.3: patches/nuxt-seo-utils@8.3.3.patch
     nuxt-studio@1.8.0: patches/nuxt-studio@1.8.0.patch
     prisma-orm-extension-typed-json: patches/prisma-orm-extension-typed-json.patch

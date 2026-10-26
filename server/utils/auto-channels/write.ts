@@ -13,6 +13,7 @@ import {
 	removeAutoMessage,
 	upsertAutoMessage,
 } from "#server/database/settings/messages/storage";
+import { createKeyedLock } from "#server/utils/keyed-lock";
 import {
 	MAXIMUM_AUTO_DELETES,
 	MAXIMUM_AUTO_MESSAGES,
@@ -24,8 +25,6 @@ import {
 	type AutoPurge,
 	type AutoPurgeData,
 } from "#shared/utils/auto-channels";
-import { Collection } from "@discordjs/collection";
-import { AsyncQueue } from "@sapphire/async-queue";
 import { ChannelType } from "discord-api-types/v10";
 
 /**
@@ -63,7 +62,7 @@ export interface AutoChannelChange<T> {
 type Orm = Database["orm"];
 
 const LOCK_KEY_RANGE = 2_147_483_647n;
-const queues = new Collection<string, AsyncQueue>();
+const withKeyLock = createKeyedLock();
 
 /**
  * Runs the writes of one table for a guild one after the other, as the rules
@@ -77,12 +76,9 @@ async function writeAutoChannels<T>(
 	guildId: Snowflake,
 	callback: (orm: Orm) => Promise<T>,
 ): Promise<T> {
-	const key = `${kind}:${guildId}`;
-	const queue = queues.ensure(key, () => new AsyncQueue());
-	await queue.wait();
-	try {
+	return withKeyLock(`${kind}:${guildId}`, () => {
 		const guildKey = Number(BigInt(guildId) % LOCK_KEY_RANGE);
-		return await db.transaction(async (tx) => {
+		return db.transaction(async (tx) => {
 			await tx.execute(
 				db.raw
 					.sql`SELECT pg_advisory_xact_lock(${AutoChannelKinds[kind].lockNamespace}, ${guildKey})`
@@ -91,10 +87,7 @@ async function writeAutoChannels<T>(
 			);
 			return callback(tx.orm);
 		});
-	} finally {
-		queue.shift();
-		if (queue.remaining === 0) queues.delete(key);
-	}
+	});
 }
 
 // The bot works in text and announcement channels only (`/autodelete enable`

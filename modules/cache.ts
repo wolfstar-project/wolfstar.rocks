@@ -35,13 +35,17 @@ export default defineNuxtModule({
 	async setup(_, nuxt) {
 		if (nuxt.options.test) return;
 
+		if (!isCloudflareBuild && provider !== "netlify") return;
+
 		const config = useRuntimeConfig();
-		if (isCloudflareBuild) {
-			// A Worker has no file system to keep the `fsLite` mounts on, so each one
-			// moves to Workers KV, whole: the cache next to the fetch cache, the rate
-			// limiters with their keys as on Netlify. Skew protection mounts its own
-			// namespace from `skewProtection.storage` (nuxt.config.ts).
-			nuxt.hook("nitro:config", (nitroConfig) => {
+		nuxt.hook("nitro:config", (nitroConfig) => {
+			nitroConfig.storage = nitroConfig.storage || {};
+
+			if (isCloudflareBuild) {
+				// A Worker has no file system to keep the `fsLite` mounts on, so each one
+				// moves to Workers KV, whole: the cache next to the fetch cache, the rate
+				// limiters with their keys as on Netlify. Skew protection mounts its own
+				// namespace from `skewProtection.storage` (nuxt.config.ts).
 				nitroConfig.storage = {
 					...nitroConfig.storage,
 					"cache": cloudflareKVMount(CLOUDFLARE_BINDINGS.cache, "cache"),
@@ -55,15 +59,8 @@ export default defineNuxtModule({
 						"wolfstar-auth-ratelimiter",
 					),
 				};
-			});
-			return;
-		}
-		if (provider !== "netlify") {
-			return;
-		}
-
-		nuxt.hook("nitro:config", (nitroConfig) => {
-			nitroConfig.storage = nitroConfig.storage || {};
+				return;
+			}
 
 			// Main cache storage (for defineCachedFunction, i18n handler cache, etc.)
 			// Uses a resilient Blobs driver so cold-start `getKeys("nitro:handlers:i18n")`

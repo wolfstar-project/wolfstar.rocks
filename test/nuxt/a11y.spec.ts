@@ -52,6 +52,7 @@ import {
 	OauthStatusPanel,
 	GuildAuditChanges,
 	GuildAutomodDurationInput,
+	GuildCommandsDiscordPermissions,
 	GuildCommandsRules,
 	GuildLogsCaseDetail,
 	GuildMemberPicker,
@@ -754,6 +755,54 @@ describe("component accessibility audits", () => {
 			const component = await mountSuspended(GuildSettingsAccess);
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildCommandsDiscordPermissions", () => {
+		const GUILD_ID = "123456789012345678";
+
+		it.each([
+			["authorized", true],
+			["waiting for the scope", false],
+		])("should have no accessibility violations when %s", async (_state, scopeGranted) => {
+			clearNuxtData();
+			registerEndpoint(`/api/guilds/${GUILD_ID}/command-permissions`, {
+				method: "GET",
+				handler: () => ({
+					applicationId: "500000000000000001",
+					commands: [
+						{
+							id: "600000000000000001",
+							name: "ban",
+							command: "ban",
+							category: "Moderation",
+							description: "Ban a member",
+						},
+					],
+					permissions: {
+						"600000000000000001": [
+							{ id: "300000000000000001", type: 1, permission: true },
+						],
+					},
+					snapshot: "x",
+					authorization: { scopeGranted, manageGuild: true, manageRoles: true },
+				}),
+			});
+			registerEndpoint(`/api/guilds/${GUILD_ID}/members/search`, {
+				method: "GET",
+				handler: () => [],
+			});
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+			const component = await mountSuspended(GuildCommandsDiscordPermissions);
+			await vi.waitFor(() =>
+				expect(component.text()).toContain(
+					scopeGranted ? "App default" : "Authorize with Discord",
+				),
+			);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+			component.unmount();
 		});
 	});
 

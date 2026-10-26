@@ -16,7 +16,7 @@
 		<template #content="{ item }">
 			<GuildSettingsDisabledCommands v-if="item.value === 'disabled'" :commands />
 			<GuildCommandsRules v-else-if="item.value === 'rules'" :commands />
-			<slot v-else-if="item.value === 'discord'" name="discord" />
+			<GuildCommandsDiscordPermissions v-else-if="item.value === 'discord'" />
 		</template>
 	</UTabs>
 </template>
@@ -26,11 +26,7 @@ import type { FlattenedCommand } from "#shared/types/discord";
 
 type CommandsTab = "disabled" | "rules" | "discord";
 
-const { commands, discord = false } = defineProps<{
-	commands: FlattenedCommand[];
-	/** Whether the Discord permissions tab is offered. */
-	discord?: boolean;
-}>();
+const { commands } = defineProps<{ commands: FlattenedCommand[] }>();
 
 const { ts } = useI18n();
 const tab = ref<CommandsTab>("disabled");
@@ -38,8 +34,6 @@ const tab = ref<CommandsTab>("disabled");
 const tabs = computed<{ value: CommandsTab; label: string }[]>(() => [
 	{ value: "disabled", label: ts("guild_settings.command_tabs.disabled") },
 	{ value: "rules", label: ts("guild_settings.command_tabs.rules") },
-	...(discord
-		? [{ value: "discord" as const, label: ts("guild_settings.command_tabs.discord") }]
-		: []),
+	{ value: "discord", label: ts("guild_settings.command_tabs.discord") },
 ]);
 </script>

@@ -12,6 +12,7 @@ allowBuilds:
     esbuild: false
     msgpackr-extract: false
     msw: true
+    nuxt-i18n-micro: false
     onnxruntime-node: false
     prisma: true
     protobufjs: false
@@ -90,7 +91,11 @@ shellEmulator: true
 # nuxt-seo-utils' absoluteImageUrls plugin declares its `tags:resolve` hook
 # `async` with no await; unhead v3 ignores the promise and warns in dev
 # ("promise ignored: tags:resolve"). The patch drops the `async`.
+# nuxt-studio 1.8.0 ships an empty `studio.client.d.ts`; the generated plugin
+# injections import it, so every `useNuxtApp().$x` became `unknown`. The patch
+# restores the declaration 1.7.0 shipped.
 patchedDependencies:
-    "@i18n-micro/path-strategy@1.3.10": patches/@i18n-micro__path-strategy@1.3.10.patch
+    "@i18n-micro/path-strategy@1.3.20": patches/@i18n-micro__path-strategy@1.3.20.patch
     nuxt-seo-utils@8.3.3: patches/nuxt-seo-utils@8.3.3.patch
+    nuxt-studio@1.8.0: patches/nuxt-studio@1.8.0.patch
     prisma-orm-extension-typed-json: patches/prisma-orm-extension-typed-json.patch

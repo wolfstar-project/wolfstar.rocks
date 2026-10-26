@@ -77,6 +77,9 @@ export const ALPHA_WORKER = {
 		{ binding: CLOUDFLARE_BINDINGS.rateLimit, id: "f9b5b50991c44b7f981a966e35180edb" },
 		{ binding: CLOUDFLARE_BINDINGS.skewProtection, id: "9518d22a8f88456e9fcedb50ab30bdfc" },
 	],
+	version_metadata: {
+		binding: "CF_VERSION_METADATA",
+	},
 	name: "wolfstar-alpha",
 	observability: OBSERVABILITY,
 	preview_urls: false,

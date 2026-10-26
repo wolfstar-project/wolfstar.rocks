@@ -357,6 +357,9 @@ export default defineNuxtConfig({
 
 	sourcemap: {
 		client: "hidden",
+		// Rollup collapsing the server maps is the other half of the bundling time
+		// on Workers Builds, and nothing uploads them for the Worker.
+		server: !isCloudflareBuild,
 	},
 
 	features: {
@@ -771,6 +774,10 @@ export default defineNuxtConfig({
 		// untouched on purpose: sentry.client.config.ts lazy-loads it.
 		bundleSizeOptimizations: { excludeDebugStatements: true },
 		sourcemaps: {
+			// Without a token nothing is uploaded, yet the plugins still regenerate
+			// every chunk's source map to inject debug ids: that was most of the
+			// server bundling time, enough to time out the alpha Worker's build.
+			disable: !runtimeConfig.sentry.authToken,
 			filesToDeleteAfterUpload: [".*/**/public/**/*.map", ".output/**/public/**/*.map"],
 		},
 	},

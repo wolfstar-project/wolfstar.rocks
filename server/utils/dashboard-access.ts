@@ -5,8 +5,8 @@ import { resolveDashboardAccess, type PermissionEntry } from "#shared/utils/dash
 import { createError } from "evlog";
 
 /**
- * Checks a settings write that changes the dashboard access rules before it is
- * made. Only the owner, or a member who manages the server without any rule,
+ * Checks a settings write that changes the dashboard access rules, or the
+ * admin roles, before it is made. Only the owner, or a member who manages the server without any rule,
  * may change them: a member let in by a rule alone must not let others in. A
  * change that would keep its writer out is refused, the owner excepted, who no
  * rule can keep out.
@@ -17,15 +17,23 @@ export function assertCanEditDashboardAccess(
 	settings: ReadonlyGuildData,
 	changes: Partial<GuildData>,
 ): void {
-	const { permissionsUsers, permissionsRoles } = changes;
-	if (permissionsUsers === undefined && permissionsRoles === undefined) return;
+	const { permissionsUsers, permissionsRoles, rolesAdmin } = changes;
+	// The admin roles decide who manages the server without a rule, and so who
+	// may write the rules: changing them is guarded the same way.
+	if (
+		permissionsUsers === undefined &&
+		permissionsRoles === undefined &&
+		rolesAdmin === undefined
+	) {
+		return;
+	}
 	if (member.user.id === guild.owner_id) return;
 
 	if (!hasAdminPermissions(guild, member, settings.rolesAdmin)) {
 		throw createError({
 			message: "You cannot change who opens the dashboard",
 			status: 403,
-			why: "Only the owner or a member who can manage the server changes the dashboard access rules",
+			why: "Only the owner or a member who can manage the server changes the dashboard access rules and the admin roles",
 			fix: "Ask the server owner or an administrator to change them",
 		});
 	}

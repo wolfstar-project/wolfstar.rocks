@@ -229,19 +229,34 @@ const sending = ref(false);
 const progress = ref<string | undefined>(undefined);
 const failure = ref<{ title: string; description: string; reload: boolean } | null>(null);
 
-const FAILURE_KEYS: Record<string, string> = {
-	"scope-missing": "guild_settings.command_permissions.error_scope",
-	"manage-guild": "guild_settings.command_permissions.error_permissions",
-	"manage-roles": "guild_settings.command_permissions.error_permissions",
-	"command-unavailable": "guild_settings.command_permissions.error_command",
-	"role-above": "guild_settings.command_permissions.error_role_above",
-	"channel-hidden": "guild_settings.command_permissions.error_channel",
-	"unknown-role": "guild_settings.command_permissions.error_unknown_role",
-	"unknown-channel": "guild_settings.command_permissions.error_unknown_channel",
-	"discord-refused": "guild_settings.command_permissions.error_refused",
-	"rate-limited": "guild_settings.command_permissions.error_rate_limited",
-	"unknown-command": "guild_settings.command_permissions.error_unknown_command",
-};
+// Literal keys, one per code the write answers with, so the i18n report sees each.
+function failureMessage(code: string): string {
+	switch (code) {
+		case "scope-missing":
+			return ts("guild_settings.command_permissions.error_scope");
+		case "manage-guild":
+		case "manage-roles":
+			return ts("guild_settings.command_permissions.error_permissions");
+		case "command-unavailable":
+			return ts("guild_settings.command_permissions.error_command");
+		case "role-above":
+			return ts("guild_settings.command_permissions.error_role_above");
+		case "channel-hidden":
+			return ts("guild_settings.command_permissions.error_channel");
+		case "unknown-role":
+			return ts("guild_settings.command_permissions.error_unknown_role");
+		case "unknown-channel":
+			return ts("guild_settings.command_permissions.error_unknown_channel");
+		case "discord-refused":
+			return ts("guild_settings.command_permissions.error_refused");
+		case "rate-limited":
+			return ts("guild_settings.command_permissions.error_rate_limited");
+		case "unknown-command":
+			return ts("guild_settings.command_permissions.error_unknown_command");
+		default:
+			return ts("guild_settings.please_try_again");
+	}
+}
 
 async function send() {
 	sending.value = true;
@@ -269,7 +284,7 @@ async function send() {
 	}
 	failure.value = {
 		title: ts("guild_settings.command_permissions.failed_title", { command: name }),
-		description: `${ts(FAILURE_KEYS[outcome.failed.code] ?? "guild_settings.please_try_again")} ${sent}`,
+		description: `${failureMessage(outcome.failed.code)} ${sent}`,
 		reload: false,
 	};
 }

@@ -91,7 +91,18 @@ describe("assertCanEditDashboardAccess", () => {
 	});
 
 	it("does nothing when the change holds no access rules", () => {
-		expect(attempt(helper, settings(), { rolesAdmin: [ADMIN_ROLE] })).toBeNull();
+		expect(attempt(helper, settings(), { rolesPublic: [ADMIN_ROLE] })).toBeNull();
+	});
+
+	it("refuses the admin roles to a member let in by a rule alone", () => {
+		// Holding an admin role makes a member a server manager, who may write the rules.
+		const current = settings({ permissionsUsers: [createDashboardEntry(HELPER, "allow")] });
+		const error = attempt(helper, current, { rolesAdmin: [LOW_ROLE] }) as { status?: number };
+		expect(error?.status).toBe(403);
+	});
+
+	it("lets a server manager change the admin roles", () => {
+		expect(attempt(admin, settings(), { rolesAdmin: [LOW_ROLE] })).toBeNull();
 	});
 });
 

@@ -42,14 +42,32 @@ const { guildSettings } = useGuildSettings();
 
 type RuleList = Exclude<keyof CommandRule, "command">;
 
-const LIST_LABELS: Record<RuleList, string> = {
-	allowedChannels: "guild_settings.command_rules.allowed_channels",
-	ignoredChannels: "guild_settings.command_rules.ignored_channels",
-	allowedRoles: "guild_settings.command_rules.allowed_roles",
-	ignoredRoles: "guild_settings.command_rules.ignored_roles",
-	allowedUsers: "guild_settings.command_rules.allowed_users",
-	ignoredUsers: "guild_settings.command_rules.ignored_users",
-};
+const RULE_LISTS: readonly RuleList[] = [
+	"allowedChannels",
+	"ignoredChannels",
+	"allowedRoles",
+	"ignoredRoles",
+	"allowedUsers",
+	"ignoredUsers",
+];
+
+// Literal keys, so the i18n report sees each.
+function listLabel(list: RuleList): string {
+	switch (list) {
+		case "allowedChannels":
+			return ts("guild_settings.command_rules.allowed_channels");
+		case "ignoredChannels":
+			return ts("guild_settings.command_rules.ignored_channels");
+		case "allowedRoles":
+			return ts("guild_settings.command_rules.allowed_roles");
+		case "ignoredRoles":
+			return ts("guild_settings.command_rules.ignored_roles");
+		case "allowedUsers":
+			return ts("guild_settings.command_rules.allowed_users");
+		case "ignoredUsers":
+			return ts("guild_settings.command_rules.ignored_users");
+	}
+}
 
 const rules = computed(() => readCommandRules(guildSettings.value?.commandsRestrictions));
 
@@ -93,13 +111,11 @@ const rows = computed(() =>
 		.map((rule) => ({
 			command: rule.command,
 			name: discordName(rule.command),
-			lists: (Object.keys(LIST_LABELS) as RuleList[])
-				.filter((list) => rule[list].length > 0)
-				.map((list) => ({
-					key: list,
-					label: ts(LIST_LABELS[list]),
-					values: rule[list].map((id) => nameOf(list, id)),
-				})),
+			lists: RULE_LISTS.filter((list) => rule[list].length > 0).map((list) => ({
+				key: list,
+				label: listLabel(list),
+				values: rule[list].map((id) => nameOf(list, id)),
+			})),
 		}))
 		.toSorted((a, b) => a.name.localeCompare(b.name)),
 );

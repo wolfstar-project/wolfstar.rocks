@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const { mockFetchGuildData, mockWriteGuildData } = vi.hoisted(() => ({
 	mockFetchGuildData: vi.fn(),
@@ -74,5 +74,25 @@ describe("isGuildUnconfigured", () => {
 		await working.write({ language: "it-IT" }).submit();
 		working.dispose();
 		expect(isGuildUnconfigured(id)).toBe(false);
+	});
+});
+
+describe("writeSettingsTransaction on Cloudflare Workers", () => {
+	afterEach(() => {
+		vi.unstubAllGlobals();
+	});
+
+	// A Worker cancels a request as hung while it waits on another request's lock.
+	it("opens a write for a guild while another one is still open", async () => {
+		vi.stubGlobal("navigator", { userAgent: "Cloudflare-Workers" });
+		const id = guildId();
+		mockFetchGuildData.mockResolvedValue({ id, language: "it-IT" });
+
+		const first = await writeSettingsTransaction(id);
+		const second = await writeSettingsTransaction(id);
+
+		expect(second.settings.language).toBe("it-IT");
+		first.dispose();
+		second.dispose();
 	});
 });

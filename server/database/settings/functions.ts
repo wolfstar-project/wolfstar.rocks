@@ -7,6 +7,7 @@ import {
 	updateSettingsContext,
 } from "#server/database/settings/context/functions";
 import { fetchGuildData, writeGuildData } from "#server/database/settings/storage";
+import { canWaitOnOtherRequests } from "#server/utils/keyed-lock";
 import { Collection } from "@discordjs/collection";
 import { AsyncQueue } from "@sapphire/async-queue";
 
@@ -53,6 +54,12 @@ export function readSettingsPermissionNodes(settings: ReadonlyGuildData) {
 }
 
 export async function writeSettingsTransaction(id: string) {
+	// On Cloudflare Workers a request cannot wait on another's lock, so writes
+	// there are not ordered in memory; see `canWaitOnOtherRequests()`.
+	if (!canWaitOnOtherRequests()) {
+		return new Transaction(await processFetch(id, true), null);
+	}
+
 	const lock = locks.ensure(id, () => new AsyncQueue());
 
 	// Acquire a write lock:
@@ -72,7 +79,7 @@ class Transaction {
 
 	public constructor(
 		public readonly settings: ReadonlyGuildData,
-		private readonly queue: AsyncQueue,
+		private readonly queue: AsyncQueue | null,
 	) {}
 
 	public get hasChanges() {
@@ -113,7 +120,7 @@ class Transaction {
 			this.#changes = Object.create(null);
 
 			if (this.#locking) {
-				this.queue.shift();
+				this.queue?.shift();
 				this.#locking = false;
 			}
 		}
@@ -121,14 +128,14 @@ class Transaction {
 
 	public abort() {
 		if (this.#locking) {
-			this.queue.shift();
+			this.queue?.shift();
 			this.#locking = false;
 		}
 	}
 
 	public dispose() {
 		if (this.#locking) {
-			this.queue.shift();
+			this.queue?.shift();
 			this.#locking = false;
 		}
 	}
@@ -156,7 +163,7 @@ async function unlockOnThrow(promise: Promise<ReadonlyGuildData>, lock: AsyncQue
  */
 async function processFetch(id: string, fresh = false): Promise<ReadonlyGuildData> {
 	const previous = queue.get(id);
-	if (previous && !fresh) {
+	if (previous && !fresh && canWaitOnOtherRequests()) {
 		return previous;
 	}
 

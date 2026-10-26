@@ -1,5 +1,6 @@
 import type { Models } from "#server/database/generated/prisma/contract";
 import type { StoredGuildData } from "#server/database/settings/columns";
+import type { PermissionEntry } from "#shared/utils/dashboard-access";
 import type { DeepReadonly } from "@sapphire/utilities";
 import type { Snowflake } from "discord-api-types/v10";
 import { SETTING_CHOICES } from "#shared/utils/settings-choices";
@@ -57,11 +58,11 @@ export type MessageUpdateStyle = Models.public_GuildLogsOptions["messageUpdateSt
 export const MessageUpdateStyles =
 	SETTING_CHOICES.logsMessageUpdateStyle satisfies readonly MessageUpdateStyle[];
 
-export interface PermissionsNode {
-	allow: readonly Snowflake[];
-	deny: readonly Snowflake[];
-	id: Snowflake;
-}
+/**
+ * An entry of `permissions.users` or `permissions.roles`: a legacy permission
+ * node, or a dashboard access rule (see `#shared/utils/dashboard-access`).
+ */
+export type PermissionsNode = PermissionEntry;
 
 export interface UniqueRoleSet {
 	name: string;

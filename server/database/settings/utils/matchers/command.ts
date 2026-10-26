@@ -20,8 +20,13 @@ function commandName(command: WolfCommand): string {
 	return command.command ?? command.name;
 }
 
+// The commands that were renamed, by the name a node may still hold, as the
+// bot's matcher has them: a node on the old command applies to the new one.
+const RenamedCommands: Readonly<Record<string, string>> = { conf: "settings" };
+
 function matchName(name: string, command: WolfCommand): boolean {
-	return commandName(command) === name || command.alias.includes(name);
+	const current = RenamedCommands[name] ?? name;
+	return commandName(command) === current || command.alias.includes(current);
 }
 
 function matchNameAndCategory(name: string, category: string, command: WolfCommand): boolean {

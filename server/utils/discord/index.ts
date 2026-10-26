@@ -31,6 +31,7 @@ import {
 	fetchGuildMemberWithRetry,
 } from "#server/utils/discord/oauth";
 import { PermissionsBits } from "#shared/utils/bits";
+import { resolveDashboardAccess } from "#shared/utils/dashboard-access";
 import { hours } from "#shared/utils/times";
 import { cast } from "@sapphire/utilities";
 import { hasAtLeastOneKeyInMap } from "@sapphire/utilities/hasAtLeastOneKeyInMap";
@@ -70,7 +71,11 @@ function computePermissions(memberRoles: string[], guildRoles: APIRole[]): bigin
 // `permissions` is absent on bot-token GET /guilds/{id}/members/{id} responses;
 // fall back to computing permissions from the member's roles against guild.roles.
 // Administrator implies every permission including ManageGuild.
-function isAdmin(guild: APIGuild, member: APIGuildMember, roles: readonly string[]): boolean {
+export function hasAdminPermissions(
+	guild: APIGuild,
+	member: APIGuildMember,
+	roles: readonly string[],
+): boolean {
 	if (roles.length > 0) {
 		return hasAtLeastOneKeyInMap(
 			new Map(roles.map((role) => [role, true])),
@@ -99,11 +104,22 @@ async function manage(guild: APIGuild, member: APIGuildMember, settings?: Readon
 	}
 
 	const resolvedSettings = settings ?? (await readSettings(guild.id));
-	const nodes = readSettingsPermissionNodes(resolvedSettings);
 
+	// A dashboard access rule decides on its own: an allow opens the dashboard
+	// without Manage Server, a deny keeps an admin out.
+	const access = resolveDashboardAccess(
+		{ userId: member.user.id, roleIds: member.roles },
+		{ users: resolvedSettings.permissionsUsers, roles: resolvedSettings.permissionsRoles },
+		guild.roles,
+	);
+	if (access !== null) {
+		return access === "allow";
+	}
+
+	const nodes = readSettingsPermissionNodes(resolvedSettings);
 	return (
-		isAdmin(guild, member, resolvedSettings.rolesAdmin) &&
-		((await nodes.run(member, "conf")) ?? true)
+		hasAdminPermissions(guild, member, resolvedSettings.rolesAdmin) &&
+		((await nodes.run(member, "settings")) ?? true)
 	);
 }
 

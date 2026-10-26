@@ -30,6 +30,7 @@ describe("matchAny", () => {
 					command: "warnThresholds",
 				}),
 				entry("ping", { category: "General", subCategory: "Misc" }),
+				entry("settings", { category: "Management", subCategory: "General" }),
 			]),
 		);
 	});
@@ -41,6 +42,11 @@ describe("matchAny", () => {
 	it("matches a node naming the command the subcommands belong to", async () => {
 		await expect(matchAny(["ban"], "ban")).resolves.toBe(true);
 		await expect(matchAny(["warnThresholds"], "warnThresholds")).resolves.toBe(true);
+	});
+
+	it("reads a node on the old conf command as one on settings", async () => {
+		await expect(matchAny(["conf"], "settings")).resolves.toBe(true);
+		await expect(matchAny(["conf"], "ban")).resolves.toBe(false);
 	});
 
 	it("does not match a node naming another command", async () => {

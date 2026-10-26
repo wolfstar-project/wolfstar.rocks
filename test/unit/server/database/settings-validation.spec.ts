@@ -104,6 +104,28 @@ describe("parseSettingsChanges", () => {
 		expect(invalid.errors).toHaveLength(2);
 	});
 
+	it("keeps a dashboard access entry with its empty lists", () => {
+		const entry = { id: ROLE, allow: [], deny: [], dashboard: "allow" };
+		const parsed = parseSettingsChanges([["permissionsRoles", [entry]]]);
+		expect(parsed.errors).toBeUndefined();
+		expect(parsed.data?.permissionsRoles).toEqual([entry]);
+	});
+
+	it("refuses a dashboard access entry that is neither allow nor deny", () => {
+		const parsed = parseSettingsChanges([
+			["permissionsUsers", [{ id: ROLE, allow: [], deny: [], dashboard: "maybe" }]],
+		]);
+		expect(parsed.errors).toHaveLength(1);
+	});
+
+	it("refuses an entry that mixes a dashboard rule with commands", () => {
+		const parsed = parseSettingsChanges([
+			["permissionsRoles", [{ id: ROLE, allow: ["settings"], deny: [], dashboard: "allow" }]],
+		]);
+		expect(parsed.errors).toHaveLength(1);
+		expect(parsed.errors?.[0]).toMatch(/dashboard/i);
+	});
+
 	// Guards the fallback in `validatorFor`: a column added to `Columns`
 	// without a validator must be refused, not written unchecked.
 	it("has a validator for every stored key", () => {

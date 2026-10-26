@@ -1,7 +1,7 @@
 import { writeSettingsTransaction } from "#server/database";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
 import { authorizeGuildManager, useManagedGuild } from "#server/utils/guilds/manager";
-import { guildAccessLegacyRemoved } from "#shared/audit/actions";
+import { guildAccessLegacyRemoved, guildSettingsAccessDenied } from "#shared/audit/actions";
 import { LegacyRemovalSchema } from "#shared/schemas";
 import { stripLegacyNodes } from "#shared/utils/dashboard-access";
 import { createError, useLogger, withAuditMethods } from "evlog";
@@ -18,6 +18,14 @@ export default defineWrappedResponseHandler(
 		const { guild, member } = useManagedGuild(event);
 
 		if (member.user.id !== guild.owner_id) {
+			log.audit(
+				guildSettingsAccessDenied({
+					actor: { type: "user", id: member.user.id, displayName: member.user.username },
+					target: { type: "guild", id: guild.id },
+					outcome: "denied",
+					reason: "Only the server owner removes legacy permission nodes",
+				}),
+			);
 			throw createError({
 				message: "Only the server owner removes legacy permission nodes",
 				status: 403,

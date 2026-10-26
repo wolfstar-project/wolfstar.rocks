@@ -169,3 +169,27 @@ describe("checkEditorRequirements and the command's own permissions", () => {
 		).toBeNull();
 	});
 });
+
+describe("checkEditorRequirements and ids the server no longer has", () => {
+	it("names a role that no longer exists instead of calling it higher", () => {
+		expect(
+			checkEditorRequirements({
+				guild,
+				member: editor,
+				channels,
+				rows: [role("300000000000000099")],
+			}),
+		).toEqual({ code: "unknown-role", roleId: "300000000000000099" });
+	});
+
+	it("names a channel that no longer exists instead of calling it hidden", () => {
+		expect(
+			checkEditorRequirements({
+				guild,
+				member: editor,
+				channels,
+				rows: [channel("400000000000000099")],
+			}),
+		).toEqual({ code: "unknown-channel", channelId: "400000000000000099" });
+	});
+});

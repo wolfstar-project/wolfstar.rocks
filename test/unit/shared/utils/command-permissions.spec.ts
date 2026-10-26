@@ -2,6 +2,7 @@ import {
 	allChannelsId,
 	applyChanges,
 	assertOverwriteLimit,
+	changedRows,
 	diffOverwrites,
 	everyoneId,
 	isAppDefault,
@@ -155,5 +156,14 @@ describe("snapshotOf", () => {
 		expect(snapshotOf({ a: [role(ROLE_A, false)] })).not.toBe(
 			snapshotOf({ a: [role(ROLE_A, true)] }),
 		);
+	});
+});
+
+describe("changedRows", () => {
+	it("is the rows a write adds or flips, not the ones it keeps or drops", () => {
+		const before = [role(ROLE_A, true), channel(CHANNEL_X, false)];
+		const after = [role(ROLE_A, false), role(ROLE_B, true)];
+		expect(changedRows(before, after)).toEqual([role(ROLE_A, false), role(ROLE_B, true)]);
+		expect(changedRows(before, before)).toEqual([]);
 	});
 });

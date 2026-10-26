@@ -86,7 +86,11 @@ describe("GuildCommandsDiscordPermissions", () => {
 		mounted.push(wrapper);
 		await vi.waitFor(() => expect(wrapper.text()).toContain("Authorize with Discord"));
 		expect(
-			wrapper.find('a[href="/oauth/login?grant=command-permissions&next=/app"]').exists(),
+			wrapper
+				.find(
+					`a[href="/oauth/login?grant=command-permissions&next=${encodeURIComponent(`/guilds/${GUILD_ID}/manage/commands?tab=discord`)}"]`,
+				)
+				.exists(),
 		).toBe(true);
 		expect(wrapper.text()).not.toContain("Review changes");
 	});

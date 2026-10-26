@@ -100,7 +100,24 @@ export default defineWrappedResponseHandler(
 		using trx = await writeSettingsTransaction(guild.id);
 
 		// Read inside the transaction, so the check sees what the database has now.
-		assertCanEditDashboardAccess(guild, member, trx.settings, settingsData);
+		try {
+			assertCanEditDashboardAccess(guild, member, trx.settings, settingsData);
+		} catch (accessErr) {
+			log.audit(
+				guildSettingsAccessDenied({
+					actor: { type: "user", id: member.user.id, displayName: member.user.username },
+					target: { type: "guild", id: guild.id },
+					outcome: "denied",
+					reason:
+						accessErr instanceof Error &&
+						"why" in accessErr &&
+						typeof accessErr.why === "string"
+							? accessErr.why
+							: "Refused change of the dashboard access rules",
+				}),
+			);
+			throw accessErr;
+		}
 
 		const beforeSettings = JSON.parse(serializeSettings(trx.settings)) as Record<
 			string,

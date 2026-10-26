@@ -352,7 +352,14 @@ entry refused, the lock-out guard, the import classification.
    decided", so the bot's API agrees with the site.
 3. #338's owner removal of the legacy nodes must keep dashboard entries. As written it would empty the
    columns.
-4. Optional: a listener for `APPLICATION_COMMAND_PERMISSIONS_UPDATE` that writes an audit row, so changes
+4. The bot's permission node serializer (`serializers/permissionNode.ts`) requires exactly three keys, so
+   once a server holds a dashboard rule its `permissionsRoles`/`permissionsUsers` fail validation in the
+   bot's settings transfer import, its settings menu and its API PATCH. It must accept the `dashboard` key.
+5. Until `/permission-nodes` is gone (#338), `add` on a role or member that has a dashboard rule rebuilds
+   the entry without `dashboard`, so a deny silently disappears and a denied admin gets back in; `remove`
+   errors on it and `reset` deletes it. #338 removes the command; until it ships, those three must refuse
+   a dashboard rule.
+6. Optional: a listener for `APPLICATION_COMMAND_PERMISSIONS_UPDATE` that writes an audit row, so changes
    made in Discord's own settings show up in the activity feed.
 
 No contract change and no migration: the columns and their JSON type stay as they are.

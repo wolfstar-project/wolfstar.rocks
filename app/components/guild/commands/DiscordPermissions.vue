@@ -26,7 +26,7 @@
 
 		<div v-else-if="!data.authorization.scopeGranted" class="console-card space-y-3">
 			<p class="text-sm">{{ ts("guild_settings.command_permissions.scope_needed") }}</p>
-			<UButton :to="AUTHORIZE_URL" external icon="ic:round-lock-open">
+			<UButton :to="authorizeUrl" external icon="ic:round-lock-open">
 				{{ ts("guild_settings.command_permissions.authorize") }}
 			</UButton>
 		</div>
@@ -138,12 +138,17 @@ import {
 	normalizeOverwrites,
 } from "#shared/utils/command-permissions";
 
-const AUTHORIZE_URL = `/oauth/login?grant=${COMMAND_PERMISSIONS_GRANT}&next=/app`;
-
 const { ts } = useI18n();
 const headingId = useId();
 const { activeGuildId } = useActiveGuild();
 const { guildData } = useGuildData();
+
+// After the sign-in, the legacy route records the server and the section and
+// the dashboard opens this tab from the query.
+const authorizeUrl = computed(() => {
+	const back = `/guilds/${activeGuildId.value}/manage/commands?tab=discord`;
+	return `/oauth/login?grant=${COMMAND_PERMISSIONS_GRANT}&next=${encodeURIComponent(back)}`;
+});
 
 const {
 	baseRows,
@@ -231,6 +236,8 @@ const FAILURE_KEYS: Record<string, string> = {
 	"command-unavailable": "guild_settings.command_permissions.error_command",
 	"role-above": "guild_settings.command_permissions.error_role_above",
 	"channel-hidden": "guild_settings.command_permissions.error_channel",
+	"unknown-role": "guild_settings.command_permissions.error_unknown_role",
+	"unknown-channel": "guild_settings.command_permissions.error_unknown_channel",
 	"discord-refused": "guild_settings.command_permissions.error_refused",
 	"rate-limited": "guild_settings.command_permissions.error_rate_limited",
 	"unknown-command": "guild_settings.command_permissions.error_unknown_command",

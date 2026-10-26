@@ -29,7 +29,9 @@ type CommandsTab = "disabled" | "rules" | "discord";
 const { commands } = defineProps<{ commands: FlattenedCommand[] }>();
 
 const { ts } = useI18n();
-const tab = ref<CommandsTab>("disabled");
+const route = useRoute();
+// The sign-in that grants the command permissions scope comes back with `tab=discord`.
+const tab = ref<CommandsTab>(route.query.tab === "discord" ? "discord" : "disabled");
 
 const tabs = computed<{ value: CommandsTab; label: string }[]>(() => [
 	{ value: "disabled", label: ts("guild_settings.command_tabs.disabled") },

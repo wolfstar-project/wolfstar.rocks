@@ -145,6 +145,19 @@ export function diffOverwrites(
 	return diff;
 }
 
+/**
+ * The rows a write adds or flips: the ones the editor answers for. The rows it
+ * keeps were someone else's to set, and may name a role above the editor or one
+ * deleted since.
+ */
+export function changedRows(
+	before: readonly Overwrite[],
+	after: readonly Overwrite[],
+): Overwrite[] {
+	const { added, flipped } = diffOverwrites(before, after);
+	return normalizeOverwrites([...added, ...flipped]);
+}
+
 /** Whether a set is the app default: Discord keys it by the application id. */
 export function isAppDefault(commandId: string, applicationId: string): boolean {
 	return commandId === applicationId;

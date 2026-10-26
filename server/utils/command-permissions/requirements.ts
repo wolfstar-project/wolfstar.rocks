@@ -9,6 +9,8 @@ export type EditorRequirementFailure =
 	| { code: "manage-roles" }
 	| { code: "role-above"; roleId: string }
 	| { code: "channel-hidden"; channelId: string }
+	| { code: "unknown-role"; roleId: string }
+	| { code: "unknown-channel"; channelId: string }
 	| { code: "command-unavailable" };
 
 /** What a channel needs to say who can see it. */
@@ -22,7 +24,7 @@ interface EditorRequirementInput {
 	member: APIGuildMember;
 	/** The server's channels, with their permission overwrites. */
 	channels: readonly ChannelOverwrites[];
-	/** The rows the editor is about to write. */
+	/** The rows the editor adds or flips (see `changedRows`). */
 	rows: readonly Overwrite[];
 	/**
 	 * The command's `default_member_permissions`, which Discord asks of whoever
@@ -105,13 +107,14 @@ export function checkEditorRequirements({
 
 	for (const row of rows) {
 		if (row.type === ApplicationCommandPermissionType.Role && row.id !== everyone) {
-			if ((positions.get(row.id) ?? Number.POSITIVE_INFINITY) >= highest) {
-				return { code: "role-above", roleId: row.id };
-			}
+			const position = positions.get(row.id);
+			if (position === undefined) return { code: "unknown-role", roleId: row.id };
+			if (position >= highest) return { code: "role-above", roleId: row.id };
 		}
 		if (row.type === ApplicationCommandPermissionType.Channel && row.id !== allChannels) {
 			const channel = channelsById.get(row.id);
-			if (!administrator && (!channel || !canViewChannel(guild, member, base, channel))) {
+			if (!channel) return { code: "unknown-channel", channelId: row.id };
+			if (!administrator && !canViewChannel(guild, member, base, channel)) {
 				return { code: "channel-hidden", channelId: row.id };
 			}
 		}

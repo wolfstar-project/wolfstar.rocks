@@ -16,6 +16,7 @@ import {
 import { CommandPermissionsPutSchema } from "#shared/schemas/command-permissions";
 import {
 	assertOverwriteLimit,
+	changedRows,
 	isAppDefault,
 	normalizeOverwrites,
 	snapshotOf,
@@ -100,14 +101,28 @@ export default defineWrappedResponseHandler(
 		const rows = normalizeOverwrites(body.permissions);
 		assertOverwriteLimit(rows);
 
-		const channels = rows.some((row) => row.type === ApplicationCommandPermissionType.Channel)
+		const before = await loadPermissionSet(api, appId, guild.id, commandId);
+		if (snapshotOf({ [commandId]: before }) !== body.snapshot) {
+			throw createError({
+				message: "These command permissions changed in Discord",
+				status: 409,
+				code: "conflict",
+				why: "Someone changed them in Discord after this page loaded them, and saving would erase that change",
+				fix: "Reload the command permissions and make the change again",
+			});
+		}
+
+		const changed = changedRows(before, rows);
+		const channels = changed.some(
+			(row) => row.type === ApplicationCommandPermissionType.Channel,
+		)
 			? await api.guilds.getChannels(guild.id)
 			: [];
 		const failure = checkEditorRequirements({
 			guild,
 			member,
 			channels,
-			rows,
+			rows: changed,
 			requiredPermissions,
 		});
 		if (failure) {
@@ -118,17 +133,6 @@ export default defineWrappedResponseHandler(
 				code: failure.code,
 				why: "Discord asks Manage Server, Manage Roles, the command's own permissions, roles below your highest role and channels you can see",
 				fix: "Remove the role or channel named, or ask someone with the missing permission",
-			});
-		}
-
-		const before = await loadPermissionSet(api, appId, guild.id, commandId);
-		if (snapshotOf({ [commandId]: before }) !== body.snapshot) {
-			throw createError({
-				message: "These command permissions changed in Discord",
-				status: 409,
-				code: "conflict",
-				why: "Someone changed them in Discord after this page loaded them, and saving would erase that change",
-				fix: "Reload the command permissions and make the change again",
 			});
 		}
 

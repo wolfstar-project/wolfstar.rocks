@@ -113,6 +113,12 @@ export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
 	},
 	{
 		group: "tools",
+		icon: "ic:round-admin-panel-settings",
+		labelKey: "dashboard.nav.access",
+		slug: "access",
+	},
+	{
+		group: "tools",
 		icon: "ic:round-description",
 		labelKey: "dashboard.nav.logs",
 		slug: "logs",

@@ -55,7 +55,7 @@ describe("DASHBOARD_NAV", () => {
 			"autopurge",
 			"automessage",
 		]);
-		expect(tools).toStrictEqual(["commands", "logs"]);
+		expect(tools).toStrictEqual(["commands", "access", "logs"]);
 		expect(findDashboardNavItem("commands")?.moduleKey).toBeUndefined();
 	});
 

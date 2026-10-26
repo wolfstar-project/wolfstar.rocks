@@ -119,6 +119,7 @@ function sectionComponent(loader: () => Promise<Component>, kind: DashboardSkele
 // Pre-define async components outside of computed to avoid re-creating
 // wrapper instances on every reactive update, which would unmount/remount.
 const asyncComponentMap: Record<string, ReturnType<typeof defineAsyncComponent>> = {
+	access: sectionComponent(() => import("~/components/guild/settings/Access.vue"), "form"),
 	appeals: sectionComponent(() => import("~/components/guild/settings/Appeals.vue"), "form"),
 	autodelete: sectionComponent(
 		() => import("~/components/guild/settings/AutoDelete.vue"),

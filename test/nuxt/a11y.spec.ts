@@ -56,6 +56,7 @@ import {
 	GuildMemberPicker,
 	GuildReviewQueue,
 	GuildServerRail,
+	GuildSettingsAccess,
 	GuildSettingsAppeals,
 	GuildSettingsAutoDelete,
 	GuildSettingsAutoMessage,
@@ -723,6 +724,33 @@ describe("component accessibility audits", () => {
 			const component = await mountSuspended(GuildMemberPicker, {
 				props: { ids: ["200000000000000099"], guildId: GUILD_ID, label: "Members" },
 			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildSettingsAccess", () => {
+		const GUILD_ID = "123456789012345678";
+
+		it("should have no accessibility violations with legacy nodes", async () => {
+			registerEndpoint(`/api/guilds/${GUILD_ID}/members/search`, {
+				method: "GET",
+				handler: () => [],
+			});
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+			useGuildSettings().setGuildSettings(
+				createMockGuildData(GUILD_ID, {
+					permissionsRoles: [
+						{ id: "300000000000000001", allow: ["settings"], deny: [] },
+						{ id: "300000000000000002", allow: ["Moderation.*"], deny: [] },
+					],
+					permissionsUsers: [
+						{ id: "200000000000000001", allow: [], deny: [], dashboard: "allow" },
+					],
+				}),
+			);
+			const component = await mountSuspended(GuildSettingsAccess);
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
 		});

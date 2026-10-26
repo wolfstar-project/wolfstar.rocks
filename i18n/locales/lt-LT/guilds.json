@@ -3,6 +3,17 @@
 	"guild_card": {
 		"invite_bot_aria": ""
 	},
+	"guild_member_picker": {
+		"add": "",
+		"add_member": "",
+		"add_to": "",
+		"added": "",
+		"dialog_description": "",
+		"dialog_title": "",
+		"not_in_server": "",
+		"search_placeholder": "",
+		"type_to_search": ""
+	},
 	"guild_settings": {
 		"appeals": {
 			"add_question": "",

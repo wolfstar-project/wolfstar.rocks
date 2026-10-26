@@ -3,6 +3,17 @@
 	"guild_card": {
 		"invite_bot_aria": "Invite WolfStar bot to {name}"
 	},
+	"guild_member_picker": {
+		"add": "Add member",
+		"add_member": "Add {name}",
+		"add_to": "Add a member to {name}",
+		"added": "Added",
+		"dialog_description": "Search the members of this server by name, or paste a user ID.",
+		"dialog_title": "Add a member to {name}",
+		"not_in_server": "Not in the server",
+		"search_placeholder": "Search members by name or ID",
+		"type_to_search": "Type a name or paste a user ID to search."
+	},
 	"guild_settings": {
 		"appeals": {
 			"add_question": "Add question",

@@ -53,6 +53,7 @@ import {
 	GuildAuditChanges,
 	GuildAutomodDurationInput,
 	GuildLogsCaseDetail,
+	GuildMemberPicker,
 	GuildReviewQueue,
 	GuildServerRail,
 	GuildSettingsAppeals,
@@ -708,6 +709,22 @@ describe("component accessibility audits", () => {
 				const results = await runAxe(component, { include: panel ? [panel] : [] });
 				expect(results.violations).toEqual([]);
 			}
+		});
+	});
+
+	describe("GuildMemberPicker", () => {
+		const GUILD_ID = "123456789012345678";
+
+		it("should have no accessibility violations with a member who left", async () => {
+			registerEndpoint(`/api/guilds/${GUILD_ID}/members/search`, {
+				method: "GET",
+				handler: () => [],
+			});
+			const component = await mountSuspended(GuildMemberPicker, {
+				props: { ids: ["200000000000000099"], guildId: GUILD_ID, label: "Members" },
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
 		});
 	});
 

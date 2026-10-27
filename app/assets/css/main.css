@@ -219,22 +219,6 @@
 		--ink-400: oklch(38% 0.012 273.1);
 		--ink-300: oklch(44.7% 0.014 252.2);
 
-		/* Discord's desktop chrome, which the marketing demos are drawn in:
-		   the channel, the edge under its header, and the header's hairline
-		   shadow. Light Discord here, dark (#313338, #1E1F22) in the theme blocks. */
-		--discord-chrome: oklch(98.17% 0.002 264);
-		--discord-chrome-border: oklch(92.64% 0.006 264);
-		--discord-chrome-edge: oklch(21.15% 0.009 264 / 0.08);
-		--discord-chrome-text: oklch(21.15% 0.009 264);
-
-		/* Form fields and the popovers they open (selects, menus): the design
-		   system's `surface-input`, `border-default`, `surface-raised` and
-		   `shadow-high`. Light values here, dark ones in the theme blocks below. */
-		--field-surface: oklch(94.5% 0.003 247.9);
-		--field-border: oklch(91% 0.006 275);
-		--popover-surface: var(--color-base-100);
-		--popover-shadow: 0 8px 16px oklch(0% 0 0 / 0.12);
-
 		/* What dims the page behind a dialog, drawer or sheet: Discord's scrim,
 		   black at 52% in every theme. */
 		--scrim: oklch(0% 0 0 / 0.52);
@@ -279,6 +263,24 @@
 @layer theme {
 	[data-theme="light"],
 	:root {
+		/* Kept in this layer with their dark values below: a default in @layer
+		   base would win over every theme block (test/unit/design-tokens/layer-order). */
+		/* Discord's desktop chrome, which the marketing demos are drawn in:
+		   the channel, the edge under its header, and the header's hairline
+		   shadow. Light Discord here, dark (#313338, #1E1F22) in the theme blocks. */
+		--discord-chrome: oklch(98.17% 0.002 264);
+		--discord-chrome-border: oklch(92.64% 0.006 264);
+		--discord-chrome-edge: oklch(21.15% 0.009 264 / 0.08);
+		--discord-chrome-text: oklch(21.15% 0.009 264);
+
+		/* Form fields and the popovers they open (selects, menus): the design
+		   system's `surface-input`, `border-default`, `surface-raised` and
+		   `shadow-high`. Light values here, dark ones in the theme blocks below. */
+		--field-surface: oklch(94.5% 0.003 247.9);
+		--field-border: oklch(91% 0.006 275);
+		--popover-surface: var(--color-base-100);
+		--popover-shadow: 0 8px 16px oklch(0% 0 0 / 0.12);
+
 		--ui-text-dimmed: var(--color-neutral-600);
 		--ui-text-muted: var(--color-neutral-800);
 		--ui-text-toned: var(--color-neutral-900);

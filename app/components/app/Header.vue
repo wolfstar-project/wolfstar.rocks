@@ -1,5 +1,10 @@
 <template>
-	<UHeader class="app-navbar" :title="ts('header.brand')" :aria-label="ts('header.site_header')">
+	<UHeader
+		class="app-navbar"
+		:title="ts('header.brand')"
+		:aria-label="ts('header.site_header')"
+		:ui="mobileMenuUi"
+	>
 		<template #left>
 			<NuxtLink
 				class="flex items-center gap-2.5"
@@ -151,6 +156,17 @@ const { ts } = useI18n();
 const { applicationLinks, currentApp, desktopLinks, featureLinks, mobileLinks } = useHeader();
 
 /**
+ * The phone menu is a fullscreen `UModal` teleported to the body, so it gets the
+ * dialog's raised surface (`app/themes/modal.ts`) and not the `--ui-header-height`
+ * that `.app-navbar` sets. Paint it the page's colour and give its top row the
+ * navbar's height, so opening it keeps the logo and the toggle where they were.
+ */
+const mobileMenuUi = {
+	content: "bg-base-100",
+	header: "h-20",
+};
+
+/**
  * Value of the open desktop dropdown, `""` when none is open. The rows in the
  * custom content slots are plain links rather than `NavigationMenuLink`, so
  * nothing dismisses the panel on its own — and since the header survives
@@ -174,7 +190,10 @@ function closeMenu() {
 <style scoped>
 @reference "@/assets/css/main.css";
 
-.app-navbar {
+/* `UHeader` renders more than one root (the bar and its lazy phone menu), so Vue
+   puts no scope attribute of this component on the bar: a scoped `.app-navbar`
+   never matched it. The bar's two rules are global, and the class is unique. */
+:global(.app-navbar) {
 	--ui-header-height: 5rem;
 	width: 100%;
 	border-radius: 0;
@@ -189,7 +208,7 @@ function closeMenu() {
 /* The dropdown chrome lives on the viewport so the panel below can size itself;
    `app/themes/navigation-menu.ts` dresses both for the dashboard's sidebar menu,
    which is a different surface, so the header undoes that here. */
-.app-navbar :deep(.app-navbar-viewport) {
+:global(.app-navbar .app-navbar-viewport) {
 	@apply rounded-xl shadow-2xl ring-0;
 	background-color: var(--color-base-300);
 	border: 1px solid var(--ui-border);

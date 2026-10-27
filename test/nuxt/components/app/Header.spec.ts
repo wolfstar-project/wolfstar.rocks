@@ -67,6 +67,37 @@ describe("AppHeader", () => {
 		});
 	});
 
+	describe("bar", () => {
+		it("draws the redesign's solid 5rem bar, not UHeader's translucent one", async () => {
+			const wrapper = await mountSuspended(AppHeader, { attachTo: document.body });
+			const bar = getComputedStyle(wrapper.find(".app-navbar").element);
+
+			expect(bar.getPropertyValue("--ui-header-height").trim()).toBe("5rem");
+			expect(bar.backdropFilter).toBe("none");
+
+			wrapper.unmount();
+		});
+	});
+
+	describe("phone menu", () => {
+		it("opens on the page's surface with the navbar's height", async () => {
+			const wrapper = await mountSuspended(AppHeader, { attachTo: document.body });
+			const toggle = wrapper.find("button[data-slot='toggle']");
+			expect(toggle.exists()).toBe(true);
+			await toggle.trigger("click");
+			await new Promise((resolve) => setTimeout(resolve, 100));
+
+			// Teleported to the body: neither `.app-navbar`'s rules nor its height reach it.
+			const dialog = document.querySelector<HTMLElement>("[role='dialog']");
+			expect(dialog).not.toBeNull();
+			expect(dialog!.classList).toContain("bg-base-100");
+			expect(dialog!.classList).not.toContain("bg-(--popover-surface)");
+			expect(dialog!.querySelector("[data-slot='header']")?.classList).toContain("h-20");
+
+			wrapper.unmount();
+		});
+	});
+
 	describe("hydration safety", () => {
 		it("renders deterministically across mounts (no SSR/client divergence)", async () => {
 			const first = await mountSuspended(AppHeader);

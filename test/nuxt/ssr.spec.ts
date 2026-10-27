@@ -1246,7 +1246,7 @@ describe("component SSR rendering", () => {
 			expect(wrapper.text()).toContain("/ban");
 			expect(wrapper.text()).toContain("/kick");
 			expect(wrapper.text()).toContain("/mute");
-			expect(wrapper.text()).toContain("/settings server menu");
+			expect(wrapper.text()).toContain("/settings server");
 			expect(wrapper.text()).toContain("/subscriptions twitch show");
 			expect(wrapper.text()).toContain("/subscriptions twitch add");
 			expect(wrapper.text()).toContain("/addfriend");
@@ -1298,7 +1298,8 @@ describe("component SSR rendering", () => {
 			await wrapper.vm.$nextTick();
 
 			const suggestions = wrapper.findAll(".discord-slash-command-suggestion");
-			expect(suggestions).toHaveLength(13);
+			// The scripted commands, then the rest of the bot's catalogue.
+			expect(suggestions.length).toBeGreaterThan(12);
 			for (const command of [
 				"/warn add",
 				"/ban add",
@@ -1310,8 +1311,9 @@ describe("component SSR rendering", () => {
 				"/case archive",
 				"/case delete",
 				"/slowmode",
-				"/settings server menu",
-				"/settings server export",
+				"/settings server",
+				"/settings user",
+				"/archive create",
 			]) {
 				expect(wrapper.text()).toContain(command);
 			}
@@ -1369,7 +1371,7 @@ describe("component SSR rendering", () => {
 
 			const settingsSuggestion = wrapper
 				.findAll(".discord-slash-command-suggestion")
-				.find((suggestion) => suggestion.text().includes("/settings server menu"));
+				.find((suggestion) => suggestion.text().includes("/settings server"));
 			expect(settingsSuggestion).toBeDefined();
 			await settingsSuggestion!.trigger("click");
 			await wrapper.vm.$nextTick();
@@ -1584,7 +1586,7 @@ describe("component SSR rendering", () => {
 
 			const settingsSuggestion = wrapper
 				.findAll(".discord-slash-command-suggestion")
-				.find((suggestion) => suggestion.text().includes("/settings server menu"));
+				.find((suggestion) => suggestion.text().includes("/settings server"));
 			expect(settingsSuggestion).toBeDefined();
 			await settingsSuggestion!.trigger("click");
 			await wrapper.vm.$nextTick();
@@ -1593,10 +1595,10 @@ describe("component SSR rendering", () => {
 				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
 			).toBe("");
 			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(false);
-			// No duplicate plain `/settings server menu` bubble — only “used” reply + bot menu.
+			// No duplicate plain `/settings server` bubble — only “used” reply + bot menu.
 			expect(wrapper.find(".showcase-typed-command-message").exists()).toBe(false);
 			expect(wrapper.find(".discord-message-reply").attributes("aria-label")).toMatch(
-				/used the settings server menu slash command/i,
+				/used the settings server slash command/i,
 			);
 			expect(
 				wrapper.find(".showcase-desktop-command-response .discord-v2-container").exists(),

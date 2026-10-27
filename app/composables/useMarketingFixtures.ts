@@ -199,10 +199,6 @@ export function useShowcaseCommands() {
 			description: ts("marketing.wolfstar.fixtures.cmd_mute_description"),
 			tooltip: ts("marketing.wolfstar.fixtures.cmd_mute_tooltip"),
 		},
-		settings_export: {
-			description: ts("marketing.wolfstar.fixtures.cmd_settings_export_description"),
-			tooltip: ts("marketing.wolfstar.fixtures.cmd_settings_export_tooltip"),
-		},
 		settings_menu: {
 			description: ts("marketing.wolfstar.fixtures.cmd_settings_menu_description"),
 			tooltip: ts("marketing.wolfstar.fixtures.cmd_settings_menu_tooltip"),
@@ -227,10 +223,6 @@ export function useShowcaseCommands() {
 		case_delete: ts("marketing.wolfstar.fixtures.reply_case_deleted", { id: 3 }),
 		case_edit: ts("marketing.wolfstar.fixtures.reply_case_edited", { id: 3 }),
 		case_list: ts("marketing.wolfstar.fixtures.reply_no_cases"),
-		settings_export: ts("marketing.wolfstar.fixtures.reply_settings_exported", {
-			rules: 3,
-			settings: 52,
-		}),
 		slowmode: ts("marketing.wolfstar.fixtures.reply_slowmode_set", {
 			duration: ts("marketing.wolfstar.fixtures.value_ten_seconds"),
 		}),
@@ -254,8 +246,10 @@ export function useShowcaseCommands() {
 		);
 	}
 
-	return computed<ShowcaseCommand[]>(() =>
-		showcaseCommands.map((command) => {
+	const catalogue = useShowcaseCommandCatalogue();
+
+	return computed<ShowcaseCommand[]>(() => [
+		...showcaseCommands.map((command): ShowcaseCommand => {
 			const text = copy.value[command.id];
 			const base = Object.assign({}, command, {
 				description: text?.description ?? command.description,
@@ -282,7 +276,7 @@ export function useShowcaseCommands() {
 						})),
 					});
 				}
-				default: {
+				case "components": {
 					return Object.assign({}, base, {
 						expires: ts("marketing.wolfstar.fixtures.menu_expires", {
 							time: ts("marketing.wolfstar.fixtures.value_in_fifteen_minutes"),
@@ -313,7 +307,11 @@ export function useShowcaseCommands() {
 						selectPlaceholder: ts("marketing.wolfstar.fixtures.select_placeholder"),
 					});
 				}
+				default: {
+					return base;
+				}
 			}
 		}),
-	);
+		...catalogue.value,
+	]);
 }

@@ -356,10 +356,11 @@ export const SlashCommandRailApps: SlashCommandAppName[] = [
 ];
 
 /**
- * The slash commands of the commands demo, as WolfStar V7 registers them and
- * answers them (wolfstar-project/wolfstar, `projects/bot/src/commands` and the
- * en-US locale). Moderation actions are `add` subcommands, except `/kick`, and
- * answer with a green embed; the old `conf` command is `/settings`.
+ * The slash commands the commands demo scripts in full, as WolfStar V7 registers
+ * them and answers them (wolfstar-project/wolfstar, `projects/bot/src/commands`
+ * and the en-US locale). Moderation actions are `add` subcommands, except
+ * `/kick`, and answer with a green embed; the old `conf` command is `/settings`.
+ * `useShowcaseCommandCatalogue()` adds the rest of the bot's commands.
  */
 export const showcaseCommands: ShowcaseCommand[] = [
 	{
@@ -451,7 +452,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		id: "settings_menu",
 		tooltip: "Settings Menu",
 		name: "settings",
-		subcommand: "server menu",
+		subcommand: "server",
 		description: "Open the settings menu of the server.",
 		invoker: "redstar",
 		frequentlyUsed: true,
@@ -571,19 +572,6 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		responseType: "text",
 		content: "The cooldown for this channel has been set to 10 seconds.",
 	},
-	{
-		id: "settings_export",
-		tooltip: "Export Settings",
-		name: "settings",
-		subcommand: "server export",
-		description: "Export the settings and the auto-moderation rules of the server to a file.",
-		invoker: "redstar",
-		options: [],
-		ephemeral: true,
-		responseType: "text",
-		content:
-			"Here is the configuration of the server: 52 settings and 3 auto-moderation rules. Roles, channels and users are not in it, and neither are the exempt roles and channels of the rules.",
-	},
 ];
 
 export const EmojiRegexExtractName = /<?a?:(\w{2,32}):\d{17,21}>?/gi;
@@ -663,8 +651,8 @@ export const discordAppLauncherRecents: readonly DiscordAppLauncherEntry[] = [
 		description: "> Customizable moderation and more!",
 		avatar: "/avatars/wolfstar.png",
 		kind: "command",
-		commandName: "settings server menu",
-		tileTitle: "settings server menu",
+		commandName: "settings server",
+		tileTitle: "settings server",
 		tileSubtitle: "WolfStar Beta",
 	},
 	{

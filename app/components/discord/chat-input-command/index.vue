@@ -77,21 +77,19 @@ const ariaLabel = computed(() => {
 @reference "@/assets/css/main.css";
 
 .discord-slash-command-composed {
-	--discord-slash-command-composed-name: oklch(100% 0 0);
-	--discord-slash-command-option-name: oklch(73.06% 0.0048 264.53);
-	--discord-slash-command-option-value: oklch(100% 0 0);
+	--discord-slash-command-composed-name: var(--discord-chrome-strong);
+	--discord-slash-command-option-name: var(--discord-chrome-muted);
+	--discord-slash-command-option-value: var(--discord-chrome-strong);
 	--discord-slash-command-option-focused: oklch(57.7% 0.209 273.88 / 0.35);
-	--discord-slash-command-option-placeholder: oklch(59.38% 0.0075 264.51);
+	--discord-slash-command-option-placeholder: var(--discord-chrome-muted);
 
 	@apply inline font-whitney text-sm whitespace-nowrap;
 }
 
-:global([data-theme="light"]) .discord-slash-command-composed {
-	--discord-slash-command-composed-name: oklch(21.15% 0.009 264);
-	--discord-slash-command-option-name: oklch(47.12% 0.012 264);
-	--discord-slash-command-option-value: oklch(21.15% 0.009 264);
-	--discord-slash-command-option-focused: oklch(57.7% 0.209 273.88 / 0.2);
-	--discord-slash-command-option-placeholder: oklch(47.12% 0.012 264);
+@variant theme-light {
+	.discord-slash-command-composed {
+		--discord-slash-command-option-focused: oklch(57.7% 0.209 273.88 / 0.2);
+	}
 }
 
 .discord-slash-command-composed-name,

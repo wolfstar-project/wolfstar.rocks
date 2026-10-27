@@ -263,15 +263,30 @@
 @layer theme {
 	[data-theme="light"],
 	:root {
-		/* Kept in this layer with their dark values below: a default in @layer
-		   base would win over every theme block (test/unit/design-tokens/layer-order). */
 		/* Discord's desktop chrome, which the marketing demos are drawn in:
 		   the channel, the edge under its header, and the header's hairline
-		   shadow. Light Discord here, dark (#313338, #1E1F22) in the theme blocks. */
+		   shadow; the member list, the server rail and the message field; the
+		   strongest, secondary and muted text and the links; the veils of a
+		   hovered and of an active row; and which way a surface raised on the
+		   channel goes (lighter on a dark theme, darker on the light one).
+		   Light Discord here; Ash in the dark block, Onyx in the midnight one,
+		   and Dark in color-themes.css. They live in this layer, not in `base`:
+		   `base` comes after `theme`, so the blocks below could not override
+		   a value set there (test/unit/design-tokens/layer-order). */
 		--discord-chrome: oklch(98.17% 0.002 264);
 		--discord-chrome-border: oklch(92.64% 0.006 264);
 		--discord-chrome-edge: oklch(21.15% 0.009 264 / 0.08);
 		--discord-chrome-text: oklch(21.15% 0.009 264);
+		--discord-chrome-strong: oklch(21.15% 0.009 264);
+		--discord-chrome-secondary: oklch(47.12% 0.012 264);
+		--discord-chrome-muted: oklch(47.12% 0.012 264);
+		--discord-hover: oklch(21.15% 0.009 264 / 0.035);
+		--discord-active: oklch(21.15% 0.009 264 / 0.07);
+		--discord-sidebar: oklch(96.4% 0.003 264.5);
+		--discord-server: oklch(92.12% 0.005 258.3);
+		--discord-composer: oklch(94.51% 0.003 247.9);
+		--discord-link: oklch(55.55% 0.204 257.8);
+		--discord-raise: -1;
 
 		/* Form fields and the popovers they open (selects, menus): the design
 		   system's `surface-input`, `border-default`, `surface-raised` and
@@ -314,6 +329,16 @@
 			--discord-chrome-border: oklch(19.34% 0.004 273.16);
 			--discord-chrome-edge: oklch(0% 0 0 / 0.2);
 			--discord-chrome-text: oklch(91.56% 0.004 272.93);
+			--discord-chrome-strong: oklch(100% 0 0);
+			--discord-chrome-secondary: oklch(78.71% 0.0114 256.71);
+			--discord-chrome-muted: oklch(71.01% 0.01 273.13);
+			--discord-hover: oklch(100% 0 0 / 0.1);
+			--discord-active: oklch(100% 0 0 / 0.16);
+			--discord-sidebar: oklch(23.47% 0.005 272.95);
+			--discord-server: oklch(19.34% 0.004 273.16);
+			--discord-composer: oklch(28.84% 0.007 272.93);
+			--discord-link: oklch(64.78% 0.154 262.35);
+			--discord-raise: 1;
 			--field-surface: var(--ink-500);
 			--field-border: var(--ink-400);
 			--popover-surface: var(--ink-600);
@@ -347,10 +372,21 @@
 
 	[data-theme="midnight"],
 	.midnight {
-		--discord-chrome: oklch(26.65% 0.006 272.93);
-		--discord-chrome-border: oklch(19.34% 0.004 273.16);
+		/* Onyx: the channel, the member list and the rail are its own ink. */
+		--discord-chrome: var(--ink-600);
+		--discord-chrome-border: var(--ink-800);
 		--discord-chrome-edge: oklch(0% 0 0 / 0.2);
 		--discord-chrome-text: oklch(91.56% 0.004 272.93);
+		--discord-chrome-strong: oklch(100% 0 0);
+		--discord-chrome-secondary: oklch(78.71% 0.0114 256.71);
+		--discord-chrome-muted: oklch(71.01% 0.01 273.13);
+		--discord-hover: oklch(100% 0 0 / 0.1);
+		--discord-active: oklch(100% 0 0 / 0.16);
+		--discord-sidebar: var(--ink-700);
+		--discord-server: var(--ink-800);
+		--discord-composer: var(--ink-500);
+		--discord-link: oklch(64.78% 0.154 262.35);
+		--discord-raise: 1;
 		--field-surface: var(--ink-500);
 		--field-border: var(--ink-400);
 		--popover-surface: var(--ink-600);

@@ -399,6 +399,545 @@
 				"server_suffix": "— WolfStar HQ",
 				"suite_for": "Una suite completa per {subject}",
 				"suite_subject": "i log di moderazione"
+			},
+			"commands_catalogue": {
+				"archive_create": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"archive_list": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"archive_show": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"autodelete_disable": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"autodelete_enable": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"autodelete_list": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"automessage_disable": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"automessage_enable": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"automessage_list": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"autopurge_disable": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"autopurge_enable": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"autopurge_list": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"automod_add": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"select": ""
+				},
+				"automod_create": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"select": ""
+				},
+				"automod_delete": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"automod_edit": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"select": ""
+				},
+				"automod_ignore": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"select": ""
+				},
+				"automod_list": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"select": ""
+				},
+				"automod_remove": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"select": ""
+				},
+				"automod_show": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"select": ""
+				},
+				"ban_remove": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"softban": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"note": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"setnickname": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"voicekick": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"role_add": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"role_remove": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"warn_remove": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"mute_remove": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"timeout_remove": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"vmute_add": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"vmute_remove": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"restrict_attachment": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"restrict_embed": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"restrict_emoji": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"restrict_reaction": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"restrict_voice": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"unrestrict_attachment": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"unrestrict_embed": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"unrestrict_emoji": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"unrestrict_reaction": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"unrestrict_voice": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"commands": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"select": ""
+				},
+				"dehoist": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"honeypot_disable": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"honeypot_edit": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"honeypot_setup": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"honeypot_show": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"lockdown": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"mute_create": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"permission_nodes_add": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"permission_nodes_remove": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"permission_nodes_reset": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"permission_nodes_show": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"permissions": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"prune_age": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_any": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_attachments": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_author": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_bots": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_embeds": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_endswith": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_humans": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_images": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_includes": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_invites": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_links": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_match": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_mentions": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_pins": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_startswith": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_you": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"reasons_add": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"reasons_list": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"reasons_remove": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"report": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"reports_block": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"reports_history": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"reports_unblock": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"role_rules_add": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"role_rules_list": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"role_rules_remove": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"roles_browse": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"button": ""
+				},
+				"roles_claim": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"roles_list": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"roles_unclaim": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"settings_user": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"button": ""
+				},
+				"sticky_nickname": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"sticky_roles_add": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"sticky_roles_remove": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"sticky_roles_reset": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"sticky_roles_show": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"warn_thresholds_add": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"warn_thresholds_list": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"warn_thresholds_remove": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"whois_channel": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"footer": ""
+				},
+				"whois_emoji": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"whois_role": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"whois_server": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"whois_user": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"footer": ""
+				}
 			}
 		}
 	}

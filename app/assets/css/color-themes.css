@@ -16,6 +16,12 @@
 	--color-base-100: lab(13.73% 0.3 -2.85);
 	--color-base-200: lab(9.39% 0.8 -2.79);
 	--color-base-300: lab(5.52% 0.32 -1.19);
+	/* The marketing demos' Discord chrome, in Dark's own surfaces. */
+	--discord-chrome: var(--ink-600);
+	--discord-chrome-border: var(--ink-800);
+	--discord-sidebar: var(--ink-700);
+	--discord-server: var(--ink-800);
+	--discord-composer: var(--ink-500);
 }
 
 /*

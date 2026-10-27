@@ -345,12 +345,12 @@ useEventListener(
 
 .discord-string-select-menu-trigger {
 	/* Skyra dark select trigger tones (bg/border + text). */
-	--discord-string-select-menu-bg: oklch(20% 0.012 264);
-	--discord-string-select-menu-border: oklch(20% 0.012 264);
+	--discord-string-select-menu-bg: var(--discord-server);
+	--discord-string-select-menu-border: var(--discord-server);
 	--discord-string-select-menu-border-hover: oklch(0% 0 0);
-	--discord-string-select-menu-text: oklch(90% 0.012 250);
-	--discord-string-select-menu-placeholder-text: oklch(72% 0.01 260);
-	--discord-string-select-menu-chevron: oklch(90% 0.012 250);
+	--discord-string-select-menu-text: var(--discord-chrome-text);
+	--discord-string-select-menu-placeholder-text: var(--discord-chrome-muted);
+	--discord-string-select-menu-chevron: var(--discord-chrome-text);
 
 	@apply box-border flex h-9 min-h-9 w-full items-center justify-between gap-2 rounded border px-2 text-sm font-medium;
 	background-color: var(--discord-string-select-menu-bg);
@@ -397,8 +397,8 @@ useEventListener(
 
 .discord-string-select-menu-panel {
 	/* Skyra panel surface; max-height 190px; z-index 1002 via inline style. */
-	--discord-string-select-menu-panel-bg: oklch(26% 0.012 260);
-	--discord-string-select-menu-panel-border: oklch(20% 0.012 264);
+	--discord-string-select-menu-panel-bg: var(--discord-chrome);
+	--discord-string-select-menu-panel-border: var(--discord-server);
 	--discord-string-select-menu-panel-shadow: oklch(0% 0 0 / 0.45);
 	--discord-string-select-menu-panel-scroll-track: oklch(0% 0 0 / 0);
 	--discord-string-select-menu-panel-scroll-thumb: oklch(0% 0 0 / 0.3);

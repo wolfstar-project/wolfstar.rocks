@@ -148,9 +148,11 @@
 												<DiscordV2Container
 													:accent-color="activeDisplayCommand.accentColor"
 												>
-													<h3 class="showcase-settings-heading">
-														{{ activeDisplayCommand.panelHeading }}
-													</h3>
+													<!-- Through the markdown too, so a heading's emoji is Twemoji like the body's. -->
+													<ShowcaseMarkdown
+														class="showcase-panel-heading"
+														:source="`## ${activeDisplayCommand.panelHeading}`"
+													/>
 													<ShowcaseMarkdown
 														:source="activeDisplayCommand.panelBody"
 													/>
@@ -1568,6 +1570,11 @@ onMounted(() => {
 /* Discord's "## heading": 20px bold on a 24px line. */
 .showcase-settings-heading {
 	@apply m-0 mb-1 text-xl leading-6 font-bold;
+	color: var(--showcase-discord-primary-text);
+}
+
+.showcase-panel-heading {
+	@apply mb-1;
 	color: var(--showcase-discord-primary-text);
 }
 

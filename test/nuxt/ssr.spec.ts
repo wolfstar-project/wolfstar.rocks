@@ -1298,8 +1298,16 @@ describe("component SSR rendering", () => {
 			await wrapper.vm.$nextTick();
 
 			const suggestions = wrapper.findAll(".discord-slash-command-suggestion");
-			// The scripted commands, then the rest of the bot's catalogue.
-			expect(suggestions.length).toBeGreaterThan(12);
+			// Every leaf V7 registers, once: the scripted commands, then the rest of
+			// the bot's catalogue. A command added to or dropped from the bot moves this.
+			const paths = suggestions.map((suggestion) =>
+				suggestion.find(".discord-slash-command-suggestion-name-path").text(),
+			);
+			expect(paths).toHaveLength(112);
+			expect(new Set(paths).size).toBe(paths.length);
+			expect(paths).not.toContain("settings server menu");
+			expect(paths).not.toContain("settings server export");
+			expect(paths).not.toContain("conf");
 			for (const command of [
 				"/warn add",
 				"/ban add",

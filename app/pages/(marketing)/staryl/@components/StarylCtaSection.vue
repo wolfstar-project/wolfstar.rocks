@@ -21,15 +21,10 @@
 					{{ ts("marketing.staryl.cta.title") }}
 				</h2>
 				<p class="mt-5 max-w-140 text-base leading-relaxed text-base-content/65">
-					{{
-						inviteUrl === "#"
-							? ts("marketing.staryl.cta.subtitle_no_invite")
-							: ts("marketing.staryl.cta.subtitle")
-					}}
+					{{ ts("marketing.staryl.cta.subtitle") }}
 				</p>
 				<div class="mt-7 flex flex-col gap-3 sm:flex-row">
 					<UButton
-						v-if="inviteUrl !== '#'"
 						:to="inviteUrl"
 						color="primary"
 						size="lg"
@@ -40,13 +35,10 @@
 					</UButton>
 					<UButton
 						to="https://join.wolfstar.rocks"
-						:color="inviteUrl === '#' ? 'primary' : 'neutral'"
-						:variant="inviteUrl === '#' ? 'solid' : 'outline'"
+						color="neutral"
+						variant="outline"
 						size="lg"
-						:class="[
-							'justify-center sm:min-w-48',
-							inviteUrl === '#' ? undefined : 'staryl-cta-outline',
-						]"
+						class="staryl-cta-outline justify-center sm:min-w-48"
 					>
 						{{ ts("marketing.staryl.cta.ask_in_support") }}
 					</UButton>

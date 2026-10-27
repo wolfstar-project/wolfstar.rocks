@@ -20,7 +20,6 @@
 
 					<div class="mt-9 flex flex-col gap-3 sm:flex-row">
 						<UButton
-							v-if="inviteUrl !== '#'"
 							:to="inviteUrl"
 							size="xl"
 							color="primary"
@@ -43,25 +42,16 @@
 					</div>
 
 					<p class="mt-6 text-sm text-muted">
-						<span
-							v-if="inviteUrl === '#'"
-							class="font-medium text-base-content/80"
-							data-testid="staryl-hero-availability"
-						>
-							{{ ts("marketing.staryl.hero.no_invite") }}
-						</span>
-						<template v-else>
-							{{ ts("marketing.staryl.hero.release", { version: buildVersion }) }} ·
-							<NuxtTime
-								:datetime="buildTime"
-								month="short"
-								day="numeric"
-								year="numeric"
-							/>
-						</template>
+						{{ ts("marketing.staryl.hero.release", { version: buildVersion }) }} ·
+						<NuxtTime
+							:datetime="buildTime"
+							month="short"
+							day="numeric"
+							year="numeric"
+						/>
 						·
 						<NuxtLink
-							to="https://github.com/wolfstar-project/wolfstar.rocks"
+							to="https://github.com/wolfstar-project/staryl"
 							target="_blank"
 							rel="noopener noreferrer"
 							class="font-medium text-base-content underline decoration-base-content/25 underline-offset-4 hover:decoration-base-content"
@@ -125,7 +115,7 @@ const { buildTime, buildVersion, inviteUrl } = defineProps<{
 
 const { ts } = useI18n();
 
-const SETUP_COMMAND = "/subscriptions twitch";
+const SETUP_COMMAND = "/setup";
 </script>
 
 <style scoped>

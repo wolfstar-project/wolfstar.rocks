@@ -30,11 +30,10 @@ These exact strings. Do not paraphrase them per page. The "Where" column names t
 | WolfStar CTA title   | Put the rules and the record in one place.                                                                                                      | `marketing.wolfstar.cta.title`                                                                                                                             |
 | Staryl H1            | Social updates, where your server already is.                                                                                                   | `marketing.staryl.hero.title`                                                                                                                              |
 | Staryl kicker        | Open-source social notifications                                                                                                                | `marketing.staryl.hero.kicker`                                                                                                                             |
-| Staryl status        | Public invite not available yet                                                                                                                 | `marketing.staryl.hero.no_invite`                                                                                                                          |
-| Staryl description   | Staryl is an in-development Discord app for social notifications from the WolfStar Project. Its public invite is not available yet.             | `marketing.staryl.seo.description`                                                                                                                         |
+| Staryl description   | Staryl is an open-source Discord app from the WolfStar Project that posts Twitch live and offline notifications in the channel you choose.      | `marketing.staryl.seo.description`                                                                                                                         |
 | Primary actions      | Invite WolfStar · Invite Staryl · Ask in support · View source · Sign in to dashboard · Browse commands                                         | `marketing.*.hero.*`, `marketing.*.cta.*`                                                                                                                  |
 | Per-bot summary      | WolfStar combines configurable moderation, server event logging, and dashboard-managed settings.                                                | `marketing.other_apps.wolfstar_description`                                                                                                                |
-| Per-bot summary      | Staryl brings social updates into Discord. Its public invite is not available yet.                                                              | `marketing.other_apps.staryl_description`                                                                                                                  |
+| Per-bot summary      | Staryl brings Twitch live and offline notifications into Discord.                                                                               | `marketing.other_apps.staryl_description`                                                                                                                  |
 
 ### The product in four lengths
 
@@ -47,8 +46,7 @@ team one place to manage server settings.
 dashboard-managed settings. Staryl brings social updates into Discord.
 
 **1 paragraph:** use the WolfStar subtitle, then the proof steps in order: set the rule, keep the record,
-review it together. Name Staryl only where the paragraph is about the project, and say its public invite is
-not available yet.
+review it together. Name Staryl only where the paragraph is about the project.
 
 ### Value propositions
 
@@ -67,7 +65,7 @@ operating copy of it.
 | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | Open source           | "open source", while both `wolfstar-project/wolfstar` and `wolfstar-project/wolfstar.rocks` are public. Checked 2026-10-10, Apache 2.0 | "open source" if either repository goes private: narrow to the one a reader can clone |
 | Audit record          | "tamper-evident", with the mechanism: a SHA-256 hash chain verified offline                                                            | secure, immutable, unhackable, military-grade                                         |
-| Staryl availability   | "in development", "public invite not available yet"                                                                                    | "coming soon", any date, "launching"                                                  |
+| Staryl availability   | "Invite Staryl": its public invite is live (checked 2026-10-27)                                                                        | "beta", "early access", "in development"                                              |
 | Staryl capability     | Twitch live and offline notifications, as of this review                                                                               | other platforms, unless the source list in the Staryl page says so                    |
 | Scale and reliability | Nothing, unless measured, sourced, and dated                                                                                           | server counts, member counts, uptime, "trusted by", "thousands of"                    |
 | Testimonials          | Nothing, unless a named person said it and agreed to be quoted                                                                         | invented or composite quotes                                                          |

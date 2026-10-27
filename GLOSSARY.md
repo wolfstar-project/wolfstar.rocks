@@ -68,7 +68,7 @@ Collisions
 ### Staryl
 
 **Is:** the Discord app from the WolfStar Project that posts social updates into a server. Twitch live and
-offline notifications are supported today. It has no public invite yet.
+offline notifications are supported today, and its public invite is live.
 
 **Casing:** `Staryl`.
 

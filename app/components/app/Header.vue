@@ -100,7 +100,6 @@
 		<template #right>
 			<div class="hidden items-center gap-2 md:flex">
 				<UButton
-					v-if="currentApp.invite !== '#'"
 					:label="ts('header.add_app')"
 					size="sm"
 					color="primary"
@@ -132,7 +131,6 @@
 
 				<div class="mt-auto flex flex-col items-center gap-3 border-t border-default pt-5">
 					<UButton
-						v-if="currentApp.invite !== '#'"
 						:label="ts('header.add_app')"
 						size="md"
 						color="primary"

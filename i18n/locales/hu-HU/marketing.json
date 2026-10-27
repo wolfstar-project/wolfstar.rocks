@@ -42,7 +42,6 @@
 			"explore": "",
 			"eyebrow": "",
 			"invite": "",
-			"invite_pending": "",
 			"logo_alt": "",
 			"staryl_description": "",
 			"title": "",
@@ -59,7 +58,6 @@
 				"eyebrow": "",
 				"invite": "",
 				"subtitle": "",
-				"subtitle_no_invite": "",
 				"title": ""
 			},
 			"hero": {
@@ -67,7 +65,6 @@
 				"brief_label": "",
 				"invite": "",
 				"kicker": "",
-				"no_invite": "",
 				"release": "",
 				"routing_term": "",
 				"routing_value": "",
@@ -79,6 +76,21 @@
 				"subtitle": "",
 				"title": "",
 				"view_source": ""
+			},
+			"notification": {
+				"box_art_alt": "",
+				"description": "",
+				"eyebrow": "",
+				"footer": "",
+				"game": "",
+				"game_label": "",
+				"live_header": "",
+				"message": "",
+				"preview_alt": "",
+				"stream_title": "",
+				"timestamp": "",
+				"title": "",
+				"watch": ""
 			},
 			"proof": {
 				"eyebrow": "",
@@ -104,6 +116,12 @@
 				"reset_description": "",
 				"reset_response": "",
 				"search_placeholder": "",
+				"setup_count": "",
+				"setup_description": "",
+				"setup_heading": "",
+				"setup_hint": "",
+				"setup_intro": "",
+				"setup_placeholder": "",
 				"show_description": "",
 				"show_embed_offline": "",
 				"show_embed_online": "",

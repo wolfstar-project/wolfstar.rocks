@@ -1,5 +1,6 @@
 <template>
 	<div ref="rootRef" class="discord-string-select-menu" @focusout="onFocusOut">
+		<!-- The listbox exists only while open: pointing at it when closed is a reference to nothing. -->
 		<button
 			:id="triggerId"
 			ref="triggerRef"
@@ -9,7 +10,7 @@
 			role="combobox"
 			:aria-haspopup="'listbox'"
 			:aria-expanded="isOpen"
-			:aria-controls="listboxId"
+			:aria-controls="isOpen ? listboxId : undefined"
 			:aria-activedescendant="activeDescendant"
 			:aria-label="ariaLabel ?? ts('discord.select.aria')"
 			:disabled="disabled"

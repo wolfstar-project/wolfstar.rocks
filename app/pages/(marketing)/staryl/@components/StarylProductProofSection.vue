@@ -20,11 +20,6 @@
 			</h2>
 		</div>
 
-		<!--
-			The three cards still describe unshipped work: their copy is deliberately
-			vague. Replace the message values in marketing.json once the feature set
-			is locked — and only claim behaviour that actually exists.
-		-->
 		<div class="grid gap-4 md:grid-cols-3">
 			<SurfaceCard
 				v-for="step of proofSteps"

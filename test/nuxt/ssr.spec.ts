@@ -2,6 +2,7 @@ import {
 	WolfstarCommandsSection,
 	WolfstarCommandsShowcase,
 	StarylCommandsShowcase,
+	StarylNotificationSection,
 	DiscordChannelHeader,
 	DiscordChannelWelcome,
 	DiscordChat,
@@ -1615,25 +1616,53 @@ describe("component SSR rendering", () => {
 	});
 
 	describe("StarylCommandsShowcase", () => {
-		it("uses the shipped Twitch commands and renders their response formats", async () => {
+		it("uses the commands Staryl registers and the replies it sends", async () => {
 			const wrapper = await mountSuspended(StarylCommandsShowcase);
+
+			// `/setup` comes first: its menu is Components V2.
+			expect(wrapper.find(".staryl-setup-menu .discord-v2-container").text()).toContain(
+				"Staryl setup",
+			);
+			expect(wrapper.find(".staryl-setup-menu").text()).toContain("Current notifications: 2");
 
 			// Desktop-only mount arming (`/`) is skipped on narrow test viewports; open the
 			// picker the same way the Wolfstar showcase specs do.
 			await wrapper.find(".discord-message-composer-input").setValue("/");
 			await wrapper.vm.$nextTick();
 
-			expect(wrapper.text()).toContain("/subscriptions twitch add");
-			expect(wrapper.text()).toContain("/subscriptions twitch remove");
-			expect(wrapper.text()).toContain("/subscriptions twitch reset");
-			expect(wrapper.text()).toContain("/subscriptions twitch show");
-			expect(wrapper.text()).toContain("/subscriptions twitch test");
+			for (const command of [
+				"/setup",
+				"/subscriptions twitch add",
+				"/subscriptions twitch remove",
+				"/subscriptions twitch reset",
+				"/subscriptions twitch show",
+				"/subscriptions twitch test",
+			]) {
+				expect(wrapper.text()).toContain(command);
+			}
 			expect(wrapper.text()).not.toContain("Placeholder");
+
+			const suggestions = wrapper.findAll(".discord-slash-command-suggestion");
+			// Every row is Staryl's, with its avatar: none falls back to WolfStar's.
+			for (const suggestion of suggestions) {
+				expect(suggestion.find("img").attributes("src")).toContain("staryl");
+				expect(suggestion.find(".discord-slash-command-suggestion-app").text()).toBe(
+					"Staryl",
+				);
+			}
+
+			const addSuggestion = suggestions.find((suggestion) =>
+				suggestion.text().includes("/subscriptions twitch add"),
+			);
+			await addSuggestion!.trigger("click");
+			await wrapper.vm.$nextTick();
 			expect(wrapper.find(".discord-message-ephemeral").exists()).toBe(true);
 			expect(wrapper.find(".staryl-command-response").text()).toContain(
-				"Whenever shroud goes live",
+				"Whenever stella goes live",
 			);
 
+			await wrapper.find(".discord-message-composer-input").setValue("/");
+			await wrapper.vm.$nextTick();
 			const showSuggestion = wrapper
 				.findAll(".discord-slash-command-suggestion")
 				.find((suggestion) => suggestion.text().includes("/subscriptions twitch show"));
@@ -1643,8 +1672,23 @@ describe("component SSR rendering", () => {
 
 			expect(wrapper.find(".discord-embed").text()).toContain("Twitch Subscriptions");
 			expect(wrapper.find(".discord-embed").text()).toContain(
-				"shroud — #staryl-notifications → Live",
+				"stella — #staryl-notifications → Live",
 			);
+		});
+	});
+
+	describe("StarylNotificationSection", () => {
+		it("shows the live notification Staryl sends, as its components", async () => {
+			const wrapper = await mountSuspended(StarylNotificationSection);
+
+			const container = wrapper.find(".discord-v2-container");
+			expect(container.text()).toContain("Stella is now live on Twitch!");
+			expect(container.find("a").attributes("href")).toBe("https://twitch.tv/stella");
+			expect(container.text()).toContain("Game");
+			expect(container.find(".discord-v2-thumbnail").exists()).toBe(true);
+			expect(container.find(".discord-v2-media-gallery img").attributes("alt")).toBeTruthy();
+			expect(container.text()).toContain("Staryl Twitch Notifications • October 26, 2026");
+			expect(wrapper.find(".discord-action-row").text()).toContain("Watch Stream");
 		});
 	});
 

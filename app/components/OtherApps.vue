@@ -56,7 +56,6 @@
 							class="mt-3 flex flex-col items-start gap-3 sm:flex-row sm:items-center"
 						>
 							<UButton
-								v-if="app.invite !== '#'"
 								:to="app.invite"
 								color="primary"
 								icon="ph:plus-circle-fill"
@@ -72,9 +71,6 @@
 							>
 								{{ ts("marketing.other_apps.explore", { app: app.name }) }}
 							</UButton>
-							<span v-if="app.invite === '#'" class="font-mono text-xs text-muted">
-								{{ ts("marketing.other_apps.invite_pending") }}
-							</span>
 						</div>
 					</div>
 				</SurfaceCard>

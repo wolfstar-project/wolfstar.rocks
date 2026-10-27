@@ -385,6 +385,7 @@ watch(isReadyToSubmit, () => {
 	});
 });
 
+const { discardAll: discardCommandPermissionDrafts } = useCommandPermissionDrafts();
 const { showDialog, confirmLeave, cancelLeave } = useUnsavedChanges(isReadyToSubmit);
 
 // One dialog covers both ways of leaving staged edits behind: a route change
@@ -399,12 +400,14 @@ function stayOnPage() {
 function discardAndLeave() {
 	if (pendingNavigation.value) {
 		resetGuildSettingsChanges();
+		discardCommandPermissionDrafts();
 		confirmPendingNavigation();
 		return;
 	}
 	// The active guild outlives the route, so a draft left in place would be
 	// back on the next visit to `/app` after the admin chose to discard it.
 	resetGuildSettingsChanges();
+	discardCommandPermissionDrafts();
 	confirmLeave();
 }
 

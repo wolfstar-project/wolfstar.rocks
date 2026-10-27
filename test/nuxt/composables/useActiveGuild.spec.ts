@@ -103,4 +103,29 @@ describe("useDashboardNavigation", () => {
 		expect(activeGuildId.value).toBe(GUILD_B);
 		expect(pendingNavigation.value).toBeNull();
 	});
+
+	it("counts staged command permission edits as unsaved, per guild", () => {
+		const { selectGuild } = useActiveGuild();
+		const { drafts, discardAll } = useCommandPermissionDrafts();
+		const { goToGuild, hasStagedChanges, pendingNavigation } = useDashboardNavigation();
+
+		selectGuild(GUILD_A);
+		drafts.value = {
+			"600000000000000001": {
+				rows: [{ id: "300000000000000001", type: 1, permission: true }],
+				base: [],
+			},
+		};
+		expect(hasStagedChanges.value).toBe(true);
+
+		goToGuild(GUILD_B);
+		expect(pendingNavigation.value).toStrictEqual({ guildId: GUILD_B });
+
+		// The edits belong to the guild they were made in.
+		const otherGuild = useCommandPermissionDrafts(GUILD_B);
+		expect(otherGuild.drafts.value).toStrictEqual({});
+
+		discardAll();
+		expect(hasStagedChanges.value).toBe(false);
+	});
 });

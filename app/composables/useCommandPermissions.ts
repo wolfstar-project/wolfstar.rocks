@@ -1,10 +1,5 @@
 import { snapshotOf, type Overwrite } from "#shared/utils/command-permissions";
-import {
-	runSequentialSaves,
-	stageRows,
-	type SaveOutcome,
-	type StagedDraft,
-} from "~/utils/command-permissions-run";
+import { runSequentialSaves, stageRows, type SaveOutcome } from "~/utils/command-permissions-run";
 
 export interface RegisteredCommandEntry {
 	/** `null` when Discord has no such command here. */
@@ -38,7 +33,8 @@ export function useCommandPermissions(guildId: MaybeRefOrGetter<string | null>) 
 		},
 	);
 
-	const drafts = ref<Record<string, StagedDraft>>({});
+	// Kept per guild beyond this page, so a section switch does not drop them.
+	const { drafts } = useCommandPermissionDrafts(guildId);
 
 	const savedRows = (commandId: string): Overwrite[] => data.value?.permissions[commandId] ?? [];
 	const rowsOf = (commandId: string): Overwrite[] =>

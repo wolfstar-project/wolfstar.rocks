@@ -70,6 +70,7 @@ async function mount() {
 describe("GuildCommandsDiscordPermissions", () => {
 	beforeEach(() => {
 		clearNuxtData();
+		clearNuxtState();
 		Object.assign(authorization, { scopeGranted: true, manageGuild: true, manageRoles: true });
 		banRows = [{ id: ROLE, type: 1, permission: true }];
 		putStatus = 200;
@@ -149,5 +150,15 @@ describe("GuildCommandsDiscordPermissions", () => {
 		const wrapper = await mount();
 		expect(wrapper.text()).toContain("101/100");
 		expect(wrapper.get("button[data-review]").attributes("disabled")).toBeDefined();
+	});
+
+	it("keeps a staged edit when the section is left and opened again", async () => {
+		const first = await mount();
+		await first.get(`button[data-reset="${BAN}"]`).trigger("click");
+		first.unmount();
+		mounted.splice(0);
+
+		const again = await mount();
+		expect(again.get(`[data-status="${BAN}"]`).text()).toBe("Uses app default");
 	});
 });

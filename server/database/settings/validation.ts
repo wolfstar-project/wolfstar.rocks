@@ -8,6 +8,7 @@ import {
 	type StickyRole,
 	type UniqueRoleSet,
 } from "#server/database/settings/types";
+import { createDashboardEntry } from "#shared/utils/dashboard-access";
 import { SETTING_NUMBER_RANGES } from "#shared/utils/settings-choices";
 import { isSnowflake } from "#shared/utils/snowflake";
 
@@ -109,11 +110,18 @@ function commandNames(value: unknown): string[] {
 const validatePermissionNodes: Validator = (value) =>
 	list(value, (item): PermissionsNode => {
 		if (!isPlainObject(item)) fail("Expected permission nodes.");
-		return {
-			id: snowflake(item.id),
-			allow: commandNames(item.allow),
-			deny: commandNames(item.deny),
-		};
+		const id = snowflake(item.id);
+		const allow = commandNames(item.allow);
+		const deny = commandNames(item.deny);
+		if (item.dashboard === undefined) return { id, allow, deny };
+
+		if (item.dashboard !== "allow" && item.dashboard !== "deny") {
+			fail('Expected a dashboard access rule of "allow" or "deny".');
+		}
+		if (allow.length > 0 || deny.length > 0) {
+			fail("Expected a dashboard access rule without commands.");
+		}
+		return createDashboardEntry(id, item.dashboard);
 	});
 
 const validateUniqueRoleSets: Validator = (value) =>

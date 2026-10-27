@@ -52,9 +52,13 @@ import {
 	OauthStatusPanel,
 	GuildAuditChanges,
 	GuildAutomodDurationInput,
+	GuildCommandsDiscordPermissions,
+	GuildCommandsRules,
 	GuildLogsCaseDetail,
+	GuildMemberPicker,
 	GuildReviewQueue,
 	GuildServerRail,
+	GuildSettingsAccess,
 	GuildSettingsAppeals,
 	GuildSettingsAutoDelete,
 	GuildSettingsAutoMessage,
@@ -708,6 +712,124 @@ describe("component accessibility audits", () => {
 				const results = await runAxe(component, { include: panel ? [panel] : [] });
 				expect(results.violations).toEqual([]);
 			}
+		});
+	});
+
+	describe("GuildMemberPicker", () => {
+		const GUILD_ID = "123456789012345678";
+
+		it("should have no accessibility violations with a member who left", async () => {
+			registerEndpoint(`/api/guilds/${GUILD_ID}/members/search`, {
+				method: "GET",
+				handler: () => [],
+			});
+			const component = await mountSuspended(GuildMemberPicker, {
+				props: { ids: ["200000000000000099"], guildId: GUILD_ID, label: "Members" },
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildSettingsAccess", () => {
+		const GUILD_ID = "123456789012345678";
+
+		it("should have no accessibility violations with legacy nodes", async () => {
+			registerEndpoint(`/api/guilds/${GUILD_ID}/members/search`, {
+				method: "GET",
+				handler: () => [],
+			});
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+			useGuildSettings().setGuildSettings(
+				createMockGuildData(GUILD_ID, {
+					permissionsRoles: [
+						{ id: "300000000000000001", allow: ["settings"], deny: [] },
+						{ id: "300000000000000002", allow: ["Moderation.*"], deny: [] },
+					],
+					permissionsUsers: [
+						{ id: "200000000000000001", allow: [], deny: [], dashboard: "allow" },
+					],
+				}),
+			);
+			const component = await mountSuspended(GuildSettingsAccess);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildCommandsDiscordPermissions", () => {
+		const GUILD_ID = "123456789012345678";
+
+		it.each([
+			["authorized", true],
+			["waiting for the scope", false],
+		])("should have no accessibility violations when %s", async (_state, scopeGranted) => {
+			clearNuxtData();
+			registerEndpoint(`/api/guilds/${GUILD_ID}/command-permissions`, {
+				method: "GET",
+				handler: () => ({
+					applicationId: "500000000000000001",
+					commands: [
+						{
+							id: "600000000000000001",
+							name: "ban",
+							command: "ban",
+							category: "Moderation",
+							description: "Ban a member",
+						},
+					],
+					permissions: {
+						"600000000000000001": [
+							{ id: "300000000000000001", type: 1, permission: true },
+						],
+					},
+					snapshot: "x",
+					authorization: { scopeGranted, manageGuild: true, manageRoles: true },
+				}),
+			});
+			registerEndpoint(`/api/guilds/${GUILD_ID}/members/search`, {
+				method: "GET",
+				handler: () => [],
+			});
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+			const component = await mountSuspended(GuildCommandsDiscordPermissions);
+			await vi.waitFor(() =>
+				expect(component.text()).toContain(
+					scopeGranted ? "App default" : "Authorize with Discord",
+				),
+			);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+			component.unmount();
+		});
+	});
+
+	describe("GuildCommandsRules", () => {
+		const GUILD_ID = "123456789012345678";
+
+		it("should have no accessibility violations with rules", async () => {
+			registerEndpoint(`/api/guilds/${GUILD_ID}/members/search`, {
+				method: "GET",
+				handler: () => [],
+			});
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+			useGuildSettings().setGuildSettings(
+				createMockGuildData(GUILD_ID, {
+					commandsRestrictions: [
+						{
+							command: "ban",
+							allowedRoles: ["300000000000000001"],
+							ignoredUsers: ["200000000000000001"],
+						},
+					],
+				}),
+			);
+			const component = await mountSuspended(GuildCommandsRules, { props: { commands: [] } });
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
 		});
 	});
 

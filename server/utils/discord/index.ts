@@ -12,11 +12,11 @@ import type { DiscordAPIError } from "@discordjs/rest";
 import type {
 	APIGuild,
 	APIGuildMember,
-	APIRole,
 	RESTAPIPartialCurrentUserGuild,
 } from "discord-api-types/v10";
 import type { H3Event } from "h3";
 import { readSettings, readSettingsPermissionNodes } from "#server/database";
+import { hasAdminPermissions } from "#server/utils/discord/admin";
 import {
 	CURRENT_USER_CACHE_NAME,
 	GUILD_CACHE_NAME,
@@ -31,9 +31,9 @@ import {
 	fetchGuildMemberWithRetry,
 } from "#server/utils/discord/oauth";
 import { PermissionsBits } from "#shared/utils/bits";
+import { resolveDashboardAccess } from "#shared/utils/dashboard-access";
 import { hours } from "#shared/utils/times";
 import { cast } from "@sapphire/utilities";
-import { hasAtLeastOneKeyInMap } from "@sapphire/utilities/hasAtLeastOneKeyInMap";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
 import * as Sentry from "@sentry/nuxt";
 import {
@@ -57,38 +57,7 @@ async function getUserIdFromEvent(event: H3Event): Promise<string> {
 	return userId;
 }
 
-function computePermissions(memberRoles: string[], guildRoles: APIRole[]): bigint {
-	let perms = 0n;
-	for (const role of guildRoles) {
-		if (memberRoles.includes(role.id) || role.name === "@everyone") {
-			perms |= BigInt(role.permissions);
-		}
-	}
-	return perms;
-}
-
-// `permissions` is absent on bot-token GET /guilds/{id}/members/{id} responses;
-// fall back to computing permissions from the member's roles against guild.roles.
-// Administrator implies every permission including ManageGuild.
-function isAdmin(guild: APIGuild, member: APIGuildMember, roles: readonly string[]): boolean {
-	if (roles.length > 0) {
-		return hasAtLeastOneKeyInMap(
-			new Map(roles.map((role) => [role, true])),
-			member.roles.map((r) => r),
-		);
-	}
-
-	const rawPermissions = cast<{ permissions?: string }>(member).permissions;
-	const memberRolePermissions =
-		rawPermissions !== undefined
-			? BigInt(rawPermissions)
-			: computePermissions(member.roles, guild.roles);
-
-	return (
-		PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.Administrator) ||
-		PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.ManageGuild)
-	);
-}
+export { hasAdminPermissions };
 
 async function manage(guild: APIGuild, member: APIGuildMember, settings?: ReadonlyGuildData) {
 	if (!member.user || !member.user.id) {
@@ -99,11 +68,22 @@ async function manage(guild: APIGuild, member: APIGuildMember, settings?: Readon
 	}
 
 	const resolvedSettings = settings ?? (await readSettings(guild.id));
-	const nodes = readSettingsPermissionNodes(resolvedSettings);
 
+	// A dashboard access rule decides on its own: an allow opens the dashboard
+	// without Manage Server, a deny keeps an admin out.
+	const access = resolveDashboardAccess(
+		{ userId: member.user.id, roleIds: member.roles },
+		{ users: resolvedSettings.permissionsUsers, roles: resolvedSettings.permissionsRoles },
+		guild.roles,
+	);
+	if (access !== null) {
+		return access === "allow";
+	}
+
+	const nodes = readSettingsPermissionNodes(resolvedSettings);
 	return (
-		isAdmin(guild, member, resolvedSettings.rolesAdmin) &&
-		((await nodes.run(member, "conf")) ?? true)
+		hasAdminPermissions(guild, member, resolvedSettings.rolesAdmin) &&
+		((await nodes.run(member, "settings")) ?? true)
 	);
 }
 

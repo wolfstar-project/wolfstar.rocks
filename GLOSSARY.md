@@ -15,28 +15,31 @@ identifiers" at the end.
 
 ## Map
 
-| Term               | Owner                              | Relation                       | Customer word        |
-| ------------------ | ---------------------------------- | ------------------------------ | -------------------- |
-| WolfStar           | `wolfstar-project/wolfstar`        | WolfStar 1—N server            | "WolfStar"           |
-| Staryl             | WolfStar Project                   | Staryl 1—N server              | "Staryl"             |
-| WolfStar.rocks     | this repository                    | one                            | "WolfStar.rocks"     |
-| server             | Discord                            | server 1—N channel, 1—N case   | "server"             |
-| dashboard          | `app/pages/(app)`                  | account 1—N manageable server  | "dashboard"          |
-| settings           | the bot's per-server configuration | server 1—1 settings            | "settings"           |
-| filter             | `guild_settings.filter`            | server 1—N filter              | "filter"             |
-| case               | the bot's moderation record        | server 1—N case                | "case"               |
-| appeal             | the bot's `Appeal`                 | case 1—1 appeal (unique index) | "appeal"             |
-| honeypot           | the bot's `GuildHoneypot`          | server 1—1 honeypot channel    | "Honeypot"           |
-| Auto-Delete        | the bot's `GuildAutoDelete`        | channel 1—1 (unique index)     | "Auto-Delete"        |
-| Auto-Purge         | the bot's `GuildAutoPurge`         | channel 1—1 (unique index)     | "Auto-Purge"         |
-| Auto-Message       | the bot's `GuildAutoMessage`       | channel 1—1 (unique index)     | "Auto-Message"       |
-| moderation history | `/guilds/[id]/logs`                | server 1—N case                | "Moderation history" |
-| command history    | `CommandLog`                       | server 1—N command run         | "Command history"    |
-| settings activity  | `AuditEvent`                       | server 1—N audit event         | "Settings activity"  |
-| logging channel    | server settings                    | log event N—1 channel          | "logging channel"    |
-| subscription       | Staryl                             | server 1—N subscription        | "subscription"       |
-| invite             | Discord OAuth                      | bot 1—N server                 | "Invite"             |
-| sign in            | `better-auth`, Discord OAuth       | account 1—1 Discord user       | "Sign in"            |
+| Term                | Owner                              | Relation                       | Customer word         |
+| ------------------- | ---------------------------------- | ------------------------------ | --------------------- |
+| WolfStar            | `wolfstar-project/wolfstar`        | WolfStar 1—N server            | "WolfStar"            |
+| Staryl              | WolfStar Project                   | Staryl 1—N server              | "Staryl"              |
+| WolfStar.rocks      | this repository                    | one                            | "WolfStar.rocks"      |
+| server              | Discord                            | server 1—N channel, 1—N case   | "server"              |
+| dashboard           | `app/pages/(app)`                  | account 1—N manageable server  | "dashboard"           |
+| settings            | the bot's per-server configuration | server 1—1 settings            | "settings"            |
+| filter              | `guild_settings.filter`            | server 1—N filter              | "filter"              |
+| case                | the bot's moderation record        | server 1—N case                | "case"                |
+| appeal              | the bot's `Appeal`                 | case 1—1 appeal (unique index) | "appeal"              |
+| honeypot            | the bot's `GuildHoneypot`          | server 1—1 honeypot channel    | "Honeypot"            |
+| Auto-Delete         | the bot's `GuildAutoDelete`        | channel 1—1 (unique index)     | "Auto-Delete"         |
+| Auto-Purge          | the bot's `GuildAutoPurge`         | channel 1—1 (unique index)     | "Auto-Purge"          |
+| Auto-Message        | the bot's `GuildAutoMessage`       | channel 1—1 (unique index)     | "Auto-Message"        |
+| moderation history  | `/guilds/[id]/logs`                | server 1—N case                | "Moderation history"  |
+| command history     | `CommandLog`                       | server 1—N command run         | "Command history"     |
+| settings activity   | `AuditEvent`                       | server 1—N audit event         | "Settings activity"   |
+| logging channel     | server settings                    | log event N—1 channel          | "logging channel"     |
+| subscription        | Staryl                             | server 1—N subscription        | "subscription"        |
+| invite              | Discord OAuth                      | bot 1—N server                 | "Invite"              |
+| sign in             | `better-auth`, Discord OAuth       | account 1—1 Discord user       | "Sign in"             |
+| dashboard access    | `permissions.users`/`.roles` rules | server 1—N rule                | "Dashboard access"    |
+| command permissions | Discord, per bot command           | command 1—N row (max 100)      | "Discord permissions" |
+| command rules       | the bot's `/commands`              | command 1—1 rule               | "Command rules"       |
 
 Collisions
 
@@ -286,6 +289,42 @@ An excluded channel is ignored for logged events.
 **Is:** a slash command. WolfStar and Staryl support slash commands only.
 
 **Never:** prefix command, message command, bang command.
+
+### dashboard access
+
+**Is:** a rule that lets a role or member open a server's dashboard without Manage Server, or keeps them out
+of it. The owner is never kept out. Stored next to the legacy permission nodes, told apart by `dashboard`.
+
+**Never:** permission node, dashboard permission.
+
+### legacy permission node
+
+**Is:** an entry of the old `/permission-nodes` shape (commands allowed and denied). In V7 it only decides who
+opens the dashboard, until it is imported as a dashboard access rule or removed by the owner.
+
+**Never:** node, permission.
+
+### command permissions
+
+**Is:** Discord's own permissions for one of the bot's commands in a server, the ones of Server Settings →
+Integrations, per role, member and channel. Discord applies them; the bot does not.
+
+**Never:** integration permissions, overrides, overwrites (in copy; `overwrite` stays in code, as Discord's
+API word for one row).
+
+### app default
+
+**Is:** the command permissions every command without permissions of its own uses. Discord shows such a
+command as synced; one with its own is "Custom" here.
+
+**Never:** global permissions, synced permissions.
+
+### command rules
+
+**Is:** where and by whom a command may run, as the bot's `/commands` sets it. The bot applies them to
+everyone, its administrators included. The dashboard shows them and does not edit them.
+
+**Never:** restrictions (in copy), bot permissions.
 
 ### support server
 

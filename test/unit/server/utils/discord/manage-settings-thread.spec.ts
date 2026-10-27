@@ -126,3 +126,70 @@ describe("canManage - settings threading through manage()", () => {
 		expect(mockReadSettings).not.toHaveBeenCalled();
 	});
 });
+
+describe("canManage - dashboard access entries", () => {
+	const ROLE = "300000000000000001";
+	const guildWithRole = {
+		id: "guild-123",
+		owner_id: "owner-456",
+		roles: [{ id: ROLE, name: "Helpers", permissions: "0", position: 3 }],
+	} as unknown as APIGuild;
+	const run = vi.fn();
+
+	function settingsWith(users: unknown[], roles: unknown[]): ReadonlyGuildData {
+		return {
+			...mockSettings,
+			permissionsUsers: users,
+			permissionsRoles: roles,
+		} as unknown as ReadonlyGuildData;
+	}
+
+	beforeEach(() => {
+		vi.clearAllMocks();
+		run.mockResolvedValue(null);
+		mockReadSettingsPermissionNodes.mockReturnValue({ run });
+	});
+
+	it("lets a member without Manage Server in by their own allow entry", async () => {
+		const member = {
+			user: { id: "helper-1" },
+			roles: [],
+			permissions: "0",
+		} as unknown as APIGuildMember;
+		const settings = settingsWith(
+			[{ id: "helper-1", allow: [], deny: [], dashboard: "allow" }],
+			[],
+		);
+
+		await expect(canManage(guildWithRole, member, settings)).resolves.toBeUndefined();
+	});
+
+	it("keeps an Administrator out with a deny entry on their role", async () => {
+		const member = {
+			user: { id: "admin-1" },
+			roles: [ROLE],
+			permissions: "8",
+		} as unknown as APIGuildMember;
+		const settings = settingsWith([], [{ id: ROLE, allow: [], deny: [], dashboard: "deny" }]);
+
+		await expect(canManage(guildWithRole, member, settings)).rejects.toMatchObject({
+			status: 403,
+		});
+	});
+
+	it("never keeps the owner out", async () => {
+		const owner = { user: { id: "owner-456" }, roles: [] } as unknown as APIGuildMember;
+		const settings = settingsWith(
+			[{ id: "owner-456", allow: [], deny: [], dashboard: "deny" }],
+			[],
+		);
+
+		await expect(canManage(guildWithRole, owner, settings)).resolves.toBeUndefined();
+	});
+
+	it("runs the legacy nodes on settings when no entry names the member", async () => {
+		await canManage(guildWithRole, adminMember, mockSettings);
+
+		expect(run).toHaveBeenCalledWith(adminMember, "settings");
+	});
+});

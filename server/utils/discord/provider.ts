@@ -1,4 +1,5 @@
 import type { DiscordOptions, DiscordProfile } from "better-auth/social-providers";
+import { COMMAND_PERMISSIONS_SCOPE } from "#shared/utils/command-permissions";
 
 /** Discord OAuth credentials as they arrive from `runtimeConfig.discord`. */
 export interface DiscordProviderCredentials {
@@ -19,6 +20,10 @@ export interface DiscordProviderCredentials {
  * `guilds.members.read` only covers per-guild member lookups.
  */
 export const DISCORD_OAUTH_SCOPES = ["guilds", "guilds.members.read"] as const;
+
+// Asked only by the sign-in the command permissions tab starts (see
+// `app/pages/oauth/login.vue`), never at an ordinary one.
+export { COMMAND_PERMISSIONS_SCOPE };
 
 /**
  * Builds the Better Auth Discord social-provider options.

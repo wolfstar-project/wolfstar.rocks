@@ -1,6 +1,15 @@
-import { serializeSettings, writeSettingsTransaction } from "#server/database";
+import type { ReadonlyGuildData } from "#server/database";
+import {
+	readSettingsPermissionNodes,
+	serializeSettings,
+	writeSettingsTransaction,
+} from "#server/database";
 import { parseSettingsChanges } from "#server/database/settings/validation";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
+import {
+	assertCanEditDashboardAccess,
+	assertKeepsDashboardAccess,
+} from "#server/utils/dashboard-access";
 import { guildSettingsAccessDenied, guildSettingsUpdate } from "#shared/audit/actions";
 import { SettingsUpdateSchema } from "#shared/schemas";
 import { isNullOrUndefined, isNullishOrEmpty } from "@sapphire/utilities";
@@ -97,6 +106,43 @@ export default defineWrappedResponseHandler(
 		log.set({ settings: { keysUpdated: Object.keys(settingsData).length } });
 
 		using trx = await writeSettingsTransaction(guild.id);
+
+		// Read inside the transaction, so the check sees what the database has now.
+		const { permissionsRoles, permissionsUsers, rolesAdmin } = settingsData;
+		try {
+			assertCanEditDashboardAccess(guild, member, trx.settings, settingsData);
+			if (
+				permissionsRoles !== undefined ||
+				permissionsUsers !== undefined ||
+				rolesAdmin !== undefined
+			) {
+				// The settings context is cached per guild: made from what the database
+				// holds now first, the decision runs the current legacy nodes and the
+				// proposed rules, and the cache never holds an unsaved change.
+				readSettingsPermissionNodes(trx.settings);
+				await assertKeepsDashboardAccess(
+					guild,
+					member,
+					{ ...trx.settings, ...settingsData } as ReadonlyGuildData,
+					canManage,
+				);
+			}
+		} catch (accessErr) {
+			log.audit(
+				guildSettingsAccessDenied({
+					actor: { type: "user", id: member.user.id, displayName: member.user.username },
+					target: { type: "guild", id: guild.id },
+					outcome: "denied",
+					reason:
+						accessErr instanceof Error &&
+						"why" in accessErr &&
+						typeof accessErr.why === "string"
+							? accessErr.why
+							: "Refused change of the dashboard access rules",
+				}),
+			);
+			throw accessErr;
+		}
 
 		const beforeSettings = JSON.parse(serializeSettings(trx.settings)) as Record<
 			string,

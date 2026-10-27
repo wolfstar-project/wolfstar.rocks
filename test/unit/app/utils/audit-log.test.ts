@@ -229,3 +229,34 @@ describe("formatDaysAgo", () => {
 		expect(formatDaysAgo(new Date(2026, 9, 13, 1, 0), now, "en-GB")).toBe("today");
 	});
 });
+
+describe("auditLogActionParts for access and command permissions", () => {
+	function withAction(
+		action: DashboardAuditEntry["action"],
+		changes: DashboardAuditEntry["changes"],
+	): DashboardAuditEntry {
+		return { ...makeEntry({}), action, changes };
+	}
+
+	it("says how many legacy permission nodes the owner removed", () => {
+		const entry = withAction("guild.access.legacy-removed", {
+			changed: { legacyPermissionNodes: { from: 3, to: 0 } },
+		});
+		expect(auditLogActionDescription(entry)).toBe("Legacy permission nodes removed: 3");
+	});
+
+	it("names the command whose Discord permissions changed", () => {
+		const entry = withAction("guild.command-permissions.update", {
+			changed: { ban: { from: [], to: [{ id: "1", type: 1, permission: true }] } },
+		});
+		expect(auditLogActionParts(entry)).toEqual([
+			{ strong: false, text: "Command permissions updated: " },
+			{ strong: true, text: "ban" },
+		]);
+	});
+
+	it("says a command permissions change was refused", () => {
+		const entry = withAction("guild.command-permissions.access-denied", {});
+		expect(auditLogActionDescription(entry)).toBe("Command permissions change refused");
+	});
+});

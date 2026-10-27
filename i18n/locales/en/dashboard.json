@@ -49,6 +49,7 @@
 		"loading": "Loading",
 		"loading_aria": "Loading dashboard",
 		"nav": {
+			"access": "Dashboard access",
 			"appeals": "Appeals",
 			"autodelete": "Auto-Delete",
 			"automessage": "Auto-Message",

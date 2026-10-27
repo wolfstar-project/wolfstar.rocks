@@ -385,7 +385,12 @@ watch(isReadyToSubmit, () => {
 	});
 });
 
-const { showDialog, confirmLeave, cancelLeave } = useUnsavedChanges(isReadyToSubmit);
+const { discardAll: discardCommandPermissionDrafts, hasDrafts: hasCommandPermissionDrafts } =
+	useCommandPermissionDrafts();
+// Unsent command permission edits are lost on a reload too, like staged settings.
+const { showDialog, confirmLeave, cancelLeave } = useUnsavedChanges(
+	computed(() => isReadyToSubmit.value || hasCommandPermissionDrafts.value),
+);
 
 // One dialog covers both ways of leaving staged edits behind: a route change
 // (router guard) and a guild/section switch inside `/app` (pending navigation).
@@ -399,12 +404,14 @@ function stayOnPage() {
 function discardAndLeave() {
 	if (pendingNavigation.value) {
 		resetGuildSettingsChanges();
+		discardCommandPermissionDrafts();
 		confirmPendingNavigation();
 		return;
 	}
 	// The active guild outlives the route, so a draft left in place would be
 	// back on the next visit to `/app` after the admin chose to discard it.
 	resetGuildSettingsChanges();
+	discardCommandPermissionDrafts();
 	confirmLeave();
 }
 

@@ -34,7 +34,7 @@ export function useCommandPermissions(guildId: MaybeRefOrGetter<string | null>) 
 	);
 
 	// Kept per guild beyond this page, so a section switch does not drop them.
-	const { drafts } = useCommandPermissionDrafts(guildId);
+	const { drafts, settle } = useCommandPermissionDrafts(guildId);
 
 	const savedRows = (commandId: string): Overwrite[] => data.value?.permissions[commandId] ?? [];
 	const rowsOf = (commandId: string): Overwrite[] =>
@@ -61,11 +61,13 @@ export function useCommandPermissions(guildId: MaybeRefOrGetter<string | null>) 
 	async function saveAll(): Promise<SaveOutcome> {
 		const id = toValue(guildId);
 		if (!id) return { sent: [], failed: null };
-		const list = changedCommandIds.value.map((commandId) => ({
+		// Captured with the guild: the admin may switch guilds before the writes end.
+		const staged = { ...drafts.value };
+		const list = Object.entries(staged).map(([commandId, draft]) => ({
 			commandId,
-			permissions: drafts.value[commandId]?.rows ?? [],
+			permissions: draft.rows,
 			// The rows the edit was made on, not the ones a later reload brought.
-			snapshot: snapshotOf({ [commandId]: drafts.value[commandId]?.base ?? [] }),
+			snapshot: snapshotOf({ [commandId]: draft.base }),
 		}));
 		const outcome = await runSequentialSaves(list, async (commandId, body) => {
 			await $fetch(`/api/guilds/${id}/command-permissions/${commandId}`, {
@@ -73,7 +75,7 @@ export function useCommandPermissions(guildId: MaybeRefOrGetter<string | null>) 
 				body,
 			});
 		});
-		for (const commandId of outcome.sent) discard(commandId);
+		settle(id, staged, outcome.sent);
 		await refresh();
 		return outcome;
 	}

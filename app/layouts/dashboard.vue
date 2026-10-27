@@ -385,8 +385,12 @@ watch(isReadyToSubmit, () => {
 	});
 });
 
-const { discardAll: discardCommandPermissionDrafts } = useCommandPermissionDrafts();
-const { showDialog, confirmLeave, cancelLeave } = useUnsavedChanges(isReadyToSubmit);
+const { discardAll: discardCommandPermissionDrafts, hasDrafts: hasCommandPermissionDrafts } =
+	useCommandPermissionDrafts();
+// Unsent command permission edits are lost on a reload too, like staged settings.
+const { showDialog, confirmLeave, cancelLeave } = useUnsavedChanges(
+	computed(() => isReadyToSubmit.value || hasCommandPermissionDrafts.value),
+);
 
 // One dialog covers both ways of leaving staged edits behind: a route change
 // (router guard) and a guild/section switch inside `/app` (pending navigation).

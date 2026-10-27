@@ -29,5 +29,24 @@ export function useCommandPermissionDrafts(guildId?: MaybeRefOrGetter<string | n
 		drafts.value = {};
 	}
 
-	return { discardAll, drafts, hasDrafts };
+	/**
+	 * Drops the drafts of `sentIds` that a save took from `staged` and sent to
+	 * `sentGuildId`, which need not be the active guild any more. A draft edited
+	 * again while the save ran is a new object and stays.
+	 */
+	function settle(
+		sentGuildId: string,
+		staged: Readonly<Record<string, StagedDraft>>,
+		sentIds: readonly string[],
+	) {
+		const current = store.value[sentGuildId];
+		if (!current) return;
+		const next = { ...current };
+		for (const commandId of sentIds) {
+			if (next[commandId] === staged[commandId]) delete next[commandId];
+		}
+		store.value = { ...store.value, [sentGuildId]: next };
+	}
+
+	return { discardAll, drafts, hasDrafts, settle };
 }

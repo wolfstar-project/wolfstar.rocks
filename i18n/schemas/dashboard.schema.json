@@ -151,6 +151,9 @@
 				"nav": {
 					"type": "object",
 					"properties": {
+						"access": {
+							"type": "string"
+						},
 						"appeals": {
 							"type": "string"
 						},

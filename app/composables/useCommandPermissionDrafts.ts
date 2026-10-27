@@ -1,4 +1,5 @@
 import type { StagedDraft } from "~/utils/command-permissions-run";
+import { overwritesEqual } from "#shared/utils/command-permissions";
 
 /**
  * The unsent command permission edits of a guild, by command id. Kept per guild
@@ -32,7 +33,8 @@ export function useCommandPermissionDrafts(guildId?: MaybeRefOrGetter<string | n
 	/**
 	 * Drops the drafts of `sentIds` that a save took from `staged` and sent to
 	 * `sentGuildId`, which need not be the active guild any more. A draft edited
-	 * again while the save ran is a new object and stays.
+	 * again while the save ran stays, rebased on the rows the save wrote, so its
+	 * own save is checked against what Discord holds now.
 	 */
 	function settle(
 		sentGuildId: string,
@@ -43,7 +45,11 @@ export function useCommandPermissionDrafts(guildId?: MaybeRefOrGetter<string | n
 		if (!current) return;
 		const next = { ...current };
 		for (const commandId of sentIds) {
-			if (next[commandId] === staged[commandId]) delete next[commandId];
+			const sent = staged[commandId];
+			const draft = next[commandId];
+			if (!sent || !draft) continue;
+			if (overwritesEqual(draft.rows, sent.rows)) delete next[commandId];
+			else next[commandId] = { rows: draft.rows, base: sent.rows };
 		}
 		store.value = { ...store.value, [sentGuildId]: next };
 	}

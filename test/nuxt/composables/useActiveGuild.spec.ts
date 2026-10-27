@@ -155,8 +155,10 @@ describe("useDashboardNavigation", () => {
 
 		guildA.settle(GUILD_A, staged, [COMMAND_X, COMMAND_Y]);
 
-		expect(Object.keys(guildA.drafts.value)).toStrictEqual([COMMAND_Y]);
-		expect(guildA.drafts.value[COMMAND_Y]?.rows).toStrictEqual([row("300000000000000004")]);
+		// The newer edit is kept, and checked next against the rows this save wrote.
+		expect(guildA.drafts.value).toStrictEqual({
+			[COMMAND_Y]: { rows: [row("300000000000000004")], base: [row("300000000000000002")] },
+		});
 		expect(guildB.drafts.value[COMMAND_X]?.rows).toStrictEqual([row("300000000000000003")]);
 	});
 });

@@ -179,7 +179,10 @@ function setSwitch(on: boolean) {
 	if (!on) state.honeypotChannel = null;
 }
 
-watch(activeGuildId, () => {
+// A guild switch or a reset of the staged changes puts the saved settings
+// back: a switch turned on without saving goes back off with them.
+const { resetCounter } = useGuildSettingsChanges();
+watch([activeGuildId, resetCounter], () => {
 	enabling.value = false;
 });
 

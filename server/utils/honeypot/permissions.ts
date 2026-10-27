@@ -156,8 +156,9 @@ const FailureMessages: Record<HoneypotChannelFailure["code"], { why: string; fix
 
 /**
  * Refuses a change of the honeypot's channels or action the bot could not
- * carry out, with 422 and the failure's code. Discord is asked fresh: an
- * overwrite changed a minute ago must count.
+ * carry out, with 422 and the failure's code. Discord is asked fresh for the
+ * roles, the channels and the bot: `guild` comes from a cache an hour old, and
+ * a permission granted or taken a minute ago must count.
  */
 export async function assertHoneypotIsUsable(
 	guild: APIGuild,
@@ -169,12 +170,13 @@ export async function assertHoneypotIsUsable(
 	if (next.honeypotChannel === null) return;
 
 	const api = useApi();
-	const [channels, bot] = await Promise.all([
+	const [roles, channels, bot] = await Promise.all([
+		api.guilds.getRoles(guild.id),
 		api.guilds.getChannels(guild.id),
 		api.guilds.getMember(guild.id, applicationId()),
 	]);
 	const failure = checkHoneypotChannels({
-		guild,
+		guild: { ...guild, roles },
 		bot,
 		channels,
 		trap: next.honeypotChannel,

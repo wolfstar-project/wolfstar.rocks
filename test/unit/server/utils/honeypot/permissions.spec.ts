@@ -155,12 +155,14 @@ describe("checkHoneypotChannels", () => {
 describe("assertHoneypotIsUsable", () => {
 	const getChannels = vi.fn();
 	const getMember = vi.fn();
+	const getRoles = vi.fn();
 
 	beforeEach(() => {
 		getChannels.mockReset().mockResolvedValue([text(TRAP)]);
 		getMember.mockReset().mockResolvedValue(bot);
+		getRoles.mockReset().mockResolvedValue(guild(0n).roles);
 		(globalThis as Record<string, unknown>).useApi = () => ({
-			guilds: { getChannels, getMember },
+			guilds: { getChannels, getMember, getRoles },
 		});
 	});
 
@@ -194,10 +196,24 @@ describe("assertHoneypotIsUsable", () => {
 	});
 
 	it("lets a usable trap through", async () => {
+		getRoles.mockResolvedValue(guild(PermissionFlagsBits.Administrator).roles);
+		await expect(
+			assertHoneypotIsUsable(guild(0n), current, { honeypotChannel: TRAP }),
+		).resolves.toBeUndefined();
+	});
+
+	// The guild comes from a cache an hour old: a permission granted since must count.
+	it("reads the roles from Discord, not from the cached guild", async () => {
+		getRoles.mockResolvedValue(guild(PermissionFlagsBits.Administrator).roles);
+		await expect(
+			assertHoneypotIsUsable(guild(0n), current, { honeypotChannel: TRAP }),
+		).resolves.toBeUndefined();
+
+		getRoles.mockResolvedValue(guild(0n).roles);
 		await expect(
 			assertHoneypotIsUsable(guild(PermissionFlagsBits.Administrator), current, {
 				honeypotChannel: TRAP,
 			}),
-		).resolves.toBeUndefined();
+		).rejects.toMatchObject({ status: 422 });
 	});
 });

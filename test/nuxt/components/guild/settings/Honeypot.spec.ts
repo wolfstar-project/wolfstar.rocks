@@ -14,6 +14,7 @@ const LOG_CHANNEL = "345678901234567890";
 
 const mockGuildSettings = ref<GuildData | undefined>(createMockGuildData(GUILD_ID));
 const mockSetGuildSettingsChanges = vi.fn();
+const mockResetCounter = ref(0);
 const mockCopy = vi.fn();
 
 mockNuxtImport("useGuildSettings", () => () => ({
@@ -27,7 +28,7 @@ mockNuxtImport("useGuildSettingsChanges", () => () => ({
 	setGuildSettingsChanges: mockSetGuildSettingsChanges,
 	removeChange: vi.fn(),
 	resetGuildSettingsChanges: vi.fn(),
-	resetCounter: ref(0),
+	resetCounter: mockResetCounter,
 }));
 
 mockNuxtImport("useGuildData", () => () => ({
@@ -117,6 +118,26 @@ describe("honeypot guild settings", () => {
 			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
 				honeypotChannel: TRAP_CHANNEL,
 			});
+		});
+
+		it("is off again after the staged changes are reset", async () => {
+			const wrapper = await mountReady();
+
+			await moduleSwitch(wrapper).trigger("click");
+			await nextTick();
+			wrapper
+				.findAllComponents(SelectChannel)[0]!
+				.vm.$emit("update:modelValue", TRAP_CHANNEL);
+			await nextTick();
+
+			// A reset puts the saved settings back (no channel) and counts one more reset.
+			mockGuildSettings.value = createMockGuildData(GUILD_ID);
+			mockResetCounter.value += 1;
+			await nextTick();
+			await nextTick();
+
+			expect(moduleSwitch(wrapper).attributes("aria-checked")).toBe("false");
+			expect(wrapper.findAllComponents(SelectChannel)).toHaveLength(0);
 		});
 	});
 

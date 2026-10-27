@@ -1689,6 +1689,10 @@ describe("component SSR rendering", () => {
 			expect(container.find(".discord-v2-media-gallery img").attributes("alt")).toBeTruthy();
 			expect(container.text()).toContain("Staryl Twitch Notifications • October 26, 2026");
 			expect(wrapper.find(".discord-action-row").text()).toContain("Watch Stream");
+			// A live link button, not the dimmed one a demo's spare buttons are.
+			expect(wrapper.find(".discord-action-row .discord-button").classes()).not.toContain(
+				"discord-button-disabled",
+			);
 		});
 	});
 

@@ -67,6 +67,7 @@
 								<!-- Discord draws a link button grey, with the launch arrow. -->
 								<DiscordButton
 									variant="secondary"
+									:disabled="false"
 									:url="STREAM_URL"
 									:label="ts('marketing.staryl.notification.watch')"
 								/>

@@ -1,6 +1,9 @@
 import type { GuildData, ReadonlyGuildData } from "#server/database/settings/types";
 import type { APIGuild, APIGuildMember } from "discord-api-types/v10";
-import { assertCanEditDashboardAccess } from "#server/utils/dashboard-access";
+import {
+	assertCanEditDashboardAccess,
+	assertKeepsDashboardAccess,
+} from "#server/utils/dashboard-access";
 import { createDashboardEntry } from "#shared/utils/dashboard-access";
 import { describe, expect, it } from "vitest";
 
@@ -144,5 +147,36 @@ describe("assertCanEditDashboardAccess and the role order", () => {
 				permissionsRoles: [createDashboardEntry(HEAD_ROLE, "deny")],
 			}),
 		).toBeNull();
+	});
+});
+
+describe("assertKeepsDashboardAccess", () => {
+	const proposed = settings({ permissionsUsers: [] });
+
+	it("refuses a change after which the full access decision keeps the writer out", async () => {
+		// Removing their own allow exposes a legacy deny: the decision refuses them.
+		const decide = async () => {
+			throw Object.assign(new Error("Insufficient permissions"), { status: 403 });
+		};
+		await expect(
+			assertKeepsDashboardAccess(guild, admin, proposed, decide),
+		).rejects.toMatchObject({
+			status: 409,
+		});
+	});
+
+	it("lets a change through when the writer keeps the dashboard", async () => {
+		await expect(
+			assertKeepsDashboardAccess(guild, admin, proposed, async () => {}),
+		).resolves.toBeUndefined();
+	});
+
+	it("never asks for the owner", async () => {
+		const decide = async () => {
+			throw Object.assign(new Error("no"), { status: 403 });
+		};
+		await expect(
+			assertKeepsDashboardAccess(guild, owner, proposed, decide),
+		).resolves.toBeUndefined();
 	});
 });

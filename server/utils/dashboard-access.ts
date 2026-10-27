@@ -112,3 +112,36 @@ function firstOutrankedRule(
 		? "The rule names a role at or above your highest role, which only someone above it may rule"
 		: null;
 }
+
+type AccessDecision = (
+	guild: APIGuild,
+	member: APIGuildMember,
+	settings: ReadonlyGuildData,
+) => Promise<void>;
+
+/**
+ * Refuses a change after which the writer could no longer open the dashboard,
+ * by the whole decision (`canManage`), not the rules alone: removing their own
+ * allow can hand them back to a legacy deny or to admin roles they lack. The
+ * owner is never kept out, so is not asked.
+ */
+export async function assertKeepsDashboardAccess(
+	guild: APIGuild,
+	member: APIGuildMember,
+	proposed: ReadonlyGuildData,
+	decide: AccessDecision,
+): Promise<void> {
+	if (member.user.id === guild.owner_id) return;
+	try {
+		await decide(guild, member, proposed);
+	} catch (error) {
+		const status = error instanceof Error && "status" in error ? error.status : null;
+		if (status !== 403) throw error;
+		throw createError({
+			message: "This change would lock you out of the dashboard",
+			status: 409,
+			why: "Once saved, the rules, the admin roles and the legacy nodes together would deny you the dashboard",
+			fix: "Keep a rule that lets you in, or ask the server owner to make the change",
+		});
+	}
+}

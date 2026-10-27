@@ -13,14 +13,20 @@ const STUCK = "300000000000000002";
 const mockGuildSettings = ref<GuildData | undefined>(createMockGuildData(GUILD_ID));
 const currentUserId = ref<string>(OWNER_ID);
 
+const mockOriginalSettings = ref<GuildData | undefined>(mockGuildSettings.value);
+const mockSetGuildSettings = vi.fn();
+const mockStagedChanges = ref<GuildData | undefined>(undefined);
+const mockMergeGuildSettings = vi.fn();
+
 mockNuxtImport("useGuildSettings", () => () => ({
 	guildSettings: mockGuildSettings,
-	originalGuildSettings: ref(mockGuildSettings.value),
-	setGuildSettings: vi.fn(),
+	originalGuildSettings: mockOriginalSettings,
+	setGuildSettings: mockSetGuildSettings,
 }));
 
 mockNuxtImport("useGuildSettingsChanges", () => () => ({
-	guildSettingsChanges: ref<GuildData | undefined>(undefined),
+	guildSettingsChanges: mockStagedChanges,
+	mergeGuildSettings: mockMergeGuildSettings,
 	setGuildSettingsChanges: vi.fn(),
 	removeChange: vi.fn(),
 	resetGuildSettingsChanges: vi.fn(),
@@ -97,5 +103,52 @@ describe("GuildSettingsAccess", () => {
 		await wrapper.get("button[data-import-all]").trigger("click");
 		expect(wrapper.find(`button[data-import="${DENIED}"]`).exists()).toBe(false);
 		expect(wrapper.find(`button[data-import="${IMPORTABLE}"]`).exists()).toBe(true);
+	});
+
+	it("removes the legacy nodes from the staged edits and the server they belong to", async () => {
+		const OTHER_GUILD = "223456789012345678";
+		const legacy = { id: STUCK, allow: ["Moderation.*"], deny: [] };
+		const rule = { id: IMPORTABLE, allow: [], deny: [], dashboard: "allow" as const };
+		withNodes([legacy]);
+		mockOriginalSettings.value = mockGuildSettings.value;
+		mockStagedChanges.value = { permissionsRoles: [rule, legacy] } as unknown as GuildData;
+		registerEndpoint(`/api/guilds/${GUILD_ID}/access/legacy`, {
+			method: "DELETE",
+			handler: () => {
+				// The admin switches servers while the removal is on its way.
+				mockOriginalSettings.value = createMockGuildData(OTHER_GUILD);
+				return { removed: 1 };
+			},
+		});
+
+		const wrapper = await mountSuspended(Access);
+		await wrapper
+			.findAll("button")
+			.find((button) => button.text() === "Remove legacy nodes")!
+			.trigger("click");
+		await vi.waitFor(() =>
+			expect(document.querySelector("input[autocomplete='off']")).not.toBeNull(),
+		);
+		const input = document.querySelector("input[autocomplete='off']") as HTMLInputElement;
+		input.value = "REMOVE";
+		input.dispatchEvent(new Event("input"));
+		await vi.waitFor(() => {
+			const submit = [...document.querySelectorAll("button")]
+				.filter((button) => button.textContent?.trim() === "Remove legacy nodes")
+				.at(-1) as HTMLButtonElement;
+			expect(submit.disabled).toBe(false);
+		});
+		(
+			[...document.querySelectorAll("button")]
+				.filter((button) => button.textContent?.trim() === "Remove legacy nodes")
+				.at(-1) as HTMLButtonElement
+		).click();
+
+		await vi.waitFor(() => expect(mockSetGuildSettings).toHaveBeenCalled());
+		const [savedSettings, savedFor] = mockSetGuildSettings.mock.calls.at(-1)!;
+		expect(savedFor).toBe(GUILD_ID);
+		expect((savedSettings as GuildData).id).toBe(GUILD_ID);
+		expect(mockMergeGuildSettings).toHaveBeenCalledWith({ permissionsRoles: [rule] }, GUILD_ID);
+		wrapper.unmount();
 	});
 });

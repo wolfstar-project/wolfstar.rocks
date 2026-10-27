@@ -230,6 +230,7 @@ const toast = useToast();
 const { activeGuildId } = useActiveGuild();
 const { guildData } = useGuildData();
 const { guildSettings, originalGuildSettings, setGuildSettings } = useGuildSettings();
+const { guildSettingsChanges, mergeGuildSettings } = useGuildSettingsChanges();
 const { discordUser } = useDiscordAccount();
 
 const rolesHeadingId = useId();
@@ -385,6 +386,9 @@ async function removeLegacy() {
 	const guildId = activeGuildId.value;
 	if (!guildId || removeConfirm.value !== "REMOVE") return;
 	removing.value = true;
+	// Read before the request: the active server may change while it runs.
+	const saved = originalGuildSettings.value;
+	const staged = guildSettingsChanges.value;
 	try {
 		const { removed } = await $fetch<{ removed: number }>(
 			`/api/guilds/${guildId}/access/legacy`,
@@ -397,8 +401,8 @@ async function removeLegacy() {
 		});
 		removeOpen.value = false;
 		removeConfirm.value = "";
-		// The server kept only the rules; the saved settings follow it.
-		const saved = originalGuildSettings.value;
+		// The server kept only the rules; the saved settings follow it, and so
+		// does an unsaved edit of the columns, which would write the nodes back.
 		if (saved) {
 			setGuildSettings(
 				{
@@ -409,6 +413,12 @@ async function removeLegacy() {
 				guildId,
 			);
 		}
+		const cleaned: Partial<GuildData> = {};
+		if (staged?.permissionsRoles)
+			cleaned.permissionsRoles = stripLegacyNodes(staged.permissionsRoles);
+		if (staged?.permissionsUsers)
+			cleaned.permissionsUsers = stripLegacyNodes(staged.permissionsUsers);
+		if (Object.keys(cleaned).length > 0) mergeGuildSettings(cleaned, guildId);
 	} catch {
 		toast.add({
 			color: "error",

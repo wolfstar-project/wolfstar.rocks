@@ -679,7 +679,6 @@
 				"softban": "",
 				"softban_help": ""
 			},
-			"active": "",
 			"behaviour_title": "",
 			"catching": "",
 			"channel_help": "",
@@ -687,12 +686,19 @@
 			"copied_description": "",
 			"copied_title": "",
 			"copy_setup": "",
+			"errors": {
+				"same_channel": "",
+				"unknown_channel": "",
+				"trap_permissions": "",
+				"log_permissions": ""
+			},
 			"form_aria": "",
 			"not_reported": "",
-			"not_set_up": "",
 			"off_body": "",
 			"off_summary": "",
 			"off_title": "",
+			"pick_channel": "",
+			"pick_channel_hint": "",
 			"subtitle": "",
 			"title": "",
 			"warning_help": ""

@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const database = vi.hoisted(() => {
 	const tx = { execute: vi.fn(), orm: { transaction: true } };
 	return {
-		lockQuery: vi.fn((_strings: TemplateStringsArray, ...keys: number[]) => ({
+		lockQuery: vi.fn((_strings: TemplateStringsArray, ...keys: unknown[]) => ({
 			affectedCount: () => ({ build: () => ({ keys }) }),
 		})),
 		tx,
@@ -154,8 +154,32 @@ describe("automatic channel writes", () => {
 				mentions: false,
 			});
 
-			const namespaces = database.lockQuery.mock.calls.map((call) => call[1]);
+			const namespaces = database.lockQuery.mock.calls
+				.filter(([strings]) => strings.join("").includes("pg_advisory_xact_lock"))
+				.map((call) => call[1]);
 			expect(new Set(namespaces).size).toBe(2);
+		});
+
+		it("tells the bot which table changed, after the write and in its transaction", async () => {
+			cleanup.fetchAutoDeletes.mockResolvedValue([]);
+
+			await setAutoDelete(GUILD_ID, "111111111111111111", {
+				allow: [],
+				bots: false,
+				delay: 0,
+			});
+
+			const notify = database.lockQuery.mock.calls.find(([strings]) =>
+				strings.join("").includes("pg_notify"),
+			);
+			expect(notify?.[1]).toBe("guild_settings_update");
+			expect(JSON.parse(String(notify?.[2]))).toStrictEqual({
+				guildId: GUILD_ID,
+				keys: ["autoDelete"],
+			});
+			expect(cleanup.upsertAutoDelete.mock.invocationCallOrder[0]).toBeLessThan(
+				database.tx.execute.mock.invocationCallOrder.at(-1)!,
+			);
 		});
 	});
 

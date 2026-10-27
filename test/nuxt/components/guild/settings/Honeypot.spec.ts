@@ -70,14 +70,17 @@ describe("honeypot guild settings", () => {
 		}
 	});
 
+	const moduleSwitch = (wrapper: Awaited<ReturnType<typeof mountReady>>) =>
+		wrapper.find('[aria-label="Toggle Honeypot"]');
+
 	describe("without a channel", () => {
-		it("says the trap is off and how Discord sets it up", async () => {
+		it("is off, with the switch and the Discord way to set it up", async () => {
 			const wrapper = await mountReady();
 
-			expect(wrapper.text()).toContain("Not set up");
+			expect(moduleSwitch(wrapper).attributes("aria-checked")).toBe("false");
 			expect(wrapper.text()).toContain("The honeypot is off");
-			expect(wrapper.text()).toContain("Run /honeypot setup in Discord");
-			expect(wrapper.find("form").exists()).toBe(false);
+			expect(wrapper.text()).toContain("/honeypot setup in Discord");
+			expect(wrapper.findAllComponents(SelectChannel)).toHaveLength(0);
 		});
 
 		it("copies the setup command", async () => {
@@ -93,6 +96,28 @@ describe("honeypot guild settings", () => {
 				expect.objectContaining({ title: "Command copied" }),
 			);
 		});
+
+		it("opens the form on the switch and stages nothing until a channel is picked", async () => {
+			const wrapper = await mountReady();
+
+			await moduleSwitch(wrapper).trigger("click");
+			await nextTick();
+
+			expect(wrapper.text()).toContain("Pick the honeypot channel to turn it on.");
+			const [trap] = wrapper.findAllComponents(SelectChannel);
+			expect(trap!.props("label")).toBe("Honeypot Channel");
+			expect(trap!.props("modelValue")).toBeNull();
+			expect(mockSetGuildSettingsChanges).not.toHaveBeenCalledWith(
+				expect.objectContaining({ honeypotChannel: expect.anything() }),
+			);
+
+			trap!.vm.$emit("update:modelValue", TRAP_CHANNEL);
+			await nextTick();
+
+			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+				honeypotChannel: TRAP_CHANNEL,
+			});
+		});
 	});
 
 	describe("with a channel", () => {
@@ -104,35 +129,52 @@ describe("honeypot guild settings", () => {
 			});
 		});
 
-		it("names the channel it catches in, which only Discord changes", async () => {
+		it("is on and names the channel it catches in", async () => {
 			const wrapper = await mountReady();
 
+			expect(moduleSwitch(wrapper).attributes("aria-checked")).toBe("true");
 			expect(wrapper.text()).toContain(
 				"Catching who writes in #do-not-type-here, but the moderators.",
 			);
-			// One picker, for the reports: the trap itself is no field.
 			const pickers = wrapper.findAllComponents(SelectChannel);
-			expect(pickers).toHaveLength(1);
-			expect(pickers[0]!.props("label")).toBe("Honeypot Catches Channel");
-		});
-
-		it("cannot report the catches to the trap itself", async () => {
-			const wrapper = await mountReady();
-
-			expect(wrapper.findComponent(SelectChannel).props("exclude")).toStrictEqual([
-				TRAP_CHANNEL,
+			expect(pickers.map((picker) => picker.props("label"))).toStrictEqual([
+				"Honeypot Channel",
+				"Honeypot Catches Channel",
 			]);
 		});
 
-		it("shows the action and the warning without letting them change", async () => {
+		it("keeps the trap and the catches in different channels", async () => {
 			const wrapper = await mountReady();
 
-			const ban = wrapper.find('[role="radio"][value="Ban"]');
-			expect(ban.attributes("aria-checked")).toBe("true");
-			expect(ban.attributes("disabled")).toBeDefined();
-			expect(
-				wrapper.find('[aria-label="Toggle Honeypot Warning"]').attributes("disabled"),
-			).toBeDefined();
+			const [trap, logs] = wrapper.findAllComponents(SelectChannel);
+			expect(trap!.props("exclude")).toStrictEqual([LOG_CHANNEL]);
+			expect(logs!.props("exclude")).toStrictEqual([TRAP_CHANNEL]);
+		});
+
+		it("turns off by clearing the channel", async () => {
+			const wrapper = await mountReady();
+
+			await moduleSwitch(wrapper).trigger("click");
+			await nextTick();
+
+			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({ honeypotChannel: null });
+		});
+
+		it("stages the action and the warning like the other settings", async () => {
+			const wrapper = await mountReady();
+
+			await wrapper.find('[role="radio"][value="Kick"]').trigger("click");
+			await nextTick();
+			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+				honeypotAction: "Kick",
+			});
+
+			await wrapper.find('[aria-label="Toggle Honeypot Warning"]').trigger("click");
+			await nextTick();
+			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+				honeypotAction: "Kick",
+				honeypotWarning: false,
+			});
 		});
 
 		it("stages the switches the dashboard edits", async () => {

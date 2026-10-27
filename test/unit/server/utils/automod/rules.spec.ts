@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const database = vi.hoisted(() => {
 	const tx = { execute: vi.fn(), orm: { transaction: true } };
 	return {
-		lockQuery: vi.fn((_strings: TemplateStringsArray, ...keys: number[]) => ({
+		lockQuery: vi.fn((_strings: TemplateStringsArray, ...keys: unknown[]) => ({
 			affectedCount: () => ({ build: () => ({ keys }) }),
 		})),
 		tx,
@@ -204,7 +204,8 @@ describe("auto-moderation rule service", () => {
 	it("reads and writes inside one transaction that holds the guild's lock", async () => {
 		await updateAutoModerationRule(GUILD_ID, "1", () => ({ enabled: false }));
 
-		expect(database.tx.execute).toHaveBeenCalledOnce();
+		// The lock first, then the notify that tells the bot the rules changed.
+		expect(database.tx.execute).toHaveBeenCalledTimes(2);
 		const [namespace, guildKey] = database.lockQuery.mock.calls[0]?.slice(1) ?? [];
 		expect(namespace).toBeTypeOf("number");
 		expect(guildKey).toBe(Number(BigInt(GUILD_ID) % 2_147_483_647n));
@@ -215,5 +216,11 @@ describe("auto-moderation rule service", () => {
 			"1",
 			{ enabled: false },
 		);
+		const [channel, payload] = database.lockQuery.mock.calls[1]?.slice(1) ?? [];
+		expect(channel).toBe("guild_settings_update");
+		expect(JSON.parse(String(payload))).toStrictEqual({
+			guildId: GUILD_ID,
+			keys: ["autoModerationRules"],
+		});
 	});
 });

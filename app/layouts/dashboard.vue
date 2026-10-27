@@ -447,7 +447,7 @@ async function submitChanges() {
 			error: parseError(error),
 		});
 		// Preserve staged edits; only notify so the admin can retry.
-		toast.add(guildSettingsSaveFailureToast(ts));
+		toast.add(guildSettingsSaveFailureToast(ts, error));
 		return;
 	}
 

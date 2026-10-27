@@ -51,13 +51,37 @@ export function parseGuildSettingsSaveResponse(response: unknown): unknown {
  */
 export function guildSettingsSaveFailureToast(
 	t: (key: string) => string,
+	error?: unknown,
 ): GuildSettingsSaveFailureToast {
 	return {
 		color: "error",
 		title: t("dashboard.update_failed_message"),
-		description: `${t("dashboard.update_failed_why")} ${t("dashboard.update_failed_fix")}`,
+		description:
+			settingsRefusalMessage(t, error) ??
+			`${t("dashboard.update_failed_why")} ${t("dashboard.update_failed_fix")}`,
 		icon: "heroicons:x-circle",
 	};
+}
+
+/**
+ * What to tell the admin when the server refused the change for a reason they
+ * can fix, read from the error's code; `null` for any other failure. Literal
+ * keys, one per code, so the i18n report sees each.
+ */
+function settingsRefusalMessage(t: (key: string) => string, error: unknown): string | null {
+	const data = (error as { data?: { code?: unknown; data?: { code?: unknown } } } | null)?.data;
+	switch (data?.code ?? data?.data?.code) {
+		case "honeypot-same-channel":
+			return t("guild_settings.honeypot.errors.same_channel");
+		case "honeypot-unknown-channel":
+			return t("guild_settings.honeypot.errors.unknown_channel");
+		case "honeypot-trap-permissions":
+			return t("guild_settings.honeypot.errors.trap_permissions");
+		case "honeypot-log-permissions":
+			return t("guild_settings.honeypot.errors.log_permissions");
+		default:
+			return null;
+	}
 }
 
 /**

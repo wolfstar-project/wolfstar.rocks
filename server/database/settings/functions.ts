@@ -6,6 +6,7 @@ import {
 	getSettingsContext,
 	updateSettingsContext,
 } from "#server/database/settings/context/functions";
+import { notifyGuildSettingsUpdate } from "#server/database/settings/notify";
 import { fetchGuildData, writeGuildData } from "#server/database/settings/storage";
 import { canWaitOnOtherRequests } from "#server/utils/keyed-lock";
 import { Collection } from "@discordjs/collection";
@@ -110,7 +111,17 @@ class Transaction {
 		try {
 			// Write the merged settings, so the rows created for the first time
 			// carry every column and not just the changes:
-			await writeGuildData(db, { ...this.settings, ...this.#changes }, this.#changes, extra);
+			const keys = Object.keys(this.#changes);
+			await writeGuildData(
+				db,
+				{ ...this.settings, ...this.#changes },
+				this.#changes,
+				async (tx) => {
+					await extra?.(tx);
+					// The bot caches the settings: it reloads them on this, once committed.
+					await notifyGuildSettingsUpdate(tx, this.settings.id, keys);
+				},
+			);
 
 			unconfigured.delete(this.settings.id);
 			Object.assign(this.settings, this.#changes);

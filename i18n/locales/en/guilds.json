@@ -669,7 +669,7 @@
 			}
 		},
 		"honeypot": {
-			"action_help": "What WolfStar does to who writes in the honeypot channel. Change it with /honeypot edit in Discord, which rewrites the warning to match.",
+			"action_help": "What WolfStar does to who writes in the honeypot channel. The warning in the channel changes to match.",
 			"action_title": "Action",
 			"actions": {
 				"ban": "Ban",
@@ -679,23 +679,29 @@
 				"softban": "Softban",
 				"softban_help": "A ban and an unban: it also deletes what they sent in the other channels in the last hour."
 			},
-			"active": "Active",
 			"behaviour_title": "Behaviour",
 			"catching": "Catching who writes in #{channel}, but the moderators.",
-			"channel_help": "Set in Discord: /honeypot setup moves the trap to another channel and /honeypot disable turns it off. WolfStar posts the warning there itself.",
+			"channel_help": "A channel no member has a reason to write in. WolfStar posts the warning there, and takes it off the channel it leaves.",
 			"channels_title": "Channels",
 			"copied_description": "Paste it in any channel of the server.",
 			"copied_title": "Command copied",
 			"copy_setup": "Copy /honeypot setup",
+			"errors": {
+				"same_channel": "The catches can't be reported in the honeypot channel itself. Pick another channel for them, or none.",
+				"unknown_channel": "The honeypot needs a text channel of the server. Pick another channel.",
+				"trap_permissions": "WolfStar needs View Channel, Send Messages, Read Message History, Manage Messages, and Kick or Ban Members in the honeypot channel. Give it those there, or pick another channel.",
+				"log_permissions": "WolfStar needs View Channel, Send Messages and Embed Links in the catches channel. Give it those there, or pick another channel."
+			},
 			"form_aria": "Honeypot settings form",
 			"not_reported": "Not reported",
-			"not_set_up": "Not set up",
-			"off_body": "Run /honeypot setup in Discord: WolfStar creates a channel no member has a reason to write in, posts a warning there and starts catching. Move the channel to the top of the list, where the bots look first.",
+			"off_body": "Turn it on and pick a channel no member has a reason to write in. Or run /honeypot setup in Discord: WolfStar creates one at the top of the list, where the bots look first.",
 			"off_summary": "Nobody is caught while it has no channel.",
 			"off_title": "The honeypot is off",
+			"pick_channel": "Pick the honeypot channel",
+			"pick_channel_hint": "Pick the honeypot channel to turn it on.",
 			"subtitle": "A trap for spam bots: no member has a reason to write in its channel, so WolfStar acts on whoever does and deletes what they sent. The moderators are never caught.",
 			"title": "Honeypot",
-			"warning_help": "Without it the channel says nothing, which is harder for a bot to learn to avoid, and for a member too. Only WolfStar posts or takes down the warning: change it with /honeypot edit."
+			"warning_help": "Without it the channel says nothing, which is harder for a bot to learn to avoid, and for a member too. WolfStar posts or takes down the warning when you save."
 		},
 		"moderation": {
 			"cases_title": "Cases",

@@ -11,7 +11,7 @@
 
 import { GUILD_MODULES } from "./guild-modules";
 import {
-	BotManagedHoneypotSettings,
+	HoneypotTrapSettings,
 	ConfigurableAppealChannels,
 	ConfigurableAppealQuestions,
 	ConfigurableAppealSwitch,
@@ -98,9 +98,9 @@ export const AUDIT_FIELD_METADATA: Readonly<Record<string, AuditFieldMetadata>> 
 		...fields(ConfigurableReportChannels, "channel", false),
 		...fields(ConfigurableReportRoles, "role", false),
 		...fields(ConfigurableReportToggles, "boolean", false),
-		...fields([BotManagedHoneypotSettings.honeypotChannel], "channel", false),
-		...fields([BotManagedHoneypotSettings.honeypotAction], "string", false),
-		...fields([BotManagedHoneypotSettings.honeypotWarning], "boolean", false),
+		...fields([HoneypotTrapSettings.honeypotChannel], "channel", false),
+		...fields([HoneypotTrapSettings.honeypotAction], "string", false),
+		...fields([HoneypotTrapSettings.honeypotWarning], "boolean", false),
 		...fields(ConfigurableHoneypotChannels, "channel", false),
 		...fields(ConfigurableHoneypotToggles, "boolean", false),
 		...fields(ConfigurableAppealSwitch, "boolean", false),

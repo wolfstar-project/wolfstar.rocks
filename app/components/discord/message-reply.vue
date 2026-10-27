@@ -80,7 +80,7 @@ const ariaLabel = computed(() => {
 	/* Discord's command chip: link-blue text on a blurple wash. */
 	--discord-command-chip-bg: oklch(57.7% 0.209 273.88 / 0.24);
 	--discord-command-chip-text: oklch(70.5% 0.155 252);
-	--discord-interaction-muted: oklch(73.06% 0.0048 264.53);
+	--discord-interaction-muted: var(--discord-chrome-muted);
 
 	@apply relative mb-0 flex min-w-0 flex-nowrap items-center gap-x-1 font-whitney text-xs leading-4;
 }
@@ -128,7 +128,7 @@ const ariaLabel = computed(() => {
 	color: var(--discord-interaction-muted);
 }
 
-@media (prefers-color-scheme: light) {
+@variant theme-light {
 	.discord-message-reply {
 		--discord-command-chip-bg: oklch(57.7% 0.209 273.88 / 0.12);
 		--discord-command-chip-text: oklch(45.08% 0.281 265.53);

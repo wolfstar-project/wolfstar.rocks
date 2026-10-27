@@ -129,16 +129,16 @@ const embedAriaLabel = computed(() => {
  * Colors use Discord brand tokens as oklch CSS vars (allow-listed under discord/).
  */
 .discord-embed {
-	/* Discord dark embed chrome */
-	--discord-embed-default-border: oklch(23.95% 0.0059 271.17);
-	--discord-embed-bg: oklch(32.11% 0.0093 268.38);
-	--discord-embed-border: oklch(37.56% 0.0106 271.13);
+	/* Discord's dark embed chrome, drawn from the channel so it follows Ash, Dark and Onyx. */
+	--discord-embed-default-border: oklch(from var(--discord-chrome) calc(l - 0.027) c h);
+	--discord-embed-bg: oklch(from var(--discord-chrome) calc(l + 0.0546) c h);
+	--discord-embed-border: oklch(from var(--discord-chrome) calc(l + 0.109) c h);
 	--discord-embed-text: oklch(78.71% 0.0114 256.71);
 	--discord-embed-title: oklch(89.92% 0.0052 247.88);
 	--discord-embed-author: oklch(89.92% 0.0052 247.88);
 	--discord-embed-footer: oklch(78.71% 0.0114 256.71);
 	--discord-embed-footer-separator: oklch(78.71% 0.0114 256.71);
-	--discord-embed-code-bg: oklch(29.67% 0.0078 264.45);
+	--discord-embed-code-bg: oklch(from var(--discord-chrome) calc(l + 0.03) c h);
 	--discord-embed-code-text: oklch(89.92% 0.0052 247.88);
 	--discord-embed-quote-bar: oklch(43.23% 0.0134 274.64);
 	--discord-embed-link: oklch(72% 0.14 230);
@@ -154,8 +154,15 @@ const embedAriaLabel = computed(() => {
 	line-height: 1.125rem;
 }
 
-.discord-embed--light,
-:global([data-theme="light"] .discord-embed):not(.discord-embed--dark) {
+/* `theme="dark"` keeps Ash's surfaces on any page. */
+.discord-embed--dark {
+	--discord-embed-default-border: oklch(23.95% 0.0059 271.17);
+	--discord-embed-bg: oklch(32.11% 0.0093 268.38);
+	--discord-embed-border: oklch(37.56% 0.0106 271.13);
+	--discord-embed-code-bg: oklch(29.67% 0.0078 264.45);
+}
+
+.discord-embed--light {
 	--discord-embed-default-border: oklch(92.12% 0.0046 258.33);
 	--discord-embed-bg: oklch(96.4% 0.0029 264.54);
 	--discord-embed-border: oklch(92.12% 0.0046 258.33);
@@ -168,6 +175,23 @@ const embedAriaLabel = computed(() => {
 	--discord-embed-code-text: oklch(32.11% 0.0093 268.38);
 	--discord-embed-quote-bar: oklch(78.71% 0.0114 256.71);
 	--discord-embed-link: oklch(62% 0.16 230);
+}
+
+@variant theme-light {
+	.discord-embed:not(.discord-embed--dark) {
+		--discord-embed-default-border: oklch(92.12% 0.0046 258.33);
+		--discord-embed-bg: oklch(96.4% 0.0029 264.54);
+		--discord-embed-border: oklch(92.12% 0.0046 258.33);
+		--discord-embed-text: oklch(43.23% 0.0134 274.64);
+		--discord-embed-title: oklch(32.11% 0.0093 268.38);
+		--discord-embed-author: oklch(32.11% 0.0093 268.38);
+		--discord-embed-footer: oklch(43.23% 0.0134 274.64);
+		--discord-embed-footer-separator: oklch(43.23% 0.0134 274.64);
+		--discord-embed-code-bg: oklch(92.12% 0.0046 258.33);
+		--discord-embed-code-text: oklch(32.11% 0.0093 268.38);
+		--discord-embed-quote-bar: oklch(78.71% 0.0114 256.71);
+		--discord-embed-link: oklch(62% 0.16 230);
+	}
 }
 
 .discord-embed-left-border {

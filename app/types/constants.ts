@@ -129,7 +129,7 @@ interface ShowcaseCommandEmbedResponse {
 	embedLines: ShowcaseCommandEmbedLine[];
 }
 
-/** A plain reply, e.g. "Successfully archived case 3." */
+/** A plain reply in Discord markdown, e.g. "Successfully archived case 3." */
 interface ShowcaseCommandTextResponse {
 	responseType: "text";
 	content: string;
@@ -158,7 +158,7 @@ export interface ShowcaseSettingsRow {
 	code?: string;
 }
 
-/** The settings menu `/settings server menu` opens (Components V2). */
+/** The settings menu `/settings server` opens (Components V2). */
 interface ShowcaseCommandComponentsResponse {
 	responseType: "components";
 	accentColor: string;
@@ -175,12 +175,40 @@ interface ShowcaseCommandComponentsResponse {
 	expiresTime: string;
 }
 
+/**
+ * An embed with a title over a body of Discord markdown, and an optional
+ * footer: `/whois`, the lists of `/autodelete`, `/autopurge` and the others.
+ */
+interface ShowcaseCommandCardResponse {
+	responseType: "card";
+	cardColor: string;
+	cardTitle: string;
+	cardBody: string;
+	cardFooter?: string;
+}
+
+/**
+ * A Components V2 reply other than the settings menu (`/automod show`,
+ * `/commands`, `/roles browse`): a heading over Discord markdown, then a select
+ * menu or a button.
+ */
+interface ShowcaseCommandPanelResponse {
+	responseType: "panel";
+	accentColor: string;
+	panelHeading: string;
+	panelBody: string;
+	panelSelect?: string;
+	panelButton?: string;
+}
+
 export type ShowcaseCommand = ShowcaseCommandBase &
 	(
 		| ShowcaseCommandEmbedResponse
 		| ShowcaseCommandTextResponse
 		| ShowcaseCommandModerationResponse
 		| ShowcaseCommandComponentsResponse
+		| ShowcaseCommandCardResponse
+		| ShowcaseCommandPanelResponse
 	);
 
 export interface OtherApp {

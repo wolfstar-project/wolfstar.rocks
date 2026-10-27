@@ -15,6 +15,7 @@
 			aria-hidden="true"
 			decoding="async"
 		/><span v-if="kind === 'mention'" aria-hidden="true">@</span
+		><span v-else-if="kind === 'channel'" aria-hidden="true">#</span
 		><LazyIconsApp
 			v-else-if="kind === 'app' && !avatar"
 			class="icon"
@@ -27,7 +28,7 @@
 import type { VNode } from "vue";
 
 interface MentionProps {
-	kind?: "mention" | "app";
+	kind?: "mention" | "channel" | "app";
 	/** User avatar URL. Shown on desktop (≥48rem) and hidden on mobile. */
 	avatar?: string;
 }
@@ -77,10 +78,12 @@ const { kind = "mention", avatar } = defineProps<MentionProps>();
 	color: var(--discord-mention-text);
 }
 
-:global([data-theme="light"] .discord-mention) {
-	--discord-mention-bg: oklch(57.7% 0.209 273.88 / 0.25);
-	--discord-mention-text: oklch(45.08% 0.281 265.53);
-	--discord-mention-focus: oklch(45.08% 0.281 265.53);
+@variant theme-light {
+	.discord-mention {
+		--discord-mention-bg: oklch(57.7% 0.209 273.88 / 0.25);
+		--discord-mention-text: oklch(45.08% 0.281 265.53);
+		--discord-mention-focus: oklch(45.08% 0.281 265.53);
+	}
 }
 
 .tag:focus {

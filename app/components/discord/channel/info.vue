@@ -212,15 +212,19 @@ useEventListener(document, "keydown", onDocumentKeydown);
 @reference "@/assets/css/main.css";
 
 .discord-channel-info {
-	--discord-channel-info-bg: oklch(26.65% 0.006 272.93);
-	--discord-channel-info-text: oklch(91.56% 0.004 272.93);
-	--discord-channel-info-muted: oklch(71.01% 0.01 273.13);
-	--discord-channel-info-icon-bg: oklch(32.11% 0.007 272.93);
-	--discord-channel-info-accent: oklch(64.78% 0.154 262.35);
-	--discord-channel-info-empty-icon-bg: oklch(32.11% 0.007 272.93);
+	--discord-channel-info-bg: var(--discord-chrome);
+	--discord-channel-info-text: var(--discord-chrome-text);
+	--discord-channel-info-muted: var(--discord-chrome-muted);
+	--discord-channel-info-icon-bg: oklch(
+		from var(--discord-chrome) calc(l + 0.055 * var(--discord-raise)) c h
+	);
+	--discord-channel-info-accent: var(--discord-link);
+	--discord-channel-info-empty-icon-bg: oklch(
+		from var(--discord-chrome) calc(l + 0.055 * var(--discord-raise)) c h
+	);
 	--discord-channel-info-cta: oklch(57.74% 0.2091 273.85);
 	--discord-channel-info-cta-text: oklch(100% 0 0);
-	--discord-channel-info-tab-border: oklch(100% 0 0 / 0.06);
+	--discord-channel-info-tab-border: oklch(from var(--discord-chrome-strong) l c h / 0.06);
 
 	@apply absolute inset-0 z-20 flex flex-col overflow-hidden font-whitney;
 	background-color: var(--discord-channel-info-bg);

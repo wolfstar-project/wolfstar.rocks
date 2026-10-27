@@ -225,13 +225,13 @@ function secondaryText(member: DiscordMemberListMember, inPinnedRoleSection: boo
 
 .discord-member-list {
 	/* Discord member sidebar surfaces (oklch only). */
-	--discord-member-list-bg: oklch(23.47% 0.005 272.95);
-	--discord-member-list-border: oklch(19.34% 0.004 273.16);
-	--discord-member-list-text: oklch(91.56% 0.004 272.93);
-	--discord-member-list-muted: oklch(71.01% 0.01 273.13);
-	--discord-member-list-hover: oklch(100% 0 0 / 0.04);
-	--discord-member-list-avatar-bg: oklch(100% 0 0 / 0.1);
-	--discord-member-list-presence-ring: oklch(23.47% 0.005 272.95);
+	--discord-member-list-bg: var(--discord-sidebar);
+	--discord-member-list-border: var(--discord-server);
+	--discord-member-list-text: var(--discord-chrome-text);
+	--discord-member-list-muted: var(--discord-chrome-muted);
+	--discord-member-list-hover: var(--discord-hover);
+	--discord-member-list-avatar-bg: oklch(from var(--discord-chrome-strong) l c h / 0.1);
+	--discord-member-list-presence-ring: var(--discord-sidebar);
 	--discord-member-list-app-bg: oklch(57.74% 0.2091 273.85);
 	--discord-member-list-app-text: oklch(100% 0 0);
 

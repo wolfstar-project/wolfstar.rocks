@@ -182,16 +182,16 @@ function toggleMembers() {
 
 .discord-channel-header {
 	/* Discord-true desktop dark chrome (oklch only). */
-	--discord-channel-header-bg: oklch(26.65% 0.006 272.93);
-	--discord-channel-header-border: oklch(19.34% 0.004 273.16);
-	--discord-channel-header-edge: oklch(0% 0 0 / 0.2);
-	--discord-channel-header-text: oklch(91.56% 0.004 272.93);
-	--discord-channel-header-muted: oklch(71.01% 0.01 273.13);
+	--discord-channel-header-bg: var(--discord-chrome);
+	--discord-channel-header-border: var(--discord-chrome-border);
+	--discord-channel-header-edge: var(--discord-chrome-edge);
+	--discord-channel-header-text: var(--discord-chrome-text);
+	--discord-channel-header-muted: var(--discord-chrome-muted);
 	/* Search field: Discord #1e1f22 fill, #949ba4 placeholder, brighter icon. */
-	--discord-channel-header-search-bg: oklch(19.34% 0.004 273.16);
-	--discord-channel-header-search-border: oklch(28.84% 0.007 272.93);
-	--discord-channel-header-search-placeholder: oklch(69.5% 0.015 255);
-	--discord-channel-header-search-icon: oklch(91.56% 0.004 272.93);
+	--discord-channel-header-search-bg: var(--discord-server);
+	--discord-channel-header-search-border: var(--discord-composer);
+	--discord-channel-header-search-placeholder: var(--discord-chrome-muted);
+	--discord-channel-header-search-icon: var(--discord-chrome-text);
 	--discord-channel-header-badge: oklch(63.17% 0.208 24.62);
 	--discord-channel-header-online: oklch(72.27% 0.191 149.58);
 
@@ -200,18 +200,6 @@ function toggleMembers() {
 	background-color: var(--discord-channel-header-bg);
 	box-shadow: 0 1px 0 var(--discord-channel-header-edge);
 	color: var(--discord-channel-header-text);
-}
-
-:global([data-theme="light"]) .discord-channel-header {
-	--discord-channel-header-bg: oklch(98.17% 0.002 264);
-	--discord-channel-header-border: oklch(92.64% 0.006 264);
-	--discord-channel-header-edge: oklch(21.15% 0.009 264 / 0.08);
-	--discord-channel-header-text: oklch(21.15% 0.009 264);
-	--discord-channel-header-muted: oklch(47.12% 0.012 264);
-	--discord-channel-header-search-bg: oklch(93.74% 0.005 264);
-	--discord-channel-header-search-border: oklch(92.64% 0.006 264);
-	--discord-channel-header-search-placeholder: oklch(47.12% 0.012 264);
-	--discord-channel-header-search-icon: oklch(21.15% 0.009 264);
 }
 
 .discord-channel-header-desktop {

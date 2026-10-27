@@ -235,13 +235,13 @@ function onKeydown(event: KeyboardEvent) {
 
 .discord-message-composer {
 	/* Discord-true dark surfaces (Figma / desktop client). */
-	--discord-message-composer-bg: oklch(28.84% 0.007 272.93);
-	--discord-message-composer-border: oklch(100% 0 0 / 0.06);
-	--discord-message-composer-text: oklch(91.56% 0.004 272.93);
-	--discord-message-composer-muted: oklch(71.01% 0.01 273.13);
-	--discord-message-composer-hover: oklch(100% 0 0 / 0.06);
-	--discord-message-composer-add-bg: oklch(19.34% 0.004 273.16);
-	--discord-message-composer-pill-bg: oklch(28.84% 0.007 272.93);
+	--discord-message-composer-bg: var(--discord-composer);
+	--discord-message-composer-border: oklch(from var(--discord-chrome-strong) l c h / 0.06);
+	--discord-message-composer-text: var(--discord-chrome-text);
+	--discord-message-composer-muted: var(--discord-chrome-muted);
+	--discord-message-composer-hover: var(--discord-hover);
+	--discord-message-composer-add-bg: var(--discord-server);
+	--discord-message-composer-pill-bg: var(--discord-composer);
 	--discord-message-composer-send-active: oklch(57.74% 0.2091 273.85);
 
 	/* Desktop: side inset; flush to chat bottom; hairline border + modest radius. */
@@ -251,14 +251,12 @@ function onKeydown(event: KeyboardEvent) {
 	color: var(--discord-message-composer-muted);
 }
 
-:global([data-theme="light"]) .discord-message-composer {
-	--discord-message-composer-bg: oklch(93.74% 0.005 264);
-	--discord-message-composer-border: oklch(92.64% 0.006 264);
-	--discord-message-composer-text: oklch(21.15% 0.009 264);
-	--discord-message-composer-muted: oklch(47.12% 0.012 264);
-	--discord-message-composer-hover: oklch(21.15% 0.009 264 / 0.08);
-	--discord-message-composer-add-bg: oklch(47.12% 0.012 264);
-	--discord-message-composer-pill-bg: oklch(98.17% 0.002 264);
+/* Light Discord draws the "+" on a grey disc and the pill on the channel. */
+@variant theme-light {
+	.discord-message-composer {
+		--discord-message-composer-add-bg: var(--discord-chrome-muted);
+		--discord-message-composer-pill-bg: var(--discord-chrome);
+	}
 }
 
 .discord-message-composer-button {

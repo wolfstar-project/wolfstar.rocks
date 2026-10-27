@@ -116,11 +116,73 @@
 												"
 												class="showcase-desktop-text-response"
 											>
-												<ShowcaseTwemojiText
-													:line="activeDisplayCommand.content"
+												<ShowcaseMarkdown
+													:source="activeDisplayCommand.content"
 												/>
 											</span>
-											<!-- /settings server menu: two Components V2 containers, sized as
+											<!-- An embed with a title: /whois, the lists of the Auto-* commands. -->
+											<DiscordEmbed
+												v-else-if="
+													activeDisplayCommand.responseType === 'card'
+												"
+												:color="activeDisplayCommand.cardColor"
+												:title="activeDisplayCommand.cardTitle"
+												:footer="
+													activeDisplayCommand.cardFooter
+														? { text: activeDisplayCommand.cardFooter }
+														: undefined
+												"
+											>
+												<ShowcaseMarkdown
+													:source="activeDisplayCommand.cardBody"
+												/>
+											</DiscordEmbed>
+											<!-- Components V2 (/automod show, /commands): a heading over the
+											     text, then a select menu or a button. -->
+											<div
+												v-else-if="
+													activeDisplayCommand.responseType === 'panel'
+												"
+												class="showcase-settings-menu"
+											>
+												<DiscordV2Container
+													:accent-color="activeDisplayCommand.accentColor"
+												>
+													<!-- Through the markdown too, so a heading's emoji is Twemoji like the body's. -->
+													<ShowcaseMarkdown
+														class="showcase-panel-heading"
+														:source="`## ${activeDisplayCommand.panelHeading}`"
+													/>
+													<ShowcaseMarkdown
+														:source="activeDisplayCommand.panelBody"
+													/>
+													<DiscordActionRow
+														v-if="activeDisplayCommand.panelSelect"
+													>
+														<DiscordStringSelectMenu
+															:options="[]"
+															disabled
+															:placeholder="
+																activeDisplayCommand.panelSelect
+															"
+															:aria-label="
+																activeDisplayCommand.panelSelect
+															"
+														/>
+													</DiscordActionRow>
+													<DiscordActionRow
+														v-else-if="activeDisplayCommand.panelButton"
+													>
+														<DiscordButton
+															:disabled="false"
+															:label="
+																activeDisplayCommand.panelButton
+															"
+														/>
+													</DiscordActionRow>
+												</DiscordV2Container>
+											</div>
+											<!-- /settings server: two Components V2 containers, sized as
 											     Discord draws them (16px padding, 8px between components). -->
 											<div v-else class="showcase-settings-menu">
 												<DiscordV2Container
@@ -411,7 +473,7 @@ import type {
 	DiscordChatMessage,
 } from "~/types/discord";
 import { Colors } from "~/types/constants";
-import ShowcaseTwemojiText from "./WolfstarShowcaseTwemojiText.vue";
+import ShowcaseMarkdown from "./WolfstarShowcaseMarkdown.vue";
 
 const { ts } = useI18n();
 
@@ -1167,38 +1229,41 @@ onMounted(() => {
 <style scoped>
 @reference "@/assets/css/main.css";
 
-/* SurfaceCard defaults to theme --color-base-300; pin Discord charcoal so the card never reads red/warm. */
+/* SurfaceCard defaults to theme --color-base-300; draw it in Discord's channel colour instead. */
 :deep(.commands-showcase-card.home-surface-card) {
-	--commands-showcase-card-bg: oklch(26.65% 0.006 272.93);
-	--commands-showcase-card-border: oklch(19.34% 0.004 273.16);
-	background-color: var(--commands-showcase-card-bg);
-	border-color: var(--commands-showcase-card-border);
+	background-color: var(--discord-chrome);
+	border-color: var(--discord-chrome-border);
 }
 
 .showcase-discord-shell {
-	/* Authentic Discord desktop dark theme (chat / sidebar / server / input surfaces). */
-	--showcase-discord-chrome: oklch(26.65% 0.006 272.93);
-	--showcase-discord-sidebar: oklch(23.47% 0.005 272.95);
-	--showcase-discord-server: oklch(19.34% 0.004 273.16);
-	--showcase-discord-chrome-border: oklch(19.34% 0.004 273.16);
-	--showcase-discord-composer: oklch(28.84% 0.007 272.93);
-	--showcase-discord-composer-muted: oklch(71.01% 0.01 273.13);
-	--showcase-discord-composer-text: oklch(91.56% 0.004 272.93);
-	--showcase-discord-composer-hover: oklch(100% 0 0 / 0.06);
-	--showcase-discord-header-edge: oklch(0% 0 0 / 0.2);
-	--showcase-discord-message-hover: oklch(100% 0 0 / 0.03);
-	--showcase-discord-primary-text: oklch(91.56% 0.004 272.93);
-	--showcase-discord-muted-text: oklch(71.01% 0.01 273.13);
-	--showcase-mobile-command-link: oklch(64.78% 0.154 262.35);
+	/*
+	 * Discord's desktop surfaces in the page's theme (Light, Ash, Dark or Onyx;
+	 * see the `--discord-*` tokens in main.css). Hovers and veils are the text
+	 * colour at a low alpha, so they darken on Light and lighten on the others.
+	 */
+	--showcase-discord-chrome: var(--discord-chrome);
+	--showcase-discord-sidebar: var(--discord-sidebar);
+	--showcase-discord-server: var(--discord-server);
+	--showcase-discord-chrome-border: var(--discord-chrome-border);
+	--showcase-discord-composer: var(--discord-composer);
+	--showcase-discord-composer-muted: var(--discord-chrome-muted);
+	--showcase-discord-composer-text: var(--discord-chrome-text);
+	--showcase-discord-composer-hover: oklch(from var(--discord-chrome-text) l c h / 0.06);
+	--showcase-discord-header-edge: var(--discord-chrome-edge);
+	--showcase-discord-message-hover: oklch(from var(--discord-chrome-text) l c h / 0.03);
+	--showcase-discord-primary-text: var(--discord-chrome-text);
+	--showcase-discord-muted-text: var(--discord-chrome-muted);
+	--showcase-mobile-command-link: var(--discord-link);
 
 	/*
 	 * Neutralize DaisyUI / Nuxt UI theme surfaces inside the mock so embeds,
-	 * containers, messages, and chat never inherit a warm/red page tint via
-	 * --color-base-* or --discord-surface.
+	 * containers, messages, and chat take Discord's colours and never a warm
+	 * page tint via --color-base-* or --discord-surface; the text follows them.
 	 */
 	--color-base-100: var(--showcase-discord-chrome);
 	--color-base-200: var(--showcase-discord-sidebar);
 	--color-base-300: var(--showcase-discord-chrome);
+	--color-base-content: var(--showcase-discord-primary-text);
 	--discord-surface: var(--showcase-discord-chrome);
 
 	@apply relative flex flex-col overflow-hidden;
@@ -1291,8 +1356,8 @@ onMounted(() => {
 	--discord-message-composer-text: var(--showcase-discord-composer-text);
 	--discord-message-composer-muted: var(--showcase-discord-composer-muted);
 	--discord-message-composer-hover: var(--showcase-discord-composer-hover);
-	--discord-message-composer-add-bg: oklch(100% 0 0 / 0.1);
-	--discord-message-composer-pill-bg: oklch(100% 0 0 / 0.12);
+	--discord-message-composer-add-bg: oklch(from var(--discord-chrome-text) l c h / 0.1);
+	--discord-message-composer-pill-bg: oklch(from var(--discord-chrome-text) l c h / 0.12);
 }
 
 .showcase-composer-slash-field {
@@ -1337,10 +1402,10 @@ onMounted(() => {
 
 @media (max-width: 767.98px) {
 	.showcase-discord-shell {
-		/* Same Discord-true dark palette on mobile; composer bar matches input field. */
-		--showcase-discord-composer-bar: oklch(26.65% 0.006 272.93);
-		--showcase-discord-composer-add-bg: oklch(19.34% 0.004 273.16);
-		--showcase-discord-composer-pill-bg: oklch(28.84% 0.007 272.93);
+		/* The same surfaces on mobile; the composer bar is the channel. */
+		--showcase-discord-composer-bar: var(--showcase-discord-chrome);
+		--showcase-discord-composer-add-bg: var(--showcase-discord-server);
+		--showcase-discord-composer-pill-bg: var(--showcase-discord-composer);
 	}
 
 	/* Scoped .discord-member-list { display: flex } beats Tailwind `hidden`. */
@@ -1383,7 +1448,7 @@ onMounted(() => {
 	 * a lighter composer-bar fringe (the “hairline” over the channel).
 	 */
 	.showcase-command-picker-apps-open {
-		--showcase-discord-composer-bar: oklch(22% 0.006 272);
+		--showcase-discord-composer-bar: var(--showcase-discord-sidebar);
 		@apply flex flex-col;
 		background-color: var(--showcase-discord-composer-bar);
 	}
@@ -1451,7 +1516,10 @@ onMounted(() => {
 .showcase-inline-code {
 	/* line-height 1 keeps the mono chip from making its line taller. */
 	@apply rounded px-1 py-0.5 font-mono text-[0.85em] leading-none;
-	background-color: oklch(from var(--showcase-discord-chrome) calc(l + 0.05) calc(c + 0.02) 280);
+	--showcase-code-surface: oklch(
+		from var(--showcase-discord-chrome) calc(l + 0.05 * var(--discord-raise)) calc(c + 0.02) 280
+	);
+	background-color: var(--showcase-code-surface);
 }
 
 /*
@@ -1459,13 +1527,22 @@ onMounted(() => {
  * 8px apart, 16px padding behind a 4px accent and 8px corners, 8px between
  * components; a section is two 20px lines beside a 60×32 button. The surfaces
  * are the channel made lighter as Discord does (OKLCH lightness): the container
- * +0.035, the select +0.022, the buttons +0.083, the separator and timestamp +0.1.
+ * +0.035, the select +0.022, the buttons +0.083, the separator and timestamp +0.1;
+ * darker by as much on the light theme (`--discord-raise`).
  */
 .showcase-settings-menu {
-	--showcase-v2-container: oklch(from var(--showcase-discord-chrome) calc(l + 0.035) c h);
-	--showcase-v2-select: oklch(from var(--showcase-discord-chrome) calc(l + 0.022) c h);
-	--showcase-v2-button: oklch(from var(--showcase-discord-chrome) calc(l + 0.083) c h);
-	--showcase-v2-line: oklch(from var(--showcase-discord-chrome) calc(l + 0.1) c h);
+	--showcase-v2-container: oklch(
+		from var(--showcase-discord-chrome) calc(l + 0.035 * var(--discord-raise)) c h
+	);
+	--showcase-v2-select: oklch(
+		from var(--showcase-discord-chrome) calc(l + 0.022 * var(--discord-raise)) c h
+	);
+	--showcase-v2-button: oklch(
+		from var(--showcase-discord-chrome) calc(l + 0.083 * var(--discord-raise)) c h
+	);
+	--showcase-v2-line: oklch(
+		from var(--showcase-discord-chrome) calc(l + 0.1 * var(--discord-raise)) c h
+	);
 
 	@apply mt-1 flex max-w-125 flex-col gap-2;
 }
@@ -1496,12 +1573,18 @@ onMounted(() => {
 	color: var(--showcase-discord-primary-text);
 }
 
+.showcase-panel-heading {
+	@apply mb-1;
+	color: var(--showcase-discord-primary-text);
+}
+
 .showcase-settings-menu :deep(.discord-button) {
 	@apply m-0 h-8 min-w-15 shrink-0 rounded-[8px] px-4;
 }
 
 .showcase-settings-menu :deep(.discord-button-secondary) {
 	background-color: var(--showcase-v2-button);
+	color: var(--showcase-discord-primary-text);
 }
 
 .showcase-settings-menu :deep(.discord-button-emoji) {

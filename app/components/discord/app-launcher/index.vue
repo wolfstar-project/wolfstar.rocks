@@ -1058,18 +1058,20 @@ onBeforeUnmount(() => {
 @reference "@/assets/css/main.css";
 
 .discord-app-launcher {
-	/* Discord dark theme surfaces: #2b2d31 popout, #313338 cards, #1e1f22 input. */
-	--discord-app-launcher-bg: oklch(26.65% 0.006 272.93);
-	--discord-app-launcher-nested: oklch(28.84% 0.007 272.93);
-	--discord-app-launcher-text: oklch(91.56% 0.004 272.93);
-	--discord-app-launcher-header: oklch(96.2% 0.002 272.93);
-	--discord-app-launcher-muted: oklch(71.01% 0.01 273.13);
-	--discord-app-launcher-interactive: oklch(80.5% 0.008 273.13);
-	--discord-app-launcher-link: oklch(66.5% 0.147 236);
+	/* Discord's surfaces in the page's theme (see the `--discord-*` tokens in main.css). */
+	--discord-app-launcher-bg: var(--discord-chrome);
+	--discord-app-launcher-nested: var(--discord-composer);
+	--discord-app-launcher-text: var(--discord-chrome-text);
+	--discord-app-launcher-header: var(--discord-chrome-strong);
+	--discord-app-launcher-muted: var(--discord-chrome-muted);
+	--discord-app-launcher-interactive: var(--discord-chrome-secondary);
+	--discord-app-launcher-link: var(--discord-link);
 	--discord-app-launcher-focus: oklch(57.74% 0.2091 273.85);
-	--discord-app-launcher-search-bg: oklch(19.34% 0.004 273.16);
-	--discord-app-launcher-divider: oklch(100% 0 0 / 0.06);
-	--discord-app-launcher-icon-bg: oklch(32% 0.01 264);
+	--discord-app-launcher-search-bg: var(--discord-server);
+	--discord-app-launcher-divider: oklch(from var(--discord-chrome-strong) l c h / 0.06);
+	--discord-app-launcher-icon-bg: oklch(
+		from var(--discord-chrome) calc(l + 0.0535 * var(--discord-raise)) c h
+	);
 	--discord-app-launcher-shadow: oklch(0% 0 0 / 0.24);
 	--discord-app-launcher-wordle-bg: oklch(93% 0.008 95);
 	--discord-app-launcher-wordle-title: oklch(22% 0.02 260);
@@ -1084,9 +1086,13 @@ onBeforeUnmount(() => {
 	--discord-app-launcher-garden-berry: oklch(58% 0.22 25);
 	--discord-app-launcher-garden-seed: oklch(95% 0.04 95);
 	--discord-app-launcher-garden-flower: oklch(78% 0.16 340);
-	--discord-app-launcher-back-bg: oklch(32% 0.01 264);
-	--discord-app-launcher-back-hover: oklch(38% 0.012 268);
-	--discord-app-launcher-help-bg: oklch(28.84% 0.007 272.93);
+	--discord-app-launcher-back-bg: oklch(
+		from var(--discord-chrome) calc(l + 0.0535 * var(--discord-raise)) c h
+	);
+	--discord-app-launcher-back-hover: oklch(
+		from var(--discord-chrome) calc(l + 0.1135 * var(--discord-raise)) c h
+	);
+	--discord-app-launcher-help-bg: var(--discord-composer);
 	--discord-app-launcher-wolfstar-bg: oklch(0% 0 0);
 
 	/* Explicit radii: the app theme remaps Tailwind's rounded-* scale to 16px. */
@@ -1719,17 +1725,21 @@ onBeforeUnmount(() => {
  * keep the desktop popover chrome on phones/tablets that still show the site hamburger. */
 @media (max-width: 767.98px) {
 	.discord-app-launcher {
-		--discord-app-launcher-bg: oklch(22% 0.006 272);
-		--discord-app-launcher-nested: oklch(28% 0.007 272);
-		--discord-app-launcher-search-bg: oklch(18% 0.005 272);
-		--discord-app-launcher-header: oklch(95% 0.004 272);
+		--discord-app-launcher-bg: var(--discord-sidebar);
+		--discord-app-launcher-nested: var(--discord-composer);
+		--discord-app-launcher-search-bg: var(--discord-server);
+		--discord-app-launcher-header: var(--discord-chrome-strong);
 		/* Discord mobile links are lavender (#949cf7), not the desktop blue. */
 		--discord-app-launcher-link: oklch(70% 0.125 285);
-		--discord-app-launcher-help-bg: oklch(28% 0.007 272);
-		--discord-app-launcher-handle: oklch(62% 0.01 272);
-		--discord-app-launcher-promo-bar: oklch(12% 0.005 272);
-		--discord-app-launcher-help-btn: oklch(43% 0.008 272);
-		--discord-app-launcher-help-btn-text: oklch(98% 0.002 272);
+		--discord-app-launcher-help-bg: var(--discord-composer);
+		--discord-app-launcher-handle: var(--discord-chrome-muted);
+		--discord-app-launcher-promo-bar: oklch(
+			from var(--discord-server) calc(l + -0.07 * var(--discord-raise)) c h
+		);
+		--discord-app-launcher-help-btn: oklch(
+			from var(--discord-chrome) calc(l + 0.1635 * var(--discord-raise)) c h
+		);
+		--discord-app-launcher-help-btn-text: var(--discord-chrome-strong);
 		--discord-app-launcher-sheet-half: min(55dvh, 22rem);
 		/* Nearly the channel column under the header; parent may hide the composer at full. */
 		--discord-app-launcher-sheet-full: min(92dvh, 40rem);

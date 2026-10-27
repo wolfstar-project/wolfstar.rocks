@@ -29,12 +29,12 @@ const { count, self } = defineProps<ReactionProps>();
 .discord-reaction {
 	@apply flex w-fit cursor-pointer items-center gap-1 rounded-md border px-1 font-whitney;
 	border-color: transparent;
-	background-color: oklch(29.64% 0.0077 264.45);
+	background-color: oklch(from var(--discord-chrome) calc(l + 0.03 * var(--discord-raise)) c h);
 }
 
 .discord-reaction:hover {
-	border-color: oklch(100% 0 0 / 0.2);
-	background-color: oklch(32.11% 0.0094 268.56);
+	border-color: oklch(from var(--discord-chrome-strong) l c h / 0.2);
+	background-color: oklch(from var(--discord-chrome) calc(l + 0.0546 * var(--discord-raise)) c h);
 }
 
 .discord-reaction.self {

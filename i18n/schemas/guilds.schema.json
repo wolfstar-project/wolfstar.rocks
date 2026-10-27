@@ -13,9 +13,159 @@
 			},
 			"additionalProperties": false
 		},
+		"guild_member_picker": {
+			"type": "object",
+			"properties": {
+				"add": {
+					"type": "string"
+				},
+				"add_member": {
+					"type": "string"
+				},
+				"add_to": {
+					"type": "string"
+				},
+				"added": {
+					"type": "string"
+				},
+				"dialog_description": {
+					"type": "string"
+				},
+				"dialog_title": {
+					"type": "string"
+				},
+				"not_in_server": {
+					"type": "string"
+				},
+				"search_placeholder": {
+					"type": "string"
+				},
+				"type_to_search": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
 		"guild_settings": {
 			"type": "object",
 			"properties": {
+				"access": {
+					"type": "object",
+					"properties": {
+						"allow_note": {
+							"type": "string"
+						},
+						"default_permissions": {
+							"type": "string"
+						},
+						"default_roles": {
+							"type": "string"
+						},
+						"default_title": {
+							"type": "string"
+						},
+						"deny_note": {
+							"type": "string"
+						},
+						"form_aria": {
+							"type": "string"
+						},
+						"legacy_allow": {
+							"type": "string"
+						},
+						"legacy_becomes_allow": {
+							"type": "string"
+						},
+						"legacy_becomes_deny": {
+							"type": "string"
+						},
+						"legacy_deny": {
+							"type": "string"
+						},
+						"legacy_download": {
+							"type": "string"
+						},
+						"legacy_drops": {
+							"type": "string"
+						},
+						"legacy_import": {
+							"type": "string"
+						},
+						"legacy_import_all": {
+							"type": "string"
+						},
+						"legacy_import_aria": {
+							"type": "string"
+						},
+						"legacy_member": {
+							"type": "string"
+						},
+						"legacy_not_convertible": {
+							"type": "string"
+						},
+						"legacy_remove": {
+							"type": "string"
+						},
+						"legacy_remove_cancel": {
+							"type": "string"
+						},
+						"legacy_remove_confirm_label": {
+							"type": "string"
+						},
+						"legacy_remove_description": {
+							"type": "string"
+						},
+						"legacy_remove_failed": {
+							"type": "string"
+						},
+						"legacy_remove_submit": {
+							"type": "string"
+						},
+						"legacy_remove_title": {
+							"type": "string"
+						},
+						"legacy_removed": {
+							"type": "string"
+						},
+						"legacy_subtitle": {
+							"type": "string"
+						},
+						"legacy_title": {
+							"type": "string"
+						},
+						"members_allowed": {
+							"type": "string"
+						},
+						"members_denied": {
+							"type": "string"
+						},
+						"members_order": {
+							"type": "string"
+						},
+						"members_title": {
+							"type": "string"
+						},
+						"roles_allowed": {
+							"type": "string"
+						},
+						"roles_denied": {
+							"type": "string"
+						},
+						"roles_order": {
+							"type": "string"
+						},
+						"roles_title": {
+							"type": "string"
+						},
+						"subtitle": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"appeals": {
 					"type": "object",
 					"properties": {
@@ -1381,6 +1531,219 @@
 					},
 					"additionalProperties": false
 				},
+				"command_permissions": {
+					"type": "object",
+					"properties": {
+						"added": {
+							"type": "string"
+						},
+						"administrator_note": {
+							"type": "string"
+						},
+						"all_channels": {
+							"type": "string"
+						},
+						"allow": {
+							"type": "string"
+						},
+						"allowed": {
+							"type": "string"
+						},
+						"app_default": {
+							"type": "string"
+						},
+						"app_default_note": {
+							"type": "string"
+						},
+						"authorize": {
+							"type": "string"
+						},
+						"changed_count": {
+							"type": "string"
+						},
+						"channels": {
+							"type": "string"
+						},
+						"conflict": {
+							"type": "string"
+						},
+						"conflict_title": {
+							"type": "string"
+						},
+						"count_aria": {
+							"type": "string"
+						},
+						"denied": {
+							"type": "string"
+						},
+						"deny": {
+							"type": "string"
+						},
+						"error_channel": {
+							"type": "string"
+						},
+						"error_command": {
+							"type": "string"
+						},
+						"error_permissions": {
+							"type": "string"
+						},
+						"error_rate_limited": {
+							"type": "string"
+						},
+						"error_refused": {
+							"type": "string"
+						},
+						"error_role_above": {
+							"type": "string"
+						},
+						"error_scope": {
+							"type": "string"
+						},
+						"error_unknown_channel": {
+							"type": "string"
+						},
+						"error_unknown_command": {
+							"type": "string"
+						},
+						"error_unknown_role": {
+							"type": "string"
+						},
+						"everyone": {
+							"type": "string"
+						},
+						"failed_title": {
+							"type": "string"
+						},
+						"flipped": {
+							"type": "string"
+						},
+						"keep_editing": {
+							"type": "string"
+						},
+						"load_failed": {
+							"type": "string"
+						},
+						"member": {
+							"type": "string"
+						},
+						"members": {
+							"type": "string"
+						},
+						"missing": {
+							"type": "string"
+						},
+						"missing_title": {
+							"type": "string"
+						},
+						"not_registered": {
+							"type": "string"
+						},
+						"not_set": {
+							"type": "string"
+						},
+						"over_limit": {
+							"type": "string"
+						},
+						"preview_description": {
+							"type": "string"
+						},
+						"preview_title": {
+							"type": "string"
+						},
+						"reload": {
+							"type": "string"
+						},
+						"removed": {
+							"type": "string"
+						},
+						"review": {
+							"type": "string"
+						},
+						"roles": {
+							"type": "string"
+						},
+						"scope_needed": {
+							"type": "string"
+						},
+						"send": {
+							"type": "string"
+						},
+						"sending": {
+							"type": "string"
+						},
+						"sent_before_stop": {
+							"type": "string"
+						},
+						"status_custom": {
+							"type": "string"
+						},
+						"status_default": {
+							"type": "string"
+						},
+						"subtitle": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						},
+						"use_app_default": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"command_rules": {
+					"type": "object",
+					"properties": {
+						"allowed_channels": {
+							"type": "string"
+						},
+						"allowed_roles": {
+							"type": "string"
+						},
+						"allowed_users": {
+							"type": "string"
+						},
+						"empty": {
+							"type": "string"
+						},
+						"ignored_channels": {
+							"type": "string"
+						},
+						"ignored_roles": {
+							"type": "string"
+						},
+						"ignored_users": {
+							"type": "string"
+						},
+						"subtitle": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"command_tabs": {
+					"type": "object",
+					"properties": {
+						"aria": {
+							"type": "string"
+						},
+						"disabled": {
+							"type": "string"
+						},
+						"discord": {
+							"type": "string"
+						},
+						"rules": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"commands": {
 					"type": "object",
 					"properties": {
@@ -1678,9 +2041,6 @@
 							},
 							"additionalProperties": false
 						},
-						"active": {
-							"type": "string"
-						},
 						"behaviour_title": {
 							"type": "string"
 						},
@@ -1702,13 +2062,28 @@
 						"copy_setup": {
 							"type": "string"
 						},
+						"errors": {
+							"type": "object",
+							"properties": {
+								"same_channel": {
+									"type": "string"
+								},
+								"unknown_channel": {
+									"type": "string"
+								},
+								"trap_permissions": {
+									"type": "string"
+								},
+								"log_permissions": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
 						"form_aria": {
 							"type": "string"
 						},
 						"not_reported": {
-							"type": "string"
-						},
-						"not_set_up": {
 							"type": "string"
 						},
 						"off_body": {
@@ -1718,6 +2093,12 @@
 							"type": "string"
 						},
 						"off_title": {
+							"type": "string"
+						},
+						"pick_channel": {
+							"type": "string"
+						},
+						"pick_channel_hint": {
 							"type": "string"
 						},
 						"subtitle": {

@@ -1203,6 +1203,1623 @@
 								}
 							},
 							"additionalProperties": false
+						},
+						"commands_catalogue": {
+							"type": "object",
+							"properties": {
+								"archive_create": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"archive_list": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"archive_show": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"autodelete_disable": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"autodelete_enable": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"autodelete_list": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"automessage_disable": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"automessage_enable": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"automessage_list": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"autopurge_disable": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"autopurge_enable": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"autopurge_list": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"automod_add": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										},
+										"select": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"automod_create": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										},
+										"select": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"automod_delete": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"automod_edit": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										},
+										"select": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"automod_ignore": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										},
+										"select": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"automod_list": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										},
+										"select": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"automod_remove": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										},
+										"select": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"automod_show": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										},
+										"select": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"ban_remove": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"softban": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"note": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"setnickname": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"voicekick": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"role_add": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"role_remove": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"warn_remove": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"mute_remove": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"timeout_remove": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"vmute_add": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"vmute_remove": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"restrict_attachment": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"restrict_embed": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"restrict_emoji": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"restrict_reaction": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"restrict_voice": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"unrestrict_attachment": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"unrestrict_embed": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"unrestrict_emoji": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"unrestrict_reaction": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"unrestrict_voice": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"commands": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										},
+										"select": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"dehoist": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"honeypot_disable": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"honeypot_edit": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"honeypot_setup": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"honeypot_show": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"lockdown": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"mute_create": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"permission_nodes_add": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"permission_nodes_remove": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"permission_nodes_reset": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"permission_nodes_show": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"permissions": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"prune_age": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"prune_any": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"prune_attachments": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"prune_author": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"prune_bots": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"prune_embeds": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"prune_endswith": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"prune_humans": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"prune_images": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"prune_includes": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"prune_invites": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"prune_links": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"prune_match": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"prune_mentions": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"prune_pins": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"prune_startswith": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"prune_you": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"reasons_add": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"reasons_list": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"reasons_remove": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"report": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"reports_block": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"reports_history": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"reports_unblock": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"role_rules_add": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"role_rules_list": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"role_rules_remove": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"roles_browse": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										},
+										"button": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"roles_claim": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"roles_list": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"roles_unclaim": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"settings_user": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										},
+										"button": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"sticky_nickname": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"sticky_roles_add": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"sticky_roles_remove": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"sticky_roles_reset": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"sticky_roles_show": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"warn_thresholds_add": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"warn_thresholds_list": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"warn_thresholds_remove": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"whois_channel": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										},
+										"footer": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"whois_emoji": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"whois_role": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"whois_server": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"whois_user": {
+									"type": "object",
+									"properties": {
+										"tooltip": {
+											"type": "string"
+										},
+										"description": {
+											"type": "string"
+										},
+										"title": {
+											"type": "string"
+										},
+										"reply": {
+											"type": "string"
+										},
+										"footer": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								}
+							},
+							"additionalProperties": false
 						}
 					},
 					"additionalProperties": false

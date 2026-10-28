@@ -44,7 +44,7 @@ export default defineWrappedResponseHandler(
 			};
 		}
 
-		const applied = await applyConfigurationImport(guild.id, parsed.value).catch(
+		const applied = await applyConfigurationImport(guild, parsed.value).catch(
 			(error: unknown) => {
 				if (!(error instanceof ConfigurationImportStaleError)) throw error;
 				throw createError({

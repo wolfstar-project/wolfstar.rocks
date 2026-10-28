@@ -1,7 +1,7 @@
 # The honeypot from the dashboard, and the bot told of dashboard writes
 
 Date: 2026-10-27
-Status: proposed
+Status: implemented (wolfstar.rocks#484, wolfstar#342)
 
 ## Purpose
 
@@ -59,18 +59,20 @@ failure to the honeypot's log channel when it has one, as `/honeypot setup` repo
 - **Fields.** The channel (`SelectChannel`, text channels, not the catches channel), the action (the choice cards,
   enabled) and the warning (the toggle row, enabled) are staged like the other settings and saved with the save bar.
   The help texts lose "Set in Discord".
-- **Permissions, before saving.** The `settings.patch` route refuses a honeypot change the bot could not carry out, as
-  the commands do: in the trap channel the bot needs View Channel, Send Messages, Read Message History and Manage
-  Messages, plus Kick Members (Kick) or Ban Members (Softban, Ban); in the catches channel View Channel, Send Messages
-  and Embed Links. Computed from the guild's roles, the bot member and the channel's overwrites (the code of
-  `server/utils/command-permissions/requirements.ts`), refused with 422 `honeypot-permissions` and the list of what is
-  missing, shown under the field. The trap and the catches channel cannot be the same.
+- **Permissions, before saving.** `assertHoneypotIsUsable()` (`server/utils/honeypot/permissions.ts`) refuses a
+  honeypot change the bot could not carry out, as the commands do: in the trap channel the bot needs View Channel,
+  Send Messages, Read Message History and Manage Messages, plus Kick Members (Kick) or Ban Members (Softban, Ban); in
+  the catches channel View Channel, Send Messages and Embed Links. The roles, the channels and the bot member are read
+  fresh from Discord. It runs in `settings.patch` and in the settings import, and refuses with 422 and one of
+  `honeypot-trap-permissions`, `honeypot-log-permissions`, `honeypot-same-channel` and `honeypot-unknown-channel`. The
+  save toast explains the code; the error's `why` names the missing permissions.
 - **Audit.** Unchanged: the settings write is audited as today.
 
 ## Order and compatibility
 
-The website's notify is harmless without a listener, so it can ship first: the dashboard fields only become editable
-once the bot release that listens is deployed. Until then, the section stays as it is.
+The website's notify is harmless without a listener, but the editable fields are not: merged before the bot listens,
+the dashboard would move the trap while the old warning stays where it was. So the website's pull request was merged
+after the bot's (wolfstar#342) was running on staging, the bot that the alpha site shares its database with.
 
 ## Tests
 

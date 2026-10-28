@@ -1,9 +1,10 @@
 import type { ParsedConfiguration } from "#server/utils/settings-transfer/parse";
 import type { AutoModerationRule } from "#shared/utils/automod-rules";
-import type { Snowflake } from "discord-api-types/v10";
+import type { APIGuild } from "discord-api-types/v10";
 import { serializeSettings, writeSettingsTransaction } from "#server/database";
 import { writeAutoModerationRulePlan } from "#server/database/settings/automod/storage";
 import { writeAutoModerationRules } from "#server/utils/automod/rules";
+import { assertHoneypotIsUsable } from "#server/utils/honeypot/permissions";
 import {
 	findOversizedRuleLists,
 	getPlannedRules,
@@ -48,11 +49,14 @@ export interface AppliedConfiguration {
  * @throws {@linkcode ConfigurationImportStaleError} When a list of a rule of
  * the file is longer than the limit and than the one the rule of the guild has
  * by now.
+ * @throws A 422 when the file changes the honeypot in a way the bot could not
+ * carry out, as `settings.patch` refuses it (`assertHoneypotIsUsable()`).
  */
 export async function applyConfigurationImport(
-	guildId: Snowflake,
+	guild: APIGuild,
 	parsed: ParsedConfiguration,
 ): Promise<AppliedConfiguration> {
+	const guildId = guild.id;
 	using transaction = await writeSettingsTransaction(guildId);
 
 	// Awaited here: the lock of the settings is released when this function
@@ -73,7 +77,12 @@ export async function applyConfigurationImport(
 		}
 
 		let created: AutoModerationRule[] = [];
-		if (plan.settings.length > 0) transaction.write(getPlannedSettings(plan));
+		if (plan.settings.length > 0) {
+			const settings = getPlannedSettings(plan);
+			// The file can switch a live trap to another action, which needs another permission:
+			await assertHoneypotIsUsable(guild, transaction.settings, settings);
+			transaction.write(settings);
+		}
 		await transaction.submit(
 			rulesChanged
 				? async (tx) => {

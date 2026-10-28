@@ -60,6 +60,28 @@
 				"subtitle": "Invite Staryl now, or join the support server if you want to ask a question first.",
 				"title": "Bring your streamers into your server."
 			},
+			"features": {
+				"command_hint": "With {command}",
+				"description": "A live alert with the stream's title, game and preview, an offline note in your own words, and a test whenever you want to check the channel.",
+				"eyebrow": "What lands in the channel",
+				"live_body": "The stream's title links to the channel, next to the game and its box art, above a preview of the stream and a button to watch.",
+				"live_title": "Going live",
+				"next": "Next notification",
+				"notifications_description": "Each subscription sends one streamer's live or offline update to one channel. Pick a kind to see what lands there.",
+				"notifications_title": "Twitch notifications",
+				"offline_body": "An offline subscription posts the message you wrote for it, with the time the stream ended. Offline subscriptions need that message.",
+				"offline_message": "Stella's stream is over, thanks for watching!",
+				"offline_title": "Stream over",
+				"ping_body": "Give the subscription a message and it goes above the notification. Mention a role in it and Staryl pings that role, as long as the role can be mentioned.",
+				"ping_role": "Stream Pings",
+				"ping_title": "Ping a role",
+				"previous": "Previous notification",
+				"test_body": "A test goes through the same path as a real notification, so a missing permission shows up now and not at the next stream. It says it is a test.",
+				"test_notice": "this is a preview requested by a server administrator, not a real stream update.",
+				"test_notice_label": "Test notification",
+				"test_title": "Test it",
+				"title": "One message per stream, in your channel."
+			},
 			"hero": {
 				"brief_aria": "Staryl capability summary",
 				"brief_label": "What your server gets",
@@ -78,8 +100,6 @@
 			},
 			"notification": {
 				"box_art_alt": "",
-				"description": "When a streamer goes live, Staryl posts the stream's title, game and preview, with a button to watch. The message you set for the subscription, if any, goes above it.",
-				"eyebrow": "A sent notification",
 				"footer": "Staryl Twitch Notifications",
 				"game": "Software and Game Development",
 				"game_label": "Game",
@@ -87,8 +107,8 @@
 				"message": "Stella is live, come say hi!",
 				"preview_alt": "The stream's preview: a code editor and the streamer's webcam.",
 				"stream_title": "Fixing bugs live, come hang out",
+				"test_title": "Test notification",
 				"timestamp": "Today at 17:48",
-				"title": "What lands in your channel.",
 				"watch": "Watch Stream"
 			},
 			"proof": {
@@ -104,6 +124,22 @@
 			"seo": {
 				"description": "Staryl is an open-source Discord app from the WolfStar Project that posts Twitch live and offline notifications in the channel you choose.",
 				"title": "Staryl"
+			},
+			"setup": {
+				"add_body": "The streamer, the channel, live or offline, and an optional message, required for offline notifications.",
+				"add_title": "Add a notification",
+				"eyebrow": "No dashboard needed",
+				"index_label": "The /setup menu",
+				"manage_body": "Review the server's notifications, remove the ones you pick, or reset them all.",
+				"manage_title": "Manage notifications",
+				"overview_body": "How many notifications the server has, and where to go next.",
+				"overview_title": "Overview",
+				"pages_count": "4 pages",
+				"see_commands": "See the commands",
+				"subtitle": "Run {command} and Staryl opens its menu in the channel, for the administrator who opened it. Four pages cover everything a subscription needs.",
+				"test_body": "Send a preview through the real delivery path, to check the channel and the bot's permissions.",
+				"test_title": "Test notifications",
+				"title": "Set it up from Discord."
 			},
 			"showcase": {
 				"add_description": "Add a new Twitch subscription for a streamer.",

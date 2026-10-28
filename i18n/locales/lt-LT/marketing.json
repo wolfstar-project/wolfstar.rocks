@@ -60,6 +60,28 @@
 				"subtitle": "",
 				"title": ""
 			},
+			"features": {
+				"command_hint": "",
+				"description": "",
+				"eyebrow": "",
+				"live_body": "",
+				"live_title": "",
+				"next": "",
+				"notifications_description": "",
+				"notifications_title": "",
+				"offline_body": "",
+				"offline_message": "",
+				"offline_title": "",
+				"ping_body": "",
+				"ping_role": "",
+				"ping_title": "",
+				"previous": "",
+				"test_body": "",
+				"test_notice": "",
+				"test_notice_label": "",
+				"test_title": "",
+				"title": ""
+			},
 			"hero": {
 				"brief_aria": "",
 				"brief_label": "",
@@ -78,8 +100,6 @@
 			},
 			"notification": {
 				"box_art_alt": "",
-				"description": "",
-				"eyebrow": "",
 				"footer": "",
 				"game": "",
 				"game_label": "",
@@ -87,8 +107,8 @@
 				"message": "",
 				"preview_alt": "",
 				"stream_title": "",
+				"test_title": "",
 				"timestamp": "",
-				"title": "",
 				"watch": ""
 			},
 			"proof": {
@@ -103,6 +123,22 @@
 			},
 			"seo": {
 				"description": "",
+				"title": ""
+			},
+			"setup": {
+				"add_body": "",
+				"add_title": "",
+				"eyebrow": "",
+				"index_label": "",
+				"manage_body": "",
+				"manage_title": "",
+				"overview_body": "",
+				"overview_title": "",
+				"pages_count": "",
+				"see_commands": "",
+				"subtitle": "",
+				"test_body": "",
+				"test_title": "",
 				"title": ""
 			},
 			"showcase": {

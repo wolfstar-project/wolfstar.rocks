@@ -42,7 +42,7 @@ import {
 
 	// #endregion
 
-	DashboardBottomNav,
+	DashboardContextCard,
 	DashboardDirectMessageThread,
 	DashboardDirectMessages,
 	DashboardPageHeader,
@@ -1012,11 +1012,23 @@ describe("component accessibility audits", () => {
 		});
 	});
 
-	describe("DashboardBottomNav", () => {
-		it("should have no accessibility violations", async () => {
-			const component = await mountSuspended(DashboardBottomNav);
-			const results = await runAxe(component);
-			expect(results.violations).toEqual([]);
+	describe("DashboardContextCard", () => {
+		it("should have no accessibility violations on a module section and elsewhere", async () => {
+			useActiveGuild().selectGuild("123456789012345678");
+			useActiveGuild().setSection("automod");
+			// The switch shows once the saved settings are in.
+			useGuildSettings().setGuildSettings(createMockGuildData("123456789012345678"));
+			const withSwitch = await mountSuspended(DashboardContextCard, {
+				route: "/app?screen=page",
+			});
+			expect(withSwitch.find('[role="switch"]').exists()).toBe(true);
+			expect((await runAxe(withSwitch)).violations).toEqual([]);
+
+			useActiveGuild().setSection("commands");
+			const withList = await mountSuspended(DashboardContextCard, {
+				route: "/app?screen=page",
+			});
+			expect((await runAxe(withList)).violations).toEqual([]);
 		});
 	});
 

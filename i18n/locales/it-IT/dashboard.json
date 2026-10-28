@@ -54,7 +54,6 @@
 			"autodelete": "Auto-elimina",
 			"automessage": "",
 			"automod": "Automoderazione",
-			"automod_short": "AutoMod",
 			"autopurge": "Auto-pulizia",
 			"channels": "Eventi",
 			"commands": "Comandi",
@@ -73,15 +72,18 @@
 			"modules": "Moduli",
 			"resources": "Risorse"
 		},
-		"nav_menu": "Server e sezioni",
-		"nav_menu_description": "Cambia server o apri una sezione di questo server.",
 		"nav_module_off": "Il modulo è disattivato",
 		"nav_pin": "Fissa {name}",
 		"nav_pinned": "Fissati",
 		"nav_recent": "Aperti di recente",
-		"nav_sections_aria": "Sezioni",
 		"nav_unpin": "Non fissare più {name}",
-		"nav_you": "Tu",
+		"phone": {
+			"back": "",
+			"context_aria": "",
+			"module_off": "",
+			"module_on": "",
+			"modules_on": ""
+		},
 		"picker": {
 			"empty": "Non ci sono ancora server che puoi gestire. Per configurare WolfStar su un server ti serve il permesso Gestisci server.",
 			"error": "Non è stato possibile caricare i tuoi server. Controlla la connessione e riprova."

@@ -27,10 +27,7 @@ describe("DASHBOARD_NAV", () => {
 	});
 
 	it("only labels sections with copy the English locale has", () => {
-		const keys = DASHBOARD_NAV.flatMap((item) => [
-			item.labelKey,
-			item.shortLabelKey ?? item.labelKey,
-		]);
+		const keys = DASHBOARD_NAV.map((item) => item.labelKey);
 		const missing = keys.filter((key) => typeof resolve(key) !== "string");
 
 		expect(missing).toStrictEqual([]);

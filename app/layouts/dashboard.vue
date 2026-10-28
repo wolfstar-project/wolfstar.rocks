@@ -1,5 +1,6 @@
 <template>
-	<div class="console">
+	<!-- On a phone one screen shows at a time: the list (servers and sections) or the page. -->
+	<div class="console" :class="{ 'console--page': screen === 'page' }">
 		<GuildServerRail
 			:current-guild-id="guildId ?? undefined"
 			:guilds="userGuilds"
@@ -8,15 +9,25 @@
 			@home="goToGuild(null)"
 		/>
 
-		<aside v-if="guildId" class="console-sidebar" :aria-label="ts('dashboard.nav_aria')">
-			<DashboardSidebar floating />
+		<aside
+			v-if="guildId"
+			ref="consoleList"
+			class="console-sidebar"
+			:aria-label="ts('dashboard.nav_aria')"
+		>
+			<DashboardSidebar floating @navigate="openPageOnPhone" />
 		</aside>
 		<!-- No server open: the Home, with the bots' direct messages. -->
-		<aside v-else class="console-sidebar" :aria-label="ts('dashboard.dm.title')">
-			<DashboardDirectMessages floating />
+		<aside
+			v-else
+			ref="consoleList"
+			class="console-sidebar"
+			:aria-label="ts('dashboard.dm.title')"
+		>
+			<DashboardDirectMessages floating @navigate="openPageOnPhone" />
 		</aside>
 
-		<div class="console-main">
+		<div ref="consoleMain" class="console-main">
 			<!-- The page shows its own skeleton until the server's data is in. -->
 			<slot v-if="!guildId || !nuxtError"></slot>
 			<div
@@ -66,33 +77,9 @@
 				</UButton>
 			</div>
 
-			<DashboardBottomNav v-if="guildId" />
+			<!-- The phone's page names its server and section here; the save bar takes its place. -->
+			<DashboardContextCard v-if="guildId && !showSaveChangesBar" class="sm:hidden" />
 		</div>
-
-		<USlideover
-			v-model:open="drawerOpen"
-			side="left"
-			:title="ts('dashboard.nav_menu')"
-			:description="ts('dashboard.nav_menu_description')"
-			:ui="{ content: 'w-[20.375rem] max-w-[90vw]' }"
-		>
-			<template #content>
-				<div class="console-drawer">
-					<GuildServerRail
-						class="flex!"
-						:current-guild-id="guildId ?? undefined"
-						:guilds="userGuilds"
-						:pending="userGuildsPending"
-						@select="selectFromDrawer"
-						@home="selectFromDrawer(null)"
-					/>
-					<div class="min-w-0 flex-1">
-						<DashboardSidebar v-if="guildId" @navigate="closeDrawer" />
-						<DashboardDirectMessages v-else @navigate="closeDrawer" />
-					</div>
-				</div>
-			</template>
-		</USlideover>
 
 		<UModal
 			:open="leaveDialogOpen"
@@ -160,7 +147,11 @@ const { selectGuild } = useActiveGuild();
 
 const toast = useToast();
 const router = useRouter();
-const { close: closeDrawer, open: drawerOpen } = useDashboardDrawer();
+const { isPhone, openPage, screen } = usePhoneScreen();
+usePhoneScreenFocus(
+	useTemplateRef<HTMLElement>("consoleList"),
+	useTemplateRef<HTMLElement>("consoleMain"),
+);
 const nuxtError = useError();
 const { setGuildData } = useGuildData();
 const { setGuildSettings, guildSettings } = useGuildSettings();
@@ -415,10 +406,9 @@ function discardAndLeave() {
 	confirmLeave();
 }
 
-// A server or the Home picked in the phone drawer closes it, so what opens is in view.
-function selectFromDrawer(id: string | null) {
-	closeDrawer();
-	goToGuild(id);
+// A section picked in the phone's list opens its page; on a wider screen both show.
+function openPageOnPhone() {
+	if (isPhone.value) void openPage();
 }
 
 async function submitChanges() {
@@ -510,8 +500,7 @@ watch(guildId, (newGuildId, oldGuildId) => {
  * to the page. In the light theme the cards and the sidebar are as bright as the
  * page and only the rail is tinted. Components inside read these variables.
  */
-.console,
-.console-drawer {
+.console {
 	--console-main: var(--ink-600);
 	--console-surface: var(--ink-700);
 	--console-rail: var(--ink-800);
@@ -552,15 +541,8 @@ watch(guildId, (newGuildId, oldGuildId) => {
 	}
 }
 
-/* The drawer is portaled out of `.console`, so it carries the tokens itself. */
-.console-drawer {
-	@apply flex h-full w-full overflow-hidden;
-	background-color: var(--console-surface);
-}
-
 @variant theme-light {
-	.console,
-	.console-drawer {
+	.console {
 		--console-main: var(--color-base-100);
 		--console-surface: var(--color-base-100);
 		--console-rail: oklch(92.1% 0.005 258.3);
@@ -585,9 +567,25 @@ watch(guildId, (newGuildId, oldGuildId) => {
 	background-color: var(--console-main);
 }
 
-/* A floating card rather than a docked strip. On phones it sits in the flow
-   just above the tab bar; from `sm` up it floats over the end of the page,
-   which gets room to scroll clear of it (see below). */
+/* The phone's two screens. The list is the server rail and the sidebar, the
+   sidebar taking the width the page leaves; the page is the page alone. */
+@variant max-sm {
+	.console:not(.console--page) :deep(.guild-rail) {
+		display: flex;
+	}
+
+	.console:not(.console--page) .console-sidebar {
+		@apply block min-w-0 flex-1;
+	}
+
+	.console:not(.console--page) .console-main {
+		display: none;
+	}
+}
+
+/* A floating card rather than a docked strip. On phones it sits in the flow at
+   the foot of the page, where the context card was; from `sm` up it floats over
+   the end of the page, which gets room to scroll clear of it (see below). */
 .console-savebar {
 	@apply z-10 mx-3 my-2 flex shrink-0 items-center gap-2.5 rounded-[10px] py-2.5 pr-3 pl-4 sm:absolute sm:inset-x-4 sm:bottom-4 sm:m-0;
 	background-color: var(--console-solid);

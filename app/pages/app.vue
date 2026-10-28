@@ -6,13 +6,16 @@
 				color="neutral"
 				variant="ghost"
 				size="lg"
-				icon="ic:round-menu"
-				:aria-label="ts('dashboard.nav_menu')"
-				:aria-expanded="drawerOpen"
-				@click="toggleDrawer"
+				icon="ic:round-arrow-back-ios-new"
+				:aria-label="ts('dashboard.phone.back')"
+				@click="openList"
 			/>
 			<div class="min-w-0 sm:flex sm:items-baseline sm:gap-2">
-				<h1 class="truncate text-[0.9375rem] leading-tight font-bold sm:text-base">
+				<!-- Focused when a phone opens the page, so it is announced. -->
+				<h1
+					tabindex="-1"
+					class="truncate text-[0.9375rem] leading-tight font-bold sm:text-base"
+				>
 					{{ navbarTitle }}
 				</h1>
 				<p
@@ -82,7 +85,7 @@ const toast = useToast();
 const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();
 const { activeGuildId, hasStagedChanges, section } = useDashboardNavigation();
-const { open: drawerOpen, toggle: toggleDrawer } = useDashboardDrawer();
+const { openList } = usePhoneScreen();
 
 const {
 	data: commands,
@@ -278,8 +281,9 @@ useSeoMeta({
 	box-shadow: var(--console-shadow-low);
 }
 
+/* On a phone the page leaves room to scroll clear of the floating context card. */
 .console-content {
-	@apply min-h-0 flex-1 overflow-y-auto p-3.5 sm:p-5.5;
+	@apply min-h-0 flex-1 overflow-y-auto p-3.5 pb-24 sm:p-5.5;
 }
 
 .console-unsaved {

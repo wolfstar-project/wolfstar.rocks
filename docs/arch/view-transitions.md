@@ -24,4 +24,5 @@ Router-driven View Transitions are enabled via a **manual plugin** (not `experim
 
 - **OAuth pages** and any page that redirects on mount **must** have `definePageMeta({ viewTransition: false })`. Transitions freeze DOM updates mid-flight.
 - **Do not add `view-transition-name`** to elements shared across pages without a per-page uniqueness audit. Duplicate names cause silent VT skip.
+- **A navigation that keeps the path gets no transition**, back or forward. Nuxt keeps the page mounted for a query or hash change and emits no `page:finish`, so the transition's update callback would never settle and the screen would freeze until the browser skips it. The phone dashboard's `?screen=page` depends on this.
 - Reduced-motion is honored at two layers: system (`prefers-reduced-motion: reduce` checked in plugin, CSS `@media` kill-switch) and user override (`wolfstar-settings.reduceMotion` via `useReduceMotion()`; legacy `user-prefers-reduced-motion` is migrated on first load).

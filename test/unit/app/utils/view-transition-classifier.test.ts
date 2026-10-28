@@ -53,6 +53,17 @@ describe("classifyNavigation", () => {
 		expect(result).toEqual([]);
 	});
 
+	it("returns empty array for a popstate that only changes the query", () => {
+		// The phone's back from `/app?screen=page` to the list: the page stays mounted.
+		const result = classifyNavigation({
+			toPath: "/app",
+			fromPath: "/app",
+			isPopstate: true,
+			hasUAVisualTransition: false,
+		});
+		expect(result).toEqual([]);
+	});
+
 	it("tags nav-forward + route-marketing for forward nav to /blog", () => {
 		const result = classifyNavigation({
 			toPath: "/blog",

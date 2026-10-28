@@ -54,7 +54,6 @@
 			"autodelete": "",
 			"automessage": "",
 			"automod": "",
-			"automod_short": "",
 			"autopurge": "",
 			"channels": "",
 			"commands": "Commands",
@@ -73,15 +72,18 @@
 			"modules": "",
 			"resources": ""
 		},
-		"nav_menu": "",
-		"nav_menu_description": "",
 		"nav_module_off": "",
 		"nav_pin": "",
 		"nav_pinned": "",
 		"nav_recent": "",
-		"nav_sections_aria": "",
 		"nav_unpin": "",
-		"nav_you": "",
+		"phone": {
+			"back": "",
+			"context_aria": "",
+			"module_off": "",
+			"module_on": "",
+			"modules_on": ""
+		},
 		"picker": {
 			"empty": "",
 			"error": ""

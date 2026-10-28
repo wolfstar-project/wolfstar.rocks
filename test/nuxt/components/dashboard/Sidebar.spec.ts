@@ -99,13 +99,25 @@ describe("DashboardSidebar", () => {
 		expect(rowFor(wrapper, "Moderation").find('[title="Module is off"]').exists()).toBe(false);
 	});
 
-	it("opens a section and tells a drawer to close", async () => {
+	it("opens a section and says so, for a phone to show its page", async () => {
 		const wrapper = await mountSidebar();
 
 		await rowFor(wrapper, "Commands").find(".dashboard-nav-button").trigger("click");
 
 		expect(useActiveGuild().section.value).toBe("commands");
 		expect(wrapper.emitted("navigate")).toHaveLength(1);
+	});
+
+	// The settings open in a dialog over the list: a phone must stay on the list.
+	it("opens no section when the account card opens the settings", async () => {
+		usePreferencesDialog().isOpen.value = false;
+		const wrapper = await mountSidebar();
+
+		await wrapper.get("button.account-user").trigger("click");
+
+		expect(usePreferencesDialog().isOpen.value).toBe(true);
+		expect(wrapper.emitted("navigate")).toBeUndefined();
+		usePreferencesDialog().isOpen.value = false;
 	});
 
 	it("pins a section above the others and remembers it", async () => {

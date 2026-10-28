@@ -139,7 +139,7 @@
 			</template>
 		</nav>
 
-		<DashboardAccountCard :floating @navigate="emit('navigate')" />
+		<DashboardAccountCard :floating />
 	</div>
 </template>
 
@@ -155,13 +155,13 @@ import { resolveGuildIconSrc } from "~/utils/guild-dashboard";
 const { floating = false } = defineProps<{
 	/**
 	 * Lays the account card over the server rail and the foot of the sidebar,
-	 * as the console design does; in the drawer it stays in the flow.
+	 * as the console design does; otherwise it stays in the flow.
 	 */
 	floating?: boolean;
 }>();
 
 const emit = defineEmits<{
-	/** A section was opened, so a drawer holding the sidebar can close. */
+	/** A section was opened, so a phone can show its page. */
 	navigate: [];
 }>();
 

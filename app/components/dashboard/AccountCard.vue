@@ -19,7 +19,7 @@
 			type="button"
 			class="account-user"
 			:aria-label="ts('dashboard.user_settings_for', { name })"
-			@click="openSettings"
+			@click="openPreferences()"
 		>
 			<span ref="nameBlock" class="flex min-w-0 items-center gap-2.5">
 				<AppUserAvatar :src="avatar" :decoration size="md" />
@@ -33,7 +33,7 @@
 			icon="ic:round-settings"
 			:aria-label="ts('dashboard.user_preferences')"
 			:title="ts('dashboard.user_preferences')"
-			@click="openSettings"
+			@click="openPreferences()"
 		/>
 		<UButton
 			color="neutral"
@@ -55,14 +55,9 @@
 const { floating = false } = defineProps<{
 	/**
 	 * Lays the card over the server rail and the foot of the sidebar, as the
-	 * console design does; in the drawer it stays in the flow.
+	 * console design does; otherwise it stays in the flow.
 	 */
 	floating?: boolean;
-}>();
-
-const emit = defineEmits<{
-	/** The settings were opened, so a drawer holding the card can close. */
-	navigate: [];
 }>();
 
 const { ts } = useI18n();
@@ -90,13 +85,6 @@ const nameplateStyle = computed(() => {
 	};
 });
 const { open: openPreferences } = usePreferencesDialog();
-
-// In the drawer the sidebar sits in a dialog of its own: it is closed first, so
-// the settings do not open stacked on top of it.
-function openSettings() {
-	emit("navigate");
-	openPreferences();
-}
 </script>
 
 <style scoped>
@@ -119,6 +107,13 @@ function openSettings() {
 	@apply absolute bottom-2 left-2 z-30 m-0;
 	width: calc(var(--console-rail-width) + var(--console-sidebar-width) - 1rem);
 	box-shadow: var(--popover-shadow);
+}
+
+/* The phone's list gives the sidebar the whole width the rail leaves: the card spans it. */
+@variant max-sm {
+	.account-card--floating {
+		width: calc(100% - 1rem);
+	}
 }
 
 .account-nameplate {

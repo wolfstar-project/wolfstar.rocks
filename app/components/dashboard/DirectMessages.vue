@@ -50,7 +50,7 @@
 			</p>
 		</nav>
 
-		<DashboardAccountCard :floating @navigate="emit('navigate')" />
+		<DashboardAccountCard :floating />
 	</div>
 </template>
 
@@ -64,7 +64,7 @@ const { floating = false } = defineProps<{
 }>();
 
 const emit = defineEmits<{
-	/** A thread or the settings were opened, so a drawer holding the list can close. */
+	/** A thread was opened, so a phone can show its page. */
 	navigate: [];
 }>();
 

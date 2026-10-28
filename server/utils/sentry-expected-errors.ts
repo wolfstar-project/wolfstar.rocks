@@ -1,6 +1,7 @@
 import type { ErrorEvent, EventHint } from "@sentry/nuxt";
 
-const EXPECTED_HTTP_STATUSES = new Set([400, 401, 403, 404, 409, 429]);
+/** The HTTP errors the app raises on purpose. */
+export const EXPECTED_HTTP_STATUSES: ReadonlySet<number> = new Set([400, 401, 403, 404, 409, 429]);
 
 /**
  * Matches only errors the application deliberately created via `createError()`.

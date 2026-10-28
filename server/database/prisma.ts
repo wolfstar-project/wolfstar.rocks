@@ -47,7 +47,9 @@ declare module "h3" {
 function requestDatabase(): Database {
 	const { database } = useEvent().context;
 	if (!database) {
-		throw new Error("[database] the request has no database client");
+		throw new Error(
+			"[database] the request has no database client: it carries no Hyperdrive binding, as a request made with the global $fetch does not (use event.$fetch)",
+		);
 	}
 	return database;
 }

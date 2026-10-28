@@ -11,7 +11,11 @@
 				@click="openList"
 			/>
 			<div class="min-w-0 sm:flex sm:items-baseline sm:gap-2">
-				<h1 class="truncate text-[0.9375rem] leading-tight font-bold sm:text-base">
+				<!-- Focused when a phone opens the page, so it is announced. -->
+				<h1
+					tabindex="-1"
+					class="truncate text-[0.9375rem] leading-tight font-bold sm:text-base"
+				>
 					{{ navbarTitle }}
 				</h1>
 				<p

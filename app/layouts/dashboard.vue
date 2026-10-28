@@ -9,15 +9,25 @@
 			@home="goToGuild(null)"
 		/>
 
-		<aside v-if="guildId" class="console-sidebar" :aria-label="ts('dashboard.nav_aria')">
+		<aside
+			v-if="guildId"
+			ref="consoleList"
+			class="console-sidebar"
+			:aria-label="ts('dashboard.nav_aria')"
+		>
 			<DashboardSidebar floating @navigate="openPageOnPhone" />
 		</aside>
 		<!-- No server open: the Home, with the bots' direct messages. -->
-		<aside v-else class="console-sidebar" :aria-label="ts('dashboard.dm.title')">
+		<aside
+			v-else
+			ref="consoleList"
+			class="console-sidebar"
+			:aria-label="ts('dashboard.dm.title')"
+		>
 			<DashboardDirectMessages floating @navigate="openPageOnPhone" />
 		</aside>
 
-		<div class="console-main">
+		<div ref="consoleMain" class="console-main">
 			<!-- The page shows its own skeleton until the server's data is in. -->
 			<slot v-if="!guildId || !nuxtError"></slot>
 			<div
@@ -138,6 +148,10 @@ const { selectGuild } = useActiveGuild();
 const toast = useToast();
 const router = useRouter();
 const { isPhone, openPage, screen } = usePhoneScreen();
+usePhoneScreenFocus(
+	useTemplateRef<HTMLElement>("consoleList"),
+	useTemplateRef<HTMLElement>("consoleMain"),
+);
 const nuxtError = useError();
 const { setGuildData } = useGuildData();
 const { setGuildSettings, guildSettings } = useGuildSettings();

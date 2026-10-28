@@ -85,9 +85,12 @@ function setModule(on: boolean) {
 <style scoped>
 @reference "@/assets/css/main.css";
 
-/* Floats over the foot of the page, as the account card does over the list. */
+/* Floats over the foot of the page, as the account card does over the list.
+   A phone's alone: from `sm` up the sidebar names the server and the page's
+   banner carries the switch. Hidden here, as this rule's `flex` would win over
+   a `sm:hidden` the parent passes. */
 .context-card {
-	@apply absolute inset-x-2.5 bottom-2.5 z-10 flex items-center gap-3 rounded-2xl py-2.5 pr-3 pl-2.5;
+	@apply absolute inset-x-2.5 bottom-2.5 z-10 flex items-center gap-3 rounded-2xl py-2.5 pr-3 pl-2.5 sm:hidden;
 	background-color: var(--console-solid);
 	border: 1px solid var(--console-border);
 	box-shadow:

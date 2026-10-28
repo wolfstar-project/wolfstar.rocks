@@ -1,6 +1,7 @@
 import { DashboardContextCard } from "#components";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { page } from "vitest/browser";
 import { nextTick } from "vue";
 import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 import { createMockGuildData } from "~~/test/mocks/guildData";
@@ -68,6 +69,30 @@ describe("DashboardContextCard", () => {
 
 		expect(wrapper.find('[role="switch"]').attributes("aria-checked")).toBe("true");
 		expect(useGuildSettingsChanges().guildSettingsChanges.value).toBeUndefined();
+	});
+
+	describe("by screen width", () => {
+		afterEach(async () => {
+			await page.viewport(1280, 900);
+		});
+
+		// From `sm` up the page's own banner carries the module's switch, and the sidebar names the server.
+		it("shows on a phone only", async () => {
+			await page.viewport(1280, 900);
+			openServer({ modulesAutomod: true });
+			useActiveGuild().setSection("automod");
+			const wrapper = await mountSuspended(DashboardContextCard, {
+				attachTo: document.body,
+				route: "/app?screen=page",
+			});
+			const display = () => getComputedStyle(wrapper.element as HTMLElement).display;
+
+			expect(display()).toBe("none");
+
+			await page.viewport(390, 844);
+			await expect.poll(display).toBe("flex");
+			wrapper.unmount();
+		});
 	});
 
 	it("goes back to the list from a section without a switch", async () => {

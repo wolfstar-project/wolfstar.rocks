@@ -78,7 +78,7 @@
 			</div>
 
 			<!-- The phone's page names its server and section here; the save bar takes its place. -->
-			<DashboardContextCard v-if="guildId && !showSaveChangesBar" class="sm:hidden" />
+			<DashboardContextCard v-if="guildId && !showSaveChangesBar" />
 		</div>
 
 		<UModal

@@ -274,6 +274,9 @@
 		   `base` comes after `theme`, so the blocks below could not override
 		   a value set there (test/unit/design-tokens/layer-order). */
 		--discord-chrome: oklch(98.17% 0.002 264);
+		/* Twitch's brand purple (#9146ff), the accent Staryl gives its notifications;
+		   the same in every theme, as in Discord. */
+		--twitch-brand: oklch(59.1% 0.255 296.1);
 		--discord-chrome-border: oklch(92.64% 0.006 264);
 		--discord-chrome-edge: oklch(21.15% 0.009 264 / 0.08);
 		--discord-chrome-text: oklch(21.15% 0.009 264);

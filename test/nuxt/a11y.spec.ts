@@ -79,6 +79,7 @@ import {
 	StarylCommandsShowcase,
 	StarylCtaSection,
 	StarylHeroSection,
+	StarylNotificationSection,
 	StarylProductProofSection,
 	// #endregion
 } from "#components";
@@ -1257,9 +1258,8 @@ describe("component accessibility audits", () => {
 			it("should have no accessibility violations", async () => {
 				const component = await mountSuspended(StarylHeroSection, {
 					props: {
-						buildTime: new Date("2024-06-01T12:00:00Z"),
-						buildVersion: "7.0.0",
-						inviteUrl: "#",
+						inviteUrl:
+							"https://discord.com/oauth2/authorize?client_id=1489991104672567386",
 					},
 				});
 				const results = await runAxe(component);
@@ -1291,10 +1291,21 @@ describe("component accessibility audits", () => {
 			});
 		});
 
+		describe("StarylNotificationSection", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(StarylNotificationSection);
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
 		describe("StarylCtaSection", () => {
 			it("should have no accessibility violations", async () => {
 				const component = await mountSuspended(StarylCtaSection, {
-					props: { inviteUrl: "#" },
+					props: {
+						inviteUrl:
+							"https://discord.com/oauth2/authorize?client_id=1489991104672567386",
+					},
 				});
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);

@@ -2,6 +2,7 @@ import {
 	WolfstarCommandsSection,
 	WolfstarCommandsShowcase,
 	StarylCommandsShowcase,
+	StarylHeroSection,
 	StarylNotificationShowcase,
 	StarylSetupSection,
 	DiscordChannelHeader,
@@ -1004,6 +1005,35 @@ describe("component SSR rendering", () => {
 
 			expect(wrapper.text()).toContain("The demo below behaves like Discord.");
 			expect(wrapper.find("#home-commands-heading").exists()).toBe(true);
+		});
+	});
+
+	describe("Staryl's release line", () => {
+		const inviteUrl = "https://discord.com/oauth2/authorize?client_id=test";
+
+		it("names Staryl's own version and date beside its source", async () => {
+			const hero = await mountSuspended(StarylHeroSection, {
+				props: {
+					inviteUrl,
+					release: { version: "1.0.0", time: Date.parse("2026-10-28T09:25:24Z") },
+				},
+			});
+
+			expect(hero.text().replace(/\s+/g, " ")).toContain(
+				"Release v1.0.0 · Oct 28, 2026 · View source",
+			);
+		});
+
+		// GitHub could not be reached at build time.
+		it("keeps only the source link when the release is unknown", async () => {
+			const hero = await mountSuspended(StarylHeroSection, {
+				props: { inviteUrl, release: null },
+			});
+
+			expect(hero.text()).not.toContain("Release");
+			expect(hero.find("a[href='https://github.com/wolfstar-project/staryl']").exists()).toBe(
+				true,
+			);
 		});
 	});
 

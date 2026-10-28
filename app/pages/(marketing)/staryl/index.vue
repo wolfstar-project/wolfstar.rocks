@@ -1,6 +1,6 @@
 <template>
 	<div class="text-base-content">
-		<StarylHeroSection :invite-url="Invites.Staryl" />
+		<StarylHeroSection :invite-url="Invites.Staryl" :release="starylRelease" />
 
 		<StarylProductProofSection />
 
@@ -28,6 +28,7 @@ useSeoMetadata({
 const otherApps = useApp();
 const Invites = useInvites();
 const site = useSiteConfig();
+const { starylRelease } = useAppConfig();
 
 useDiscordLinkCard(() => ({
 	accentColor: STARYL_ACCENT_COLOR,

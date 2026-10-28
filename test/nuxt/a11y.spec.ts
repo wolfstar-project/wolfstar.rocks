@@ -1273,6 +1273,7 @@ describe("component accessibility audits", () => {
 					props: {
 						inviteUrl:
 							"https://discord.com/oauth2/authorize?client_id=1489991104672567386",
+						release: { version: "1.0.0", time: Date.parse("2026-10-28T09:25:24Z") },
 					},
 				});
 				const results = await runAxe(component);

@@ -265,6 +265,9 @@
 								"kicker": {
 									"type": "string"
 								},
+								"release": {
+									"type": "string"
+								},
 								"routing_term": {
 									"type": "string"
 								},

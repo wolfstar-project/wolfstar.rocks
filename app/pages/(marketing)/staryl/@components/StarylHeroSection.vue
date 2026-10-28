@@ -29,7 +29,7 @@
 							{{ ts("marketing.staryl.hero.invite") }}
 						</UButton>
 						<UButton
-							to="#staryl-showcase"
+							to="#features"
 							:locale="false"
 							size="xl"
 							color="neutral"

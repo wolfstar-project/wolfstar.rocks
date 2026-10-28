@@ -4,9 +4,11 @@
 
 		<StarylProductProofSection />
 
-		<StarylCommandsSection />
+		<StarylNotificationShowcaseSection />
 
-		<StarylNotificationSection />
+		<StarylSetupSection :invite-url="Invites.Staryl" />
+
+		<StarylCommandsSection />
 
 		<OtherApps :apps="[otherApps.WolfStar]" />
 

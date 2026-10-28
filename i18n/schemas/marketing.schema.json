@@ -184,6 +184,72 @@
 							},
 							"additionalProperties": false
 						},
+						"features": {
+							"type": "object",
+							"properties": {
+								"command_hint": {
+									"type": "string"
+								},
+								"description": {
+									"type": "string"
+								},
+								"eyebrow": {
+									"type": "string"
+								},
+								"live_body": {
+									"type": "string"
+								},
+								"live_title": {
+									"type": "string"
+								},
+								"next": {
+									"type": "string"
+								},
+								"notifications_description": {
+									"type": "string"
+								},
+								"notifications_title": {
+									"type": "string"
+								},
+								"offline_body": {
+									"type": "string"
+								},
+								"offline_message": {
+									"type": "string"
+								},
+								"offline_title": {
+									"type": "string"
+								},
+								"ping_body": {
+									"type": "string"
+								},
+								"ping_role": {
+									"type": "string"
+								},
+								"ping_title": {
+									"type": "string"
+								},
+								"previous": {
+									"type": "string"
+								},
+								"test_body": {
+									"type": "string"
+								},
+								"test_notice": {
+									"type": "string"
+								},
+								"test_notice_label": {
+									"type": "string"
+								},
+								"test_title": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
 						"hero": {
 							"type": "object",
 							"properties": {
@@ -238,12 +304,6 @@
 								"box_art_alt": {
 									"type": "string"
 								},
-								"description": {
-									"type": "string"
-								},
-								"eyebrow": {
-									"type": "string"
-								},
 								"footer": {
 									"type": "string"
 								},
@@ -265,10 +325,10 @@
 								"stream_title": {
 									"type": "string"
 								},
-								"timestamp": {
+								"test_title": {
 									"type": "string"
 								},
-								"title": {
+								"timestamp": {
 									"type": "string"
 								},
 								"watch": {
@@ -311,6 +371,54 @@
 							"type": "object",
 							"properties": {
 								"description": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"setup": {
+							"type": "object",
+							"properties": {
+								"add_body": {
+									"type": "string"
+								},
+								"add_title": {
+									"type": "string"
+								},
+								"eyebrow": {
+									"type": "string"
+								},
+								"index_label": {
+									"type": "string"
+								},
+								"manage_body": {
+									"type": "string"
+								},
+								"manage_title": {
+									"type": "string"
+								},
+								"overview_body": {
+									"type": "string"
+								},
+								"overview_title": {
+									"type": "string"
+								},
+								"pages_count": {
+									"type": "string"
+								},
+								"see_commands": {
+									"type": "string"
+								},
+								"subtitle": {
+									"type": "string"
+								},
+								"test_body": {
+									"type": "string"
+								},
+								"test_title": {
 									"type": "string"
 								},
 								"title": {

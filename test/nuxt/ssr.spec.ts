@@ -2,7 +2,8 @@ import {
 	WolfstarCommandsSection,
 	WolfstarCommandsShowcase,
 	StarylCommandsShowcase,
-	StarylNotificationSection,
+	StarylNotificationShowcase,
+	StarylSetupSection,
 	DiscordChannelHeader,
 	DiscordChannelWelcome,
 	DiscordChat,
@@ -1677,22 +1678,58 @@ describe("component SSR rendering", () => {
 		});
 	});
 
-	describe("StarylNotificationSection", () => {
-		it("shows the live notification Staryl sends, as its components", async () => {
-			const wrapper = await mountSuspended(StarylNotificationSection);
+	describe("StarylNotificationShowcase", () => {
+		it("shows each kind of notification Staryl sends", async () => {
+			const wrapper = await mountSuspended(StarylNotificationShowcase);
+			const pick = async (id: string) => {
+				await wrapper.find(`#staryl-notification-${id}`).setValue(true);
+				await wrapper.vm.$nextTick();
+			};
 
+			// Live: the components the bot builds, with a live Watch Stream button.
 			const container = wrapper.find(".discord-v2-container");
 			expect(container.text()).toContain("Stella is now live on Twitch!");
 			expect(container.find("a").attributes("href")).toBe("https://twitch.tv/stella");
 			expect(container.text()).toContain("Game");
-			expect(container.find(".discord-v2-thumbnail").exists()).toBe(true);
 			expect(container.find(".discord-v2-media-gallery img").attributes("alt")).toBeTruthy();
 			expect(container.text()).toContain("Staryl Twitch Notifications • October 26, 2026");
-			expect(wrapper.find(".discord-action-row").text()).toContain("Watch Stream");
-			// A live link button, not the dimmed one a demo's spare buttons are.
 			expect(wrapper.find(".discord-action-row .discord-button").classes()).not.toContain(
 				"discord-button-disabled",
 			);
+
+			await pick("ping");
+			expect(wrapper.find(".discord-mention").text()).toContain("Stream Pings");
+
+			// Offline: plain text, as `buildOfflineMessage()` writes it.
+			await pick("offline");
+			expect(wrapper.find(".discord-v2-container").exists()).toBe(false);
+			expect(wrapper.find(".staryl-showcase-feed").text()).toContain(
+				"Stella's stream is over, thanks for watching! | October 26, 2026",
+			);
+			expect(wrapper.text()).toContain("/subscriptions twitch add type:Stream Offline");
+
+			// A test on a streamer who is not live: the notice, the placeholder title, no preview.
+			await pick("test");
+			expect(wrapper.find(".staryl-showcase-feed").text()).toContain("Test notification");
+			expect(wrapper.find(".discord-v2-container a").text()).toBe("Test notification");
+			expect(wrapper.find(".discord-v2-media-gallery").exists()).toBe(false);
+		});
+	});
+
+	describe("StarylSetupSection", () => {
+		it("lists the pages of the /setup menu", async () => {
+			const wrapper = await mountSuspended(StarylSetupSection, {
+				props: { inviteUrl: "https://discord.com/oauth2/authorize?client_id=1" },
+			});
+
+			const titles = wrapper.findAll(".staryl-setup-row h3").map((title) => title.text());
+			expect(titles).toStrictEqual([
+				"Overview",
+				"Add a notification",
+				"Manage notifications",
+				"Test notifications",
+			]);
+			expect(wrapper.find("code").text()).toBe("/setup");
 		});
 	});
 

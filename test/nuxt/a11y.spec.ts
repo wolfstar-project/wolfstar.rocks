@@ -79,7 +79,8 @@ import {
 	StarylCommandsShowcase,
 	StarylCtaSection,
 	StarylHeroSection,
-	StarylNotificationSection,
+	StarylNotificationShowcase,
+	StarylSetupSection,
 	StarylProductProofSection,
 	// #endregion
 } from "#components";
@@ -1291,9 +1292,19 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("StarylNotificationSection", () => {
+		describe("StarylSetupSection", () => {
 			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(StarylNotificationSection);
+				const component = await mountSuspended(StarylSetupSection, {
+					props: { inviteUrl: "https://discord.com/oauth2/authorize?client_id=1" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("StarylNotificationShowcase", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(StarylNotificationShowcase);
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
 			});

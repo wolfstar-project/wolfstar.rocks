@@ -60,6 +60,28 @@
 				"subtitle": "Invita Staryl ora, oppure entra nel server di supporto se prima vuoi fare una domanda.",
 				"title": "Porta i tuoi streamer nel tuo server."
 			},
+			"features": {
+				"command_hint": "Con {command}",
+				"description": "Un avviso di live con titolo, gioco e anteprima, un messaggio di fine live scritto da te e una prova quando vuoi controllare il canale.",
+				"eyebrow": "Cosa arriva nel canale",
+				"live_body": "Il titolo della live porta al canale, accanto al gioco e alla sua copertina, sopra l'anteprima della live e un pulsante per guardarla.",
+				"live_title": "Inizio della live",
+				"next": "Notifica successiva",
+				"notifications_description": "Ogni iscrizione manda l'inizio o la fine della live di uno streamer in un canale. Scegli un tipo per vedere cosa arriva.",
+				"notifications_title": "Notifiche di Twitch",
+				"offline_body": "Un'iscrizione di fine live pubblica il messaggio che hai scritto, con l'ora in cui la live è finita. Per queste iscrizioni il messaggio è obbligatorio.",
+				"offline_message": "La live di Stella è finita, grazie per averla guardata!",
+				"offline_title": "Fine della live",
+				"ping_body": "Dai un messaggio all'iscrizione e compare sopra la notifica. Se ci menzioni un ruolo, Staryl lo pinga, purché il ruolo si possa menzionare.",
+				"ping_role": "Stream Pings",
+				"ping_title": "Menziona un ruolo",
+				"previous": "Notifica precedente",
+				"test_body": "Una prova fa lo stesso percorso di una notifica vera, così un permesso mancante salta fuori ora e non alla prossima live. È segnata come prova.",
+				"test_notice": "è un'anteprima chiesta da un amministratore del server, non un vero aggiornamento della live.",
+				"test_notice_label": "Notifica di prova",
+				"test_title": "Provala",
+				"title": "Un messaggio per ogni live, nel tuo canale."
+			},
 			"hero": {
 				"brief_aria": "Riepilogo delle funzioni di Staryl",
 				"brief_label": "Cosa ottiene il tuo server",
@@ -78,8 +100,6 @@
 			},
 			"notification": {
 				"box_art_alt": "",
-				"description": "Quando uno streamer va in live, Staryl pubblica il titolo, il gioco e l'anteprima della live, con un pulsante per guardarla. Il messaggio che hai impostato per l'iscrizione, se c'è, compare sopra.",
-				"eyebrow": "Una notifica inviata",
 				"footer": "Staryl Twitch Notifications",
 				"game": "Software and Game Development",
 				"game_label": "Gioco",
@@ -87,8 +107,8 @@
 				"message": "Stella è in live, passate a salutare!",
 				"preview_alt": "L'anteprima della live: un editor di codice e la webcam dello streamer.",
 				"stream_title": "Bug fixing in diretta, venite a fare un salto",
+				"test_title": "Notifica di prova",
 				"timestamp": "Oggi alle 17:48",
-				"title": "Ciò che arriva nel tuo canale.",
 				"watch": "Guarda la live"
 			},
 			"proof": {
@@ -104,6 +124,22 @@
 			"seo": {
 				"description": "Staryl è un'app Discord open source del WolfStar Project che pubblica le notifiche di live iniziata e terminata su Twitch nel canale che scegli.",
 				"title": "Staryl"
+			},
+			"setup": {
+				"add_body": "Lo streamer, il canale, inizio o fine della live e un messaggio facoltativo, obbligatorio per le notifiche di fine live.",
+				"add_title": "Aggiungi una notifica",
+				"eyebrow": "Nessuna dashboard",
+				"index_label": "Il menu /setup",
+				"manage_body": "Rivedi le notifiche del server, rimuovi quelle che scegli o azzerale tutte.",
+				"manage_title": "Gestisci le notifiche",
+				"overview_body": "Quante notifiche ha il server, e dove andare dopo.",
+				"overview_title": "Panoramica",
+				"pages_count": "4 pagine",
+				"see_commands": "Guarda i comandi",
+				"subtitle": "Esegui {command} e Staryl apre il suo menu nel canale, per l'amministratore che l'ha aperto. Quattro pagine coprono tutto quello che serve a un'iscrizione.",
+				"test_body": "Manda un'anteprima per il vero percorso di consegna, per controllare il canale e i permessi del bot.",
+				"test_title": "Prova le notifiche",
+				"title": "Si configura da Discord."
 			},
 			"showcase": {
 				"add_description": "Aggiungi una nuova iscrizione Twitch per uno streamer.",

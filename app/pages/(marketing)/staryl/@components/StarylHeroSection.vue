@@ -41,8 +41,19 @@
 						</UButton>
 					</div>
 
-					<!-- No release line: the site's own build is not Staryl's version. -->
+					<!-- Staryl's own version, not the site's build. -->
 					<p class="mt-6 text-sm text-muted">
+						<template v-if="release">
+							{{ ts("marketing.staryl.hero.release", { version: release.version }) }}
+							·
+							<NuxtTime
+								:datetime="release.time"
+								month="short"
+								day="numeric"
+								year="numeric"
+							/>
+							·
+						</template>
 						<NuxtLink
 							to="https://github.com/wolfstar-project/staryl"
 							target="_blank"
@@ -100,8 +111,10 @@
 </template>
 
 <script setup lang="ts">
-const { inviteUrl } = defineProps<{
+const { inviteUrl, release = null } = defineProps<{
 	inviteUrl: string;
+	/** Left out when GitHub could not be reached at build time. */
+	release?: StarylRelease | null;
 }>();
 
 const { ts } = useI18n();

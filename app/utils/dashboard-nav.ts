@@ -12,8 +12,6 @@ export interface DashboardNavItem {
 	/** Section slug the item opens; `""` is the overview. */
 	slug: string;
 	labelKey: string;
-	/** Shorter label for places with little room, such as the phone tab bar. */
-	shortLabelKey?: string;
 	icon: string;
 	group: DashboardNavGroup;
 	/**
@@ -49,7 +47,6 @@ export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
 		icon: "ic:round-shield",
 		labelKey: "dashboard.nav.automod",
 		moduleKey: "modulesAutomod",
-		shortLabelKey: "dashboard.nav.automod_short",
 		slug: "automod",
 	},
 	{

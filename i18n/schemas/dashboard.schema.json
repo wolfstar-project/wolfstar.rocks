@@ -166,9 +166,6 @@
 						"automod": {
 							"type": "string"
 						},
-						"automod_short": {
-							"type": "string"
-						},
 						"autopurge": {
 							"type": "string"
 						},
@@ -223,12 +220,6 @@
 					},
 					"additionalProperties": false
 				},
-				"nav_menu": {
-					"type": "string"
-				},
-				"nav_menu_description": {
-					"type": "string"
-				},
 				"nav_module_off": {
 					"type": "string"
 				},
@@ -241,14 +232,29 @@
 				"nav_recent": {
 					"type": "string"
 				},
-				"nav_sections_aria": {
-					"type": "string"
-				},
 				"nav_unpin": {
 					"type": "string"
 				},
-				"nav_you": {
-					"type": "string"
+				"phone": {
+					"type": "object",
+					"properties": {
+						"back": {
+							"type": "string"
+						},
+						"context_aria": {
+							"type": "string"
+						},
+						"module_off": {
+							"type": "string"
+						},
+						"module_on": {
+							"type": "string"
+						},
+						"modules_on": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
 				},
 				"picker": {
 					"type": "object",

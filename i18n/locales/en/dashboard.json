@@ -54,7 +54,6 @@
 			"autodelete": "Auto-Delete",
 			"automessage": "Auto-Message",
 			"automod": "Auto Moderation",
-			"automod_short": "AutoMod",
 			"autopurge": "Auto-Purge",
 			"channels": "Events",
 			"commands": "Commands",
@@ -73,15 +72,18 @@
 			"modules": "Modules",
 			"resources": "Resources"
 		},
-		"nav_menu": "Servers and sections",
-		"nav_menu_description": "Switch server or open a section of this server.",
 		"nav_module_off": "Module is off",
 		"nav_pin": "Pin {name}",
 		"nav_pinned": "Pinned",
 		"nav_recent": "Recently opened",
-		"nav_sections_aria": "Sections",
 		"nav_unpin": "Unpin {name}",
-		"nav_you": "You",
+		"phone": {
+			"back": "Back to the sections",
+			"context_aria": "Open section",
+			"module_off": "{name} · Off",
+			"module_on": "{name} · On",
+			"modules_on": "{count} of {total} modules on"
+		},
 		"picker": {
 			"empty": "No servers you can manage yet. You need the Manage Server permission on a server to set WolfStar up there.",
 			"error": "Your servers could not be loaded. Check your connection and try again."

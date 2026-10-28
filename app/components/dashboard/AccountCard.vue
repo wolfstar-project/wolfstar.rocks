@@ -121,6 +121,13 @@ function openSettings() {
 	box-shadow: var(--popover-shadow);
 }
 
+/* The phone's list gives the sidebar the whole width the rail leaves: the card spans it. */
+@variant max-sm {
+	.account-card--floating {
+		width: calc(100% - 1rem);
+	}
+}
+
 .account-nameplate {
 	@apply pointer-events-none absolute inset-0;
 }

@@ -63,6 +63,11 @@
 	border: 1px solid var(--home-border-subtle);
 	border-radius: 0.5rem;
 	box-shadow: var(--console-shadow-low, none);
+
+	/* On a phone the cards are rounder, as Discord draws them there. */
+	@media (width < 40rem) {
+		border-radius: 0.75rem;
+	}
 }
 
 /* The small uppercase label that names a group of rows inside a card. */

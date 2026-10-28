@@ -1258,8 +1258,6 @@ describe("component accessibility audits", () => {
 			it("should have no accessibility violations", async () => {
 				const component = await mountSuspended(StarylHeroSection, {
 					props: {
-						buildTime: new Date("2024-06-01T12:00:00Z"),
-						buildVersion: "7.0.0",
 						inviteUrl:
 							"https://discord.com/oauth2/authorize?client_id=1489991104672567386",
 					},

@@ -1,10 +1,6 @@
 <template>
 	<div class="text-base-content">
-		<StarylHeroSection
-			:build-time
-			:build-version="buildInfo.version"
-			:invite-url="Invites.Staryl"
-		/>
+		<StarylHeroSection :invite-url="Invites.Staryl" />
 
 		<StarylProductProofSection />
 
@@ -42,6 +38,4 @@ useDiscordLinkCard(() => ({
 	thumbnailUrl: `${site.url}/avatars/staryl.png`,
 	title: "Staryl",
 }));
-const { buildInfo } = useAppConfig();
-const buildTime = computed(() => new Date(buildInfo.time));
 </script>

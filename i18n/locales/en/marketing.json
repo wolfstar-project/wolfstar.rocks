@@ -65,7 +65,6 @@
 				"brief_label": "What your server gets",
 				"invite": "Invite Staryl",
 				"kicker": "Open-source social notifications",
-				"release": "Release v{version}",
 				"routing_term": "Routing",
 				"routing_value": "One streamer, one channel, one alert type per subscription",
 				"see_work": "See Staryl work",

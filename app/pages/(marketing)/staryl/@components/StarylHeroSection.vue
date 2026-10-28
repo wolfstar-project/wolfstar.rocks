@@ -41,15 +41,8 @@
 						</UButton>
 					</div>
 
+					<!-- No release line: the site's own build is not Staryl's version. -->
 					<p class="mt-6 text-sm text-muted">
-						{{ ts("marketing.staryl.hero.release", { version: buildVersion }) }} ·
-						<NuxtTime
-							:datetime="buildTime"
-							month="short"
-							day="numeric"
-							year="numeric"
-						/>
-						·
 						<NuxtLink
 							to="https://github.com/wolfstar-project/staryl"
 							target="_blank"
@@ -107,9 +100,7 @@
 </template>
 
 <script setup lang="ts">
-const { buildTime, buildVersion, inviteUrl } = defineProps<{
-	buildTime: Date;
-	buildVersion: string;
+const { inviteUrl } = defineProps<{
 	inviteUrl: string;
 }>();
 

@@ -11,7 +11,7 @@ function isHyperdrive(value: unknown): value is { connectionString: string } {
 	);
 }
 
-function hyperdriveConnectionString(cloudflare: unknown): string {
+function hyperdriveConnectionString(cloudflare: unknown): string | undefined {
 	const env: unknown =
 		typeof cloudflare === "object" && cloudflare !== null && "env" in cloudflare
 			? cloudflare.env
@@ -20,12 +20,7 @@ function hyperdriveConnectionString(cloudflare: unknown): string {
 		typeof env === "object" && env !== null
 			? Reflect.get(env, CLOUDFLARE_BINDINGS.database)
 			: undefined;
-	if (!isHyperdrive(binding)) {
-		throw new Error(
-			`[database] the Worker has no Hyperdrive binding named ${CLOUDFLARE_BINDINGS.database}`,
-		);
-	}
-	return binding.connectionString;
+	return isHyperdrive(binding) ? binding.connectionString : undefined;
 }
 
 /**
@@ -34,14 +29,19 @@ function hyperdriveConnectionString(cloudflare: unknown): string {
  * query. Idle connections are never timed out (`0`), since that timer would
  * fire during another request; the runtime closes the request's sockets when
  * the request, and what it hands to `waitUntil`, is done.
+ *
+ * A request made inside another one with the global `$fetch`, as the
+ * translations and the icons are during server rendering, carries no bindings
+ * and gets no client. The hook must not throw for it: Nitro would skip the
+ * `request` hooks after this one, evlog's among them, and the request would
+ * fail for want of a logger.
  */
 export default defineNitroPlugin((nitroApp) => {
 	if (runtime !== "workerd") return;
 
 	nitroApp.hooks.hook("request", (event) => {
-		event.context.database = createDatabase(
-			hyperdriveConnectionString(event.context.cloudflare),
-			0,
-		);
+		const url = hyperdriveConnectionString(event.context.cloudflare);
+		if (url === undefined) return;
+		event.context.database = createDatabase(url, 0);
 	});
 });

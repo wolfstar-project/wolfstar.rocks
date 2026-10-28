@@ -1,6 +1,7 @@
 import { DashboardContextCard } from "#components";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it } from "vitest";
+import { nextTick } from "vue";
 import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 import { createMockGuildData } from "~~/test/mocks/guildData";
 
@@ -49,6 +50,23 @@ describe("DashboardContextCard", () => {
 
 		// Back to what is saved: nothing is left staged.
 		await toggle.trigger("click");
+		expect(useGuildSettingsChanges().guildSettingsChanges.value).toBeUndefined();
+	});
+
+	it("holds the switch back until the saved settings are in", async () => {
+		useActiveGuild().selectGuild(GUILD_ID);
+		useActiveGuild().setSection("automod");
+		const wrapper = await mountSuspended(DashboardContextCard, { route: "/app?screen=page" });
+
+		expect(wrapper.find('[role="switch"]').exists()).toBe(false);
+		expect(wrapper.text()).not.toMatch(/· O(n|ff)/);
+
+		useGuildSettings().setGuildSettings(
+			createMockGuildData(GUILD_ID, { modulesAutomod: true }),
+		);
+		await nextTick();
+
+		expect(wrapper.find('[role="switch"]').attributes("aria-checked")).toBe("true");
 		expect(useGuildSettingsChanges().guildSettingsChanges.value).toBeUndefined();
 	});
 

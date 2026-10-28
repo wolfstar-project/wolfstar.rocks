@@ -10,13 +10,13 @@
 			<p class="truncate text-xs leading-tight text-muted">{{ summary }}</p>
 		</div>
 		<USwitch
-			v-if="moduleKey"
+			v-if="moduleKey && isLoaded"
 			:model-value="moduleOn"
 			:aria-label="ts('guild_settings.modules.toggle_aria', { title: label })"
 			@update:model-value="setModule"
 		/>
 		<UButton
-			v-else
+			v-else-if="!moduleKey"
 			data-testid="context-card-list"
 			color="neutral"
 			variant="soft"
@@ -45,11 +45,15 @@ const label = computed(() => ts(item.value?.labelKey ?? "dashboard.nav.overview"
 
 // The switch of the section's feature, the one its banner shows, when it has one.
 const moduleKey = computed(() => item.value?.moduleKey ?? null);
+// Until the saved settings are in, the switch and the summary would claim a
+// module is off, and a flip would stage a change against nothing.
+const isLoaded = computed(() => Object.keys(originalGuildSettings.value ?? {}).length > 0);
 const moduleOn = computed(() =>
 	moduleKey.value ? guildSettings.value?.[moduleKey.value] === true : false,
 );
 
 const summary = computed(() => {
+	if (!isLoaded.value) return label.value;
 	if (moduleKey.value) {
 		return moduleOn.value
 			? ts("dashboard.phone.module_on", { name: label.value })
@@ -67,7 +71,7 @@ const summary = computed(() => {
 // Staged like the banner's switch: flipping it back to what is saved leaves nothing staged.
 function setModule(on: boolean) {
 	const key = moduleKey.value;
-	if (!key) return;
+	if (!key || !isLoaded.value) return;
 	if (originalGuildSettings.value?.[key] === on) {
 		removeChange(key);
 		return;

@@ -6,6 +6,7 @@ import {
 	patchAutoModerationRule,
 	removeAutoModerationRule,
 } from "#server/database/settings/automod/storage";
+import { notifyGuildSettingsUpdate } from "#server/database/settings/notify";
 import { createKeyedLock } from "#server/utils/keyed-lock";
 import {
 	getDefaultAutoModerationRule,
@@ -87,7 +88,10 @@ export async function writeAutoModerationRules<T>(
 					.affectedCount()
 					.build(),
 			);
-			return callback(await fetchAutoModerationRules(tx.orm, guildId), tx.orm);
+			const result = await callback(await fetchAutoModerationRules(tx.orm, guildId), tx.orm);
+			// The bot caches the rules: it reloads them on this, once committed.
+			await notifyGuildSettingsUpdate(tx, guildId, ["autoModerationRules"]);
+			return result;
 		});
 	});
 }

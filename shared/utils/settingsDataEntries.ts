@@ -437,11 +437,12 @@ export const ConfigurableReportToggles: SettingEntry<ToggleSettingKey>[] = [
 // #region Honeypot
 
 /**
- * The honeypot settings only `/honeypot` in Discord changes: the bot posts,
- * rewrites or takes down the warning in the channel as they change, and checks
- * its permissions there. The dashboard shows them.
+ * The settings that make the trap: its channel (set means on), what it does to
+ * who it catches, and the warning. When the dashboard writes them the bot is
+ * told, and posts, rewrites or takes down the warning in the channel to match;
+ * the server checks the bot's permissions there first.
  */
-export const BotManagedHoneypotSettings = {
+export const HoneypotTrapSettings = {
 	honeypotAction: {
 		key: "honeypotAction",
 		name: "Honeypot Action",

@@ -13,6 +13,7 @@ import {
 	removeAutoMessage,
 	upsertAutoMessage,
 } from "#server/database/settings/messages/storage";
+import { notifyGuildSettingsUpdate } from "#server/database/settings/notify";
 import { createKeyedLock } from "#server/utils/keyed-lock";
 import {
 	MAXIMUM_AUTO_DELETES,
@@ -85,7 +86,10 @@ async function writeAutoChannels<T>(
 					.affectedCount()
 					.build(),
 			);
-			return callback(tx.orm);
+			const result = await callback(tx.orm);
+			// The bot caches these channels: it reloads them on this, once committed.
+			await notifyGuildSettingsUpdate(tx, guildId, [kind]);
+			return result;
 		});
 	});
 }

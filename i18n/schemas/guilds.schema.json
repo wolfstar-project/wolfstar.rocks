@@ -2041,9 +2041,6 @@
 							},
 							"additionalProperties": false
 						},
-						"active": {
-							"type": "string"
-						},
 						"behaviour_title": {
 							"type": "string"
 						},
@@ -2065,13 +2062,28 @@
 						"copy_setup": {
 							"type": "string"
 						},
+						"errors": {
+							"type": "object",
+							"properties": {
+								"same_channel": {
+									"type": "string"
+								},
+								"unknown_channel": {
+									"type": "string"
+								},
+								"trap_permissions": {
+									"type": "string"
+								},
+								"log_permissions": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
 						"form_aria": {
 							"type": "string"
 						},
 						"not_reported": {
-							"type": "string"
-						},
-						"not_set_up": {
 							"type": "string"
 						},
 						"off_body": {
@@ -2081,6 +2093,12 @@
 							"type": "string"
 						},
 						"off_title": {
+							"type": "string"
+						},
+						"pick_channel": {
+							"type": "string"
+						},
+						"pick_channel_hint": {
 							"type": "string"
 						},
 						"subtitle": {

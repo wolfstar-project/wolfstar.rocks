@@ -115,6 +115,23 @@ describe("resolveGuildIconSrc", () => {
 });
 
 describe("guild settings save failure feedback", () => {
+	it("says what to fix when the server refused the honeypot's channel", () => {
+		const t = (key: string) => key;
+		const refused = { data: { code: "honeypot-trap-permissions" } };
+
+		expect(guildSettingsSaveFailureToast(t, refused).description).toBe(
+			"guild_settings.honeypot.errors.trap_permissions",
+		);
+		// Nested as ofetch wraps an h3 error body.
+		expect(
+			guildSettingsSaveFailureToast(t, { data: { data: { code: "honeypot-same-channel" } } })
+				.description,
+		).toBe("guild_settings.honeypot.errors.same_channel");
+		expect(guildSettingsSaveFailureToast(t, new Error("network")).description).toBe(
+			"dashboard.update_failed_why dashboard.update_failed_fix",
+		);
+	});
+
 	it("builds a localized error toast without clearing staged edits", () => {
 		const stagedChanges: Record<string, unknown> = { prefix: "!" };
 		const toasts: Array<ReturnType<typeof guildSettingsSaveFailureToast>> = [];

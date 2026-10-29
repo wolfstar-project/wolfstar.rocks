@@ -33,6 +33,7 @@
 
 <script setup lang="ts">
 import type { DeepReadonly } from "@sapphire/utilities";
+import type { ChannelType } from "discord-api-types/v10";
 
 const {
 	label,
@@ -45,6 +46,7 @@ const {
 	dialogTitle,
 	searchPlaceholder,
 	countLabel,
+	channelTypes,
 } = defineProps<{
 	/** The label of the field */
 	label: string;
@@ -68,6 +70,8 @@ const {
 	countLabel?: (count: number) => string;
 	/** Text shown while nothing is selected */
 	emptyLabel?: string;
+	/** The kinds of channel to offer, by default the ones WolfStar can post in. */
+	channelTypes?: readonly ChannelType[];
 }>();
 
 const emit = defineEmits<{
@@ -75,5 +79,5 @@ const emit = defineEmits<{
 	"change": [value: string[]];
 }>();
 
-const options = computed(() => channelOptions(guild));
+const options = computed(() => channelOptions(guild, channelTypes));
 </script>

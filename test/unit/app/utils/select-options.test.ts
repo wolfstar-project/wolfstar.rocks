@@ -49,6 +49,20 @@ describe("channelOptions", () => {
 	it("is empty while the guild has not loaded", () => {
 		expect(channelOptions(undefined)).toStrictEqual([]);
 	});
+
+	it("offers the kinds of channel it is asked for", () => {
+		const voice = channelOptions(
+			guild({
+				channels: [
+					{ id: "1", name: "Staff", parentId: null, rawPosition: 2, type: 4 },
+					{ id: "3", name: "mod-log", parentId: "1", rawPosition: 5, type: 0 },
+					{ id: "7", name: "Voice", parentId: "1", rawPosition: 0, type: 2 },
+				],
+			}),
+			[0, 2],
+		);
+		expect(voice.map((option) => option.label)).toStrictEqual(["Voice", "mod-log"]);
+	});
 });
 
 describe("roleOptions", () => {

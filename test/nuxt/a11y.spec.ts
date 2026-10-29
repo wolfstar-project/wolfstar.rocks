@@ -53,6 +53,7 @@ import {
 	GuildAuditChanges,
 	GuildAutomodDurationInput,
 	GuildCommandsDiscordPermissions,
+	GuildCommandsRuleEditor,
 	GuildCommandsRules,
 	GuildLogsCaseDetail,
 	GuildMemberPicker,
@@ -832,6 +833,52 @@ describe("component accessibility audits", () => {
 			const component = await mountSuspended(GuildCommandsRules, { props: { commands: [] } });
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildCommandsRuleEditor", () => {
+		const GUILD_ID = "123456789012345678";
+
+		it("should have no accessibility violations with the editor open", async () => {
+			registerEndpoint(`/api/guilds/${GUILD_ID}/command-rules/archive`, {
+				method: "GET",
+				handler: () => ({
+					command: "archive",
+					enabled: true,
+					rule: {
+						command: "archive",
+						allowedChannels: ["333333333333333333"],
+						ignoredChannels: [],
+						allowedRoles: [],
+						ignoredRoles: ["300000000000000001"],
+						allowedUsers: ["200000000000000001"],
+						ignoredUsers: [],
+					},
+					revision: 1,
+				}),
+			});
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+			const component = await mountSuspended(GuildCommandsRuleEditor, {
+				props: {
+					open: true,
+					enabled: true,
+					command: {
+						name: "archive",
+						label: "archive",
+						category: "Moderation",
+						description: "Save and read the recent messages of members.",
+					},
+				},
+				attachTo: document.body,
+			});
+			await vi.waitFor(() =>
+				expect(document.querySelector('[role="dialog"] form')).not.toBeNull(),
+			);
+			const panel = document.querySelector('[role="dialog"]');
+			const results = await runAxe(component, { include: panel ? [panel] : [] });
+			expect(results.violations).toEqual([]);
+			component.unmount();
 		});
 	});
 

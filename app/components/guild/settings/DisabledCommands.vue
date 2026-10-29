@@ -67,6 +67,20 @@
 										{{ command.description }}
 									</p>
 								</div>
+								<UButton
+									icon="ic:round-tune"
+									color="neutral"
+									variant="ghost"
+									size="sm"
+									square
+									aria-haspopup="dialog"
+									:aria-label="
+										ts('guild_settings.command_rules.editor.open_aria', {
+											name: command.label,
+										})
+									"
+									@click="openEditor(command, $event)"
+								/>
 								<button
 									v-if="!isNullOrUndefined(getCommand(command.name))"
 									type="button"
@@ -162,11 +176,20 @@
 			/>
 		</GuildSettingsForm>
 	</section>
+
+	<GuildCommandsRuleEditor
+		v-model:open="editorOpen"
+		:command="editedCommand"
+		:enabled="editedCommand ? (getCommand(editedCommand.name)?.isEnabled ?? true) : true"
+		:opener="editorOpener"
+		@saved="onRuleSaved"
+	/>
 </template>
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
 import type { DisableCommands } from "#shared/types";
+import type { CommandRuleSaved } from "#shared/utils/command-rules";
 import type { FormErrorEvent } from "@nuxt/ui";
 import type * as v from "valibot";
 import type { DisableableCommand } from "~/utils/command-settings";
@@ -185,7 +208,8 @@ const { ts } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
 const toast = useToast();
 const { guildData } = useGuildData();
-const { guildSettings } = useGuildSettings();
+const { activeGuildId } = useActiveGuild();
+const { guildSettings, originalGuildSettings, setGuildSettings } = useGuildSettings();
 
 const {
 	mapToGuildData: mapChannelsToGuildData,
@@ -195,6 +219,10 @@ const {
 } = useSettingsForm({ many: ConfigurableCommandChannels.map((entry) => entry.key) });
 
 const expandedCategory = ref<string | undefined>(undefined);
+
+const editorOpen = ref(false);
+const editedCommand = ref<DisableableCommand | null>(null);
+const editorOpener = ref<HTMLElement | null>(null);
 
 // One entry per command: the bot lists each subcommand on its own, but the
 // settings turn off a whole command, by the name in `command`.
@@ -291,6 +319,41 @@ function resetCategory(category: string) {
 		icon: "i-heroicons-arrow-path",
 		title: ts("guild_settings.commands.category_reset"),
 	});
+}
+
+function openEditor(command: DisableableCommand, event: MouseEvent) {
+	editedCommand.value = command;
+	editorOpener.value = event.currentTarget instanceof HTMLElement ? event.currentTarget : null;
+	editorOpen.value = true;
+}
+
+/**
+ * Takes in what the editor saved. The form rebases on the stored settings
+ * whenever they change, so the tiles are set to them first, and the toggles of
+ * other tiles not saved yet are made again after, to stay staged.
+ */
+function onRuleSaved(saved: CommandRuleSaved, guildId: string) {
+	const current = originalGuildSettings.value;
+	if (!current || guildId !== activeGuildId.value) return;
+
+	const staged = Object.values(state)
+		.filter(
+			(command) =>
+				command.name !== saved.command &&
+				command.isEnabled === current.commandsDisabled.includes(command.name),
+		)
+		.map((command) => [command.name, command.isEnabled] as const);
+
+	Object.assign(state, createDefaultState(disableableCommands.value, saved.commandsDisabled));
+	setGuildSettings(
+		{
+			...current,
+			commandsDisabled: saved.commandsDisabled,
+			commandsRestrictions: saved.commandsRestrictions,
+		},
+		guildId,
+	);
+	for (const [name, isEnabled] of staged) toggleCommand(name, isEnabled);
 }
 
 async function onError(event: FormErrorEvent) {

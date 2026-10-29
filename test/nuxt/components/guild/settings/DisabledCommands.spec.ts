@@ -1,6 +1,7 @@
 import type { GuildData } from "#server/database";
 import type { DOMWrapper } from "@vue/test-utils";
-import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
+import type { H3Event } from "h3";
+import { mockNuxtImport, mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import DisabledCommands from "~/components/guild/settings/DisabledCommands.vue";
 import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
@@ -41,6 +42,57 @@ mockNuxtImport("useToast", () => () => ({
 mockNuxtImport("useGuildData", () => () => ({
 	guildData: ref(createMockOauthFlattenedGuild({ id: "123456789012345678" })),
 }));
+
+// h3's `readBody` needs Node's `Buffer`, which the browser runner lacks; the
+// stub hands the handler the web request, whose body reads as it is.
+let lastBody: Record<string, unknown> | undefined;
+async function readSentBody(event: H3Event): Promise<Record<string, unknown>> {
+	lastBody = (await event.web?.request?.json()) as Record<string, unknown>;
+	return lastBody;
+}
+function lastPutBody(): Record<string, unknown> | undefined {
+	return lastBody;
+}
+
+registerEndpoint("/api/guilds/123456789012345678/command-rules/ban", {
+	method: "GET",
+	handler: () => ({
+		command: "ban",
+		enabled: false,
+		rule: {
+			command: "ban",
+			allowedChannels: [],
+			ignoredChannels: [],
+			allowedRoles: [],
+			ignoredRoles: [],
+			allowedUsers: [],
+			ignoredUsers: [],
+		},
+		revision: 3,
+	}),
+});
+registerEndpoint("/api/guilds/123456789012345678/command-rules/ban", {
+	method: "PUT",
+	handler: async (event) => {
+		const body = await readSentBody(event);
+		return {
+			command: "ban",
+			enabled: body.enabled,
+			rule: {
+				command: "ban",
+				allowedChannels: [],
+				ignoredChannels: [],
+				allowedRoles: [],
+				ignoredRoles: [],
+				allowedUsers: [],
+				ignoredUsers: [],
+			},
+			revision: 4,
+			commandsDisabled: body.enabled ? [] : ["ban"],
+			commandsRestrictions: [],
+		};
+	},
+});
 
 // Mock commands data with multiple categories
 const mockCommands: FlattenedCommand[] = [
@@ -440,5 +492,49 @@ describe("disabledCommands", () => {
 		// Assert that setGuildSettingsChanges was NOT called during initialization
 		// (It should only be called when the user actually changes something)
 		expect(mockSetGuildSettingsChanges).not.toHaveBeenCalled();
+	});
+
+	it("edits a command's rules from its tile and keeps both switches in step", async () => {
+		useActiveGuild().selectGuild("123456789012345678");
+		const wrapper = await mountSuspended(DisabledCommands, {
+			props: { commands: mockCommands },
+			attachTo: document.body,
+		});
+		await wrapper
+			.findAll("button")
+			.find((btn) => btn.text().includes("Moderation"))!
+			.trigger("click");
+		// A toggle staged on another tile, not saved yet.
+		await wrapper.get('[role="switch"][aria-label="kick"]').trigger("click");
+
+		const opener = wrapper.get('button[aria-label="Edit the rules of ban"]');
+		expect(opener.attributes("aria-haspopup")).toBe("dialog");
+		await opener.trigger("click");
+		await vi.waitFor(() =>
+			expect(document.querySelector('[role="dialog"] form')).not.toBeNull(),
+		);
+		const modalSwitch = document.querySelector<HTMLElement>('[role="dialog"] [role="switch"]');
+		expect(modalSwitch?.getAttribute("aria-checked")).toBe("false");
+
+		modalSwitch?.click();
+		await nextTick();
+		[...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button')]
+			.find((button) => button.textContent?.includes("Save rules"))
+			?.click();
+
+		await vi.waitFor(() => expect(readCommandEnabled(wrapper, "ban")).toBe(true));
+		expect(lastPutBody()).toMatchObject({ revision: 3, enabled: true });
+		expect(mockSetGuildSettings).toHaveBeenCalledWith(
+			expect.objectContaining({ commandsDisabled: [], commandsRestrictions: [] }),
+			"123456789012345678",
+		);
+		expect(readCommandEnabled(wrapper, "kick")).toBe(false);
+		await vi.waitFor(() =>
+			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+				commandsDisabled: ["kick"],
+			}),
+		);
+		await vi.waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull());
+		wrapper.unmount();
 	});
 });

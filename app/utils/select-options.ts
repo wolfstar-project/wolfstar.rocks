@@ -7,10 +7,12 @@ type SelectGuild =
 	| undefined;
 
 /**
- * The channels WolfStar can post in, in the order Discord lists them and
- * grouped under their category.
+ * The channels of `types`, by default the ones WolfStar can post in, in the
+ * order Discord lists them and grouped under their category.
  */
-export function channelOptions(guild: SelectGuild): SelectOption[] {
+export function channelOptions(guild: SelectGuild, types?: readonly ChannelType[]): SelectOption[] {
+	// Read when called, not at module scope: see the `discord-api-types` SSR note in CLAUDE.md.
+	const wanted = types ?? [ChannelType.GuildText, ChannelType.GuildAnnouncement];
 	const channels = guild?.channels ?? [];
 	const categories = new Map(
 		channels
@@ -21,11 +23,7 @@ export function channelOptions(guild: SelectGuild): SelectOption[] {
 		parentId === null ? -1 : (categories.get(parentId)?.rawPosition ?? -1);
 
 	return channels
-		.filter(
-			(channel) =>
-				channel.type === ChannelType.GuildText ||
-				channel.type === ChannelType.GuildAnnouncement,
-		)
+		.filter((channel) => wanted.includes(channel.type))
 		.toSorted(
 			(a, b) =>
 				categoryPosition(a.parentId) - categoryPosition(b.parentId) ||

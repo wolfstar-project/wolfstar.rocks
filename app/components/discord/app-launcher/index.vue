@@ -25,8 +25,8 @@
 			:aria-label="
 				isBelowMediumScreen
 					? sheetSnap === 'full'
-						? 'Collapse Apps sheet'
-						: 'Expand Apps sheet'
+						? ts('discord.launcher.collapse')
+						: ts('discord.launcher.expand')
 					: undefined
 			"
 			:aria-expanded="isBelowMediumScreen ? sheetSnap === 'full' : undefined"
@@ -49,8 +49,8 @@
 						v-model="searchQuery"
 						type="search"
 						class="discord-app-launcher-search-input"
-						placeholder="Search Apps & Commands"
-						aria-label="Search Apps & Commands"
+						:placeholder="ts('discord.launcher.search')"
+						:aria-label="ts('discord.launcher.search')"
 						autocomplete="off"
 						spellcheck="false"
 						@keydown.enter.prevent="onSearchEnter"
@@ -77,7 +77,7 @@
 									id="discord-app-launcher-commands-heading"
 									class="discord-app-launcher-section-title"
 								>
-									Commands
+									{{ ts("discord.launcher.commands") }}
 								</h2>
 							</div>
 							<div class="discord-app-launcher-server-list">
@@ -108,7 +108,7 @@
 									id="discord-app-launcher-recents-heading"
 									class="discord-app-launcher-section-title"
 								>
-									Recents
+									{{ ts("discord.launcher.views.recents") }}
 									<UIcon
 										name="ph:caret-down-bold"
 										class="discord-app-launcher-section-caret"
@@ -123,11 +123,11 @@
 								>
 									<span
 										class="discord-app-launcher-view-more-desktop max-md:hidden"
-										>View More</span
+										>{{ ts("discord.launcher.view_more") }}</span
 									>
 									<span
 										class="discord-app-launcher-view-more-mobile hidden max-md:inline"
-										>View All</span
+										>{{ ts("discord.launcher.view_all") }}</span
 									>
 								</button>
 							</div>
@@ -250,11 +250,11 @@
 								>
 									<span
 										class="discord-app-launcher-server-title-desktop max-md:hidden"
-										>Apps in this Server</span
+										>{{ ts("discord.launcher.views.server-apps") }}</span
 									>
 									<span
 										class="discord-app-launcher-server-title-mobile hidden max-md:inline"
-										>In This Server</span
+										>{{ ts("discord.launcher.in_server") }}</span
 									>
 								</h2>
 								<button
@@ -265,11 +265,11 @@
 								>
 									<span
 										class="discord-app-launcher-view-more-desktop max-md:hidden"
-										>View More</span
+										>{{ ts("discord.launcher.view_more") }}</span
 									>
 									<span
 										class="discord-app-launcher-view-more-mobile hidden max-md:inline"
-										>View All</span
+										>{{ ts("discord.launcher.view_all") }}</span
 									>
 								</button>
 							</div>
@@ -356,7 +356,7 @@
 									id="discord-app-launcher-promoted-heading"
 									class="discord-app-launcher-section-title"
 								>
-									Promoted
+									{{ ts("discord.launcher.promoted") }}
 								</h2>
 							</div>
 							<div class="discord-app-launcher-promoted-grid">
@@ -513,7 +513,7 @@
 									:id="`discord-app-launcher-${category.id}-heading`"
 									class="discord-app-launcher-section-title"
 								>
-									{{ category.title }}
+									{{ viewTitle(category) }}
 								</h2>
 								<button
 									v-if="shouldShowCategoryViewMore(category)"
@@ -521,7 +521,7 @@
 									class="discord-app-launcher-view-more discord-app-launcher-view-more-header"
 									@click="openListView(category.id)"
 								>
-									View More
+									{{ ts("discord.launcher.view_more") }}
 								</button>
 							</div>
 							<div class="discord-app-launcher-server-list">
@@ -546,20 +546,19 @@
 									class="discord-app-launcher-view-more discord-app-launcher-view-more-footer"
 									@click="openListView(category.id)"
 								>
-									View More
+									{{ ts("discord.launcher.view_more") }}
 								</button>
 							</div>
 						</section>
 
 						<aside v-if="!normalizedQuery" class="discord-app-launcher-help">
 							<span>
-								<strong>Have Questions?</strong>
-								<span
-									>Visit our help center to learn more about using and discovering
-									apps on Discord.</span
-								>
+								<strong>{{ ts("discord.launcher.help_title") }}</strong>
+								<span>{{ ts("discord.launcher.help_body") }}</span>
 							</span>
-							<button type="button" @click="emit('requestHelp')">Learn More</button>
+							<button type="button" @click="emit('requestHelp')">
+								{{ ts("discord.launcher.learn_more") }}
+							</button>
 						</aside>
 					</div>
 				</div>
@@ -572,12 +571,14 @@
 					ref="backRef"
 					type="button"
 					class="discord-app-launcher-back"
-					aria-label="Back to Apps"
+					:aria-label="ts('discord.launcher.back')"
 					@click="returnToMainView"
 				>
 					<UIcon name="ph:caret-left-bold" class="size-4" aria-hidden="true" />
 				</button>
-				<h2 class="discord-app-launcher-list-title">{{ activeListView?.title }}</h2>
+				<h2 class="discord-app-launcher-list-title">
+					{{ activeListView ? viewTitle(activeListView) : "" }}
+				</h2>
 				<span class="discord-app-launcher-back-spacer" aria-hidden="true" />
 			</header>
 
@@ -662,6 +663,7 @@ interface SheetDragSession {
 </script>
 
 <script setup lang="ts">
+const { ts } = useI18n();
 const {
 	recents = discordAppLauncherRecents,
 	serverApps = discordAppLauncherServerApps,
@@ -715,7 +717,27 @@ const activeListView = computed(() => {
 	return listViewById.value.get(activeView.value);
 });
 
-const dialogLabel = computed(() => (activeListView.value ? activeListView.value.title : "Apps"));
+// The list views' titles, by id; an unknown view keeps the title it came with.
+const VIEW_TITLE_KEYS: Record<string, string> = {
+	"action-games": "discord.launcher.views.action-games",
+	"bot-games": "discord.launcher.views.bot-games",
+	"card-games": "discord.launcher.views.card-games",
+	"chill-together": "discord.launcher.views.chill-together",
+	"puzzle-games": "discord.launcher.views.puzzle-games",
+	"recents": "discord.launcher.views.recents",
+	"server-apps": "discord.launcher.views.server-apps",
+	"social-activities": "discord.launcher.views.social-activities",
+	"strategy-games": "discord.launcher.views.strategy-games",
+};
+
+function viewTitle(view: DiscordAppLauncherListView): string {
+	const key = VIEW_TITLE_KEYS[view.id];
+	return key ? ts(key) : view.title;
+}
+
+const dialogLabel = computed(() =>
+	activeListView.value ? viewTitle(activeListView.value) : ts("discord.launcher.apps"),
+);
 
 function matchesQuery(entry: DiscordAppLauncherEntry, query: string): boolean {
 	if (!query) return true;
@@ -1036,18 +1058,20 @@ onBeforeUnmount(() => {
 @reference "@/assets/css/main.css";
 
 .discord-app-launcher {
-	/* Discord dark theme surfaces: #2b2d31 popout, #313338 cards, #1e1f22 input. */
-	--discord-app-launcher-bg: oklch(26.65% 0.006 272.93);
-	--discord-app-launcher-nested: oklch(28.84% 0.007 272.93);
-	--discord-app-launcher-text: oklch(91.56% 0.004 272.93);
-	--discord-app-launcher-header: oklch(96.2% 0.002 272.93);
-	--discord-app-launcher-muted: oklch(71.01% 0.01 273.13);
-	--discord-app-launcher-interactive: oklch(80.5% 0.008 273.13);
-	--discord-app-launcher-link: oklch(66.5% 0.147 236);
+	/* Discord's surfaces in the page's theme (see the `--discord-*` tokens in main.css). */
+	--discord-app-launcher-bg: var(--discord-chrome);
+	--discord-app-launcher-nested: var(--discord-composer);
+	--discord-app-launcher-text: var(--discord-chrome-text);
+	--discord-app-launcher-header: var(--discord-chrome-strong);
+	--discord-app-launcher-muted: var(--discord-chrome-muted);
+	--discord-app-launcher-interactive: var(--discord-chrome-secondary);
+	--discord-app-launcher-link: var(--discord-link);
 	--discord-app-launcher-focus: oklch(57.74% 0.2091 273.85);
-	--discord-app-launcher-search-bg: oklch(19.34% 0.004 273.16);
-	--discord-app-launcher-divider: oklch(100% 0 0 / 0.06);
-	--discord-app-launcher-icon-bg: oklch(32% 0.01 264);
+	--discord-app-launcher-search-bg: var(--discord-server);
+	--discord-app-launcher-divider: oklch(from var(--discord-chrome-strong) l c h / 0.06);
+	--discord-app-launcher-icon-bg: oklch(
+		from var(--discord-chrome) calc(l + 0.0535 * var(--discord-raise)) c h
+	);
 	--discord-app-launcher-shadow: oklch(0% 0 0 / 0.24);
 	--discord-app-launcher-wordle-bg: oklch(93% 0.008 95);
 	--discord-app-launcher-wordle-title: oklch(22% 0.02 260);
@@ -1062,9 +1086,13 @@ onBeforeUnmount(() => {
 	--discord-app-launcher-garden-berry: oklch(58% 0.22 25);
 	--discord-app-launcher-garden-seed: oklch(95% 0.04 95);
 	--discord-app-launcher-garden-flower: oklch(78% 0.16 340);
-	--discord-app-launcher-back-bg: oklch(32% 0.01 264);
-	--discord-app-launcher-back-hover: oklch(38% 0.012 268);
-	--discord-app-launcher-help-bg: oklch(28.84% 0.007 272.93);
+	--discord-app-launcher-back-bg: oklch(
+		from var(--discord-chrome) calc(l + 0.0535 * var(--discord-raise)) c h
+	);
+	--discord-app-launcher-back-hover: oklch(
+		from var(--discord-chrome) calc(l + 0.1135 * var(--discord-raise)) c h
+	);
+	--discord-app-launcher-help-bg: var(--discord-composer);
 	--discord-app-launcher-wolfstar-bg: oklch(0% 0 0);
 
 	/* Explicit radii: the app theme remaps Tailwind's rounded-* scale to 16px. */
@@ -1697,17 +1725,21 @@ onBeforeUnmount(() => {
  * keep the desktop popover chrome on phones/tablets that still show the site hamburger. */
 @media (max-width: 767.98px) {
 	.discord-app-launcher {
-		--discord-app-launcher-bg: oklch(22% 0.006 272);
-		--discord-app-launcher-nested: oklch(28% 0.007 272);
-		--discord-app-launcher-search-bg: oklch(18% 0.005 272);
-		--discord-app-launcher-header: oklch(95% 0.004 272);
+		--discord-app-launcher-bg: var(--discord-sidebar);
+		--discord-app-launcher-nested: var(--discord-composer);
+		--discord-app-launcher-search-bg: var(--discord-server);
+		--discord-app-launcher-header: var(--discord-chrome-strong);
 		/* Discord mobile links are lavender (#949cf7), not the desktop blue. */
 		--discord-app-launcher-link: oklch(70% 0.125 285);
-		--discord-app-launcher-help-bg: oklch(28% 0.007 272);
-		--discord-app-launcher-handle: oklch(62% 0.01 272);
-		--discord-app-launcher-promo-bar: oklch(12% 0.005 272);
-		--discord-app-launcher-help-btn: oklch(43% 0.008 272);
-		--discord-app-launcher-help-btn-text: oklch(98% 0.002 272);
+		--discord-app-launcher-help-bg: var(--discord-composer);
+		--discord-app-launcher-handle: var(--discord-chrome-muted);
+		--discord-app-launcher-promo-bar: oklch(
+			from var(--discord-server) calc(l + -0.07 * var(--discord-raise)) c h
+		);
+		--discord-app-launcher-help-btn: oklch(
+			from var(--discord-chrome) calc(l + 0.1635 * var(--discord-raise)) c h
+		);
+		--discord-app-launcher-help-btn-text: var(--discord-chrome-strong);
 		--discord-app-launcher-sheet-half: min(55dvh, 22rem);
 		/* Nearly the channel column under the header; parent may hide the composer at full. */
 		--discord-app-launcher-sheet-full: min(92dvh, 40rem);

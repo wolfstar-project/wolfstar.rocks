@@ -1,161 +1,135 @@
 <template>
-	<UDashboardGroup unit="rem">
-		<UDashboardSidebar
-			id="default"
-			collapsible
-			resizable
-			:ui="{
-				header: 'bg-base-200/80',
-				body: 'bg-base-200/80 border-r border-base-200',
-				footer: 'bg-base-200/80 border-t border-b border-base-200',
-			}"
+	<!-- On a phone one screen shows at a time: the list (servers and sections) or the page. -->
+	<div class="console" :class="{ 'console--page': screen === 'page' }">
+		<GuildServerRail
+			:current-guild-id="guildId ?? undefined"
+			:guilds="userGuilds"
+			:pending="userGuildsPending"
+			@select="goToGuild"
+			@home="goToGuild(null)"
+		/>
+
+		<aside
+			v-if="guildId"
+			ref="consoleList"
+			class="console-sidebar"
+			:aria-label="ts('dashboard.nav_aria')"
 		>
-			<template #header="{ collapsed }">
-				<div v-if="guildData" class="flex cursor-pointer items-center gap-0.5">
-					<UAvatar
-						:src="guildIconSrc"
-						:text="guildData.acronym"
-						:alt="guildData.name"
-						class="mr-2"
-					/>
-					<h1 v-if="!collapsed" class="text-lg font-semibold">{{ guildData.name }}</h1>
-				</div>
-				<div v-else class="flex h-10 items-center justify-center">
-					<USkeleton class="mr-2 h-10 w-10 rounded-full" />
-					<div v-if="!collapsed" class="ms-2">
-						<USkeleton class="h-4 w-24 rounded" />
-					</div>
-				</div>
-			</template>
-			<template #default="{ collapsed }">
-				<UNavigationMenu
-					:collapsed="collapsed"
-					:items="items[0]"
-					orientation="vertical"
-					tooltip
-					popover
-				/>
-
-				<UNavigationMenu
-					:collapsed="collapsed"
-					:items="items[1]"
-					orientation="vertical"
-					tooltip
-					class="mt-auto"
-				/>
-			</template>
-
-			<template #footer="{ collapsed }">
-				<UserMenu :collapsed="collapsed" />
-			</template>
-		</UDashboardSidebar>
-
-		<slot v-if="isReadyToRender"></slot>
-		<div
-			v-else-if="nuxtError"
-			class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4 text-center"
-			role="alert"
-			:aria-label="ts('dashboard.error_aria')"
-		>
-			<UIcon name="ph:warning-duotone" class="size-12 text-error" aria-hidden="true" />
-			<div class="space-y-2">
-				<h2 class="text-xl font-semibold text-base-content">
-					{{ nuxtError.statusMessage || ts("dashboard.error_title") }}
-				</h2>
-				<p v-if="nuxtError.status === 403">
-					{{ ts("dashboard.error_forbidden") }}
-				</p>
-				<p class="text-sm text-base-content/60">
-					{{ nuxtError.message || ts("dashboard.error_fallback") }}
-				</p>
-			</div>
-		</div>
-		<div
+			<DashboardSidebar floating @navigate="openPageOnPhone" />
+		</aside>
+		<!-- No server open: the Home, with the bots' direct messages. -->
+		<aside
 			v-else
-			class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4"
-			role="status"
-			:aria-label="ts('dashboard.loading_aria')"
+			ref="consoleList"
+			class="console-sidebar"
+			:aria-label="ts('dashboard.dm.title')"
 		>
-			<div class="flex flex-col items-center space-y-4">
-				<UIcon name="ph:warning-duotone" class="size-12 text-primary" aria-hidden="true" />
-				<div class="space-y-2 text-center">
+			<DashboardDirectMessages floating @navigate="openPageOnPhone" />
+		</aside>
+
+		<div ref="consoleMain" class="console-main">
+			<!-- The page shows its own skeleton until the server's data is in. -->
+			<slot v-if="!guildId || !nuxtError"></slot>
+			<div
+				v-else
+				class="flex w-full flex-1 flex-col items-center justify-center space-y-4 px-4 text-center"
+				role="alert"
+				:aria-label="ts('dashboard.error_aria')"
+			>
+				<UIcon name="ph:warning-duotone" class="size-12 text-error" aria-hidden="true" />
+				<div class="space-y-2">
 					<h2 class="text-xl font-semibold text-base-content">
-						{{ ts("dashboard.loading_title") }}
+						{{ nuxtError.statusMessage || ts("dashboard.error_title") }}
 					</h2>
+					<p v-if="nuxtError.status === 403">
+						{{ ts("dashboard.error_forbidden") }}
+					</p>
 					<p class="text-sm text-base-content/60">
-						{{ ts("dashboard.loading_description") }}
+						{{ nuxtError.message || ts("dashboard.error_fallback") }}
 					</p>
 				</div>
-				<div class="flex items-center space-x-2">
-					<div
-						class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary"
-					></div>
-					<div
-						class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary [animation-delay:200ms]"
-					></div>
-					<div
-						class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary [animation-delay:400ms]"
-					></div>
-				</div>
 			</div>
-		</div>
-		<Transition
-			enter-active-class="transition-[opacity,transform] duration-300 ease-out"
-			enter-from-class="opacity-0 translate-y-2"
-			enter-to-class="opacity-100 translate-y-0"
-			leave-active-class="transition-[opacity,transform] duration-200 ease-in"
-			leave-from-class="opacity-100 translate-y-0"
-			leave-to-class="opacity-0 translate-y-2"
-		>
 			<div
-				v-if="isReadyToSubmit"
+				v-if="showSaveChangesBar"
 				style="view-transition-name: save-changes-bar"
-				class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2"
+				role="region"
+				:aria-label="ts('dashboard.unsaved_title')"
+				class="console-savebar"
 			>
-				<UFieldGroup>
-					<UButton color="primary" icon="heroicons:check" @click="submitChanges">
-						{{ ts("dashboard.save_changes") }}
-					</UButton>
-					<UButton color="error" icon="heroicons:arrow-path" @click="resetChanges">
-						{{ ts("dashboard.reset_changes") }}
-					</UButton>
-				</UFieldGroup>
+				<span class="size-2 shrink-0 rounded-full bg-warning" aria-hidden="true"></span>
+				<span class="console-savebar-status">{{ ts("dashboard.unsaved_bar") }}</span>
+				<UButton
+					color="primary"
+					icon="heroicons:check"
+					class="console-savebar-action"
+					@click="submitChanges"
+				>
+					{{ ts("dashboard.save_changes") }}
+				</UButton>
+				<UButton
+					color="neutral"
+					variant="outline"
+					icon="heroicons:arrow-path"
+					class="console-savebar-action"
+					@click="resetChanges"
+				>
+					{{ ts("dashboard.reset_changes") }}
+				</UButton>
 			</div>
-		</Transition>
+
+			<!-- The phone's page names its server and section here; the save bar takes its place. -->
+			<DashboardContextCard v-if="guildId && !showSaveChangesBar" />
+		</div>
 
 		<UModal
-			v-model:open="showDialog"
+			:open="leaveDialogOpen"
 			:title="ts('dashboard.unsaved_title')"
 			:description="ts('dashboard.unsaved_description')"
 			:dismissible="false"
 		>
 			<template #footer>
 				<div class="flex justify-end gap-2">
-					<UButton color="neutral" variant="ghost" @click="cancelLeave">
+					<UButton
+						color="neutral"
+						variant="outline"
+						class="dialog-cancel"
+						@click="stayOnPage"
+					>
 						{{ ts("dashboard.stay_on_page") }}
 					</UButton>
-					<UButton color="error" @click="confirmLeave">
+					<UButton color="error" @click="discardAndLeave">
 						{{ ts("dashboard.discard_changes") }}
 					</UButton>
 				</div>
 			</template>
 		</UModal>
-	</UDashboardGroup>
+
+		<!-- A newer build is out. Held back while edits are unsaved: the reload would drop them. -->
+		<ClientOnly>
+			<DeferredMount>
+				<div v-show="!hasUnsavedEdits" class="dashboard-update-prompt">
+					<LazyPwaPrompt />
+				</div>
+			</DeferredMount>
+		</ClientOnly>
+
+		<Transition name="dashboard-loader">
+			<DashboardLoader v-if="booting" />
+		</Transition>
+	</div>
 </template>
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
-import type { NavigationMenuItem } from "@nuxt/ui";
-import { isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
+import { objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { objectToTuples } from "@sapphire/utilities/objectToTuples";
-import { parseError, createError } from "evlog";
+import { parseError } from "evlog";
 import {
 	parseGuildSettings,
 	classifyGuildError,
 	parseGuildSettingsSaveResponse,
 	guildSettingsSaveFailureToast,
-	resolveGuildIconSrc,
 } from "~/utils/guild-dashboard";
 
 function isSafeUrl(url: unknown): url is string {
@@ -170,28 +144,36 @@ function isSafeUrl(url: unknown): url is string {
 
 const { ts } = useI18n();
 
-const guildId = useRouteParams("id", null, { transform: String });
-
-if (!isValidGuildId(guildId.value)) {
-	throw createError({
-		why: ts("dashboard.invalid_guild_why"),
-		status: 400,
-		message: ts("dashboard.invalid_guild_message"),
-		fix: ts("dashboard.invalid_guild_fix"),
-	});
-}
+// The guild is dashboard state, not a route param: `/app` is one page.
+const {
+	activeGuildId: guildId,
+	cancelPendingNavigation,
+	confirmPendingNavigation,
+	goToGuild,
+	pendingNavigation,
+} = useDashboardNavigation();
+const { selectGuild } = useActiveGuild();
 
 const toast = useToast();
 const router = useRouter();
-const open = ref(false);
+const { isPhone, openPage, screen } = usePhoneScreen();
+usePhoneScreenFocus(
+	useTemplateRef<HTMLElement>("consoleList"),
+	useTemplateRef<HTMLElement>("consoleMain"),
+);
 const nuxtError = useError();
-const { setGuildData, guildData } = useGuildData();
+const { setGuildData } = useGuildData();
 const { setGuildSettings, guildSettings } = useGuildSettings();
 const { setGuildSettingsChanges, guildSettingsChanges, resetGuildSettingsChanges } =
 	useGuildSettingsChanges();
 
 const { user } = useUserSession();
-const { guilds: userGuilds } = useUser(user);
+const { guilds: userGuilds, status: userGuildsStatus } = useUser(user);
+// `useUser()` only fetches on the client, so the rail renders placeholders until
+// the guild list lands rather than appearing late and shifting the page.
+const userGuildsPending = computed(
+	() => userGuildsStatus.value === "idle" || userGuildsStatus.value === "pending",
+);
 watch(
 	[guildId, userGuilds],
 	([newGuildId, newUserGuilds]) => {
@@ -207,13 +189,28 @@ const requestFetch = useRequestFetch();
 const route = useRoute();
 const refreshGuildCache = computed(() => route.query.refresh === "true");
 
-const {
-	data,
-	pending: isLoading,
-	error,
-} = useAsyncData(
-	() => `dashboard:guild:${guildId.value}`,
+// A server card's link carries its guild so that opening it in a new tab lands
+// on that server. The id moves into state here and leaves the URL.
+watch(
+	() => route.query.guild,
+	(requestedGuildId) => {
+		if (!isValidGuildId(requestedGuildId)) {
+			return;
+		}
+		goToGuild(requestedGuildId);
+		void router.replace({ query: { ...route.query, guild: undefined } });
+	},
+	{ immediate: true },
+);
+
+// Kept in the browser, so a reload opens on the server as it was last seen
+// while it is fetched again.
+const { data, error } = usePersistedAsyncData(
+	() => `dashboard:guild:${guildId.value ?? "none"}`,
 	() => {
+		if (!guildId.value) {
+			return Promise.resolve(null);
+		}
 		const refreshQuery = refreshGuildCache.value ? { refresh: "true" } : undefined;
 		return Promise.all([
 			requestFetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(
@@ -225,6 +222,21 @@ const {
 			}),
 		]);
 	},
+	{ watch: [guildId] },
+);
+
+// The first entry shows the bot's mark until the server list and the open
+// server are in, or the server failed to load. It does not come back when the
+// admin switches servers: the page shows its skeleton for that.
+const booting = ref(true);
+watch(
+	[userGuildsPending, guildId, () => data.value, () => error.value],
+	([pending, id, loaded, failed]) => {
+		if (!pending && (!id || loaded || failed)) {
+			booting.value = false;
+		}
+	},
+	{ immediate: true },
 );
 
 watch(
@@ -247,6 +259,12 @@ watch(
 
 			setGuildSettings(parsedSettings as GuildData);
 
+			// One uncached load is enough after the bot was invited: left in the
+			// URL, the flag would bypass the cache for every guild opened later.
+			if (refreshGuildCache.value) {
+				void router.replace({ query: { ...route.query, refresh: undefined } });
+			}
+
 			if (nuxtError.value) {
 				clearError();
 			}
@@ -267,7 +285,15 @@ watch(
 				error: parsedError,
 			});
 
-			switch (classifyGuildError(parsedError.status)) {
+			const failure = classifyGuildError(parsedError.status);
+			// The selection is restored from storage on the next visit: left in
+			// place, a guild the admin can no longer open would fail every time.
+			// A signed-out session keeps it, to come back to after signing in.
+			if (failure !== "unauthorized") {
+				selectGuild(null);
+			}
+
+			switch (failure) {
 				case "forbidden": {
 					if (import.meta.client) {
 						toast.add({
@@ -338,151 +364,74 @@ watch(
 
 const { effectiveReduceMotion } = useReduceMotion();
 
-const items = computed<NavigationMenuItem[][]>(() => [
-	[
-		{
-			exact: true,
-			icon: "heroicons:home",
-			label: ts("dashboard.nav.home"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/manage`,
-		},
-		{
-			icon: "lucide:shield",
-			label: ts("dashboard.nav.moderation"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/manage/moderation`,
-			children: [
-				{
-					label: ts("dashboard.nav.bad_words"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/word`,
-				},
-				{
-					label: ts("dashboard.nav.capitals"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/capitals`,
-				},
-				{
-					label: ts("dashboard.nav.invites"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/invites`,
-				},
-				{
-					label: ts("dashboard.nav.links"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/links`,
-				},
-				{
-					label: ts("dashboard.nav.message_duplication"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/messages`,
-				},
-				{
-					label: ts("dashboard.nav.line_spam"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/lines`,
-				},
-				{
-					label: ts("dashboard.nav.reactions"),
-					onSelect: () => {
-						open.value = false;
-					},
-					to: `/guilds/${guildId.value}/manage/moderation/reactions`,
-				},
-			],
-		},
-		{
-			icon: "heroicons:hashtag",
-			label: ts("dashboard.nav.channels"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/manage/channels`,
-		},
-		{
-			icon: "heroicons:user-group",
-			label: ts("dashboard.nav.roles"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/manage/roles`,
-		},
-		{
-			icon: "heroicons:bell",
-			label: ts("dashboard.nav.events"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/manage/events`,
-		},
-		{
-			icon: "heroicons:command-line",
-			label: ts("dashboard.nav.commands"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/manage/commands`,
-		},
-		{
-			icon: "lucide:logs",
-			label: ts("dashboard.nav.logs"),
-			onSelect: () => {
-				open.value = false;
-			},
-			to: `/guilds/${guildId.value}/logs`,
-		},
-	],
-]);
-
-const isReadyToRender = computed(
-	() =>
-		!nuxtError.value &&
-		!isLoading.value &&
-		!isNullOrUndefined(guildData.value) &&
-		!isNullOrUndefined(guildSettings.value) &&
-		!isNullOrUndefinedOrZero(objectValues(guildData.value).length) &&
-		!isNullOrUndefinedOrZero(objectValues(guildSettings.value).length),
-);
-
 const isReadyToSubmit = computed(
 	() =>
 		!isNullOrUndefined(guildSettingsChanges.value) &&
 		objectValues(guildSettingsChanges.value).length > 0,
 );
 
-const { showDialog, confirmLeave, cancelLeave } = useUnsavedChanges(isReadyToSubmit);
+// The bar's own view transition (see `view-transitions.css`) animates it in and
+// out, so its visibility is committed inside one instead of a Vue transition.
+// Leaving a guild with staged changes hides the bar from the `guildId` watcher
+// below, mid-navigation: a navigation transition owns the screen, so the bar
+// rides along with it rather than interrupting it for one of its own.
+const showSaveChangesBar = ref(isReadyToSubmit.value);
+watch(isReadyToSubmit, () => {
+	// Read the state when the transition commits, not when it was requested: a
+	// later change that bypasses a running transition must not be overwritten.
+	startViewTransition(() => (showSaveChangesBar.value = isReadyToSubmit.value), {
+		reduceMotion: effectiveReduceMotion.value,
+		whenActive: "bypass",
+	});
+});
 
-const guildIconSrc = computed(() => resolveGuildIconSrc(guildData.value, { size: 64 }));
-// Validate Guild ID format (Discord Snowflake: 17-19 digit string)
-function isValidGuildId(id: string | undefined | null): boolean {
-	if (isNullOrUndefined(id)) {
-		return false;
+const { discardAll: discardCommandPermissionDrafts, hasDrafts: hasCommandPermissionDrafts } =
+	useCommandPermissionDrafts();
+// Unsent command permission edits are lost on a reload too, like staged settings.
+const hasUnsavedEdits = computed(() => isReadyToSubmit.value || hasCommandPermissionDrafts.value);
+const { showDialog, confirmLeave, cancelLeave } = useUnsavedChanges(hasUnsavedEdits);
+
+// One dialog covers both ways of leaving staged edits behind: a route change
+// (router guard) and a guild/section switch inside `/app` (pending navigation).
+const leaveDialogOpen = computed(() => showDialog.value || pendingNavigation.value !== null);
+
+function stayOnPage() {
+	cancelPendingNavigation();
+	cancelLeave();
+}
+
+function discardAndLeave() {
+	if (pendingNavigation.value) {
+		resetGuildSettingsChanges();
+		discardCommandPermissionDrafts();
+		confirmPendingNavigation();
+		return;
 	}
-	const snowflakeRegex = /^\d{17,19}$/;
-	return snowflakeRegex.test(id);
+	// The active guild outlives the route, so a draft left in place would be
+	// back on the next visit to `/app` after the admin chose to discard it.
+	resetGuildSettingsChanges();
+	discardCommandPermissionDrafts();
+	confirmLeave();
+}
+
+// A section picked in the phone's list opens its page; on a wider screen both show.
+function openPageOnPhone() {
+	if (isPhone.value) void openPage();
 }
 
 async function submitChanges() {
+	// The admin can confirm a guild switch while this PATCH is in flight, so the
+	// id is captured here and every later write targets it. Reading
+	// `guildId.value` after the await would apply this guild's response to
+	// whichever guild is active by then, and clear that guild's staged edits.
+	const targetGuildId = guildId.value;
+	if (!targetGuildId) {
+		return;
+	}
+
 	let data: GuildData;
 	try {
-		const response = await $fetch(`/api/guilds/${guildId.value}/settings`, {
+		const response = await $fetch(`/api/guilds/${targetGuildId}/settings`, {
 			body: {
 				data: objectToTuples(guildSettingsChanges.value as Partial<GuildData>),
 			},
@@ -492,11 +441,11 @@ async function submitChanges() {
 	} catch (error) {
 		log.error({
 			tag: "wolfstar:dashboard",
-			message: `Failed to save settings update for guild Id: ${guildId.value}`,
+			message: `Failed to save settings update for guild Id: ${targetGuildId}`,
 			error: parseError(error),
 		});
 		// Preserve staged edits; only notify so the admin can retry.
-		toast.add(guildSettingsSaveFailureToast(ts));
+		toast.add(guildSettingsSaveFailureToast(ts, error));
 		return;
 	}
 
@@ -505,23 +454,17 @@ async function submitChanges() {
 	}
 
 	const savedSettings = data;
-	if (!document.startViewTransition || effectiveReduceMotion.value) {
-		setGuildSettings(savedSettings);
-		setGuildSettingsChanges(undefined);
-	} else {
-		if (document.activeViewTransition) {
-			document.activeViewTransition.skipTransition();
-		}
-		document.startViewTransition(async () => {
-			setGuildSettings(savedSettings);
-			setGuildSettingsChanges(undefined);
-			await nextTick();
-		});
-	}
+	startViewTransition(
+		() => {
+			setGuildSettings(savedSettings, targetGuildId);
+			setGuildSettingsChanges(undefined, targetGuildId);
+		},
+		{ reduceMotion: effectiveReduceMotion.value },
+	);
 
 	log.info(
 		"wolfstar:dashboard",
-		`Guild settings changes saved successfully for guild Id: ${guildId.value}`,
+		`Guild settings changes saved successfully for guild Id: ${targetGuildId}`,
 	);
 
 	toast.add({
@@ -533,17 +476,7 @@ async function submitChanges() {
 }
 
 function resetChanges() {
-	if (!document.startViewTransition || effectiveReduceMotion.value) {
-		resetGuildSettingsChanges();
-	} else {
-		if (document.activeViewTransition) {
-			document.activeViewTransition.skipTransition();
-		}
-		document.startViewTransition(async () => {
-			resetGuildSettingsChanges();
-			await nextTick();
-		});
-	}
+	startViewTransition(resetGuildSettingsChanges, { reduceMotion: effectiveReduceMotion.value });
 
 	log.info("wolfstar:dashboard", `Guild settings changes reset for guild Id: ${guildId.value}`);
 
@@ -566,3 +499,140 @@ watch(guildId, (newGuildId, oldGuildId) => {
 	}
 });
 </script>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+/*
+ * Surfaces of the dashboard, from the rail (darkest) over the sidebar and cards
+ * to the page. In the light theme the cards and the sidebar are as bright as the
+ * page and only the rail is tinted. Components inside read these variables.
+ */
+.console {
+	--console-main: var(--ink-600);
+	--console-surface: var(--ink-700);
+	--console-rail: var(--ink-800);
+	--console-input: var(--ink-500);
+	/* What floats or must not show through: the account card, the save bar, the
+	   server tiles. A colour theme turns the others into veils over its gradient. */
+	--console-solid: var(--ink-700);
+	--console-border: var(--ink-400);
+	--console-hover: oklch(100% 0 0 / 0.04);
+	--console-active: oklch(100% 0 0 / 0.08);
+	--console-shadow-low:
+		0 1px 0 oklch(0% 0 0 / 0.2), 0 1.5px 0 oklch(0% 0 0 / 0.05), 0 2px 0 oklch(0% 0 0 / 0.05);
+
+	color: var(--ui-text);
+}
+
+.console {
+	@apply relative flex h-dvh min-h-0 w-full overflow-hidden;
+	background-color: var(--console-main);
+
+	/* The server rail and the sidebar read these; the account card floating
+	   over both is as wide as their sum. */
+	--console-rail-width: 3.75rem;
+	--console-sidebar-width: 12.25rem;
+}
+
+@variant md {
+	.console {
+		--console-rail-width: 4rem;
+		--console-sidebar-width: 13.25rem;
+	}
+}
+
+@variant lg {
+	.console {
+		--console-rail-width: 4.25rem;
+		--console-sidebar-width: 14.75rem;
+	}
+}
+
+@variant theme-light {
+	.console {
+		--console-main: var(--color-base-100);
+		--console-surface: var(--color-base-100);
+		--console-rail: oklch(92.1% 0.005 258.3);
+		--console-input: oklch(94.5% 0.003 247.9);
+		--console-solid: oklch(94.5% 0.003 247.9);
+		--console-border: oklch(91% 0.006 275);
+		--console-hover: oklch(0% 0 0 / 0.03);
+		--console-active: oklch(0% 0 0 / 0.07);
+		--console-shadow-low: 0 1px 2px oklch(0% 0 0 / 0.08);
+	}
+}
+
+.console-sidebar {
+	@apply hidden h-full shrink-0 sm:block;
+	width: var(--console-sidebar-width);
+	background-color: var(--console-surface);
+	border-right: 1px solid var(--home-border-subtle);
+}
+
+.console-main {
+	@apply relative flex h-full min-h-0 min-w-0 flex-1 flex-col;
+	background-color: var(--console-main);
+}
+
+/* The phone's two screens. The list is the server rail and the sidebar, the
+   sidebar taking the width the page leaves; the page is the page alone. */
+@variant max-sm {
+	.console:not(.console--page) :deep(.guild-rail) {
+		display: flex;
+	}
+
+	.console:not(.console--page) .console-sidebar {
+		@apply block min-w-0 flex-1;
+	}
+
+	.console:not(.console--page) .console-main {
+		display: none;
+	}
+}
+
+/* A floating card rather than a docked strip. On phones it sits in the flow at
+   the foot of the page, where the context card was; from `sm` up it floats over
+   the end of the page, which gets room to scroll clear of it (see below). */
+.console-savebar {
+	@apply z-10 mx-3 my-2 flex shrink-0 items-center gap-2.5 rounded-[10px] py-2.5 pr-3 pl-4 sm:absolute sm:inset-x-4 sm:bottom-4 sm:m-0;
+	background-color: var(--console-solid);
+	border: 1px solid var(--console-border);
+	box-shadow:
+		0 8px 24px oklch(0% 0 0 / 0.28),
+		0 2px 6px oklch(0% 0 0 / 0.2);
+}
+
+/* Below desktop the two actions share the card and the dot says the rest. */
+.console-savebar-status {
+	@apply hidden min-w-0 flex-1 text-sm lg:block;
+}
+
+.console-savebar-action {
+	@apply h-9 flex-1 justify-center rounded-md px-4 lg:flex-none;
+}
+
+/* Clear of the cards at the foot of a phone's screens; from `sm` up, the page's
+   bottom-right corner, which only the save bar uses, and the prompt waits for it. */
+.dashboard-update-prompt {
+	@apply pointer-events-none fixed right-4 bottom-4 z-40 flex;
+
+	@variant max-sm {
+		@apply inset-x-0 justify-center px-3;
+		/* Clear of the context card on the page (its tile, padding, border and
+		   offset come to about 4.5rem) and of the account card on the list, which
+		   is lower. Change it with either card. */
+		bottom: calc(5.25rem + env(safe-area-inset-bottom));
+	}
+}
+
+.dashboard-update-prompt > :deep(*) {
+	@apply pointer-events-auto;
+}
+
+.console-main:has(> .console-savebar) :deep(.console-content) {
+	@variant sm {
+		padding-bottom: 5.5rem;
+	}
+}
+</style>

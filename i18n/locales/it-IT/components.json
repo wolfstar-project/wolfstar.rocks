@@ -1,5 +1,116 @@
 {
 	"$schema": "../../schemas/components.schema.json",
+	"discord": {
+		"channel_info": {
+			"back": "Torna al canale",
+			"create_thread": "Crea thread",
+			"label": "Informazioni sul canale #{name}",
+			"members_in": "Membri in #{name}",
+			"no_threads": "Non ci sono thread.",
+			"sections": "Sezioni delle informazioni sul canale",
+			"tabs": {
+				"files": "File",
+				"links": "Link",
+				"media": "Contenuti multimediali",
+				"members": "Membri",
+				"pins": "Fissati",
+				"threads": "Thread"
+			},
+			"text_channel": "Canale testuale"
+		},
+		"chat": {
+			"messages_in": "Messaggi in {channel}"
+		},
+		"command": {
+			"label": "Comando slash {command}",
+			"matched": "Comando slash: {command}",
+			"suggestion": "Comando slash di {app}: {command}"
+		},
+		"composer": {
+			"close_apps": "Chiudi app e comandi",
+			"label": "Casella di scrittura per {channel}",
+			"open_apps": "Apri app e comandi",
+			"placeholder": "Messaggio in #{channel}",
+			"send": "Invia messaggio"
+		},
+		"embed": {
+			"footer_icon": "Icona del piè di pagina per {text}",
+			"from": "Embed di {name}",
+			"generic": "Embed di Discord",
+			"titled": "Embed: {title}"
+		},
+		"header": {
+			"hide_members": "Nascondi l'elenco dei membri",
+			"notifications": "Impostazioni delle notifiche",
+			"open_info": "Apri le informazioni del canale #{name}",
+			"pins": "Messaggi fissati",
+			"search": "Cerca in {name}",
+			"search_plain": "Cerca",
+			"show_members": "Mostra l'elenco dei membri",
+			"threads": "Thread"
+		},
+		"launcher": {
+			"apps": "App",
+			"back": "Torna alle app",
+			"collapse": "Riduci il pannello delle app",
+			"commands": "Comandi",
+			"expand": "Espandi il pannello delle app",
+			"help_body": "Visita il nostro centro assistenza per saperne di più su come usare e scoprire le app su Discord.",
+			"help_title": "Hai domande?",
+			"in_server": "In questo server",
+			"learn_more": "Scopri di più",
+			"promoted": "In evidenza",
+			"search": "Cerca app e comandi",
+			"view_all": "Vedi tutto",
+			"view_more": "Vedi altro",
+			"views": {
+				"action-games": "Giochi d'azione",
+				"bot-games": "Giochi dei bot",
+				"card-games": "Giochi di carte",
+				"chill-together": "Relax insieme",
+				"puzzle-games": "Rompicapi",
+				"recents": "Recenti",
+				"server-apps": "App in questo server",
+				"social-activities": "Attività social",
+				"strategy-games": "Giochi di strategia e da tavolo"
+			}
+		},
+		"member_list": {
+			"app": "Applicazione",
+			"label": "Membri del server",
+			"offline": "Offline",
+			"online": "Online",
+			"verified_app": "Applicazione verificata"
+		},
+		"message": {
+			"dismiss": "Ignora messaggio",
+			"dismiss_aria": "Ignora il messaggio temporaneo",
+			"ephemeral_notice": "Avviso di messaggio temporaneo",
+			"from": "Messaggio di {name}",
+			"only_you": "Solo tu puoi vedere questo messaggio",
+			"verified_badge": "Badge di applicazione verificata"
+		},
+		"reply": {
+			"replying_to": "In risposta a {name}: {preview}",
+			"used_command": "{name} ha usato il comando slash {command}"
+		},
+		"select": {
+			"aria": "Seleziona un'opzione",
+			"placeholder": "Fai una scelta"
+		},
+		"suggestions": {
+			"for_prefix": "Suggerimenti di comandi slash per {prefix}",
+			"frequently_used": "Usati spesso",
+			"listbox": "Suggerimenti di comandi slash",
+			"matched": "Comando slash corrispondente",
+			"rail": "Applicazioni"
+		},
+		"welcome": {
+			"edit": "Modifica canale",
+			"start": "Questo è l'inizio del canale #{name}.",
+			"title": "Benvenuto in #{name}!"
+		}
+	},
 	"feedback": {
 		"description": "Segnala un bug o condividi i tuoi pensieri con il team di WolfStar.",
 		"email": "Email",
@@ -18,20 +129,29 @@
 	},
 	"pwa": {
 		"dismiss": "Chiudi",
-		"install": "Install",
+		"install": "Installa",
 		"install_app": "Installa app",
 		"reload": "Ricarica",
 		"update_available": "Aggiornamento disponibile"
 	},
 	"select": {
+		"add": "Aggiungi",
+		"add_to": "Aggiungi a {name}",
+		"clear": "Svuota",
 		"clear_selected": "Cancella selezione",
 		"days": "Giorni",
+		"done": "Fatto",
 		"hours": "Ore",
 		"max_duration": "Durata massima",
 		"min_duration": "Durata minima",
 		"minutes": "Minuti",
 		"none": "Nessuno",
+		"nothing_chosen": "Ancora niente.",
+		"nothing_matches": "Nessun risultato.",
+		"remove_option": "Rimuovi {name}",
 		"search": "Cerca...",
-		"seconds": "Secondi"
+		"seconds": "Secondi",
+		"unknown_channel": "Canale sconosciuto",
+		"unknown_role": "Ruolo sconosciuto"
 	}
 }

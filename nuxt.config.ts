@@ -2,10 +2,18 @@ import netlifyNuxt from "@netlify/nuxt";
 import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
 import { isCI, isTest, provider } from "std-env";
+import {
+	ALPHA_WORKER,
+	applyAlphaWorkerEnv,
+	CLOUDFLARE_BINDINGS,
+	isCloudflareBuild,
+} from "./config/cloudflare.ts";
 import { currentLocales, datetimeFormats, numberFormats } from "./config/i18n.ts";
 import { pwa } from "./config/pwa.ts";
 import { LOCALE_BUNDLES_DIR } from "./modules/i18n-locale-bundles.ts";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig.ts";
+
+applyAlphaWorkerEnv();
 
 const runtimeConfig = generateRuntimeConfig();
 const isStorybook = process.env.STORYBOOK === "true" || process.env.VITEST_STORYBOOK === "true";
@@ -14,6 +22,10 @@ const { resolve } = createResolver(import.meta.url);
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+	// The dev validator of unhead is registered by `app/plugins/unhead-validate.client.ts`,
+	// which sets the rules Nuxt's own injection cannot.
+	unhead: { vite: { validate: false } },
+
 	// Modules configuration
 	modules: [
 		"@nuxt/ui",
@@ -22,7 +34,7 @@ export default defineNuxtConfig({
 		// Skip it in Vitest/Storybook: its Vite plugins break the rolldown-based
 		// test environment. Studio editor chunks are also excluded from the PWA
 		// precache in config/pwa.ts so multi-MB bundles don't fail the build.
-		...(isTest || isStorybook ? [] : ["nuxt-studio"]),
+		...(isTest || isStorybook || isCloudflareBuild ? [] : ["nuxt-studio"]),
 		"@nuxt/image",
 		"@nuxt/hints",
 		"@nuxt/fonts",
@@ -45,7 +57,7 @@ export default defineNuxtConfig({
 				extends: "auto",
 			},
 		],
-		...(isTest || isCI || isStorybook ? [] : [netlifyNuxt]),
+		...(isTest || isCI || isStorybook || isCloudflareBuild ? [] : [netlifyNuxt]),
 	],
 
 	// @nuxtjs/better-auth. Redirect targets are centralised here so route rules,
@@ -56,10 +68,10 @@ export default defineNuxtConfig({
 			// Aliased to /oauth/login, which immediately hands off to Discord.
 			login: "/login",
 			// Signed-in users who open a guest-only route (the login hand-off).
-			guest: "/profile",
+			guest: "/app",
 			// Fallback landing page after a completed sign-in, used when no safe
 			// `?next=` is present and no explicit onSuccess/callbackURL is given.
-			authenticated: "/profile",
+			authenticated: "/app",
 			logout: "/",
 		},
 		preserveRedirect: true,
@@ -70,6 +82,15 @@ export default defineNuxtConfig({
 	},
 
 	content: {
+		// A Worker has no SQLite file, so there the content is loaded into D1.
+		...(isCloudflareBuild
+			? {
+					database: {
+						bindingName: CLOUDFLARE_BINDINGS.contentDatabase,
+						type: "d1" as const,
+					},
+				}
+			: {}),
 		// Use Node.js built-in sqlite (available in Node v22.5+) to avoid
 		// requiring better-sqlite3 as an additional native dependency.
 		experimental: {
@@ -101,7 +122,9 @@ export default defineNuxtConfig({
 
 	$production: {
 		image: {
-			provider: "netlify",
+			// On the alpha Worker, through the zone's image transformations, which
+			// accept the zone's own images and the origins Netlify allows.
+			provider: isCloudflareBuild ? "cloudflare" : "netlify",
 		},
 		modules: ["nuxt-security"],
 		sentry: {
@@ -128,12 +151,9 @@ export default defineNuxtConfig({
 			charset: "utf-8",
 			htmlAttrs: { lang: "en-US" },
 			link: [
-				// Preconnect for external domains (faster than dns-prefetch: includes TLS handshake)
+				// Preconnect covers the DNS lookup too, so no dns-prefetch beside it.
 				{ href: "https://cdn.discordapp.com", rel: "preconnect", crossorigin: "anonymous" },
 				{ href: "https://cdn.wolfstar.rocks", rel: "preconnect", crossorigin: "anonymous" },
-				// Fallback dns-prefetch for browsers that don't support preconnect
-				{ href: "https://cdn.discordapp.com", rel: "dns-prefetch" },
-				{ href: "https://cdn.wolfstar.rocks", rel: "dns-prefetch" },
 			],
 			meta: [
 				// Page transitions
@@ -221,7 +241,11 @@ export default defineNuxtConfig({
 	},
 
 	htmlValidator: {
-		enabled: !isCI || (provider !== "netlify" && !!process.env.VALIDATE_HTML),
+		enabled:
+			!isCI ||
+			(provider !== "netlify" &&
+				provider !== "cloudflare_workers" &&
+				!!process.env.VALIDATE_HTML),
 		options: {
 			rules: {
 				"meta-refresh": "off",
@@ -281,34 +305,39 @@ export default defineNuxtConfig({
 		"/oauth/login": {
 			prerender: false,
 			robots: true,
-			auth: { only: "guest", redirectTo: "/profile" },
+			auth: { only: "guest", redirectTo: "/app" },
 		},
 		// `/login` is an alias of `/oauth/login`, but route rules match on the
 		// requested path, so the guest rule has to be repeated here or signed-in
 		// users hitting /login get bounced back to Discord.
 		"/login": {
 			prerender: false,
-			auth: { only: "guest", redirectTo: "/profile" },
+			auth: { only: "guest", redirectTo: "/app" },
 		},
-		"/guilds/**": { auth: { only: "user", redirectTo: "/login" } },
+		// The dashboard is one client-rendered page; the guild it shows is app
+		// state, so nothing about it is prerenderable or worth indexing.
+		"/app": {
+			auth: { only: "user", redirectTo: "/login" },
+			prerender: false,
+			robots: false,
+			ssr: false,
+		},
+		// Legacy entry points that forward into `/app`: sign-in gated, never indexed.
+		"/guilds/**": { auth: { only: "user", redirectTo: "/login" }, robots: false },
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
-		// /profile hosts local UI settings (theme/locale/motion) for guests and the
-		// Discord account/servers view for signed-in users. Never statically prerender
-		// it (crawlLinks would otherwise reach it via links on prerendered pages).
-		"/profile": {
-			appLayout: "default",
-			prerender: false,
-			robots: true,
-		},
-		"/account": {
-			appLayout: "default",
-			prerender: false,
-			robots: true,
-		},
+		// Deprecated: the page moved into `/app` (server list) and the preferences
+		// dialog (theme/locale/motion). Kept as permanent redirects for old links.
+		"/profile": { redirect: { to: "/app", statusCode: 301 }, prerender: false, robots: false },
+		"/account": { redirect: { to: "/app", statusCode: 301 }, prerender: false, robots: false },
 		"/starly": { appLayout: "default", robots: true },
 
 		// Static pages
-		"/commands": { appLayout: "default", prerender: true, robots: true },
+		// The alpha bot's commands change with each image it runs, so the alpha
+		// Worker renders the page and keeps it an hour instead of freezing it at
+		// build time.
+		"/commands": isCloudflareBuild
+			? { appLayout: "default", robots: true, swr: 60 * 60 }
+			: { appLayout: "default", prerender: true, robots: true },
 		"/staryl": { appLayout: "default", prerender: true, robots: true },
 		"/terms": { appLayout: "default", prerender: true, robots: true },
 		"/wolfstar": { appLayout: "default", prerender: true, robots: true },
@@ -331,6 +360,9 @@ export default defineNuxtConfig({
 
 	sourcemap: {
 		client: "hidden",
+		// Rollup collapsing the server maps is the other half of the bundling time
+		// on Workers Builds, and nothing uploads them for the Worker.
+		server: !isCloudflareBuild,
 	},
 
 	features: {
@@ -363,8 +395,28 @@ export default defineNuxtConfig({
 	compatibilityDate: "2025-09-20",
 
 	nitro: {
+		...(isCloudflareBuild
+			? {
+					cloudflare: { deployConfig: true, nodeCompat: true, wrangler: ALPHA_WORKER },
+					// A Worker refuses I/O across requests, so the database client is made
+					// per request and found through `useEvent()` (server/database/prisma.ts).
+					experimental: { asyncContext: true },
+					// Sentry's SDK for Workers, in place of the Node one that
+					// `sentry.server.config.ts` sets up.
+					plugins: [resolve("./server/cloudflare/sentry.ts")],
+				}
+			: {}),
 		future: {
 			nativeSWR: true,
+		},
+		// The bot API only allows the production origin, so a browser on
+		// localhost cannot call it directly. In development `$api` goes through
+		// this same-origin path instead (see `app/plugins/api.ts`).
+		devProxy: {
+			"/__bot-api": {
+				target: process.env.NUXT_PUBLIC_API_BASE_URL || "http://localhost:8282",
+				changeOrigin: true,
+			},
 		},
 		esbuild: {
 			options: {
@@ -532,6 +584,23 @@ export default defineNuxtConfig({
 				weights: [400, 500, 600, 700],
 				display: "swap",
 			},
+			// Display name styles (`AppDisplayName`): the open-source typefaces
+			// Discord's name fonts come from, one weight each as Discord ships
+			// them. Self-hosted at build time and only fetched by a page that
+			// draws a name in one of them.
+			{ display: "swap", name: "Bangers", provider: "google", weights: [400] },
+			{ display: "swap", name: "BioRhyme", provider: "google", weights: [400] },
+			{ display: "swap", name: "Cherry Bomb One", provider: "google", weights: [400] },
+			{ display: "swap", name: "Chicle", provider: "google", weights: [400] },
+			{ display: "swap", name: "MuseoModerno", provider: "google", weights: [500] },
+			{ display: "swap", name: "Pirata One", provider: "google", weights: [400] },
+			{ display: "swap", name: "Pixelify Sans", provider: "google", weights: [400] },
+			{ display: "swap", name: "Grenze Gotisch", provider: "google", weights: [400] },
+			{ display: "swap", name: "Zilla Slab", provider: "google", weights: [600] },
+			{ display: "swap", name: "Playpen Sans", provider: "google", weights: [700] },
+			{ display: "swap", name: "Orbitron", provider: "google", weights: [700] },
+			{ display: "swap", name: "New Rocker", provider: "google", weights: [400] },
+			{ display: "swap", name: "Kalam", provider: "google", weights: [700] },
 		],
 	},
 
@@ -568,6 +637,10 @@ export default defineNuxtConfig({
 	ogImage: {
 		enabled: !isStorybook,
 		security: {
+			// The module's 15 s unless the build asks for more: on a machine with
+			// little memory the prerender swaps, and each render waits on the
+			// garbage collector far longer than it draws.
+			renderTimeout: Number(process.env.OG_IMAGE_RENDER_TIMEOUT) || undefined,
 			strict: !!process.env.NUXT_IMAGE_PROXY_SECRET,
 			secret: process.env.NUXT_IMAGE_PROXY_SECRET,
 			// HMAC signing is sufficient; origin pinning blocks localhost e2e runs
@@ -579,13 +652,17 @@ export default defineNuxtConfig({
 	skewProtection: {
 		// Same Netlify Blobs backend as the cache/fetch-cache Nitro storage mounts
 		// (see modules/cache.ts); falls back to the module's fs cache elsewhere.
-		storage: {
-			base: "./.cache/skew-protection",
-			// nuxt-skew-protection imports `unstorage/drivers/${driver}` verbatim,
-			// so this must be the kebab-case file name (fs-lite.mjs), unlike the
-			// Nitro storage mounts above where "fsLite" is a registered driver name.
-			driver: "fs-lite",
-		},
+		// The Workers build keeps it in a KV namespace of its own, the way the
+		// module's Cloudflare guide sets it up.
+		storage: isCloudflareBuild
+			? { binding: CLOUDFLARE_BINDINGS.skewProtection, driver: "cloudflare-kv-binding" }
+			: {
+					base: "./.cache/skew-protection",
+					// nuxt-skew-protection imports `unstorage/drivers/${driver}` verbatim,
+					// so this must be the kebab-case file name (fs-lite.mjs), unlike the
+					// Nitro storage mounts above where "fsLite" is a registered driver name.
+					driver: "fs-lite",
+				},
 		updateStrategy: "polling",
 		// Keep the persistent-previous-build-assets feature off: with storage now
 		// always configured, the module's default (true) runs augmentBuildMetadata,
@@ -593,7 +670,16 @@ export default defineNuxtConfig({
 		// patches the Nitro server's embedded size/etag for latest.json. The node
 		// preview server then serves the app manifest with stale content-length,
 		// and clients fail with NUXT_E5004/NUXT_E5002 on client-side navigation.
-		bundleAssets: false,
+		// A Worker serves those files from its asset binding as they are, so there
+		// the assets of past deploys are kept, for clients still on them, by a
+		// build in CI: the module uploads them through `wrangler`, 25 processes at
+		// a time, which a machine with 4 GB of memory does not survive. Workers
+		// Builds hands the build an API token, and there the upload of the 626
+		// assets of each of the last releases outlasted the 30 minute limit, so it
+		// is opt-in with SKEW_PROTECTION_BUNDLE_ASSETS; without it the build keeps
+		// no past assets.
+		bundleAssets:
+			isCloudflareBuild && isCI && process.env.SKEW_PROTECTION_BUNDLE_ASSETS === "true",
 	},
 
 	// PWA configuration
@@ -687,11 +773,17 @@ export default defineNuxtConfig({
 
 	sentry: {
 		...runtimeConfig.sentry,
-		autoInjectServerSentry: "top-level-import",
+		// A Worker gets the Cloudflare SDK from `server/cloudflare/sentry.ts`, so
+		// the Node one is not imported into its entry.
+		autoInjectServerSentry: isCloudflareBuild ? undefined : "top-level-import",
 		// Strips the SDK's debug logging from the bundles. Replay stays
 		// untouched on purpose: sentry.client.config.ts lazy-loads it.
 		bundleSizeOptimizations: { excludeDebugStatements: true },
 		sourcemaps: {
+			// Without a token nothing is uploaded, yet the plugins still regenerate
+			// every chunk's source map to inject debug ids: that was most of the
+			// server bundling time, enough to time out the alpha Worker's build.
+			disable: !runtimeConfig.sentry.authToken,
 			filesToDeleteAfterUpload: [".*/**/public/**/*.map", ".output/**/public/**/*.map"],
 		},
 	},
@@ -719,7 +811,14 @@ export default defineNuxtConfig({
 	},
 
 	sitemap: {
-		exclude: ["/oauth/guild", "/oauth/callback", "/guilds/[...id]"],
+		exclude: [
+			"/app",
+			"/profile",
+			"/account",
+			"/oauth/guild",
+			"/oauth/callback",
+			"/guilds/[...id]",
+		],
 		zeroRuntime: true,
 	},
 

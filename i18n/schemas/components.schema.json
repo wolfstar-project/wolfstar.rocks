@@ -4,6 +4,339 @@
 	"description": "Schema for components.json. Generated from en/components.json — do not edit manually.",
 	"type": "object",
 	"properties": {
+		"discord": {
+			"type": "object",
+			"properties": {
+				"channel_info": {
+					"type": "object",
+					"properties": {
+						"back": {
+							"type": "string"
+						},
+						"create_thread": {
+							"type": "string"
+						},
+						"label": {
+							"type": "string"
+						},
+						"members_in": {
+							"type": "string"
+						},
+						"no_threads": {
+							"type": "string"
+						},
+						"sections": {
+							"type": "string"
+						},
+						"tabs": {
+							"type": "object",
+							"properties": {
+								"files": {
+									"type": "string"
+								},
+								"links": {
+									"type": "string"
+								},
+								"media": {
+									"type": "string"
+								},
+								"members": {
+									"type": "string"
+								},
+								"pins": {
+									"type": "string"
+								},
+								"threads": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"text_channel": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"chat": {
+					"type": "object",
+					"properties": {
+						"messages_in": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"command": {
+					"type": "object",
+					"properties": {
+						"label": {
+							"type": "string"
+						},
+						"matched": {
+							"type": "string"
+						},
+						"suggestion": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"composer": {
+					"type": "object",
+					"properties": {
+						"close_apps": {
+							"type": "string"
+						},
+						"label": {
+							"type": "string"
+						},
+						"open_apps": {
+							"type": "string"
+						},
+						"placeholder": {
+							"type": "string"
+						},
+						"send": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"embed": {
+					"type": "object",
+					"properties": {
+						"footer_icon": {
+							"type": "string"
+						},
+						"from": {
+							"type": "string"
+						},
+						"generic": {
+							"type": "string"
+						},
+						"titled": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"header": {
+					"type": "object",
+					"properties": {
+						"hide_members": {
+							"type": "string"
+						},
+						"notifications": {
+							"type": "string"
+						},
+						"open_info": {
+							"type": "string"
+						},
+						"pins": {
+							"type": "string"
+						},
+						"search": {
+							"type": "string"
+						},
+						"search_plain": {
+							"type": "string"
+						},
+						"show_members": {
+							"type": "string"
+						},
+						"threads": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"launcher": {
+					"type": "object",
+					"properties": {
+						"apps": {
+							"type": "string"
+						},
+						"back": {
+							"type": "string"
+						},
+						"collapse": {
+							"type": "string"
+						},
+						"commands": {
+							"type": "string"
+						},
+						"expand": {
+							"type": "string"
+						},
+						"help_body": {
+							"type": "string"
+						},
+						"help_title": {
+							"type": "string"
+						},
+						"in_server": {
+							"type": "string"
+						},
+						"learn_more": {
+							"type": "string"
+						},
+						"promoted": {
+							"type": "string"
+						},
+						"search": {
+							"type": "string"
+						},
+						"view_all": {
+							"type": "string"
+						},
+						"view_more": {
+							"type": "string"
+						},
+						"views": {
+							"type": "object",
+							"properties": {
+								"action-games": {
+									"type": "string"
+								},
+								"bot-games": {
+									"type": "string"
+								},
+								"card-games": {
+									"type": "string"
+								},
+								"chill-together": {
+									"type": "string"
+								},
+								"puzzle-games": {
+									"type": "string"
+								},
+								"recents": {
+									"type": "string"
+								},
+								"server-apps": {
+									"type": "string"
+								},
+								"social-activities": {
+									"type": "string"
+								},
+								"strategy-games": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						}
+					},
+					"additionalProperties": false
+				},
+				"member_list": {
+					"type": "object",
+					"properties": {
+						"app": {
+							"type": "string"
+						},
+						"label": {
+							"type": "string"
+						},
+						"offline": {
+							"type": "string"
+						},
+						"online": {
+							"type": "string"
+						},
+						"verified_app": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"message": {
+					"type": "object",
+					"properties": {
+						"dismiss": {
+							"type": "string"
+						},
+						"dismiss_aria": {
+							"type": "string"
+						},
+						"ephemeral_notice": {
+							"type": "string"
+						},
+						"from": {
+							"type": "string"
+						},
+						"only_you": {
+							"type": "string"
+						},
+						"verified_badge": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"reply": {
+					"type": "object",
+					"properties": {
+						"replying_to": {
+							"type": "string"
+						},
+						"used_command": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"select": {
+					"type": "object",
+					"properties": {
+						"aria": {
+							"type": "string"
+						},
+						"placeholder": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"suggestions": {
+					"type": "object",
+					"properties": {
+						"for_prefix": {
+							"type": "string"
+						},
+						"frequently_used": {
+							"type": "string"
+						},
+						"listbox": {
+							"type": "string"
+						},
+						"matched": {
+							"type": "string"
+						},
+						"rail": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"welcome": {
+					"type": "object",
+					"properties": {
+						"edit": {
+							"type": "string"
+						},
+						"start": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				}
+			},
+			"additionalProperties": false
+		},
 		"feedback": {
 			"type": "object",
 			"properties": {
@@ -76,10 +409,22 @@
 		"select": {
 			"type": "object",
 			"properties": {
+				"add": {
+					"type": "string"
+				},
+				"add_to": {
+					"type": "string"
+				},
+				"clear": {
+					"type": "string"
+				},
 				"clear_selected": {
 					"type": "string"
 				},
 				"days": {
+					"type": "string"
+				},
+				"done": {
 					"type": "string"
 				},
 				"hours": {
@@ -97,10 +442,25 @@
 				"none": {
 					"type": "string"
 				},
+				"nothing_chosen": {
+					"type": "string"
+				},
+				"nothing_matches": {
+					"type": "string"
+				},
+				"remove_option": {
+					"type": "string"
+				},
 				"search": {
 					"type": "string"
 				},
 				"seconds": {
+					"type": "string"
+				},
+				"unknown_channel": {
+					"type": "string"
+				},
+				"unknown_role": {
 					"type": "string"
 				}
 			},

@@ -1,150 +1,600 @@
 {
 	"$schema": "../../schemas/guilds.schema.json",
 	"guild_card": {
-		"invite_aria": "Invitar el bot a {name}",
-		"invite_bot": "Invitar bot",
-		"invite_bot_aria": "Invitar bot a {name}",
-		"manage_aria": "Administrar {name}",
-		"manage_server": "Gestionar servidor",
-		"manage_server_aria": "Administrar servidor {name}",
-		"members_online": "Miembros en línea",
-		"no_permission": "Sin permiso",
-		"no_permission_aria": "Sin permiso para administrar {name}",
-		"total_members": "Total de miembros: {count}"
+		"invite_bot_aria": "Invitar bot a {name}"
+	},
+	"guild_member_picker": {
+		"add": "",
+		"add_member": "",
+		"add_to": "",
+		"added": "",
+		"dialog_description": "",
+		"dialog_title": "",
+		"not_in_server": "",
+		"search_placeholder": "",
+		"type_to_search": ""
 	},
 	"guild_settings": {
+		"access": {
+			"allow_note": "",
+			"default_permissions": "",
+			"default_roles": "",
+			"default_title": "",
+			"deny_note": "",
+			"form_aria": "",
+			"legacy_allow": "",
+			"legacy_becomes_allow": "",
+			"legacy_becomes_deny": "",
+			"legacy_deny": "",
+			"legacy_download": "",
+			"legacy_drops": "",
+			"legacy_import": "",
+			"legacy_import_all": "",
+			"legacy_import_aria": "",
+			"legacy_member": "",
+			"legacy_not_convertible": "",
+			"legacy_remove": "",
+			"legacy_remove_cancel": "",
+			"legacy_remove_confirm_label": "",
+			"legacy_remove_description": "",
+			"legacy_remove_failed": "",
+			"legacy_remove_submit": "",
+			"legacy_remove_title": "",
+			"legacy_removed": "",
+			"legacy_subtitle": "",
+			"legacy_title": "",
+			"members_allowed": "",
+			"members_denied": "",
+			"members_order": "",
+			"members_title": "",
+			"roles_allowed": "",
+			"roles_denied": "",
+			"roles_order": "",
+			"roles_title": "",
+			"subtitle": "",
+			"title": ""
+		},
+		"appeals": {
+			"add_question": "",
+			"appealable_title": "",
+			"form_aria": "",
+			"form_notice": "",
+			"form_notice_title": "",
+			"off_body": "",
+			"off_summary": "",
+			"off_title": "",
+			"on_summary": "",
+			"question_aria": "",
+			"question_placeholder": "",
+			"questions_count": "",
+			"questions_empty": "",
+			"questions_extra": "",
+			"questions_full": "",
+			"questions_help": "",
+			"questions_title": "",
+			"remove_question": "",
+			"settings_title": "",
+			"subtitle": "",
+			"switch_aria": "",
+			"title": ""
+		},
+		"auto": {
+			"allow": {
+				"embeds": "",
+				"embeds_help": "",
+				"images": "",
+				"images_help": "",
+				"invites": "",
+				"invites_help": "",
+				"links": "",
+				"links_help": "",
+				"mentions": "",
+				"mentions_help": "",
+				"text": "",
+				"text_help": ""
+			},
+			"columns": {
+				"actions": "",
+				"channel": ""
+			},
+			"count": "",
+			"editor": {
+				"automessage_interval_help": "",
+				"automessage_subtitle": "",
+				"autodelete_subtitle": "",
+				"autopurge_interval_help": "",
+				"autopurge_subtitle": "",
+				"bots": "",
+				"bots_help": "",
+				"cancel": "",
+				"channel": "",
+				"channel_locked": "",
+				"channel_placeholder": "",
+				"delete_after": "",
+				"delete_after_help": "",
+				"delete_at_once": "",
+				"edit_title": "",
+				"enable": "",
+				"filter": "",
+				"filter_help": "",
+				"keep": "",
+				"keep_help": "",
+				"mentions": "",
+				"mentions_help": "",
+				"message": "",
+				"message_placeholder": "",
+				"new_title": "",
+				"preview": "",
+				"preview_empty": "",
+				"purge_every": "",
+				"save": "",
+				"send_every": "",
+				"value_help": "",
+				"value_text": "",
+				"value_text_placeholder": "",
+				"value_user": "",
+				"value_user_placeholder": ""
+			},
+			"errors": {
+				"channel": "",
+				"channel_taken": "",
+				"content": "",
+				"content_length": "",
+				"delay": "",
+				"message_interval": "",
+				"needs_text": "",
+				"needs_user": "",
+				"purge_interval": "",
+				"value_length": ""
+			},
+			"filters": {
+				"any": "",
+				"bots": "",
+				"contains": "",
+				"embeds": "",
+				"endsWith": "",
+				"humans": "",
+				"images": "",
+				"invites": "",
+				"links": "",
+				"mentions": "",
+				"notContains": "",
+				"startsWith": "",
+				"text": "",
+				"user": ""
+			},
+			"load_failed": "",
+			"module_hint": "",
+			"removed_title": "",
+			"retry": "",
+			"saved_title": "",
+			"server_errors": {
+				"channel": "",
+				"generic": "",
+				"invalid": "",
+				"limit": "",
+				"unknown": ""
+			}
+		},
+		"autodelete": {
+			"add": "",
+			"at_once": "",
+			"bots_deleted": "",
+			"bots_kept": "",
+			"channels_title": "",
+			"columns": {
+				"bots": "",
+				"delay": "",
+				"kept": ""
+			},
+			"edit_aria": "",
+			"empty_body": "",
+			"empty_title": "",
+			"footnote": "",
+			"nothing_kept": "",
+			"remove": "",
+			"remove_aria": "",
+			"remove_description": "",
+			"remove_title": "",
+			"removed_description": "",
+			"restart_body": "",
+			"restart_title": "",
+			"saved_description": "",
+			"subtitle": "",
+			"table_aria": ""
+		},
+		"automessage": {
+			"add": "",
+			"edit_aria": "",
+			"empty_body": "",
+			"empty_title": "",
+			"every": "",
+			"list_aria": "",
+			"mentions_aria": "",
+			"mentions_off": "",
+			"mentions_on": "",
+			"mentions_saved_off": "",
+			"mentions_saved_on": "",
+			"next": "",
+			"remove": "",
+			"remove_aria": "",
+			"remove_description": "",
+			"remove_title": "",
+			"removed_description": "",
+			"saved_description": "",
+			"subtitle": ""
+		},
+		"automod": {
+			"form_aria": "",
+			"hard_actions": {
+				"Ban": "",
+				"Kick": "",
+				"Mute": "",
+				"Softban": "",
+				"Timeout": "",
+				"VoiceKick": "",
+				"Warning": ""
+			},
+			"module_hint": "",
+			"module_settings": "",
+			"options": {
+				"alerts": "",
+				"allowed": "",
+				"allowedCodes": "",
+				"allowedGuilds": "",
+				"characters": "",
+				"maximum": "",
+				"mentionsAllowed": "",
+				"minimum": "",
+				"perChannel": "",
+				"timePeriod": "",
+				"words": ""
+			},
+			"rules": {
+				"action": "",
+				"count": "",
+				"defaults": {
+					"description": "",
+					"escalation_title": "",
+					"rule_title": "",
+					"save": "",
+					"saved": ""
+				},
+				"delete": "",
+				"delete_aria": "",
+				"delete_description": "",
+				"delete_title": "",
+				"edit": "",
+				"edit_aria": "",
+				"editor": {
+					"action": "",
+					"back": "",
+					"cancel": "",
+					"create": "",
+					"create_title": "",
+					"duration": "",
+					"duration_unit_aria": "",
+					"edit_title": "",
+					"enabled": "",
+					"escalation": "",
+					"escalation_add": "",
+					"escalation_duration": "",
+					"escalation_duration_help": "",
+					"escalation_help": "",
+					"escalation_remove_aria": "",
+					"escalation_step": "",
+					"exemptions": "",
+					"hard_action": "",
+					"hard_action_help": "",
+					"ignored_channels": "",
+					"ignored_roles": "",
+					"list_placeholder": "",
+					"name": "",
+					"name_placeholder": "",
+					"options": "",
+					"permanent_hint": "",
+					"save": "",
+					"soft_actions": "",
+					"soft_actions_help": "",
+					"soft_alert": "",
+					"soft_delete": "",
+					"soft_log": "",
+					"threshold_duration": "",
+					"threshold_maximum": "",
+					"type": "",
+					"type_locked": ""
+				},
+				"empty_description": "",
+				"empty_title": "",
+				"enabled_count": "",
+				"errors": {
+					"generic": "",
+					"invalid": "",
+					"limit": "",
+					"nameInvalid": "",
+					"nameRequired": "",
+					"nameTaken": "",
+					"timeoutNeedsDuration": "",
+					"unknown": ""
+				},
+				"first_infraction": "",
+				"load_failed": "",
+				"loading_aria": "",
+				"new": "",
+				"no_match": "",
+				"nothing": "",
+				"on_hit": "",
+				"retry": "",
+				"search_placeholder": "",
+				"soft_alert_short": "",
+				"soft_delete_short": "",
+				"soft_log_short": "",
+				"subtitle": "",
+				"threshold": "",
+				"title": "",
+				"toasts": {
+					"created": "",
+					"deleted": "",
+					"saved": ""
+				},
+				"toggle_aria": "",
+				"type_picker": {
+					"content_filters": "",
+					"description": "",
+					"rate_limits": "",
+					"title": ""
+				}
+			},
+			"subtitle": "",
+			"title": "",
+			"types": {
+				"Attachments": {
+					"description": "",
+					"name": ""
+				},
+				"Capitals": {
+					"description": "",
+					"name": ""
+				},
+				"Characters": {
+					"description": "",
+					"name": ""
+				},
+				"Duplicates": {
+					"description": "",
+					"name": ""
+				},
+				"Emojis": {
+					"description": "",
+					"name": ""
+				},
+				"ImageSpam": {
+					"description": "",
+					"name": ""
+				},
+				"Invites": {
+					"description": "",
+					"name": ""
+				},
+				"Links": {
+					"description": "",
+					"name": ""
+				},
+				"LinksCooldown": {
+					"description": "",
+					"name": ""
+				},
+				"MaskedLinks": {
+					"description": "",
+					"name": ""
+				},
+				"MassMentions": {
+					"description": "",
+					"name": ""
+				},
+				"MentionsCooldown": {
+					"description": "",
+					"name": ""
+				},
+				"MessageSpam": {
+					"description": "",
+					"name": ""
+				},
+				"Newlines": {
+					"description": "",
+					"name": ""
+				},
+				"NoMentionSpam": {
+					"description": "",
+					"name": ""
+				},
+				"Phishing": {
+					"description": "",
+					"name": ""
+				},
+				"Polls": {
+					"description": "",
+					"name": ""
+				},
+				"Spoilers": {
+					"description": "",
+					"name": ""
+				},
+				"Stickers": {
+					"description": "",
+					"name": ""
+				},
+				"StickersCooldown": {
+					"description": "",
+					"name": ""
+				},
+				"Words": {
+					"description": "",
+					"name": ""
+				},
+				"Zalgo": {
+					"description": "",
+					"name": ""
+				}
+			}
+		},
+		"autopurge": {
+			"add": "",
+			"columns": {
+				"every": "",
+				"filter": "",
+				"next": ""
+			},
+			"edit_aria": "",
+			"empty_body": "",
+			"empty_title": "",
+			"footnote": "",
+			"remove": "",
+			"remove_aria": "",
+			"remove_description": "",
+			"remove_title": "",
+			"removed_description": "",
+			"saved_description": "",
+			"schedules_title": "",
+			"subtitle": "",
+			"table_aria": ""
+		},
 		"channels": {
-			"excluded_channels": "Canales excluidos",
+			"bulk": {
+				"all_help": "",
+				"all_label": "",
+				"cancel_selection": "",
+				"group_help": "",
+				"group_label": "",
+				"mixed": "",
+				"no_logs_selected": "",
+				"remove_channel": "",
+				"select_group": "",
+				"select_log": "",
+				"select_logs": "",
+				"selected_count": "",
+				"selection_help": "",
+				"selection_label": "",
+				"selection_region": ""
+			},
+			"delivery": {
+				"edit_style": {
+					"difference": "",
+					"difference_help": "",
+					"separate": "",
+					"separate_help": ""
+				},
+				"title": ""
+			},
+			"excluded_channels": "",
 			"excluded_channels_help": "Canales omitidos por tipos específicos de registro.",
 			"form_aria": "Formulario de configuración de canales",
+			"groups": {
+				"channels": "",
+				"emojis": "",
+				"members": "",
+				"messages": "",
+				"reactions": "",
+				"roles": "",
+				"server": ""
+			},
+			"ignore_dialog_title": "",
+			"ignored_count": "",
 			"logging_channels": "Canales de registro",
 			"logging_channels_help": "Elige dónde WolfStar publica cada tipo de registro.",
+			"not_logged": "",
+			"nothing_ignored": "",
+			"routed_count": "",
+			"search_text_channels": "",
 			"subtitle": "Elige dónde publica WolfStar los registros y qué canales ignorar.",
-			"title": "Configuración de canales"
+			"title": ""
+		},
+		"command_permissions": {
+			"added": "",
+			"administrator_note": "",
+			"all_channels": "",
+			"allow": "",
+			"allowed": "",
+			"app_default": "",
+			"app_default_note": "",
+			"authorize": "",
+			"changed_count": "",
+			"channels": "",
+			"conflict": "",
+			"conflict_title": "",
+			"count_aria": "",
+			"denied": "",
+			"deny": "",
+			"error_channel": "",
+			"error_command": "",
+			"error_permissions": "",
+			"error_rate_limited": "",
+			"error_refused": "",
+			"error_role_above": "",
+			"error_scope": "",
+			"error_unknown_channel": "",
+			"error_unknown_command": "",
+			"error_unknown_role": "",
+			"everyone": "",
+			"failed_title": "",
+			"flipped": "",
+			"keep_editing": "",
+			"load_failed": "",
+			"member": "",
+			"members": "",
+			"missing": "",
+			"missing_title": "",
+			"not_registered": "",
+			"not_set": "",
+			"over_limit": "",
+			"preview_description": "",
+			"preview_title": "",
+			"reload": "",
+			"removed": "",
+			"review": "",
+			"roles": "",
+			"scope_needed": "",
+			"send": "",
+			"sending": "",
+			"sent_before_stop": "",
+			"status_custom": "",
+			"status_default": "",
+			"subtitle": "",
+			"title": "",
+			"use_app_default": ""
+		},
+		"command_rules": {
+			"allowed_channels": "",
+			"allowed_roles": "",
+			"allowed_users": "",
+			"empty": "",
+			"ignored_channels": "",
+			"ignored_roles": "",
+			"ignored_users": "",
+			"subtitle": "",
+			"title": ""
+		},
+		"command_tabs": {
+			"aria": "",
+			"disabled": "",
+			"discord": "",
+			"rules": ""
 		},
 		"commands": {
 			"category_reset": "Restablecer categoría",
 			"category_reset_description": "Restablece todos los comandos de esta categoría al valor predeterminado.",
+			"channels_form_aria": "",
 			"disable_all": "Desactivar todo",
+			"disabled_channels": "",
 			"enable_all": "Activar todo",
+			"enabled_count": "",
 			"form_aria": "Formulario de configuración de comandos desactivados",
+			"off": "",
+			"on": "",
 			"reset": "Restablecer",
 			"save_failed": "No se pudieron guardar los ajustes de comandos. {message}",
 			"subtitle": "Elige qué comandos activar o desactivar en tu servidor",
 			"title": "Comandos"
-		},
-		"events": {
-			"channels_page_link": "la página de Canales",
-			"form_aria": "Formulario de configuración de eventos",
-			"message_events": "Eventos de mensajes",
-			"message_events_help": "Estos eventos rastrean la actividad de los mensajes. Los canales necesarios varían según el tipo de evento y se pueden configurar en {channelsPage}.",
-			"moderation_events": "Eventos de moderación",
-			"moderation_events_help": "Estos eventos involucran acciones de moderación. Configura un canal de registros de moderación en {channelsPage}.",
-			"subtitle": "Configura qué eventos deben registrarse y rastrearse",
-			"title": "Configuración de eventos",
-			"toggle_aria": "Activar o desactivar {title}"
-		},
-		"filter": {
-			"capitals": {
-				"filter_label": "Filtro {state}",
-				"form_aria": "Formulario de configuración del filtro de mayúsculas",
-				"maximum": "Caracteres en mayúscula máximos",
-				"minimum": "Caracteres mínimos",
-				"save_failed": "No se pudo guardar la configuración del filtro de mayúsculas. {message}",
-				"title": "Filtro de letras mayúsculas",
-				"toggle": "Activar/desactivar filtro de mayúsculas",
-				"toggle_help": "Bloquea mensajes con demasiados caracteres en mayúscula."
-			},
-			"common": {
-				"actions": {
-					"ban": "Banear",
-					"kick": "Expulsar",
-					"mute": "Silenciar",
-					"none": "Ninguna",
-					"softban": "Baneo suave",
-					"warning": "Advertencia"
-				},
-				"alerts": "Alertas",
-				"alerts_help": "Publica una alerta en el canal donde ocurrió la infracción.",
-				"delete_message": "Eliminar mensaje",
-				"delete_message_help": "Elimina el mensaje que activó el filtro.",
-				"disabled": "Desactivado",
-				"duration": "Duración",
-				"duration_help": "Cuánto dura el silencio o el baneo",
-				"enabled": "Activado",
-				"hard_action": "Acción dura",
-				"hard_action_description": "Castigo aplicado cuando se alcanza el umbral.",
-				"logging": "Registro",
-				"logging_help": "Envía un mensaje de registro al canal de registros de moderación configurado.",
-				"options": "Opciones",
-				"punishments": "Sanciones",
-				"select_action_aria": "Seleccionar acción de castigo",
-				"soft_actions": "Acciones suaves",
-				"threshold": "Umbral",
-				"threshold_duration": "Ventana de tiempo (segundos)",
-				"threshold_maximum": "Infracciones antes de la sanción"
-			},
-			"invites": {
-				"filter_label": "Filtro {state}",
-				"form_aria": "Formulario de configuración del filtro de invitaciones",
-				"save_failed": "No se pudo guardar la configuración del filtro de invitaciones. {message}",
-				"title": "Filtro de enlaces de invitación",
-				"toggle": "Activar/desactivar filtro de invitaciones",
-				"toggle_help": "Bloquea los enlaces de invitación de Discord publicados en el chat."
-			},
-			"lines": {
-				"filter_label": "Filtro {state}",
-				"form_aria": "Formulario de configuración del filtro de nuevas líneas",
-				"maximum": "Líneas máximas",
-				"maximum_help": "Número máximo de saltos de línea permitidos en un mensaje.",
-				"save_failed": "No se pudo guardar la configuración del filtro de nuevas líneas. {message}",
-				"title": "Filtro de spam de líneas",
-				"toggle": "Activar/desactivar filtro de nuevas líneas",
-				"toggle_help": "Bloquea mensajes con demasiadas líneas nuevas."
-			},
-			"links": {
-				"add_link": "Añadir enlace permitido",
-				"add_link_placeholder": "ejemplo.com",
-				"allowed_links": "Enlaces permitidos",
-				"filter_label": "Filtro {state}",
-				"form_aria": "Formulario de configuración del filtro de enlaces",
-				"remove_link": "Eliminar {link}",
-				"save_failed": "No se pudo guardar la configuración del filtro de enlaces. {message}",
-				"title": "Filtro de enlaces",
-				"toggle": "Activar/desactivar filtro de enlaces",
-				"toggle_help": "Bloquea mensajes que contengan enlaces."
-			},
-			"messages": {
-				"filter_label": "Filtro {state}",
-				"form_aria": "Formulario de configuración del filtro de duplicación de mensajes",
-				"save_failed": "No se pudo guardar la configuración del filtro de duplicación de mensajes. {message}",
-				"title": "Filtro de duplicación de mensajes",
-				"toggle": "Activar/desactivar filtro de duplicación de mensajes",
-				"toggle_help": "Bloquea mensajes idénticos repetidos."
-			},
-			"reactions": {
-				"filter_label": "Filtro {state}",
-				"form_aria": "Formulario de configuración del filtro de reacciones",
-				"save_failed": "No se pudo guardar la configuración del filtro de reacciones. {message}",
-				"title": "Filtro de reacciones",
-				"toggle": "Activar/desactivar filtro de reacciones",
-				"toggle_help": "Bloquea reacciones de emoji específicas."
-			},
-			"word": {
-				"add_placeholder": "ej. palabrota",
-				"add_word": "Añadir palabra filtrada",
-				"alerts_toggle": "Activar/desactivar acción suave de alertas",
-				"delete_toggle": "Activar/desactivar acción suave de eliminación",
-				"filtered_words": "Palabras filtradas",
-				"filter_label": "Filtro {state}",
-				"form_aria": "Formulario de configuración del filtro de palabras",
-				"logging_toggle": "Activar/desactivar acción suave de registro",
-				"remove_word": "Eliminar {word}",
-				"save_failed": "No se pudo guardar la configuración del filtro de palabras. {message}",
-				"title": "Filtro de palabras",
-				"toggle": "Activar/desactivar filtro de palabras",
-				"toggle_help": "Bloquea mensajes que contengan palabras o frases específicas."
-			}
 		},
 		"general": {
 			"copy_server_id": "Copiar ID del servidor",
@@ -153,13 +603,18 @@
 			"language_aria": "Idioma del bot",
 			"language_description": "Idioma de las respuestas del bot en este servidor.",
 			"language_placeholder": "Seleccionar idioma",
+			"last_change": "",
+			"mod_actions_aria": "",
+			"mod_actions_partial": "",
+			"mod_actions_title": "",
+			"mod_actions_total": "",
 			"need_help": "¿Necesitas ayuda?",
-			"no_activity": "Aún no hay cambios en la configuración",
-			"no_activity_description": "Los cambios de configuración aparecerán aquí.",
-			"prefix": "Prefijo",
-			"prefix_aria": "Prefijo de comandos del bot",
-			"prefix_description": "Prefijo de comando del bot",
-			"prefix_placeholder": "!",
+			"no_activity": "",
+			"no_activity_description": "",
+			"no_activity_yet": "",
+			"no_activity_yet_description": "",
+			"overview_subtitle": "",
+			"overview_title": "",
 			"recent_activity": "Actividad reciente",
 			"save_failed_message": "No se pudieron guardar los ajustes generales. {message}",
 			"server_id_copied_description": "El ID del servidor se ha copiado al portapapeles.",
@@ -167,221 +622,552 @@
 			"server_info": "Información del servidor",
 			"server_info_description": "Información básica sobre este servidor de Discord.",
 			"server_stats_aria": "Estadísticas del servidor",
-			"stat_categories": "Categorías",
+			"stat_cases": "",
+			"stat_categories_note": "",
+			"stat_channels": "",
+			"stat_commands": "",
+			"stat_last_days": "",
 			"stat_members": "Miembros",
+			"stat_online": "",
+			"stat_open_reports": "",
+			"stat_open_reports_note": "",
 			"stat_roles": "Roles",
-			"stat_text_channels": "Canales de texto",
-			"stat_voice_channels": "Canales de voz",
 			"subtitle": "Configura los ajustes básicos del servidor para WolfStar.",
-			"title": "Configuración general"
+			"time_zone": "",
+			"time_zone_description": "",
+			"time_zone_now": "",
+			"title": "Configuración general",
+			"transfer": {
+				"becomes": "",
+				"cancel": "",
+				"confirm": "",
+				"description": "",
+				"export": "",
+				"export_failed": "",
+				"exported": "",
+				"import": "",
+				"import_failed": "",
+				"imported": "",
+				"issues_aria": "",
+				"nothing": "",
+				"refused_description": "",
+				"refused_title": "",
+				"review_description": "",
+				"review_title": "",
+				"rules_created": "",
+				"rules_heading": "",
+				"rules_moved": "",
+				"rules_removed": "",
+				"rules_updated": "",
+				"rules_warning": "",
+				"settings_heading": "",
+				"stale": "",
+				"title": "",
+				"too_big": "",
+				"unsaved": "",
+				"unsupported": ""
+			}
+		},
+		"honeypot": {
+			"action_help": "",
+			"action_title": "",
+			"actions": {
+				"ban": "",
+				"ban_help": "",
+				"kick": "",
+				"kick_help": "",
+				"softban": "",
+				"softban_help": ""
+			},
+			"behaviour_title": "",
+			"catching": "",
+			"channel_help": "",
+			"channels_title": "",
+			"copied_description": "",
+			"copied_title": "",
+			"copy_setup": "",
+			"errors": {
+				"same_channel": "",
+				"unknown_channel": "",
+				"trap_permissions": "",
+				"log_permissions": ""
+			},
+			"form_aria": "",
+			"not_reported": "",
+			"off_body": "",
+			"off_summary": "",
+			"off_title": "",
+			"pick_channel": "",
+			"pick_channel_hint": "",
+			"subtitle": "",
+			"title": "",
+			"warning_help": ""
 		},
 		"moderation": {
+			"cases_title": "",
 			"form_aria": "Formulario de configuración de moderación",
-			"subtitle": "Configura cómo gestiona WolfStar las acciones de moderación como baneos, expulsiones y silencios.",
-			"title": "Configuración de sanciones"
+			"minutes": "",
+			"module_hint": "",
+			"subtitle": "",
+			"title": ""
+		},
+		"modules": {
+			"active_hint": "",
+			"channel_count": "",
+			"configure": "",
+			"descriptions": {
+				"appeals": "",
+				"autodelete": "",
+				"automessage": "",
+				"automod": "",
+				"autopurge": "",
+				"channels": "",
+				"honeypot": "",
+				"moderation": "",
+				"roles": ""
+			},
+			"disable_all": "",
+			"enable_all": "",
+			"enable_first": "",
+			"enabled_count": "",
+			"form_aria": "",
+			"hint": "",
+			"inactive_hint": "",
+			"manage": "",
+			"not_set_up": "",
+			"off": "",
+			"on": "",
+			"set_up": "",
+			"subtitle": "",
+			"summary_aria": "",
+			"title": "",
+			"toggle_aria": ""
 		},
 		"please_try_again": "Por favor, inténtalo de nuevo.",
+		"reports": {
+			"queue": {
+				"columns": {
+					"filed": "",
+					"reason": "",
+					"status": "",
+					"target": ""
+				},
+				"empty_description": "",
+				"empty_status_description": "",
+				"empty_status_title": "",
+				"empty_title": "",
+				"filter_aria": "",
+				"refresh": "",
+				"status": {
+					"actioned": "",
+					"all": "",
+					"dismissed": "",
+					"open": ""
+				},
+				"table_aria": "",
+				"title": ""
+			},
+			"subtitle": "",
+			"title": ""
+		},
 		"roles": {
 			"configurable": "Roles configurables",
 			"configurable_help": "Asigna roles para las funciones principales del bot, como moderación y asignación automática.",
 			"form_aria": "Formulario de configuración de roles",
 			"general_options": "Opciones generales",
+			"groups": {
+				"join": "",
+				"moderation": "",
+				"restrictions": "",
+				"staff": ""
+			},
+			"not_set": "",
 			"restricted": "Roles restringidos",
 			"restricted_help": "Roles aplicados cuando se utiliza un comando de restricción.",
 			"subtitle": "Configura los roles que WolfStar usa para moderación, permisos y automatización.",
 			"title": "Roles"
 		},
-		"save_failed": "Error al guardar"
+		"save_failed": "Error al guardar",
+		"setup": {
+			"back": "",
+			"channels": {
+				"automod_help": "",
+				"automod_label": "",
+				"description": "",
+				"events_help": "",
+				"events_label": "",
+				"moderation_help": "",
+				"moderation_label": "",
+				"none": "",
+				"note": "",
+				"title": ""
+			},
+			"close_aria": "",
+			"description": "",
+			"done_description": "",
+			"done_title": "",
+			"finish": "",
+			"language": {
+				"description": "",
+				"help": "",
+				"label": "",
+				"title": ""
+			},
+			"modules": {
+				"description": "",
+				"recommended": "",
+				"title": "",
+				"turn_on": ""
+			},
+			"next": "",
+			"rail_note": "",
+			"rail_title": "",
+			"resume_action": "",
+			"resume_description": "",
+			"resume_title": "",
+			"review": {
+				"description": "",
+				"edit": "",
+				"edit_aria": "",
+				"none": "",
+				"none_on": "",
+				"not_set": "",
+				"rows": {
+					"admin": "",
+					"automod_log": "",
+					"event_log": "",
+					"language": "",
+					"moderation_log": "",
+					"moderator": "",
+					"modules": "",
+					"muted": ""
+				},
+				"title": ""
+			},
+			"roles": {
+				"admin_help": "",
+				"admin_label": "",
+				"description": "",
+				"moderator_help": "",
+				"moderator_label": "",
+				"muted_help": "",
+				"muted_label": "",
+				"none": "",
+				"title": ""
+			},
+			"skip": "",
+			"skipped_description": "",
+			"skipped_title": "",
+			"step_names": {
+				"channels": "",
+				"language": "",
+				"modules": "",
+				"review": "",
+				"roles": ""
+			},
+			"step_of": "",
+			"steps_aria": "",
+			"title": ""
+		},
+		"toggle_aria": "Activar o desactivar {title}"
 	},
 	"settings": {
 		"entries": {
-			"channelsIgnoreAll": {
-				"description": "Canales excluidos de todos los tipos de registro.",
-				"name": "Todos los registros"
+			"appealsBans": {
+				"description": "",
+				"name": ""
 			},
-			"channelsIgnoreMessageDelete": {
-				"description": "Canales excluidos del registro de mensajes eliminados.",
-				"name": "Registros de mensajes eliminados"
+			"appealsChannel": {
+				"description": "",
+				"name": ""
 			},
-			"channelsIgnoreMessageEdit": {
-				"description": "Canales excluidos del registro de mensajes editados.",
-				"name": "Registros de mensajes editados"
+			"appealsEnabled": {
+				"description": "",
+				"name": ""
 			},
-			"channelsIgnoreReactionAdd": {
-				"description": "Canales excluidos del registro de reacciones.",
-				"name": "Registros de reacciones añadidas"
+			"appealsMutes": {
+				"description": "",
+				"name": ""
 			},
-			"channelsLogsChannelCreate": {
+			"appealsQuestions": {
+				"description": "",
+				"name": ""
+			},
+			"appealsTimeouts": {
+				"description": "",
+				"name": ""
+			},
+			"automodChannel": {
+				"description": "",
+				"name": ""
+			},
+			"automodTrackNative": {
+				"description": "",
+				"name": ""
+			},
+			"commandsDisabledChannels": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotAction": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotChannel": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotDirectMessage": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotKeepActive": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotLogChannel": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotRandomName": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotWarning": {
+				"description": "",
+				"name": ""
+			},
+			"logsBoosts": {
+				"description": "",
+				"name": ""
+			},
+			"logsChannelCreate": {
 				"description": "Recibe un mensaje de registro cuando se crea un nuevo canal.",
 				"name": "Registros de canal creado"
 			},
-			"channelsLogsChannelDelete": {
+			"logsChannelDelete": {
 				"description": "Recibe un mensaje de registro cuando se elimina un canal.",
 				"name": "Registros de canal eliminado"
 			},
-			"channelsLogsChannelUpdate": {
+			"logsChannelUpdate": {
 				"description": "Recibe un mensaje de registro cuando se actualiza cualquier canal, incluyendo los cambios realizados.",
 				"name": "Registros de canal actualizado"
 			},
-			"channelsLogsEmojiCreate": {
+			"logsEmojiCreate": {
 				"description": "Recibe un mensaje de registro cuando se crea un nuevo emoji.",
 				"name": "Registros de emoji creado"
 			},
-			"channelsLogsEmojiDelete": {
+			"logsEmojiDelete": {
 				"description": "Recibe un mensaje de registro cuando se elimina un emoji.",
 				"name": "Registros de emoji eliminado"
 			},
-			"channelsLogsEmojiUpdate": {
+			"logsEmojiUpdate": {
 				"description": "Recibe un mensaje de registro cuando se actualiza un emoji, incluyendo los cambios realizados.",
 				"name": "Registros de emoji actualizado"
 			},
-			"channelsLogsImage": {
+			"logsEvents": {
+				"description": "",
+				"name": ""
+			},
+			"logsExpressions": {
+				"description": "",
+				"name": ""
+			},
+			"logsIgnoreAll": {
+				"description": "Canales excluidos de todos los tipos de registro.",
+				"name": "Todos los registros"
+			},
+			"logsIgnoreMessages": {
+				"description": "",
+				"name": ""
+			},
+			"logsIgnoreReactions": {
+				"description": "Canales excluidos del registro de reacciones.",
+				"name": ""
+			},
+			"logsImage": {
 				"description": "Recibe copias resubidas de las imágenes publicadas en el servidor.",
 				"name": "Registros de imágenes"
 			},
-			"channelsLogsMemberAdd": {
+			"logsIntegrations": {
+				"description": "",
+				"name": ""
+			},
+			"logsInvites": {
+				"description": "",
+				"name": ""
+			},
+			"logsMemberAdd": {
 				"description": "Recibe un mensaje de registro cuando un miembro se une al servidor.",
 				"name": "Registros de miembro añadido"
 			},
-			"channelsLogsMemberNicknameUpdate": {
+			"logsMemberNicknameUpdate": {
 				"description": "Recibe un mensaje de registro cuando un miembro cambia su apodo.",
 				"name": "Registros de cambio de apodo"
 			},
-			"channelsLogsMemberRemove": {
+			"logsMemberRemove": {
 				"description": "Recibe un mensaje de registro cuando un miembro abandona el servidor, es expulsado o baneado.",
 				"name": "Registros de miembro eliminado"
 			},
-			"channelsLogsMemberRolesUpdate": {
-				"description": "Recibe un mensaje de registro cuando un miembro obtiene o pierde un rol.",
-				"name": "Registros de roles de miembro"
-			},
-			"channelsLogsMemberUsernameUpdate": {
+			"logsMemberUsernameUpdate": {
 				"description": "Recibe un mensaje de registro cuando un miembro cambia su nombre de usuario.",
 				"name": "Registros de cambio de nombre de usuario"
 			},
-			"channelsLogsMessageDelete": {
+			"logsMessageDelete": {
 				"description": "Recibe un mensaje de registro cuando se elimina un mensaje.",
 				"name": "Registros de mensaje eliminado"
 			},
-			"channelsLogsMessageDeleteNsfw": {
+			"logsMessageDeleteNsfw": {
 				"description": "Recibe un mensaje de registro cuando se elimina un mensaje de un canal NSFW.",
 				"name": "Registros de mensaje NSFW eliminado"
 			},
-			"channelsLogsMessageUpdate": {
+			"logsMessageUpdate": {
 				"description": "Recibe un mensaje de registro cuando se edita un mensaje.",
 				"name": "Registros de mensaje editado"
 			},
-			"channelsLogsMessageUpdateNsfw": {
+			"logsMessageUpdateNsfw": {
 				"description": "Recibe un mensaje de registro cuando se edita un mensaje de un canal NSFW.",
 				"name": "Registros de mensaje NSFW editado"
 			},
-			"channelsLogsModeration": {
-				"description": "Recibe todos los registros de casos de moderación. Necesario para que funcionen los eventos de moderación.",
-				"name": "Registros de moderación"
+			"logsMessageUpdateStyle": {
+				"description": "",
+				"name": ""
 			},
-			"channelsLogsPrune": {
+			"logsPrune": {
 				"description": "Recibe un mensaje de registro cuando se eliminan mensajes en masa (purga).",
 				"name": "Registros de purga"
 			},
-			"channelsLogsReaction": {
+			"logsReactionEmojiAdd": {
 				"description": "Recibe un mensaje de registro cuando se añade una reacción a un mensaje.",
-				"name": "Registros de reacciones"
+				"name": ""
 			},
-			"channelsLogsRoleCreate": {
+			"logsReactionEmojiIncludeTwemoji": {
+				"description": "",
+				"name": "Reacciones Twemoji"
+			},
+			"logsReactionEmojiRemove": {
+				"description": "",
+				"name": ""
+			},
+			"logsRoleCreate": {
 				"description": "Recibe un mensaje de registro cuando se crea un nuevo rol.",
 				"name": "Registros de rol creado"
 			},
-			"channelsLogsRoleDelete": {
+			"logsRoleDelete": {
 				"description": "Recibe un mensaje de registro cuando se elimina un rol.",
 				"name": "Registros de rol eliminado"
 			},
-			"channelsLogsRoleUpdate": {
+			"logsRoleUpdate": {
 				"description": "Recibe un mensaje de registro cuando se actualiza un rol, incluyendo los cambios realizados.",
 				"name": "Registros de rol actualizado"
 			},
-			"channelsLogsServerUpdate": {
+			"logsServerUpdate": {
 				"description": "Recibe un mensaje de registro cuando se actualiza la configuración del servidor, incluyendo los cambios realizados.",
 				"name": "Registros de servidor actualizado"
 			},
-			"eventsBanAdd": {
-				"description": "Se publica un registro de moderación anónimo cuando se banea a un miembro.",
-				"title": "Baneo añadido"
+			"logsThreads": {
+				"description": "",
+				"name": ""
 			},
-			"eventsBanRemove": {
-				"description": "Se publica un registro de moderación anónimo cuando se levanta el baneo de un miembro.",
-				"title": "Baneo revocado"
+			"logsWebhooks": {
+				"description": "",
+				"name": ""
 			},
-			"eventsTwemojiReactions": {
-				"description": "Cuando un miembro reacciona con un Twemoji, la reacción se envía al canal de registros de reacciones.",
-				"title": "Reacciones Twemoji"
+			"moderationChannel": {
+				"description": "",
+				"name": "Registros de moderación"
 			},
-			"messagesIgnoreChannels": {
-				"description": "Canales excluidos del registro de mensajes eliminados, mensajes editados y reacciones añadidas.",
-				"name": "Registros de eliminar, editar mensajes y añadir reacciones"
+			"moderationConfirmRecentMinutes": {
+				"description": "",
+				"name": ""
 			},
-			"messagesModerationAutoDelete": {
-				"description": "Elimina el mensaje del comando para mantener el anonimato del moderador.",
-				"name": "Ocultar mensaje"
+			"moderationDehoist": {
+				"description": "",
+				"name": ""
 			},
-			"messagesModerationDm": {
-				"description": "Envía al miembro sancionado un mensaje directo con el motivo y la duración.",
-				"name": "Mensaje al usuario"
+			"moderationTrackBans": {
+				"description": "",
+				"name": ""
 			},
-			"messagesModerationMessageDisplay": {
-				"description": "Publica un mensaje de confirmación después de aplicar una sanción.",
-				"name": "Enviar respuesta de sanción"
+			"moderationTrackKicks": {
+				"description": "",
+				"name": ""
 			},
-			"messagesModerationReasonDisplay": {
-				"description": "Incluye el motivo en el mensaje de respuesta de la sanción.",
-				"name": "Mostrar motivo"
+			"moderationTrackRoles": {
+				"description": "",
+				"name": ""
 			},
-			"messagesModeratorNameDisplay": {
-				"description": "Incluye el nombre del moderador en el mensaje directo enviado al miembro sancionado.",
-				"name": "Mostrar nombre del moderador"
+			"moderationTrackTimeouts": {
+				"description": "",
+				"name": ""
+			},
+			"reportsAnonymous": {
+				"description": "",
+				"name": ""
+			},
+			"reportsChannel": {
+				"description": "",
+				"name": ""
+			},
+			"reportsNotify": {
+				"description": "",
+				"name": ""
+			},
+			"reportsRole": {
+				"description": "",
+				"name": ""
 			},
 			"rolesAdmin": {
-				"name": "Administrador",
-				"tooltip": "Los roles de administrador. Los administradores tienen acceso a todos los comandos de moderación y gestión. Por defecto, cualquiera con el permiso \"Gestionar servidor\"."
+				"description": "Los roles de administrador. Los administradores tienen acceso a todos los comandos de moderación y gestión. Por defecto, cualquiera con el permiso \"Gestionar servidor\".",
+				"name": "Administrador"
 			},
 			"rolesInitial": {
-				"name": "Inicial",
-				"tooltip": "El rol inicial, si está configurado, se asigna a los usuarios en cuanto se unen."
+				"description": "",
+				"name": "Inicial"
+			},
+			"rolesInitialHumans": {
+				"description": "",
+				"name": ""
+			},
+			"rolesInitialRobots": {
+				"description": "",
+				"name": ""
 			},
 			"rolesModerator": {
-				"name": "Moderador",
-				"tooltip": "Los roles de moderador. Los moderadores tienen acceso a casi todos los comandos de moderación. Por defecto, cualquiera que pueda banear miembros."
+				"description": "Los roles de moderador. Los moderadores tienen acceso a casi todos los comandos de moderación. Por defecto, cualquiera que pueda banear miembros.",
+				"name": "Moderador"
 			},
 			"rolesMuted": {
-				"name": "Silenciado",
-				"tooltip": "El rol silenciado, si está configurado, se asigna a los usuarios silenciados. Si no se establece ningún rol de silencio, se te pedirá que crees uno."
+				"description": "El rol silenciado, si está configurado, se asigna a los usuarios silenciados. Si no se establece ningún rol de silencio, se te pedirá que crees uno.",
+				"name": "Silenciado"
 			},
 			"rolesPublic": {
-				"name": "Roles públicos",
-				"tooltip": "Los roles públicos. Cualquier usuario puede reclamarlos mediante el comando \"roles\"."
+				"description": "Los roles públicos. Cualquier usuario puede reclamarlos mediante el comando \"roles\".",
+				"name": "Roles públicos"
 			},
 			"rolesRemoveInitial": {
-				"name": "Eliminar rol inicial",
-				"tooltip": "Cuando está activado, reclamar un rol público elimina automáticamente el rol inicial."
+				"description": "",
+				"name": "Eliminar rol inicial"
 			},
 			"rolesRestrictedAttachment": {
-				"name": "Adjunto restringido",
-				"tooltip": "Asignado a miembros a quienes se les restringe subir archivos adjuntos."
+				"description": "Asignado a miembros a quienes se les restringe subir archivos adjuntos.",
+				"name": "Adjunto restringido"
 			},
 			"rolesRestrictedEmbed": {
-				"name": "Embed restringido",
-				"tooltip": "Asignado a miembros a quienes se les restringe incrustar enlaces."
+				"description": "Asignado a miembros a quienes se les restringe incrustar enlaces.",
+				"name": "Embed restringido"
 			},
 			"rolesRestrictedEmoji": {
-				"name": "Emoji restringido",
-				"tooltip": "Asignado a miembros a quienes se les restringe el uso de emojis externos."
+				"description": "Asignado a miembros a quienes se les restringe el uso de emojis externos.",
+				"name": "Emoji restringido"
 			},
 			"rolesRestrictedReaction": {
-				"name": "Reacción restringida",
-				"tooltip": "Asignado a miembros cuyas reacciones están restringidas."
+				"description": "Asignado a miembros cuyas reacciones están restringidas.",
+				"name": "Reacción restringida"
 			},
 			"rolesRestrictedVoice": {
-				"name": "Voz restringida",
-				"tooltip": "Asignado a miembros a quienes se les restringe unirse a canales de voz."
+				"description": "Asignado a miembros a quienes se les restringe unirse a canales de voz.",
+				"name": "Voz restringida"
 			}
 		}
 	}

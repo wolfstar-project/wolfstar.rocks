@@ -8,6 +8,11 @@ export default defineWrappedResponseHandler(
 		const guildId = getGuildParam(event);
 		log.set({ guild: { id: guildId } });
 
+		// The member does not wait on the guild: both are asked for at once.
+		const memberRequest = getCurrentMember(event, guildId);
+		// When the guild is missing the member is never awaited; keep its
+		// failure from surfacing as an unhandled rejection.
+		memberRequest.catch(() => undefined);
 		const guild = await resolveGuildForRequest(event, guildId);
 		if (!guild) {
 			throw createError({
@@ -18,7 +23,7 @@ export default defineWrappedResponseHandler(
 			});
 		}
 
-		const member = await getCurrentMember(event, guild.id);
+		const member = await memberRequest;
 		log.set({ member: { id: member.user.id } });
 
 		const settings = await readSettings(guild.id);

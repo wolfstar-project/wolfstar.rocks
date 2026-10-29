@@ -23,9 +23,9 @@ describe("useApp", () => {
 		expect(apps.Staryl.purposes).toStrictEqual(["Social", "Notification"]);
 	});
 
-	it("should have Staryl invite as '#'", () => {
+	it("has Staryl's public invite", () => {
 		const apps = useApp();
-		expect(apps.Staryl.invite).toBe("#");
+		expect(apps.Staryl.invite).toBe(useInvites().Staryl);
 	});
 
 	it("should have WolfStar invite containing a client_id", () => {

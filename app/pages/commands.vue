@@ -1,124 +1,146 @@
 <template>
-	<UContainer class="mx-auto max-w-7xl space-y-12 px-4 py-8">
-		<header class="mt-8 flex flex-col items-center space-y-6 text-center">
-			<h1 class="text-4xl font-bold tracking-tight text-default/90 md:text-5xl">
-				WolfStar Commands
+	<!-- `relative` lifts the page above the layout's decorative top glow, which otherwise veils the heading. -->
+	<UContainer class="commands-page relative px-4 pt-12 pb-20 sm:pt-16 sm:pb-24">
+		<header class="mx-auto mb-11 flex max-w-[45rem] flex-col gap-5 text-center">
+			<h1
+				class="text-4xl font-bold tracking-(--home-ls-tight) text-default sm:text-[2.75rem]"
+			>
+				{{ ts("marketing.commands.title") }}
 			</h1>
-			<p class="max-w-2xl text-lg text-toned">
-				Browse and search through all available bot commands.
-				<span class="font-semibold">Powerful moderation</span> at your fingertips.
+			<p class="text-lg leading-relaxed text-toned">
+				{{ ts("marketing.commands.subtitle_lead") }}
+				<strong class="font-semibold text-default">{{
+					ts("marketing.commands.subtitle_highlight")
+				}}</strong>
+				{{ ts("marketing.commands.subtitle_tail") }}
 			</p>
 		</header>
 
-		<div class="space-y-8">
-			<!-- Search bar -->
-			<section aria-labelledby="search-heading" class="mx-auto w-full max-w-3xl">
-				<h2 id="search-heading" class="sr-only">Search Commands</h2>
-				<UFieldGroup size="xl" class="w-full">
-					<UInput
-						v-model="searchValue"
-						placeholder="Search commands..."
-						icon="i-heroicons-magnifying-glass"
-						class="min-w-0 flex-1"
-						aria-label="Search for commands by name or description"
-						:aria-describedby="searchValue ? 'search-results-count' : undefined"
-					>
-						<template v-if="searchValue" #trailing>
-							<UButton
-								color="neutral"
-								variant="link"
-								size="md"
-								icon="i-heroicons-x-mark-20-solid"
-								aria-label="Clear search"
-								@click="searchValue = ''"
-							/>
-						</template>
-					</UInput>
-
-					<UButton
-						icon="i-heroicons-arrow-path"
-						color="primary"
-						variant="soft"
-						:loading="status === 'pending'"
-						aria-label="Refresh commands list"
-						@click="refresh()"
-					>
-						<span class="hidden sm:inline">Refresh</span>
-					</UButton>
-				</UFieldGroup>
-			</section>
-
-			<!-- Results count for screen readers -->
+		<section
+			aria-labelledby="search-heading"
+			class="mx-auto mb-4 flex max-w-[45rem] items-start gap-2.5"
+		>
+			<h2 id="search-heading" class="sr-only">
+				{{ ts("marketing.commands.search_heading") }}
+			</h2>
 			<div
-				v-if="searchValue && !loading"
-				id="search-results-count"
-				class="sr-only"
-				role="status"
-				aria-live="polite"
-			>
-				{{ filteredCommandsCount }} command{{ filteredCommandsCount !== 1 ? "s" : "" }}
-				found
-			</div>
-
-			<!-- Loading state -->
-			<div v-if="loading" class="space-y-4" role="status" aria-label="Loading commands">
-				<div class="rounded-xl border border-inverted/10 py-20 text-center">
-					<UIcon
-						name="i-heroicons-arrow-path"
-						class="mx-auto mb-6 h-10 w-10 animate-spin text-dimmed"
-					/>
-					<p class="mb-2 text-lg font-semibold text-toned">Loading commands...</p>
-					<p class="text-sm text-default/50">This may take a moment</p>
-				</div>
-			</div>
-
-			<!-- No results message -->
-			<div
-				v-else-if="commands.length === 0"
-				class="space-y-6 rounded-xl border border-inverted/10 py-20 text-center"
-				role="status"
+				class="flex h-13 min-w-0 flex-1 items-center gap-2.5 rounded-[12px] border border-base-content/17 bg-base-100 px-4.5 focus-within:border-primary focus-within:shadow-glow theme-dark:bg-base-content/8"
 			>
 				<UIcon
-					name="i-heroicons-exclamation-circle"
-					class="mx-auto h-12 w-12 text-muted/40"
+					name="i-heroicons-magnifying-glass"
+					class="size-4.5 shrink-0 text-muted"
+					aria-hidden="true"
 				/>
-				<div>
-					<h2 class="mb-3 text-2xl font-bold">No commands available</h2>
-					<p class="mx-auto max-w-md text-toned">
-						Couldn't load commands right now. Try refreshing.
-					</p>
-				</div>
+				<input
+					v-model="searchValue"
+					type="search"
+					class="commands-search min-w-0 flex-1 bg-transparent text-[0.9375rem] text-default outline-none placeholder:text-muted"
+					:placeholder="ts('marketing.commands.search_placeholder')"
+					:aria-label="ts('marketing.commands.search_label')"
+					:aria-describedby="isSearching ? 'search-results-count' : undefined"
+				/>
+				<UButton
+					v-if="searchValue"
+					color="neutral"
+					variant="link"
+					size="sm"
+					icon="i-heroicons-x-mark-20-solid"
+					class="shrink-0 p-0.5"
+					:aria-label="ts('marketing.commands.search_clear')"
+					@click="searchValue = ''"
+				/>
+			</div>
+
+			<UButton
+				icon="i-heroicons-arrow-path"
+				color="primary"
+				variant="soft"
+				size="lg"
+				class="h-13 rounded-[12px] border border-primary/30 bg-primary/12 px-4 text-[0.9375rem] font-semibold hover:bg-primary/20 sm:px-5.5 theme-dark:text-highlighted"
+				:loading
+				:aria-label="ts('marketing.commands.refresh_label')"
+				@click="refresh()"
+			>
+				<span class="hidden sm:inline">{{ ts("marketing.commands.refresh") }}</span>
+			</UButton>
+		</section>
+
+		<p
+			v-if="isSearching && !loading"
+			id="search-results-count"
+			class="mx-auto max-w-[45rem] text-center text-[0.8125rem] text-muted"
+			role="status"
+			aria-live="polite"
+		>
+			{{ tc("marketing.commands.results", filteredCommands.length) }}
+		</p>
+
+		<section
+			aria-labelledby="categories-heading"
+			class="mx-auto mt-8 flex max-w-[56.25rem] flex-col gap-2.5 rounded-[16px] border border-(--home-border-subtle) bg-base-content/4 p-4 sm:p-7"
+		>
+			<h2 id="categories-heading" class="sr-only">
+				{{ ts("marketing.commands.categories_heading") }}
+			</h2>
+
+			<div
+				v-if="loading"
+				class="flex flex-col gap-2.5"
+				role="status"
+				:aria-label="ts('marketing.commands.loading')"
+			>
+				<USkeleton v-for="row in LOADING_ROWS" :key="row" class="h-14.5 rounded-[16px]" />
+			</div>
+
+			<div v-else-if="commands.length === 0" class="px-6 py-12 text-center" role="status">
+				<p class="mb-1.5 text-base font-bold text-default">
+					{{ ts("marketing.commands.unavailable_title") }}
+				</p>
+				<p class="mb-5 text-sm text-muted">
+					{{ ts("marketing.commands.unavailable_description") }}
+				</p>
 				<UButton
 					icon="i-heroicons-arrow-path"
 					color="primary"
-					variant="outline"
-					size="lg"
+					variant="soft"
 					@click="refresh()"
 				>
-					Try Again
+					{{ ts("marketing.commands.try_again") }}
 				</UButton>
 			</div>
 
-			<!-- Categories -->
-			<section
-				v-else
-				aria-labelledby="categories-heading"
-				class="rounded-xl border border-inverted/10 bg-muted/80 p-6 sm:p-8"
-			>
-				<h2 id="categories-heading" class="sr-only">Command Categories</h2>
-				<LazyCommandCategory
-					:commands="filteredCommands"
-					:search-value
-					:categories
-					:loading
+			<div v-else-if="groups.length === 0" class="px-6 py-12 text-center" role="status">
+				<p class="mb-1.5 text-base font-bold text-default">
+					{{ ts("marketing.commands.empty_title") }}
+				</p>
+				<p class="text-sm text-muted">
+					{{ ts("marketing.commands.empty_description") }}
+				</p>
+			</div>
+
+			<template v-else>
+				<CommandCategory
+					v-for="group in groups"
+					:key="group.name"
+					:name="group.name"
+					:commands="group.commands"
+					:open="isSearching || openCategory === group.name"
+					@update:open="(open) => toggleCategory(group.name, open)"
 				/>
-			</section>
-		</div>
+			</template>
+		</section>
 	</UContainer>
 </template>
 
 <script lang="ts" setup>
 import { useFuse } from "@vueuse/integrations/useFuse";
+
+const LOADING_ROWS = 6;
+const DEFAULT_CATEGORY = "General";
+/** The category the redesign opens first, when the bot reports it. */
+const INITIAL_CATEGORY = "Moderation";
+
+const { ts, tc } = useI18n();
 
 useSeoMetadata({
 	description: "Browse all available WolfStar bot commands and their descriptions.",
@@ -134,6 +156,7 @@ const searchValue = ref("");
 const { data: commands, status, refresh } = useCommands();
 
 const loading = computed(() => status.value === "pending");
+const isSearching = computed(() => searchValue.value.trim().length > 0);
 
 const { results } = useFuse(searchValue, commands, {
 	fuseOptions: {
@@ -145,13 +168,60 @@ const { results } = useFuse(searchValue, commands, {
 
 const filteredCommands = computed(() => results.value.map((result) => result.item));
 
-const categories = computed(() => {
-	const uniqueCategories = new Set<string>();
-	for (const command of commands.value) {
-		uniqueCategories.add(command.category || "General");
+const groups = computed(() => {
+	const byCategory = new Map<string, FlattenedCommand[]>();
+	for (const command of filteredCommands.value) {
+		const category = command.category || DEFAULT_CATEGORY;
+		const group = byCategory.get(category);
+		if (group) {
+			group.push(command);
+		} else {
+			byCategory.set(category, [command]);
+		}
 	}
-	return [...uniqueCategories].toSorted();
+	return Array.from(byCategory.entries(), ([name, categoryCommands]) => ({
+		name,
+		commands: categoryCommands,
+	})).toSorted((a, b) => a.name.localeCompare(b.name));
 });
 
-const filteredCommandsCount = computed(() => results.value.length);
+// One category is open at a time; `undefined` means the visitor has not chosen yet.
+const selectedCategory = ref<string | null>();
+const openCategory = computed(() => {
+	if (selectedCategory.value !== undefined) {
+		return selectedCategory.value;
+	}
+	return groups.value.some((group) => group.name === INITIAL_CATEGORY) ? INITIAL_CATEGORY : null;
+});
+
+function toggleCategory(name: string, open: boolean) {
+	// While searching every match is expanded, so a toggle has nothing to collapse.
+	if (isSearching.value) {
+		return;
+	}
+	selectedCategory.value = open ? name : null;
+}
 </script>
+
+<style scoped>
+/* The redesign's commands page is one flat surface, so the layout's top glow is
+   switched off here. The element selector outranks the layout's scoped rule. */
+:global(div.app-layout:has(.commands-page)::before) {
+	display: none;
+}
+
+/* The field is one flat surface: its wrapper paints the background and border. Dev
+   tooling ships an unlayered `input { background; padding }` rule that would otherwise
+   win over the utility classes and draw a darker, padded box inside the wrapper. */
+.commands-search {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	box-shadow: none;
+}
+
+/* The field has its own clear button; hide the browser's. */
+.commands-search::-webkit-search-cancel-button {
+	appearance: none;
+}
+</style>

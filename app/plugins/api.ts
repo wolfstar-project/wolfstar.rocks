@@ -1,7 +1,10 @@
 export default defineNuxtPlugin(() => {
 	const cachedFetch = useCachedFetch();
 	const runtimeConfig = useRuntimeConfig();
-	const apiBaseUrl = runtimeConfig.public.apiBaseUrl;
+	// A browser on the dev server reaches the bot API through Nitro's
+	// `devProxy` (`nuxt.config.ts`), which keeps the request same-origin.
+	const apiBaseUrl =
+		import.meta.dev && import.meta.client ? "/__bot-api" : runtimeConfig.public.apiBaseUrl;
 
 	return {
 		provide: {

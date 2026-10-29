@@ -37,17 +37,20 @@
 										src: article.image,
 										width: index === 0 ? 672 : 437,
 										height: index === 0 ? 378 : 246,
-										alt: `${article.title} image`,
+										alt: ts('blog.image_alt', { title: article.title }),
 									}
 								: undefined
 						"
-						:date="formatDateByLocale('en', article.date)"
+						:date="formatDateByLocale(locale, article.date)"
 						:authors="
 							article.authors.map((author) => ({
 								...author,
 								size: 'sm' as const,
 								avatar: author.avatar
-									? { ...author.avatar, alt: `${author.name} avatar` }
+									? {
+											...author.avatar,
+											alt: ts('blog.avatar_alt', { name: author.name }),
+										}
 									: undefined,
 							}))
 						"
@@ -64,6 +67,7 @@
 
 <script setup lang="ts">
 const { ts } = useI18n();
+const { locale } = useAppLocale();
 const { data: page } = await useAsyncData("blog-landing", () =>
 	queryCollection("landing").path("/blog").first(),
 );

@@ -35,8 +35,39 @@
 										subcommand: activeCommand.subcommand,
 									}"
 								>
+									<!-- `/setup` answers with its menu, made of components (Components V2). -->
+									<div
+										v-if="activeCommand.response.type === 'setup'"
+										class="staryl-setup-menu"
+									>
+										<DiscordV2Container>
+											<h3 class="staryl-setup-heading">
+												{{ activeCommand.response.heading }}
+											</h3>
+											<DiscordV2TextDisplay
+												>{{ activeCommand.response.intro }}{{ "\n"
+												}}<strong>{{
+													activeCommand.response.countLabel
+												}}</strong>
+												{{ activeCommand.response.count }}{{ "\n"
+												}}{{
+													activeCommand.response.hint
+												}}</DiscordV2TextDisplay
+											>
+											<DiscordActionRow>
+												<DiscordStringSelectMenu
+													:options="[]"
+													disabled
+													:placeholder="
+														activeCommand.response.placeholder
+													"
+													:aria-label="activeCommand.response.placeholder"
+												/>
+											</DiscordActionRow>
+										</DiscordV2Container>
+									</div>
 									<DiscordEmbed
-										v-if="activeCommand.response.type === 'embed'"
+										v-else-if="activeCommand.response.type === 'embed'"
 										:title="activeCommand.response.title"
 									>
 										<span
@@ -66,7 +97,7 @@
 										:key="commandDisplayName(command)"
 										:name="commandDisplayName(command)"
 										:description="command.description"
-										app-label="Staryl"
+										app="staryl"
 										:active="isSuggestionActive(command)"
 										@select="executeCommand(command)"
 									/>
@@ -152,7 +183,18 @@ interface StarylShowcaseCommand {
 	description: string;
 	invoker: ProfileName;
 	options: SlashCommandOption[];
-	response: { type: "embed"; title: string; lines: string[] } | { type: "text"; content: string };
+	response:
+		| { type: "embed"; title: string; lines: string[] }
+		| { type: "text"; content: string }
+		| {
+				type: "setup";
+				heading: string;
+				intro: string;
+				countLabel: string;
+				count: number;
+				hint: string;
+				placeholder: string;
+		  };
 }
 
 const { ts } = useI18n();
@@ -165,12 +207,30 @@ const composerLabel = computed(() =>
 );
 
 const twitchOptions = computed<SlashCommandOption[]>(() => [
-	{ name: "streamer", value: "shroud" },
+	{ name: "streamer", value: "stella" },
 	{ name: "channel", value: `#${CHANNEL_NAME}` },
 	{ name: "type", value: "Stream Online", focused: true },
 ]);
 
+// The commands Staryl registers (staryl, `src/commands`), with the replies the
+// bot sends in English (`src/locales/en-US/commands`).
 const starylCommands = computed<StarylShowcaseCommand[]>(() => [
+	{
+		name: "setup",
+		description: ts("marketing.staryl.showcase.setup_description"),
+		invoker: "redstar",
+		options: [],
+		response: {
+			type: "setup",
+			heading: ts("marketing.staryl.showcase.setup_heading"),
+			intro: ts("marketing.staryl.showcase.setup_intro"),
+			countLabel: ts("marketing.staryl.showcase.setup_count"),
+			// The two subscriptions `/subscriptions twitch show` lists.
+			count: 2,
+			hint: ts("marketing.staryl.showcase.setup_hint"),
+			placeholder: ts("marketing.staryl.showcase.setup_placeholder"),
+		},
+	},
 	{
 		name: "subscriptions",
 		subcommandGroup: "twitch",
@@ -246,11 +306,15 @@ const timestamp = ref(0);
 const composerText = ref("");
 
 const channelNow = new Date();
-const channelDateLabel = new Intl.DateTimeFormat("en-US", {
-	month: "long",
-	day: "numeric",
-	year: "numeric",
-}).format(channelNow);
+const { locale: appLocale } = useAppLocale();
+// The channel's first day, in the language on screen.
+const channelDateLabel = computed(() =>
+	new Intl.DateTimeFormat(appLocale.value, {
+		month: "long",
+		day: "numeric",
+		year: "numeric",
+	}).format(channelNow),
+);
 const channelDateTime = [
 	String(channelNow.getFullYear()),
 	String(channelNow.getMonth() + 1).padStart(2, "0"),
@@ -575,6 +639,12 @@ onMounted(() => {
 
 .staryl-command-response {
 	@apply m-0 text-base;
+	color: var(--staryl-discord-primary-text);
+}
+
+/* `## Staryl setup`: Discord draws a level-two heading 20px bold. */
+.staryl-setup-heading {
+	@apply m-0 text-xl leading-6 font-bold;
 	color: var(--staryl-discord-primary-text);
 }
 

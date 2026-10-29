@@ -1,6 +1,7 @@
-import { AppHeaderAuth } from "#components";
+import { AppHeaderAuth, AppPreferencesQuickDialog } from "#components";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { defineComponent, h } from "vue";
 
 // `AppHeaderAuth` is a `.client.vue` component that reads the session through
 // `useUserSession`. Those calls resolve inside the precompiled module runtime,
@@ -42,21 +43,55 @@ describe("AppHeaderAuth", () => {
 		});
 	});
 
-	describe("guest settings link", () => {
-		it("links guests to /profile for local settings", async () => {
+	// `/profile` is deprecated: the local preferences open in a dialog, so a
+	// guest never leaves the page they are on to change the theme or language.
+	describe("guest settings button", () => {
+		it("opens the compact preferences dialog instead of navigating", async () => {
+			usePreferencesDialog().isOpen.value = false;
 			const wrapper = await mountSuspended(AppHeaderAuth);
-			const settings = wrapper.get('a[aria-label="Settings"]');
-			expect(settings.attributes("href")).toBe("/profile");
+			const settings = wrapper.get('button[aria-label="Settings"]');
 			expect(settings.classes().join(" ")).toContain("hidden");
 			expect(settings.classes().join(" ")).toContain("md:inline-flex");
+			expect(wrapper.find('a[href="/profile"]').exists()).toBe(false);
+
+			await settings.trigger("click");
+
+			expect(usePreferencesDialog().isOpen.value).toBe(true);
+			expect(usePreferencesDialog().variant.value).toBe("quick");
 		});
 
-		it("shows the settings link in the mobile drawer", async () => {
+		// The dialog is mounted by `app.vue`, apart from the button. Checking the
+		// flag alone would pass with the dialog gone, so both are rendered here.
+		it("shows the preferences once the button is clicked", async () => {
+			usePreferencesDialog().isOpen.value = false;
+			const wrapper = await mountSuspended(
+				defineComponent({
+					setup: () => () => [h(AppHeaderAuth), h(AppPreferencesQuickDialog)],
+				}),
+				{ attachTo: document.body },
+			);
+			expect(document.body.querySelector('[role="dialog"]')).toBeNull();
+
+			await wrapper.get('button[aria-label="Settings"]').trigger("click");
+
+			await vi.waitFor(() => {
+				const dialog = document.body.querySelector('[role="dialog"]');
+				expect(dialog?.textContent).toContain("Settings");
+				expect(dialog?.textContent).toContain("Theme");
+				expect(dialog?.textContent).toContain("Reduce Motion");
+				// The dashboard's log density has no place on the pages around it.
+				expect(dialog?.textContent).not.toContain("Cozy");
+			});
+
+			usePreferencesDialog().isOpen.value = false;
+			wrapper.unmount();
+		});
+
+		it("shows the settings button in the mobile drawer", async () => {
 			const wrapper = await mountSuspended(AppHeaderAuth, {
 				props: { mobile: true },
 			});
-			const settings = wrapper.get('a[aria-label="Settings"]');
-			expect(settings.attributes("href")).toBe("/profile");
+			const settings = wrapper.get('button[aria-label="Settings"]');
 			expect(settings.classes().join(" ")).toContain("rounded-lg");
 		});
 	});

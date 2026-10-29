@@ -51,13 +51,37 @@ export function parseGuildSettingsSaveResponse(response: unknown): unknown {
  */
 export function guildSettingsSaveFailureToast(
 	t: (key: string) => string,
+	error?: unknown,
 ): GuildSettingsSaveFailureToast {
 	return {
 		color: "error",
 		title: t("dashboard.update_failed_message"),
-		description: `${t("dashboard.update_failed_why")} ${t("dashboard.update_failed_fix")}`,
+		description:
+			settingsRefusalMessage(t, error) ??
+			`${t("dashboard.update_failed_why")} ${t("dashboard.update_failed_fix")}`,
 		icon: "heroicons:x-circle",
 	};
+}
+
+/**
+ * What to tell the admin when the server refused the change for a reason they
+ * can fix, read from the error's code; `null` for any other failure. Literal
+ * keys, one per code, so the i18n report sees each.
+ */
+function settingsRefusalMessage(t: (key: string) => string, error: unknown): string | null {
+	const data = (error as { data?: { code?: unknown; data?: { code?: unknown } } } | null)?.data;
+	switch (data?.code ?? data?.data?.code) {
+		case "honeypot-same-channel":
+			return t("guild_settings.honeypot.errors.same_channel");
+		case "honeypot-unknown-channel":
+			return t("guild_settings.honeypot.errors.unknown_channel");
+		case "honeypot-trap-permissions":
+			return t("guild_settings.honeypot.errors.trap_permissions");
+		case "honeypot-log-permissions":
+			return t("guild_settings.honeypot.errors.log_permissions");
+		default:
+			return null;
+	}
 }
 
 /**
@@ -71,11 +95,11 @@ export function guildSettingsSaveFailureToast(
  * intentionally — objects with null prototypes or non-plain class instances are rejected in
  * favour of the `fallback`, since guild settings are always plain JSON objects.
  */
-export function parseGuildSettings(
+export function parseGuildSettings<Settings extends object>(
 	raw: string,
-	fallback: Record<string, unknown>,
+	fallback: Settings,
 	onError?: (err: unknown) => void,
-): Record<string, unknown> {
+): Settings {
 	try {
 		const parsed: unknown = JSON.parse(raw);
 		if (
@@ -84,11 +108,38 @@ export function parseGuildSettings(
 			!Array.isArray(parsed) &&
 			Object.getPrototypeOf(parsed) === Object.prototype
 		) {
-			return parsed as Record<string, unknown>;
+			return parsed as Settings;
 		}
 		return fallback;
 	} catch (err) {
 		onError?.(err);
 		return fallback;
 	}
+}
+
+/**
+ * Picks the guilds that belong in the dashboard's server rail: every one the
+ * viewer can manage. Those WolfStar has joined open their dashboard; the
+ * others invite it. Sorted by name so the rail order stays stable between
+ * refreshes of `/api/users`.
+ */
+export function selectDashboardRailGuilds(
+	guilds: readonly OauthFlattenedGuild[],
+): OauthFlattenedGuild[] {
+	return guilds
+		.filter((guild) => guild.manageable)
+		.toSorted((a, b) => a.name.localeCompare(b.name, "en", { sensitivity: "base" }));
+}
+
+/**
+ * Maps a section slug from a pre-V7 `/guilds/:id/manage/*` link to the section
+ * that holds those settings now. The per-filter pages became auto-moderation
+ * rules, and the event toggles moved next to the moderation log channel.
+ */
+export function resolveLegacyDashboardSection(slug: string): string {
+	if (slug.startsWith("moderation/")) return "automod";
+	if (slug === "events") return "moderation";
+	// Reports had a page of their own before they moved in with the cases.
+	if (slug === "reports") return "moderation";
+	return slug;
 }

@@ -8,7 +8,9 @@ import { createMockGuildData } from "~~/test/mocks/guildData";
 
 // Mock guild settings data
 const mockOriginalSettings = createMockGuildData("123456789012345678", {
-	prefix: "!",
+	// The form under test edits two free-text fields. V7 has no prefix, so the
+	// test's `prefix` field is stored in `rolesMuted`, the other string setting.
+	rolesMuted: "!",
 	language: "en-US",
 });
 
@@ -71,14 +73,14 @@ describe("Form - Reset Behavior", () => {
 			components: { Form },
 			setup() {
 				const state = reactive<TestSchema>({
-					prefix: mockGuildSettings.value.prefix,
+					prefix: mockGuildSettings.value.rolesMuted ?? "",
 					language: mockGuildSettings.value.language,
 				});
 
 				function mapToGuildData(formState: TestSchema): Partial<GuildData> {
 					const changes: Partial<GuildData> = {};
 					if (formState.prefix) {
-						changes.prefix = formState.prefix;
+						changes.rolesMuted = formState.prefix;
 					}
 					if (formState.language) {
 						changes.language = formState.language;
@@ -141,6 +143,47 @@ describe("Form - Reset Behavior", () => {
 		expect(mockGuildSettingsChanges.value).toBeUndefined();
 	});
 
+	// A section can hold two forms (Commands does). Each one only owns its own
+	// keys, so reverting an edit in one must not wipe what the other staged.
+	it("drops only its own keys when an edit is reverted by hand", async () => {
+		const TestWrapper = defineComponent({
+			components: { Form },
+			setup() {
+				const state = reactive<TestSchema>({
+					prefix: mockGuildSettings.value.rolesMuted ?? "",
+					language: mockGuildSettings.value.language,
+				});
+
+				function mapToGuildData(formState: TestSchema): Partial<GuildData> {
+					return { rolesMuted: formState.prefix, language: formState.language };
+				}
+
+				return { state, mapToGuildData, testSchema };
+			},
+			template: `
+				<Form :schema="testSchema" :state="state" :map-to-guild-data="mapToGuildData">
+					<input id="prefix-input" v-model="state.prefix" />
+				</Form>
+			`,
+		});
+
+		const wrapper = await mountSuspended(TestWrapper);
+		await nextTick();
+		await nextTick();
+
+		const prefixInput = wrapper.find("#prefix-input");
+		await prefixInput.setValue("?");
+		await nextTick();
+		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({ rolesMuted: "?" });
+
+		mockSetGuildSettingsChanges.mockClear();
+		await prefixInput.setValue("!");
+		await nextTick();
+
+		expect(mockRemoveChange).toHaveBeenCalledWith("rolesMuted");
+		expect(mockSetGuildSettingsChanges).not.toHaveBeenCalledWith(undefined);
+	});
+
 	it("should not revert state if originalState is not initialized", async () => {
 		// Set originalGuildSettings to undefined to prevent initialization
 		mockOriginalGuildSettings.value = undefined as any;
@@ -186,13 +229,13 @@ describe("Form - Reset Behavior", () => {
 			components: { Form },
 			setup() {
 				const state = reactive<TestSchema>({
-					prefix: mockGuildSettings.value.prefix,
+					prefix: mockGuildSettings.value.rolesMuted ?? "",
 					language: mockGuildSettings.value.language,
 				});
 
 				function mapToGuildData(formState: TestSchema): Partial<GuildData> {
 					return {
-						prefix: formState.prefix,
+						rolesMuted: formState.prefix,
 						language: formState.language,
 					};
 				}
@@ -244,14 +287,14 @@ describe("Form - Reset Behavior", () => {
 				// Use a custom schema with nested structure
 				const state = reactive({
 					prefixWrapper: {
-						value: mockGuildSettings.value.prefix,
+						value: mockGuildSettings.value.rolesMuted ?? "",
 					},
 				});
 
 				// Custom mapping function
 				function mapToGuildData(formState: typeof state): Partial<GuildData> {
 					return {
-						prefix: formState.prefixWrapper.value,
+						rolesMuted: formState.prefixWrapper.value,
 					};
 				}
 

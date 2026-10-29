@@ -1,130 +1,167 @@
 <template>
-	<div>
-		<GuildSettingsSection
-			:title="ts('guild_settings.commands.title')"
-			:description="ts('guild_settings.commands.subtitle')"
+	<section class="console-card" aria-labelledby="commands-heading">
+		<h2 id="commands-heading" class="text-xl font-bold tracking-[0.01em]">
+			{{ ts("guild_settings.commands.title") }}
+		</h2>
+		<p class="mt-1 mb-4 text-[0.8125rem] leading-normal text-muted">
+			{{ ts("guild_settings.commands.subtitle") }}
+		</p>
+
+		<div v-if="loading" class="space-y-2">
+			<USkeleton v-for="i in 5" :key="i" class="h-11 w-full" />
+		</div>
+
+		<GuildSettingsForm
+			v-else
+			:state="state"
+			:schema="disabledCommandsSchema"
+			:map-to-guild-data="mapToGuildData"
+			:aria-label="ts('guild_settings.commands.form_aria')"
+			:aria-busy="loading"
+			:aria-disabled="loading"
+			@error="onError"
 		>
-			<!-- Unified Form wrapper to match skeleton and content -->
-			<div v-if="loading" class="space-y-4">
-				<div v-for="i in 3" :key="i" class="space-y-2">
-					<!-- Simulated accordion trigger skeleton -->
-					<USkeleton class="h-12 w-full" />
+			<div class="divide-y divide-(--home-border-subtle)">
+				<UCollapsible
+					v-for="category in categories"
+					:key="category"
+					:open="isCategoryOpen(category)"
+					:unmount-on-hide="false"
+					@update:open="() => toggleCategory(category)"
+				>
+					<template #default="{ open }">
+						<button type="button" class="command-category">
+							<span class="truncate text-base">{{ category }}</span>
+							<span class="ml-auto font-mono text-xs text-muted">
+								{{
+									ts("guild_settings.commands.enabled_count", {
+										enabled: enabledIn(category),
+										total: getCommandsByCategory(category).length,
+									})
+								}}
+							</span>
+							<UIcon
+								name="ic:round-expand-more"
+								class="size-4.5 shrink-0 text-muted transition-transform duration-200"
+								:class="[open && 'rotate-180']"
+								aria-hidden="true"
+							/>
+						</button>
+					</template>
 
-					<!-- Commands grid skeleton -->
-					<div
-						class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-					>
-						<div
-							v-for="j in 8"
-							:key="j"
-							class="flex items-center justify-between rounded-lg border border-muted p-3"
-						>
-							<div class="flex-1 space-y-2">
-								<USkeleton class="h-5 w-32" />
-								<USkeleton class="h-4 w-48" />
+					<template #content>
+						<div class="grid grid-cols-1 gap-2 pt-1 pb-3 sm:grid-cols-2 xl:grid-cols-4">
+							<div
+								v-for="command in getCommandsByCategory(category)"
+								:key="command.name"
+								class="command-tile"
+								:class="{
+									'command-tile--off': !getCommand(command.name)?.isEnabled,
+								}"
+							>
+								<div class="min-w-0 flex-1">
+									<p class="truncate font-mono text-[0.8125rem] font-bold">
+										{{ command.label }}
+									</p>
+									<p class="truncate text-xs text-muted">
+										{{ command.description }}
+									</p>
+								</div>
+								<button
+									v-if="!isNullOrUndefined(getCommand(command.name))"
+									type="button"
+									role="switch"
+									class="command-state"
+									:class="
+										getCommand(command.name)?.isEnabled
+											? 'command-state--on'
+											: 'command-state--off'
+									"
+									:aria-checked="getCommand(command.name)?.isEnabled"
+									:aria-label="command.label"
+									@click="
+										toggleCommand(
+											command.name,
+											!getCommand(command.name)?.isEnabled,
+										)
+									"
+								>
+									<span
+										class="size-1.5 rounded-full bg-current"
+										aria-hidden="true"
+									></span>
+									{{
+										getCommand(command.name)?.isEnabled
+											? ts("guild_settings.commands.on")
+											: ts("guild_settings.commands.off")
+									}}
+								</button>
 							</div>
-							<USkeleton class="h-6 w-11 rounded-full" />
 						</div>
-					</div>
-				</div>
-			</div>
 
-			<GuildSettingsForm
-				v-else
-				:state="state"
-				:schema="disabledCommandsSchema"
-				:map-to-guild-data="mapToGuildData"
-				class="space-y-4"
-				:aria-label="ts('guild_settings.commands.form_aria')"
-				:aria-busy="loading"
-				:aria-disabled="loading"
-				@error="onError"
-			>
-				<div class="space-y-4">
-					<UCollapsible
-						v-for="category in categories"
-						:key="category"
-						:open="isCategoryOpen(category)"
-						:unmount-on-hide="false"
-						@update:open="() => toggleCategory(category)"
-					>
-						<template #default="{ open }">
+						<div
+							class="flex flex-wrap justify-end gap-2 border-t border-(--home-border-subtle) py-3"
+						>
 							<UButton
 								color="neutral"
-								variant="ghost"
-								class="w-full justify-between border-b border-muted"
+								variant="solid"
+								size="sm"
+								@click="toggleAllInCategory(category, true)"
 							>
-								<span class="truncate text-xl font-medium">{{ category }}</span>
-
-								<template #trailing>
-									<UIcon
-										name="i-heroicons-chevron-down-20-solid"
-										class="ms-auto size-5 transform transition-transform duration-200"
-										:class="[open && 'rotate-180']"
-									/>
-								</template>
+								{{ ts("guild_settings.commands.enable_all") }}
 							</UButton>
-						</template>
-
-						<template #content>
-							<div
-								class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+							<UButton
+								color="neutral"
+								variant="solid"
+								size="sm"
+								@click="toggleAllInCategory(category, false)"
 							>
-								<div
-									v-for="command in getCommandsByCategory(category)"
-									:key="command.name"
-									class="flex items-center justify-between rounded-lg border border-muted p-3"
-								>
-									<div class="min-w-0 flex-1">
-										<p class="truncate font-medium text-default">
-											{{ command.name }}
-										</p>
-										<p class="truncate text-sm text-muted">
-											{{ command.description }}
-										</p>
-									</div>
-									<USwitch
-										v-if="!isNullOrUndefined(getCommand(command.name))"
-										:model-value="getCommand(command.name)?.isEnabled"
-										:value="getCommand(command.name)?.name"
-										:default-value="true"
-										@update:model-value="
-											(isEnabled) => toggleCommand(command.name, isEnabled)
-										"
-									/>
-								</div>
-							</div>
+								{{ ts("guild_settings.commands.disable_all") }}
+							</UButton>
+							<UButton
+								color="neutral"
+								variant="outline"
+								size="sm"
+								@click="resetCategory(category)"
+							>
+								{{ ts("guild_settings.commands.reset") }}
+							</UButton>
+						</div>
+					</template>
+				</UCollapsible>
+			</div>
+		</GuildSettingsForm>
+	</section>
 
-							<Separator />
-							<UFieldGroup size="sm" class="flex-wrap justify-end p-4">
-								<UButton
-									color="success"
-									variant="solid"
-									@click="toggleAllInCategory(category, true)"
-								>
-									{{ ts("guild_settings.commands.enable_all") }}
-								</UButton>
-								<UButton
-									color="warning"
-									variant="solid"
-									@click="toggleAllInCategory(category, false)"
-								>
-									{{ ts("guild_settings.commands.disable_all") }}
-								</UButton>
-								<UButton
-									color="neutral"
-									variant="outline"
-									@click="resetCategory(category)"
-								>
-									{{ ts("guild_settings.commands.reset") }}
-								</UButton>
-							</UFieldGroup>
-						</template>
-					</UCollapsible>
-				</div>
-			</GuildSettingsForm>
-		</GuildSettingsSection>
-	</div>
+	<section class="console-card" aria-labelledby="commands-channels-heading">
+		<div class="flex items-center gap-3">
+			<h3
+				id="commands-channels-heading"
+				class="text-[1.0625rem] font-semibold whitespace-nowrap"
+			>
+				{{ ts("guild_settings.commands.disabled_channels") }}
+			</h3>
+			<span class="h-px flex-1 bg-base-content/15" aria-hidden="true"></span>
+		</div>
+		<GuildSettingsForm
+			:state="channelsState"
+			:schema="channelsSchema"
+			:map-to-guild-data="mapChannelsToGuildData"
+			:aria-label="ts('guild_settings.commands.channels_form_aria')"
+			class="mt-4 space-y-2"
+			@error="onChannelsError"
+		>
+			<SelectChannels
+				v-for="config in ConfigurableCommandChannels"
+				:key="config.key"
+				v-model="channelsState[config.key]"
+				layout="row"
+				:guild="guildData"
+				:label="translateEntry(config, 'name')"
+				:tooltip-title="translateEntry(config, 'description')"
+			/>
+		</GuildSettingsForm>
+	</section>
 </template>
 
 <script setup lang="ts">
@@ -132,8 +169,10 @@ import type { GuildData } from "#server/database";
 import type { DisableCommands } from "#shared/types";
 import type { FormErrorEvent } from "@nuxt/ui";
 import type * as v from "valibot";
+import type { DisableableCommand } from "~/utils/command-settings";
 // oxlint-disable-next-line typescript/consistent-type-imports
 import { disabledCommandsSchema } from "#shared/schemas";
+import { ConfigurableCommandChannels } from "#shared/utils/settingsDataEntries";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
 
 const { commands } = defineProps<{
@@ -143,42 +182,45 @@ const { commands } = defineProps<{
 type Schema = v.InferOutput<typeof disabledCommandsSchema>;
 
 const { ts } = useI18n();
+const { translateEntry } = useSettingsEntryI18n();
 const toast = useToast();
+const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();
+
+const {
+	mapToGuildData: mapChannelsToGuildData,
+	onError: onChannelsError,
+	schema: channelsSchema,
+	state: channelsState,
+} = useSettingsForm({ many: ConfigurableCommandChannels.map((entry) => entry.key) });
 
 const expandedCategory = ref<string | undefined>(undefined);
 
+// One entry per command: the bot lists each subcommand on its own, but the
+// settings turn off a whole command, by the name in `command`.
+const disableableCommands = computed(() => listDisableableCommands(commands));
+
 const state = reactive<Schema>(
-	createDefaultState(commands, guildSettings.value?.disabledCommands as string[]),
+	createDefaultState(disableableCommands.value, guildSettings.value?.commandsDisabled),
 );
 
 // Loading state
 const loading = computed(() => !commands.length || !guildSettings.value);
 
-const categories = computed(() => {
-	const uniqueCategories = new Set<string>();
-	for (const command of commands) {
-		if (!command.guarded) {
-			uniqueCategories.add(command.category || "General");
-		}
-	}
-	return [...uniqueCategories].toSorted();
-});
+const categories = computed(() =>
+	[...new Set(disableableCommands.value.map((command) => command.category))].toSorted(),
+);
 
 // Helper to create default state from commands and settings
 function createDefaultState(
-	cmdList: FlattenedCommand[],
+	cmdList: DisableableCommand[],
 	disabledCommands: string[] | undefined,
 ): Schema {
 	const result: Record<string, DisableCommands.Command> = {};
 
 	for (const command of cmdList) {
-		if (command.guarded) {
-			continue;
-		}
-
 		result[command.name] = {
-			category: command.category || "General",
+			category: command.category,
 			description: command.description,
 			isEnabled: !disabledCommands?.includes(command.name),
 			name: command.name,
@@ -198,7 +240,7 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 		}
 	}
 
-	return { disabledCommands };
+	return { commandsDisabled: disabledCommands };
 }
 
 function toggleCommand(name: string, isEnabled: boolean) {
@@ -213,8 +255,8 @@ function getCommand(name: string): DisableCommands.Command | undefined {
 	return cmd ? { ...cmd } : undefined;
 }
 
-function getCommandsByCategory(category: string): FlattenedCommand[] {
-	return commands.filter((cmd) => (cmd.category || "General") === category && !cmd.guarded);
+function getCommandsByCategory(category: string): DisableableCommand[] {
+	return disableableCommands.value.filter((command) => command.category === category);
 }
 
 function toggleAllInCategory(category: string, enable: boolean) {
@@ -222,6 +264,11 @@ function toggleAllInCategory(category: string, enable: boolean) {
 	for (const command of commands) {
 		toggleCommand(command.name, enable);
 	}
+}
+
+function enabledIn(category: string): number {
+	return getCommandsByCategory(category).filter((command) => state[command.name]?.isEnabled)
+		.length;
 }
 
 function isCategoryOpen(category: string): boolean {
@@ -235,7 +282,7 @@ function toggleCategory(category: string): void {
 function resetCategory(category: string) {
 	const commands = getCommandsByCategory(category);
 	for (const command of commands) {
-		toggleCommand(command.name, !guildSettings.value?.disabledCommands?.includes(command.name));
+		toggleCommand(command.name, !guildSettings.value?.commandsDisabled.includes(command.name));
 	}
 
 	toast.add({
@@ -267,8 +314,8 @@ watch(
 	(isLoading) => {
 		if (!isLoading && guildSettings.value) {
 			const newValues = createDefaultState(
-				commands,
-				guildSettings.value.disabledCommands as string[],
+				disableableCommands.value,
+				guildSettings.value.commandsDisabled,
 			);
 
 			// Remove stale keys not in new values
@@ -285,3 +332,45 @@ watch(
 	{ immediate: true },
 );
 </script>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+.command-category {
+	@apply flex min-h-12.5 w-full cursor-pointer items-center gap-3 border-0 bg-transparent px-2 text-left;
+}
+
+.command-category:hover {
+	background-color: var(--console-hover);
+}
+
+.command-category:focus-visible,
+.command-state:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: -2px;
+}
+
+.command-tile {
+	@apply flex min-w-0 items-center gap-3 rounded-lg px-3 py-2.5;
+	border: 1px solid var(--home-border-subtle);
+}
+
+.command-tile--off {
+	border-color: oklch(from var(--color-error) l c h / 0.25);
+	background-color: oklch(from var(--color-error) l c h / 0.04);
+}
+
+.command-state {
+	@apply inline-flex h-6 shrink-0 cursor-pointer items-center gap-1.5 rounded-full border-0 px-2.5 text-xs font-bold;
+}
+
+.command-state--on {
+	background-color: oklch(from var(--color-success) l c h / 0.16);
+	color: var(--color-success);
+}
+
+.command-state--off {
+	background-color: var(--console-input);
+	color: var(--ui-text-muted);
+}
+</style>

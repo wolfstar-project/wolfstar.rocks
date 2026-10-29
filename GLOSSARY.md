@@ -15,23 +15,31 @@ identifiers" at the end.
 
 ## Map
 
-| Term               | Owner                              | Relation                      | Customer word        |
-| ------------------ | ---------------------------------- | ----------------------------- | -------------------- |
-| WolfStar           | `wolfstar-project/wolfstar`        | WolfStar 1—N server           | "WolfStar"           |
-| Staryl             | WolfStar Project                   | Staryl 1—N server             | "Staryl"             |
-| WolfStar.rocks     | this repository                    | one                           | "WolfStar.rocks"     |
-| server             | Discord                            | server 1—N channel, 1—N case  | "server"             |
-| dashboard          | `app/pages/(app)`                  | account 1—N manageable server | "dashboard"          |
-| settings           | the bot's per-server configuration | server 1—1 settings           | "settings"           |
-| filter             | `guild_settings.filter`            | server 1—N filter             | "filter"             |
-| case               | the bot's moderation record        | server 1—N case               | "case"               |
-| moderation history | `/guilds/[id]/logs`                | server 1—N case               | "Moderation history" |
-| command history    | `CommandLog`                       | server 1—N command run        | "Command history"    |
-| settings activity  | `AuditEvent`                       | server 1—N audit event        | "Settings activity"  |
-| logging channel    | server settings                    | log event N—1 channel         | "logging channel"    |
-| subscription       | Staryl                             | server 1—N subscription       | "subscription"       |
-| invite             | Discord OAuth                      | bot 1—N server                | "Invite"             |
-| sign in            | `better-auth`, Discord OAuth       | account 1—1 Discord user      | "Sign in"            |
+| Term                | Owner                              | Relation                       | Customer word         |
+| ------------------- | ---------------------------------- | ------------------------------ | --------------------- |
+| WolfStar            | `wolfstar-project/wolfstar`        | WolfStar 1—N server            | "WolfStar"            |
+| Staryl              | WolfStar Project                   | Staryl 1—N server              | "Staryl"              |
+| WolfStar.rocks      | this repository                    | one                            | "WolfStar.rocks"      |
+| server              | Discord                            | server 1—N channel, 1—N case   | "server"              |
+| dashboard           | `app/pages/(app)`                  | account 1—N manageable server  | "dashboard"           |
+| settings            | the bot's per-server configuration | server 1—1 settings            | "settings"            |
+| filter              | `guild_settings.filter`            | server 1—N filter              | "filter"              |
+| case                | the bot's moderation record        | server 1—N case                | "case"                |
+| appeal              | the bot's `Appeal`                 | case 1—1 appeal (unique index) | "appeal"              |
+| honeypot            | the bot's `GuildHoneypot`          | server 1—1 honeypot channel    | "Honeypot"            |
+| Auto-Delete         | the bot's `GuildAutoDelete`        | channel 1—1 (unique index)     | "Auto-Delete"         |
+| Auto-Purge          | the bot's `GuildAutoPurge`         | channel 1—1 (unique index)     | "Auto-Purge"          |
+| Auto-Message        | the bot's `GuildAutoMessage`       | channel 1—1 (unique index)     | "Auto-Message"        |
+| moderation history  | `/guilds/[id]/logs`                | server 1—N case                | "Moderation history"  |
+| command history     | `CommandLog`                       | server 1—N command run         | "Command history"     |
+| settings activity   | `AuditEvent`                       | server 1—N audit event         | "Settings activity"   |
+| logging channel     | server settings                    | log event N—1 channel          | "logging channel"     |
+| subscription        | Staryl                             | server 1—N subscription        | "subscription"        |
+| invite              | Discord OAuth                      | bot 1—N server                 | "Invite"              |
+| sign in             | `better-auth`, Discord OAuth       | account 1—1 Discord user       | "Sign in"             |
+| dashboard access    | `permissions.users`/`.roles` rules | server 1—N rule                | "Dashboard access"    |
+| command permissions | Discord, per bot command           | command 1—N row (max 100)      | "Discord permissions" |
+| command rules       | the bot's `/commands`              | command 1—1 rule               | "Command rules"       |
 
 Collisions
 
@@ -40,6 +48,10 @@ Collisions
 - "Moderation history" is the dashboard view of cases. A "moderation log channel" is a Discord channel that
   receives live messages. One is a place to search, the other a place to watch.
 - "Alert" is a filter's soft action. See the open questions for how it meets Staryl's notifications.
+- An Auto-Purge's "messages to purge" picks which messages a channel clears. It is not a filter: a filter
+  is an Auto Moderation rule with soft and hard actions.
+- An appeal is about a case and is not one. Accepting it makes a new case (an unban, an unmute, a timeout
+  end) that undoes the first.
 - "Language" names the dashboard's own language. A bot's server language is a separate setting. Always say
   which one.
 
@@ -56,7 +68,7 @@ Collisions
 ### Staryl
 
 **Is:** the Discord app from the WolfStar Project that posts social updates into a server. Twitch live and
-offline notifications are supported today. It has no public invite yet.
+offline notifications are supported today, and its public invite is live.
 
 **Casing:** `Staryl`.
 
@@ -102,6 +114,9 @@ repeated messages, words, mentions, reactions, attachments. A filter has soft ac
 **Marketing phrase:** "AutoMod", as in "Configurable message filters and escalation rules". It names the
 whole set of filters. UI panels keep "filter".
 
+**Dashboard section:** "Auto Moderation" holds the filters. The section that routes log events to their
+logging channels is "Events", and the history of cases, commands and settings activity is "Logs".
+
 **Never:** automod rule, spam rule, content rule.
 
 ### soft action
@@ -131,6 +146,67 @@ marketing prose.
 a date. Shown as "Case {id}".
 
 **Never:** ticket, incident, infraction (an infraction is the message that broke a filter, not the record).
+
+### appeal
+
+**Is:** a member's request to undo one of their cases, a ban, a mute or a timeout, with their answers to the
+form questions the server sets. A moderator accepts it in Discord, and WolfStar undoes the case, or denies it.
+One appeal per case.
+
+**Use for:** the "Appeals" section and module, "appeal form", "form questions", "Appeals channel".
+
+**Never:** ticket (collides with case), dispute, unban request, ban appeal (a mute or a timeout can be
+appealed too).
+
+**Casing:** `Appeals` as the section and module name, `appeal` in prose.
+
+### honeypot
+
+**Is:** a channel no member has a reason to write in. WolfStar kicks, softbans or bans whoever writes there,
+the moderators aside, and deletes what they sent. `/honeypot setup` in Discord creates it and posts its
+warning.
+
+**Use for:** the "Honeypot" section and module, "the honeypot channel". "Trap" may explain it in a
+sentence; it is not its name.
+
+**Caught:** a member WolfStar acted on after they wrote in the honeypot channel.
+
+**Never:** trap channel, bait channel, spam trap.
+
+**Casing:** `Honeypot` as the section and module name, `honeypot` in prose.
+
+### Auto-Delete
+
+**Is:** the messages of a channel deleted as they are sent, or a delay after, but the ones it keeps (links,
+invites, images, mentions, embeds, only text) and the pinned ones. Set with `/autodelete`, one per channel.
+
+**Use for:** the "Auto-Delete" section and module.
+
+**Never:** auto-clean, slow delete, purge (that is Auto-Purge).
+
+**Casing:** `Auto-Delete` in the UI, `autodelete` in identifiers and the section slug.
+
+### Auto-Purge
+
+**Is:** a channel cleared of its messages every interval, of every message or of the ones that match.
+Set with `/autopurge`, one per channel.
+
+**Use for:** the "Auto-Purge" section and module, "purge every", "messages to purge".
+
+**Never:** cleanup, wipe, scheduled delete (that reads as Auto-Delete).
+
+**Casing:** `Auto-Purge` in the UI, `autopurge` in identifiers and the section slug.
+
+### Auto-Message
+
+**Is:** a message WolfStar sends in a channel again every interval, skipping a round while the last message of
+the channel is still its own. Set with `/automessage`, one per channel.
+
+**Use for:** the "Auto-Message" section and module.
+
+**Never:** announcement (a Discord channel type), reminder, broadcast, scheduled message.
+
+**Casing:** `Auto-Message` in the UI, `automessage` in identifiers and the section slug.
 
 ### moderation action
 
@@ -213,6 +289,42 @@ An excluded channel is ignored for logged events.
 **Is:** a slash command. WolfStar and Staryl support slash commands only.
 
 **Never:** prefix command, message command, bang command.
+
+### dashboard access
+
+**Is:** a rule that lets a role or member open a server's dashboard without Manage Server, or keeps them out
+of it. The owner is never kept out. Stored next to the legacy permission nodes, told apart by `dashboard`.
+
+**Never:** permission node, dashboard permission.
+
+### legacy permission node
+
+**Is:** an entry of the old `/permission-nodes` shape (commands allowed and denied). In V7 it only decides who
+opens the dashboard, until it is imported as a dashboard access rule or removed by the owner.
+
+**Never:** node, permission.
+
+### command permissions
+
+**Is:** Discord's own permissions for one of the bot's commands in a server, the ones of Server Settings →
+Integrations, per role, member and channel. Discord applies them; the bot does not.
+
+**Never:** integration permissions, overrides, overwrites (in copy; `overwrite` stays in code, as Discord's
+API word for one row).
+
+### app default
+
+**Is:** the command permissions every command without permissions of its own uses. Discord shows such a
+command as synced; one with its own is "Custom" here.
+
+**Never:** global permissions, synced permissions.
+
+### command rules
+
+**Is:** where and by whom a command may run, as the bot's `/commands` sets it. The bot applies them to
+everyone, its administrators included. The dashboard shows them and does not edit them.
+
+**Never:** restrictions (in copy), bot permissions.
 
 ### support server
 

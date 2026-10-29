@@ -26,8 +26,10 @@
 			<button
 				type="button"
 				class="discord-message-composer-button discord-message-composer-mobile-action discord-message-composer-apps-mobile"
-				:aria-label="appsOpen ? 'Close apps and commands' : 'Open apps and commands'"
-				:title="appsOpen ? 'Close apps and commands' : 'Open apps and commands'"
+				:aria-label="
+					ts(appsOpen ? 'discord.composer.close_apps' : 'discord.composer.open_apps')
+				"
+				:title="ts(appsOpen ? 'discord.composer.close_apps' : 'discord.composer.open_apps')"
 				@click="emit('openApps')"
 			>
 				<UIcon
@@ -81,17 +83,17 @@
 		<div class="discord-message-composer-actions">
 			<button
 				v-for="action of ComposerActions"
-				:key="action.label ?? action.icon"
+				:key="action.icon"
 				type="button"
 				class="discord-message-composer-button discord-message-composer-action"
 				:class="{
 					'discord-message-composer-action-secondary': action.secondary,
 					'discord-message-composer-action-optional': action.optional,
 				}"
-				:aria-label="action.label"
+				:aria-label="action.labelKey ? ts(action.labelKey) : undefined"
 				:aria-hidden="action.decorative ? true : undefined"
 				:tabindex="action.decorative ? -1 : undefined"
-				:title="action.label"
+				:title="action.labelKey ? ts(action.labelKey) : undefined"
 				@click="onComposerAction(action)"
 			>
 				<UIcon
@@ -105,10 +107,10 @@
 		<button
 			type="button"
 			class="discord-message-composer-button discord-message-composer-send"
-			:aria-label="hasValue ? 'Send message' : undefined"
+			:aria-label="hasValue ? ts('discord.composer.send') : undefined"
 			:aria-hidden="hasValue ? undefined : true"
 			:tabindex="hasValue ? undefined : -1"
-			:title="hasValue ? 'Send message' : undefined"
+			:title="hasValue ? ts('discord.composer.send') : undefined"
 			:disabled="!hasValue"
 			@click="emit('submit')"
 		>
@@ -143,8 +145,8 @@ interface MessageComposerProps {
 
 interface ComposerAction {
 	icon: string;
-	/** Accessible name for functional controls; omitted when decorative. */
-	label?: string;
+	/** Key of the accessible name for functional controls; omitted when decorative. */
+	labelKey?: string;
 	secondary?: boolean;
 	optional?: boolean;
 	emitOpenApps?: boolean;
@@ -158,7 +160,12 @@ const ComposerActions: readonly ComposerAction[] = [
 	{ icon: "discord:gif", decorative: true },
 	{ icon: "discord:sticker", optional: true, decorative: true },
 	{ icon: "discord:emoji", decorative: true },
-	{ icon: "discord:apps", label: "Open apps and commands", optional: true, emitOpenApps: true },
+	{
+		icon: "discord:apps",
+		labelKey: "discord.composer.open_apps",
+		optional: true,
+		emitOpenApps: true,
+	},
 ];
 
 interface MessageComposerEmits {
@@ -170,6 +177,7 @@ interface MessageComposerEmits {
 </script>
 
 <script setup lang="ts">
+const { ts } = useI18n();
 const {
 	channelName,
 	placeholder,
@@ -184,8 +192,10 @@ const modelValue = defineModel<string>({ default: "" });
 
 const emit = defineEmits<MessageComposerEmits>();
 
-const displayPlaceholder = computed(() => placeholder ?? `Message #${channelName}`);
-const composerLabel = computed(() => `Message composer for ${channelName}`);
+const displayPlaceholder = computed(
+	() => placeholder ?? ts("discord.composer.placeholder", { channel: channelName }),
+);
+const composerLabel = computed(() => ts("discord.composer.label", { channel: channelName }));
 const hasValue = computed(() => modelValue.value.trim().length > 0);
 
 function onComposerAction(action: ComposerAction) {
@@ -225,13 +235,13 @@ function onKeydown(event: KeyboardEvent) {
 
 .discord-message-composer {
 	/* Discord-true dark surfaces (Figma / desktop client). */
-	--discord-message-composer-bg: oklch(28.84% 0.007 272.93);
-	--discord-message-composer-border: oklch(100% 0 0 / 0.06);
-	--discord-message-composer-text: oklch(91.56% 0.004 272.93);
-	--discord-message-composer-muted: oklch(71.01% 0.01 273.13);
-	--discord-message-composer-hover: oklch(100% 0 0 / 0.06);
-	--discord-message-composer-add-bg: oklch(19.34% 0.004 273.16);
-	--discord-message-composer-pill-bg: oklch(28.84% 0.007 272.93);
+	--discord-message-composer-bg: var(--discord-composer);
+	--discord-message-composer-border: oklch(from var(--discord-chrome-strong) l c h / 0.06);
+	--discord-message-composer-text: var(--discord-chrome-text);
+	--discord-message-composer-muted: var(--discord-chrome-muted);
+	--discord-message-composer-hover: var(--discord-hover);
+	--discord-message-composer-add-bg: var(--discord-server);
+	--discord-message-composer-pill-bg: var(--discord-composer);
 	--discord-message-composer-send-active: oklch(57.74% 0.2091 273.85);
 
 	/* Desktop: side inset; flush to chat bottom; hairline border + modest radius. */
@@ -241,14 +251,12 @@ function onKeydown(event: KeyboardEvent) {
 	color: var(--discord-message-composer-muted);
 }
 
-:global([data-theme="light"]) .discord-message-composer {
-	--discord-message-composer-bg: oklch(93.74% 0.005 264);
-	--discord-message-composer-border: oklch(92.64% 0.006 264);
-	--discord-message-composer-text: oklch(21.15% 0.009 264);
-	--discord-message-composer-muted: oklch(47.12% 0.012 264);
-	--discord-message-composer-hover: oklch(21.15% 0.009 264 / 0.08);
-	--discord-message-composer-add-bg: oklch(47.12% 0.012 264);
-	--discord-message-composer-pill-bg: oklch(98.17% 0.002 264);
+/* Light Discord draws the "+" on a grey disc and the pill on the channel. */
+@variant theme-light {
+	.discord-message-composer {
+		--discord-message-composer-add-bg: var(--discord-chrome-muted);
+		--discord-message-composer-pill-bg: var(--discord-chrome);
+	}
 }
 
 .discord-message-composer-button {

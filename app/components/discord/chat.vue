@@ -14,7 +14,7 @@
 					role="log"
 					aria-live="polite"
 					aria-relevant="additions text"
-					:aria-label="`Messages in ${channelName}`"
+					:aria-label="ts('discord.chat.messages_in', { channel: channelName })"
 				>
 					<template v-for="(message, index) of messages" :key="message.id">
 						<slot name="message" :message :index>
@@ -55,6 +55,7 @@ interface ChatSlots {
 </script>
 
 <script setup lang="ts">
+const { ts } = useI18n();
 defineProps<ChatProps>();
 defineSlots<ChatSlots>();
 </script>
@@ -64,14 +65,10 @@ defineSlots<ChatSlots>();
 
 .discord-chat {
 	/* Discord-true channel chrome (oklch); showcase may override via --showcase tokens. */
-	--discord-chat-bg: oklch(26.65% 0.006 272.93);
+	--discord-chat-bg: var(--discord-chrome);
 
 	@apply flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden font-whitney;
 	background-color: var(--discord-chat-bg);
-}
-
-:global([data-theme="light"]) .discord-chat {
-	--discord-chat-bg: oklch(98.17% 0.002 264);
 }
 
 .discord-chat-scrollbar {

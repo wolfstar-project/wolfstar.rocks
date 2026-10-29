@@ -1,5 +1,6 @@
 // oxlint-disable no-console
 import type { ReadonlyGuildData } from "#server/database";
+import type { GuildProbe } from "#server/utils/discord/cache";
 import type {
 	FlattenedGuild,
 	LoginData,
@@ -11,15 +12,17 @@ import type { DiscordAPIError } from "@discordjs/rest";
 import type {
 	APIGuild,
 	APIGuildMember,
-	APIRole,
 	RESTAPIPartialCurrentUserGuild,
 } from "discord-api-types/v10";
 import type { H3Event } from "h3";
 import { readSettings, readSettingsPermissionNodes } from "#server/database";
+import { hasAdminPermissions } from "#server/utils/discord/admin";
 import {
 	CURRENT_USER_CACHE_NAME,
 	GUILD_CACHE_NAME,
 	invalidateGuildCache,
+	rememberGuildProbe,
+	removePersistedGuild,
 	shouldRefreshCurrentUserCache,
 	shouldRefreshGuildCache,
 } from "#server/utils/discord/cache";
@@ -28,9 +31,9 @@ import {
 	fetchGuildMemberWithRetry,
 } from "#server/utils/discord/oauth";
 import { PermissionsBits } from "#shared/utils/bits";
+import { resolveDashboardAccess } from "#shared/utils/dashboard-access";
 import { hours } from "#shared/utils/times";
 import { cast } from "@sapphire/utilities";
-import { hasAtLeastOneKeyInMap } from "@sapphire/utilities/hasAtLeastOneKeyInMap";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
 import * as Sentry from "@sentry/nuxt";
 import {
@@ -54,38 +57,7 @@ async function getUserIdFromEvent(event: H3Event): Promise<string> {
 	return userId;
 }
 
-function computePermissions(memberRoles: string[], guildRoles: APIRole[]): bigint {
-	let perms = 0n;
-	for (const role of guildRoles) {
-		if (memberRoles.includes(role.id) || role.name === "@everyone") {
-			perms |= BigInt(role.permissions);
-		}
-	}
-	return perms;
-}
-
-// `permissions` is absent on bot-token GET /guilds/{id}/members/{id} responses;
-// fall back to computing permissions from the member's roles against guild.roles.
-// Administrator implies every permission including ManageGuild.
-function isAdmin(guild: APIGuild, member: APIGuildMember, roles: readonly string[]): boolean {
-	if (roles.length > 0) {
-		return hasAtLeastOneKeyInMap(
-			new Map(roles.map((role) => [role, true])),
-			member.roles.map((r) => r),
-		);
-	}
-
-	const rawPermissions = cast<{ permissions?: string }>(member).permissions;
-	const memberRolePermissions =
-		rawPermissions !== undefined
-			? BigInt(rawPermissions)
-			: computePermissions(member.roles, guild.roles);
-
-	return (
-		PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.Administrator) ||
-		PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.ManageGuild)
-	);
-}
+export { hasAdminPermissions };
 
 async function manage(guild: APIGuild, member: APIGuildMember, settings?: ReadonlyGuildData) {
 	if (!member.user || !member.user.id) {
@@ -96,11 +68,22 @@ async function manage(guild: APIGuild, member: APIGuildMember, settings?: Readon
 	}
 
 	const resolvedSettings = settings ?? (await readSettings(guild.id));
-	const nodes = readSettingsPermissionNodes(resolvedSettings);
 
+	// A dashboard access rule decides on its own: an allow opens the dashboard
+	// without Manage Server, a deny keeps an admin out.
+	const access = resolveDashboardAccess(
+		{ userId: member.user.id, roleIds: member.roles },
+		{ users: resolvedSettings.permissionsUsers, roles: resolvedSettings.permissionsRoles },
+		guild.roles,
+	);
+	if (access !== null) {
+		return access === "allow";
+	}
+
+	const nodes = readSettingsPermissionNodes(resolvedSettings);
 	return (
-		isAdmin(guild, member, resolvedSettings.rolesAdmin) &&
-		((await nodes.run(member, "conf")) ?? true)
+		hasAdminPermissions(guild, member, resolvedSettings.rolesAdmin) &&
+		((await nodes.run(member, "settings")) ?? true)
 	);
 }
 
@@ -229,13 +212,11 @@ export async function transformOauthGuildsAndUser({
 
 	// Phase 1: Live bot-membership probe for every guild. Cached getGuild can stay
 	// positive for up to an hour after the bot leaves, which caused stale profile lists.
-	const guildData = await mapWithConcurrency(guilds, 16, async (g) => {
-		const { guild, confirmedAbsent } = await probeBotGuildMembership(g.id);
-		if (confirmedAbsent) {
-			await invalidateGuildCache(g.id);
-		}
-		return guild;
-	});
+	const guildData = await mapWithConcurrency(
+		guilds,
+		16,
+		async (g) => (await probeBotGuildMembership(g.id)).guild,
+	);
 
 	// Phase 2: Fetch member data only for bot-present guilds where the user is not owner.
 	// Separates the sequential getGuild→getMember chain into two independent parallel phases.
@@ -441,22 +422,30 @@ export const getGuild = defineCachedFunction(
 
 /**
  * Live-probes bot guild membership. Returns `confirmedAbsent: true` only when
- * Discord responds 404 (bot not in guild). On transient probe failures, falls
- * back to the cached `getGuild` entry so a valid cache is not discarded.
+ * Discord responds 404 (bot not in guild), and then drops the stored
+ * `getGuild` entry. On transient probe failures, falls back to that entry so
+ * a valid cache is not discarded. A live answer is shared for a few seconds
+ * (`rememberGuildProbe()`).
  */
-async function probeBotGuildMembership(
-	guildId: string,
-): Promise<{ guild: APIGuild | null; confirmedAbsent: boolean }> {
-	try {
-		const guild = await fetchBotGuildFromDiscord(guildId);
-		return { guild, confirmedAbsent: guild === null };
-	} catch (error) {
-		console.warn(`[discord] Live guild probe failed for ${guildId}, falling back to cache`, {
-			error,
-		});
-		const guild = await getGuild(guildId).catch(() => null);
-		return { guild, confirmedAbsent: false };
-	}
+function probeBotGuildMembership(guildId: string): Promise<GuildProbe> {
+	return rememberGuildProbe(guildId, async () => {
+		try {
+			const guild = await fetchBotGuildFromDiscord(guildId);
+			if (guild === null) {
+				await removePersistedGuild(guildId);
+			}
+			return { confirmedAbsent: guild === null, guild, live: true };
+		} catch (error) {
+			console.warn(
+				`[discord] Live guild probe failed for ${guildId}, falling back to cache`,
+				{
+					error,
+				},
+			);
+			const guild = await getGuild(guildId).catch(() => null);
+			return { confirmedAbsent: false, guild, live: false };
+		}
+	});
 }
 
 export async function resolveGuildForRequest(event: H3Event, guildId: string) {
@@ -464,11 +453,7 @@ export async function resolveGuildForRequest(event: H3Event, guildId: string) {
 		await invalidateGuildCache(guildId);
 	}
 	const { guild, confirmedAbsent } = await probeBotGuildMembership(guildId);
-	if (confirmedAbsent) {
-		await invalidateGuildCache(guildId);
-		return null;
-	}
-	return guild;
+	return confirmedAbsent ? null : guild;
 }
 
 export const fetchCommands = defineCachedFunction(

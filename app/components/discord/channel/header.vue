@@ -11,7 +11,7 @@
 			<button
 				type="button"
 				class="discord-channel-header-mobile-title"
-				:aria-label="`Open channel info for #${name}`"
+				:aria-label="ts('discord.header.open_info', { name })"
 				@click="emit('open-channel-info')"
 			>
 				<span class="discord-channel-header-mobile-name-row">
@@ -66,7 +66,7 @@
 						'discord-channel-header-action-active':
 							action.id === 'members' && membersOpen,
 					}"
-					:aria-label="action.id === 'members' ? membersToggleLabel : action.label"
+					:aria-label="action.id === 'members' ? membersToggleLabel : ts(action.labelKey)"
 					:aria-pressed="action.id === 'members' ? membersOpen : undefined"
 					@click="action.id === 'members' ? toggleMembers() : undefined"
 				>
@@ -113,7 +113,7 @@ type ToolbarActionId = "threads" | "notifications" | "pins" | "members";
 interface ToolbarAction {
 	id: ToolbarActionId;
 	icon: string;
-	label: string;
+	labelKey: string;
 }
 
 const TypeIcons = {
@@ -125,10 +125,14 @@ const TypeIcons = {
  * threads → notifications → pins → members, then search.
  */
 const ToolbarActions = [
-	{ id: "threads", icon: "discord:threads", label: "Threads" },
-	{ id: "notifications", icon: "discord:notifications", label: "Notification settings" },
-	{ id: "pins", icon: "discord:pins", label: "Pinned messages" },
-	{ id: "members", icon: "discord:members", label: "Show member list" },
+	{ id: "threads", icon: "discord:threads", labelKey: "discord.header.threads" },
+	{
+		id: "notifications",
+		icon: "discord:notifications",
+		labelKey: "discord.header.notifications",
+	},
+	{ id: "pins", icon: "discord:pins", labelKey: "discord.header.pins" },
+	{ id: "members", icon: "discord:members", labelKey: "discord.header.show_members" },
 ] as const satisfies readonly ToolbarAction[];
 
 interface ChannelHeaderEmits {
@@ -140,11 +144,12 @@ interface ChannelHeaderEmits {
 </script>
 
 <script setup lang="ts">
+const { ts } = useI18n();
 const {
 	name,
 	type = "text",
 	topic,
-	searchPlaceholder = "Search",
+	searchPlaceholder,
 	guildName,
 	onlineCount,
 	notificationCount = 0,
@@ -157,12 +162,14 @@ const typeIcon = computed(() => TypeIcons[type]);
 
 const searchPlaceholderText = computed(() => {
 	if (guildName) {
-		return `Search ${guildName}`;
+		return ts("discord.header.search", { name: guildName });
 	}
-	return searchPlaceholder;
+	return searchPlaceholder ?? ts("discord.header.search_plain");
 });
 
-const membersToggleLabel = computed(() => (membersOpen ? "Hide member list" : "Show member list"));
+const membersToggleLabel = computed(() =>
+	ts(membersOpen ? "discord.header.hide_members" : "discord.header.show_members"),
+);
 
 function toggleMembers() {
 	emit("toggle-members");
@@ -175,16 +182,16 @@ function toggleMembers() {
 
 .discord-channel-header {
 	/* Discord-true desktop dark chrome (oklch only). */
-	--discord-channel-header-bg: oklch(26.65% 0.006 272.93);
-	--discord-channel-header-border: oklch(19.34% 0.004 273.16);
-	--discord-channel-header-edge: oklch(0% 0 0 / 0.2);
-	--discord-channel-header-text: oklch(91.56% 0.004 272.93);
-	--discord-channel-header-muted: oklch(71.01% 0.01 273.13);
+	--discord-channel-header-bg: var(--discord-chrome);
+	--discord-channel-header-border: var(--discord-chrome-border);
+	--discord-channel-header-edge: var(--discord-chrome-edge);
+	--discord-channel-header-text: var(--discord-chrome-text);
+	--discord-channel-header-muted: var(--discord-chrome-muted);
 	/* Search field: Discord #1e1f22 fill, #949ba4 placeholder, brighter icon. */
-	--discord-channel-header-search-bg: oklch(19.34% 0.004 273.16);
-	--discord-channel-header-search-border: oklch(28.84% 0.007 272.93);
-	--discord-channel-header-search-placeholder: oklch(69.5% 0.015 255);
-	--discord-channel-header-search-icon: oklch(91.56% 0.004 272.93);
+	--discord-channel-header-search-bg: var(--discord-server);
+	--discord-channel-header-search-border: var(--discord-composer);
+	--discord-channel-header-search-placeholder: var(--discord-chrome-muted);
+	--discord-channel-header-search-icon: var(--discord-chrome-text);
 	--discord-channel-header-badge: oklch(63.17% 0.208 24.62);
 	--discord-channel-header-online: oklch(72.27% 0.191 149.58);
 
@@ -193,18 +200,6 @@ function toggleMembers() {
 	background-color: var(--discord-channel-header-bg);
 	box-shadow: 0 1px 0 var(--discord-channel-header-edge);
 	color: var(--discord-channel-header-text);
-}
-
-:global([data-theme="light"]) .discord-channel-header {
-	--discord-channel-header-bg: oklch(98.17% 0.002 264);
-	--discord-channel-header-border: oklch(92.64% 0.006 264);
-	--discord-channel-header-edge: oklch(21.15% 0.009 264 / 0.08);
-	--discord-channel-header-text: oklch(21.15% 0.009 264);
-	--discord-channel-header-muted: oklch(47.12% 0.012 264);
-	--discord-channel-header-search-bg: oklch(93.74% 0.005 264);
-	--discord-channel-header-search-border: oklch(92.64% 0.006 264);
-	--discord-channel-header-search-placeholder: oklch(47.12% 0.012 264);
-	--discord-channel-header-search-icon: oklch(21.15% 0.009 264);
 }
 
 .discord-channel-header-desktop {

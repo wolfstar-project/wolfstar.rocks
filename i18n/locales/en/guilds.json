@@ -1,150 +1,600 @@
 {
 	"$schema": "../../schemas/guilds.schema.json",
 	"guild_card": {
-		"invite_aria": "Invite bot to {name}",
-		"invite_bot": "Invite Bot",
-		"invite_bot_aria": "Invite WolfStar bot to {name}",
-		"manage_aria": "Manage {name}",
-		"manage_server": "Manage Server",
-		"manage_server_aria": "Manage {name} server settings",
-		"members_online": "Members online",
-		"no_permission": "No Permission",
-		"no_permission_aria": "{name} - No permission",
-		"total_members": "Total members: {count}"
+		"invite_bot_aria": "Invite WolfStar bot to {name}"
+	},
+	"guild_member_picker": {
+		"add": "Add member",
+		"add_member": "Add {name}",
+		"add_to": "Add a member to {name}",
+		"added": "Added",
+		"dialog_description": "Search the members of this server by name, or paste a user ID.",
+		"dialog_title": "Add a member to {name}",
+		"not_in_server": "Not in the server",
+		"search_placeholder": "Search members by name or ID",
+		"type_to_search": "Type a name or paste a user ID to search."
 	},
 	"guild_settings": {
+		"access": {
+			"allow_note": "Opens the dashboard without Manage Server. Choose only people you trust with every setting.",
+			"default_permissions": "Without a rule, the owner and members with Manage Server or Administrator open the dashboard.",
+			"default_roles": "Without a rule, the owner and members with one of these roles open the dashboard: {roles}.",
+			"default_title": "Who opens the dashboard",
+			"deny_note": "Keeps them out of the dashboard, even with Manage Server or Administrator. The owner is never kept out.",
+			"form_aria": "Dashboard access rules",
+			"legacy_allow": "Allow:",
+			"legacy_becomes_allow": "Importing it allows the dashboard.",
+			"legacy_becomes_deny": "Importing it denies the dashboard.",
+			"legacy_deny": "Deny:",
+			"legacy_download": "Download legacy nodes as JSON",
+			"legacy_drops": "It no longer applies to {commands}: slash commands never read it.",
+			"legacy_import": "Import rule",
+			"legacy_import_all": "Import every convertible deny",
+			"legacy_import_aria": "Import the legacy node of {name} as a dashboard rule",
+			"legacy_member": "Member {id}",
+			"legacy_not_convertible": "Not convertible: it names neither the settings command nor its category. It still applies to the dashboard until it is removed.",
+			"legacy_remove": "Remove legacy nodes",
+			"legacy_remove_cancel": "Keep legacy nodes",
+			"legacy_remove_confirm_label": "Type REMOVE to confirm",
+			"legacy_remove_description": "Every legacy permission node of this server is removed. Dashboard access rules stay. This cannot be undone, so download the nodes first if you may need them.",
+			"legacy_remove_failed": "The legacy nodes were not removed.",
+			"legacy_remove_submit": "Remove legacy nodes",
+			"legacy_remove_title": "Remove the legacy permission nodes",
+			"legacy_removed": "Legacy nodes removed: {count}.",
+			"legacy_subtitle": "Permission nodes set with the old /permission-nodes command. They only decide who opens the dashboard now.",
+			"legacy_title": "Legacy permission nodes",
+			"members_allowed": "Members allowed",
+			"members_denied": "Members kept out",
+			"members_order": "A member's own rule wins over the rules of their roles.",
+			"members_title": "Members",
+			"roles_allowed": "Roles allowed",
+			"roles_denied": "Roles kept out",
+			"roles_order": "When a member has several roles with a rule, the highest role decides.",
+			"roles_title": "Roles",
+			"subtitle": "Let roles and members open this server's dashboard, or keep them out of it.",
+			"title": "Dashboard access"
+		},
+		"appeals": {
+			"add_question": "Add question",
+			"appealable_title": "What can be appealed",
+			"form_aria": "Appeals settings form",
+			"form_notice": "The direct message of a punishment links to an appeal page on WolfStar.rocks that does not open a form yet. What you set here applies once it does.",
+			"form_notice_title": "The appeal form is in development",
+			"off_body": "Turn them on and the direct message of a ban, a mute or a timeout links to the appeal page of this server.",
+			"off_summary": "Nobody can appeal a case.",
+			"off_title": "Appeals are off",
+			"on_summary": "Members can appeal the cases chosen below.",
+			"question_aria": "New question",
+			"question_placeholder": "e.g. What will you do differently?",
+			"questions_count": "{count} / {maximum}",
+			"questions_empty": "No questions: the form asks why the case should be undone.",
+			"questions_extra": "WolfStar asks the first five; the others are kept, but not asked.",
+			"questions_full": "Five questions is the most a form asks.",
+			"questions_help": "One question per field of the form. A waiting appeal shows its answers under the questions of the moment, so change them when none is pending.",
+			"questions_title": "Form questions",
+			"remove_question": "Remove the question {question}",
+			"settings_title": "Settings",
+			"subtitle": "Members appeal their bans, mutes and timeouts on WolfStar.rocks, from the link in the direct message of the punishment.",
+			"switch_aria": "Let the members appeal",
+			"title": "Appeals"
+		},
+		"auto": {
+			"allow": {
+				"embeds": "Embeds",
+				"embeds_help": "Keep the messages that have an embed.",
+				"images": "Images",
+				"images_help": "Keep the messages that have an image.",
+				"invites": "Invites",
+				"invites_help": "Keep the messages that have an invite.",
+				"links": "Links",
+				"links_help": "Keep the messages that have a link.",
+				"mentions": "Mentions",
+				"mentions_help": "Keep the messages that mention somebody.",
+				"text": "Only text",
+				"text_help": "Keep the messages that are only text, without attachments."
+			},
+			"columns": {
+				"actions": "Actions",
+				"channel": "Channel"
+			},
+			"count": "{count} / {maximum}",
+			"editor": {
+				"automessage_interval_help": "Every {duration}. From 10 minutes to 14 days.",
+				"automessage_subtitle": "Send a message in a channel every interval.",
+				"autodelete_subtitle": "Delete the messages sent in a channel, at once or a delay after.",
+				"autopurge_interval_help": "Every {duration}. From 5 minutes to 14 days.",
+				"autopurge_subtitle": "Purge a channel every interval, of every message or of the ones that match.",
+				"bots": "Bots and webhooks too",
+				"bots_help": "Delete their messages too, they are kept otherwise. WolfStar's own are never deleted.",
+				"cancel": "Cancel",
+				"channel": "Channel",
+				"channel_locked": "A channel has one at most: to move it, stop this one and add the other channel.",
+				"channel_placeholder": "Pick a channel",
+				"delete_after": "Delete after",
+				"delete_after_help": "A message stays {duration}. 0 deletes it at once, 24 hours at most.",
+				"delete_at_once": "Deleted at once. 24 hours at most.",
+				"edit_title": "{name} · {channel}",
+				"enable": "Enable",
+				"filter": "Messages to purge",
+				"filter_help": "Up to 1,000 messages each time, but the pinned ones and the ones older than 14 days.",
+				"keep": "Keep",
+				"keep_help": "The messages that match one of them stay. The pinned ones always do.",
+				"mentions": "Mentions ping",
+				"mentions_help": "Whether the mentions of the message ping who they mention. They do not when this is off.",
+				"message": "Message",
+				"message_placeholder": "What WolfStar sends",
+				"new_title": "New {name}",
+				"preview": "Preview",
+				"preview_empty": "The message shows up here.",
+				"purge_every": "Purge every",
+				"save": "Save",
+				"send_every": "Send every",
+				"value_help": "{maximum} characters at most.",
+				"value_text": "Text",
+				"value_text_placeholder": "e.g. [LFG]",
+				"value_user": "User",
+				"value_user_placeholder": "@member or user ID"
+			},
+			"errors": {
+				"channel": "Pick a channel.",
+				"channel_taken": "{channel} already has one. Edit it instead, a channel has one at most.",
+				"content": "The message cannot be empty.",
+				"content_length": "A message is {maximum} characters at most.",
+				"delay": "A message stays 24 hours at most.",
+				"message_interval": "A message is sent every 10 minutes at least and every 14 days at most.",
+				"needs_text": "This filter needs a text.",
+				"needs_user": "This filter needs a user.",
+				"purge_interval": "A channel is purged every 5 minutes at least and every 14 days at most.",
+				"value_length": "The text is {maximum} characters at most."
+			},
+			"filters": {
+				"any": "Every message",
+				"bots": "Messages of bots",
+				"contains": "Messages that contain a text",
+				"embeds": "Messages with embeds",
+				"endsWith": "Messages that end with a text",
+				"humans": "Messages of humans",
+				"images": "Messages with images",
+				"invites": "Messages with invites",
+				"links": "Messages with links",
+				"mentions": "Messages with mentions",
+				"notContains": "Messages that do not contain a text",
+				"startsWith": "Messages that start with a text",
+				"text": "Messages that are only text",
+				"user": "Messages of a user"
+			},
+			"load_failed": "Couldn't load the channels. Check your connection and retry.",
+			"module_hint": "On while it has a channel. It has no switch of its own: stop a channel below to end it there.",
+			"removed_title": "Stopped",
+			"retry": "Retry",
+			"saved_title": "Saved",
+			"server_errors": {
+				"channel": "Pick a text or announcement channel of this server.",
+				"generic": "Couldn't save. Check your connection and try again.",
+				"invalid": "WolfStar refused these values. Check them and try again.",
+				"limit": "This server already has the most it can have. Stop one first.",
+				"unknown": "This channel has none any more. Close the editor and try again."
+			}
+		},
+		"autodelete": {
+			"add": "Add channel",
+			"at_once": "at once",
+			"bots_deleted": "Deleted",
+			"bots_kept": "Kept",
+			"channels_title": "Channels",
+			"columns": {
+				"bots": "Bots",
+				"delay": "Delay",
+				"kept": "Kept"
+			},
+			"edit_aria": "Edit the deletion in {channel}",
+			"empty_body": "Add a channel and WolfStar deletes its messages as they are sent, or a delay after.",
+			"empty_title": "No channel yet",
+			"footnote": "Kept messages stay in the channel, and so do the pinned ones. Bots decides whether the messages of bots and webhooks go too.",
+			"nothing_kept": "Nothing",
+			"remove": "Stop deleting",
+			"remove_aria": "Stop deleting the messages of {channel}",
+			"remove_description": "WolfStar stops deleting the messages of {channel}. The messages it already deleted stay deleted.",
+			"remove_title": "Stop deleting the messages of this channel?",
+			"removed_description": "The messages of {channel} are no longer deleted.",
+			"restart_body": "WolfStar reads these channels when it starts, and when /autodelete changes them in Discord. A change made here applies once WolfStar restarts.",
+			"restart_title": "Changes apply after a restart of WolfStar",
+			"saved_description": "WolfStar deletes the messages of {channel}.",
+			"subtitle": "Messages in these channels are deleted after a delay.",
+			"table_aria": "Channels whose messages are deleted"
+		},
+		"automessage": {
+			"add": "Add message",
+			"edit_aria": "Edit the message of {channel}",
+			"empty_body": "Add a channel, the message WolfStar sends there, and how often.",
+			"empty_title": "No message yet",
+			"every": "every {duration}",
+			"list_aria": "Messages WolfStar sends again and again",
+			"mentions_aria": "Let the mentions of the message in {channel} ping",
+			"mentions_off": "Mentions do not ping",
+			"mentions_on": "Mentions ping",
+			"mentions_saved_off": "The mentions of the message in {channel} no longer ping.",
+			"mentions_saved_on": "The mentions of the message in {channel} ping who they mention.",
+			"next": "next {when}",
+			"remove": "Stop sending",
+			"remove_aria": "Stop sending the message of {channel}",
+			"remove_description": "WolfStar stops sending its message in {channel}. The messages it already sent stay.",
+			"remove_title": "Stop sending this message?",
+			"removed_description": "WolfStar no longer sends a message in {channel}.",
+			"saved_description": "WolfStar sends the message in {channel} on its schedule.",
+			"subtitle": "WolfStar sends a message in a channel again and again, from every 10 minutes to every 14 days. When the last message of the channel is still its own, it skips that round."
+		},
+		"automod": {
+			"form_aria": "Auto Moderation settings form",
+			"hard_actions": {
+				"Ban": "Ban",
+				"Kick": "Kick",
+				"Mute": "Mute",
+				"Softban": "Softban",
+				"Timeout": "Timeout",
+				"VoiceKick": "Voice kick",
+				"Warning": "Warning"
+			},
+			"module_hint": "Turning this off keeps the rules below but stops every one of them.",
+			"module_settings": "Module settings",
+			"options": {
+				"alerts": "Warn before banning",
+				"allowed": "Allowed domains",
+				"allowedCodes": "Allowed invite codes",
+				"allowedGuilds": "Allowed server IDs",
+				"characters": "Repeated characters",
+				"maximum": "Maximum",
+				"mentionsAllowed": "Mention points allowed",
+				"minimum": "Minimum length",
+				"perChannel": "Count everyone in the channel together",
+				"timePeriod": "Time period (seconds)",
+				"words": "Words"
+			},
+			"rules": {
+				"action": "Action",
+				"count": "{count} / {max} rules",
+				"defaults": {
+					"description": "New rules you create from here start with these. They are kept in this browser.",
+					"escalation_title": "Default escalation",
+					"rule_title": "Default rule",
+					"save": "Save defaults",
+					"saved": "Defaults saved. New rules start from them."
+				},
+				"delete": "Delete",
+				"delete_aria": "Delete rule {name}",
+				"delete_description": "The rule \"{name}\" will stop acting on messages. This can't be undone.",
+				"delete_title": "Delete rule",
+				"edit": "Edit",
+				"edit_aria": "Edit rule {name}",
+				"editor": {
+					"action": "Action",
+					"back": "Back",
+					"cancel": "Cancel",
+					"create": "Create rule",
+					"create_title": "New rule",
+					"duration": "Duration",
+					"duration_unit_aria": "{label} unit",
+					"edit_title": "Edit {name}",
+					"enabled": "Enabled",
+					"escalation": "Escalation",
+					"escalation_add": "Add step",
+					"escalation_duration": "Punishments count for",
+					"escalation_duration_help": "How long a punishment counts towards the next step.",
+					"escalation_help": "What replaces the punishment for members who keep reaching the threshold. The last step repeats.",
+					"escalation_remove_aria": "Remove step {index}",
+					"escalation_step": "Step {index}",
+					"exemptions": "Exemptions",
+					"hard_action": "Punishment",
+					"hard_action_help": "Applied once a member reaches the threshold. A threshold of 0 punishes on the first infraction.",
+					"ignored_channels": "Ignored channels",
+					"ignored_roles": "Ignored roles",
+					"list_placeholder": "Type and press Enter",
+					"name": "Name",
+					"name_placeholder": "e.g. No invite links",
+					"options": "What it looks for",
+					"permanent_hint": "Leave at 0 for a permanent action.",
+					"save": "Save rule",
+					"soft_actions": "On every infraction",
+					"soft_actions_help": "Applied each time a message breaks the rule.",
+					"soft_alert": "Alert the channel",
+					"soft_delete": "Delete the message",
+					"soft_log": "Log it",
+					"threshold_duration": "Counted within",
+					"threshold_maximum": "Infractions before punishment",
+					"type": "Type",
+					"type_locked": "The type of a rule can't be changed."
+				},
+				"empty_description": "Create a rule to start filtering messages on this server.",
+				"empty_title": "No rules yet",
+				"enabled_count": "{enabled} of {total} enabled",
+				"errors": {
+					"generic": "Something went wrong. Please try again.",
+					"invalid": "The server refused one of the values. Check the fields and try again.",
+					"limit": "This server already has the maximum number of rules.",
+					"nameInvalid": "Use a name of 1 to 50 characters that isn't just a number.",
+					"nameRequired": "Give the rule a name.",
+					"nameTaken": "There is already a rule with that name.",
+					"timeoutNeedsDuration": "A timeout step needs a duration.",
+					"unknown": "This rule no longer exists. Reload the page."
+				},
+				"first_infraction": "First infraction",
+				"load_failed": "Couldn't load the rules.",
+				"loading_aria": "Loading auto-moderation rules",
+				"new": "Create rule",
+				"no_match": "No rule matches that search.",
+				"nothing": "Nothing",
+				"on_hit": "On hit",
+				"retry": "Try again",
+				"search_placeholder": "Search rules by name or type…",
+				"soft_alert_short": "Alert",
+				"soft_delete_short": "Delete",
+				"soft_log_short": "Log",
+				"subtitle": "Each rule watches for one kind of message and decides what happens to it. Rules are saved as soon as you confirm them.",
+				"threshold": "Threshold",
+				"title": "Rules",
+				"toasts": {
+					"created": "Rule \"{name}\" created",
+					"deleted": "Rule \"{name}\" deleted",
+					"saved": "Rule \"{name}\" saved"
+				},
+				"toggle_aria": "Toggle rule {name}",
+				"type_picker": {
+					"content_filters": "Content filters",
+					"description": "A rule keeps the type it is created with.",
+					"rate_limits": "Rate limits",
+					"title": "Pick a rule type"
+				}
+			},
+			"subtitle": "Choose where auto-moderation reports what it does, and whether it also follows Discord's own AutoMod.",
+			"title": "Auto Moderation",
+			"types": {
+				"Attachments": {
+					"description": "Every message with an attachment breaks the rule.",
+					"name": "Attachments"
+				},
+				"Capitals": {
+					"description": "Messages of at least the minimum length in which at least the maximum percentage of letters are capitals.",
+					"name": "Capital letters"
+				},
+				"Characters": {
+					"description": "Messages longer than the maximum number of characters.",
+					"name": "Message length"
+				},
+				"Duplicates": {
+					"description": "Messages that repeat a character or a word more times in a row than allowed.",
+					"name": "Repeated text"
+				},
+				"Emojis": {
+					"description": "Messages with more emojis than the maximum.",
+					"name": "Emojis"
+				},
+				"ImageSpam": {
+					"description": "More images from one member than the maximum within the time period, in one message or several.",
+					"name": "Image spam"
+				},
+				"Invites": {
+					"description": "Discord invite links, except the allowed codes and servers.",
+					"name": "Invite links"
+				},
+				"Links": {
+					"description": "Links, except those to the allowed domains.",
+					"name": "Links"
+				},
+				"LinksCooldown": {
+					"description": "More links from one member than the maximum within the time period.",
+					"name": "Link cooldown"
+				},
+				"MaskedLinks": {
+					"description": "Messages with a link shown as different text.",
+					"name": "Masked links"
+				},
+				"MassMentions": {
+					"description": "Messages that mention more different users than the maximum.",
+					"name": "Mass mentions"
+				},
+				"MentionsCooldown": {
+					"description": "More mentions from one member than the maximum within the time period.",
+					"name": "Mention cooldown"
+				},
+				"MessageSpam": {
+					"description": "More messages from one member in a channel than the maximum within the time period.",
+					"name": "Message spam"
+				},
+				"Newlines": {
+					"description": "Messages with more lines than the maximum.",
+					"name": "Line breaks"
+				},
+				"NoMentionSpam": {
+					"description": "More mention points than allowed within the time period, which bans the member.",
+					"name": "Mention spam"
+				},
+				"Phishing": {
+					"description": "Links to known phishing domains, except the allowed ones.",
+					"name": "Phishing links"
+				},
+				"Polls": {
+					"description": "Every message with a native Discord poll breaks the rule.",
+					"name": "Polls"
+				},
+				"Spoilers": {
+					"description": "Messages with a spoiler, in their text or as an attachment.",
+					"name": "Spoilers"
+				},
+				"Stickers": {
+					"description": "Every message with a sticker breaks the rule.",
+					"name": "Stickers"
+				},
+				"StickersCooldown": {
+					"description": "More stickers from one member than the maximum within the time period.",
+					"name": "Sticker cooldown"
+				},
+				"Words": {
+					"description": "Messages that contain one of the listed words.",
+					"name": "Filtered words"
+				},
+				"Zalgo": {
+					"description": "Messages in which a character carries more combining marks than the maximum.",
+					"name": "Zalgo text"
+				}
+			}
+		},
+		"autopurge": {
+			"add": "Add channel",
+			"columns": {
+				"every": "Every",
+				"filter": "Messages to purge",
+				"next": "Next run"
+			},
+			"edit_aria": "Edit the purge of {channel}",
+			"empty_body": "Add a channel and WolfStar purges it of its messages every so often.",
+			"empty_title": "No channel yet",
+			"footnote": "The filter decides what goes: every message, or only the ones it looks for. Up to 1,000 messages each time; pinned messages and the ones older than 14 days stay.",
+			"remove": "Stop purging",
+			"remove_aria": "Stop purging {channel}",
+			"remove_description": "WolfStar stops purging {channel}. Nothing is deleted when you confirm.",
+			"remove_title": "Stop purging this channel?",
+			"removed_description": "{channel} is no longer purged.",
+			"saved_description": "WolfStar purges {channel} on its schedule.",
+			"schedules_title": "Schedules",
+			"subtitle": "These channels are cleared on a schedule.",
+			"table_aria": "Channels that are purged"
+		},
 		"channels": {
-			"excluded_channels": "Excluded Channels",
+			"bulk": {
+				"all_help": "Sets the channel of every log at once.",
+				"all_label": "Every log",
+				"cancel_selection": "Cancel selection",
+				"group_help": "Sets the channel of every log in this group.",
+				"group_label": "All {group} logs",
+				"mixed": "mixed channels",
+				"no_logs_selected": "no logs selected",
+				"remove_channel": "Remove channel",
+				"select_group": "Select every log in {group}",
+				"select_log": "Select {name}",
+				"select_logs": "Select logs",
+				"selected_count": "No logs selected | 1 log selected | {count} logs selected",
+				"selection_help": "Sets the channel of every selected log.",
+				"selection_label": "Selected logs",
+				"selection_region": "Selected logs actions"
+			},
+			"delivery": {
+				"edit_style": {
+					"difference": "Difference",
+					"difference_help": "One text: what was removed struck through, what was added in bold.",
+					"separate": "Separate",
+					"separate_help": "The content before and the content after, each in a block of its own."
+				},
+				"title": "Delivery"
+			},
+			"excluded_channels": "Ignored channels",
 			"excluded_channels_help": "Select channels that should be ignored for specific logging events. Messages and events in these channels won't be logged.",
 			"form_aria": "Channel settings form",
+			"groups": {
+				"channels": "Channels",
+				"emojis": "Emojis & stickers",
+				"members": "Members",
+				"messages": "Messages",
+				"reactions": "Reactions",
+				"roles": "Roles",
+				"server": "Server"
+			},
+			"ignore_dialog_title": "Ignore channels",
+			"ignored_count": "No channels ignored | 1 channel ignored | {count} channels ignored",
 			"logging_channels": "Logging Channels",
 			"logging_channels_help": "Select which channels should receive specific log events. Leave empty to disable logging for that event.",
+			"not_logged": "not logged",
+			"nothing_ignored": "Nothing ignored.",
+			"routed_count": "{routed} of {total} routed",
+			"search_text_channels": "Search text channels…",
 			"subtitle": "Choose where WolfStar posts logs and which channels to ignore.",
-			"title": "Channel Settings"
+			"title": "Event Logs"
+		},
+		"command_permissions": {
+			"added": "Added",
+			"administrator_note": "Members with Administrator always use every command, whatever these permissions say.",
+			"all_channels": "All channels",
+			"allow": "Allowed",
+			"allowed": "Allowed",
+			"app_default": "App default",
+			"app_default_note": "Every command without permissions of its own uses these. Discord shows such a command as synced.",
+			"authorize": "Authorize with Discord",
+			"changed_count": "Commands with changes: {count}",
+			"channels": "Channels",
+			"conflict": "Someone changed these permissions in Discord after this page loaded them, so nothing was sent for this command.",
+			"conflict_title": "{command} changed in Discord",
+			"count_aria": "{count} of {max} permissions",
+			"denied": "Denied",
+			"deny": "Denied",
+			"error_channel": "You cannot see one of the channels named. Remove it, or ask someone who can.",
+			"error_command": "You cannot use this command yourself, so Discord does not let you change who can.",
+			"error_permissions": "Changing command permissions needs Manage Server and Manage Roles.",
+			"error_rate_limited": "Discord asked to wait. Send the remaining changes again in a moment.",
+			"error_refused": "Discord refused the change. Check that you can manage the roles, members and channels named.",
+			"error_role_above": "One of the roles named is at or above your highest role. Remove it, or ask someone above it.",
+			"error_scope": "Your Discord sign-in no longer allows changing command permissions. Authorize with Discord again.",
+			"error_unknown_channel": "A channel you added no longer exists on the server. Remove it and send again.",
+			"error_unknown_command": "Discord no longer has this command. Reload the command permissions.",
+			"error_unknown_role": "A role you added no longer exists on the server. Remove it and send again.",
+			"everyone": "@everyone",
+			"failed_title": "{command} was not saved",
+			"flipped": "Changed",
+			"keep_editing": "Keep editing",
+			"load_failed": "The command permissions could not be loaded from Discord.",
+			"member": "Member {id}",
+			"members": "Members",
+			"missing": "You need {permission} to change command permissions. You can still read them.",
+			"missing_title": "Read only",
+			"not_registered": "Not registered with Discord here, so they cannot be edited: {commands}.",
+			"not_set": "Not set",
+			"over_limit": "Discord keeps at most {max} permissions per command. Remove some before you review.",
+			"preview_description": "Nothing is sent until you confirm. Each command is sent on its own, one after another.",
+			"preview_title": "Review the changes",
+			"reload": "Reload command permissions",
+			"removed": "Removed",
+			"review": "Review changes",
+			"roles": "Roles",
+			"scope_needed": "Changing these permissions uses your own Discord account, with a permission the sign-in does not ask for. Authorize it once with Discord; you come back here afterwards.",
+			"send": "Send to Discord",
+			"sending": "Sending the changes of {total} commands…",
+			"sent_before_stop": "Commands saved before it stopped: {count}.",
+			"status_custom": "Custom",
+			"status_default": "Uses app default",
+			"subtitle": "Discord's own permissions for WolfStar's commands, the same as Server Settings → Integrations → WolfStar. Discord hides a command from whoever may not use it.",
+			"title": "Discord permissions",
+			"use_app_default": "Use app default"
+		},
+		"command_rules": {
+			"allowed_channels": "Only in",
+			"allowed_roles": "Only for roles",
+			"allowed_users": "Also for members",
+			"empty": "No command has rules. Add them with /commands in Discord.",
+			"ignored_channels": "Not in",
+			"ignored_roles": "Never for roles",
+			"ignored_users": "Never for members",
+			"subtitle": "Where and by whom each command may run, as /commands in Discord sets it. The bot applies these rules to everyone, its administrators included. Edit them with /commands in Discord.",
+			"title": "Command rules"
+		},
+		"command_tabs": {
+			"aria": "Command settings",
+			"disabled": "Disabled commands",
+			"discord": "Discord permissions",
+			"rules": "Command rules"
 		},
 		"commands": {
 			"category_reset": "Category Reset",
 			"category_reset_description": "{category} commands reverted to saved values.",
+			"channels_form_aria": "Disabled channels settings form",
 			"disable_all": "Disable all",
+			"disabled_channels": "Channels where no command runs",
 			"enable_all": "Enable all",
+			"enabled_count": "{enabled} / {total} on",
 			"form_aria": "Disabled commands settings form",
+			"off": "Off",
+			"on": "On",
 			"reset": "Reset",
 			"save_failed": "Could not save command settings. {message}",
 			"subtitle": "Choose which commands to enable or disable on your server",
 			"title": "Commands"
-		},
-		"events": {
-			"channels_page_link": "the Channels page",
-			"form_aria": "Events settings form",
-			"message_events": "Message Events",
-			"message_events_help": "These events track message activity. The required channels vary by event type and can be configured on {channelsPage}.",
-			"moderation_events": "Moderation Events",
-			"moderation_events_help": "These events involve moderation actions. Please set up a Moderation Logs channel on {channelsPage}.",
-			"subtitle": "Configure which events should be logged and tracked",
-			"title": "Event Settings",
-			"toggle_aria": "Toggle {title}"
-		},
-		"filter": {
-			"capitals": {
-				"filter_label": "Filter {state}",
-				"form_aria": "Capital letters filter settings form",
-				"maximum": "Maximum uppercase characters",
-				"minimum": "Minimum characters",
-				"save_failed": "Couldn't save capitals filter settings. {message}",
-				"title": "Capital Letters Filter",
-				"toggle": "Toggle capitals filter",
-				"toggle_help": "Blocks messages with too many uppercase characters."
-			},
-			"common": {
-				"actions": {
-					"ban": "Ban",
-					"kick": "Kick",
-					"mute": "Mute",
-					"none": "None",
-					"softban": "Softban",
-					"warning": "Warning"
-				},
-				"alerts": "Alerts",
-				"alerts_help": "Posts an alert in the channel where the violation occurred.",
-				"delete_message": "Delete Message",
-				"delete_message_help": "Deletes the message that triggered the filter.",
-				"disabled": "Disabled",
-				"duration": "Duration",
-				"duration_help": "How long the mute or ban lasts",
-				"enabled": "Enabled",
-				"hard_action": "Hard Action",
-				"hard_action_description": "What happens when a member exceeds the limit",
-				"logging": "Logging",
-				"logging_help": "Sends a log message to the configured moderation log channel.",
-				"options": "Options",
-				"punishments": "Punishments",
-				"select_action_aria": "Select punishment action",
-				"soft_actions": "Soft Actions",
-				"threshold": "Threshold",
-				"threshold_duration": "Time window (seconds)",
-				"threshold_maximum": "Violations before punishment"
-			},
-			"invites": {
-				"filter_label": "Filter {state}",
-				"form_aria": "Invite link filter settings form",
-				"save_failed": "Couldn't save invite filter settings. {message}",
-				"title": "Invite Link Filter",
-				"toggle": "Toggle invite filter",
-				"toggle_help": "Blocks Discord invite links posted in chat."
-			},
-			"lines": {
-				"filter_label": "Filter {state}",
-				"form_aria": "New line filter settings form",
-				"maximum": "Maximum lines",
-				"maximum_help": "Maximum amount of new lines in a message before filter is applied",
-				"save_failed": "Couldn't save new line filter settings. {message}",
-				"title": "Line Spam Filter",
-				"toggle": "Toggle new line filter",
-				"toggle_help": "Blocks messages with too many new lines."
-			},
-			"links": {
-				"add_link": "Add allowed link",
-				"add_link_placeholder": "e.g. example.com",
-				"allowed_links": "Allowed Links",
-				"filter_label": "Filter {state}",
-				"form_aria": "Link filter settings form",
-				"remove_link": "Remove {link}",
-				"save_failed": "Couldn't save link filter settings. {message}",
-				"title": "Link Filter",
-				"toggle": "Toggle link filter",
-				"toggle_help": "Blocks messages containing links."
-			},
-			"messages": {
-				"filter_label": "Filter {state}",
-				"form_aria": "Message duplication filter settings form",
-				"save_failed": "Couldn't save message duplication filter settings. {message}",
-				"title": "Message Duplication Filter",
-				"toggle": "Toggle message duplication filter",
-				"toggle_help": "Blocks repeated identical messages."
-			},
-			"reactions": {
-				"filter_label": "Filter {state}",
-				"form_aria": "Reaction filter settings form",
-				"save_failed": "Couldn't save reaction filter settings. {message}",
-				"title": "Reaction Filter",
-				"toggle": "Toggle reaction filter",
-				"toggle_help": "Blocks specific emoji reactions."
-			},
-			"word": {
-				"add_placeholder": "e.g. badword",
-				"add_word": "Add filtered word",
-				"alerts_toggle": "Toggle alerts soft action",
-				"delete_toggle": "Toggle delete soft action",
-				"filtered_words": "Filtered Words",
-				"filter_label": "Filter {state}",
-				"form_aria": "Word filter settings form",
-				"logging_toggle": "Toggle logging soft action",
-				"remove_word": "Remove {word}",
-				"save_failed": "Couldn't save word filter settings. {message}",
-				"title": "Word Filter",
-				"toggle": "Toggle word filter",
-				"toggle_help": "Blocks messages containing specific words or phrases."
-			}
 		},
 		"general": {
 			"copy_server_id": "Copy Server ID",
@@ -153,13 +603,18 @@
 			"language_aria": "Select bot language",
 			"language_description": "The language WolfStar uses for responses in this server.",
 			"language_placeholder": "Select language...",
+			"last_change": "Last change {when} · {name}",
+			"mod_actions_aria": "Moderation actions per day: {days}",
+			"mod_actions_partial": "The bars cover the latest {count} actions; the total counts all of them.",
+			"mod_actions_title": "Mod actions · last 7 days",
+			"mod_actions_total": "{count} total",
 			"need_help": "Need Help?",
-			"no_activity": "No settings changes yet",
-			"no_activity_description": "Changes you make to this server's settings will appear here so you can track who changed what.",
-			"prefix": "Prefix",
-			"prefix_aria": "Bot command prefix",
-			"prefix_description": "The prefix used to trigger WolfStar commands in this server.",
-			"prefix_placeholder": "Select a command prefix",
+			"no_activity": "No recent activity",
+			"no_activity_description": "Nothing has changed on this server in the last {count} days. Changes made from the dashboard will show up here.",
+			"no_activity_yet": "No activity yet",
+			"no_activity_yet_description": "Nothing has been changed on this server yet. Turn on a module and every change made from the dashboard will show up here.",
+			"overview_subtitle": "WolfStar on {name}, straight off the shared database.",
+			"overview_title": "Overview",
 			"recent_activity": "Recent Activity",
 			"save_failed_message": "Couldn't save general settings. {message}",
 			"server_id_copied_description": "The server ID has been copied to your clipboard.",
@@ -167,221 +622,552 @@
 			"server_info": "Server Info",
 			"server_info_description": "Your server at a glance. Adjust settings below or explore sections in the sidebar.",
 			"server_stats_aria": "Server statistics",
-			"stat_categories": "Categories",
+			"stat_cases": "Cases",
+			"stat_categories_note": "No categories | 1 category | {count} categories",
+			"stat_channels": "Channels",
+			"stat_commands": "Commands",
+			"stat_last_days": "last {count} days",
 			"stat_members": "Members",
+			"stat_online": "{count} online",
+			"stat_open_reports": "Open reports",
+			"stat_open_reports_note": "awaiting review",
 			"stat_roles": "Roles",
-			"stat_text_channels": "Text Channels",
-			"stat_voice_channels": "Voice Channels",
 			"subtitle": "Configure basic server settings for WolfStar.",
-			"title": "General Settings"
+			"time_zone": "Time zone",
+			"time_zone_description": "The time zone of your server, UTC until you set one.",
+			"time_zone_now": "It is {time} there now.",
+			"title": "General Settings",
+			"transfer": {
+				"becomes": "becomes",
+				"cancel": "Cancel",
+				"confirm": "Import",
+				"description": "Copy this server's settings and auto-moderation rules to a file, or restore them from one. It is the file /settings server export gives, so the bot reads it too. Roles, channels and users are not in it.",
+				"export": "Export",
+				"export_failed": "Could not export the settings",
+				"exported": "Settings exported",
+				"import": "Import",
+				"import_failed": "Could not import the file",
+				"imported": "Settings imported",
+				"issues_aria": "Problems in the file",
+				"nothing": "This server already is as the file says. There is nothing to import.",
+				"refused_description": "{file} has the problems below. Nothing was changed.",
+				"refused_title": "This file cannot be imported",
+				"review_description": "{file}: this is what the import changes. Nothing is written until you confirm.",
+				"review_title": "Import settings",
+				"rules_created": "Created ({count}):",
+				"rules_heading": "Auto-moderation rules",
+				"rules_moved": "Made again to keep the order of the file ({count}):",
+				"rules_removed": "Deleted ({count}):",
+				"rules_updated": "Edited ({count}):",
+				"rules_warning": "The rules of this server that are not in the file are deleted.",
+				"settings_heading": "Settings ({count})",
+				"stale": "The server changed while the file was being read. Choose the file again.",
+				"title": "Export and import",
+				"too_big": "That file is too large: 1 MB at most.",
+				"unsaved": "Save or discard your changes before importing.",
+				"unsupported": "Left out, since this dashboard does not manage them: {names}"
+			}
+		},
+		"honeypot": {
+			"action_help": "What WolfStar does to who writes in the honeypot channel. The warning in the channel changes to match.",
+			"action_title": "Action",
+			"actions": {
+				"ban": "Ban",
+				"ban_help": "They cannot come back until they are unbanned.",
+				"kick": "Kick",
+				"kick_help": "They can join again with an invite.",
+				"softban": "Softban",
+				"softban_help": "A ban and an unban: it also deletes what they sent in the other channels in the last hour."
+			},
+			"behaviour_title": "Behaviour",
+			"catching": "Catching who writes in #{channel}, but the moderators.",
+			"channel_help": "A channel no member has a reason to write in. WolfStar posts the warning there, and takes it off the channel it leaves.",
+			"channels_title": "Channels",
+			"copied_description": "Paste it in any channel of the server.",
+			"copied_title": "Command copied",
+			"copy_setup": "Copy /honeypot setup",
+			"errors": {
+				"same_channel": "The catches can't be reported in the honeypot channel itself. Pick another channel for them, or none.",
+				"unknown_channel": "The honeypot needs a text channel of the server. Pick another channel.",
+				"trap_permissions": "WolfStar needs View Channel, Send Messages, Read Message History, Manage Messages, and Kick or Ban Members in the honeypot channel. Give it those there, or pick another channel.",
+				"log_permissions": "WolfStar needs View Channel, Send Messages and Embed Links in the catches channel. Give it those there, or pick another channel."
+			},
+			"form_aria": "Honeypot settings form",
+			"not_reported": "Not reported",
+			"off_body": "Turn it on and pick a channel no member has a reason to write in. Or run /honeypot setup in Discord: WolfStar creates one at the top of the list, where the bots look first.",
+			"off_summary": "Nobody is caught while it has no channel.",
+			"off_title": "The honeypot is off",
+			"pick_channel": "Pick the honeypot channel",
+			"pick_channel_hint": "Pick the honeypot channel to turn it on.",
+			"subtitle": "A trap for spam bots: no member has a reason to write in its channel, so WolfStar acts on whoever does and deletes what they sent. The moderators are never caught.",
+			"title": "Honeypot",
+			"warning_help": "Without it the channel says nothing, which is harder for a bot to learn to avoid, and for a member too. WolfStar posts or takes down the warning when you save."
 		},
 		"moderation": {
+			"cases_title": "Cases",
 			"form_aria": "Moderation settings form",
-			"subtitle": "Configure how WolfStar handles moderation actions like bans, kicks, and mutes.",
-			"title": "Punishment Settings"
+			"minutes": "minutes",
+			"module_hint": "Turning this off makes WolfStar refuse the moderation commands, such as /ban and /warn. The settings below can still be changed.",
+			"subtitle": "Where cases are logged, which manual actions open one, and how member reports are reviewed.",
+			"title": "Moderation"
+		},
+		"modules": {
+			"active_hint": "Module is active on this server.",
+			"channel_count": "No channel | 1 channel | {count} channels",
+			"configure": "Configure",
+			"descriptions": {
+				"appeals": "Members appeal their bans, mutes and timeouts on WolfStar.rocks.",
+				"autodelete": "Delete the messages of a channel as they are sent, or a delay after.",
+				"automessage": "Send a message in a channel again and again.",
+				"automod": "Message filters and their escalation rules.",
+				"autopurge": "Purge a channel of its messages every so often.",
+				"channels": "Pick the channel where WolfStar logs each event in the server.",
+				"honeypot": "A channel no member has a reason to write in: WolfStar acts on the spam bots that do.",
+				"moderation": "Manual moderation actions and their case history.",
+				"roles": "Role automation: initial roles and sticky roles."
+			},
+			"disable_all": "Disable all",
+			"enable_all": "Enable all",
+			"enable_first": "Enable first",
+			"enabled_count": "{enabled} / {total} enabled",
+			"form_aria": "Modules settings form",
+			"hint": "Turn a module on, then configure it.",
+			"inactive_hint": "Enable to configure.",
+			"manage": "Manage modules",
+			"not_set_up": "Not set up",
+			"off": "Off",
+			"on": "Enabled",
+			"set_up": "Set up",
+			"subtitle": "Turn WolfStar's feature modules on or off for this server, one at a time or all at once.",
+			"summary_aria": "Modules overview",
+			"title": "Modules",
+			"toggle_aria": "Toggle {title}"
 		},
 		"please_try_again": "Please try again.",
+		"reports": {
+			"queue": {
+				"columns": {
+					"filed": "Filed",
+					"reason": "Reason",
+					"status": "Status",
+					"target": "Target"
+				},
+				"empty_description": "When a member reports someone, the report waits here until a moderator actions or dismisses it.",
+				"empty_status_description": "No report has that status right now.",
+				"empty_status_title": "Nothing in this bucket",
+				"empty_title": "No reports yet",
+				"filter_aria": "Show reports by status",
+				"refresh": "Refresh reports",
+				"status": {
+					"actioned": "Actioned",
+					"all": "All",
+					"dismissed": "Dismissed",
+					"open": "Open"
+				},
+				"table_aria": "Reports",
+				"title": "Review queue"
+			},
+			"subtitle": "Members report a message or a user; your moderators review it.",
+			"title": "Reports"
+		},
 		"roles": {
 			"configurable": "Configurable Roles",
 			"configurable_help": "Assign roles for core bot functions like moderation and auto-assignment.",
 			"form_aria": "Roles settings form",
 			"general_options": "General Options",
+			"groups": {
+				"join": "Auto-assign on join",
+				"moderation": "Moderation",
+				"restrictions": "Restrictions",
+				"staff": "Staff"
+			},
+			"not_set": "not set",
 			"restricted": "Restricted Roles",
 			"restricted_help": "Roles applied when a restriction command is used.",
 			"subtitle": "Configure the roles WolfStar uses for moderation, permissions, and automation.",
 			"title": "Roles"
 		},
-		"save_failed": "Save Failed"
+		"save_failed": "Save Failed",
+		"setup": {
+			"back": "Back to {step}",
+			"channels": {
+				"automod_help": "Every message a filter deletes or flags shows up here.",
+				"automod_label": "Auto-moderation log",
+				"description": "Choose the channels for the modules you turned on. Leave one empty and that log stays off.",
+				"events_help": "Joins, leaves, deleted and edited messages, role and channel changes. Each event can get its own channel later, in Events.",
+				"events_label": "Event log",
+				"moderation_help": "Bans, kicks, timeouts and warnings are posted here as cases.",
+				"moderation_label": "Moderation log",
+				"none": "None of the modules you chose post to a channel. Go back to turn one on, or continue.",
+				"note": "Keep these channels for staff. WolfStar needs View Channel and Send Messages in each one.",
+				"title": "Where should WolfStar post?"
+			},
+			"close_aria": "Skip setup for now",
+			"description": "Choose the modules, channels, roles and language WolfStar starts with in this server.",
+			"done_description": "Your choices are saved. Everything stays editable in the dashboard.",
+			"done_title": "WolfStar is set up on {name}",
+			"finish": "Finish setup",
+			"language": {
+				"description": "The language WolfStar answers in on this server.",
+				"help": "This is the server language, set for the whole server. It is not the language of the dashboard.",
+				"label": "Server language",
+				"title": "Pick a language"
+			},
+			"modules": {
+				"description": "Pick what WolfStar should do here. Every module is a switch you can flip later, so nothing below is permanent.",
+				"recommended": "Recommended",
+				"title": "Let's set up {name}",
+				"turn_on": "Turn on {name}"
+			},
+			"next": "Continue to {step}",
+			"rail_note": "Skip any step. Every setting here stays in the dashboard afterwards.",
+			"rail_title": "WolfStar setup",
+			"resume_action": "Resume setup",
+			"resume_description": "You skipped the setup. Pick up where you left off, it takes a minute.",
+			"resume_title": "Finish setting up {name}",
+			"review": {
+				"description": "This is what WolfStar will set up on {name}. It is saved as one entry in settings activity.",
+				"edit": "Edit",
+				"edit_aria": "Edit {label}",
+				"none": "None",
+				"none_on": "None on",
+				"not_set": "Not set",
+				"rows": {
+					"admin": "Administrator roles",
+					"automod_log": "Auto-moderation log",
+					"event_log": "Event log",
+					"language": "Server language",
+					"moderation_log": "Moderation log",
+					"moderator": "Moderator roles",
+					"modules": "Modules",
+					"muted": "Muted role"
+				},
+				"title": "Ready when you are"
+			},
+			"roles": {
+				"admin_help": "Administrators can use every moderation and management command. With none set, anyone with Manage Server is one.",
+				"admin_label": "Administrator roles",
+				"description": "WolfStar uses these roles to decide who can run its staff commands.",
+				"moderator_help": "Moderators can use almost every moderation command. With none set, anyone who can ban members is one.",
+				"moderator_label": "Moderator roles",
+				"muted_help": "Given to muted members. With none set, WolfStar offers to create one the first time you mute someone.",
+				"muted_label": "Muted role",
+				"none": "No roles",
+				"title": "Who runs this server?"
+			},
+			"skip": "Skip for now",
+			"skipped_description": "You can pick it up again from the overview.",
+			"skipped_title": "Setup skipped",
+			"step_names": {
+				"channels": "Channels",
+				"language": "Language",
+				"modules": "Modules",
+				"review": "Review",
+				"roles": "Roles"
+			},
+			"step_of": "Step {step} of {total}",
+			"steps_aria": "Setup steps",
+			"title": "Set up WolfStar on {name}"
+		},
+		"toggle_aria": "Toggle {title}"
 	},
 	"settings": {
 		"entries": {
-			"channelsIgnoreAll": {
-				"description": "Channels excluded from all types of logging.",
-				"name": "All logs"
+			"appealsBans": {
+				"description": "Banned members can appeal; they do not need to be in the server.",
+				"name": "Appealable Bans"
 			},
-			"channelsIgnoreMessageDelete": {
-				"description": "Channels excluded from deleted-message logging.",
-				"name": "Message delete logs"
+			"appealsChannel": {
+				"description": "Where the moderators accept or deny them. An appeal sent while it is not set never reaches them.",
+				"name": "Appeals Channel"
 			},
-			"channelsIgnoreMessageEdit": {
-				"description": "Channels excluded from edited-message logging.",
-				"name": "Message edit logs"
+			"appealsEnabled": {
+				"description": "Lets the members appeal their bans, mutes and timeouts.",
+				"name": "Appeals"
 			},
-			"channelsIgnoreReactionAdd": {
-				"description": "Channels excluded from reaction logging.",
-				"name": "Reaction add logs"
+			"appealsMutes": {
+				"description": "Muted members can appeal their mute.",
+				"name": "Appealable Mutes"
 			},
-			"channelsLogsChannelCreate": {
+			"appealsQuestions": {
+				"description": "One question per field of the form. WolfStar asks the first five.",
+				"name": "Appeal Form Questions"
+			},
+			"appealsTimeouts": {
+				"description": "Members can appeal a timeout while it lasts.",
+				"name": "Appealable Timeouts"
+			},
+			"automodChannel": {
+				"description": "Receives a log message when an auto-moderation rule acts on a message.",
+				"name": "Auto Moderation Logs"
+			},
+			"automodTrackNative": {
+				"description": "Also logs the actions taken by Discord's own AutoMod rules.",
+				"name": "Track Discord AutoMod"
+			},
+			"commandsDisabledChannels": {
+				"description": "Channels where members cannot use any WolfStar command.",
+				"name": "Disabled Channels"
+			},
+			"honeypotAction": {
+				"description": "What WolfStar does to who writes in the honeypot channel.",
+				"name": "Honeypot Action"
+			},
+			"honeypotChannel": {
+				"description": "Nobody is caught while it is not set.",
+				"name": "Honeypot Channel"
+			},
+			"honeypotDirectMessage": {
+				"description": "Tells the member it caught why, in a direct message. A hacked account that is softbanned can come back once its owner has it again.",
+				"name": "Tell Caught Members Why"
+			},
+			"honeypotKeepActive": {
+				"description": "WolfStar sends a message there every day, so the channel does not look abandoned.",
+				"name": "Keep Honeypot Active"
+			},
+			"honeypotLogChannel": {
+				"description": "Every member it caught, with what they sent. The case still goes to the moderation logs.",
+				"name": "Honeypot Catches Channel"
+			},
+			"honeypotRandomName": {
+				"description": "The bots cannot avoid the channel by its name.",
+				"name": "Rename Honeypot Daily"
+			},
+			"honeypotWarning": {
+				"description": "Without it the channel says nothing, which is harder for a bot to learn to avoid, and for a member too.",
+				"name": "Honeypot Warning"
+			},
+			"logsBoosts": {
+				"description": "Receives a log message when a member starts boosting the server and when they stop, with how long they boosted for.",
+				"name": "Boost Logs"
+			},
+			"logsChannelCreate": {
 				"description": "Receives a log message when a new channel is created.",
 				"name": "Channel Create Logs"
 			},
-			"channelsLogsChannelDelete": {
+			"logsChannelDelete": {
 				"description": "Receives a log message when a channel is deleted.",
 				"name": "Channel Delete Logs"
 			},
-			"channelsLogsChannelUpdate": {
+			"logsChannelUpdate": {
 				"description": "Receives a log message when any channel is updated, including the changes made.",
 				"name": "Channel Update Logs"
 			},
-			"channelsLogsEmojiCreate": {
+			"logsEmojiCreate": {
 				"description": "Receives a log message when a new emoji is created.",
 				"name": "Emoji Create Logs"
 			},
-			"channelsLogsEmojiDelete": {
+			"logsEmojiDelete": {
 				"description": "Receives a log message when an emoji is deleted.",
 				"name": "Emoji Delete Logs"
 			},
-			"channelsLogsEmojiUpdate": {
+			"logsEmojiUpdate": {
 				"description": "Receives a log message when an emoji is updated, including the changes made.",
 				"name": "Emoji Update Logs"
 			},
-			"channelsLogsImage": {
+			"logsEvents": {
+				"description": "Receives a log message when a scheduled event is created, changed, started, ended or deleted.",
+				"name": "Event Logs"
+			},
+			"logsExpressions": {
+				"description": "Receives a log message when a sticker or a soundboard sound is created, changed or deleted.",
+				"name": "Sticker and Sound Logs"
+			},
+			"logsIgnoreAll": {
+				"description": "Channels excluded from all types of logging.",
+				"name": "All logs"
+			},
+			"logsIgnoreMessages": {
+				"description": "Channels excluded from deleted-message and edited-message logging.",
+				"name": "Message logs"
+			},
+			"logsIgnoreReactions": {
+				"description": "Channels excluded from reaction logging.",
+				"name": "Reaction logs"
+			},
+			"logsImage": {
 				"description": "Receives re-uploaded copies of images posted in the server.",
 				"name": "Image Logs"
 			},
-			"channelsLogsMemberAdd": {
+			"logsIntegrations": {
+				"description": "Receives a log message when an app is added or removed, and when the webhooks of a channel change.",
+				"name": "App and Webhook Logs"
+			},
+			"logsInvites": {
+				"description": "Receives a log message when an invite is created or deleted.",
+				"name": "Invite Logs"
+			},
+			"logsMemberAdd": {
 				"description": "Receives a log message when a member joins the server.",
 				"name": "Member Add Logs"
 			},
-			"channelsLogsMemberNicknameUpdate": {
+			"logsMemberNicknameUpdate": {
 				"description": "Receives a log message when a member changes their nickname.",
 				"name": "Member Nickname Update Logs"
 			},
-			"channelsLogsMemberRemove": {
+			"logsMemberRemove": {
 				"description": "Receives a log message when a member leaves, is kicked, or is banned.",
 				"name": "Member Remove Logs"
 			},
-			"channelsLogsMemberRolesUpdate": {
-				"description": "Receives a log message when a member gains or loses a role.",
-				"name": "Member Role Logs"
-			},
-			"channelsLogsMemberUsernameUpdate": {
+			"logsMemberUsernameUpdate": {
 				"description": "Receives a log message when a member changes their username.",
 				"name": "Member Username Update Logs"
 			},
-			"channelsLogsMessageDelete": {
+			"logsMessageDelete": {
 				"description": "Receives a log message when a message is deleted.",
 				"name": "Message Delete Logs"
 			},
-			"channelsLogsMessageDeleteNsfw": {
+			"logsMessageDeleteNsfw": {
 				"description": "Receives a log message when a message from an NSFW channel is deleted.",
 				"name": "NSFW Message Delete Logs"
 			},
-			"channelsLogsMessageUpdate": {
+			"logsMessageUpdate": {
 				"description": "Receives a log message when a message is edited.",
 				"name": "Message Update Logs"
 			},
-			"channelsLogsMessageUpdateNsfw": {
+			"logsMessageUpdateNsfw": {
 				"description": "Receives a log message when a message from an NSFW channel is edited.",
 				"name": "NSFW Message Update Logs"
 			},
-			"channelsLogsModeration": {
-				"description": "Receives all moderation case logs. Required for moderation events to work.",
-				"name": "Moderation Logs"
+			"logsMessageUpdateStyle": {
+				"description": "How the log of an edited message shows what changed.",
+				"name": "Edited Messages"
 			},
-			"channelsLogsPrune": {
+			"logsPrune": {
 				"description": "Receives a log message when messages are bulk-deleted (pruned).",
 				"name": "Prune Logs"
 			},
-			"channelsLogsReaction": {
+			"logsReactionEmojiAdd": {
 				"description": "Receives a log message when a reaction is added to a message.",
-				"name": "Reaction Logs"
+				"name": "Reaction Add Logs"
 			},
-			"channelsLogsRoleCreate": {
+			"logsReactionEmojiIncludeTwemoji": {
+				"description": "When a member reacts with a Twemoji, the reaction is sent to the reaction log channels.",
+				"name": "Twemoji Reactions"
+			},
+			"logsReactionEmojiRemove": {
+				"description": "Receives a log message when a reaction is removed from a message.",
+				"name": "Reaction Remove Logs"
+			},
+			"logsRoleCreate": {
 				"description": "Receives a log message when a new role is created.",
 				"name": "Role Create Logs"
 			},
-			"channelsLogsRoleDelete": {
+			"logsRoleDelete": {
 				"description": "Receives a log message when a role is deleted.",
 				"name": "Role Delete Logs"
 			},
-			"channelsLogsRoleUpdate": {
+			"logsRoleUpdate": {
 				"description": "Receives a log message when a role is updated, including the changes made.",
 				"name": "Role Update Logs"
 			},
-			"channelsLogsServerUpdate": {
+			"logsServerUpdate": {
 				"description": "Receives a log message when the server settings are updated, including the changes made.",
 				"name": "Server Update Logs"
 			},
-			"eventsBanAdd": {
-				"description": "An anonymous moderation log is posted when a member is banned.",
-				"title": "Ban Added"
+			"logsThreads": {
+				"description": "Receives a log message when a thread is created, deleted, renamed, archived or locked.",
+				"name": "Thread Logs"
 			},
-			"eventsBanRemove": {
-				"description": "An anonymous moderation log is posted when a member is unbanned.",
-				"title": "Ban Revoked"
+			"logsWebhooks": {
+				"description": "WolfStar creates a webhook in each log channel, whose name and avatar you can change. Without Manage Webhooks a channel gets the logs as before; the moderation log and the reports are always WolfStar's own messages.",
+				"name": "Send Through Webhooks"
 			},
-			"eventsTwemojiReactions": {
-				"description": "When a member reacts with a Twemoji, the reaction is sent to the Reaction Logs channel.",
-				"title": "Twemoji Reactions"
+			"moderationChannel": {
+				"description": "Receives all moderation case logs. Required for the options below to work.",
+				"name": "Moderation Logs"
 			},
-			"messagesIgnoreChannels": {
-				"description": "Channels excluded from message-delete, message-edit, and reaction-add logging.",
-				"name": "Message Delete, Edit and Reaction Add logs"
+			"moderationConfirmRecentMinutes": {
+				"description": "Asks before acting on a member who got a case within these minutes, so two moderators do not punish twice. 0 never asks.",
+				"name": "Confirm a Second Action"
 			},
-			"messagesModerationAutoDelete": {
-				"description": "Deletes the command message to keep the moderator anonymous.",
-				"name": "Hide Message"
+			"moderationDehoist": {
+				"description": "Cleans the names of the members when they join or change them: what lists a name above the others goes, and fancy fonts, symbols and emojis become plain letters. Accents stay, and sticky nicknames and members who can manage nicknames are left alone.",
+				"name": "Dehoist Names"
 			},
-			"messagesModerationDm": {
-				"description": "Sends the punished member a DM with the reason and duration.",
-				"name": "Message User"
+			"moderationTrackBans": {
+				"description": "Opens a moderation case when a member is banned or unbanned by hand.",
+				"name": "Track Manual Bans"
 			},
-			"messagesModerationMessageDisplay": {
-				"description": "Posts a confirmation message after a punishment is applied.",
-				"name": "Send Punishment Response"
+			"moderationTrackKicks": {
+				"description": "Opens a moderation case when a member is kicked by hand. WolfStar reads the audit log for every member who leaves, so it needs View Audit Log.",
+				"name": "Track Manual Kicks"
 			},
-			"messagesModerationReasonDisplay": {
-				"description": "Includes the reason in the punishment response message.",
-				"name": "Show Reason"
+			"moderationTrackRoles": {
+				"description": "Mutes or restricts a member, as the commands do, when someone gives them the muted role or a restriction role by hand.",
+				"name": "Track Manual Roles"
 			},
-			"messagesModeratorNameDisplay": {
-				"description": "Includes the moderator's name in the DM sent to the punished member.",
-				"name": "Show Mod Name"
+			"moderationTrackTimeouts": {
+				"description": "Opens a moderation case when a member is timed out by hand.",
+				"name": "Track Manual Timeouts"
+			},
+			"reportsAnonymous": {
+				"description": "Hides who filed a report from the moderators reading it.",
+				"name": "Anonymous Reports"
+			},
+			"reportsChannel": {
+				"description": "Receives the reports members file. Reports are off until a channel is set.",
+				"name": "Reports Channel"
+			},
+			"reportsNotify": {
+				"description": "Tells the reporter when a moderator acts on or dismisses their report.",
+				"name": "Notify Reporter"
+			},
+			"reportsRole": {
+				"description": "Mentioned in the reports channel when a new report comes in.",
+				"name": "Notified Role"
 			},
 			"rolesAdmin": {
-				"name": "Administrator",
-				"tooltip": "The administrator roles. Administrators have access to all moderation and management commands. Defaults to anyone with the \"Manage Server\" permission."
+				"description": "The administrator roles. Administrators have access to all moderation and management commands. Defaults to anyone with the \"Manage Server\" permission.",
+				"name": "Administrator"
 			},
 			"rolesInitial": {
-				"name": "Initial",
-				"tooltip": "The initial role, if configured, is assigned to users as soon as they join."
+				"description": "The initial roles are assigned to every member as soon as they join.",
+				"name": "Initial"
+			},
+			"rolesInitialHumans": {
+				"description": "Assigned to human members as soon as they join.",
+				"name": "Initial (Humans)"
+			},
+			"rolesInitialRobots": {
+				"description": "Assigned to bots as soon as they are added to the server.",
+				"name": "Initial (Bots)"
 			},
 			"rolesModerator": {
-				"name": "Moderator",
-				"tooltip": "The moderator roles. Moderators have access to almost all moderation commands. Defaults to anyone who can ban members"
+				"description": "The moderator roles. Moderators have access to almost all moderation commands. Defaults to anyone who can ban members",
+				"name": "Moderator"
 			},
 			"rolesMuted": {
-				"name": "Muted",
-				"tooltip": "The muted role, if configured, is assigned to muted users. If no muted role is set, you are prompted to create one."
+				"description": "The muted role, if configured, is assigned to muted users. If no muted role is set, you are prompted to create one.",
+				"name": "Muted"
 			},
 			"rolesPublic": {
-				"name": "Public Roles",
-				"tooltip": "The public roles. These can be claimed by any user using the \"roles\" command."
+				"description": "The public roles. These can be claimed by any user using the \"roles\" command.",
+				"name": "Public Roles"
 			},
 			"rolesRemoveInitial": {
-				"name": "Remove Initial",
-				"tooltip": "When enabled, claiming a public role automatically removes the initial role."
+				"description": "When enabled, claiming a public role automatically removes the initial roles.",
+				"name": "Remove Initial"
 			},
 			"rolesRestrictedAttachment": {
-				"name": "Restricted Attachment",
-				"tooltip": "Assigned to members who are restricted from uploading attachments."
+				"description": "Assigned to members who are restricted from uploading attachments.",
+				"name": "Restricted Attachment"
 			},
 			"rolesRestrictedEmbed": {
-				"name": "Restricted Embed",
-				"tooltip": "Assigned to members who are restricted from embedding links."
+				"description": "Assigned to members who are restricted from embedding links.",
+				"name": "Restricted Embed"
 			},
 			"rolesRestrictedEmoji": {
-				"name": "Restricted Emoji",
-				"tooltip": "Assigned to members who are restricted from using external emojis."
+				"description": "Assigned to members who are restricted from using external emojis.",
+				"name": "Restricted Emoji"
 			},
 			"rolesRestrictedReaction": {
-				"name": "Restricted Reaction",
-				"tooltip": "Assigned to members whose reactions are restricted."
+				"description": "Assigned to members whose reactions are restricted.",
+				"name": "Restricted Reaction"
 			},
 			"rolesRestrictedVoice": {
-				"name": "Restricted Voice",
-				"tooltip": "Assigned to members who are restricted from joining voice channels."
+				"description": "Assigned to members who are restricted from joining voice channels.",
+				"name": "Restricted Voice"
 			}
 		}
 	}

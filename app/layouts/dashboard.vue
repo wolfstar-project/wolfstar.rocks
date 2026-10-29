@@ -104,6 +104,15 @@
 			</template>
 		</UModal>
 
+		<!-- A newer build is out. Held back while edits are unsaved: the reload would drop them. -->
+		<ClientOnly>
+			<DeferredMount>
+				<div v-show="!hasUnsavedEdits" class="dashboard-update-prompt">
+					<LazyPwaPrompt />
+				</div>
+			</DeferredMount>
+		</ClientOnly>
+
 		<Transition name="dashboard-loader">
 			<DashboardLoader v-if="booting" />
 		</Transition>
@@ -379,9 +388,8 @@ watch(isReadyToSubmit, () => {
 const { discardAll: discardCommandPermissionDrafts, hasDrafts: hasCommandPermissionDrafts } =
 	useCommandPermissionDrafts();
 // Unsent command permission edits are lost on a reload too, like staged settings.
-const { showDialog, confirmLeave, cancelLeave } = useUnsavedChanges(
-	computed(() => isReadyToSubmit.value || hasCommandPermissionDrafts.value),
-);
+const hasUnsavedEdits = computed(() => isReadyToSubmit.value || hasCommandPermissionDrafts.value);
+const { showDialog, confirmLeave, cancelLeave } = useUnsavedChanges(hasUnsavedEdits);
 
 // One dialog covers both ways of leaving staged edits behind: a route change
 // (router guard) and a guild/section switch inside `/app` (pending navigation).
@@ -602,6 +610,21 @@ watch(guildId, (newGuildId, oldGuildId) => {
 
 .console-savebar-action {
 	@apply h-9 flex-1 justify-center rounded-md px-4 lg:flex-none;
+}
+
+/* Clear of the cards at the foot of a phone's screens; from `sm` up, the page's
+   bottom-right corner, which only the save bar uses, and the prompt waits for it. */
+.dashboard-update-prompt {
+	@apply pointer-events-none fixed right-4 bottom-4 z-40 flex;
+
+	@variant max-sm {
+		@apply inset-x-0 justify-center px-3;
+		bottom: calc(5.25rem + env(safe-area-inset-bottom));
+	}
+}
+
+.dashboard-update-prompt > :deep(*) {
+	@apply pointer-events-auto;
 }
 
 .console-main:has(> .console-savebar) :deep(.console-content) {

@@ -76,7 +76,8 @@
 									:checked="colorTheme === theme.id"
 									:aria-label="theme.label"
 									class="sr-only"
-									@change="selectColorTheme(theme.id)"
+									@change="theme.id === 'custom' || selectColorTheme(theme.id)"
+									@click="theme.id === 'custom' && openCustomTheme()"
 								/>
 								<UIcon
 									v-if="theme.id === 'custom'"
@@ -97,8 +98,6 @@
 							{{ ts("profile.themes.color_hint") }}
 						</p>
 					</div>
-
-					<AppCustomThemeEditor v-if="!quick && colorTheme === 'custom'" />
 				</div>
 				<template #fallback>
 					<div class="flex flex-wrap gap-2">
@@ -301,6 +300,8 @@ const { reduceMotionEnabled, effectiveReduceMotion, setReduceMotion, systemPrefe
 	useReduceMotion();
 
 const { baseTheme, colorTheme, customTheme, selectBase, selectColorTheme } = useThemeChoice();
+// The custom theme is built in a panel beside the page, as Discord's is.
+const { open: openCustomTheme } = useCustomThemePanel();
 const logDensity = useLogDensity();
 
 const themeGroupName = useId();

@@ -1,5 +1,6 @@
 import {
 	AppCustomThemeEditor,
+	AppCustomThemePanel,
 	AppFooter,
 	AppHeader,
 	AppHeaderAuth,
@@ -1176,6 +1177,21 @@ describe("component accessibility audits", () => {
 			const wrapper = await mountSuspended(AppCustomThemeEditor);
 			const results = await runAxe(wrapper);
 			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("AppCustomThemePanel", () => {
+		it("has no axe-core violations", async () => {
+			useCustomThemePanel().open();
+			const wrapper = await mountSuspended(AppCustomThemePanel, { attachTo: document.body });
+			await vi.waitFor(() =>
+				expect(document.querySelector('[role="dialog"]')).not.toBeNull(),
+			);
+			const panel = document.querySelector('[role="dialog"]');
+			const results = await runAxe(wrapper, { include: panel ? [panel] : [] });
+			expect(results.violations).toEqual([]);
+			useCustomThemePanel().discard();
+			wrapper.unmount();
 		});
 	});
 

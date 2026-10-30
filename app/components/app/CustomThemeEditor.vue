@@ -1,9 +1,5 @@
 <template>
-	<section class="custom-theme" :aria-labelledby="headingId">
-		<p :id="headingId" class="text-sm font-semibold text-highlighted">
-			{{ ts("profile.themes.customize") }}
-		</p>
-
+	<div class="custom-theme">
 		<div>
 			<p :id="baseLabelId" class="custom-theme-label">
 				{{ ts("profile.themes.appearance") }}
@@ -126,6 +122,7 @@
 					:min="0"
 					:max="360"
 					:aria-labelledby="angleLabelId"
+					:ui="SLIDER_UI"
 					@update:model-value="(value) => update({ angle: toNumber(value) })"
 				/>
 			</div>
@@ -139,6 +136,7 @@
 					:min="0"
 					:max="100"
 					:aria-labelledby="intensityLabelId"
+					:ui="SLIDER_UI"
 					@update:model-value="(value) => update({ intensity: toNumber(value) })"
 				/>
 			</div>
@@ -158,7 +156,7 @@
 				{{ ts("profile.themes.reset") }}
 			</UButton>
 		</div>
-	</section>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -175,7 +173,7 @@ import {
  * Builds the custom colour theme, as Discord's "Customize your theme" does: a
  * dark or light base, up to five colours picked on a strip that shows the
  * gradient, the gradient's direction and how much of it shows. Every change
- * applies at once.
+ * previews at once; `AppCustomThemePanel` around it keeps or drops them.
  */
 interface EyeDropperResult {
 	sRGBHex: string;
@@ -184,7 +182,6 @@ interface EyeDropperResult {
 const { ts } = useI18n();
 const { customTheme: theme, updateCustomTheme: update } = useThemeChoice();
 
-const headingId = useId();
 const baseLabelId = useId();
 const colorsLabelId = useId();
 const angleLabelId = useId();
@@ -244,6 +241,13 @@ async function pickFromScreen() {
 	}
 }
 
+// Discord's sliders: a thin track and a plain white knob.
+const SLIDER_UI = {
+	range: "bg-(--color-primary)",
+	thumb: "size-4 bg-white ring-0 shadow-[0_1px_3px_oklch(0%_0_0/0.35)]",
+	track: "h-1.5 bg-(--console-input,var(--field-surface))",
+};
+
 function toNumber(value: number | number[] | undefined): number {
 	return Array.isArray(value) ? (value[0] ?? 0) : (value ?? 0);
 }
@@ -290,9 +294,7 @@ function reset() {
 @reference "@/assets/css/main.css";
 
 .custom-theme {
-	@apply flex max-w-86 flex-col gap-4.5 rounded-[10px] p-4;
-	background-color: var(--console-surface, var(--color-base-200));
-	border: 1px solid var(--home-border-subtle);
+	@apply flex flex-col gap-4.5;
 }
 
 .custom-theme-label {

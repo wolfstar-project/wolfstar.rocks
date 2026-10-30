@@ -54,6 +54,7 @@ import {
 	GuildAutomodDurationInput,
 	GuildCommandsDiscordPermissions,
 	GuildCommandsRuleEditor,
+	GuildCommandsRuleList,
 	GuildLogsCaseDetail,
 	GuildMemberPicker,
 	GuildReviewQueue,
@@ -808,6 +809,31 @@ describe("component accessibility audits", () => {
 		});
 	});
 
+	describe("GuildCommandsRuleList", () => {
+		it("should have no accessibility violations", async () => {
+			useGuildData().setGuildData(
+				createMockOauthFlattenedGuild({ id: "123456789012345678" }),
+			);
+			const component = await mountSuspended(GuildCommandsRuleList, {
+				props: {
+					rules: [
+						{
+							command: "Moderation.*",
+							allowedChannels: ["333333333333333333"],
+							ignoredChannels: [],
+							allowedRoles: ["300000000000000001"],
+							ignoredRoles: ["123456789012345678"],
+							allowedUsers: [],
+							ignoredUsers: [],
+						},
+					],
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
 	describe("GuildCommandsRuleEditor", () => {
 		const GUILD_ID = "123456789012345678";
 
@@ -817,6 +843,7 @@ describe("component accessibility audits", () => {
 				handler: () => ({
 					command: "archive",
 					enabled: true,
+					onlyAllowed: true,
 					rule: {
 						command: "archive",
 						allowedChannels: ["333333333333333333"],
@@ -839,7 +866,19 @@ describe("component accessibility audits", () => {
 						label: "archive",
 						category: "Moderation",
 						description: "Save and read the recent messages of members.",
+						subCategory: null,
 					},
+					inherited: [
+						{
+							command: "Moderation.*",
+							allowedChannels: [],
+							ignoredChannels: ["333333333333333333"],
+							allowedRoles: [],
+							ignoredRoles: [GUILD_ID],
+							allowedUsers: [],
+							ignoredUsers: [],
+						},
+					],
 				},
 				attachTo: document.body,
 			});

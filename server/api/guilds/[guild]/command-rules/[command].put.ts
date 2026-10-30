@@ -18,8 +18,8 @@ import {
 import { createError, useLogger, withAuditMethods } from "evlog";
 import { parse } from "valibot";
 
-function ruleOf(settings: CommandRuleSettings, command: string): CommandRule {
-	return findCommandRule(readCommandRules(settings.commandsRestrictions), command);
+function ruleOf(settings: CommandRuleSettings, command: string, guildId: string): CommandRule {
+	return findCommandRule(readCommandRules(settings.commandsRestrictions, guildId), command);
 }
 
 /**
@@ -33,6 +33,7 @@ function auditedChanges(
 	before: CommandRuleSettings,
 	after: CommandRuleSettings,
 	command: string,
+	guildId: string,
 ): { before: Record<string, unknown>; after: Record<string, unknown> } {
 	const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
 	const result = { before: {} as Record<string, unknown>, after: {} as Record<string, unknown> };
@@ -41,7 +42,8 @@ function auditedChanges(
 		result.after.commandsDisabled = [...after.commandsDisabled];
 	}
 
-	const [ruleBefore, ruleAfter] = [ruleOf(before, command), ruleOf(after, command)];
+	const ruleBefore = ruleOf(before, command, guildId);
+	const ruleAfter = ruleOf(after, command, guildId);
 	const lists = COMMAND_RULE_LISTS.filter((list) => !same(ruleBefore[list], ruleAfter[list]));
 	if (lists.length > 0) {
 		result.before.commandsRestrictions = {
@@ -101,7 +103,7 @@ export default defineWrappedResponseHandler(
 		}
 
 		using trx = await writeSettingsTransaction(guild.id);
-		if (readCommandRuleState(trx.settings, command).revision !== body.revision) {
+		if (readCommandRuleState(trx.settings, command, guild.id).revision !== body.revision) {
 			throw createError({
 				message: "This command changed since it was opened",
 				status: 409,
@@ -115,8 +117,8 @@ export default defineWrappedResponseHandler(
 			commandsDisabled: [...trx.settings.commandsDisabled],
 			commandsRestrictions: trx.settings.commandsRestrictions,
 		};
-		await trx.write(writeCommandRule(trx.settings, command, body)).submit();
-		const changes = auditedChanges(before, trx.settings, command);
+		await trx.write(writeCommandRule(trx.settings, command, body, guild.id)).submit();
+		const changes = auditedChanges(before, trx.settings, command, guild.id);
 
 		withAuditMethods(useLogger(event)).audit(
 			guildSettingsUpdate({
@@ -128,9 +130,9 @@ export default defineWrappedResponseHandler(
 		);
 
 		return {
-			...readCommandRuleState(trx.settings, command),
+			...readCommandRuleState(trx.settings, command, guild.id),
 			commandsDisabled: [...trx.settings.commandsDisabled],
-			commandsRestrictions: readCommandRules(trx.settings.commandsRestrictions),
+			commandsRestrictions: [...trx.settings.commandsRestrictions],
 		};
 	},
 	{

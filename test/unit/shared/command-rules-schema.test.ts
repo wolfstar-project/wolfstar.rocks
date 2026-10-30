@@ -7,6 +7,7 @@ const C1 = "400000000000000001";
 const body = {
 	revision: 1_262_773_392,
 	enabled: true,
+	onlyAllowed: false,
 	allowedChannels: [C1],
 	ignoredChannels: [],
 	allowedRoles: [],

@@ -1696,6 +1696,15 @@
 				"command_rules": {
 					"type": "object",
 					"properties": {
+						"allowed_channels": {
+							"type": "string"
+						},
+						"allowed_roles": {
+							"type": "string"
+						},
+						"allowed_users": {
+							"type": "string"
+						},
 						"editor": {
 							"type": "object",
 							"properties": {
@@ -1711,6 +1720,9 @@
 								"allowed_roles_hint": {
 									"type": "string"
 								},
+								"also_applies": {
+									"type": "string"
+								},
 								"cancel": {
 									"type": "string"
 								},
@@ -1721,6 +1733,9 @@
 									"type": "string"
 								},
 								"count": {
+									"type": "string"
+								},
+								"disabled_by": {
 									"type": "string"
 								},
 								"enabled": {
@@ -1759,6 +1774,12 @@
 								"off_note": {
 									"type": "string"
 								},
+								"only_allowed": {
+									"type": "string"
+								},
+								"only_allowed_hint": {
+									"type": "string"
+								},
 								"open_aria": {
 									"type": "string"
 								},
@@ -1791,6 +1812,27 @@
 								}
 							},
 							"additionalProperties": false
+						},
+						"every_command": {
+							"type": "string"
+						},
+						"groups_subtitle": {
+							"type": "string"
+						},
+						"groups_title": {
+							"type": "string"
+						},
+						"ignored_channels": {
+							"type": "string"
+						},
+						"ignored_roles": {
+							"type": "string"
+						},
+						"ignored_users": {
+							"type": "string"
+						},
+						"order": {
+							"type": "string"
 						}
 					},
 					"additionalProperties": false

@@ -45,6 +45,7 @@ describe("GET /api/guilds/:guild/command-rules/:command", () => {
 		expect(state).toEqual({
 			command: "ban",
 			enabled: false,
+			onlyAllowed: false,
 			rule,
 			revision: getCommandRuleRevision(rule, true),
 		});

@@ -12,7 +12,7 @@ export default defineWrappedResponseHandler(
 	async (event) => {
 		const { guild } = useManagedGuild(event);
 		const command = getCommandRuleParam(event);
-		return readCommandRuleState(await readFreshSettings(guild.id), command);
+		return readCommandRuleState(await readFreshSettings(guild.id), command, guild.id);
 	},
 	{
 		auth: true,

@@ -56,7 +56,7 @@
 								:key="command.name"
 								type="button"
 								class="command-tile"
-								:class="{ 'command-tile--off': !isEnabled(command.name) }"
+								:class="{ 'command-tile--off': !isOn(command) }"
 								aria-haspopup="dialog"
 								:aria-label="
 									ts('guild_settings.command_rules.editor.open_aria', {
@@ -83,7 +83,7 @@
 									<span
 										class="command-state"
 										:class="
-											isEnabled(command.name)
+											isOn(command)
 												? 'command-state--on'
 												: 'command-state--off'
 										"
@@ -93,12 +93,12 @@
 											aria-hidden="true"
 										></span>
 										{{
-											isEnabled(command.name)
+											isOn(command)
 												? ts("guild_settings.commands.on")
 												: ts("guild_settings.commands.off")
 										}}
 									</span>
-									<span v-if="ruleCount(command.name) > 0" class="command-rules">
+									<span v-if="ruleCount(command) > 0" class="command-rules">
 										<UIcon
 											name="ic:round-key"
 											class="size-3"
@@ -107,7 +107,7 @@
 										{{
 											tc(
 												"guild_settings.command_rules.editor.count",
-												ruleCount(command.name),
+												ruleCount(command),
 											)
 										}}
 									</span>
@@ -182,6 +182,8 @@
 	<GuildCommandsRuleEditor
 		v-model:open="editorOpen"
 		:command="editedCommand"
+		:inherited="editedCommand ? inheritedRules(editedCommand) : []"
+		:disabled-by="editedCommand ? disabledByGroup(editedCommand) : undefined"
 		:staged-enabled="editedCommand ? stagedStatusOf(editedCommand.name) : undefined"
 		:opener="editorOpener"
 		@saved="onRuleSaved"
@@ -197,7 +199,13 @@ import type * as v from "valibot";
 import type { DisableableCommand } from "~/utils/command-settings";
 // oxlint-disable-next-line typescript/consistent-type-imports
 import { disabledCommandsSchema } from "#shared/schemas";
-import { countCommandRuleEntries, readCommandRules } from "#shared/utils/command-rules";
+import {
+	countCommandRuleEntries,
+	findMatchingCommandRules,
+	matchesCommandRuleTarget,
+	readCommandRules,
+	resolveCommandRules,
+} from "#shared/utils/command-rules";
 import { ConfigurableCommandChannels } from "#shared/utils/settingsDataEntries";
 
 const { commands } = defineProps<{
@@ -265,7 +273,10 @@ function createDefaultState(
 }
 
 function mapToGuildData(formState: Schema): Partial<GuildData> {
-	const disabledCommands: string[] = [];
+	// A group `/commands` disabled has no tile, and a save must not drop it.
+	const disabledCommands = (originalGuildSettings.value?.commandsDisabled ?? []).filter(
+		(name) => !(name in formState),
+	);
 
 	for (const key in formState) {
 		const cmd = formState[key];
@@ -284,23 +295,46 @@ function toggleCommand(name: string, isEnabled: boolean) {
 	}
 }
 
-function isEnabled(name: string): boolean {
-	return state[name]?.isEnabled === true;
+/** What turns a command off besides its own tile: a group `/commands` disabled. */
+function disabledByGroup(command: DisableableCommand): string | undefined {
+	return guildSettings.value?.commandsDisabled.find(
+		(name) => name !== command.name && matchesCommandRuleTarget(name, command),
+	);
 }
 
-// What each tile counts: the channels, roles and members its rule names.
+function isOn(command: DisableableCommand): boolean {
+	return state[command.name]?.isEnabled === true && disabledByGroup(command) === undefined;
+}
+
+const guildId = computed(() => activeGuildId.value ?? "");
+const rules = computed(() =>
+	readCommandRules(guildSettings.value?.commandsRestrictions, guildId.value),
+);
+
+// What each tile counts: what the rules that match the command leave in force,
+// its own and the ones of its groups.
 const ruleCounts = computed(
 	() =>
 		new Map(
-			readCommandRules(guildSettings.value?.commandsRestrictions).map((rule) => [
-				rule.command,
-				countCommandRuleEntries(rule),
+			disableableCommands.value.map((command) => [
+				command.name,
+				countCommandRuleEntries(
+					resolveCommandRules(findMatchingCommandRules(rules.value, command)),
+					guildId.value,
+				),
 			]),
 		),
 );
 
-function ruleCount(name: string): number {
-	return ruleCounts.value.get(name) ?? 0;
+function ruleCount(command: DisableableCommand): number {
+	return ruleCounts.value.get(command.name) ?? 0;
+}
+
+/** The rules of a command that its editor only shows: the ones of its groups. */
+function inheritedRules(command: DisableableCommand) {
+	return findMatchingCommandRules(rules.value, command).filter(
+		(rule) => rule.command !== command.name,
+	);
 }
 
 function getCommandsByCategory(category: string): DisableableCommand[] {
@@ -315,8 +349,7 @@ function toggleAllInCategory(category: string, enable: boolean) {
 }
 
 function enabledIn(category: string): number {
-	return getCommandsByCategory(category).filter((command) => state[command.name]?.isEnabled)
-		.length;
+	return getCommandsByCategory(category).filter(isOn).length;
 }
 
 function isCategoryOpen(category: string): boolean {

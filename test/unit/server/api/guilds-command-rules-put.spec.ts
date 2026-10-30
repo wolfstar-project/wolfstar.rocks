@@ -4,6 +4,7 @@ const C1 = "400000000000000001";
 const C2 = "400000000000000002";
 const R1 = "300000000000000001";
 const U1 = "500000000000000001";
+const GUILD = "100000000000000009";
 
 // vi.hoisted() ensures globals are present before the route module is evaluated.
 const { mocks } = vi.hoisted(() => {
@@ -32,7 +33,7 @@ const { mocks } = vi.hoisted(() => {
 vi.mock("#server/utils/guilds/manager", () => ({
 	authorizeGuildManager: () => vi.fn(),
 	useManagedGuild: () => ({
-		guild: { id: "guild-1" },
+		guild: { id: "100000000000000009" },
 		member: { user: { id: "user-1", username: "alice" } },
 	}),
 }));
@@ -67,7 +68,7 @@ import { getCommandRuleRevision, readCommandRuleState } from "#shared/utils/comm
 const callHandler = putHandler as unknown as (event: H3Event) => Promise<unknown>;
 
 function storedRevision(): number {
-	return readCommandRuleState(mocks.settings, "ban").revision;
+	return readCommandRuleState(mocks.settings, "ban", GUILD).revision;
 }
 
 describe("PUT /api/guilds/:guild/command-rules/:command", () => {
@@ -88,6 +89,7 @@ describe("PUT /api/guilds/:guild/command-rules/:command", () => {
 		mocks.body = {
 			revision: storedRevision(),
 			enabled: false,
+			onlyAllowed: false,
 			allowedChannels: [C1],
 			ignoredChannels: [],
 			allowedRoles: [],
@@ -108,6 +110,7 @@ describe("PUT /api/guilds/:guild/command-rules/:command", () => {
 					allowedRoles: [],
 					allowedUsers: [U1],
 				}),
+				{ format: 2 },
 			],
 		});
 		expect(mocks.submit).toHaveBeenCalledOnce();
@@ -115,7 +118,26 @@ describe("PUT /api/guilds/:guild/command-rules/:command", () => {
 			command: "ban",
 			enabled: false,
 			commandsDisabled: ["kick", "ban"],
+			commandsRestrictions: expect.arrayContaining([{ format: 2 }]),
 			revision: storedRevision(),
+		});
+	});
+
+	it("reads and writes the rule's status as @everyone", async () => {
+		mocks.body = { ...mocks.body, onlyAllowed: true, allowedRoles: [R1] };
+
+		const response = await callHandler({} as H3Event);
+
+		expect(mocks.write).toHaveBeenCalledWith(
+			expect.objectContaining({
+				commandsRestrictions: expect.arrayContaining([
+					expect.objectContaining({ command: "ban", ignoredRoles: [GUILD] }),
+				]),
+			}),
+		);
+		expect(response).toMatchObject({
+			onlyAllowed: true,
+			rule: { command: "ban", ignoredRoles: [] },
 		});
 	});
 
@@ -127,7 +149,7 @@ describe("PUT /api/guilds/:guild/command-rules/:command", () => {
 		expect(event).toMatchObject({
 			action: "guild.settings.update",
 			actor: { type: "user", id: "user-1", displayName: "alice" },
-			target: { type: "guild", id: "guild-1" },
+			target: { type: "guild", id: GUILD },
 			outcome: "success",
 		});
 		const changes = event.changes as { patch: { path: string; value: unknown }[] };
@@ -144,6 +166,12 @@ describe("PUT /api/guilds/:guild/command-rules/:command", () => {
 				path: "/commandsRestrictions/ban/allowedRoles",
 				value: [],
 				from: [R1],
+			},
+			{
+				op: "replace",
+				path: "/commandsRestrictions/ban/ignoredRoles",
+				value: [],
+				from: [GUILD],
 			},
 		]);
 		expect(JSON.parse(JSON.stringify(event.changes))).toEqual(event.changes);

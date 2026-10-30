@@ -45,7 +45,32 @@
 					/>
 				</div>
 
+				<p v-if="disabledByLabel" class="text-[0.8125rem] text-muted">
+					{{
+						ts("guild_settings.command_rules.editor.disabled_by", {
+							target: disabledByLabel,
+						})
+					}}
+				</p>
+
 				<template v-if="draft.enabled">
+					<div class="rule-enabled">
+						<div class="min-w-0 flex-1">
+							<label :for="onlyAllowedId" class="text-[0.9375rem] font-semibold">
+								{{ ts("guild_settings.command_rules.editor.only_allowed") }}
+							</label>
+							<p :id="onlyAllowedHintId" class="text-[0.8125rem] text-muted">
+								{{ ts("guild_settings.command_rules.editor.only_allowed_hint") }}
+							</p>
+						</div>
+						<USwitch
+							:id="onlyAllowedId"
+							v-model="draft.onlyAllowed"
+							:disabled="saving"
+							:aria-describedby="onlyAllowedHintId"
+						/>
+					</div>
+
 					<SelectChannels
 						class="rule-allowed"
 						:model-value="draft.allowedChannels"
@@ -104,6 +129,16 @@
 					<p v-if="keptMembers > 0" class="text-[0.8125rem] text-muted">
 						{{ tc("guild_settings.command_rules.editor.members_kept", keptMembers) }}
 					</p>
+
+					<section v-if="alsoApplying.length > 0" :aria-labelledby="alsoApplyingId">
+						<p :id="alsoApplyingId" class="console-label">
+							{{ ts("guild_settings.command_rules.editor.also_applies") }}
+						</p>
+						<p class="mt-1 mb-3 text-[0.8125rem] text-muted">
+							{{ ts("guild_settings.command_rules.order") }}
+						</p>
+						<GuildCommandsRuleList :rules="alsoApplying" />
+					</section>
 				</template>
 				<p v-else class="text-[0.8125rem] text-muted">
 					{{ ts("guild_settings.command_rules.editor.off_note") }}
@@ -135,13 +170,16 @@
 <script setup lang="ts">
 import type { DisableableCommand } from "~/utils/command-settings";
 import {
-	countEditableCommandRuleEntries,
+	applyCommandRuleEdit,
+	countCommandRuleEntries,
+	resolveCommandRules,
 	type CommandRule,
 	type CommandRuleSaved,
 	type CommandRuleState,
 	type EditableCommandRuleList,
 } from "#shared/utils/command-rules";
 import { ChannelType } from "discord-api-types/v10";
+import { commandTargetLabel } from "~/utils/command-settings";
 
 const open = defineModel<boolean>("open", { required: true });
 
@@ -150,9 +188,15 @@ const {
 	// Left out, a boolean prop would read as `false`: a staged "off".
 	stagedEnabled = undefined,
 	opener = null,
+	inherited = [],
+	disabledBy,
 } = defineProps<{
 	/** The command to edit; the editor stays closed without one. */
 	command: DisableableCommand | null;
+	/** The other rules that match the command, which only `/commands` edits. */
+	inherited?: readonly CommandRule[];
+	/** The group in `commandsDisabled` that turns the command off, whatever its status. */
+	disabledBy?: string;
 	/**
 	 * A status toggled where the editor opens from and not saved yet. Without
 	 * one the editor shows the stored status, which someone else may have
@@ -168,7 +212,7 @@ const emit = defineEmits<{
 	saved: [saved: CommandRuleSaved, guildId: string];
 }>();
 
-type Draft = { enabled: boolean } & Record<EditableCommandRuleList, string[]>;
+type Draft = { enabled: boolean; onlyAllowed: boolean } & Record<EditableCommandRuleList, string[]>;
 
 const { ts, tc } = useI18n();
 const toast = useToast();
@@ -178,6 +222,9 @@ const { guildData } = useGuildData();
 const formId = useId();
 const enabledId = useId();
 const enabledHintId = useId();
+const onlyAllowedId = useId();
+const onlyAllowedHintId = useId();
+const alsoApplyingId = useId();
 
 // The bot's `/commands` offers these: a command can run in a voice channel's
 // chat and in the threads of a forum, which are ruled as their forum.
@@ -205,8 +252,26 @@ const keptMembers = computed(() =>
 		? stored.value.rule.allowedUsers.length + stored.value.rule.ignoredUsers.length
 		: 0,
 );
-// What the command's tile counts: the members are part of the rule, if not of this form.
-const count = computed(() => countEditableCommandRuleEntries(draft) + keptMembers.value);
+const guildId = computed(() => activeGuildId.value ?? "");
+// The rule as a save would store it, and what that leaves of the others: the
+// command's tile counts the same, the members included.
+const applying = computed(() =>
+	stored.value
+		? resolveCommandRules([
+				applyCommandRuleEdit(stored.value.rule, draft, guildId.value),
+				...inherited,
+			])
+		: [],
+);
+const count = computed(() => countCommandRuleEntries(applying.value, guildId.value));
+const alsoApplying = computed(() =>
+	applying.value.filter((rule) => rule.command !== command?.name),
+);
+const disabledByLabel = computed(() =>
+	disabledBy
+		? commandTargetLabel(disabledBy, ts("guild_settings.command_rules.every_command"))
+		: undefined,
+);
 const enabledHint = computed(() =>
 	draft.enabled
 		? ts("guild_settings.command_rules.editor.enabled_hint", { name: name.value })
@@ -243,6 +308,7 @@ function notesFrom(list: EditableCommandRuleList): ReadonlyMap<string, string> {
 function emptyDraft(): Draft {
 	return {
 		enabled: true,
+		onlyAllowed: false,
 		allowedChannels: [],
 		ignoredChannels: [],
 		allowedRoles: [],
@@ -250,9 +316,10 @@ function emptyDraft(): Draft {
 	};
 }
 
-function fill(rule: CommandRule, isEnabled: boolean) {
+function fill({ onlyAllowed, rule }: CommandRuleState, isEnabled: boolean) {
 	Object.assign(draft, {
 		enabled: isEnabled,
+		onlyAllowed,
 		allowedChannels: [...rule.allowedChannels],
 		ignoredChannels: [...rule.ignoredChannels],
 		allowedRoles: [...rule.allowedRoles],
@@ -278,7 +345,7 @@ async function load(isEnabled?: boolean) {
 		// The editor may have been closed, or opened on another command, meanwhile.
 		if (!open.value || command?.name !== commandName) return;
 		stored.value = state;
-		fill(state.rule, isEnabled ?? state.enabled);
+		fill(state, isEnabled ?? state.enabled);
 	} catch {
 		loadFailed.value = true;
 	} finally {
@@ -306,6 +373,7 @@ async function save() {
 				body: {
 					revision: stored.value.revision,
 					enabled: draft.enabled,
+					onlyAllowed: draft.onlyAllowed,
 					allowedChannels: draft.allowedChannels,
 					ignoredChannels: draft.ignoredChannels,
 					allowedRoles: draft.allowedRoles,

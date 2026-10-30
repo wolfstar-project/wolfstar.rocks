@@ -2,7 +2,7 @@ import type { GuildData } from "#server/database";
 import type { DOMWrapper } from "@vue/test-utils";
 import type { H3Event } from "h3";
 import { mockNuxtImport, mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import DisabledCommands from "~/components/guild/settings/DisabledCommands.vue";
 import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 import { createMockGuildData } from "~~/test/mocks/guildData";
@@ -67,6 +67,7 @@ registerEndpoint("/api/guilds/123456789012345678/command-rules/ban", {
 	handler: () => ({
 		command: "ban",
 		enabled: false,
+		onlyAllowed: false,
 		rule: {
 			command: "ban",
 			allowedChannels: [],
@@ -529,6 +530,65 @@ describe("disabledCommands", () => {
 		const description = kick.find(`[id="${kick.attributes("aria-describedby")}"]`);
 		expect(description.text()).toContain("On");
 		expect(description.text()).toContain("1 rule");
+	});
+
+	describe("with the rules and the disabled names of a group", () => {
+		const { commandsDisabled, commandsRestrictions } = mockGuildSettings;
+
+		afterEach(() => {
+			Object.assign(mockGuildSettings, { commandsDisabled, commandsRestrictions });
+		});
+
+		it("counts on a tile the rules that apply to its command", async () => {
+			Object.assign(mockGuildSettings, {
+				commandsRestrictions: [
+					{ command: "Moderation.*", ignoredChannels: ["400000000000000001"] },
+					{ command: "kick", ignoredChannels: ["400000000000000002"] },
+					{ command: "Music.*", ignoredChannels: ["400000000000000003"] },
+					{ format: 2 },
+				],
+			});
+			const wrapper = await mountSuspended(DisabledCommands, {
+				props: { commands: mockCommands },
+			});
+
+			expect(getCommandCard(wrapper, "kick").textContent).toContain("2 rules");
+			expect(getCommandCard(wrapper, "ban").textContent).toContain("1 rule");
+			expect(getCommandCard(wrapper, "avatar").textContent).not.toContain("rule");
+		});
+
+		it("does not count @everyone, which is the status of a rule", async () => {
+			Object.assign(mockGuildSettings, {
+				// Saved before the format: an allowed role meant "only these".
+				commandsRestrictions: [{ command: "kick", allowedRoles: ["300000000000000001"] }],
+			});
+			useActiveGuild().selectGuild("123456789012345678");
+			const wrapper = await mountSuspended(DisabledCommands, {
+				props: { commands: mockCommands },
+			});
+
+			expect(getCommandCard(wrapper, "kick").textContent).toContain("1 rule");
+		});
+
+		it("shows off what a group turned off, and a save keeps the group", async () => {
+			Object.assign(mockGuildSettings, { commandsDisabled: ["Moderation.*", "ban"] });
+			const wrapper = await mountSuspended(DisabledCommands, {
+				props: { commands: mockCommands },
+			});
+
+			expect(readCommandEnabled(wrapper, "kick")).toBe(false);
+			expect(wrapper.text()).toContain("0 / 3 on");
+
+			await wrapper
+				.findAll("button")
+				.find((btn) => btn.text().includes("Enable all") && btn.isVisible())!
+				.trigger("click");
+			await nextTick();
+
+			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+				commandsDisabled: ["Moderation.*"],
+			});
+		});
 	});
 
 	it("adds a channel where no command runs, one at a time", async () => {

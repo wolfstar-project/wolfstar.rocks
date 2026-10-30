@@ -564,15 +564,20 @@
 			"use_app_default": ""
 		},
 		"command_rules": {
+			"allowed_channels": "",
+			"allowed_roles": "",
+			"allowed_users": "",
 			"editor": {
 				"allowed_channels": "",
 				"allowed_channels_hint": "",
 				"allowed_roles": "",
 				"allowed_roles_hint": "",
+				"also_applies": "",
 				"cancel": "",
 				"conflict_description": "",
 				"conflict_title": "",
 				"count": "",
+				"disabled_by": "",
 				"enabled": "",
 				"enabled_hint": "",
 				"enabled_hint_off": "",
@@ -585,6 +590,8 @@
 				"note_allowed": "",
 				"note_ignored": "",
 				"off_note": "",
+				"only_allowed": "",
+				"only_allowed_hint": "",
 				"open_aria": "",
 				"retry": "",
 				"save": "",
@@ -595,7 +602,14 @@
 				"summary_none": "",
 				"summary_off": "",
 				"title": ""
-			}
+			},
+			"every_command": "",
+			"groups_subtitle": "",
+			"groups_title": "",
+			"ignored_channels": "",
+			"ignored_roles": "",
+			"ignored_users": "",
+			"order": ""
 		},
 		"commands": {
 			"category_reset": "",

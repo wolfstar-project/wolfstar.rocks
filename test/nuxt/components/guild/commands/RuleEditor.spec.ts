@@ -34,6 +34,7 @@ const archive = {
 	label: "archive",
 	category: "Moderation",
 	description: "Save and read the recent messages of members.",
+	subCategory: null,
 };
 
 function rule(lists: Record<string, string[]> = {}) {
@@ -60,7 +61,7 @@ function lastPutBody(): Record<string, unknown> | undefined {
 	return lastBody;
 }
 
-let stored = { command: "archive", enabled: true, rule: rule(), revision: 1 };
+let stored = { command: "archive", enabled: true, onlyAllowed: false, rule: rule(), revision: 1 };
 let gets = 0;
 let putStatus = 200;
 
@@ -117,7 +118,13 @@ describe("GuildCommandsRuleEditor", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		clearNuxtState();
-		stored = { command: "archive", enabled: true, rule: rule(), revision: 1 };
+		stored = {
+			command: "archive",
+			enabled: true,
+			onlyAllowed: false,
+			rule: rule(),
+			revision: 1,
+		};
 		gets = 0;
 		putStatus = 200;
 		lastBody = undefined;
@@ -193,6 +200,62 @@ describe("GuildCommandsRuleEditor", () => {
 		expect(lastPutBody()).toMatchObject({ enabled: false, allowedChannels: [MOD_CHAT] });
 	});
 
+	it("keeps the command to the allowed roles and users with its status", async () => {
+		stored = { ...stored, onlyAllowed: true, rule: rule({ allowedRoles: [STAFF] }) };
+		await mount();
+		const onlyAllowed = dialog().querySelectorAll<HTMLElement>('[role="switch"]')[1];
+
+		expect(dialog().textContent).toContain("Only the allowed roles and users");
+		expect(onlyAllowed?.getAttribute("aria-checked")).toBe("true");
+
+		onlyAllowed?.click();
+		await nextTick();
+		button("Save rules").click();
+
+		await vi.waitFor(() => expect(lastPutBody()).toBeDefined());
+		expect(lastPutBody()).toMatchObject({ onlyAllowed: false, allowedRoles: [STAFF] });
+	});
+
+	it("counts a rule that only keeps the command to nobody listed", async () => {
+		stored = { ...stored, onlyAllowed: true };
+		await mount();
+		expect(dialog().textContent).toContain("1 rule");
+		expect(dialog().textContent).not.toContain("No extra rules");
+	});
+
+	it("says an allowed role is an exception, and what outranks an ignored one", async () => {
+		await mount();
+		expect(dialog().textContent).toContain(
+			"An exception: they run the command over an ignored role below them.",
+		);
+		expect(dialog().textContent).toContain(
+			"They cannot run it, unless a higher role or their own rule allows them.",
+		);
+	});
+
+	it("shows what the rules of its groups leave in force", async () => {
+		stored = { ...stored, rule: rule({ allowedRoles: [STAFF] }) };
+		await mount({
+			inherited: [
+				{ ...rule({ ignoredRoles: [STAFF], ignoredChannels: [MOD_CHAT] }), command: "*" },
+			],
+		});
+
+		expect(dialog().textContent).toContain("Also applies");
+		expect(dialog().textContent).toContain("Every command");
+		expect(dialog().textContent).toContain("#mod-chat");
+		// Its own rule outranks the ignored role of every command.
+		expect(dialog().textContent).not.toContain("Not for roles");
+		expect(dialog().textContent).toContain("2 rules");
+	});
+
+	it("says when a group turns the command off", async () => {
+		await mount({ disabledBy: "Moderation.*" });
+		expect(dialog().textContent).toContain(
+			"Moderation is turned off with /commands. Turning this command on here does not undo that.",
+		);
+	});
+
 	it("moves an id picked in the opposite list, and notes where it is", async () => {
 		stored.rule = rule({ ignoredChannels: [MOD_CHAT] });
 		const wrapper = await mount();
@@ -229,6 +292,7 @@ describe("GuildCommandsRuleEditor", () => {
 		expect(lastPutBody()).toEqual({
 			revision: 1,
 			enabled: false,
+			onlyAllowed: false,
 			allowedChannels: [MOD_CHAT],
 			ignoredChannels: [],
 			allowedRoles: [],

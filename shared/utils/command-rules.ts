@@ -223,6 +223,11 @@ export function writeCommandRule(
 	};
 }
 
+/** How many channels, roles and members a rule names, its entries together. */
+export function countCommandRuleEntries(rule: CommandRule): number {
+	return COMMAND_RULE_LISTS.reduce((total, list) => total + rule[list].length, 0);
+}
+
 /** How many entries the lists the dashboard edits hold together. */
 export function countEditableCommandRuleEntries(
 	rule: Readonly<Record<EditableCommandRuleList, readonly string[]>>,

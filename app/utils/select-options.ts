@@ -36,6 +36,18 @@ export function channelOptions(guild: SelectGuild, types?: readonly ChannelType[
 		}));
 }
 
+/** `options` with the note `notes` holds for each of them, if any. */
+export function withOptionNotes(
+	options: SelectOption[],
+	notes?: ReadonlyMap<string, string>,
+): SelectOption[] {
+	if (!notes?.size) return options;
+	return options.map((option) => {
+		const note = notes.get(option.value);
+		return note ? { ...option, note } : option;
+	});
+}
+
 /** A role's colour as CSS, or nothing for a role that has Discord's default. */
 function roleColor(color: number): string | undefined {
 	return color === 0 ? undefined : `#${color.toString(16).padStart(6, "0")}`;

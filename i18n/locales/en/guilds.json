@@ -564,9 +564,6 @@
 			"use_app_default": "Use app default"
 		},
 		"command_rules": {
-			"allowed_channels": "Only in",
-			"allowed_roles": "Only for roles",
-			"allowed_users": "Also for members",
 			"editor": {
 				"allowed_channels": "Allowed Channels",
 				"allowed_channels_hint": "Only these channels. Empty means every channel.",
@@ -578,33 +575,27 @@
 				"count": "No rules | 1 rule | {count} rules",
 				"enabled": "Enabled",
 				"enabled_hint": "Members can run {name} where the rules below allow it.",
+				"enabled_hint_off": "Nobody can run {name} on this server.",
 				"ignored_channels": "Ignored Channels",
 				"ignored_channels_hint": "WolfStar ignores the command here.",
 				"ignored_roles": "Ignored Roles",
 				"ignored_roles_hint": "Members with these roles cannot run it, even if another rule allows them.",
 				"load_failed": "Couldn't load the rules of {name}.",
 				"members_kept": "No members | 1 member set with /commands in Discord stays as it is. | {count} members set with /commands in Discord stay as they are.",
-				"open_aria": "Edit the rules of {name}",
+				"note_allowed": "allowed",
+				"note_ignored": "ignored",
+				"off_note": "Its rules are kept and come back when you turn the command on again.",
+				"open_aria": "Settings for {name}",
 				"retry": "Try again",
 				"save": "Save rules",
 				"save_failed_description": "Couldn't save the rules of {name}. {message}",
 				"save_failed_title": "Save failed",
 				"saved_description": "WolfStar applies the new rules of {name} from now on.",
 				"saved_title": "Command rules saved",
+				"summary_none": "No extra rules: Discord permissions apply",
+				"summary_off": "Off on this server",
 				"title": "Command rules"
-			},
-			"empty": "No command has rules. Add them from a command under Disabled commands, or with /commands in Discord.",
-			"ignored_channels": "Not in",
-			"ignored_roles": "Never for roles",
-			"ignored_users": "Never for members",
-			"subtitle": "Where and by whom each command may run. Members at WolfStar's administrator level are not held to them. Edit them from a command under Disabled commands, or with /commands in Discord.",
-			"title": "Command rules"
-		},
-		"command_tabs": {
-			"aria": "Command settings",
-			"disabled": "Disabled commands",
-			"discord": "Discord permissions",
-			"rules": "Command rules"
+			}
 		},
 		"commands": {
 			"category_reset": "Category Reset",
@@ -619,7 +610,7 @@
 			"on": "On",
 			"reset": "Reset",
 			"save_failed": "Could not save command settings. {message}",
-			"subtitle": "Choose which commands to enable or disable on your server",
+			"subtitle": "Choose which commands to enable or disable on your server. Click a command for its rules.",
 			"title": "Commands"
 		},
 		"general": {
@@ -932,7 +923,7 @@
 				"name": "Track Discord AutoMod"
 			},
 			"commandsDisabledChannels": {
-				"description": "Channels where members cannot use any WolfStar command.",
+				"description": "Every command is ignored here, whatever its own settings say.",
 				"name": "Disabled Channels"
 			},
 			"honeypotAction": {

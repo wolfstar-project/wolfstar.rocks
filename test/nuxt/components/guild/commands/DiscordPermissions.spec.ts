@@ -81,6 +81,30 @@ describe("GuildCommandsDiscordPermissions", () => {
 		for (const wrapper of mounted.splice(0)) wrapper.unmount();
 	});
 
+	it("stays closed until asked for, at the foot of the commands page", async () => {
+		const wrapper = await mount();
+		expect(wrapper.get("details").attributes("open")).toBeUndefined();
+		expect(wrapper.get("summary h2").text()).toBe("Discord permissions");
+	});
+
+	it("opens when the sign-in that grants the scope comes back", async () => {
+		const scrollIntoView = vi.spyOn(HTMLElement.prototype, "scrollIntoView");
+		const wrapper = await mountSuspended(DiscordPermissions, {
+			route: "/?tab=discord",
+		});
+		mounted.push(wrapper);
+
+		expect(wrapper.get("details").attributes("open")).toBeDefined();
+		expect(scrollIntoView).toHaveBeenCalledOnce();
+		scrollIntoView.mockRestore();
+	});
+
+	it("opens on edits not sent yet", async () => {
+		useCommandPermissionDrafts(GUILD_ID).drafts.value = { [BAN]: { base: [], rows: [] } };
+		const wrapper = await mount();
+		expect(wrapper.get("details").attributes("open")).toBeDefined();
+	});
+
 	it("asks to authorize with Discord when the scope is missing", async () => {
 		authorization.scopeGranted = false;
 		const wrapper = await mountSuspended(DiscordPermissions);

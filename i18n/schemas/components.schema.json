@@ -448,6 +448,12 @@
 				"nothing_matches": {
 					"type": "string"
 				},
+				"pick_channel": {
+					"type": "string"
+				},
+				"pick_role": {
+					"type": "string"
+				},
 				"remove_option": {
 					"type": "string"
 				},

@@ -1,6 +1,6 @@
 <template>
 	<SelectChips
-		v-if="layout === 'chips'"
+		v-if="layout === 'chips' || layout === 'add'"
 		:model-value="modelValue"
 		:label
 		:description="tooltipTitle"
@@ -11,6 +11,7 @@
 		:dialog-title="dialogTitle"
 		:search-placeholder="searchPlaceholder"
 		:count-label="countLabel"
+		:one-at-a-time="layout === 'add'"
 		@update:model-value="
 			emit('update:modelValue', $event);
 			emit('change', $event);
@@ -47,6 +48,7 @@ const {
 	searchPlaceholder,
 	countLabel,
 	channelTypes,
+	optionNotes,
 } = defineProps<{
 	/** The label of the field */
 	label: string;
@@ -61,15 +63,18 @@ const {
 	disabled?: boolean;
 	/**
 	 * `field` and `row` are selects; `chips` lists the choice as removable chips
-	 * and picks it in a dialog of checkboxes.
+	 * and picks it in a dialog of checkboxes; `add` lists it the same way and
+	 * picks one at a time, with a select and a button above the chips.
 	 */
-	layout?: "field" | "row" | "chips";
+	layout?: "field" | "row" | "chips" | "add";
 	/** For `chips`: the dialog's title, its search placeholder and its count. */
 	dialogTitle?: string;
 	searchPlaceholder?: string;
 	countLabel?: (count: number) => string;
 	/** Text shown while nothing is selected */
 	emptyLabel?: string;
+	/** A short note on an option, by its id: what picking it would also change. */
+	optionNotes?: ReadonlyMap<string, string>;
 	/** The kinds of channel to offer, by default the ones WolfStar can post in. */
 	channelTypes?: readonly ChannelType[];
 }>();
@@ -79,5 +84,5 @@ const emit = defineEmits<{
 	"change": [value: string[]];
 }>();
 
-const options = computed(() => channelOptions(guild, channelTypes));
+const options = computed(() => withOptionNotes(channelOptions(guild, channelTypes), optionNotes));
 </script>

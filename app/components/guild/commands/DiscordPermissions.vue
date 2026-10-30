@@ -1,124 +1,140 @@
 <template>
-	<section class="space-y-4" :aria-labelledby="headingId">
-		<div class="console-card">
-			<h2 :id="headingId" class="text-xl font-bold tracking-[0.01em]">
-				{{ ts("guild_settings.command_permissions.title") }}
-			</h2>
-			<p class="mt-1 text-[0.8125rem] leading-normal text-muted">
-				{{ ts("guild_settings.command_permissions.subtitle") }}
-			</p>
-			<p class="mt-2 text-[0.8125rem] leading-normal text-muted">
+	<section ref="root" :aria-labelledby="headingId">
+		<!-- Closed until asked for, so the commands page reads as its two cards. -->
+		<details class="group space-y-4" :open="expanded">
+			<summary class="discord-permissions-summary console-card">
+				<span class="min-w-0 flex-1">
+					<h2 :id="headingId" class="text-xl font-bold tracking-[0.01em]">
+						{{ ts("guild_settings.command_permissions.title") }}
+					</h2>
+					<span class="mt-1 block text-[0.8125rem] leading-normal text-muted">
+						{{ ts("guild_settings.command_permissions.subtitle") }}
+					</span>
+				</span>
+				<UIcon
+					name="ic:round-expand-more"
+					class="size-4.5 shrink-0 text-muted transition-transform duration-200 group-open:rotate-180"
+					aria-hidden="true"
+				/>
+			</summary>
+
+			<p class="text-[0.8125rem] leading-normal text-muted">
 				{{ ts("guild_settings.command_permissions.administrator_note") }}
 			</p>
-		</div>
 
-		<div v-if="!data && pending" class="space-y-2">
-			<USkeleton v-for="i in 4" :key="i" class="h-14 w-full" />
-		</div>
-
-		<UAlert
-			v-else-if="!data"
-			color="error"
-			variant="subtle"
-			icon="ic:round-error-outline"
-			:title="ts('guild_settings.command_permissions.load_failed')"
-		/>
-
-		<div v-else-if="!data.authorization.scopeGranted" class="console-card space-y-3">
-			<p class="text-sm">{{ ts("guild_settings.command_permissions.scope_needed") }}</p>
-			<UButton :to="authorizeUrl" external icon="ic:round-lock-open">
-				{{ ts("guild_settings.command_permissions.authorize") }}
-			</UButton>
-		</div>
-
-		<template v-else>
-			<UAlert
-				v-if="missingPermission"
-				color="warning"
-				variant="subtle"
-				icon="ic:round-warning-amber"
-				:title="ts('guild_settings.command_permissions.missing_title')"
-				:description="
-					ts('guild_settings.command_permissions.missing', {
-						permission: missingPermission,
-					})
-				"
-			/>
+			<div v-if="!data && pending" class="space-y-2">
+				<USkeleton v-for="i in 4" :key="i" class="h-14 w-full" />
+			</div>
 
 			<UAlert
-				v-if="failure"
+				v-else-if="!data"
 				color="error"
 				variant="subtle"
 				icon="ic:round-error-outline"
-				:title="failure.title"
-				:description="failure.description"
-			>
-				<template v-if="failure.reload" #actions>
-					<UButton size="sm" variant="soft" color="neutral" @click="reloadAfterConflict">
-						{{ ts("guild_settings.command_permissions.reload") }}
-					</UButton>
-				</template>
-			</UAlert>
-
-			<div class="flex flex-wrap items-center gap-3">
-				<UButton
-					data-review
-					icon="ic:round-preview"
-					:disabled="!canReview"
-					@click="previewOpen = true"
-				>
-					{{
-						ts("guild_settings.command_permissions.review", {
-							count: changedCommandIds.length,
-						})
-					}}
-				</UButton>
-				<span class="text-[0.8125rem] text-muted">
-					{{
-						ts("guild_settings.command_permissions.changed_count", {
-							count: changedCommandIds.length,
-						})
-					}}
-				</span>
-			</div>
-
-			<GuildCommandsPermissionCard
-				v-if="activeGuildId"
-				:command-id="data.applicationId"
-				:title="ts('guild_settings.command_permissions.app_default')"
-				app-default
-				open
-				:rows="rowsOf(data.applicationId)"
-				:guild-id="activeGuildId"
-				:guild="guildData"
-				:disabled="!canEdit"
-				@update:rows="setRows(data.applicationId, $event)"
+				:title="ts('guild_settings.command_permissions.load_failed')"
 			/>
 
-			<template v-if="activeGuildId">
+			<div v-else-if="!data.authorization.scopeGranted" class="console-card space-y-3">
+				<p class="text-sm">{{ ts("guild_settings.command_permissions.scope_needed") }}</p>
+				<UButton :to="authorizeUrl" external icon="ic:round-lock-open">
+					{{ ts("guild_settings.command_permissions.authorize") }}
+				</UButton>
+			</div>
+
+			<template v-else>
+				<UAlert
+					v-if="missingPermission"
+					color="warning"
+					variant="subtle"
+					icon="ic:round-warning-amber"
+					:title="ts('guild_settings.command_permissions.missing_title')"
+					:description="
+						ts('guild_settings.command_permissions.missing', {
+							permission: missingPermission,
+						})
+					"
+				/>
+
+				<UAlert
+					v-if="failure"
+					color="error"
+					variant="subtle"
+					icon="ic:round-error-outline"
+					:title="failure.title"
+					:description="failure.description"
+				>
+					<template v-if="failure.reload" #actions>
+						<UButton
+							size="sm"
+							variant="soft"
+							color="neutral"
+							@click="reloadAfterConflict"
+						>
+							{{ ts("guild_settings.command_permissions.reload") }}
+						</UButton>
+					</template>
+				</UAlert>
+
+				<div class="flex flex-wrap items-center gap-3">
+					<UButton
+						data-review
+						icon="ic:round-preview"
+						:disabled="!canReview"
+						@click="previewOpen = true"
+					>
+						{{
+							ts("guild_settings.command_permissions.review", {
+								count: changedCommandIds.length,
+							})
+						}}
+					</UButton>
+					<span class="text-[0.8125rem] text-muted">
+						{{
+							ts("guild_settings.command_permissions.changed_count", {
+								count: changedCommandIds.length,
+							})
+						}}
+					</span>
+				</div>
+
 				<GuildCommandsPermissionCard
-					v-for="command in registered"
-					:key="command.id"
-					:command-id="command.id"
-					:title="`/${command.name}`"
-					:description="command.description"
-					:rows="rowsOf(command.id)"
+					v-if="activeGuildId"
+					:command-id="data.applicationId"
+					:title="ts('guild_settings.command_permissions.app_default')"
+					app-default
+					open
+					:rows="rowsOf(data.applicationId)"
 					:guild-id="activeGuildId"
 					:guild="guildData"
 					:disabled="!canEdit"
-					@update:rows="setRows(command.id, $event)"
-					@reset="resetToDefault(command.id)"
+					@update:rows="setRows(data.applicationId, $event)"
 				/>
-			</template>
 
-			<p v-if="unregistered.length > 0" class="text-[0.8125rem] text-muted">
-				{{
-					ts("guild_settings.command_permissions.not_registered", {
-						commands: unregistered.map((command) => `/${command.name}`).join(", "),
-					})
-				}}
-			</p>
-		</template>
+				<template v-if="activeGuildId">
+					<GuildCommandsPermissionCard
+						v-for="command in registered"
+						:key="command.id"
+						:command-id="command.id"
+						:title="`/${command.name}`"
+						:description="command.description"
+						:rows="rowsOf(command.id)"
+						:guild-id="activeGuildId"
+						:guild="guildData"
+						:disabled="!canEdit"
+						@update:rows="setRows(command.id, $event)"
+						@reset="resetToDefault(command.id)"
+					/>
+				</template>
+
+				<p v-if="unregistered.length > 0" class="text-[0.8125rem] text-muted">
+					{{
+						ts("guild_settings.command_permissions.not_registered", {
+							commands: unregistered.map((command) => `/${command.name}`).join(", "),
+						})
+					}}
+				</p>
+			</template>
+		</details>
 
 		<GuildCommandsChangesPreview
 			v-model:open="previewOpen"
@@ -140,11 +156,13 @@ import {
 
 const { ts } = useI18n();
 const headingId = useId();
+const route = useRoute();
 const { activeGuildId } = useActiveGuild();
 const { guildData } = useGuildData();
 
 // After the sign-in, the legacy route records the server and the section and
-// the dashboard opens this tab from the query.
+// the dashboard opens this block from the query.
+const backFromSignIn = route.query.tab === "discord";
 const authorizeUrl = computed(() => {
 	const back = `/guilds/${activeGuildId.value}/manage/commands?tab=discord`;
 	return `/oauth/login?grant=${COMMAND_PERMISSIONS_GRANT}&next=${encodeURIComponent(back)}`;
@@ -162,6 +180,14 @@ const {
 	saveAll,
 	setRows,
 } = useCommandPermissions(activeGuildId);
+
+// Unsent edits are not left out of sight.
+const expanded = ref(backFromSignIn || changedCommandIds.value.length > 0);
+
+const root = useTemplateRef<HTMLElement>("root");
+onMounted(() => {
+	if (backFromSignIn) root.value?.scrollIntoView({ block: "start" });
+});
 
 const registered = computed(() =>
 	(data.value?.commands ?? []).filter(
@@ -297,3 +323,20 @@ async function reloadAfterConflict() {
 	await refresh();
 }
 </script>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+.discord-permissions-summary {
+	@apply flex cursor-pointer list-none items-center gap-3;
+}
+
+.discord-permissions-summary::-webkit-details-marker {
+	display: none;
+}
+
+.discord-permissions-summary:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: 2px;
+}
+</style>

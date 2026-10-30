@@ -2,7 +2,9 @@ import type { H3Event } from "h3";
 import { mockNuxtImport, mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
 import { createError } from "h3";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
 import RuleEditor from "~/components/guild/commands/RuleEditor.vue";
+import SelectChannels from "~/components/select/Channels.vue";
 import {
 	createMockChannel,
 	createMockOauthFlattenedGuild,
@@ -151,18 +153,60 @@ describe("GuildCommandsRuleEditor", () => {
 		);
 	});
 
-	it("counts the entries of the four lists and notes kept members", async () => {
+	it("counts what the tile counts, kept members included, and notes them", async () => {
 		stored.rule = rule({
 			allowedChannels: [MOD_CHAT],
 			ignoredRoles: [STAFF],
 			allowedUsers: [USER],
 		});
 		await mount();
-		expect(dialog().textContent).toContain("2 rules");
+		expect(dialog().textContent).toContain("3 rules");
 		expect(dialog().textContent).toContain(
 			"1 member set with /commands in Discord stays as it is.",
 		);
 		expect(dialog().textContent).toContain("mod-chat");
+	});
+
+	it("says Discord's permissions apply when there is no rule", async () => {
+		await mount();
+		expect(dialog().textContent).toContain("No extra rules: Discord permissions apply");
+		expect(dialog().textContent).toContain("Select Channel");
+		expect(dialog().textContent).toContain("Select Role");
+	});
+
+	it("hides the fields while the command is off, and keeps what they hold", async () => {
+		stored.rule = rule({ allowedChannels: [MOD_CHAT] });
+		await mount();
+
+		dialog().querySelector<HTMLElement>('[role="switch"]')?.click();
+		await nextTick();
+
+		expect(dialog().textContent).toContain("Nobody can run archive on this server.");
+		expect(dialog().textContent).toContain("Off on this server");
+		expect(dialog().textContent).toContain(
+			"Its rules are kept and come back when you turn the command on again.",
+		);
+		expect(dialog().textContent).not.toContain("Allowed Channels");
+
+		button("Save rules").click();
+		await vi.waitFor(() => expect(lastPutBody()).toBeDefined());
+		expect(lastPutBody()).toMatchObject({ enabled: false, allowedChannels: [MOD_CHAT] });
+	});
+
+	it("moves an id picked in the opposite list, and notes where it is", async () => {
+		stored.rule = rule({ ignoredChannels: [MOD_CHAT] });
+		const wrapper = await mount();
+		const [allowed, ignored] = wrapper.findAllComponents(SelectChannels);
+
+		expect(allowed!.props("optionNotes")?.get(MOD_CHAT)).toBe("ignored");
+		expect(ignored!.props("optionNotes")?.size).toBe(0);
+
+		allowed!.vm.$emit("update:modelValue", [MOD_CHAT]);
+		await nextTick();
+
+		expect(allowed!.props("modelValue")).toStrictEqual([MOD_CHAT]);
+		expect(ignored!.props("modelValue")).toStrictEqual([]);
+		expect(ignored!.props("optionNotes")?.get(MOD_CHAT)).toBe("allowed");
 	});
 
 	it("opens on the stored status when nothing is staged", async () => {
@@ -208,12 +252,14 @@ describe("GuildCommandsRuleEditor", () => {
 				expect.objectContaining({ color: "warning", title: "archive changed" }),
 			),
 		);
-		await vi.waitFor(() => expect(dialog().textContent).toContain("1 rule"));
+		await vi.waitFor(() => expect(dialog().textContent).toContain("Off on this server"));
 		expect(gets).toBe(2);
 		expect(wrapper.emitted("saved")).toBeUndefined();
-		expect(dialog().querySelector('[role="switch"]')?.getAttribute("aria-checked")).toBe(
-			"false",
-		);
+		const enabled = dialog().querySelector<HTMLElement>('[role="switch"]');
+		expect(enabled?.getAttribute("aria-checked")).toBe("false");
+
+		enabled?.click();
+		await vi.waitFor(() => expect(dialog().textContent).toContain("1 rule"));
 	});
 
 	it("gives focus back to what opened it", async () => {

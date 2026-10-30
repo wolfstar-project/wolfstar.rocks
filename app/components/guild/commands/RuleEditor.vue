@@ -4,7 +4,7 @@
 		:description="subtitle"
 		:dismissible="!saving"
 		:content="{ onCloseAutoFocus: returnFocus }"
-		:ui="{ content: 'sm:max-w-150' }"
+		:ui="{ content: 'sm:max-w-140' }"
 	>
 		<template #title>
 			{{ ts("guild_settings.command_rules.editor.title") }}
@@ -34,7 +34,7 @@
 							{{ ts("guild_settings.command_rules.editor.enabled") }}
 						</label>
 						<p :id="enabledHintId" class="text-[0.8125rem] text-muted">
-							{{ ts("guild_settings.command_rules.editor.enabled_hint", { name }) }}
+							{{ enabledHint }}
 						</p>
 					</div>
 					<USwitch
@@ -45,48 +45,75 @@
 					/>
 				</div>
 
-				<SelectChannels
-					v-model="draft.allowedChannels"
-					:guild="guildData"
-					:channel-types="channelTypes"
-					:disabled="saving"
-					:label="ts('guild_settings.command_rules.editor.allowed_channels')"
-					:tooltip-title="ts('guild_settings.command_rules.editor.allowed_channels_hint')"
-				/>
-				<SelectChannels
-					v-model="draft.ignoredChannels"
-					:guild="guildData"
-					:channel-types="channelTypes"
-					:disabled="saving"
-					:label="ts('guild_settings.command_rules.editor.ignored_channels')"
-					:tooltip-title="ts('guild_settings.command_rules.editor.ignored_channels_hint')"
-				/>
-				<SelectRoles
-					v-model="draft.allowedRoles"
-					:guild="guildData"
-					:disabled="saving"
-					:label="ts('guild_settings.command_rules.editor.allowed_roles')"
-					:tooltip-title="ts('guild_settings.command_rules.editor.allowed_roles_hint')"
-				/>
-				<SelectRoles
-					v-model="draft.ignoredRoles"
-					:guild="guildData"
-					:disabled="saving"
-					:label="ts('guild_settings.command_rules.editor.ignored_roles')"
-					:tooltip-title="ts('guild_settings.command_rules.editor.ignored_roles_hint')"
-				/>
+				<template v-if="draft.enabled">
+					<SelectChannels
+						class="rule-allowed"
+						:model-value="draft.allowedChannels"
+						:guild="guildData"
+						:channel-types="channelTypes"
+						:disabled="saving"
+						:label="ts('guild_settings.command_rules.editor.allowed_channels')"
+						:empty-label="ts('select.pick_channel')"
+						:option-notes="notesFrom('ignoredChannels')"
+						:tooltip-title="
+							ts('guild_settings.command_rules.editor.allowed_channels_hint')
+						"
+						@update:model-value="pick('allowedChannels', $event)"
+					/>
+					<SelectChannels
+						class="rule-ignored"
+						:model-value="draft.ignoredChannels"
+						:guild="guildData"
+						:channel-types="channelTypes"
+						:disabled="saving"
+						:label="ts('guild_settings.command_rules.editor.ignored_channels')"
+						:empty-label="ts('select.pick_channel')"
+						:option-notes="notesFrom('allowedChannels')"
+						:tooltip-title="
+							ts('guild_settings.command_rules.editor.ignored_channels_hint')
+						"
+						@update:model-value="pick('ignoredChannels', $event)"
+					/>
+					<SelectRoles
+						class="rule-allowed"
+						:model-value="draft.allowedRoles"
+						:guild="guildData"
+						:disabled="saving"
+						:label="ts('guild_settings.command_rules.editor.allowed_roles')"
+						:empty-label="ts('select.pick_role')"
+						:option-notes="notesFrom('ignoredRoles')"
+						:tooltip-title="
+							ts('guild_settings.command_rules.editor.allowed_roles_hint')
+						"
+						@update:model-value="pick('allowedRoles', $event)"
+					/>
+					<SelectRoles
+						class="rule-ignored"
+						:model-value="draft.ignoredRoles"
+						:guild="guildData"
+						:disabled="saving"
+						:label="ts('guild_settings.command_rules.editor.ignored_roles')"
+						:empty-label="ts('select.pick_role')"
+						:option-notes="notesFrom('allowedRoles')"
+						:tooltip-title="
+							ts('guild_settings.command_rules.editor.ignored_roles_hint')
+						"
+						@update:model-value="pick('ignoredRoles', $event)"
+					/>
 
-				<p v-if="keptMembers > 0" class="text-[0.8125rem] text-muted">
-					{{ tc("guild_settings.command_rules.editor.members_kept", keptMembers) }}
+					<p v-if="keptMembers > 0" class="text-[0.8125rem] text-muted">
+						{{ tc("guild_settings.command_rules.editor.members_kept", keptMembers) }}
+					</p>
+				</template>
+				<p v-else class="text-[0.8125rem] text-muted">
+					{{ ts("guild_settings.command_rules.editor.off_note") }}
 				</p>
 			</form>
 		</template>
 
 		<template #footer>
 			<div class="flex w-full flex-wrap items-center gap-2.5">
-				<span class="font-mono text-[0.8125rem] text-muted">
-					{{ tc("guild_settings.command_rules.editor.count", count) }}
-				</span>
+				<span v-if="stored" class="text-xs text-muted">{{ summary }}</span>
 				<span class="grow"></span>
 				<UButton color="neutral" variant="outline" :disabled="saving" @click="open = false">
 					{{ ts("guild_settings.command_rules.editor.cancel") }}
@@ -120,7 +147,8 @@ const open = defineModel<boolean>("open", { required: true });
 
 const {
 	command,
-	stagedEnabled,
+	// Left out, a boolean prop would read as `false`: a staged "off".
+	stagedEnabled = undefined,
 	opener = null,
 } = defineProps<{
 	/** The command to edit; the editor stays closed without one. */
@@ -172,12 +200,45 @@ const name = computed(() => command?.label ?? "");
 const subtitle = computed(() =>
 	command ? `${command.category} · ${command.description}` : undefined,
 );
-const count = computed(() => countEditableCommandRuleEntries(draft));
 const keptMembers = computed(() =>
 	stored.value
 		? stored.value.rule.allowedUsers.length + stored.value.rule.ignoredUsers.length
 		: 0,
 );
+// What the command's tile counts: the members are part of the rule, if not of this form.
+const count = computed(() => countEditableCommandRuleEntries(draft) + keptMembers.value);
+const enabledHint = computed(() =>
+	draft.enabled
+		? ts("guild_settings.command_rules.editor.enabled_hint", { name: name.value })
+		: ts("guild_settings.command_rules.editor.enabled_hint_off", { name: name.value }),
+);
+const summary = computed(() => {
+	if (!draft.enabled) return ts("guild_settings.command_rules.editor.summary_off");
+	if (count.value === 0) return ts("guild_settings.command_rules.editor.summary_none");
+	return tc("guild_settings.command_rules.editor.count", count.value);
+});
+
+// An id is allowed or ignored, not both: picking it in one list takes it out of the other.
+const OPPOSITE_LIST: Record<EditableCommandRuleList, EditableCommandRuleList> = {
+	allowedChannels: "ignoredChannels",
+	ignoredChannels: "allowedChannels",
+	allowedRoles: "ignoredRoles",
+	ignoredRoles: "allowedRoles",
+};
+
+function pick(list: EditableCommandRuleList, ids: string[]) {
+	const opposite = OPPOSITE_LIST[list];
+	draft[list] = ids;
+	draft[opposite] = draft[opposite].filter((id) => !ids.includes(id));
+}
+
+/** The note on the options of the field opposite `list`: where each one is now. */
+function notesFrom(list: EditableCommandRuleList): ReadonlyMap<string, string> {
+	const note = list.startsWith("allowed")
+		? ts("guild_settings.command_rules.editor.note_allowed")
+		: ts("guild_settings.command_rules.editor.note_ignored");
+	return new Map(draft[list].map((id) => [id, note]));
+}
 
 function emptyDraft(): Draft {
 	return {
@@ -316,5 +377,14 @@ function returnFocus(event: Event) {
 	@apply flex items-center gap-4 rounded-lg px-4 py-3.5;
 	border: 1px solid var(--home-border-subtle);
 	background-color: var(--console-input);
+}
+
+/* What the command allows and what it ignores read apart. */
+.rule-allowed :deep(.select-chip) {
+	background-color: oklch(from var(--color-primary) l c h / 0.16);
+}
+
+.rule-ignored :deep(.select-chip) {
+	background-color: oklch(from var(--color-error) l c h / 0.16);
 }
 </style>

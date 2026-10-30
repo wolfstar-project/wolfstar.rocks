@@ -1,5 +1,6 @@
 import {
 	applyCommandRuleEdit,
+	countCommandRuleEntries,
 	countEditableCommandRuleEntries,
 	findCommandRule,
 	getCommandRuleRevision,
@@ -193,6 +194,20 @@ describe("writeCommandRule", () => {
 			rule("kick", { ignoredChannels: [C1] }),
 			rule("ban", { ignoredChannels: [C1, C2] }),
 		]);
+	});
+});
+
+describe("countCommandRuleEntries", () => {
+	it("counts the entries of every list, members included", () => {
+		const [rule] = readCommandRules([
+			{
+				command: "ban",
+				allowedChannels: ["100000000000000001"],
+				ignoredRoles: ["100000000000000002", "100000000000000003"],
+				allowedUsers: ["100000000000000004"],
+			},
+		]);
+		expect(countCommandRuleEntries(rule!)).toBe(4);
 	});
 });
 

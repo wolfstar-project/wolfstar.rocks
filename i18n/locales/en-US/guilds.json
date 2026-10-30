@@ -564,9 +564,6 @@
 			"use_app_default": ""
 		},
 		"command_rules": {
-			"allowed_channels": "",
-			"allowed_roles": "",
-			"allowed_users": "",
 			"editor": {
 				"allowed_channels": "",
 				"allowed_channels_hint": "",
@@ -578,12 +575,16 @@
 				"count": "",
 				"enabled": "",
 				"enabled_hint": "",
+				"enabled_hint_off": "",
 				"ignored_channels": "",
 				"ignored_channels_hint": "",
 				"ignored_roles": "",
 				"ignored_roles_hint": "",
 				"load_failed": "",
 				"members_kept": "",
+				"note_allowed": "",
+				"note_ignored": "",
+				"off_note": "",
 				"open_aria": "",
 				"retry": "",
 				"save": "",
@@ -591,20 +592,10 @@
 				"save_failed_title": "",
 				"saved_description": "",
 				"saved_title": "",
+				"summary_none": "",
+				"summary_off": "",
 				"title": ""
-			},
-			"empty": "",
-			"ignored_channels": "",
-			"ignored_roles": "",
-			"ignored_users": "",
-			"subtitle": "",
-			"title": ""
-		},
-		"command_tabs": {
-			"aria": "",
-			"disabled": "",
-			"discord": "",
-			"rules": ""
+			}
 		},
 		"commands": {
 			"category_reset": "Category Reset",
@@ -619,7 +610,7 @@
 			"on": "",
 			"reset": "Reset",
 			"save_failed": "Could not save command settings. {message}",
-			"subtitle": "Choose which commands to enable or disable on your server",
+			"subtitle": "Choose which commands to enable or disable on your server. Click a command for its rules.",
 			"title": "Commands"
 		},
 		"general": {

@@ -51,66 +51,68 @@
 
 					<template #content>
 						<div class="grid grid-cols-1 gap-2 pt-1 pb-3 sm:grid-cols-2 xl:grid-cols-4">
-							<div
+							<button
 								v-for="command in getCommandsByCategory(category)"
 								:key="command.name"
+								type="button"
 								class="command-tile"
-								:class="{
-									'command-tile--off': !getCommand(command.name)?.isEnabled,
-								}"
+								:class="{ 'command-tile--off': !isEnabled(command.name) }"
+								aria-haspopup="dialog"
+								:aria-label="
+									ts('guild_settings.command_rules.editor.open_aria', {
+										name: command.label,
+									})
+								"
+								:aria-describedby="`${tileIdBase}-${command.name}`"
+								@click="openEditor(command, $event)"
 							>
-								<div class="min-w-0 flex-1">
-									<p class="truncate font-mono text-[0.8125rem] font-bold">
+								<span class="min-w-0 flex-1">
+									<span
+										class="block truncate font-mono text-[0.8125rem] font-bold"
+									>
 										{{ command.label }}
-									</p>
-									<p class="truncate text-xs text-muted">
+									</span>
+									<span class="block truncate text-xs text-muted">
 										{{ command.description }}
-									</p>
-								</div>
-								<UButton
-									icon="ic:round-tune"
-									color="neutral"
-									variant="ghost"
-									size="sm"
-									square
-									aria-haspopup="dialog"
-									:aria-label="
-										ts('guild_settings.command_rules.editor.open_aria', {
-											name: command.label,
-										})
-									"
-									@click="openEditor(command, $event)"
-								/>
-								<button
-									v-if="!isNullOrUndefined(getCommand(command.name))"
-									type="button"
-									role="switch"
-									class="command-state"
-									:class="
-										getCommand(command.name)?.isEnabled
-											? 'command-state--on'
-											: 'command-state--off'
-									"
-									:aria-checked="getCommand(command.name)?.isEnabled"
-									:aria-label="command.label"
-									@click="
-										toggleCommand(
-											command.name,
-											!getCommand(command.name)?.isEnabled,
-										)
-									"
+									</span>
+								</span>
+								<span
+									:id="`${tileIdBase}-${command.name}`"
+									class="flex shrink-0 flex-col items-end gap-1"
 								>
 									<span
-										class="size-1.5 rounded-full bg-current"
-										aria-hidden="true"
-									></span>
-									{{
-										getCommand(command.name)?.isEnabled
-											? ts("guild_settings.commands.on")
-											: ts("guild_settings.commands.off")
-									}}
-								</button>
-							</div>
+										class="command-state"
+										:class="
+											isEnabled(command.name)
+												? 'command-state--on'
+												: 'command-state--off'
+										"
+									>
+										<span
+											class="size-1.5 rounded-full bg-current"
+											aria-hidden="true"
+										></span>
+										{{
+											isEnabled(command.name)
+												? ts("guild_settings.commands.on")
+												: ts("guild_settings.commands.off")
+										}}
+									</span>
+									<span v-if="ruleCount(command.name) > 0" class="command-rules">
+										<UIcon
+											name="ic:round-key"
+											class="size-3"
+											aria-hidden="true"
+										/>
+										{{
+											tc(
+												"guild_settings.command_rules.editor.count",
+												ruleCount(command.name),
+											)
+										}}
+									</span>
+								</span>
+							</button>
 						</div>
 
 						<div
@@ -169,7 +171,7 @@
 				v-for="config in ConfigurableCommandChannels"
 				:key="config.key"
 				v-model="channelsState[config.key]"
-				layout="row"
+				layout="add"
 				:guild="guildData"
 				:label="translateEntry(config, 'name')"
 				:tooltip-title="translateEntry(config, 'description')"
@@ -195,8 +197,8 @@ import type * as v from "valibot";
 import type { DisableableCommand } from "~/utils/command-settings";
 // oxlint-disable-next-line typescript/consistent-type-imports
 import { disabledCommandsSchema } from "#shared/schemas";
+import { countCommandRuleEntries, readCommandRules } from "#shared/utils/command-rules";
 import { ConfigurableCommandChannels } from "#shared/utils/settingsDataEntries";
-import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
 
 const { commands } = defineProps<{
 	commands: FlattenedCommand[];
@@ -204,7 +206,10 @@ const { commands } = defineProps<{
 
 type Schema = v.InferOutput<typeof disabledCommandsSchema>;
 
-const { ts } = useI18n();
+// The category most servers come for; the others open on a click.
+const DEFAULT_CATEGORY = "Moderation";
+
+const { ts, tc } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
 const toast = useToast();
 const { guildData } = useGuildData();
@@ -218,7 +223,8 @@ const {
 	state: channelsState,
 } = useSettingsForm({ many: ConfigurableCommandChannels.map((entry) => entry.key) });
 
-const expandedCategory = ref<string | undefined>(undefined);
+const expandedCategory = ref<string | undefined>(DEFAULT_CATEGORY);
+const tileIdBase = useId();
 
 const editorOpen = ref(false);
 const editedCommand = ref<DisableableCommand | null>(null);
@@ -278,9 +284,23 @@ function toggleCommand(name: string, isEnabled: boolean) {
 	}
 }
 
-function getCommand(name: string): DisableCommands.Command | undefined {
-	const cmd = state[name];
-	return cmd ? { ...cmd } : undefined;
+function isEnabled(name: string): boolean {
+	return state[name]?.isEnabled === true;
+}
+
+// What each tile counts: the channels, roles and members its rule names.
+const ruleCounts = computed(
+	() =>
+		new Map(
+			readCommandRules(guildSettings.value?.commandsRestrictions).map((rule) => [
+				rule.command,
+				countCommandRuleEntries(rule),
+			]),
+		),
+);
+
+function ruleCount(name: string): number {
+	return ruleCounts.value.get(name) ?? 0;
 }
 
 function getCommandsByCategory(category: string): DisableableCommand[] {
@@ -415,23 +435,30 @@ watch(
 }
 
 .command-category:focus-visible,
-.command-state:focus-visible {
+.command-tile:focus-visible {
 	outline: 2px solid var(--color-primary);
 	outline-offset: -2px;
 }
 
 .command-tile {
-	@apply flex min-w-0 items-center gap-3 rounded-lg px-3 py-2.5;
+	@apply flex min-w-0 cursor-pointer items-center gap-3 rounded-lg bg-transparent px-3 py-2.5 text-left;
 	border: 1px solid var(--home-border-subtle);
 }
 
+.command-tile:hover {
+	background-color: var(--console-hover);
+}
+
 .command-tile--off {
-	border-color: oklch(from var(--color-error) l c h / 0.25);
-	background-color: oklch(from var(--color-error) l c h / 0.04);
+	@apply opacity-60;
 }
 
 .command-state {
-	@apply inline-flex h-6 shrink-0 cursor-pointer items-center gap-1.5 rounded-full border-0 px-2.5 text-xs font-bold;
+	@apply inline-flex h-6 items-center gap-1.5 rounded-full px-2.5 text-xs font-bold;
+}
+
+.command-rules {
+	@apply inline-flex items-center gap-1 font-mono text-[0.6875rem] whitespace-nowrap text-muted;
 }
 
 .command-state--on {

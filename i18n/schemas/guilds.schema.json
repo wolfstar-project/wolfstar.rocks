@@ -1696,15 +1696,6 @@
 				"command_rules": {
 					"type": "object",
 					"properties": {
-						"allowed_channels": {
-							"type": "string"
-						},
-						"allowed_roles": {
-							"type": "string"
-						},
-						"allowed_users": {
-							"type": "string"
-						},
 						"editor": {
 							"type": "object",
 							"properties": {
@@ -1738,6 +1729,9 @@
 								"enabled_hint": {
 									"type": "string"
 								},
+								"enabled_hint_off": {
+									"type": "string"
+								},
 								"ignored_channels": {
 									"type": "string"
 								},
@@ -1754,6 +1748,15 @@
 									"type": "string"
 								},
 								"members_kept": {
+									"type": "string"
+								},
+								"note_allowed": {
+									"type": "string"
+								},
+								"note_ignored": {
+									"type": "string"
+								},
+								"off_note": {
 									"type": "string"
 								},
 								"open_aria": {
@@ -1777,47 +1780,17 @@
 								"saved_title": {
 									"type": "string"
 								},
+								"summary_none": {
+									"type": "string"
+								},
+								"summary_off": {
+									"type": "string"
+								},
 								"title": {
 									"type": "string"
 								}
 							},
 							"additionalProperties": false
-						},
-						"empty": {
-							"type": "string"
-						},
-						"ignored_channels": {
-							"type": "string"
-						},
-						"ignored_roles": {
-							"type": "string"
-						},
-						"ignored_users": {
-							"type": "string"
-						},
-						"subtitle": {
-							"type": "string"
-						},
-						"title": {
-							"type": "string"
-						}
-					},
-					"additionalProperties": false
-				},
-				"command_tabs": {
-					"type": "object",
-					"properties": {
-						"aria": {
-							"type": "string"
-						},
-						"disabled": {
-							"type": "string"
-						},
-						"discord": {
-							"type": "string"
-						},
-						"rules": {
-							"type": "string"
 						}
 					},
 					"additionalProperties": false

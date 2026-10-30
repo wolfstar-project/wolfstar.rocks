@@ -238,16 +238,15 @@
 			"module_hint": "Disattivandolo le regole qui sotto restano, ma smettono tutte di agire.",
 			"module_settings": "Impostazioni del modulo",
 			"options": {
-				"alerts": "Avvisa prima del ban",
 				"allowed": "Domini consentiti",
 				"allowedCodes": "Codici d'invito consentiti",
 				"allowedGuilds": "ID dei server consentiti",
 				"characters": "Caratteri ripetuti",
 				"maximum": "Massimo",
-				"mentionsAllowed": "Punti menzione consentiti",
 				"minimum": "Lunghezza minima",
 				"perChannel": "",
 				"timePeriod": "Intervallo di tempo (secondi)",
+				"weighted": "Conta una menzione di ruolo come due e @everyone come cinque",
 				"words": "Parole"
 			},
 			"rules": {
@@ -403,10 +402,6 @@
 				"Newlines": {
 					"description": "Messaggi con più righe del massimo.",
 					"name": "A capo"
-				},
-				"NoMentionSpam": {
-					"description": "Più punti menzione del consentito nell'intervallo di tempo; il membro viene bannato.",
-					"name": "Spam di menzioni"
 				},
 				"Phishing": {
 					"description": "Link a domini di phishing noti, tranne quelli consentiti.",

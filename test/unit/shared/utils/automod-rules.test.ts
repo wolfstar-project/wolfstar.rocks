@@ -70,6 +70,27 @@ describe("auto-moderation rule model", () => {
 		});
 	});
 
+	describe("the mentions cooldown", () => {
+		it("keeps its weighing, and its longer period", () => {
+			expect(
+				normalizeAutoModerationRuleOptions("MentionsCooldown", {
+					maximum: 6,
+					timePeriod: 1200,
+					weighted: true,
+				}),
+			).toStrictEqual({ maximum: 6, timePeriod: 1200, weighted: true });
+		});
+
+		it("does not weigh the mentions of a rule saved before the option", () => {
+			expect(
+				normalizeAutoModerationRuleOptions("MentionsCooldown", {
+					maximum: 6,
+					timePeriod: 30,
+				}),
+			).toStrictEqual({ maximum: 6, timePeriod: 30, weighted: false });
+		});
+	});
+
 	describe("normalizeAutoModerationRuleEscalation", () => {
 		it("drops what is not a step and makes a bad duration permanent", () => {
 			expect(

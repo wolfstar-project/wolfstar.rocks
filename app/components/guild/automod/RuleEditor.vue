@@ -382,16 +382,15 @@ const formId = useId();
 // One label per option name. What `maximum` counts depends on the type, which
 // the type's own description above the fields spells out.
 const OPTION_LABEL_KEYS: Record<string, string> = {
-	alerts: "guild_settings.automod.options.alerts",
 	allowed: "guild_settings.automod.options.allowed",
 	allowedCodes: "guild_settings.automod.options.allowedCodes",
 	allowedGuilds: "guild_settings.automod.options.allowedGuilds",
 	characters: "guild_settings.automod.options.characters",
 	maximum: "guild_settings.automod.options.maximum",
-	mentionsAllowed: "guild_settings.automod.options.mentionsAllowed",
 	minimum: "guild_settings.automod.options.minimum",
 	perChannel: "guild_settings.automod.options.perChannel",
 	timePeriod: "guild_settings.automod.options.timePeriod",
+	weighted: "guild_settings.automod.options.weighted",
 	words: "guild_settings.automod.options.words",
 };
 

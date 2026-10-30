@@ -1,7 +1,7 @@
 import {
 	classifyLegacyNode,
-	createDashboardEntry,
-	isDashboardEntry,
+	createAccessEntry,
+	isAccessEntry,
 	type PermissionEntry,
 } from "#shared/utils/dashboard-access";
 
@@ -13,7 +13,7 @@ export function splitAccess(entries: readonly PermissionEntry[]): {
 	const allow: string[] = [];
 	const deny: string[] = [];
 	for (const entry of entries) {
-		if (isDashboardEntry(entry)) (entry.dashboard === "allow" ? allow : deny).push(entry.id);
+		if (isAccessEntry(entry)) (entry.dashboard === "allow" ? allow : deny).push(entry.id);
 	}
 	return { allow, deny };
 }
@@ -32,19 +32,19 @@ export function joinAccess(
 	const allowed = [...new Set(allow)].filter((id) => !denied.has(id));
 	const ruled = new Set([...allowed, ...denied]);
 	return [
-		...allowed.map((id) => createDashboardEntry(id, "allow")),
-		...Array.from(denied, (id) => createDashboardEntry(id, "deny")),
-		...entries.filter((entry) => !isDashboardEntry(entry) && !ruled.has(entry.id)),
+		...allowed.map((id) => createAccessEntry(id, "allow")),
+		...Array.from(denied, (id) => createAccessEntry(id, "deny")),
+		...entries.filter((entry) => !isAccessEntry(entry) && !ruled.has(entry.id)),
 	];
 }
 
 /** The column with the legacy node of `id` turned into its dashboard rule, when it can be. */
 export function importLegacy(entries: readonly PermissionEntry[], id: string): PermissionEntry[] {
 	return entries.map((entry) => {
-		if (entry.id !== id || isDashboardEntry(entry)) return entry;
+		if (entry.id !== id || isAccessEntry(entry)) return entry;
 		const classification = classifyLegacyNode(entry);
 		return classification.kind === "importable"
-			? createDashboardEntry(entry.id, classification.access)
+			? createAccessEntry(entry.id, classification.access)
 			: entry;
 	});
 }

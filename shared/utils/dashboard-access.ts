@@ -3,12 +3,18 @@
  *
  * The rules live in the two columns of the old permission nodes,
  * `permissions.users` and `permissions.roles`. A rule is told from a node by
- * its `dashboard` key, and keeps two empty `allow` and `deny` lists: the bot,
- * until it reads rules, runs every entry of those columns as a node, and
- * iterates both lists.
+ * its `dashboard` key, and keeps two empty `allow` and `deny` lists, so code
+ * that reads every entry as a node finds no command in it.
+ *
+ * What is named `Access` here is a port of the bot's
+ * `projects/database/src/settings/access.ts`, under its names, like the other
+ * ports of `wolfstar-database`: the bot's sources import its build output and
+ * cannot be imported from here. `dashboard-access-pin.spec.ts` runs the two
+ * against each other, so a bump that changes the bot's fails there.
  */
 
-export type DashboardAccess = "allow" | "deny";
+/** What a rule does: `allow` opens the dashboard, `deny` keeps a member out of it. */
+export type Access = "allow" | "deny";
 
 /** An entry of the old shape: commands a role or member is allowed or denied. */
 export interface LegacyPermissionNode {
@@ -18,64 +24,80 @@ export interface LegacyPermissionNode {
 }
 
 /** A rule that lets a role or member open the dashboard, or keeps them out. */
-export interface DashboardAccessEntry {
+export interface AccessEntry {
 	id: string;
 	allow: readonly [];
 	deny: readonly [];
-	dashboard: DashboardAccess;
+	dashboard: Access;
 }
 
-export type PermissionEntry = LegacyPermissionNode | DashboardAccessEntry;
+export type PermissionEntry = LegacyPermissionNode | AccessEntry;
 
-export function isDashboardEntry(entry: PermissionEntry): entry is DashboardAccessEntry {
+export function isAccessEntry(entry: PermissionEntry): entry is AccessEntry {
 	return "dashboard" in entry && (entry.dashboard === "allow" || entry.dashboard === "deny");
 }
 
-export function createDashboardEntry(id: string, dashboard: DashboardAccess): DashboardAccessEntry {
+export function createAccessEntry(id: string, dashboard: Access): AccessEntry {
 	return { id, allow: [], deny: [], dashboard };
 }
 
+/**
+ * Who the access is resolved for. Everybody holds `@everyone`, whose id is the
+ * guild's: a rule can name it, and Discord's `member.roles` never lists it.
+ */
 export interface AccessSubject {
 	userId: string;
 	roleIds: readonly string[];
 }
 
-export interface GuildRolePosition {
+/** The two columns the rules are read from. */
+export interface AccessEntries {
+	users: readonly PermissionEntry[];
+	roles: readonly PermissionEntry[];
+}
+
+/** A role of the guild and its position, which decides which rule of a member's roles wins. */
+export interface AccessRole {
 	id: string;
 	position: number;
 }
 
 /**
- * The rule that decides whether a member opens the dashboard: their own rule
- * first, then the rule of their highest role that has one. `null` when no rule
- * names them, and the admin check decides.
+ * The rule that decides for a member: their own first, else the one of their
+ * highest role that has one, by position, and of two roles at the same position
+ * the one with the higher id, as Discord orders them. `null` when no rule names
+ * them, and the admin check decides.
  */
-export function resolveDashboardAccess(
+export function resolveAccess(
 	subject: AccessSubject,
-	entries: { users: readonly PermissionEntry[]; roles: readonly PermissionEntry[] },
-	guildRoles: readonly GuildRolePosition[],
-): DashboardAccess | null {
+	entries: AccessEntries,
+	guildRoles: readonly AccessRole[],
+): Access | null {
 	const own = entries.users.find(
-		(entry): entry is DashboardAccessEntry =>
-			isDashboardEntry(entry) && entry.id === subject.userId,
+		(entry): entry is AccessEntry => isAccessEntry(entry) && entry.id === subject.userId,
 	);
 	if (own) return own.dashboard;
 
-	const ruled = new Map<string, DashboardAccess>();
+	const ruled = new Map<string, Access>();
 	for (const entry of entries.roles) {
-		if (isDashboardEntry(entry)) ruled.set(entry.id, entry.dashboard);
+		if (isAccessEntry(entry)) ruled.set(entry.id, entry.dashboard);
 	}
 	if (ruled.size === 0) return null;
 
 	const held = new Set(subject.roleIds);
-	// The order Discord shows: the highest position first, and of two roles at
-	// the same position the newer one, the higher id, first.
-	const highestFirst = guildRoles
-		.filter((role) => held.has(role.id) && ruled.has(role.id))
-		.toSorted((a, b) => b.position - a.position || Number(BigInt(b.id) - BigInt(a.id)));
+	let highest: AccessRole | null = null;
+	for (const role of guildRoles) {
+		if (!held.has(role.id) || !ruled.has(role.id)) continue;
+		if (
+			highest === null ||
+			role.position > highest.position ||
+			(role.position === highest.position && BigInt(role.id) > BigInt(highest.id))
+		) {
+			highest = role;
+		}
+	}
 
-	const highest = highestFirst[0];
-	return highest === undefined ? null : (ruled.get(highest.id) ?? null);
+	return highest === null ? null : (ruled.get(highest.id) ?? null);
 }
 
 /**
@@ -100,7 +122,7 @@ function namesDashboard(name: string): boolean {
 }
 
 export type LegacyClassification =
-	| { kind: "importable"; access: DashboardAccess; dropped: string[] }
+	| { kind: "importable"; access: Access; dropped: string[] }
 	| { kind: "not-convertible" };
 
 /**
@@ -119,6 +141,6 @@ export function classifyLegacyNode(node: LegacyPermissionNode): LegacyClassifica
 }
 
 /** The entries of a column without its legacy nodes. */
-export function stripLegacyNodes(entries: readonly PermissionEntry[]): DashboardAccessEntry[] {
-	return entries.filter((entry) => isDashboardEntry(entry));
+export function stripLegacyNodes(entries: readonly PermissionEntry[]): AccessEntry[] {
+	return entries.filter((entry) => isAccessEntry(entry));
 }

@@ -14,6 +14,8 @@ const { mocks } = vi.hoisted(() => {
 		write: vi.fn(),
 		dispose: vi.fn(),
 		fetchCommands: vi.fn(),
+		execute: vi.fn(),
+		firstRow: vi.fn(),
 		body: {} as Record<string, unknown>,
 		command: "ban" as string | undefined,
 		settings: {} as { commandsDisabled: string[]; commandsRestrictions: unknown[] },
@@ -38,6 +40,10 @@ vi.mock("#server/utils/guilds/manager", () => ({
 	}),
 }));
 
+vi.mock("#server/database/prisma", () => ({
+	db: { raw: { sql: () => ({ affectedCount: () => ({ build: () => "the query" }) }) } },
+}));
+
 vi.mock("#server/database", () => ({
 	writeSettingsTransaction: () =>
 		Promise.resolve({
@@ -45,7 +51,11 @@ vi.mock("#server/database", () => ({
 			write(data: Record<string, unknown>) {
 				mocks.write(data);
 				return {
-					submit: async () => {
+					submit: async (_extra: unknown, check?: (tx: unknown) => Promise<void>) => {
+						await check?.({
+							execute: mocks.execute,
+							orm: { public: { GuildCommands: { first: mocks.firstRow } } },
+						});
 						mocks.submit();
 						Object.assign(mocks.settings, data);
 					},
@@ -86,6 +96,10 @@ describe("PUT /api/guilds/:guild/command-rules/:command", () => {
 				{ channel: C2, commands: ["kick"] },
 			],
 		};
+		mocks.firstRow.mockResolvedValue({
+			disabled: [...mocks.settings.commandsDisabled],
+			disabledInChannels: [...mocks.settings.commandsRestrictions],
+		});
 		mocks.body = {
 			revision: storedRevision(),
 			enabled: false,
@@ -198,6 +212,40 @@ describe("PUT /api/guilds/:guild/command-rules/:command", () => {
 		expect(mocks.write).not.toHaveBeenCalled();
 		expect(mocks.audit).not.toHaveBeenCalled();
 		expect(mocks.dispose).toHaveBeenCalledOnce();
+	});
+
+	it("takes the locks first in the save's transaction", async () => {
+		await callHandler({} as H3Event);
+
+		expect(mocks.execute).toHaveBeenCalledTimes(2);
+		expect(mocks.firstRow).toHaveBeenCalledWith({ id: BigInt(GUILD) });
+	});
+
+	it("refuses a save when someone else wrote since it read, even another command", async () => {
+		mocks.firstRow.mockResolvedValue({
+			disabled: ["kick"],
+			disabledInChannels: [
+				...mocks.settings.commandsRestrictions,
+				{ command: "mute", ignoredRoles: [R1] },
+			],
+		});
+
+		await expect(callHandler({} as H3Event)).rejects.toMatchObject({
+			status: 409,
+			code: "conflict",
+		});
+		expect(mocks.submit).not.toHaveBeenCalled();
+		expect(mocks.audit).not.toHaveBeenCalled();
+	});
+
+	it("saves on a guild that has no row yet", async () => {
+		mocks.settings = { commandsDisabled: [], commandsRestrictions: [] };
+		mocks.firstRow.mockResolvedValue(null);
+		mocks.body.revision = storedRevision();
+
+		await callHandler({} as H3Event);
+
+		expect(mocks.submit).toHaveBeenCalledOnce();
 	});
 
 	it("refuses and audits a protected command", async () => {

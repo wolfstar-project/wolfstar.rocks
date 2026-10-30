@@ -3,6 +3,10 @@ import type { H3Event } from "h3";
 import { writeSettingsTransaction } from "#server/database";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
 import { findRuledCommand, getCommandRuleParam } from "#server/utils/command-rules/command";
+import {
+	assertCommandSettingsUnchanged,
+	commandRuleConflict,
+} from "#server/utils/command-rules/write";
 import { authorizeGuildManager, useManagedGuild } from "#server/utils/guilds/manager";
 import { guildSettingsAccessDenied, guildSettingsUpdate } from "#shared/audit/actions";
 import { CommandRulePutSchema } from "#shared/schemas/command-rules";
@@ -104,20 +108,16 @@ export default defineWrappedResponseHandler(
 
 		using trx = await writeSettingsTransaction(guild.id);
 		if (readCommandRuleState(trx.settings, command, guild.id).revision !== body.revision) {
-			throw createError({
-				message: "This command changed since it was opened",
-				status: 409,
-				code: "conflict",
-				why: "Someone saved this command after the editor loaded it, and saving would undo their change",
-				fix: "Reload the command's rules and make the change again",
-			});
+			throw commandRuleConflict();
 		}
 
 		const before: CommandRuleSettings = {
 			commandsDisabled: [...trx.settings.commandsDisabled],
 			commandsRestrictions: trx.settings.commandsRestrictions,
 		};
-		await trx.write(writeCommandRule(trx.settings, command, body, guild.id)).submit();
+		await trx
+			.write(writeCommandRule(trx.settings, command, body, guild.id))
+			.submit(undefined, assertCommandSettingsUnchanged(guild.id, before));
 		const changes = auditedChanges(before, trx.settings, command, guild.id);
 
 		withAuditMethods(useLogger(event)).audit(

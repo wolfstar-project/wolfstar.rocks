@@ -102,8 +102,12 @@ class Transaction {
 	 *
 	 * @param extra Other writes that belong with them, made in the same database transaction, so they are all written
 	 * or none is: the rules of an import. They run even when no setting changes.
+	 * @param check What the changes depend on, checked first in that transaction, see {@linkcode writeGuildData}.
 	 */
-	public async submit(extra?: Parameters<typeof writeGuildData>[3]) {
+	public async submit(
+		extra?: Parameters<typeof writeGuildData>[3],
+		check?: Parameters<typeof writeGuildData>[4],
+	) {
 		if (!this.#hasChanges && !extra) {
 			return;
 		}
@@ -121,6 +125,7 @@ class Transaction {
 					// The bot caches the settings: it reloads them on this, once committed.
 					await notifyGuildSettingsUpdate(tx, this.settings.id, keys);
 				},
+				check,
 			);
 
 			unconfigured.delete(this.settings.id);

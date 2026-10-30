@@ -148,6 +148,8 @@
 		"none": "Nessuno",
 		"nothing_chosen": "Ancora niente.",
 		"nothing_matches": "Nessun risultato.",
+		"pick_channel": "Seleziona canale",
+		"pick_role": "Seleziona ruolo",
 		"remove_option": "Rimuovi {name}",
 		"search": "Cerca...",
 		"seconds": "Secondi",

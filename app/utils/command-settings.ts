@@ -1,3 +1,5 @@
+import { isCommandGroupTarget } from "#shared/utils/command-rules";
+
 /**
  * A command as the settings that turn it off see it: `commandsDisabled`, the
  * restrictions and the permission nodes always name a whole command, never one
@@ -11,6 +13,8 @@ export interface DisableableCommand {
 	/** The command's description, or the names of its subcommands: `add, remove`. */
 	description: string;
 	category: string;
+	/** The second directory of its file, which a rule can target. */
+	subCategory: string | null;
 }
 
 /**
@@ -49,7 +53,20 @@ export function listDisableableCommands(
 					: first.description,
 				label,
 				name,
+				subCategory: first.subCategory ?? null,
 			},
 		];
 	});
+}
+
+/**
+ * The target of a rule, or of `commandsDisabled`, as the dashboard names it:
+ * `/warn`, `Moderation`, `Moderation · Management`, and `every` for `*`.
+ */
+export function commandTargetLabel(target: string, every: string): string {
+	if (target === "*") return every;
+	const parts = target.split(".");
+	return isCommandGroupTarget(target)
+		? parts.slice(0, -1).join(" · ")
+		: `/${parts.at(-1) ?? target}`;
 }

@@ -1705,7 +1705,121 @@
 						"allowed_users": {
 							"type": "string"
 						},
-						"empty": {
+						"editor": {
+							"type": "object",
+							"properties": {
+								"allowed_channels": {
+									"type": "string"
+								},
+								"allowed_channels_hint": {
+									"type": "string"
+								},
+								"allowed_roles": {
+									"type": "string"
+								},
+								"allowed_roles_hint": {
+									"type": "string"
+								},
+								"also_applies": {
+									"type": "string"
+								},
+								"cancel": {
+									"type": "string"
+								},
+								"conflict_description": {
+									"type": "string"
+								},
+								"conflict_title": {
+									"type": "string"
+								},
+								"count": {
+									"type": "string"
+								},
+								"disabled_by": {
+									"type": "string"
+								},
+								"enabled": {
+									"type": "string"
+								},
+								"enabled_hint": {
+									"type": "string"
+								},
+								"enabled_hint_off": {
+									"type": "string"
+								},
+								"ignored_channels": {
+									"type": "string"
+								},
+								"ignored_channels_hint": {
+									"type": "string"
+								},
+								"ignored_roles": {
+									"type": "string"
+								},
+								"ignored_roles_hint": {
+									"type": "string"
+								},
+								"load_failed": {
+									"type": "string"
+								},
+								"members_kept": {
+									"type": "string"
+								},
+								"note_allowed": {
+									"type": "string"
+								},
+								"note_ignored": {
+									"type": "string"
+								},
+								"off_note": {
+									"type": "string"
+								},
+								"only_allowed": {
+									"type": "string"
+								},
+								"only_allowed_hint": {
+									"type": "string"
+								},
+								"open_aria": {
+									"type": "string"
+								},
+								"retry": {
+									"type": "string"
+								},
+								"save": {
+									"type": "string"
+								},
+								"save_failed_description": {
+									"type": "string"
+								},
+								"save_failed_title": {
+									"type": "string"
+								},
+								"saved_description": {
+									"type": "string"
+								},
+								"saved_title": {
+									"type": "string"
+								},
+								"summary_none": {
+									"type": "string"
+								},
+								"summary_off": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"every_command": {
+							"type": "string"
+						},
+						"groups_subtitle": {
+							"type": "string"
+						},
+						"groups_title": {
 							"type": "string"
 						},
 						"ignored_channels": {
@@ -1717,28 +1831,7 @@
 						"ignored_users": {
 							"type": "string"
 						},
-						"subtitle": {
-							"type": "string"
-						},
-						"title": {
-							"type": "string"
-						}
-					},
-					"additionalProperties": false
-				},
-				"command_tabs": {
-					"type": "object",
-					"properties": {
-						"aria": {
-							"type": "string"
-						},
-						"disabled": {
-							"type": "string"
-						},
-						"discord": {
-							"type": "string"
-						},
-						"rules": {
+						"order": {
 							"type": "string"
 						}
 					},

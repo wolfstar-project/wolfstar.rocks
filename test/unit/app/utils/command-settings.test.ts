@@ -1,6 +1,10 @@
 import type { FlattenedCommand } from "#shared/types/discord";
 import { describe, expect, it } from "vitest";
-import { getCommandSettingName, listDisableableCommands } from "~/utils/command-settings";
+import {
+	commandTargetLabel,
+	getCommandSettingName,
+	listDisableableCommands,
+} from "~/utils/command-settings";
 
 function entry(name: string, overrides: Partial<FlattenedCommand> = {}): FlattenedCommand {
 	return {
@@ -37,15 +41,36 @@ describe("listDisableableCommands", () => {
 		]);
 
 		expect(commands).toEqual([
-			{ category: "Moderation", description: "add, remove", label: "ban", name: "ban" },
-			{ category: "Moderation", description: "Kick a member", label: "kick", name: "kick" },
+			{
+				category: "Moderation",
+				description: "add, remove",
+				label: "ban",
+				name: "ban",
+				subCategory: null,
+			},
+			{
+				category: "Moderation",
+				description: "Kick a member",
+				label: "kick",
+				name: "kick",
+				subCategory: null,
+			},
 			{
 				category: "Management",
 				description: "list",
 				label: "warn-thresholds",
 				name: "warnThresholds",
+				subCategory: null,
 			},
 		]);
+	});
+
+	it("keeps the sub-category a rule can target", () => {
+		const [reasons] = listDisableableCommands([
+			entry("reasons add", { command: "reasons", subCategory: "Management" }),
+		]);
+
+		expect(reasons?.subCategory).toBe("Management");
 	});
 
 	it("keeps the path after the command for nested subcommands", () => {
@@ -64,7 +89,25 @@ describe("listDisableableCommands", () => {
 		]);
 
 		expect(commands).toEqual([
-			{ category: "General", description: "ping description", label: "ping", name: "ping" },
+			{
+				category: "General",
+				description: "ping description",
+				label: "ping",
+				name: "ping",
+				subCategory: null,
+			},
 		]);
+	});
+});
+
+describe("commandTargetLabel", () => {
+	it.each([
+		["*", "Every command"],
+		["Moderation.*", "Moderation"],
+		["Moderation.Management.*", "Moderation · Management"],
+		["warn", "/warn"],
+		["Moderation.warn", "/warn"],
+	])("names %s", (target, label) => {
+		expect(commandTargetLabel(target, "Every command")).toBe(label);
 	});
 });

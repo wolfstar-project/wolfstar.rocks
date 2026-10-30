@@ -1,7 +1,29 @@
 <template>
 	<div class="flex min-w-0 flex-col gap-1">
-		<p :id="labelId" class="text-[0.9375rem]">{{ label }}</p>
-		<p v-if="description" class="text-[0.8125rem] text-muted">{{ description }}</p>
+		<p :id="labelId" :class="oneAtATime ? 'sr-only' : 'text-[0.9375rem]'">{{ label }}</p>
+		<p v-if="description && !oneAtATime" class="text-[0.8125rem] text-muted">
+			{{ description }}
+		</p>
+		<div v-if="oneAtATime" class="flex max-w-105 gap-2">
+			<SelectBase
+				v-model="picked"
+				class="min-w-0 flex-1"
+				:options="unchosen"
+				:kind
+				:disabled
+				:clearable="false"
+				:aria-label="label"
+				:placeholder="pickLabel"
+			/>
+			<UButton
+				color="primary"
+				:disabled="disabled || !picked"
+				:aria-label="ts('select.add_to', { name: label })"
+				@click="addPicked"
+			>
+				{{ ts("select.add") }}
+			</UButton>
+		</div>
 		<div
 			class="mt-1.5 flex flex-wrap items-center gap-2"
 			role="group"
@@ -29,6 +51,7 @@
 				</button>
 			</span>
 			<button
+				v-if="!oneAtATime"
 				type="button"
 				class="select-chips-add"
 				:disabled
@@ -39,8 +62,12 @@
 				{{ ts("select.add") }}
 			</button>
 		</div>
+		<p v-if="description && oneAtATime" class="mt-1 text-[0.8125rem] text-muted">
+			{{ description }}
+		</p>
 
 		<UModal
+			v-if="!oneAtATime"
 			v-model:open="open"
 			:title="dialogTitle ?? label"
 			:description="label"
@@ -137,6 +164,7 @@ const {
 	dialogTitle,
 	searchPlaceholder,
 	countLabel,
+	oneAtATime = false,
 } = defineProps<{
 	label: string;
 	description?: string;
@@ -149,6 +177,11 @@ const {
 	searchPlaceholder?: string;
 	/** The dialog's footer: how many are chosen, in words. */
 	countLabel?: (count: number) => string;
+	/**
+	 * Picks with a select and a button above the chips instead of the dialog,
+	 * where a heading already names the list.
+	 */
+	oneAtATime?: boolean;
 }>();
 
 const { ts } = useI18n();
@@ -192,6 +225,16 @@ function toggle(value: string, on: boolean) {
 
 function remove(value: string) {
 	model.value = model.value.filter((entry) => entry !== value);
+}
+
+const picked = ref<string | string[] | null>(null);
+const unchosen = computed(() => options.filter((option) => !model.value.includes(option.value)));
+const pickLabel = computed(() => ts(kind === "role" ? "select.pick_role" : "select.pick_channel"));
+
+function addPicked() {
+	if (typeof picked.value !== "string") return;
+	toggle(picked.value, true);
+	picked.value = null;
 }
 </script>
 

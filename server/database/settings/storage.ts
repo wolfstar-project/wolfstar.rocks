@@ -34,6 +34,8 @@ interface TableCollection {
 
 type Orm = Database["orm"];
 
+export type DatabaseTransaction = Parameters<Parameters<Database["transaction"]>[0]>[0];
+
 function table(orm: Pick<Orm, "public">, name: TableName): TableCollection {
 	return orm.public[name] as unknown as TableCollection;
 }
@@ -119,12 +121,15 @@ export async function fetchGuildData(orm: Orm, id: Snowflake): Promise<GuildData
  * @param settings The settings the changes apply to, with the changes already merged in.
  * @param changes The changed keys and their new values.
  * @param extra Other writes that belong with the changes: they run in the same transaction, after them.
+ * @param check What the changes depend on: it runs first in the same transaction, where it can lock what it
+ * reads, and throwing leaves everything unwritten.
  */
 export async function writeGuildData(
 	db: Database,
 	settings: ReadonlyGuildData,
 	changes: Partial<ReadonlyGuildData>,
-	extra?: (tx: Parameters<Parameters<Database["transaction"]>[0]>[0]) => Promise<void>,
+	extra?: (tx: DatabaseTransaction) => Promise<void>,
+	check?: (tx: DatabaseTransaction) => Promise<void>,
 ): Promise<void> {
 	const id = BigInt(settings.id);
 	const changedKeys = Object.keys(changes) as GuildDataKey[];
@@ -145,6 +150,8 @@ export async function writeGuildData(
 	}
 
 	await db.transaction(async (tx) => {
+		await check?.(tx);
+
 		for (const name of Tables) {
 			if (!touched.has(name)) continue;
 

@@ -53,7 +53,8 @@ import {
 	GuildAuditChanges,
 	GuildAutomodDurationInput,
 	GuildCommandsDiscordPermissions,
-	GuildCommandsRules,
+	GuildCommandsRuleEditor,
+	GuildCommandsRuleList,
 	GuildLogsCaseDetail,
 	GuildMemberPicker,
 	GuildReviewQueue,
@@ -796,7 +797,9 @@ describe("component accessibility audits", () => {
 			});
 			useActiveGuild().selectGuild(GUILD_ID);
 			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
-			const component = await mountSuspended(GuildCommandsDiscordPermissions);
+			const component = await mountSuspended(GuildCommandsDiscordPermissions, {
+				route: "/?tab=discord",
+			});
 			await vi.waitFor(() =>
 				expect(component.text()).toContain(
 					scopeGranted ? "App default" : "Authorize with Discord",
@@ -808,30 +811,86 @@ describe("component accessibility audits", () => {
 		});
 	});
 
-	describe("GuildCommandsRules", () => {
+	describe("GuildCommandsRuleList", () => {
+		it("should have no accessibility violations", async () => {
+			useGuildData().setGuildData(
+				createMockOauthFlattenedGuild({ id: "123456789012345678" }),
+			);
+			const component = await mountSuspended(GuildCommandsRuleList, {
+				props: {
+					rules: [
+						{
+							command: "Moderation.*",
+							allowedChannels: ["333333333333333333"],
+							ignoredChannels: [],
+							allowedRoles: ["300000000000000001"],
+							ignoredRoles: ["123456789012345678"],
+							allowedUsers: [],
+							ignoredUsers: [],
+						},
+					],
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildCommandsRuleEditor", () => {
 		const GUILD_ID = "123456789012345678";
 
-		it("should have no accessibility violations with rules", async () => {
-			registerEndpoint(`/api/guilds/${GUILD_ID}/members/search`, {
+		it("should have no accessibility violations with the editor open", async () => {
+			registerEndpoint(`/api/guilds/${GUILD_ID}/command-rules/archive`, {
 				method: "GET",
-				handler: () => [],
+				handler: () => ({
+					command: "archive",
+					enabled: true,
+					onlyAllowed: true,
+					rule: {
+						command: "archive",
+						allowedChannels: ["333333333333333333"],
+						ignoredChannels: [],
+						allowedRoles: [],
+						ignoredRoles: ["300000000000000001"],
+						allowedUsers: ["200000000000000001"],
+						ignoredUsers: [],
+					},
+					revision: 1,
+				}),
 			});
 			useActiveGuild().selectGuild(GUILD_ID);
 			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
-			useGuildSettings().setGuildSettings(
-				createMockGuildData(GUILD_ID, {
-					commandsRestrictions: [
+			const component = await mountSuspended(GuildCommandsRuleEditor, {
+				props: {
+					open: true,
+					command: {
+						name: "archive",
+						label: "archive",
+						category: "Moderation",
+						description: "Save and read the recent messages of members.",
+						subCategory: null,
+					},
+					inherited: [
 						{
-							command: "ban",
-							allowedRoles: ["300000000000000001"],
-							ignoredUsers: ["200000000000000001"],
+							command: "Moderation.*",
+							allowedChannels: [],
+							ignoredChannels: ["333333333333333333"],
+							allowedRoles: [],
+							ignoredRoles: [GUILD_ID],
+							allowedUsers: [],
+							ignoredUsers: [],
 						},
 					],
-				}),
+				},
+				attachTo: document.body,
+			});
+			await vi.waitFor(() =>
+				expect(document.querySelector('[role="dialog"] form')).not.toBeNull(),
 			);
-			const component = await mountSuspended(GuildCommandsRules, { props: { commands: [] } });
-			const results = await runAxe(component);
+			const panel = document.querySelector('[role="dialog"]');
+			const results = await runAxe(component, { include: panel ? [panel] : [] });
 			expect(results.violations).toEqual([]);
+			component.unmount();
 		});
 	});
 

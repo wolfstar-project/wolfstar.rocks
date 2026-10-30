@@ -797,7 +797,9 @@ describe("component accessibility audits", () => {
 			});
 			useActiveGuild().selectGuild(GUILD_ID);
 			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
-			const component = await mountSuspended(GuildCommandsDiscordPermissions);
+			const component = await mountSuspended(GuildCommandsDiscordPermissions, {
+				route: "/?tab=discord",
+			});
 			await vi.waitFor(() =>
 				expect(component.text()).toContain(
 					scopeGranted ? "App default" : "Authorize with Discord",

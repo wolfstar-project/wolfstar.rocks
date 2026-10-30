@@ -1,7 +1,7 @@
 <template>
 	<section ref="root" :aria-labelledby="headingId">
 		<!-- Closed until asked for, so the commands page reads as its two cards. -->
-		<details class="group space-y-4" :open="expanded">
+		<details class="group space-y-4" :open="expanded" @toggle="onToggle">
 			<summary class="discord-permissions-summary console-card">
 				<span class="min-w-0 flex-1">
 					<h2 :id="headingId" class="text-xl font-bold tracking-[0.01em]">
@@ -22,7 +22,7 @@
 				{{ ts("guild_settings.command_permissions.administrator_note") }}
 			</p>
 
-			<div v-if="!data && pending" class="space-y-2">
+			<div v-if="!data && !error" class="space-y-2">
 				<USkeleton v-for="i in 4" :key="i" class="h-14 w-full" />
 			</div>
 
@@ -168,21 +168,34 @@ const authorizeUrl = computed(() => {
 	return `/oauth/login?grant=${COMMAND_PERMISSIONS_GRANT}&next=${encodeURIComponent(back)}`;
 });
 
+// Unsent edits are not left out of sight.
+const { hasDrafts } = useCommandPermissionDrafts(activeGuildId);
+const expanded = ref(backFromSignIn || hasDrafts.value);
+
+// Discord limits how often its permissions are read, and most visits never
+// open this block, so they are only asked for once it is.
 const {
 	baseRows,
 	changedCommandIds,
 	data,
 	discard,
+	error,
 	pending,
 	refresh,
 	resetToDefault,
 	rowsOf,
 	saveAll,
 	setRows,
-} = useCommandPermissions(activeGuildId);
+} = useCommandPermissions(activeGuildId, { immediate: expanded.value });
 
-// Unsent edits are not left out of sight.
-const expanded = ref(backFromSignIn || changedCommandIds.value.length > 0);
+function onToggle(event: Event) {
+	expanded.value = (event.currentTarget as HTMLDetailsElement).open;
+}
+
+// A watcher and not the event: `toggle` can fire after the page has moved on.
+watch(expanded, (isOpen) => {
+	if (isOpen && !data.value && !pending.value) void refresh();
+});
 
 const root = useTemplateRef<HTMLElement>("root");
 onMounted(() => {

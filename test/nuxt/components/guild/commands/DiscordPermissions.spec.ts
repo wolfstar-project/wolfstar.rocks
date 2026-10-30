@@ -42,9 +42,13 @@ function response() {
 	};
 }
 
+let gets = 0;
 registerEndpoint(`/api/guilds/${GUILD_ID}/command-permissions`, {
 	method: "GET",
-	handler: response,
+	handler: () => {
+		gets++;
+		return response();
+	},
 });
 registerEndpoint(`/api/guilds/${GUILD_ID}/command-permissions/${BAN}`, {
 	method: "PUT",
@@ -59,8 +63,9 @@ registerEndpoint(`/api/guilds/${GUILD_ID}/members/search`, { method: "GET", hand
 // dialog there, and a later test would press that dialog's buttons.
 const mounted: { unmount: () => void }[] = [];
 
+// The block only reads Discord once it is open, as the sign-in coming back leaves it.
 async function mount() {
-	const wrapper = await mountSuspended(DiscordPermissions);
+	const wrapper = await mountSuspended(DiscordPermissions, { route: "/?tab=discord" });
 	mounted.push(wrapper);
 	await vi.waitFor(() => expect(wrapper.text()).toContain("App default"));
 	return wrapper;
@@ -74,6 +79,7 @@ describe("GuildCommandsDiscordPermissions", () => {
 		Object.assign(authorization, { scopeGranted: true, manageGuild: true, manageRoles: true });
 		banRows = [{ id: ROLE, type: 1, permission: true }];
 		putStatus = 200;
+		gets = 0;
 		useActiveGuild().selectGuild(GUILD_ID);
 	});
 
@@ -81,10 +87,17 @@ describe("GuildCommandsDiscordPermissions", () => {
 		for (const wrapper of mounted.splice(0)) wrapper.unmount();
 	});
 
-	it("stays closed until asked for, at the foot of the commands page", async () => {
-		const wrapper = await mount();
+	it("stays closed until asked for, and reads Discord only then", async () => {
+		const wrapper = await mountSuspended(DiscordPermissions);
+		mounted.push(wrapper);
 		expect(wrapper.get("details").attributes("open")).toBeUndefined();
 		expect(wrapper.get("summary h2").text()).toBe("Discord permissions");
+		expect(gets).toBe(0);
+
+		(wrapper.get("details").element as HTMLDetailsElement).open = true;
+
+		await vi.waitFor(() => expect(wrapper.text()).toContain("App default"));
+		expect(gets).toBe(1);
 	});
 
 	it("opens when the sign-in that grants the scope comes back", async () => {
@@ -101,13 +114,15 @@ describe("GuildCommandsDiscordPermissions", () => {
 
 	it("opens on edits not sent yet", async () => {
 		useCommandPermissionDrafts(GUILD_ID).drafts.value = { [BAN]: { base: [], rows: [] } };
-		const wrapper = await mount();
+		const wrapper = await mountSuspended(DiscordPermissions);
+		mounted.push(wrapper);
 		expect(wrapper.get("details").attributes("open")).toBeDefined();
+		await vi.waitFor(() => expect(wrapper.text()).toContain("App default"));
 	});
 
 	it("asks to authorize with Discord when the scope is missing", async () => {
 		authorization.scopeGranted = false;
-		const wrapper = await mountSuspended(DiscordPermissions);
+		const wrapper = await mountSuspended(DiscordPermissions, { route: "/?tab=discord" });
 		mounted.push(wrapper);
 		await vi.waitFor(() => expect(wrapper.text()).toContain("Authorize with Discord"));
 		expect(

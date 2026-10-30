@@ -180,7 +180,7 @@
 	<GuildCommandsRuleEditor
 		v-model:open="editorOpen"
 		:command="editedCommand"
-		:enabled="editedCommand ? (getCommand(editedCommand.name)?.isEnabled ?? true) : true"
+		:staged-enabled="editedCommand ? stagedStatusOf(editedCommand.name) : undefined"
 		:opener="editorOpener"
 		@saved="onRuleSaved"
 	/>
@@ -319,6 +319,13 @@ function resetCategory(category: string) {
 		icon: "i-heroicons-arrow-path",
 		title: ts("guild_settings.commands.category_reset"),
 	});
+}
+
+/** A tile's status when it differs from the stored one, so it is not saved yet. */
+function stagedStatusOf(name: string): boolean | undefined {
+	const isEnabled = state[name]?.isEnabled;
+	const storedEnabled = !originalGuildSettings.value?.commandsDisabled.includes(name);
+	return isEnabled === undefined || isEnabled === storedEnabled ? undefined : isEnabled;
 }
 
 function openEditor(command: DisableableCommand, event: MouseEvent) {

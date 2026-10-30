@@ -103,7 +103,7 @@ function button(text: string): HTMLButtonElement {
 
 async function mount(props: Record<string, unknown> = {}) {
 	const wrapper = await mountSuspended(RuleEditor, {
-		props: { open: true, command: archive, enabled: true, ...props },
+		props: { open: true, command: archive, ...props },
 		attachTo: document.body,
 	});
 	mounted.push(wrapper);
@@ -165,9 +165,17 @@ describe("GuildCommandsRuleEditor", () => {
 		expect(dialog().textContent).toContain("mod-chat");
 	});
 
-	it("opens on the status it is given and saves with the revision", async () => {
+	it("opens on the stored status when nothing is staged", async () => {
+		stored = { ...stored, enabled: false };
+		await mount();
+		expect(dialog().querySelector('[role="switch"]')?.getAttribute("aria-checked")).toBe(
+			"false",
+		);
+	});
+
+	it("opens on a staged status and saves with the revision", async () => {
 		stored.rule = rule({ allowedChannels: [MOD_CHAT] });
-		const wrapper = await mount({ enabled: false });
+		const wrapper = await mount({ stagedEnabled: false });
 		expect(dialog().querySelector('[role="switch"]')?.getAttribute("aria-checked")).toBe(
 			"false",
 		);

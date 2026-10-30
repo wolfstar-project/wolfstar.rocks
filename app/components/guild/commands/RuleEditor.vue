@@ -17,7 +17,7 @@
 				<p class="text-sm">
 					{{ ts("guild_settings.command_rules.editor.load_failed", { name }) }}
 				</p>
-				<UButton color="neutral" variant="outline" @click="load(enabled)">
+				<UButton color="neutral" variant="outline" @click="load(stagedEnabled)">
 					{{ ts("guild_settings.command_rules.editor.retry") }}
 				</UButton>
 			</div>
@@ -120,13 +120,17 @@ const open = defineModel<boolean>("open", { required: true });
 
 const {
 	command,
-	enabled,
+	stagedEnabled,
 	opener = null,
 } = defineProps<{
 	/** The command to edit; the editor stays closed without one. */
 	command: DisableableCommand | null;
-	/** Whether the command is on where the editor opens from, saved or not. */
-	enabled: boolean;
+	/**
+	 * A status toggled where the editor opens from and not saved yet. Without
+	 * one the editor shows the stored status, which someone else may have
+	 * changed since the page loaded.
+	 */
+	stagedEnabled?: boolean;
 	/** What focus goes back to when the editor closes. */
 	opener?: HTMLElement | null;
 }>();
@@ -293,7 +297,7 @@ watch(
 		if (!isOpen) return;
 		stored.value = null;
 		Object.assign(draft, emptyDraft());
-		void load(enabled);
+		void load(stagedEnabled);
 	},
 	{ immediate: true },
 );

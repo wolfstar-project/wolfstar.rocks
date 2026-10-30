@@ -109,9 +109,7 @@ export function readCommandRules(value: unknown): CommandRule[] {
 		}
 	}
 
-	return [...rules.values()].filter((rule) =>
-		COMMAND_RULE_LISTS.some((list) => rule[list].length > 0),
-	);
+	return [...rules.values()].filter((rule) => !isCommandRuleEmpty(rule));
 }
 
 /** Whether a rule rules nothing, and so is not stored. */

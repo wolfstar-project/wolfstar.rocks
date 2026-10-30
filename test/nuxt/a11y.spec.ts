@@ -862,7 +862,6 @@ describe("component accessibility audits", () => {
 			const component = await mountSuspended(GuildCommandsRuleEditor, {
 				props: {
 					open: true,
-					enabled: true,
 					command: {
 						name: "archive",
 						label: "archive",

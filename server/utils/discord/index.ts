@@ -16,6 +16,7 @@ import type {
 } from "discord-api-types/v10";
 import type { H3Event } from "h3";
 import { readSettings, readSettingsPermissionNodes } from "#server/database";
+import { accessSubject } from "#server/utils/dashboard-access";
 import { hasAdminPermissions } from "#server/utils/discord/admin";
 import {
 	CURRENT_USER_CACHE_NAME,
@@ -31,7 +32,7 @@ import {
 	fetchGuildMemberWithRetry,
 } from "#server/utils/discord/oauth";
 import { PermissionsBits } from "#shared/utils/bits";
-import { resolveDashboardAccess } from "#shared/utils/dashboard-access";
+import { resolveAccess } from "#shared/utils/dashboard-access";
 import { hours } from "#shared/utils/times";
 import { cast } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
@@ -71,8 +72,8 @@ async function manage(guild: APIGuild, member: APIGuildMember, settings?: Readon
 
 	// A dashboard access rule decides on its own: an allow opens the dashboard
 	// without Manage Server, a deny keeps an admin out.
-	const access = resolveDashboardAccess(
-		{ userId: member.user.id, roleIds: member.roles },
+	const access = resolveAccess(
+		accessSubject(guild, member),
 		{ users: resolvedSettings.permissionsUsers, roles: resolvedSettings.permissionsRoles },
 		guild.roles,
 	);

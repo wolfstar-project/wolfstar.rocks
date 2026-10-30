@@ -48,6 +48,7 @@ vi.mock("#server/database", () => ({
 import type { ReadonlyGuildData } from "#server/database";
 import type { APIGuild, APIGuildMember } from "discord-api-types/v10";
 import { canManage } from "#server/utils/discord";
+import { createAccessEntry } from "#shared/utils/dashboard-access";
 
 // Member with Administrator permission bit (8n), not the guild owner.
 // With rolesAdmin: [], isAdmin falls back to the permission-bits path.
@@ -98,6 +99,21 @@ describe("canManage - settings threading through manage()", () => {
 		await canManage(guild, ownerMember);
 
 		expect(mockReadSettings).not.toHaveBeenCalled();
+	});
+
+	it("applies a deny on @everyone, which member.roles never lists", async () => {
+		const withEveryone = {
+			...guild,
+			roles: [{ id: "guild-123", position: 0 }],
+		} as unknown as APIGuild;
+		const denied = {
+			...mockSettings,
+			permissionsRoles: [createAccessEntry("guild-123", "deny")],
+		} as unknown as ReadonlyGuildData;
+
+		await expect(canManage(withEveryone, adminMember, denied)).rejects.toMatchObject({
+			status: 403,
+		});
 	});
 
 	it("throws 403 when member lacks manage permissions and readSettings is called", async () => {

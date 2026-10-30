@@ -1,10 +1,11 @@
 import type { GuildData, ReadonlyGuildData } from "#server/database/settings/types";
 import type { APIGuild, APIGuildMember } from "discord-api-types/v10";
 import {
+	accessSubject,
 	assertCanEditDashboardAccess,
 	assertKeepsDashboardAccess,
 } from "#server/utils/dashboard-access";
-import { createDashboardEntry } from "#shared/utils/dashboard-access";
+import { createAccessEntry } from "#shared/utils/dashboard-access";
 import { describe, expect, it } from "vitest";
 
 const OWNER = "100000000000000001";
@@ -18,6 +19,7 @@ const guild = {
 	id: "900000000000000001",
 	owner_id: OWNER,
 	roles: [
+		{ id: "900000000000000001", name: "@everyone", permissions: "0", position: 0 },
 		{ id: ADMIN_ROLE, name: "Admins", permissions: "32", position: 4 },
 		{ id: HEAD_ROLE, name: "Head admins", permissions: "32", position: 8 },
 		{ id: LOW_ROLE, name: "Helpers", permissions: "0", position: 1 },
@@ -42,6 +44,15 @@ function settings(partial: Partial<GuildData> = {}): ReadonlyGuildData {
 	} as unknown as ReadonlyGuildData;
 }
 
+describe("accessSubject", () => {
+	it("adds @everyone, which member.roles never lists", () => {
+		expect(accessSubject(guild, admin)).toEqual({
+			userId: ADMIN,
+			roleIds: [guild.id, ADMIN_ROLE],
+		});
+	});
+});
+
 function attempt(
 	who: APIGuildMember,
 	current: ReadonlyGuildData,
@@ -57,21 +68,21 @@ function attempt(
 
 describe("assertCanEditDashboardAccess", () => {
 	it("lets the owner write any rule, a deny on themselves included", () => {
-		const changes = { permissionsUsers: [createDashboardEntry(OWNER, "deny")] };
+		const changes = { permissionsUsers: [createAccessEntry(OWNER, "deny")] };
 		expect(attempt(owner, settings(), changes)).toBeNull();
 	});
 
 	it("lets a member who manages the server write rules", () => {
-		const changes = { permissionsUsers: [createDashboardEntry(HELPER, "allow")] };
+		const changes = { permissionsUsers: [createAccessEntry(HELPER, "allow")] };
 		expect(attempt(admin, settings(), changes)).toBeNull();
 	});
 
 	it("refuses a member let in by a rule alone", () => {
-		const current = settings({ permissionsUsers: [createDashboardEntry(HELPER, "allow")] });
+		const current = settings({ permissionsUsers: [createAccessEntry(HELPER, "allow")] });
 		const changes = {
 			permissionsUsers: [
-				createDashboardEntry(HELPER, "allow"),
-				createDashboardEntry("100000000000000009", "allow"),
+				createAccessEntry(HELPER, "allow"),
+				createAccessEntry("100000000000000009", "allow"),
 			],
 		};
 		const error = attempt(helper, current, changes) as { status?: number; why?: string };
@@ -80,7 +91,7 @@ describe("assertCanEditDashboardAccess", () => {
 	});
 
 	it("refuses a rule that would keep out the member who writes it", () => {
-		const changes = { permissionsUsers: [createDashboardEntry(ADMIN, "deny")] };
+		const changes = { permissionsUsers: [createAccessEntry(ADMIN, "deny")] };
 		const error = attempt(admin, settings(), changes) as { status?: number; why?: string };
 		expect(error?.status).toBe(409);
 		expect(error?.why).toMatch(/lock you out/i);
@@ -88,9 +99,26 @@ describe("assertCanEditDashboardAccess", () => {
 
 	it("refuses a deny on a role of the writer's when nothing of theirs allows", () => {
 		const twoRoles = member(ADMIN, [ADMIN_ROLE, LOW_ROLE], "32");
-		const changes = { permissionsRoles: [createDashboardEntry(LOW_ROLE, "deny")] };
+		const changes = { permissionsRoles: [createAccessEntry(LOW_ROLE, "deny")] };
 		const error = attempt(twoRoles, settings(), changes) as { status?: number };
 		expect(error?.status).toBe(409);
+	});
+
+	it("refuses a deny on @everyone, which every member holds", () => {
+		const changes = { permissionsRoles: [createAccessEntry(guild.id, "deny")] };
+		const error = attempt(admin, settings(), changes) as { status?: number };
+		expect(error?.status).toBe(409);
+	});
+
+	it("lets a role of the writer's outrank a deny on @everyone", () => {
+		const changes = {
+			permissionsRoles: [
+				createAccessEntry(guild.id, "deny"),
+				createAccessEntry(LOW_ROLE, "allow"),
+			],
+		};
+		const twoRoles = member(ADMIN, [ADMIN_ROLE, LOW_ROLE], "32");
+		expect(attempt(twoRoles, settings(), changes)).toBeNull();
 	});
 
 	it("does nothing when the change holds no access rules", () => {
@@ -99,7 +127,7 @@ describe("assertCanEditDashboardAccess", () => {
 
 	it("refuses the admin roles to a member let in by a rule alone", () => {
 		// Holding an admin role makes a member a server manager, who may write the rules.
-		const current = settings({ permissionsUsers: [createDashboardEntry(HELPER, "allow")] });
+		const current = settings({ permissionsUsers: [createAccessEntry(HELPER, "allow")] });
 		const error = attempt(helper, current, { rolesAdmin: [LOW_ROLE] }) as { status?: number };
 		expect(error?.status).toBe(403);
 	});
@@ -112,23 +140,23 @@ describe("assertCanEditDashboardAccess", () => {
 describe("assertCanEditDashboardAccess and the role order", () => {
 	it("refuses a rule on a role at or above the writer's highest role", () => {
 		const above = attempt(admin, settings(), {
-			permissionsRoles: [createDashboardEntry(HEAD_ROLE, "deny")],
+			permissionsRoles: [createAccessEntry(HEAD_ROLE, "deny")],
 		}) as { status?: number; why?: string };
 		expect(above?.status).toBe(403);
 		expect(above?.why).toMatch(/at or above your highest role/i);
 
 		const own = attempt(admin, settings(), {
-			permissionsRoles: [createDashboardEntry(ADMIN_ROLE, "allow")],
+			permissionsRoles: [createAccessEntry(ADMIN_ROLE, "allow")],
 		}) as { status?: number };
 		expect(own?.status).toBe(403);
 	});
 
 	it("lets the writer rule roles below theirs, and leaves untouched rules alone", () => {
-		const current = settings({ permissionsRoles: [createDashboardEntry(HEAD_ROLE, "allow")] });
+		const current = settings({ permissionsRoles: [createAccessEntry(HEAD_ROLE, "allow")] });
 		const changes = {
 			permissionsRoles: [
-				createDashboardEntry(HEAD_ROLE, "allow"),
-				createDashboardEntry(LOW_ROLE, "allow"),
+				createAccessEntry(HEAD_ROLE, "allow"),
+				createAccessEntry(LOW_ROLE, "allow"),
 			],
 		};
 		expect(attempt(admin, current, changes)).toBeNull();
@@ -136,7 +164,7 @@ describe("assertCanEditDashboardAccess and the role order", () => {
 
 	it("refuses a rule on the owner", () => {
 		const error = attempt(admin, settings(), {
-			permissionsUsers: [createDashboardEntry(OWNER, "deny")],
+			permissionsUsers: [createAccessEntry(OWNER, "deny")],
 		}) as { status?: number };
 		expect(error?.status).toBe(403);
 	});
@@ -144,7 +172,7 @@ describe("assertCanEditDashboardAccess and the role order", () => {
 	it("lets the owner rule any role", () => {
 		expect(
 			attempt(owner, settings(), {
-				permissionsRoles: [createDashboardEntry(HEAD_ROLE, "deny")],
+				permissionsRoles: [createAccessEntry(HEAD_ROLE, "deny")],
 			}),
 		).toBeNull();
 	});

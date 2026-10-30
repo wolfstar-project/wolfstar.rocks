@@ -8,7 +8,7 @@ import {
 	type StickyRole,
 	type UniqueRoleSet,
 } from "#server/database/settings/types";
-import { createDashboardEntry } from "#shared/utils/dashboard-access";
+import { createAccessEntry } from "#shared/utils/dashboard-access";
 import { SETTING_NUMBER_RANGES } from "#shared/utils/settings-choices";
 import { isSnowflake } from "#shared/utils/snowflake";
 
@@ -121,7 +121,7 @@ const validatePermissionNodes: Validator = (value) =>
 		if (allow.length > 0 || deny.length > 0) {
 			fail("Expected a dashboard access rule without commands.");
 		}
-		return createDashboardEntry(id, item.dashboard);
+		return createAccessEntry(id, item.dashboard);
 	});
 
 const validateUniqueRoleSets: Validator = (value) =>
@@ -168,11 +168,13 @@ const ValueValidators: Partial<Record<StoredKey, Validator>> = {
  * refused: the `/commands` modal owns `commandsRestrictions`, in a shape this
  * dashboard does not check, and a change of `updatesChannel` has to move the
  * follow of the support server's announcements, which only the bot does
- * (`syncUpdatesChannelFollow`).
+ * (`syncUpdatesChannelFollow`). The join guard is set up with the bot too, as
+ * long as no page of the dashboard writes it: its keys have no validators yet.
  */
-export const BOT_ONLY_SETTINGS: ReadonlySet<string> = new Set<StoredKey>([
+export const BOT_ONLY_SETTINGS: ReadonlySet<string> = new Set<string>([
 	"commandsRestrictions",
 	"updatesChannel",
+	...Object.keys(Columns).filter((key) => key.startsWith("joinGuard")),
 ]);
 
 const refuse: Validator = () => fail("This setting cannot be changed from the dashboard.");

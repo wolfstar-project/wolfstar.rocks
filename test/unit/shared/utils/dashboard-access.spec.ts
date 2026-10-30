@@ -1,8 +1,8 @@
 import {
 	classifyLegacyNode,
-	createDashboardEntry,
-	isDashboardEntry,
-	resolveDashboardAccess,
+	createAccessEntry,
+	isAccessEntry,
+	resolveAccess,
 	stripLegacyNodes,
 	type PermissionEntry,
 } from "#shared/utils/dashboard-access";
@@ -18,9 +18,9 @@ const guildRoles = [
 	{ id: ROLE_LOW, position: 2 },
 ];
 
-describe("createDashboardEntry", () => {
+describe("createAccessEntry", () => {
 	it("keeps the empty lists the bot iterates", () => {
-		expect(createDashboardEntry("1", "deny")).toEqual({
+		expect(createAccessEntry("1", "deny")).toEqual({
 			id: "1",
 			allow: [],
 			deny: [],
@@ -29,22 +29,22 @@ describe("createDashboardEntry", () => {
 	});
 });
 
-describe("isDashboardEntry", () => {
+describe("isAccessEntry", () => {
 	it("tells a dashboard entry from a legacy node", () => {
-		expect(isDashboardEntry(createDashboardEntry("1", "allow"))).toBe(true);
-		expect(isDashboardEntry({ id: "1", allow: ["settings"], deny: [] })).toBe(false);
+		expect(isAccessEntry(createAccessEntry("1", "allow"))).toBe(true);
+		expect(isAccessEntry({ id: "1", allow: ["settings"], deny: [] })).toBe(false);
 	});
 });
 
-describe("resolveDashboardAccess", () => {
+describe("resolveAccess", () => {
 	const subject = { userId: USER, roleIds: [ROLE_HIGH, ROLE_LOW] };
 
 	it("lets the member's own entry win over their roles", () => {
-		const access = resolveDashboardAccess(
+		const access = resolveAccess(
 			subject,
 			{
-				users: [createDashboardEntry(USER, "deny")],
-				roles: [createDashboardEntry(ROLE_HIGH, "allow")],
+				users: [createAccessEntry(USER, "deny")],
+				roles: [createAccessEntry(ROLE_HIGH, "allow")],
 			},
 			guildRoles,
 		);
@@ -52,30 +52,27 @@ describe("resolveDashboardAccess", () => {
 	});
 
 	it("takes the highest role with an entry", () => {
-		const roles = [
-			createDashboardEntry(ROLE_HIGH, "deny"),
-			createDashboardEntry(ROLE_LOW, "allow"),
-		];
-		expect(resolveDashboardAccess(subject, { users: [], roles }, guildRoles)).toBe("deny");
+		const roles = [createAccessEntry(ROLE_HIGH, "deny"), createAccessEntry(ROLE_LOW, "allow")];
+		expect(resolveAccess(subject, { users: [], roles }, guildRoles)).toBe("deny");
 
 		const swapped = [
 			{ id: ROLE_HIGH, position: 1 },
 			{ id: ROLE_LOW, position: 9 },
 		];
-		expect(resolveDashboardAccess(subject, { users: [], roles }, swapped)).toBe("allow");
+		expect(resolveAccess(subject, { users: [], roles }, swapped)).toBe("allow");
 	});
 
 	it("ignores an entry for a role the server no longer has", () => {
-		const access = resolveDashboardAccess(
+		const access = resolveAccess(
 			{ userId: USER, roleIds: [ROLE_GONE] },
-			{ users: [], roles: [createDashboardEntry(ROLE_GONE, "allow")] },
+			{ users: [], roles: [createAccessEntry(ROLE_GONE, "allow")] },
 			guildRoles,
 		);
 		expect(access).toBeNull();
 	});
 
 	it("ignores legacy nodes", () => {
-		const access = resolveDashboardAccess(
+		const access = resolveAccess(
 			subject,
 			{
 				users: [{ id: USER, allow: ["*"], deny: [] }],
@@ -87,7 +84,7 @@ describe("resolveDashboardAccess", () => {
 	});
 
 	it("returns null without entries", () => {
-		expect(resolveDashboardAccess(subject, { users: [], roles: [] }, guildRoles)).toBeNull();
+		expect(resolveAccess(subject, { users: [], roles: [] }, guildRoles)).toBeNull();
 	});
 });
 
@@ -130,9 +127,9 @@ describe("classifyLegacyNode", () => {
 describe("stripLegacyNodes", () => {
 	it("keeps only the dashboard entries, in order", () => {
 		const entries: PermissionEntry[] = [
-			createDashboardEntry("1", "allow"),
+			createAccessEntry("1", "allow"),
 			{ id: "2", allow: ["settings"], deny: [] },
-			createDashboardEntry("3", "deny"),
+			createAccessEntry("3", "deny"),
 		];
 		expect(stripLegacyNodes(entries).map((entry) => entry.id)).toEqual(["1", "3"]);
 	});

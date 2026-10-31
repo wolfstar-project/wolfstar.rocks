@@ -1,8 +1,10 @@
 <template>
 	<section class="space-y-4" :aria-label="ts('guild_settings.automod.rules.title')">
-		<div class="flex flex-wrap items-center gap-2.5">
+		<!-- Stacked on a phone, in a row from `sm` up. -->
+		<div class="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
 			<UButton
 				color="primary"
+				class="justify-center"
 				:disabled="isLoading || hasFailed || rules.length >= MaximumAutoModerationRules"
 				:title="
 					ts('guild_settings.automod.rules.count', {
@@ -17,7 +19,7 @@
 			<UButton
 				color="neutral"
 				variant="outline"
-				class="dialog-cancel"
+				class="justify-center dialog-cancel"
 				@click="openDefaults('escalation')"
 			>
 				{{ ts("guild_settings.automod.rules.defaults.escalation_title") }}
@@ -25,12 +27,12 @@
 			<UButton
 				color="neutral"
 				variant="outline"
-				class="dialog-cancel"
+				class="justify-center dialog-cancel"
 				@click="openDefaults('defaults')"
 			>
 				{{ ts("guild_settings.automod.rules.defaults.rule_title") }}
 			</UButton>
-			<span class="rules-count ml-auto">
+			<span class="rules-count self-start sm:ml-auto sm:self-auto">
 				{{
 					ts("guild_settings.automod.rules.enabled_count", {
 						enabled: rules.filter((rule) => rule.enabled).length,

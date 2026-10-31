@@ -130,7 +130,13 @@
 						"appearance": {
 							"type": "string"
 						},
+						"apply": {
+							"type": "string"
+						},
 						"ash": {
+							"type": "string"
+						},
+						"back": {
 							"type": "string"
 						},
 						"base_dark": {
@@ -169,6 +175,9 @@
 						"direction": {
 							"type": "string"
 						},
+						"discard": {
+							"type": "string"
+						},
 						"eyedropper": {
 							"type": "string"
 						},
@@ -182,6 +191,9 @@
 							"type": "string"
 						},
 						"onyx": {
+							"type": "string"
+						},
+						"panel_description": {
 							"type": "string"
 						},
 						"picker_area": {

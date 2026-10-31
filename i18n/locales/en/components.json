@@ -148,6 +148,8 @@
 		"none": "None",
 		"nothing_chosen": "Nothing yet.",
 		"nothing_matches": "Nothing matches.",
+		"pick_channel": "Select Channel",
+		"pick_role": "Select Role",
 		"remove_option": "Remove {name}",
 		"search": "Search…",
 		"seconds": "Seconds",

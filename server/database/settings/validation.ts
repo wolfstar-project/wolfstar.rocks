@@ -164,9 +164,11 @@ const ValueValidators: Partial<Record<StoredKey, Validator>> = {
 };
 
 /**
- * Settings only the bot edits, so a write, a `null` reset included, is
- * refused: the `/commands` modal owns `commandsRestrictions`, in a shape this
- * dashboard does not check, and a change of `updatesChannel` has to move the
+ * Settings these generic writes refuse, a `null` reset included:
+ * `commandsRestrictions` is written one command at a time, with the revision
+ * check the bot's `/commands` makes, by
+ * `PUT /api/guilds/:guild/command-rules/:command`; and a change of
+ * `updatesChannel` has to move the
  * follow of the support server's announcements, which only the bot does
  * (`syncUpdatesChannelFollow`). The join guard is set up with the bot too, as
  * long as no page of the dashboard writes it: its keys have no validators yet.

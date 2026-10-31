@@ -321,8 +321,11 @@ command as synced; one with its own is "Custom" here.
 
 ### command rules
 
-**Is:** where and by whom a command may run, as the bot's `/commands` sets it. The bot applies them to
-everyone, its administrators included. The dashboard shows them and does not edit them.
+**Is:** where and by whom a command, or a group of commands, may run: allowed and ignored channels, roles and
+members. An allowed role or member is an exception to an ignored one below it, not "only these": that is the
+status "only the allowed roles and users". Members at WolfStar's administrator level are not held to them. Set
+with the bot's `/commands`, or from a command's tile in the dashboard, which edits the channels, the roles and
+that status of the command and keeps the members `/commands` set. Rules of a group are only edited in `/commands`.
 
 **Never:** restrictions (in copy), bot permissions.
 

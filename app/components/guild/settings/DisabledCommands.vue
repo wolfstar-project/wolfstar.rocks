@@ -51,52 +51,68 @@
 
 					<template #content>
 						<div class="grid grid-cols-1 gap-2 pt-1 pb-3 sm:grid-cols-2 xl:grid-cols-4">
-							<div
+							<button
 								v-for="command in getCommandsByCategory(category)"
 								:key="command.name"
+								type="button"
 								class="command-tile"
-								:class="{
-									'command-tile--off': !getCommand(command.name)?.isEnabled,
-								}"
+								:class="{ 'command-tile--off': !isOn(command) }"
+								aria-haspopup="dialog"
+								:aria-label="
+									ts('guild_settings.command_rules.editor.open_aria', {
+										name: command.label,
+									})
+								"
+								:aria-describedby="`${tileIdBase}-${command.name}`"
+								@click="openEditor(command, $event)"
 							>
-								<div class="min-w-0 flex-1">
-									<p class="truncate font-mono text-[0.8125rem] font-bold">
+								<span class="min-w-0 flex-1">
+									<span
+										class="block truncate font-mono text-[0.8125rem] font-bold"
+									>
 										{{ command.label }}
-									</p>
-									<p class="truncate text-xs text-muted">
+									</span>
+									<span class="block truncate text-xs text-muted">
 										{{ command.description }}
-									</p>
-								</div>
-								<button
-									v-if="!isNullOrUndefined(getCommand(command.name))"
-									type="button"
-									role="switch"
-									class="command-state"
-									:class="
-										getCommand(command.name)?.isEnabled
-											? 'command-state--on'
-											: 'command-state--off'
-									"
-									:aria-checked="getCommand(command.name)?.isEnabled"
-									:aria-label="command.label"
-									@click="
-										toggleCommand(
-											command.name,
-											!getCommand(command.name)?.isEnabled,
-										)
-									"
+									</span>
+								</span>
+								<span
+									:id="`${tileIdBase}-${command.name}`"
+									class="flex shrink-0 flex-col items-end gap-1"
 								>
 									<span
-										class="size-1.5 rounded-full bg-current"
-										aria-hidden="true"
-									></span>
-									{{
-										getCommand(command.name)?.isEnabled
-											? ts("guild_settings.commands.on")
-											: ts("guild_settings.commands.off")
-									}}
-								</button>
-							</div>
+										class="command-state"
+										:class="
+											isOn(command)
+												? 'command-state--on'
+												: 'command-state--off'
+										"
+									>
+										<span
+											class="size-1.5 rounded-full bg-current"
+											aria-hidden="true"
+										></span>
+										{{
+											isOn(command)
+												? ts("guild_settings.commands.on")
+												: ts("guild_settings.commands.off")
+										}}
+									</span>
+									<span v-if="ruleCount(command) > 0" class="command-rules">
+										<UIcon
+											name="ic:round-key"
+											class="size-3"
+											aria-hidden="true"
+										/>
+										{{
+											tc(
+												"guild_settings.command_rules.editor.count",
+												ruleCount(command),
+											)
+										}}
+									</span>
+								</span>
+							</button>
 						</div>
 
 						<div
@@ -155,25 +171,42 @@
 				v-for="config in ConfigurableCommandChannels"
 				:key="config.key"
 				v-model="channelsState[config.key]"
-				layout="row"
+				layout="add"
 				:guild="guildData"
 				:label="translateEntry(config, 'name')"
 				:tooltip-title="translateEntry(config, 'description')"
 			/>
 		</GuildSettingsForm>
 	</section>
+
+	<GuildCommandsRuleEditor
+		v-model:open="editorOpen"
+		:command="editedCommand"
+		:inherited="editedCommand ? inheritedRules(editedCommand) : []"
+		:disabled-by="editedCommand ? disabledByGroup(editedCommand) : undefined"
+		:staged-enabled="editedCommand ? stagedStatusOf(editedCommand.name) : undefined"
+		:opener="editorOpener"
+		@saved="onRuleSaved"
+	/>
 </template>
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
 import type { DisableCommands } from "#shared/types";
+import type { CommandRuleSaved } from "#shared/utils/command-rules";
 import type { FormErrorEvent } from "@nuxt/ui";
 import type * as v from "valibot";
 import type { DisableableCommand } from "~/utils/command-settings";
 // oxlint-disable-next-line typescript/consistent-type-imports
 import { disabledCommandsSchema } from "#shared/schemas";
+import {
+	countCommandRuleEntries,
+	findMatchingCommandRules,
+	matchesCommandRuleTarget,
+	readCommandRules,
+	resolveCommandRules,
+} from "#shared/utils/command-rules";
 import { ConfigurableCommandChannels } from "#shared/utils/settingsDataEntries";
-import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
 
 const { commands } = defineProps<{
 	commands: FlattenedCommand[];
@@ -181,11 +214,15 @@ const { commands } = defineProps<{
 
 type Schema = v.InferOutput<typeof disabledCommandsSchema>;
 
-const { ts } = useI18n();
+// The category most servers come for; the others open on a click.
+const DEFAULT_CATEGORY = "Moderation";
+
+const { ts, tc } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
 const toast = useToast();
 const { guildData } = useGuildData();
-const { guildSettings } = useGuildSettings();
+const { activeGuildId } = useActiveGuild();
+const { guildSettings, originalGuildSettings, setGuildSettings } = useGuildSettings();
 
 const {
 	mapToGuildData: mapChannelsToGuildData,
@@ -194,7 +231,12 @@ const {
 	state: channelsState,
 } = useSettingsForm({ many: ConfigurableCommandChannels.map((entry) => entry.key) });
 
-const expandedCategory = ref<string | undefined>(undefined);
+const expandedCategory = ref<string | undefined>(DEFAULT_CATEGORY);
+const tileIdBase = useId();
+
+const editorOpen = ref(false);
+const editedCommand = ref<DisableableCommand | null>(null);
+const editorOpener = ref<HTMLElement | null>(null);
 
 // One entry per command: the bot lists each subcommand on its own, but the
 // settings turn off a whole command, by the name in `command`.
@@ -231,7 +273,10 @@ function createDefaultState(
 }
 
 function mapToGuildData(formState: Schema): Partial<GuildData> {
-	const disabledCommands: string[] = [];
+	// A group `/commands` disabled has no tile, and a save must not drop it.
+	const disabledCommands = (originalGuildSettings.value?.commandsDisabled ?? []).filter(
+		(name) => !(name in formState),
+	);
 
 	for (const key in formState) {
 		const cmd = formState[key];
@@ -250,9 +295,46 @@ function toggleCommand(name: string, isEnabled: boolean) {
 	}
 }
 
-function getCommand(name: string): DisableCommands.Command | undefined {
-	const cmd = state[name];
-	return cmd ? { ...cmd } : undefined;
+/** What turns a command off besides its own tile: a group `/commands` disabled. */
+function disabledByGroup(command: DisableableCommand): string | undefined {
+	return guildSettings.value?.commandsDisabled.find(
+		(name) => name !== command.name && matchesCommandRuleTarget(name, command),
+	);
+}
+
+function isOn(command: DisableableCommand): boolean {
+	return state[command.name]?.isEnabled === true && disabledByGroup(command) === undefined;
+}
+
+const guildId = computed(() => activeGuildId.value ?? "");
+const rules = computed(() =>
+	readCommandRules(guildSettings.value?.commandsRestrictions, guildId.value),
+);
+
+// What each tile counts: what the rules that match the command leave in force,
+// its own and the ones of its groups.
+const ruleCounts = computed(
+	() =>
+		new Map(
+			disableableCommands.value.map((command) => [
+				command.name,
+				countCommandRuleEntries(
+					resolveCommandRules(findMatchingCommandRules(rules.value, command)),
+					guildId.value,
+				),
+			]),
+		),
+);
+
+function ruleCount(command: DisableableCommand): number {
+	return ruleCounts.value.get(command.name) ?? 0;
+}
+
+/** The rules of a command that its editor only shows: the ones of its groups. */
+function inheritedRules(command: DisableableCommand) {
+	return findMatchingCommandRules(rules.value, command).filter(
+		(rule) => rule.command !== command.name,
+	);
 }
 
 function getCommandsByCategory(category: string): DisableableCommand[] {
@@ -267,8 +349,7 @@ function toggleAllInCategory(category: string, enable: boolean) {
 }
 
 function enabledIn(category: string): number {
-	return getCommandsByCategory(category).filter((command) => state[command.name]?.isEnabled)
-		.length;
+	return getCommandsByCategory(category).filter(isOn).length;
 }
 
 function isCategoryOpen(category: string): boolean {
@@ -291,6 +372,48 @@ function resetCategory(category: string) {
 		icon: "i-heroicons-arrow-path",
 		title: ts("guild_settings.commands.category_reset"),
 	});
+}
+
+/** A tile's status when it differs from the stored one, so it is not saved yet. */
+function stagedStatusOf(name: string): boolean | undefined {
+	const isEnabled = state[name]?.isEnabled;
+	const storedEnabled = !originalGuildSettings.value?.commandsDisabled.includes(name);
+	return isEnabled === undefined || isEnabled === storedEnabled ? undefined : isEnabled;
+}
+
+function openEditor(command: DisableableCommand, event: MouseEvent) {
+	editedCommand.value = command;
+	editorOpener.value = event.currentTarget instanceof HTMLElement ? event.currentTarget : null;
+	editorOpen.value = true;
+}
+
+/**
+ * Takes in what the editor saved. The form rebases on the stored settings
+ * whenever they change, so the tiles are set to them first, and the toggles of
+ * other tiles not saved yet are made again after, to stay staged.
+ */
+function onRuleSaved(saved: CommandRuleSaved, guildId: string) {
+	const current = originalGuildSettings.value;
+	if (!current || guildId !== activeGuildId.value) return;
+
+	const staged = Object.values(state)
+		.filter(
+			(command) =>
+				command.name !== saved.command &&
+				command.isEnabled === current.commandsDisabled.includes(command.name),
+		)
+		.map((command) => [command.name, command.isEnabled] as const);
+
+	Object.assign(state, createDefaultState(disableableCommands.value, saved.commandsDisabled));
+	setGuildSettings(
+		{
+			...current,
+			commandsDisabled: saved.commandsDisabled,
+			commandsRestrictions: saved.commandsRestrictions,
+		},
+		guildId,
+	);
+	for (const [name, isEnabled] of staged) toggleCommand(name, isEnabled);
 }
 
 async function onError(event: FormErrorEvent) {
@@ -345,23 +468,30 @@ watch(
 }
 
 .command-category:focus-visible,
-.command-state:focus-visible {
+.command-tile:focus-visible {
 	outline: 2px solid var(--color-primary);
 	outline-offset: -2px;
 }
 
 .command-tile {
-	@apply flex min-w-0 items-center gap-3 rounded-lg px-3 py-2.5;
+	@apply flex min-w-0 cursor-pointer items-center gap-3 rounded-lg bg-transparent px-3 py-2.5 text-left;
 	border: 1px solid var(--home-border-subtle);
 }
 
+.command-tile:hover {
+	background-color: var(--console-hover);
+}
+
 .command-tile--off {
-	border-color: oklch(from var(--color-error) l c h / 0.25);
-	background-color: oklch(from var(--color-error) l c h / 0.04);
+	@apply opacity-60;
 }
 
 .command-state {
-	@apply inline-flex h-6 shrink-0 cursor-pointer items-center gap-1.5 rounded-full border-0 px-2.5 text-xs font-bold;
+	@apply inline-flex h-6 items-center gap-1.5 rounded-full px-2.5 text-xs font-bold;
+}
+
+.command-rules {
+	@apply inline-flex items-center gap-1 font-mono text-[0.6875rem] whitespace-nowrap text-muted;
 }
 
 .command-state--on {

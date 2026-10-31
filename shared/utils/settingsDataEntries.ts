@@ -395,7 +395,7 @@ export const ConfigurableCommandChannels: SettingEntry<ListSettingKey>[] = [
 	{
 		key: "commandsDisabledChannels",
 		name: "Disabled Channels",
-		description: "Channels where members cannot use any WolfStar command.",
+		description: "Every command is ignored here, whatever its own settings say.",
 	},
 ];
 

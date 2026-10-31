@@ -560,20 +560,52 @@
 		},
 		"command_rules": {
 			"allowed_channels": "Only in",
-			"allowed_roles": "Only for roles",
+			"allowed_roles": "Also for roles",
 			"allowed_users": "Also for members",
-			"empty": "No command has rules. Add them with /commands in Discord.",
+			"editor": {
+				"allowed_channels": "Allowed Channels",
+				"allowed_channels_hint": "Only these channels. Empty means every channel.",
+				"allowed_roles": "Allowed Roles",
+				"allowed_roles_hint": "An exception: they run the command over an ignored role below them.",
+				"also_applies": "Also applies",
+				"cancel": "Cancel",
+				"conflict_description": "Someone saved it after you opened it. The editor now shows what is saved; make your change again.",
+				"conflict_title": "{name} changed",
+				"count": "No rules | 1 rule | {count} rules",
+				"disabled_by": "{target} is turned off with /commands. Turning this command on here does not undo that.",
+				"enabled": "Enabled",
+				"enabled_hint": "Members can run {name} where the rules below allow it.",
+				"enabled_hint_off": "Nobody can run {name} on this server.",
+				"form_aria": "{name} settings form",
+				"ignored_channels": "Ignored Channels",
+				"ignored_channels_hint": "WolfStar ignores the command here.",
+				"ignored_roles": "Ignored Roles",
+				"ignored_roles_hint": "They cannot run it, unless a higher role or their own rule allows them.",
+				"load_failed": "Couldn't load the rules of {name}.",
+				"members_kept": "No members | 1 member set with /commands in Discord stays as it is. | {count} members set with /commands in Discord stay as they are.",
+				"note_allowed": "allowed",
+				"note_ignored": "ignored",
+				"off_note": "Its rules are kept and come back when you turn the command on again.",
+				"only_allowed": "Only the allowed roles and users",
+				"only_allowed_hint": "Everyone else cannot run the command.",
+				"open_aria": "Settings for {name}",
+				"retry": "Try again",
+				"save": "Save rules",
+				"save_failed_description": "Couldn't save the rules of {name}. {message}",
+				"save_failed_title": "Save failed",
+				"saved_description": "WolfStar applies the new rules of {name} from now on.",
+				"saved_title": "Command rules saved",
+				"summary_none": "No extra rules: Discord permissions apply",
+				"summary_off": "Off on this server",
+				"title": "Command rules"
+			},
+			"every_command": "Every command",
+			"groups_subtitle": "These apply to every command they name. Change them with /commands in Discord.",
+			"groups_title": "Rules of a group of commands",
 			"ignored_channels": "Not in",
-			"ignored_roles": "Never for roles",
-			"ignored_users": "Never for members",
-			"subtitle": "Where and by whom each command may run, as /commands in Discord sets it. The bot applies these rules to everyone, its administrators included. Edit them with /commands in Discord.",
-			"title": "Command rules"
-		},
-		"command_tabs": {
-			"aria": "Command settings",
-			"disabled": "Disabled commands",
-			"discord": "Discord permissions",
-			"rules": "Command rules"
+			"ignored_roles": "Not for roles",
+			"ignored_users": "Not for members",
+			"order": "A member's own rule decides, then their highest role listed, and of two rules the most specific one. An ignored channel of any rule applies; the allowed channels of the most specific rule replace the others."
 		},
 		"commands": {
 			"category_reset": "Category Reset",
@@ -588,7 +620,7 @@
 			"on": "On",
 			"reset": "Reset",
 			"save_failed": "Could not save command settings. {message}",
-			"subtitle": "Choose which commands to enable or disable on your server",
+			"subtitle": "Choose which commands to enable or disable on your server. Click a command for its rules.",
 			"title": "Commands"
 		},
 		"general": {
@@ -901,7 +933,7 @@
 				"name": "Track Discord AutoMod"
 			},
 			"commandsDisabledChannels": {
-				"description": "Channels where members cannot use any WolfStar command.",
+				"description": "Every command is ignored here, whatever its own settings say.",
 				"name": "Disabled Channels"
 			},
 			"honeypotAction": {

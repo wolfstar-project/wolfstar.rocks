@@ -14,6 +14,7 @@
 		</NuxtLayout>
 		<LazyAppPreferencesDialog v-if="consoleDialogRequested" />
 		<LazyAppPreferencesQuickDialog v-if="quickDialogRequested" />
+		<LazyAppCustomThemePanel v-if="customThemePanelRequested" />
 	</UApp>
 </template>
 
@@ -30,6 +31,12 @@ watch([preferencesOpen, preferencesVariant], ([isOpen, variant]) => {
 	if (!isOpen) return;
 	if (variant === "quick") quickDialogRequested.value = true;
 	else consoleDialogRequested.value = true;
+});
+
+const { isOpen: customThemePanelOpen } = useCustomThemePanel();
+const customThemePanelRequested = ref(customThemePanelOpen.value);
+watch(customThemePanelOpen, (isOpen) => {
+	if (isOpen) customThemePanelRequested.value = true;
 });
 
 const router = useRouter();

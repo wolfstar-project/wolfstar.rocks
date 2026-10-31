@@ -1,8 +1,9 @@
 import type { GuildData } from "#server/database";
+import { createAccessEntry } from "#shared/utils/dashboard-access";
 import { mockNuxtImport, mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import Access from "~/components/guild/settings/Access.vue";
-import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
+import { createMockOauthFlattenedGuild, createMockRole } from "~~/test/mocks/discord";
 import { createMockGuildData } from "~~/test/mocks/guildData";
 
 const GUILD_ID = "123456789012345678";
@@ -34,7 +35,13 @@ mockNuxtImport("useGuildSettingsChanges", () => () => ({
 }));
 
 mockNuxtImport("useGuildData", () => () => ({
-	guildData: ref(createMockOauthFlattenedGuild({ id: GUILD_ID, ownerId: OWNER_ID })),
+	guildData: ref(
+		createMockOauthFlattenedGuild({
+			id: GUILD_ID,
+			ownerId: OWNER_ID,
+			roles: [createMockRole({ id: GUILD_ID, name: "@everyone" })],
+		}),
+	),
 }));
 
 mockNuxtImport("useDiscordAccount", () => () => ({
@@ -58,6 +65,14 @@ describe("GuildSettingsAccess", () => {
 	it("says who opens the dashboard without a rule", async () => {
 		const wrapper = await mountSuspended(Access);
 		expect(wrapper.text()).toContain("Manage Server or Administrator");
+	});
+
+	it("names a rule on @everyone, which every member holds", async () => {
+		withNodes([createAccessEntry(GUILD_ID, "deny")]);
+		const wrapper = await mountSuspended(Access);
+
+		expect(wrapper.text()).toContain("@everyone");
+		expect(wrapper.text()).not.toContain("Unknown role");
 	});
 
 	it("warns that an allow opens the dashboard without Manage Server", async () => {

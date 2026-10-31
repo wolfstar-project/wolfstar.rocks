@@ -45,6 +45,7 @@ const {
 	dialogTitle,
 	searchPlaceholder,
 	countLabel,
+	everyone = false,
 } = defineProps<{
 	/** The label of the field */
 	label: string;
@@ -68,6 +69,8 @@ const {
 	countLabel?: (count: number) => string;
 	/** Text shown while nothing is selected */
 	emptyLabel?: string;
+	/** Offers `@everyone` too, for what can name it. */
+	everyone?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -75,5 +78,5 @@ const emit = defineEmits<{
 	"change": [value: string[]];
 }>();
 
-const options = computed(() => roleOptions(guild));
+const options = computed(() => roleOptions(guild, { everyone }));
 </script>

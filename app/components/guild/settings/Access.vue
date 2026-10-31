@@ -32,6 +32,7 @@
 				<SelectRoles
 					:model-value="roles.allow"
 					layout="chips"
+					everyone
 					:label="ts('guild_settings.access.roles_allowed')"
 					:tooltip-title="ts('guild_settings.access.allow_note')"
 					:guild="guildData"
@@ -40,6 +41,7 @@
 				<SelectRoles
 					:model-value="roles.deny"
 					layout="chips"
+					everyone
 					:label="ts('guild_settings.access.roles_denied')"
 					:tooltip-title="ts('guild_settings.access.deny_note')"
 					:guild="guildData"

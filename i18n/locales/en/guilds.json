@@ -164,7 +164,7 @@
 				"user": "Messages of a user"
 			},
 			"load_failed": "Couldn't load the channels. Check your connection and retry.",
-			"module_hint": "On while it has a channel. It has no switch of its own: stop a channel below to end it there.",
+			"module_hint": "Turning this off keeps the channels below but stops every one of them.",
 			"removed_title": "Stopped",
 			"retry": "Retry",
 			"saved_title": "Saved",

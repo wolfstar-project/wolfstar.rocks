@@ -77,7 +77,8 @@ describe("modules guild settings", () => {
 		// off until their switch is on.
 		expect(buttonsLabelled("Configure")).toHaveLength(7);
 		expect(buttonsLabelled("Enable first")).toHaveLength(GUILD_MODULES.length - 3 + 1);
-		expect(wrapper.findAll('[aria-label^="Toggle "]')).toHaveLength(GUILD_MODULES.length + 1);
+		// The flags of `Modules`, the appeals and the three Auto-* modules.
+		expect(wrapper.findAll('[aria-label^="Toggle "]')).toHaveLength(GUILD_MODULES.length + 4);
 	});
 
 	it("tells whether the honeypot is set up, from its channel", async () => {
@@ -96,6 +97,21 @@ describe("modules guild settings", () => {
 		expect(wrapper.text()).toContain("Set up");
 	});
 
+	it("switches an Auto-* module, whose channels stay", async () => {
+		const wrapper = await mountSuspended(Modules);
+		await nextTick();
+
+		const autoDelete = wrapper.get('[aria-label="Toggle Auto-Delete"]');
+		expect(autoDelete.attributes("aria-checked")).toBe("true");
+		// The list of its channels is still told, beside the switch.
+		expect(wrapper.text()).toContain("No channel");
+
+		await autoDelete.trigger("click");
+		await nextTick();
+
+		expect(getSetupState(wrapper).state.modulesAutodelete).toBe(false);
+	});
+
 	it("switches the Events with the other modules", async () => {
 		const wrapper = await mountSuspended(Modules);
 		await nextTick();
@@ -104,7 +120,7 @@ describe("modules guild settings", () => {
 		await nextTick();
 
 		expect(getSetupState(wrapper).state.modulesLogs).toBe(false);
-		expect(getSetupState(wrapper).enabledCount).toBe(2);
+		expect(getSetupState(wrapper).enabledCount).toBe(5);
 	});
 
 	it("switches the appeals like a module, Disable all included", async () => {
@@ -114,7 +130,7 @@ describe("modules guild settings", () => {
 		await wrapper.find('[aria-label="Toggle Appeals"]').trigger("click");
 		await nextTick();
 		expect(getSetupState(wrapper).state.appealsEnabled).toBe(true);
-		expect(getSetupState(wrapper).enabledCount).toBe(4);
+		expect(getSetupState(wrapper).enabledCount).toBe(7);
 
 		const disableAll = wrapper
 			.findAll("button")
@@ -151,9 +167,9 @@ describe("modules guild settings", () => {
 		expect(state.modulesRoles).toBe(true);
 		expect(state.modulesAutomod).toBe(false);
 		expect(state.modulesLogs).toBe(true);
-		expect(enabledCount).toBe(3);
-		// The four flags of `Modules` and the switch of the appeals.
-		expect(wrapper.text()).toContain("3 / 5 enabled");
+		expect(enabledCount).toBe(6);
+		// The flags of `Modules`, and the switch of the appeals.
+		expect(wrapper.text()).toContain("6 / 8 enabled");
 	});
 
 	it("enables and disables every module at once", async () => {
@@ -170,7 +186,7 @@ describe("modules guild settings", () => {
 
 		await enableAll!.trigger("click");
 		await nextTick();
-		expect(getSetupState(wrapper).enabledCount).toBe(GUILD_MODULES.length + 1);
+		expect(getSetupState(wrapper).enabledCount).toBe(GUILD_MODULES.length + 4);
 
 		await disableAll!.trigger("click");
 		await nextTick();

@@ -69,6 +69,13 @@ const MODULE_LABELS: Record<(typeof GUILD_MODULES)[number]["key"], string> = {
 	modulesLogs: "Events Module",
 };
 
+/** The flags of `Modules` of the modules that are set up in a table of their own. */
+const AUTO_MODULE_LABELS = {
+	modulesAutodelete: "Auto-Delete Module",
+	modulesAutopurge: "Auto-Purge Module",
+	modulesAutomessage: "Auto-Message Module",
+};
+
 /**
  * `modulesCommands` is no longer a setting, but audit rows that changed it stay
  * in the activity feed.
@@ -111,7 +118,7 @@ export const AUDIT_FIELD_METADATA: Readonly<Record<string, AuditFieldMetadata>> 
 			module.key,
 			{ label: MODULE_LABELS[module.key], type: "boolean", array: false },
 		]),
-		...Object.entries(LEGACY_MODULE_LABELS).map(
+		...Object.entries({ ...AUTO_MODULE_LABELS, ...LEGACY_MODULE_LABELS }).map(
 			([key, label]): [string, AuditFieldMetadata] => [
 				key,
 				{ label, type: "boolean", array: false },

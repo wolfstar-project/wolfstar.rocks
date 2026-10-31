@@ -46,16 +46,25 @@ describe("guild modules registry", () => {
 		expect(countEnabledModules(settings)).toBe(2);
 	});
 
-	// The appeals have no flag in `Modules`, but a switch of their own that the
-	// dashboard shows with the others.
-	it("counts the switch of the appeals with the module flags", () => {
+	// The appeals have no flag in `Modules`, and the Auto-* modules are set up in
+	// tables of their own: the dashboard shows their switches with the others.
+	it("counts the switches of the modules with a table of their own", () => {
 		expect(MODULE_SWITCH_KEYS).toStrictEqual([
 			"modulesAutomod",
 			"modulesModeration",
 			"modulesRoles",
 			"modulesLogs",
 			"appealsEnabled",
+			"modulesAutodelete",
+			"modulesAutopurge",
+			"modulesAutomessage",
 		]);
-		expect(countEnabledModules({ appealsEnabled: true, modulesModeration: true })).toBe(2);
+		expect(
+			countEnabledModules({
+				appealsEnabled: true,
+				modulesAutopurge: true,
+				modulesModeration: true,
+			}),
+		).toBe(3);
 	});
 });

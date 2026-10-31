@@ -30,7 +30,7 @@
 			<UFormField
 				v-for="module in moduleCards"
 				:key="module.section"
-				:name="module.kind === 'switch' ? module.key : undefined"
+				:name="module.kind === 'setup' ? undefined : module.key"
 				class="console-card flex flex-col transition-opacity"
 				:ui="{ container: 'flex h-full flex-1 flex-col' }"
 			>
@@ -46,28 +46,30 @@
 					>
 						<UIcon :name="module.icon" class="size-5.5" />
 					</span>
-					<USwitch
-						v-if="module.kind === 'switch'"
-						v-model="state[module.key]"
-						class="shrink-0"
-						:aria-label="
-							ts('guild_settings.modules.toggle_aria', {
-								title: ts(module.labelKey),
-							})
-						"
-					/>
-					<UBadge
-						v-else
-						:color="isOn(module) ? 'success' : 'neutral'"
-						variant="subtle"
-						class="shrink-0 font-semibold"
-					>
-						{{ statusLabel(module) }}
-					</UBadge>
+					<div class="flex shrink-0 items-center gap-2.5">
+						<UBadge
+							v-if="module.kind !== 'switch'"
+							:color="isOn(module) ? 'success' : 'neutral'"
+							variant="subtle"
+							class="font-semibold"
+						>
+							{{ statusLabel(module) }}
+						</UBadge>
+						<USwitch
+							v-if="module.kind !== 'setup'"
+							v-model="state[module.key]"
+							class="shrink-0"
+							:aria-label="
+								ts('guild_settings.modules.toggle_aria', {
+									title: ts(module.labelKey),
+								})
+							"
+						/>
+					</div>
 				</div>
 				<div
 					class="mt-3 min-w-0 flex-1"
-					:class="{ 'opacity-60': module.kind === 'switch' && !isOn(module) }"
+					:class="{ 'opacity-60': module.kind !== 'setup' && !state[module.key] }"
 				>
 					<p class="text-base font-bold">{{ ts(module.labelKey) }}</p>
 					<p class="mt-1 text-[0.8125rem] leading-snug text-muted">
@@ -176,9 +178,10 @@ interface SetupModuleCard extends ModuleCard {
 	kind: "setup";
 }
 
-/** A module that is a list of channels, on while it has one. */
+/** A module that is a list of channels, with a switch that stops them all. */
 interface ListModuleCard extends ModuleCard {
 	kind: "list";
+	key: (typeof MODULE_SWITCH_KEYS)[number];
 	section: AutoChannelSlug;
 }
 
@@ -217,6 +220,7 @@ const moduleCards: AnyModuleCard[] = [
 	{
 		descriptionKey: "guild_settings.modules.descriptions.autodelete",
 		icon: "lucide:timer",
+		key: "modulesAutodelete",
 		kind: "list",
 		labelKey: "dashboard.nav.autodelete",
 		section: "autodelete",
@@ -224,6 +228,7 @@ const moduleCards: AnyModuleCard[] = [
 	{
 		descriptionKey: "guild_settings.modules.descriptions.autopurge",
 		icon: "lucide:eraser",
+		key: "modulesAutopurge",
 		kind: "list",
 		labelKey: "dashboard.nav.autopurge",
 		section: "autopurge",
@@ -231,6 +236,7 @@ const moduleCards: AnyModuleCard[] = [
 	{
 		descriptionKey: "guild_settings.modules.descriptions.automessage",
 		icon: "lucide:message-square-reply",
+		key: "modulesAutomessage",
 		kind: "list",
 		labelKey: "dashboard.nav.automessage",
 		section: "automessage",
@@ -248,7 +254,10 @@ const lists = {
 function isOn(module: AnyModuleCard): boolean {
 	// The honeypot is the one module set up in Discord: it is on with a channel.
 	if (module.kind === "setup") return Boolean(guildSettings.value?.honeypotChannel);
-	if (module.kind === "list") return lists[module.section].rows.value.length > 0;
+	// Its channels do nothing while the switch is off.
+	if (module.kind === "list") {
+		return state[module.key] === true && lists[module.section].rows.value.length > 0;
+	}
 	return state[module.key] === true;
 }
 

@@ -164,7 +164,7 @@
 				"user": ""
 			},
 			"load_failed": "",
-			"module_hint": "È attivo finché ha un canale. Non ha un interruttore suo: ferma un canale qui sotto per spegnerlo lì.",
+			"module_hint": "Disattivandolo i canali qui sotto restano, ma smettono tutti di agire.",
 			"removed_title": "",
 			"retry": "",
 			"saved_title": "",

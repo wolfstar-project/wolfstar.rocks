@@ -4,13 +4,13 @@ import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { flushPromises } from "@vue/test-utils";
 import { ChannelType } from "discord-api-types/v10";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { nextTick } from "vue";
 import Editor from "~/components/guild/auto/Editor.vue";
 import AutoDeleteSection from "~/components/guild/settings/AutoDelete.vue";
 import AutoMessageSection from "~/components/guild/settings/AutoMessage.vue";
 import AutoPurgeSection from "~/components/guild/settings/AutoPurge.vue";
 import SelectChannel from "~/components/select/Channel.vue";
 import { createMockChannel, createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
+import { createMockGuildData } from "~~/test/mocks/guildData";
 
 const GUILD_ID = "123456789012345678";
 const GENERAL = "234567890123456789";
@@ -122,21 +122,24 @@ describe("automatic channel sections", () => {
 			expect(row.text()).toContain("Images");
 		});
 
-		// The bot has no switch for it: the card tells whether a channel keeps it on.
-		it("tells whether the module is on, from its channels", async () => {
-			const wrapper = await mountAttached(AutoDeleteSection);
-			const card = () =>
-				wrapper.findAll("section").find((section) => section.text().includes("no switch"));
-
-			expect(card()?.text()).toContain("Off");
-
+		it("stops the module with its switch, whose channels stay", async () => {
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildSettings().setGuildSettings(createMockGuildData(GUILD_ID));
 			mockRows.autodelete.value = [
 				{ allow: [], bots: false, channelId: GENERAL, delay: 60, id: "1" },
 			];
-			await nextTick();
+			const wrapper = await mountAttached(AutoDeleteSection);
+			const toggle = wrapper.get('[aria-label="Toggle Auto-Delete"]');
+			expect(toggle.attributes("aria-checked")).toBe("true");
 
-			expect(card()?.text()).toContain("Enabled");
-			expect(card()?.find('[role="switch"]').exists()).toBe(false);
+			await toggle.trigger("click");
+
+			await vi.waitFor(() =>
+				expect(useGuildSettingsChanges().guildSettingsChanges.value).toMatchObject({
+					modulesAutodelete: false,
+				}),
+			);
+			expect(wrapper.text()).toContain("general");
 		});
 
 		it("offers no new channel once the server has 25", async () => {

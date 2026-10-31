@@ -135,7 +135,7 @@ const asyncComponentMap: Record<string, ReturnType<typeof defineAsyncComponent>>
 	automod: sectionComponent(() => import("~/components/guild/settings/Automod.vue"), "table"),
 	autopurge: sectionComponent(() => import("~/components/guild/settings/AutoPurge.vue"), "table"),
 	channels: sectionComponent(() => import("~/components/guild/settings/Channels.vue"), "form"),
-	commands: sectionComponent(() => import("~/components/guild/commands/Tabs.vue"), "form"),
+	commands: sectionComponent(() => import("~/components/guild/settings/Commands.vue"), "form"),
 	moderation: sectionComponent(
 		() => import("~/components/guild/settings/Moderation.vue"),
 		"form",

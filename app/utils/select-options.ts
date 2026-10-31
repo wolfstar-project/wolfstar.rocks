@@ -7,10 +7,12 @@ type SelectGuild =
 	| undefined;
 
 /**
- * The channels WolfStar can post in, in the order Discord lists them and
- * grouped under their category.
+ * The channels of `types`, by default the ones WolfStar can post in, in the
+ * order Discord lists them and grouped under their category.
  */
-export function channelOptions(guild: SelectGuild): SelectOption[] {
+export function channelOptions(guild: SelectGuild, types?: readonly ChannelType[]): SelectOption[] {
+	// Read when called, not at module scope: see the `discord-api-types` SSR note in CLAUDE.md.
+	const wanted = types ?? [ChannelType.GuildText, ChannelType.GuildAnnouncement];
 	const channels = guild?.channels ?? [];
 	const categories = new Map(
 		channels
@@ -21,11 +23,7 @@ export function channelOptions(guild: SelectGuild): SelectOption[] {
 		parentId === null ? -1 : (categories.get(parentId)?.rawPosition ?? -1);
 
 	return channels
-		.filter(
-			(channel) =>
-				channel.type === ChannelType.GuildText ||
-				channel.type === ChannelType.GuildAnnouncement,
-		)
+		.filter((channel) => wanted.includes(channel.type))
 		.toSorted(
 			(a, b) =>
 				categoryPosition(a.parentId) - categoryPosition(b.parentId) ||
@@ -36,6 +34,18 @@ export function channelOptions(guild: SelectGuild): SelectOption[] {
 			label: channel.name,
 			value: channel.id,
 		}));
+}
+
+/** `options` with the note `notes` holds for each of them, if any. */
+export function withOptionNotes(
+	options: SelectOption[],
+	notes?: ReadonlyMap<string, string>,
+): SelectOption[] {
+	if (!notes?.size) return options;
+	return options.map((option) => {
+		const note = notes.get(option.value);
+		return note ? { ...option, note } : option;
+	});
 }
 
 /** A role's colour as CSS, or nothing for a role that has Discord's default. */

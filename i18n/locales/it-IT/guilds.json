@@ -564,21 +564,53 @@
 			"use_app_default": ""
 		},
 		"command_rules": {
-			"allowed_channels": "",
-			"allowed_roles": "",
-			"allowed_users": "",
-			"empty": "",
-			"ignored_channels": "",
-			"ignored_roles": "",
-			"ignored_users": "",
-			"subtitle": "",
-			"title": ""
-		},
-		"command_tabs": {
-			"aria": "",
-			"disabled": "",
-			"discord": "",
-			"rules": ""
+			"allowed_channels": "Solo in",
+			"allowed_roles": "Anche per i ruoli",
+			"allowed_users": "Anche per i membri",
+			"editor": {
+				"allowed_channels": "Canali consentiti",
+				"allowed_channels_hint": "Solo questi canali. Se vuoto, tutti i canali.",
+				"allowed_roles": "Ruoli consentiti",
+				"allowed_roles_hint": "Un'eccezione: usano il comando anche con un ruolo ignorato più in basso.",
+				"also_applies": "Vale anche",
+				"cancel": "Annulla",
+				"conflict_description": "Qualcuno l'ha salvato dopo che l'hai aperto. L'editor ora mostra ciò che è salvato: rifai la modifica.",
+				"conflict_title": "{name} è cambiato",
+				"count": "Nessuna regola | 1 regola | {count} regole",
+				"disabled_by": "{target} è disattivato con /commands. Riattivare qui questo comando non lo annulla.",
+				"enabled": "Attivo",
+				"enabled_hint": "I membri possono usare {name} dove lo permettono le regole qui sotto.",
+				"enabled_hint_off": "Nessuno può usare {name} su questo server.",
+				"form_aria": "Modulo impostazioni di {name}",
+				"ignored_channels": "Canali ignorati",
+				"ignored_channels_hint": "WolfStar ignora il comando qui.",
+				"ignored_roles": "Ruoli ignorati",
+				"ignored_roles_hint": "Non possono usarlo, a meno che un ruolo più alto o una loro regola lo permetta.",
+				"load_failed": "Impossibile caricare le regole di {name}.",
+				"members_kept": "Nessun membro | 1 membro impostato con /commands su Discord resta com'è. | {count} membri impostati con /commands su Discord restano come sono.",
+				"note_allowed": "consentito",
+				"note_ignored": "ignorato",
+				"off_note": "Le sue regole restano salvate e tornano quando riattivi il comando.",
+				"only_allowed": "Solo i ruoli e gli utenti consentiti",
+				"only_allowed_hint": "Tutti gli altri non possono usare il comando.",
+				"open_aria": "Impostazioni di {name}",
+				"retry": "Riprova",
+				"save": "Salva regole",
+				"save_failed_description": "Impossibile salvare le regole di {name}. {message}",
+				"save_failed_title": "Salvataggio non riuscito",
+				"saved_description": "Da ora WolfStar applica le nuove regole di {name}.",
+				"saved_title": "Regole del comando salvate",
+				"summary_none": "Nessuna regola aggiuntiva: valgono i permessi di Discord",
+				"summary_off": "Disattivato su questo server",
+				"title": "Regole del comando"
+			},
+			"every_command": "Tutti i comandi",
+			"groups_subtitle": "Valgono per tutti i comandi che indicano. Si cambiano con /commands su Discord.",
+			"groups_title": "Regole di un gruppo di comandi",
+			"ignored_channels": "Non in",
+			"ignored_roles": "Non per i ruoli",
+			"ignored_users": "Non per i membri",
+			"order": "Decide la regola del membro, poi il suo ruolo più alto tra quelli elencati e, tra due regole, la più specifica. Un canale ignorato da una regola vale sempre; i canali consentiti della regola più specifica sostituiscono gli altri."
 		},
 		"commands": {
 			"category_reset": "Reimposta categoria",
@@ -593,7 +625,7 @@
 			"on": "Attivo",
 			"reset": "Reimposta",
 			"save_failed": "Impossibile salvare le impostazioni dei comandi. {message}",
-			"subtitle": "Scegli quali comandi abilitare o disabilitare sul tuo server",
+			"subtitle": "Scegli quali comandi abilitare o disabilitare sul tuo server. Fai clic su un comando per le sue regole.",
 			"title": "Comandi"
 		},
 		"general": {
@@ -906,7 +938,7 @@
 				"name": "Segui l'AutoMod di Discord"
 			},
 			"commandsDisabledChannels": {
-				"description": "Canali in cui i membri non possono usare nessun comando di WolfStar.",
+				"description": "Qui ogni comando viene ignorato, qualunque siano le sue impostazioni.",
 				"name": "Canali disattivati"
 			},
 			"honeypotAction": {

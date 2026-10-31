@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { channelOptions, roleOptions } from "~/utils/select-options";
+import { channelOptions, roleOptions, withOptionNotes } from "~/utils/select-options";
 
 type Guild = NonNullable<Parameters<typeof channelOptions>[0]>;
 
@@ -48,6 +48,39 @@ describe("channelOptions", () => {
 
 	it("is empty while the guild has not loaded", () => {
 		expect(channelOptions(undefined)).toStrictEqual([]);
+	});
+
+	it("offers the kinds of channel it is asked for", () => {
+		const voice = channelOptions(
+			guild({
+				channels: [
+					{ id: "1", name: "Staff", parentId: null, rawPosition: 2, type: 4 },
+					{ id: "3", name: "mod-log", parentId: "1", rawPosition: 5, type: 0 },
+					{ id: "7", name: "Voice", parentId: "1", rawPosition: 0, type: 2 },
+				],
+			}),
+			[0, 2],
+		);
+		expect(voice.map((option) => option.label)).toStrictEqual(["Voice", "mod-log"]);
+	});
+});
+
+describe("withOptionNotes", () => {
+	const options = [
+		{ label: "general", value: "1" },
+		{ label: "mod-chat", value: "2" },
+	];
+
+	it("notes the options it names and leaves the others as they are", () => {
+		expect(withOptionNotes(options, new Map([["2", "ignored"]]))).toStrictEqual([
+			{ label: "general", value: "1" },
+			{ label: "mod-chat", note: "ignored", value: "2" },
+		]);
+	});
+
+	it("hands the options back without notes", () => {
+		expect(withOptionNotes(options)).toBe(options);
+		expect(withOptionNotes(options, new Map())).toBe(options);
 	});
 });
 

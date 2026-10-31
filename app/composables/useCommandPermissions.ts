@@ -22,14 +22,18 @@ export interface CommandPermissionsResponse {
 /**
  * Discord's command permissions of a guild and the edits staged on them. Edits
  * stay here until `saveAll` sends them, one command after another; nothing is
- * written as it is edited.
+ * written as it is edited. With `immediate: false` nothing is asked of Discord
+ * until `refresh`.
  */
-export function useCommandPermissions(guildId: MaybeRefOrGetter<string | null>) {
+export function useCommandPermissions(
+	guildId: MaybeRefOrGetter<string | null>,
+	{ immediate = true }: { immediate?: boolean } = {},
+) {
 	const { data, pending, refresh, error } = useFetch<CommandPermissionsResponse>(
 		() => `/api/guilds/${toValue(guildId)}/command-permissions`,
 		{
 			key: computed(() => `command-permissions:${toValue(guildId)}`),
-			immediate: toValue(guildId) !== null,
+			immediate: immediate && toValue(guildId) !== null,
 		},
 	);
 

@@ -364,6 +364,12 @@ export interface FlattenedCommand {
 	category: string;
 
 	/**
+	 * The second directory of the command's file, which a rule of the bot can
+	 * target (`Category.SubCategory.*`). An older bot does not send it.
+	 */
+	subCategory?: string | null;
+
+	/**
 	 * The command the entry belongs to, by the name the settings use (the bot's
 	 * piece name: `ban`, `warnThresholds`). An older bot does not send it, and
 	 * then `name` is the command.

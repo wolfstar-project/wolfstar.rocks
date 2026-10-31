@@ -33,26 +33,27 @@
 				</h3>
 				<span class="h-px flex-1 bg-base-content/15" aria-hidden="true"></span>
 			</div>
-			<div class="mt-4 space-y-3">
+			<!-- The channel and the switch side by side from `md` up, stacked on a phone. -->
+			<div class="mt-4 grid gap-4 md:grid-cols-2 md:gap-6">
 				<SelectChannel
 					v-for="config in ConfigurableAutomodChannels"
 					:key="config.key"
 					v-model="state[config.key]"
-					layout="row"
 					:guild="guildData"
 					:label="translateEntry(config, 'name')"
 					:tooltip-title="translateEntry(config, 'description')"
 				/>
-			</div>
-			<div class="mt-3">
-				<GuildSettingsToggleRow
-					v-for="config in ConfigurableAutomodToggles"
-					:key="config.key"
-					v-model="state[config.key]"
-					:name="config.key"
-					:title="translateEntry(config, 'name')"
-					:description="translateEntry(config, 'description')"
-				/>
+				<div class="md:pt-6">
+					<GuildSettingsToggleRow
+						v-for="config in ConfigurableAutomodToggles"
+						:key="config.key"
+						v-model="state[config.key]"
+						:name="config.key"
+						:title="translateEntry(config, 'name')"
+						:description="translateEntry(config, 'description')"
+						switch-first
+					/>
+				</div>
 			</div>
 		</section>
 	</GuildSettingsForm>

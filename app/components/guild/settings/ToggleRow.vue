@@ -1,8 +1,8 @@
 <template>
 	<UFormField :name="name" class="border-t border-(--home-border-subtle) first:border-t-0">
 		<div
-			class="flex gap-4 py-3"
-			:class="switchFirst ? 'items-start gap-3' : 'items-center justify-between'"
+			class="flex py-3"
+			:class="switchFirst ? 'items-start gap-3' : 'items-center justify-between gap-4'"
 		>
 			<div class="min-w-0">
 				<p class="text-sm font-bold">{{ title }}</p>

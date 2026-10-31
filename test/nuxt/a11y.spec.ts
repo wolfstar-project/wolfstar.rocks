@@ -62,6 +62,7 @@ import {
 	GuildSettingsAppeals,
 	GuildSettingsAutoDelete,
 	GuildSettingsAutoMessage,
+	GuildSettingsAutomod,
 	GuildSettingsAutoPurge,
 	GuildSettingsHoneypot,
 	GuildSettingsLogsBulkChannel,
@@ -830,6 +831,20 @@ describe("component accessibility audits", () => {
 				}),
 			);
 			const component = await mountSuspended(GuildCommandsRules, { props: { commands: [] } });
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildSettingsAutomod", () => {
+		it("should have no accessibility violations", async () => {
+			const GUILD_ID = "123456789012345678";
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+			useGuildSettings().setGuildSettings(createMockGuildData(GUILD_ID));
+			const component = await mountSuspended(GuildSettingsAutomod, {
+				global: { stubs: { GuildAutomodRules: true } },
+			});
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
 		});

@@ -24,7 +24,10 @@ describe("DashboardContextCard", () => {
 	it("names the server and counts the modules on the overview", async () => {
 		openServer({
 			appealsEnabled: false,
+			modulesAutodelete: false,
+			modulesAutomessage: false,
 			modulesAutomod: true,
+			modulesAutopurge: false,
 			modulesLogs: false,
 			modulesModeration: true,
 			modulesRoles: false,
@@ -32,7 +35,7 @@ describe("DashboardContextCard", () => {
 		const wrapper = await mountSuspended(DashboardContextCard, { route: "/app?screen=page" });
 
 		expect(wrapper.text()).toContain("WolfStar HQ");
-		expect(wrapper.text()).toContain("2 of 5 modules on");
+		expect(wrapper.text()).toContain("2 of 8 modules on");
 	});
 
 	it("offers the switch of a module section, bound to its staged setting", async () => {

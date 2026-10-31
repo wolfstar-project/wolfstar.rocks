@@ -96,6 +96,20 @@ describe("roleOptions", () => {
 		}),
 	);
 
+	it("lists @everyone last when asked for, as a rule can name it", () => {
+		const options = roleOptions(
+			guild({
+				roles: [
+					{ color: 0, id: "100", name: "@everyone", rawPosition: 0 },
+					{ color: 0, id: "200", name: "Staff", rawPosition: 3 },
+				],
+			}),
+			{ everyone: true },
+		);
+
+		expect(options.map((option) => option.label)).toStrictEqual(["Staff", "@everyone"]);
+	});
+
 	it("lists the roles highest first, without @everyone", () => {
 		expect(options.map((option) => option.label)).toStrictEqual(["Admin", "Mod", "Member"]);
 	});

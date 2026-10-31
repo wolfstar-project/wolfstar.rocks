@@ -1,5 +1,5 @@
 import type { SingleSettingKey } from "#shared/types";
-import type { GuildModuleEntry } from "#shared/utils/guild-modules";
+import type { ModuleSwitchKey } from "#shared/utils/guild-modules";
 
 /**
  * `overview` and `tools` have no title: the overview holds the two pages about
@@ -18,7 +18,7 @@ export interface DashboardNavItem {
 	 * The switch that turns the section's feature on, when it has one: a flag
 	 * of the `Modules` table, or the switch of the feature's own table.
 	 */
-	moduleKey?: GuildModuleEntry["key"] | "appealsEnabled";
+	moduleKey?: ModuleSwitchKey;
 	/** A setting the feature does nothing without, such as the honeypot's channel. */
 	requiredKey?: SingleSettingKey;
 	/**
@@ -88,18 +88,21 @@ export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
 		group: "modules",
 		icon: "ic:round-timer",
 		labelKey: "dashboard.nav.autodelete",
+		moduleKey: "modulesAutodelete",
 		slug: "autodelete",
 	},
 	{
 		group: "modules",
 		icon: "ic:round-cleaning-services",
 		labelKey: "dashboard.nav.autopurge",
+		moduleKey: "modulesAutopurge",
 		slug: "autopurge",
 	},
 	{
 		group: "modules",
 		icon: "ic:round-schedule-send",
 		labelKey: "dashboard.nav.automessage",
+		moduleKey: "modulesAutomessage",
 		slug: "automessage",
 	},
 	{

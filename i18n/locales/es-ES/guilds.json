@@ -238,16 +238,15 @@
 			"module_hint": "",
 			"module_settings": "",
 			"options": {
-				"alerts": "",
 				"allowed": "",
 				"allowedCodes": "",
 				"allowedGuilds": "",
 				"characters": "",
 				"maximum": "",
-				"mentionsAllowed": "",
 				"minimum": "",
 				"perChannel": "",
 				"timePeriod": "",
+				"weighted": "",
 				"words": ""
 			},
 			"rules": {
@@ -401,10 +400,6 @@
 					"name": ""
 				},
 				"Newlines": {
-					"description": "",
-					"name": ""
-				},
-				"NoMentionSpam": {
 					"description": "",
 					"name": ""
 				},

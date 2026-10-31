@@ -17,22 +17,29 @@
 		</UButton>
 	</DashboardPageHeader>
 
-	<!-- The bot has no switch for these: a table is on while it has a channel. -->
-	<GuildModuleBanner
-		v-if="!isLoading && !error"
-		:icon="MODULE_ICONS[slug]"
-		:title="ts(`dashboard.nav.${slug}`)"
-		:hint="ts('guild_settings.auto.module_hint')"
-		:on="rows.length > 0"
+	<GuildSettingsForm
+		:schema="schema"
+		:state="state"
+		:map-to-guild-data="mapToGuildData"
+		:aria-label="ts('guild_settings.modules.form_aria')"
+		@error="onError"
 	>
-		<UBadge
-			:color="rows.length > 0 ? 'success' : 'neutral'"
-			variant="subtle"
-			class="shrink-0 font-semibold"
+		<GuildModuleBanner
+			:icon="MODULE_ICONS[slug]"
+			:title="ts(`dashboard.nav.${slug}`)"
+			:hint="ts('guild_settings.auto.module_hint')"
+			:on="state[MODULE_KEYS[slug]] === true"
 		>
-			{{ ts(rows.length > 0 ? "guild_settings.modules.on" : "guild_settings.modules.off") }}
-		</UBadge>
-	</GuildModuleBanner>
+			<USwitch
+				v-model="state[MODULE_KEYS[slug]]"
+				:aria-label="
+					ts('guild_settings.modules.toggle_aria', {
+						title: ts(`dashboard.nav.${slug}`),
+					})
+				"
+			/>
+		</GuildModuleBanner>
+	</GuildSettingsForm>
 
 	<slot name="notice"></slot>
 
@@ -145,6 +152,16 @@ const MODULE_ICONS: Record<AutoChannelSlug, string> = {
 	automessage: "lucide:message-square-reply",
 	autopurge: "lucide:eraser",
 };
+
+const MODULE_KEYS = {
+	autodelete: "modulesAutodelete",
+	automessage: "modulesAutomessage",
+	autopurge: "modulesAutopurge",
+} as const satisfies Record<AutoChannelSlug, ToggleSettingKey>;
+
+const { mapToGuildData, onError, schema, state } = useSettingsForm({
+	toggles: Object.values(MODULE_KEYS),
+});
 
 const emptyHeadingId = useId();
 const maximum = AUTO_CHANNEL_MAXIMUMS[slug];

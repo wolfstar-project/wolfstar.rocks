@@ -53,10 +53,16 @@ function roleColor(color: number): string | undefined {
 	return color === 0 ? undefined : `#${color.toString(16).padStart(6, "0")}`;
 }
 
-/** The roles of a guild, highest first, without `@everyone`. */
-export function roleOptions(guild: SelectGuild): SelectOption[] {
+/**
+ * The roles of a guild, highest first. `@everyone` is left out, as nobody is
+ * given it, unless `everyone` asks for it: a dashboard access rule can name it.
+ */
+export function roleOptions(
+	guild: SelectGuild,
+	{ everyone = false }: { everyone?: boolean } = {},
+): SelectOption[] {
 	return [...(guild?.roles ?? [])]
-		.filter((role) => role.id !== guild?.id)
+		.filter((role) => everyone || role.id !== guild?.id)
 		.toSorted((a, b) => b.rawPosition - a.rawPosition)
 		.map((role) => ({ color: roleColor(role.color), label: role.name, value: role.id }));
 }

@@ -60,14 +60,19 @@ export type GuildModuleEntry = (typeof GUILD_MODULES)[number];
 type GuildModuleKey = GuildModuleEntry["key"];
 
 /**
- * The switches of the modules that have a table of their own rather than a
- * flag of `Modules`. They are shown, counted and flipped with the flags.
+ * The switches of the modules that are set up in a table of their own: the
+ * appeals, and the channels of the Auto-* modules, which stay while their flag
+ * of `Modules` is off and do nothing. They are shown, counted and flipped with
+ * the other flags.
  */
 export const OWN_TABLE_MODULE_SWITCHES = [
 	"appealsEnabled",
+	"modulesAutodelete",
+	"modulesAutopurge",
+	"modulesAutomessage",
 ] as const satisfies readonly ToggleSettingKey[];
 
-type ModuleSwitchKey = GuildModuleKey | (typeof OWN_TABLE_MODULE_SWITCHES)[number];
+export type ModuleSwitchKey = GuildModuleKey | (typeof OWN_TABLE_MODULE_SWITCHES)[number];
 
 /** Every module switch: the `Modules` flags, then the switches of the other modules. */
 export const MODULE_SWITCH_KEYS: readonly ModuleSwitchKey[] = [

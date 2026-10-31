@@ -718,9 +718,6 @@
 						"options": {
 							"type": "object",
 							"properties": {
-								"alerts": {
-									"type": "string"
-								},
 								"allowed": {
 									"type": "string"
 								},
@@ -736,9 +733,6 @@
 								"maximum": {
 									"type": "string"
 								},
-								"mentionsAllowed": {
-									"type": "string"
-								},
 								"minimum": {
 									"type": "string"
 								},
@@ -746,6 +740,9 @@
 									"type": "string"
 								},
 								"timePeriod": {
+									"type": "string"
+								},
+								"weighted": {
 									"type": "string"
 								},
 								"words": {
@@ -1205,18 +1202,6 @@
 									"additionalProperties": false
 								},
 								"Newlines": {
-									"type": "object",
-									"properties": {
-										"description": {
-											"type": "string"
-										},
-										"name": {
-											"type": "string"
-										}
-									},
-									"additionalProperties": false
-								},
-								"NoMentionSpam": {
 									"type": "object",
 									"properties": {
 										"description": {

@@ -1,8 +1,20 @@
 import type { GuildData, ReadonlyGuildData } from "#server/database/settings/types";
 import type { APIGuild, APIGuildMember } from "discord-api-types/v10";
 import { hasAdminPermissions } from "#server/utils/discord/admin";
-import { resolveDashboardAccess, type PermissionEntry } from "#shared/utils/dashboard-access";
+import {
+	resolveAccess,
+	type AccessSubject,
+	type PermissionEntry,
+} from "#shared/utils/dashboard-access";
 import { createError } from "evlog";
+
+/**
+ * Who a rule is resolved for: `member.roles` never lists `@everyone`, whose id
+ * is the guild's, and a rule on it would otherwise be ignored. The bot adds it too.
+ */
+export function accessSubject(guild: APIGuild, member: APIGuildMember): AccessSubject {
+	return { userId: member.user.id, roleIds: [guild.id, ...member.roles] };
+}
 
 /**
  * Checks a settings write that changes the dashboard access rules, or the
@@ -48,8 +60,8 @@ export function assertCanEditDashboardAccess(
 		});
 	}
 
-	const access = resolveDashboardAccess(
-		{ userId: member.user.id, roleIds: member.roles },
+	const access = resolveAccess(
+		accessSubject(guild, member),
 		{
 			users: permissionsUsers ?? settings.permissionsUsers,
 			roles: permissionsRoles ?? settings.permissionsRoles,

@@ -32,6 +32,7 @@
 				<SelectRoles
 					:model-value="roles.allow"
 					layout="chips"
+					everyone
 					:label="ts('guild_settings.access.roles_allowed')"
 					:tooltip-title="ts('guild_settings.access.allow_note')"
 					:guild="guildData"
@@ -40,6 +41,7 @@
 				<SelectRoles
 					:model-value="roles.deny"
 					layout="chips"
+					everyone
 					:label="ts('guild_settings.access.roles_denied')"
 					:tooltip-title="ts('guild_settings.access.deny_note')"
 					:guild="guildData"
@@ -212,8 +214,8 @@ import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
 import {
 	classifyLegacyNode,
-	createDashboardEntry,
-	isDashboardEntry,
+	createAccessEntry,
+	isAccessEntry,
 	stripLegacyNodes,
 	type LegacyClassification,
 	type LegacyPermissionNode,
@@ -247,8 +249,8 @@ const schema = object({
 // refuses the reactive proxies the settings hand out.
 function plain(entries: readonly PermissionEntry[]): FormState[Column] {
 	return entries.map((entry) =>
-		isDashboardEntry(entry)
-			? createDashboardEntry(entry.id, entry.dashboard)
+		isAccessEntry(entry)
+			? createAccessEntry(entry.id, entry.dashboard)
 			: { id: entry.id, allow: [...entry.allow], deny: [...entry.deny] },
 	) as FormState[Column];
 }
@@ -328,7 +330,7 @@ function legacyName(column: Column, id: string): string {
 const legacy = computed<LegacyRow[]>(() =>
 	(["permissionsRoles", "permissionsUsers"] as const).flatMap((column) =>
 		(state[column] as readonly PermissionEntry[])
-			.filter((entry): entry is LegacyPermissionNode => !isDashboardEntry(entry))
+			.filter((entry): entry is LegacyPermissionNode => !isAccessEntry(entry))
 			.map((entry) => ({
 				column,
 				entry,

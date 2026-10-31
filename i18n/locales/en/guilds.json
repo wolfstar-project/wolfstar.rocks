@@ -164,7 +164,7 @@
 				"user": "Messages of a user"
 			},
 			"load_failed": "Couldn't load the channels. Check your connection and retry.",
-			"module_hint": "On while it has a channel. It has no switch of its own: stop a channel below to end it there.",
+			"module_hint": "Turning this off keeps the channels below but stops every one of them.",
 			"removed_title": "Stopped",
 			"retry": "Retry",
 			"saved_title": "Saved",
@@ -238,16 +238,15 @@
 			"module_hint": "Turning this off keeps the rules below but stops every one of them.",
 			"module_settings": "Module settings",
 			"options": {
-				"alerts": "Warn before banning",
 				"allowed": "Allowed domains",
 				"allowedCodes": "Allowed invite codes",
 				"allowedGuilds": "Allowed server IDs",
 				"characters": "Repeated characters",
 				"maximum": "Maximum",
-				"mentionsAllowed": "Mention points allowed",
 				"minimum": "Minimum length",
 				"perChannel": "Count everyone in the channel together",
 				"timePeriod": "Time period (seconds)",
+				"weighted": "Count a role mention as two and @everyone as five",
 				"words": "Words"
 			},
 			"rules": {
@@ -403,10 +402,6 @@
 				"Newlines": {
 					"description": "Messages with more lines than the maximum.",
 					"name": "Line breaks"
-				},
-				"NoMentionSpam": {
-					"description": "More mention points than allowed within the time period, which bans the member.",
-					"name": "Mention spam"
 				},
 				"Phishing": {
 					"description": "Links to known phishing domains, except the allowed ones.",

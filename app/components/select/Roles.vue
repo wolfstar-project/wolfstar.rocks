@@ -46,6 +46,7 @@ const {
 	dialogTitle,
 	searchPlaceholder,
 	countLabel,
+	everyone = false,
 	optionNotes,
 } = defineProps<{
 	/** The label of the field */
@@ -71,6 +72,8 @@ const {
 	countLabel?: (count: number) => string;
 	/** Text shown while nothing is selected */
 	emptyLabel?: string;
+	/** Offers `@everyone` too, for what can name it. */
+	everyone?: boolean;
 	/** A short note on an option, by its id: what picking it would also change. */
 	optionNotes?: ReadonlyMap<string, string>;
 }>();
@@ -80,5 +83,5 @@ const emit = defineEmits<{
 	"change": [value: string[]];
 }>();
 
-const options = computed(() => withOptionNotes(roleOptions(guild), optionNotes));
+const options = computed(() => withOptionNotes(roleOptions(guild, { everyone }), optionNotes));
 </script>

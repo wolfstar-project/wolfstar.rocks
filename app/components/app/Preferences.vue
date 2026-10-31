@@ -56,43 +56,63 @@
 						<p :id="colorThemesLabelId" class="prefs-sublabel">
 							{{ ts("profile.themes.color") }}
 						</p>
-						<div
-							role="radiogroup"
-							:aria-labelledby="colorThemesLabelId"
-							class="theme-swatches"
-						>
-							<label
-								v-for="theme in colorThemes"
-								:key="theme.id"
+						<div class="theme-swatches">
+							<!-- Not a radio: arrow keys pick the radio they reach, and this leaves the settings. -->
+							<button
+								type="button"
 								class="theme-swatch"
-								:class="{ 'theme-swatch--on': colorTheme === theme.id }"
-								:style="{ backgroundImage: theme.swatch }"
-								:title="theme.label"
+								:class="{ 'theme-swatch--on': colorTheme === 'custom' }"
+								:style="{ backgroundImage: customThemeSwatch }"
+								:title="ts('profile.themes.custom')"
+								:aria-label="ts('profile.themes.custom')"
+								:aria-current="colorTheme === 'custom' ? 'true' : undefined"
+								aria-haspopup="dialog"
+								@click="openCustomTheme"
 							>
-								<input
-									type="radio"
-									:name="themeGroupName"
-									:value="theme.id"
-									:checked="colorTheme === theme.id"
-									:aria-label="theme.label"
-									class="sr-only"
-									@change="theme.id === 'custom' || selectColorTheme(theme.id)"
-									@click="theme.id === 'custom' && openCustomTheme()"
-								/>
 								<UIcon
-									v-if="theme.id === 'custom'"
 									name="ic:round-palette"
 									class="size-6 text-white"
 									aria-hidden="true"
 								/>
 								<span
-									v-if="colorTheme === theme.id"
+									v-if="colorTheme === 'custom'"
 									class="theme-swatch-check"
 									aria-hidden="true"
 								>
 									<UIcon name="ic:round-check" class="size-3" />
 								</span>
-							</label>
+							</button>
+							<div
+								role="radiogroup"
+								:aria-labelledby="colorThemesLabelId"
+								class="contents"
+							>
+								<label
+									v-for="theme in colorThemes"
+									:key="theme.id"
+									class="theme-swatch"
+									:class="{ 'theme-swatch--on': colorTheme === theme.id }"
+									:style="{ backgroundImage: theme.swatch }"
+									:title="theme.label"
+								>
+									<input
+										type="radio"
+										:name="themeGroupName"
+										:value="theme.id"
+										:checked="colorTheme === theme.id"
+										:aria-label="theme.label"
+										class="sr-only"
+										@change="selectColorTheme(theme.id)"
+									/>
+									<span
+										v-if="colorTheme === theme.id"
+										class="theme-swatch-check"
+										aria-hidden="true"
+									>
+										<UIcon name="ic:round-check" class="size-3" />
+									</span>
+								</label>
+							</div>
 						</div>
 						<p class="mt-2 text-xs text-muted">
 							{{ ts("profile.themes.color_hint") }}
@@ -347,18 +367,14 @@ const COLOR_THEME_LABEL_KEYS: Record<string, string> = {
 	"sunset": "profile.themes.presets.sunset",
 	"under-the-sea": "profile.themes.presets.under_the_sea",
 };
-const colorThemes = computed(() => [
-	{
-		id: "custom",
-		label: ts("profile.themes.custom"),
-		swatch: colorThemeSwatch(customColorTheme(customTheme.value)),
-	},
-	...COLOR_THEMES.map((theme) => ({
+const customThemeSwatch = computed(() => colorThemeSwatch(customColorTheme(customTheme.value)));
+const colorThemes = computed(() =>
+	COLOR_THEMES.map((theme) => ({
 		id: theme.id,
 		label: ts(COLOR_THEME_LABEL_KEYS[theme.id] ?? "profile.themes.custom"),
 		swatch: colorThemeSwatch(theme),
 	})),
-]);
+);
 
 const densityOptions = computed<{ id: LogDensity; label: string; hint: string }[]>(() => [
 	{ hint: ts("profile.density_cozy_hint"), id: "cozy", label: ts("profile.density_cozy") },
@@ -498,6 +514,7 @@ function handleSetReduceMotion(value: boolean) {
 		inset 0 0 0 4px var(--console-surface, var(--color-base-100));
 }
 
+.theme-swatch:focus-visible,
 .theme-swatch:has(input:focus-visible),
 .prefs-option:has(input:focus-visible) {
 	outline: 2px solid var(--color-primary);

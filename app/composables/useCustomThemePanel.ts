@@ -6,8 +6,8 @@ type ThemeSnapshot = Pick<AppSettings, "colorMode" | "colorTheme" | "customTheme
  * The custom theme's editor, docked at the right of the window as Discord's
  * is: the settings close so the dashboard shows the theme as it is built.
  *
- * Every change previews at once. Apply keeps them; Back and the close button
- * put back the theme the settings had when the editor opened.
+ * Every change previews at once. Apply keeps them; Back, the close button and
+ * leaving the page put back the theme the settings had when the editor opened.
  */
 export function useCustomThemePanel() {
 	const isOpen = useState("app:custom-theme-panel", () => false);
@@ -19,7 +19,8 @@ export function useCustomThemePanel() {
 
 	function open() {
 		const { colorMode, colorTheme, customTheme, darkShade } = settings.value;
-		snapshot.value = { colorMode, colorTheme, customTheme, darkShade };
+		// The settings can open it again while it is open: what it replaced stays the first theme.
+		snapshot.value ??= { colorMode, colorTheme, customTheme, darkShade };
 		selectColorTheme("custom");
 		preferences.isOpen.value = false;
 		isOpen.value = true;

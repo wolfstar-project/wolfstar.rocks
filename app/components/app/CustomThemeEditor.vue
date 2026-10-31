@@ -245,7 +245,7 @@ async function pickFromScreen() {
 const SLIDER_UI = {
 	range: "bg-(--color-primary)",
 	thumb: "size-4 bg-white ring-0 shadow-[0_1px_3px_oklch(0%_0_0/0.35)]",
-	track: "h-1.5 bg-(--console-input,var(--field-surface))",
+	track: "h-1.5 bg-(--field-surface)",
 };
 
 function toNumber(value: number | number[] | undefined): number {
@@ -303,7 +303,7 @@ function reset() {
 
 .custom-theme-segments {
 	@apply grid grid-cols-2 gap-1 rounded-[8px] p-1;
-	background-color: var(--console-input, var(--field-surface));
+	background-color: var(--field-surface);
 }
 
 .custom-theme-segment {
@@ -344,7 +344,7 @@ function reset() {
 
 .custom-theme-hex {
 	@apply mt-3 flex items-center gap-1.5 rounded-[8px] py-1 pr-1 pl-2;
-	background-color: var(--console-input, var(--field-surface));
+	background-color: var(--field-surface);
 }
 
 .custom-theme-sample {

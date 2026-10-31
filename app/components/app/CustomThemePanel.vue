@@ -10,7 +10,8 @@
 		:description="ts('profile.themes.panel_description')"
 		:content="{ onEscapeKeyDown: discard }"
 		:ui="{
-			content: 'custom-theme-panel max-w-full sm:max-w-80',
+			content:
+				'custom-theme-panel max-w-full bg-(--ink-700) theme-light:bg-base-100 sm:max-w-80',
 			header: 'px-4 pt-4 pb-2 sm:px-4',
 			wrapper: 'min-w-0 flex-1',
 			title: 'text-[0.9375rem] font-bold',
@@ -48,6 +49,9 @@
 <script setup lang="ts">
 const { ts } = useI18n();
 const { apply, back, discard, isOpen } = useCustomThemePanel();
+
+// The preview is in the saved settings: a reload would keep it, with no panel to undo it.
+useEventListener("pagehide", () => discard());
 </script>
 
 <style>
@@ -55,7 +59,6 @@ const { apply, back, discard, isOpen } = useCustomThemePanel();
 
 /* Solid, as Discord's: the theme paints the page beside it, not the panel. */
 .custom-theme-panel {
-	background-color: var(--console-surface, var(--color-base-200));
 	border-left: 1px solid var(--home-border-subtle);
 }
 

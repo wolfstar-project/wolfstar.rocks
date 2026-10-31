@@ -26,10 +26,11 @@ describe("AppPreferences", () => {
 		const colourNames = swatches(colour?.element).map((input) =>
 			input.getAttribute("aria-label"),
 		);
-		// The custom theme first, then Discord's 23 presets.
-		expect(colourNames).toHaveLength(24);
-		expect(colourNames[0]).toBe("Custom theme");
+		// Discord's 23 presets; the custom theme is a button in front of them.
+		expect(colourNames).toHaveLength(23);
+		expect(colourNames).not.toContain("Custom theme");
 		expect(colourNames).toContain("Mint Apple");
+		expect(wrapper.find('button[aria-label="Custom theme"]').exists()).toBe(true);
 	});
 
 	it("picks a base theme, which the colour theme gives way to", async () => {

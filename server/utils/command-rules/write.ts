@@ -24,7 +24,9 @@ export function commandRuleConflict() {
  * `canWaitOnOtherRequests`), so two saves can read the same settings, and the
  * later one would erase the earlier one, even for another command. It runs first
  * in the save's transaction: the advisory lock orders the saves of every
- * instance of the dashboard, and the row lock waits for a write in progress.
+ * instance of the dashboard, and the row locks wait for a write in progress.
+ * They follow the order of `writeGuildData`: a settings save holds `Guild` while
+ * it reaches `GuildCommands`, so locking that first would deadlock with it.
  *
  * @param guildId The guild the save is for.
  * @param read The settings the save was made from.
@@ -38,12 +40,14 @@ export function assertCommandSettingsUnchanged(guildId: string, read: CommandRul
 				.affectedCount()
 				.build(),
 		);
-		await tx.execute(
+		for (const rowLock of [
+			db.raw.sql`SELECT 1 FROM "public"."Guild" WHERE "id" = ${guildId}::bigint FOR UPDATE`,
+			db.raw.sql`SELECT 1 FROM "public"."Modules" WHERE "id" = ${guildId}::bigint FOR UPDATE`,
 			db.raw
-				.sql`SELECT 1 FROM "public"."GuildCommands" WHERE "id" = ${guildId}::bigint FOR UPDATE`
-				.affectedCount()
-				.build(),
-		);
+				.sql`SELECT 1 FROM "public"."GuildCommands" WHERE "id" = ${guildId}::bigint FOR UPDATE`,
+		]) {
+			await tx.execute(rowLock.affectedCount().build());
+		}
 
 		const row = await tx.orm.public.GuildCommands.first({ id: BigInt(guildId) });
 		const stored = [row?.disabled ?? [], row?.disabledInChannels ?? []];

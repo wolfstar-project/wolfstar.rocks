@@ -41,7 +41,13 @@ vi.mock("#server/utils/guilds/manager", () => ({
 }));
 
 vi.mock("#server/database/prisma", () => ({
-	db: { raw: { sql: () => ({ affectedCount: () => ({ build: () => "the query" }) }) } },
+	db: {
+		raw: {
+			sql: (strings: TemplateStringsArray) => ({
+				affectedCount: () => ({ build: () => strings.join("?") }),
+			}),
+		},
+	},
 }));
 
 vi.mock("#server/database", () => ({
@@ -73,6 +79,7 @@ vi.mock("evlog", async (importOriginal) => ({
 
 import type { H3Event } from "h3";
 import putHandler from "#server/api/guilds/[guild]/command-rules/[command].put";
+import { Tables, type TableName } from "#server/database/settings/columns";
 import { getCommandRuleRevision, readCommandRuleState } from "#shared/utils/command-rules";
 
 const callHandler = putHandler as unknown as (event: H3Event) => Promise<unknown>;
@@ -217,8 +224,21 @@ describe("PUT /api/guilds/:guild/command-rules/:command", () => {
 	it("takes the locks first in the save's transaction", async () => {
 		await callHandler({} as H3Event);
 
-		expect(mocks.execute).toHaveBeenCalledTimes(2);
+		expect(mocks.execute.mock.calls[0]?.[0]).toContain("pg_advisory_xact_lock");
 		expect(mocks.firstRow).toHaveBeenCalledWith({ id: BigInt(GUILD) });
+	});
+
+	// A settings save writes the tables in this order: the other way round, each
+	// waits for a row the other holds, and Postgres aborts one of them.
+	it("locks the rows in the order a settings save writes them", async () => {
+		await callHandler({} as H3Event);
+
+		const locked = mocks.execute.mock.calls.flatMap(([query]) => {
+			const table = /"public"\."(\w+)"/.exec(String(query))?.[1];
+			return table ? [table as TableName] : [];
+		});
+		expect(locked).toStrictEqual(["Guild", "Modules", "GuildCommands"]);
+		expect(locked).toStrictEqual(Tables.filter((name) => locked.includes(name)));
 	});
 
 	it("refuses a save when someone else wrote since it read, even another command", async () => {

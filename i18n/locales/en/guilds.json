@@ -581,6 +581,7 @@
 				"enabled": "Enabled",
 				"enabled_hint": "Members can run {name} where the rules below allow it.",
 				"enabled_hint_off": "Nobody can run {name} on this server.",
+				"form_aria": "{name} settings form",
 				"ignored_channels": "Ignored Channels",
 				"ignored_channels_hint": "WolfStar ignores the command here.",
 				"ignored_roles": "Ignored Roles",

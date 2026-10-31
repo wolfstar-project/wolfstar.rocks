@@ -581,6 +581,7 @@
 				"enabled": "Attivo",
 				"enabled_hint": "I membri possono usare {name} dove lo permettono le regole qui sotto.",
 				"enabled_hint_off": "Nessuno può usare {name} su questo server.",
+				"form_aria": "Modulo impostazioni di {name}",
 				"ignored_channels": "Canali ignorati",
 				"ignored_channels_hint": "WolfStar ignora il comando qui.",
 				"ignored_roles": "Ruoli ignorati",

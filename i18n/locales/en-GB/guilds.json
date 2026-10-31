@@ -581,6 +581,7 @@
 				"enabled": "",
 				"enabled_hint": "",
 				"enabled_hint_off": "",
+				"form_aria": "",
 				"ignored_channels": "",
 				"ignored_channels_hint": "",
 				"ignored_roles": "",

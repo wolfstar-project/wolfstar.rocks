@@ -143,6 +143,12 @@ describe("GuildCommandsRuleEditor", () => {
 		);
 	});
 
+	it("names its form after the command", async () => {
+		await mount();
+
+		expect(document.querySelector('form[aria-label="archive settings form"]')).not.toBeNull();
+	});
+
 	it("wires each hint to its field", async () => {
 		await mount();
 		const field = dialog().querySelector<HTMLElement>(

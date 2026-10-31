@@ -27,7 +27,14 @@
 				<USkeleton v-for="i in 4" :key="i" class="h-16 w-full" />
 			</div>
 
-			<form v-else :id="formId" class="space-y-5" novalidate @submit.prevent="save">
+			<form
+				v-else
+				:id="formId"
+				:aria-label="ts('guild_settings.command_rules.editor.form_aria', { name })"
+				class="space-y-5"
+				novalidate
+				@submit.prevent="save"
+			>
 				<div class="rule-enabled">
 					<div class="min-w-0 flex-1">
 						<label :for="enabledId" class="text-[0.9375rem] font-semibold">

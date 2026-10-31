@@ -1747,6 +1747,9 @@
 								"enabled_hint_off": {
 									"type": "string"
 								},
+								"form_aria": {
+									"type": "string"
+								},
 								"ignored_channels": {
 									"type": "string"
 								},

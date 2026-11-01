@@ -388,9 +388,9 @@ function openEditor(command: DisableableCommand, event: MouseEvent) {
 }
 
 /**
- * Takes in what the editor saved. The form rebases on the stored settings
- * whenever they change, so the tiles are set to them first, and the toggles of
- * other tiles not saved yet are made again after, to stay staged.
+ * Takes in what the editor saved. The tiles' form rebases when the stored
+ * disabled commands change, so the tiles are set to them first, and the toggles
+ * of other tiles not saved yet are made again after, to stay staged.
  */
 function onRuleSaved(saved: CommandRuleSaved, guildId: string) {
 	const current = originalGuildSettings.value;

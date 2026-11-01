@@ -1,0 +1,65 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - release
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  production:
+    name: 🚀 Deploy to Cloudflare Workers
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    if: github.repository == 'wolfstar-project/wolfstar.rocks'
+    environment: release
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The version shown on the site and Lunaria's status read the history and the tags.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: voidzero-dev/setup-vp@143f5f385f39b1b753ffed1a01ad443811855c8b # v1.16.1
+        with:
+          node-version: lts/*
+          cache: true
+          sfw: true
+
+      - name: 🔼 Generate Prisma Client
+        run: vp run prisma:generate
+
+      - name: 🌐 Build Lunaria
+        run: vp run build:lunaria
+
+      - name: 🏗️ Build the Worker
+        run: vp run build
+        env:
+          NITRO_PRESET: cloudflare_module
+          CLOUDFLARE_WORKER: production
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_HYPERDRIVE_ID: ${{ vars.CLOUDFLARE_HYPERDRIVE_ID }}
+          NODE_OPTIONS: --max-old-space-size=8192
+          NUXT_BETTER_AUTH_SECRET: ${{ secrets.NUXT_BETTER_AUTH_SECRET }}
+          NUXT_OAUTH_DISCORD_CLIENT_ID: ${{ vars.NUXT_OAUTH_DISCORD_CLIENT_ID }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SKEW_PROTECTION_BUNDLE_ASSETS: true
+
+      - name: 🧹 Drop the client source maps
+        run: find .output/public -name '*.map' -delete
+
+      - name: 🚀 Deploy
+        run: npx --yes wrangler@4.156.0 deploy -c .output/server/wrangler.json --autoconfig=false
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

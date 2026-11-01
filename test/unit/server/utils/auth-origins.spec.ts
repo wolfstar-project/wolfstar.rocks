@@ -18,9 +18,6 @@ describe("matchesHostPattern", () => {
 
 	it("matches a single label behind a wildcard", () => {
 		expect(matchesHostPattern("beta.wolfstar.rocks", "*.wolfstar.rocks")).toBe(true);
-		expect(matchesHostPattern("deploy-preview-1--site.netlify.app", "*.netlify.app")).toBe(
-			true,
-		);
 	});
 
 	it("does not let a wildcard span extra labels", () => {
@@ -39,7 +36,7 @@ describe("isTrustedOrigin", () => {
 	it("accepts the production and preview hosts", () => {
 		expect(isTrustedOrigin("https://wolfstar.rocks")).toBe(true);
 		expect(isTrustedOrigin("https://beta.wolfstar.rocks")).toBe(true);
-		expect(isTrustedOrigin("https://deploy-preview-42--wolfstar.netlify.app")).toBe(true);
+		expect(isTrustedOrigin("https://alpha.wolfstar.rocks")).toBe(true);
 		expect(isTrustedOrigin("http://localhost:3000")).toBe(true);
 	});
 
@@ -59,10 +56,10 @@ describe("resolveTrustedOrigins", () => {
 
 	it("adds the request origin for an allowed preview host", () => {
 		const origins = resolveTrustedOrigins(
-			requestFrom("https://deploy-preview-42--wolfstar.netlify.app/api/auth/sign-in/social"),
+			requestFrom("https://alpha.wolfstar.rocks/api/auth/sign-in/social"),
 		);
 
-		expect(origins).toContain("https://deploy-preview-42--wolfstar.netlify.app");
+		expect(origins).toContain("https://alpha.wolfstar.rocks");
 	});
 
 	it("ignores the request origin when the host is not allowed", () => {

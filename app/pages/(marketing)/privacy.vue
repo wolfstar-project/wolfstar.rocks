@@ -128,12 +128,12 @@
 								<span class="shrink-0 text-base-content/50">&mdash;</span>
 								<span>
 									<span class="font-semibold"
-										>Hosting provider cookies (Netlify):</span
+										>Hosting provider cookies (Cloudflare):</span
 									>
 									Our hosting/CDN may set essential operational cookies (caching,
-									routing, preview or identity/session features). These are
-									infrastructure cookies required to deliver the site and are not
-									used for advertising or cross‑site tracking.
+									routing or bot protection). These are infrastructure cookies
+									required to deliver the site and are not used for advertising or
+									cross‑site tracking.
 								</span>
 							</li>
 						</ul>
@@ -219,11 +219,11 @@
 							Analytics
 						</h2>
 						<p class="mb-4 leading-relaxed text-base-content">
-							We use Netlify Analytics to understand how visitors use our website.
+							We use Cloudflare Analytics to understand how visitors use our website.
 							This helps us improve the user experience and identify issues.
 						</p>
 						<p class="mb-3 leading-relaxed text-base-content">
-							Netlify Analytics is designed with privacy in mind:
+							Cloudflare Analytics is designed with privacy in mind:
 						</p>
 						<ul class="list-none space-y-2 pl-0 text-base-content">
 							<li class="flex items-start gap-3 leading-relaxed">
@@ -639,8 +639,8 @@
 								<span class="shrink-0 text-base-content/50">&mdash;</span>
 								<span>
 									<span class="font-semibold">Analytics Data:</span> Retained in
-									aggregate form by Netlify and cannot be linked to individual
-									users. Retained according to Netlify's data retention policy.
+									aggregate form by Cloudflare and cannot be linked to individual
+									users. Retained according to Cloudflare's data retention policy.
 								</span>
 							</li>
 							<li class="flex items-start gap-3 leading-relaxed">

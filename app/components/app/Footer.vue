@@ -54,13 +54,13 @@
 								<PwaInstallPrompt class="xl:hidden" />
 							</ClientOnly>
 							<UButton
-								:label="ts('footer.powered_by_netlify')"
-								to="https://www.netlify.com"
+								:label="ts('footer.powered_by_cloudflare')"
+								to="https://www.cloudflare.com"
 								target="_blank"
 								rel="noopener noreferrer"
 								color="neutral"
 								variant="soft"
-								:aria-label="ts('footer.powered_by_netlify_aria')"
+								:aria-label="ts('footer.powered_by_cloudflare_aria')"
 							>
 								<template #leading>
 									<span

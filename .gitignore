@@ -4,7 +4,6 @@
 .data
 .nuxt
 .nitro
-.netlify
 .wrangler
 .cache
 dist
@@ -27,9 +26,6 @@ node_modules
 .env
 .env.*
 !.env.example
-
-# Netlify
-deno.lock
 
 # Prisma generated files
 server/database/generated/

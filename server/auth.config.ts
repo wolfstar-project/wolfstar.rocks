@@ -37,10 +37,8 @@ export default defineServerAuth((ctx) => ({
 	advanced: {
 		cookiePrefix: runtimeConfig.session.name,
 		ipAddress: {
-			// Netlify supplies a single, trusted client IP. Keep Cloudflare as a
-			// fallback for deployments where it is the application runtime rather
-			// than the CDN in front of Netlify.
-			ipAddressHeaders: ["x-nf-client-connection-ip", "cf-connecting-ip"],
+			// Cloudflare supplies a single, trusted client IP.
+			ipAddressHeaders: ["cf-connecting-ip"],
 		},
 	},
 	secondaryStorage: authSecondaryStorage,

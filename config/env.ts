@@ -4,28 +4,20 @@ import packageJson from "../package.json" with { type: "json" };
 import { getNextVersion } from "../scripts/next-version.ts";
 
 /**
- * Environment variable `PULL_REQUEST` provided by Netlify.
- * @see {@link https://docs.netlify.com/build/configure-builds/environment-variables/#git-metadata}
- *
- * Whether triggered by a GitHub PR
+ * Whether this is a build of a GitHub PR.
+ * @see {@link https://docs.github.com/en/actions/reference/workflows-and-actions/variables}
  */
-const isPR = process.env.PULL_REQUEST === "true";
+const isPR = process.env.GITHUB_EVENT_NAME === "pull_request";
+
+/** Pull request number: GitHub names a PR's ref `<number>/merge`. */
+const prNumber = isPR ? (process.env.GITHUB_REF_NAME?.split("/")[0] ?? null) : null;
 
 /**
- * Environment variable `REVIEW_ID` provided by Netlify.
- * @see {@link https://docs.netlify.com/configure-builds/environment-variables/#git-metadata}
- *
- * Pull request number (if in a PR environment)
+ * Git branch, from Workers Builds or from GitHub Actions.
+ * @see {@link https://developers.cloudflare.com/workers/ci-cd/builds/configuration/#environment-variables}
  */
-const prNumber = process.env.REVIEW_ID || null;
-
-/**
- * Environment variable `BRANCH` provided by Netlify.
- * @see {@link https://docs.netlify.com/build/configure-builds/environment-variables/#git-metadata}
- *
- * Git branch
- */
-const gitBranch = process.env.BRANCH;
+const gitBranch =
+	process.env.WORKERS_CI_BRANCH || process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF_NAME;
 
 export const isCanary =
 	(process.env.NODE_ENV === "production" ||
@@ -34,37 +26,11 @@ export const isCanary =
 	gitBranch === "main" &&
 	!isPR;
 
-/**
- * Environment variable `CONTEXT` provided by Netlify.
- * `dev`, `production`, `deploy-preview`, `branch-deploy`, `preview-server`, or a branch name
- * @see {@link https://docs.netlify.com/build/configure-builds/environment-variables/#build-metadata}
- *
- * Whether this is some sort of preview environment.
- */
-const isPreview = isPR || (process.env.CONTEXT && process.env.CONTEXT !== "production");
-const isProduction = process.env.CONTEXT === "production";
-
-/**
- * Environment variable `URL` provided by Netlify.
- * This is always the current deploy URL, regardless of env.
- * @see {@link https://docs.netlify.com/build/functions/environment-variables/#functions}
- *
- * Preview URL for the current deployment, only available in preview environments.
- */
-export const getPreviewUrl = () =>
-	isPreview ? (process.env.URL ? process.env.URL : undefined) : undefined;
-
-/**
- * Environment variable `URL` provided by Netlify.
- * This is always the current deploy URL, regardless of env.
- * @see {@link https://docs.netlify.com/build/functions/environment-variables/#functions}
- *
- * Production URL for the current deployment, only available in production environments.
- */
-export const getProductionUrl = () =>
-	isProduction ? (process.env.URL ? process.env.URL : undefined) : undefined;
+/** Whether this is a build of a branch other than the ones that deploy to production or canary. */
+const isPreview = isPR || (!!gitBranch && gitBranch !== "main" && gitBranch !== "release");
 
 const git = simpleGit();
+
 async function getGitInfo() {
 	let branch;
 	try {
@@ -75,8 +41,10 @@ async function getGitInfo() {
 
 	let commit;
 	try {
-		// Netlify: COMMIT_REF
-		commit = process.env.COMMIT_REF || (await git.revparse(["HEAD"]));
+		commit =
+			process.env.WORKERS_CI_COMMIT_SHA ||
+			process.env.GITHUB_SHA ||
+			(await git.revparse(["HEAD"]));
 	} catch {
 		commit = "unknown";
 	}
@@ -113,7 +81,7 @@ export async function getFileLastUpdated(path: string) {
  *
  * Falls back to `package.json` when git is unavailable (e.g. shallow clone).
  */
-export async function getVersion() {
+async function getVersion() {
 	try {
 		const { next } = await getNextVersion();
 		return next;
@@ -128,16 +96,12 @@ export async function getEnv(isDevelopment: boolean) {
 		getVersion(),
 	]);
 	const env = isDevelopment ? "dev" : isCanary ? "canary" : isPreview ? "preview" : "release";
-	const previewUrl = getPreviewUrl();
-	const productionUrl = getProductionUrl();
 	return {
 		version,
 		commit,
 		shortCommit,
 		branch,
 		env,
-		previewUrl,
-		productionUrl,
 		prNumber,
 	} as const;
 }

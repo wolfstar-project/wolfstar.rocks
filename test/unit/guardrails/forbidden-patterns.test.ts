@@ -214,7 +214,6 @@ const RULES: Rule[] = [
 			"scripts",
 			"nuxt.config.ts",
 			".env.example",
-			"netlify.toml",
 		],
 		extensions: [".ts", ".vue", ".mjs", ".js", ".json", ".example", ".toml"],
 		violations: (source) =>

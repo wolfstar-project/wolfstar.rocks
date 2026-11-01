@@ -140,9 +140,13 @@ function rebaseOriginalState(stored?: GuildData, previous?: GuildData) {
 	}
 
 	// A state not shaped like the settings has no key to move on its own.
-	const keptOriginal = moved.every((key) => key in current) ? originalState.value : current;
+	if (!moved.every((key) => key in current)) {
+		originalState.value = current;
+		return;
+	}
+
 	originalState.value = {
-		...keptOriginal,
+		...originalState.value,
 		...Object.fromEntries(moved.map((key) => [key, current[key]])),
 	};
 }

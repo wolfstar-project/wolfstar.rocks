@@ -394,12 +394,14 @@ describe("Form - Reset Behavior", () => {
 		});
 
 		it("moves everything when its state is not shaped like the settings", async () => {
+			let formState: Record<string, unknown> = {};
 			const NestedForm = defineComponent({
 				components: { Form },
 				setup() {
 					const state = reactive({ muted: { value: "!" } });
-					const mapToGuildData = (formState: typeof state): Partial<GuildData> => ({
-						rolesMuted: formState.muted.value,
+					formState = state;
+					const mapToGuildData = (form: typeof state): Partial<GuildData> => ({
+						rolesMuted: form.muted.value,
 					});
 					return { mapToGuildData, state, testSchema };
 				},
@@ -422,6 +424,8 @@ describe("Form - Reset Behavior", () => {
 			await reset();
 
 			expect((wrapper.find("#muted-input").element as HTMLInputElement).value).toBe("??");
+			// A settings key it does not hold must not end up in the form's state.
+			expect(Object.keys(formState)).toStrictEqual(["muted"]);
 		});
 	});
 });

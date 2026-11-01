@@ -123,11 +123,39 @@ watchEffect(() => {
 	}
 });
 
+// Only the keys whose stored value changed move: a save that never touched the
+// others, such as a command's rules, leaves what Reset goes back to as it was.
+function rebaseOriginalState(stored?: GuildData, previous?: GuildData) {
+	const current: T = structuredClone(toRaw(state));
+	if (!originalState.value || !stored || !previous) {
+		originalState.value = current;
+		return;
+	}
+
+	const moved = (objectKeys(toMappedGuildData(current)) as Array<keyof GuildData>).filter(
+		(key) => !isDeepEqual(stored[key], previous[key]),
+	);
+	if (moved.length === 0) {
+		return;
+	}
+
+	// A state not shaped like the settings has no key to move on its own.
+	if (!moved.every((key) => key in current)) {
+		originalState.value = current;
+		return;
+	}
+
+	originalState.value = {
+		...originalState.value,
+		...Object.fromEntries(moved.map((key) => [key, current[key]])),
+	};
+}
+
 watch(
 	originalGuildSettings,
-	() => {
+	(stored, previous) => {
 		if (isOriginalStateInitialized.value) {
-			originalState.value = structuredClone(toRaw(state));
+			rebaseOriginalState(stored, previous);
 		}
 	},
 	{ flush: "sync" },

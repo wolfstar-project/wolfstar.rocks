@@ -331,4 +331,101 @@ describe("Form - Reset Behavior", () => {
 		// Should revert to original
 		expect((prefixInput.element as HTMLInputElement).value).toBe("!");
 	});
+
+	describe("when the stored settings change", () => {
+		const TwoKeysForm = defineComponent({
+			components: { Form },
+			setup() {
+				const state = reactive({ language: "en-US", rolesMuted: "!" });
+				return { state, testSchema };
+			},
+			template: `
+				<Form :schema="testSchema" :state="state">
+					<input id="muted-input" v-model="state.rolesMuted" />
+					<input id="language-input" v-model="state.language" />
+				</Form>
+			`,
+		});
+
+		async function mountEdited() {
+			const wrapper = await mountSuspended(TwoKeysForm);
+			await nextTick();
+			await nextTick();
+			await wrapper.find("#muted-input").setValue("??");
+			await nextTick();
+			return wrapper;
+		}
+
+		async function reset() {
+			mockResetGuildSettingsChanges();
+			await nextTick();
+			await nextTick();
+		}
+
+		const inputValue = (wrapper: Awaited<ReturnType<typeof mountEdited>>, id: string) =>
+			(wrapper.find(id).element as HTMLInputElement).value;
+
+		it("resets an edit to what is stored after a save of keys it does not hold", async () => {
+			const wrapper = await mountEdited();
+
+			mockOriginalGuildSettings.value = {
+				...mockOriginalGuildSettings.value,
+				commandsDisabled: ["ban"],
+			};
+			await nextTick();
+			await reset();
+
+			expect(inputValue(wrapper, "#muted-input")).toBe("!");
+		});
+
+		it("moves only the key that changed, so the other one still resets", async () => {
+			const wrapper = await mountEdited();
+
+			await wrapper.find("#language-input").setValue("it-IT");
+			mockOriginalGuildSettings.value = {
+				...mockOriginalGuildSettings.value,
+				language: "it-IT",
+			};
+			await nextTick();
+			await reset();
+
+			expect(inputValue(wrapper, "#muted-input")).toBe("!");
+			expect(inputValue(wrapper, "#language-input")).toBe("it-IT");
+		});
+
+		it("moves everything when its state is not shaped like the settings", async () => {
+			let formState: Record<string, unknown> = {};
+			const NestedForm = defineComponent({
+				components: { Form },
+				setup() {
+					const state = reactive({ muted: { value: "!" } });
+					formState = state;
+					const mapToGuildData = (form: typeof state): Partial<GuildData> => ({
+						rolesMuted: form.muted.value,
+					});
+					return { mapToGuildData, state, testSchema };
+				},
+				template: `
+					<Form :schema="testSchema" :state="state" :map-to-guild-data="mapToGuildData">
+						<input id="muted-input" v-model="state.muted.value" />
+					</Form>
+				`,
+			});
+			const wrapper = await mountSuspended(NestedForm);
+			await nextTick();
+			await nextTick();
+			await wrapper.find("#muted-input").setValue("??");
+
+			mockOriginalGuildSettings.value = {
+				...mockOriginalGuildSettings.value,
+				rolesMuted: "??",
+			};
+			await nextTick();
+			await reset();
+
+			expect((wrapper.find("#muted-input").element as HTMLInputElement).value).toBe("??");
+			// A settings key it does not hold must not end up in the form's state.
+			expect(Object.keys(formState)).toStrictEqual(["muted"]);
+		});
+	});
 });

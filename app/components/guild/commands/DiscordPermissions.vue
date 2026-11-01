@@ -148,11 +148,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-	COMMAND_PERMISSIONS_GRANT,
-	MAXIMUM_COMMAND_OVERWRITES,
-	normalizeOverwrites,
-} from "#shared/utils/command-permissions";
+import { MAXIMUM_COMMAND_OVERWRITES, normalizeOverwrites } from "#shared/utils/command-permissions";
 
 const { ts } = useI18n();
 const headingId = useId();
@@ -165,7 +161,7 @@ const { guildData } = useGuildData();
 const backFromSignIn = route.query.tab === "discord";
 const authorizeUrl = computed(() => {
 	const back = `/guilds/${activeGuildId.value}/manage/commands?tab=discord`;
-	return `/oauth/login?grant=${COMMAND_PERMISSIONS_GRANT}&next=${encodeURIComponent(back)}`;
+	return `/oauth/login?next=${encodeURIComponent(back)}`;
 });
 
 // Unsent edits are not left out of sight.

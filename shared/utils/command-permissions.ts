@@ -20,9 +20,6 @@ export type Overwrite = APIApplicationCommandPermission;
  */
 export const COMMAND_PERMISSIONS_SCOPE = "applications.commands.permissions.update";
 
-/** The `grant` the sign-in page reads to ask for {@link COMMAND_PERMISSIONS_SCOPE}. */
-export const COMMAND_PERMISSIONS_GRANT = "command-permissions";
-
 /** The most rows Discord keeps for one command. */
 export const MAXIMUM_COMMAND_OVERWRITES = 100;
 

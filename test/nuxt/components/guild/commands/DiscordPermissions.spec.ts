@@ -128,7 +128,7 @@ describe("GuildCommandsDiscordPermissions", () => {
 		expect(
 			wrapper
 				.find(
-					`a[href="/oauth/login?grant=command-permissions&next=${encodeURIComponent(`/guilds/${GUILD_ID}/manage/commands?tab=discord`)}"]`,
+					`a[href="/oauth/login?next=${encodeURIComponent(`/guilds/${GUILD_ID}/manage/commands?tab=discord`)}"]`,
 				)
 				.exists(),
 		).toBe(true);

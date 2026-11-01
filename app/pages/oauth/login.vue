@@ -31,10 +31,6 @@
 </template>
 
 <script setup lang="ts">
-import {
-	COMMAND_PERMISSIONS_GRANT,
-	COMMAND_PERMISSIONS_SCOPE,
-} from "#shared/utils/command-permissions";
 const { ts } = useI18n();
 const { localizeAuthError } = useAuthErrorMessage();
 
@@ -65,14 +61,10 @@ async function startSignIn() {
 
 	// `execute` never throws: a failed hand-off lands in `signInDiscord.error`
 	// and renders the retry panel instead of leaving a spinner up forever.
-	// The command permissions tab sends `grant=command-permissions` to ask for
-	// the one scope a sign-in does not request; any other value is ignored.
-	const grant = Array.isArray(route.query.grant) ? route.query.grant[0] : route.query.grant;
 	await signInDiscord.execute({
 		provider: "discord",
 		callbackURL: `/oauth/callback?next=${encodeURIComponent(safeNext)}`,
 		errorCallbackURL: "/oauth/callback",
-		...(grant === COMMAND_PERMISSIONS_GRANT && { scopes: [COMMAND_PERMISSIONS_SCOPE] }),
 	});
 }
 

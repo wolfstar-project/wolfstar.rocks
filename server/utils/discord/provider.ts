@@ -17,13 +17,15 @@ export interface DiscordProviderCredentials {
  * Scopes requested on top of Better Auth's Discord defaults (`identify`, `email`).
  *
  * `guilds` is required for GET /users/@me/guilds (the dashboard guild list);
- * `guilds.members.read` only covers per-guild member lookups.
+ * `guilds.members.read` only covers per-guild member lookups;
+ * {@link COMMAND_PERMISSIONS_SCOPE} lets a server's manager edit Discord's
+ * permissions for the bot's commands from the dashboard.
  */
-export const DISCORD_OAUTH_SCOPES = ["guilds", "guilds.members.read"] as const;
-
-// Asked only by the sign-in the command permissions tab starts (see
-// `app/pages/oauth/login.vue`), never at an ordinary one.
-export { COMMAND_PERMISSIONS_SCOPE };
+export const DISCORD_OAUTH_SCOPES = [
+	"guilds",
+	"guilds.members.read",
+	COMMAND_PERMISSIONS_SCOPE,
+] as const;
 
 /**
  * Builds the Better Auth Discord social-provider options.

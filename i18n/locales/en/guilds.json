@@ -548,7 +548,7 @@
 			"removed": "Removed",
 			"review": "Review changes",
 			"roles": "Roles",
-			"scope_needed": "Changing these permissions uses your own Discord account, with a permission the sign-in does not ask for. Authorize it once with Discord; you come back here afterwards.",
+			"scope_needed": "Changing these permissions uses your own Discord account, and your current sign-in does not cover it. Authorize it once with Discord; you come back here afterwards.",
 			"send": "Send to Discord",
 			"sending": "Sending the changes of {total} commands…",
 			"sent_before_stop": "Commands saved before it stopped: {count}.",

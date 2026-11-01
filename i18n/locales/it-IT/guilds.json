@@ -1,150 +1,627 @@
 {
 	"$schema": "../../schemas/guilds.schema.json",
 	"guild_card": {
-		"invite_aria": "Invita il bot su {name}",
-		"invite_bot": "Invita bot",
-		"invite_bot_aria": "Invita bot su {name}",
-		"manage_aria": "Gestisci {name}",
-		"manage_server": "Gestisci server",
-		"manage_server_aria": "Gestisci server {name}",
-		"members_online": "Membri online",
-		"no_permission": "Nessun permesso",
-		"no_permission_aria": "Nessun permesso per gestire {name}",
-		"total_members": "Membri totali: {count}"
+		"invite_bot_aria": "Invita bot su {name}"
+	},
+	"guild_member_picker": {
+		"add": "",
+		"add_member": "",
+		"add_to": "",
+		"added": "",
+		"dialog_description": "",
+		"dialog_title": "",
+		"not_in_server": "",
+		"search_placeholder": "",
+		"type_to_search": ""
 	},
 	"guild_settings": {
+		"access": {
+			"allow_note": "",
+			"default_permissions": "",
+			"default_roles": "",
+			"default_title": "",
+			"deny_note": "",
+			"form_aria": "",
+			"legacy_allow": "",
+			"legacy_becomes_allow": "",
+			"legacy_becomes_deny": "",
+			"legacy_deny": "",
+			"legacy_download": "",
+			"legacy_drops": "",
+			"legacy_import": "",
+			"legacy_import_all": "",
+			"legacy_import_aria": "",
+			"legacy_member": "",
+			"legacy_not_convertible": "",
+			"legacy_remove": "",
+			"legacy_remove_cancel": "",
+			"legacy_remove_confirm_label": "",
+			"legacy_remove_description": "",
+			"legacy_remove_failed": "",
+			"legacy_remove_submit": "",
+			"legacy_remove_title": "",
+			"legacy_removed": "",
+			"legacy_subtitle": "",
+			"legacy_title": "",
+			"members_allowed": "",
+			"members_denied": "",
+			"members_order": "",
+			"members_title": "",
+			"roles_allowed": "",
+			"roles_denied": "",
+			"roles_order": "",
+			"roles_title": "",
+			"subtitle": "",
+			"title": ""
+		},
+		"appeals": {
+			"add_question": "",
+			"appealable_title": "",
+			"form_aria": "",
+			"form_notice": "",
+			"form_notice_title": "",
+			"off_body": "",
+			"off_summary": "",
+			"off_title": "",
+			"on_summary": "",
+			"question_aria": "",
+			"question_placeholder": "",
+			"questions_count": "",
+			"questions_empty": "",
+			"questions_extra": "",
+			"questions_full": "",
+			"questions_help": "",
+			"questions_title": "",
+			"remove_question": "",
+			"settings_title": "",
+			"subtitle": "",
+			"switch_aria": "",
+			"title": ""
+		},
+		"auto": {
+			"allow": {
+				"embeds": "",
+				"embeds_help": "",
+				"images": "",
+				"images_help": "",
+				"invites": "",
+				"invites_help": "",
+				"links": "",
+				"links_help": "",
+				"mentions": "",
+				"mentions_help": "",
+				"text": "",
+				"text_help": ""
+			},
+			"columns": {
+				"actions": "",
+				"channel": ""
+			},
+			"count": "",
+			"editor": {
+				"automessage_interval_help": "",
+				"automessage_subtitle": "",
+				"autodelete_subtitle": "",
+				"autopurge_interval_help": "",
+				"autopurge_subtitle": "",
+				"bots": "",
+				"bots_help": "",
+				"cancel": "",
+				"channel": "",
+				"channel_locked": "",
+				"channel_placeholder": "",
+				"delete_after": "",
+				"delete_after_help": "",
+				"delete_at_once": "",
+				"edit_title": "",
+				"enable": "",
+				"filter": "",
+				"filter_help": "",
+				"keep": "",
+				"keep_help": "",
+				"mentions": "",
+				"mentions_help": "",
+				"message": "",
+				"message_placeholder": "",
+				"new_title": "",
+				"preview": "",
+				"preview_empty": "",
+				"purge_every": "",
+				"save": "",
+				"send_every": "",
+				"value_help": "",
+				"value_text": "",
+				"value_text_placeholder": "",
+				"value_user": "",
+				"value_user_placeholder": ""
+			},
+			"errors": {
+				"channel": "",
+				"channel_taken": "",
+				"content": "",
+				"content_length": "",
+				"delay": "",
+				"message_interval": "",
+				"needs_text": "",
+				"needs_user": "",
+				"purge_interval": "",
+				"value_length": ""
+			},
+			"filters": {
+				"any": "",
+				"bots": "",
+				"contains": "",
+				"embeds": "",
+				"endsWith": "",
+				"humans": "",
+				"images": "",
+				"invites": "",
+				"links": "",
+				"mentions": "",
+				"notContains": "",
+				"startsWith": "",
+				"text": "",
+				"user": ""
+			},
+			"load_failed": "",
+			"module_hint": "Disattivandolo i canali qui sotto restano, ma smettono tutti di agire.",
+			"removed_title": "",
+			"retry": "",
+			"saved_title": "",
+			"server_errors": {
+				"channel": "",
+				"generic": "",
+				"invalid": "",
+				"limit": "",
+				"unknown": ""
+			}
+		},
+		"autodelete": {
+			"add": "",
+			"at_once": "",
+			"bots_deleted": "",
+			"bots_kept": "",
+			"channels_title": "",
+			"columns": {
+				"bots": "",
+				"delay": "",
+				"kept": ""
+			},
+			"edit_aria": "",
+			"empty_body": "",
+			"empty_title": "",
+			"footnote": "",
+			"nothing_kept": "",
+			"remove": "",
+			"remove_aria": "",
+			"remove_description": "",
+			"remove_title": "",
+			"removed_description": "",
+			"restart_body": "",
+			"restart_title": "",
+			"saved_description": "",
+			"subtitle": "",
+			"table_aria": ""
+		},
+		"automessage": {
+			"add": "",
+			"edit_aria": "",
+			"empty_body": "",
+			"empty_title": "",
+			"every": "",
+			"list_aria": "",
+			"mentions_aria": "",
+			"mentions_off": "",
+			"mentions_on": "",
+			"mentions_saved_off": "",
+			"mentions_saved_on": "",
+			"next": "",
+			"remove": "",
+			"remove_aria": "",
+			"remove_description": "",
+			"remove_title": "",
+			"removed_description": "",
+			"saved_description": "",
+			"subtitle": ""
+		},
+		"automod": {
+			"form_aria": "Modulo impostazioni dell'Automoderazione",
+			"hard_actions": {
+				"Ban": "Ban",
+				"Kick": "Espulsione",
+				"Mute": "Silenziamento",
+				"Softban": "Softban",
+				"Timeout": "Timeout",
+				"VoiceKick": "Espulsione dal vocale",
+				"Warning": "Avvertimento"
+			},
+			"module_hint": "Disattivandolo le regole qui sotto restano, ma smettono tutte di agire.",
+			"module_settings": "Impostazioni del modulo",
+			"options": {
+				"allowed": "Domini consentiti",
+				"allowedCodes": "Codici d'invito consentiti",
+				"allowedGuilds": "ID dei server consentiti",
+				"characters": "Caratteri ripetuti",
+				"maximum": "Massimo",
+				"minimum": "Lunghezza minima",
+				"perChannel": "",
+				"timePeriod": "Intervallo di tempo (secondi)",
+				"weighted": "Conta una menzione di ruolo come due e @everyone come cinque",
+				"words": "Parole"
+			},
+			"rules": {
+				"action": "Azione",
+				"count": "{count} / {max} regole",
+				"defaults": {
+					"description": "Le nuove regole create da qui partono da questi valori. Sono salvati in questo browser.",
+					"escalation_title": "Inasprimento predefinito",
+					"rule_title": "Regola predefinita",
+					"save": "Salva i valori predefiniti",
+					"saved": "Valori predefiniti salvati. Le nuove regole partiranno da questi."
+				},
+				"delete": "Elimina",
+				"delete_aria": "Elimina la regola {name}",
+				"delete_description": "La regola \"{name}\" smetterà di agire sui messaggi. L'operazione non si può annullare.",
+				"delete_title": "Elimina la regola",
+				"edit": "Modifica",
+				"edit_aria": "Modifica la regola {name}",
+				"editor": {
+					"action": "Azione",
+					"back": "Indietro",
+					"cancel": "Annulla",
+					"create": "Crea la regola",
+					"create_title": "Nuova regola",
+					"duration": "Durata",
+					"duration_unit_aria": "Unità di {label}",
+					"edit_title": "Modifica {name}",
+					"enabled": "Attiva",
+					"escalation": "Inasprimento",
+					"escalation_add": "Aggiungi un passaggio",
+					"escalation_duration": "Le punizioni contano per",
+					"escalation_duration_help": "Per quanto tempo una punizione conta per il passaggio successivo.",
+					"escalation_help": "Cosa sostituisce la punizione per i membri che continuano a raggiungere la soglia. L'ultimo passaggio si ripete.",
+					"escalation_remove_aria": "Rimuovi il passaggio {index}",
+					"escalation_step": "Passaggio {index}",
+					"exemptions": "Esenzioni",
+					"hard_action": "Punizione",
+					"hard_action_help": "Si applica quando un membro raggiunge la soglia. Con una soglia di 0 punisce alla prima infrazione.",
+					"ignored_channels": "Canali ignorati",
+					"ignored_roles": "Ruoli ignorati",
+					"list_placeholder": "Scrivi e premi Invio",
+					"name": "Nome",
+					"name_placeholder": "es. Niente link d'invito",
+					"options": "Cosa cerca",
+					"permanent_hint": "Lascia 0 per un'azione permanente.",
+					"save": "Salva la regola",
+					"soft_actions": "A ogni infrazione",
+					"soft_actions_help": "Si applica ogni volta che un messaggio viola la regola.",
+					"soft_alert": "Avvisa nel canale",
+					"soft_delete": "Elimina il messaggio",
+					"soft_log": "Registralo",
+					"threshold_duration": "Contate nell'arco di",
+					"threshold_maximum": "Infrazioni prima della punizione",
+					"type": "Tipo",
+					"type_locked": "Il tipo di una regola non si può cambiare."
+				},
+				"empty_description": "Crea una regola per iniziare a filtrare i messaggi su questo server.",
+				"empty_title": "Ancora nessuna regola",
+				"enabled_count": "{enabled} di {total} attive",
+				"errors": {
+					"generic": "Qualcosa è andato storto. Riprova.",
+					"invalid": "Il server ha rifiutato uno dei valori. Controlla i campi e riprova.",
+					"limit": "Questo server ha già il numero massimo di regole.",
+					"nameInvalid": "Usa un nome da 1 a 50 caratteri che non sia solo un numero.",
+					"nameRequired": "Dai un nome alla regola.",
+					"nameTaken": "Esiste già una regola con questo nome.",
+					"timeoutNeedsDuration": "Un passaggio di timeout richiede una durata.",
+					"unknown": "Questa regola non esiste più. Ricarica la pagina."
+				},
+				"first_infraction": "Prima infrazione",
+				"load_failed": "Non è stato possibile caricare le regole.",
+				"loading_aria": "Caricamento delle regole della moderazione automatica",
+				"new": "Crea una regola",
+				"no_match": "Nessuna regola corrisponde alla ricerca.",
+				"nothing": "Niente",
+				"on_hit": "Quando scatta",
+				"retry": "Riprova",
+				"search_placeholder": "Cerca regole per nome o tipo…",
+				"soft_alert_short": "Avviso",
+				"soft_delete_short": "Elimina",
+				"soft_log_short": "Log",
+				"subtitle": "Ogni regola controlla un tipo di messaggio e decide cosa succede. Le regole vengono salvate appena le confermi.",
+				"threshold": "Soglia",
+				"title": "Regole",
+				"toasts": {
+					"created": "Regola \"{name}\" creata",
+					"deleted": "Regola \"{name}\" eliminata",
+					"saved": "Regola \"{name}\" salvata"
+				},
+				"toggle_aria": "Attiva o disattiva la regola {name}",
+				"type_picker": {
+					"content_filters": "Filtri sui contenuti",
+					"description": "Una regola mantiene il tipo con cui è stata creata.",
+					"rate_limits": "Limiti di frequenza",
+					"title": "Scegli il tipo di regola"
+				}
+			},
+			"subtitle": "Scegli dove la moderazione automatica riporta ciò che fa e se segue anche l'AutoMod di Discord.",
+			"title": "Automoderazione",
+			"types": {
+				"Attachments": {
+					"description": "Ogni messaggio con un allegato viola la regola.",
+					"name": "Allegati"
+				},
+				"Capitals": {
+					"description": "Messaggi lunghi almeno quanto il minimo in cui la percentuale di lettere maiuscole raggiunge almeno il massimo.",
+					"name": "Lettere maiuscole"
+				},
+				"Characters": {
+					"description": "Messaggi più lunghi del numero massimo di caratteri.",
+					"name": "Lunghezza del messaggio"
+				},
+				"Duplicates": {
+					"description": "Messaggi che ripetono un carattere o una parola di seguito più volte del consentito.",
+					"name": "Testo ripetuto"
+				},
+				"Emojis": {
+					"description": "Messaggi con più emoji del massimo.",
+					"name": "Emoji"
+				},
+				"ImageSpam": {
+					"description": "Più immagini di un membro del massimo nell'intervallo di tempo, in uno o più messaggi.",
+					"name": "Spam di immagini"
+				},
+				"Invites": {
+					"description": "Link d'invito di Discord, tranne i codici e i server consentiti.",
+					"name": "Link d'invito"
+				},
+				"Links": {
+					"description": "Link, tranne quelli ai domini consentiti.",
+					"name": "Link"
+				},
+				"LinksCooldown": {
+					"description": "Più link di un membro del massimo nell'intervallo di tempo.",
+					"name": "Frequenza dei link"
+				},
+				"MaskedLinks": {
+					"description": "Messaggi con un link mostrato come un testo diverso.",
+					"name": "Link mascherati"
+				},
+				"MassMentions": {
+					"description": "Messaggi che menzionano più utenti diversi del massimo.",
+					"name": "Menzioni di massa"
+				},
+				"MentionsCooldown": {
+					"description": "Più menzioni di un membro del massimo nell'intervallo di tempo.",
+					"name": "Frequenza delle menzioni"
+				},
+				"MessageSpam": {
+					"description": "Più messaggi di un membro in un canale del massimo nell'intervallo di tempo.",
+					"name": "Spam di messaggi"
+				},
+				"Newlines": {
+					"description": "Messaggi con più righe del massimo.",
+					"name": "A capo"
+				},
+				"Phishing": {
+					"description": "Link a domini di phishing noti, tranne quelli consentiti.",
+					"name": "Link di phishing"
+				},
+				"Polls": {
+					"description": "",
+					"name": ""
+				},
+				"Spoilers": {
+					"description": "Messaggi con uno spoiler, nel testo o come allegato.",
+					"name": "Spoiler"
+				},
+				"Stickers": {
+					"description": "Ogni messaggio con uno sticker viola la regola.",
+					"name": "Sticker"
+				},
+				"StickersCooldown": {
+					"description": "Più sticker di un membro del massimo nell'intervallo di tempo.",
+					"name": "Frequenza degli sticker"
+				},
+				"Words": {
+					"description": "Messaggi che contengono una delle parole in elenco.",
+					"name": "Parole filtrate"
+				},
+				"Zalgo": {
+					"description": "Messaggi in cui un carattere porta più segni combinati del massimo.",
+					"name": "Testo Zalgo"
+				}
+			}
+		},
+		"autopurge": {
+			"add": "",
+			"columns": {
+				"every": "",
+				"filter": "",
+				"next": ""
+			},
+			"edit_aria": "",
+			"empty_body": "",
+			"empty_title": "",
+			"footnote": "",
+			"remove": "",
+			"remove_aria": "",
+			"remove_description": "",
+			"remove_title": "",
+			"removed_description": "",
+			"saved_description": "",
+			"schedules_title": "",
+			"subtitle": "",
+			"table_aria": ""
+		},
 		"channels": {
-			"excluded_channels": "Canali esclusi",
+			"bulk": {
+				"all_help": "Imposta il canale di tutti i log in una volta.",
+				"all_label": "Ogni log",
+				"cancel_selection": "Annulla selezione",
+				"group_help": "Imposta il canale di tutti i log di questo gruppo.",
+				"group_label": "Tutti i log: {group}",
+				"mixed": "canali diversi",
+				"no_logs_selected": "nessun log selezionato",
+				"remove_channel": "Rimuovi canale",
+				"select_group": "Seleziona tutti i log di {group}",
+				"select_log": "Seleziona {name}",
+				"select_logs": "Seleziona log",
+				"selected_count": "Nessun log selezionato | 1 log selezionato | {count} log selezionati",
+				"selection_help": "Imposta il canale di tutti i log selezionati.",
+				"selection_label": "Log selezionati",
+				"selection_region": "Azioni sui log selezionati"
+			},
+			"delivery": {
+				"edit_style": {
+					"difference": "",
+					"difference_help": "",
+					"separate": "",
+					"separate_help": ""
+				},
+				"title": ""
+			},
+			"excluded_channels": "Canali ignorati",
 			"excluded_channels_help": "Canali esclusi da tipi specifici di registro.",
 			"form_aria": "Modulo impostazioni canali",
+			"groups": {
+				"channels": "Canali",
+				"emojis": "Emoji",
+				"members": "Membri",
+				"messages": "Messaggi",
+				"reactions": "Reazioni",
+				"roles": "Ruoli",
+				"server": "Server e bot"
+			},
+			"ignore_dialog_title": "Ignora canali",
+			"ignored_count": "Nessun canale ignorato | 1 canale ignorato | {count} canali ignorati",
 			"logging_channels": "Canali di registro",
 			"logging_channels_help": "Scegli dove WolfStar pubblica ogni tipo di registro.",
+			"not_logged": "non registrato",
+			"nothing_ignored": "Nessun canale ignorato.",
+			"routed_count": "{routed} di {total} instradati",
+			"search_text_channels": "Cerca canali testuali…",
 			"subtitle": "Scegli dove WolfStar pubblica i log e quali canali ignorare.",
-			"title": "Impostazioni canali"
+			"title": "Log degli eventi"
+		},
+		"command_permissions": {
+			"added": "",
+			"administrator_note": "",
+			"all_channels": "",
+			"allow": "",
+			"allowed": "",
+			"app_default": "",
+			"app_default_note": "",
+			"authorize": "",
+			"changed_count": "",
+			"channels": "",
+			"conflict": "",
+			"conflict_title": "",
+			"count_aria": "",
+			"denied": "",
+			"deny": "",
+			"error_channel": "",
+			"error_command": "",
+			"error_permissions": "",
+			"error_rate_limited": "",
+			"error_refused": "",
+			"error_role_above": "",
+			"error_scope": "",
+			"error_unknown_channel": "",
+			"error_unknown_command": "",
+			"error_unknown_role": "",
+			"everyone": "",
+			"failed_title": "",
+			"flipped": "",
+			"keep_editing": "",
+			"load_failed": "",
+			"member": "",
+			"members": "",
+			"missing": "",
+			"missing_title": "",
+			"not_registered": "",
+			"not_set": "",
+			"over_limit": "",
+			"preview_description": "",
+			"preview_title": "",
+			"reload": "",
+			"removed": "",
+			"review": "",
+			"roles": "",
+			"scope_needed": "",
+			"send": "",
+			"sending": "",
+			"sent_before_stop": "",
+			"status_custom": "",
+			"status_default": "",
+			"subtitle": "",
+			"title": "",
+			"use_app_default": ""
+		},
+		"command_rules": {
+			"allowed_channels": "Solo in",
+			"allowed_roles": "Anche per i ruoli",
+			"allowed_users": "Anche per i membri",
+			"editor": {
+				"allowed_channels": "Canali consentiti",
+				"allowed_channels_hint": "Solo questi canali. Se vuoto, tutti i canali.",
+				"allowed_roles": "Ruoli consentiti",
+				"allowed_roles_hint": "Un'eccezione: usano il comando anche con un ruolo ignorato più in basso.",
+				"also_applies": "Vale anche",
+				"cancel": "Annulla",
+				"conflict_description": "Qualcuno l'ha salvato dopo che l'hai aperto. L'editor ora mostra ciò che è salvato: rifai la modifica.",
+				"conflict_title": "{name} è cambiato",
+				"count": "Nessuna regola | 1 regola | {count} regole",
+				"disabled_by": "{target} è disattivato con /commands. Riattivare qui questo comando non lo annulla.",
+				"enabled": "Attivo",
+				"enabled_hint": "I membri possono usare {name} dove lo permettono le regole qui sotto.",
+				"enabled_hint_off": "Nessuno può usare {name} su questo server.",
+				"form_aria": "Modulo impostazioni di {name}",
+				"ignored_channels": "Canali ignorati",
+				"ignored_channels_hint": "WolfStar ignora il comando qui.",
+				"ignored_roles": "Ruoli ignorati",
+				"ignored_roles_hint": "Non possono usarlo, a meno che un ruolo più alto o una loro regola lo permetta.",
+				"load_failed": "Impossibile caricare le regole di {name}.",
+				"members_kept": "Nessun membro | 1 membro impostato con /commands su Discord resta com'è. | {count} membri impostati con /commands su Discord restano come sono.",
+				"note_allowed": "consentito",
+				"note_ignored": "ignorato",
+				"off_note": "Le sue regole restano salvate e tornano quando riattivi il comando.",
+				"only_allowed": "Solo i ruoli e gli utenti consentiti",
+				"only_allowed_hint": "Tutti gli altri non possono usare il comando.",
+				"open_aria": "Impostazioni di {name}",
+				"retry": "Riprova",
+				"save": "Salva regole",
+				"save_failed_description": "Impossibile salvare le regole di {name}. {message}",
+				"save_failed_title": "Salvataggio non riuscito",
+				"saved_description": "Da ora WolfStar applica le nuove regole di {name}.",
+				"saved_title": "Regole del comando salvate",
+				"summary_none": "Nessuna regola aggiuntiva: valgono i permessi di Discord",
+				"summary_off": "Disattivato su questo server",
+				"title": "Regole del comando"
+			},
+			"every_command": "Tutti i comandi",
+			"groups_subtitle": "Valgono per tutti i comandi che indicano. Si cambiano con /commands su Discord.",
+			"groups_title": "Regole di un gruppo di comandi",
+			"ignored_channels": "Non in",
+			"ignored_roles": "Non per i ruoli",
+			"ignored_users": "Non per i membri",
+			"order": "Decide la regola del membro, poi il suo ruolo più alto tra quelli elencati e, tra due regole, la più specifica. Un canale ignorato da una regola vale sempre; i canali consentiti della regola più specifica sostituiscono gli altri."
 		},
 		"commands": {
 			"category_reset": "Reimposta categoria",
 			"category_reset_description": "Reimposta tutti i comandi di questa categoria al valore predefinito.",
+			"channels_form_aria": "Modulo impostazioni dei canali disattivati",
 			"disable_all": "Disattiva tutto",
+			"disabled_channels": "Canali in cui nessun comando funziona",
 			"enable_all": "Attiva tutto",
+			"enabled_count": "{enabled} / {total} attivi",
 			"form_aria": "Modulo impostazioni comandi disabilitati",
+			"off": "Disattivato",
+			"on": "Attivo",
 			"reset": "Reimposta",
 			"save_failed": "Impossibile salvare le impostazioni dei comandi. {message}",
-			"subtitle": "Scegli quali comandi abilitare o disabilitare sul tuo server",
+			"subtitle": "Scegli quali comandi abilitare o disabilitare sul tuo server. Fai clic su un comando per le sue regole.",
 			"title": "Comandi"
-		},
-		"events": {
-			"channels_page_link": "la pagina Canali",
-			"form_aria": "Modulo impostazioni eventi",
-			"message_events": "Eventi dei messaggi",
-			"message_events_help": "Questi eventi tracciano l'attività dei messaggi. I canali richiesti variano in base al tipo di evento e possono essere configurati in {channelsPage}.",
-			"moderation_events": "Eventi di moderazione",
-			"moderation_events_help": "Questi eventi riguardano azioni di moderazione. Configura un canale dei registri di moderazione in {channelsPage}.",
-			"subtitle": "Configura quali eventi devono essere registrati e monitorati",
-			"title": "Impostazioni eventi",
-			"toggle_aria": "Attiva o disattiva {title}"
-		},
-		"filter": {
-			"capitals": {
-				"filter_label": "Filtro {state}",
-				"form_aria": "Modulo impostazioni filtro maiuscole",
-				"maximum": "Caratteri maiuscoli massimi",
-				"minimum": "Caratteri minimi",
-				"save_failed": "Impossibile salvare le impostazioni del filtro maiuscole. {message}",
-				"title": "Filtro lettere maiuscole",
-				"toggle": "Attiva/disattiva filtro maiuscole",
-				"toggle_help": "Blocca i messaggi con troppi caratteri in maiuscolo."
-			},
-			"common": {
-				"actions": {
-					"ban": "Ban",
-					"kick": "Espulsione",
-					"mute": "Silenziamento",
-					"none": "Nessuna",
-					"softban": "Softban",
-					"warning": "Avvertimento"
-				},
-				"alerts": "Avvisi",
-				"alerts_help": "Pubblica un avviso nel canale dove è avvenuta la violazione.",
-				"delete_message": "Elimina messaggio",
-				"delete_message_help": "Elimina il messaggio che ha attivato il filtro.",
-				"disabled": "Disattivato",
-				"duration": "Durata",
-				"duration_help": "Durata del silenziamento o del ban",
-				"enabled": "Attivato",
-				"hard_action": "Azione hard",
-				"hard_action_description": "Punizione applicata quando viene raggiunta la soglia.",
-				"logging": "Registrazione",
-				"logging_help": "Invia un messaggio di log al canale di log di moderazione configurato.",
-				"options": "Opzioni",
-				"punishments": "Sanzioni",
-				"select_action_aria": "Seleziona azione di punizione",
-				"soft_actions": "Azioni soft",
-				"threshold": "Soglia",
-				"threshold_duration": "Finestra temporale (secondi)",
-				"threshold_maximum": "Violazioni prima della sanzione"
-			},
-			"invites": {
-				"filter_label": "Filtro {state}",
-				"form_aria": "Modulo impostazioni filtro inviti",
-				"save_failed": "Impossibile salvare le impostazioni del filtro inviti. {message}",
-				"title": "Filtro link di invito",
-				"toggle": "Attiva/disattiva filtro inviti",
-				"toggle_help": "Blocca i link di invito Discord pubblicati in chat."
-			},
-			"lines": {
-				"filter_label": "Filtro {state}",
-				"form_aria": "Modulo impostazioni filtro nuove righe",
-				"maximum": "Righe massime",
-				"maximum_help": "Numero massimo di nuove righe consentite in un messaggio.",
-				"save_failed": "Impossibile salvare le impostazioni del filtro nuove righe. {message}",
-				"title": "Filtro spam di righe",
-				"toggle": "Attiva/disattiva filtro nuove righe",
-				"toggle_help": "Blocca i messaggi con troppe righe nuove."
-			},
-			"links": {
-				"add_link": "Aggiungi link consentito",
-				"add_link_placeholder": "esempio.com",
-				"allowed_links": "Link consentiti",
-				"filter_label": "Filtro {state}",
-				"form_aria": "Modulo impostazioni filtro link",
-				"remove_link": "Rimuovi {link}",
-				"save_failed": "Impossibile salvare le impostazioni del filtro link. {message}",
-				"title": "Filtro link",
-				"toggle": "Attiva/disattiva filtro link",
-				"toggle_help": "Blocca i messaggi contenenti link."
-			},
-			"messages": {
-				"filter_label": "Filtro {state}",
-				"form_aria": "Modulo impostazioni filtro messaggi duplicati",
-				"save_failed": "Impossibile salvare le impostazioni del filtro messaggi duplicati. {message}",
-				"title": "Filtro messaggi duplicati",
-				"toggle": "Attiva/disattiva filtro messaggi duplicati",
-				"toggle_help": "Blocca i messaggi identici ripetuti."
-			},
-			"reactions": {
-				"filter_label": "Filtro {state}",
-				"form_aria": "Modulo impostazioni filtro reazioni",
-				"save_failed": "Impossibile salvare le impostazioni del filtro reazioni. {message}",
-				"title": "Filtro reazioni",
-				"toggle": "Attiva/disattiva filtro reazioni",
-				"toggle_help": "Blocca specifiche reazioni emoji."
-			},
-			"word": {
-				"add_placeholder": "es. parolaccia",
-				"add_word": "Aggiungi parola filtrata",
-				"alerts_toggle": "Attiva/disattiva azione soft avvisi",
-				"delete_toggle": "Attiva/disattiva azione soft eliminazione",
-				"filtered_words": "Parole filtrate",
-				"filter_label": "Filtro {state}",
-				"form_aria": "Modulo impostazioni filtro parole",
-				"logging_toggle": "Attiva/disattiva azione soft registrazione",
-				"remove_word": "Rimuovi {word}",
-				"save_failed": "Impossibile salvare le impostazioni del filtro parole. {message}",
-				"title": "Filtro parole",
-				"toggle": "Attiva/disattiva filtro parole",
-				"toggle_help": "Blocca i messaggi contenenti parole o frasi specifiche."
-			}
 		},
 		"general": {
 			"copy_server_id": "Copia ID server",
@@ -153,13 +630,18 @@
 			"language_aria": "Lingua del bot",
 			"language_description": "Lingua delle risposte del bot in questo server.",
 			"language_placeholder": "Seleziona lingua",
+			"last_change": "Ultima modifica {when} · {name}",
+			"mod_actions_aria": "Azioni di moderazione al giorno: {days}",
+			"mod_actions_partial": "Le barre coprono le ultime {count} azioni; il totale le conta tutte.",
+			"mod_actions_title": "Azioni di moderazione · ultimi 7 giorni",
+			"mod_actions_total": "{count} in totale",
 			"need_help": "Hai bisogno di aiuto?",
-			"no_activity": "Nessuna modifica alle impostazioni ancora",
-			"no_activity_description": "Le modifiche alle impostazioni appariranno qui.",
-			"prefix": "Prefisso",
-			"prefix_aria": "Prefisso dei comandi del bot",
-			"prefix_description": "Prefisso dei comandi del bot",
-			"prefix_placeholder": "!",
+			"no_activity": "Nessuna attività recente",
+			"no_activity_description": "Su questo server non è cambiato niente negli ultimi {count} giorni. Le modifiche fatte dalla dashboard compariranno qui.",
+			"no_activity_yet": "Ancora nessuna attività",
+			"no_activity_yet_description": "Su questo server non è ancora stato modificato niente. Attiva un modulo e ogni modifica fatta dalla dashboard comparirà qui.",
+			"overview_subtitle": "WolfStar su {name}, direttamente dal database condiviso.",
+			"overview_title": "Panoramica",
 			"recent_activity": "Attività recente",
 			"save_failed_message": "Impossibile salvare le impostazioni generali. {message}",
 			"server_id_copied_description": "L'ID del server è stato copiato negli appunti.",
@@ -167,221 +649,552 @@
 			"server_info": "Informazioni server",
 			"server_info_description": "Informazioni di base su questo server Discord.",
 			"server_stats_aria": "Statistiche del server",
-			"stat_categories": "Categorie",
+			"stat_cases": "Casi",
+			"stat_categories_note": "Nessuna categoria | 1 categoria | {count} categorie",
+			"stat_channels": "Canali",
+			"stat_commands": "Comandi",
+			"stat_last_days": "ultimi {count} giorni",
 			"stat_members": "Membri",
+			"stat_online": "{count} online",
+			"stat_open_reports": "",
+			"stat_open_reports_note": "",
 			"stat_roles": "Ruoli",
-			"stat_text_channels": "Canali di testo",
-			"stat_voice_channels": "Canali vocali",
 			"subtitle": "Configura le impostazioni di base del server per WolfStar.",
-			"title": "Impostazioni generali"
+			"time_zone": "",
+			"time_zone_description": "",
+			"time_zone_now": "",
+			"title": "Impostazioni generali",
+			"transfer": {
+				"becomes": "diventa",
+				"cancel": "Annulla",
+				"confirm": "Importa",
+				"description": "Copia le impostazioni e le regole di auto-moderazione di questo server in un file, o ripristinale da uno. È il file di /settings server export, quindi lo legge anche il bot. Ruoli, canali e utenti non ci sono.",
+				"export": "Esporta",
+				"export_failed": "Impossibile esportare le impostazioni",
+				"exported": "Impostazioni esportate",
+				"import": "Importa",
+				"import_failed": "Impossibile importare il file",
+				"imported": "Impostazioni importate",
+				"issues_aria": "Problemi nel file",
+				"nothing": "Questo server è già come dice il file. Non c'è nulla da importare.",
+				"refused_description": "{file} ha i problemi qui sotto. Non è stato cambiato nulla.",
+				"refused_title": "Questo file non si può importare",
+				"review_description": "{file}: ecco cosa cambia l'importazione. Non viene scritto nulla finché non confermi.",
+				"review_title": "Importa le impostazioni",
+				"rules_created": "Create ({count}):",
+				"rules_heading": "Regole di auto-moderazione",
+				"rules_moved": "Rifatte per mantenere l'ordine del file ({count}):",
+				"rules_removed": "Eliminate ({count}):",
+				"rules_updated": "Modificate ({count}):",
+				"rules_warning": "Le regole di questo server che non sono nel file vengono eliminate.",
+				"settings_heading": "Impostazioni ({count})",
+				"stale": "Il server è cambiato mentre il file veniva letto. Scegli di nuovo il file.",
+				"title": "Esporta e importa",
+				"too_big": "Il file è troppo grande: al massimo 1 MB.",
+				"unsaved": "Salva o annulla le modifiche prima di importare.",
+				"unsupported": "Lasciate fuori, perché questa dashboard non le gestisce: {names}"
+			}
+		},
+		"honeypot": {
+			"action_help": "",
+			"action_title": "",
+			"actions": {
+				"ban": "",
+				"ban_help": "",
+				"kick": "",
+				"kick_help": "",
+				"softban": "",
+				"softban_help": ""
+			},
+			"behaviour_title": "",
+			"catching": "",
+			"channel_help": "",
+			"channels_title": "",
+			"copied_description": "",
+			"copied_title": "",
+			"copy_setup": "",
+			"errors": {
+				"same_channel": "",
+				"unknown_channel": "",
+				"trap_permissions": "",
+				"log_permissions": ""
+			},
+			"form_aria": "",
+			"not_reported": "",
+			"off_body": "",
+			"off_summary": "",
+			"off_title": "",
+			"pick_channel": "",
+			"pick_channel_hint": "",
+			"subtitle": "",
+			"title": "",
+			"warning_help": ""
 		},
 		"moderation": {
+			"cases_title": "Casi",
 			"form_aria": "Modulo impostazioni moderazione",
-			"subtitle": "Configura come WolfStar gestisce le azioni di moderazione come ban, espulsioni e silenziamenti.",
-			"title": "Impostazioni sanzioni"
+			"minutes": "",
+			"module_hint": "Disattivandolo WolfStar rifiuta i comandi di moderazione, come /ban e /warn. Le impostazioni qui sotto si possono comunque cambiare.",
+			"subtitle": "Dove vengono registrati i casi, quali azioni manuali ne aprono uno e come vengono esaminate le segnalazioni dei membri.",
+			"title": "Moderazione"
+		},
+		"modules": {
+			"active_hint": "Il modulo è attivo su questo server.",
+			"channel_count": "",
+			"configure": "Configura",
+			"descriptions": {
+				"appeals": "",
+				"autodelete": "",
+				"automessage": "",
+				"automod": "Filtri dei messaggi e le loro regole di inasprimento.",
+				"autopurge": "",
+				"channels": "",
+				"honeypot": "",
+				"moderation": "Azioni di moderazione manuali e la cronologia dei loro casi.",
+				"roles": "Automazione dei ruoli: ruoli iniziali e ruoli persistenti."
+			},
+			"disable_all": "Disattiva tutti",
+			"enable_all": "Attiva tutti",
+			"enable_first": "Prima attivalo",
+			"enabled_count": "{enabled} / {total} attivi",
+			"form_aria": "Modulo impostazioni dei moduli",
+			"hint": "Attiva un modulo, poi configuralo.",
+			"inactive_hint": "Attivalo per configurarlo.",
+			"manage": "Gestisci i moduli",
+			"not_set_up": "",
+			"off": "Disattivato",
+			"on": "Attivo",
+			"set_up": "",
+			"subtitle": "Attiva o disattiva i moduli di WolfStar per questo server, uno alla volta o tutti insieme.",
+			"summary_aria": "Panoramica dei moduli",
+			"title": "Moduli",
+			"toggle_aria": "Attiva o disattiva {title}"
 		},
 		"please_try_again": "Riprova.",
+		"reports": {
+			"queue": {
+				"columns": {
+					"filed": "Inviata",
+					"reason": "Motivo",
+					"status": "Stato",
+					"target": "Segnalato"
+				},
+				"empty_description": "Quando un membro segnala qualcuno, la segnalazione resta qui finché un moderatore non interviene o la archivia.",
+				"empty_status_description": "Al momento nessuna segnalazione ha questo stato.",
+				"empty_status_title": "Niente in questa categoria",
+				"empty_title": "Ancora nessuna segnalazione",
+				"filter_aria": "Mostra le segnalazioni per stato",
+				"refresh": "Aggiorna le segnalazioni",
+				"status": {
+					"actioned": "Gestita",
+					"all": "Tutte",
+					"dismissed": "Archiviata",
+					"open": "Aperta"
+				},
+				"table_aria": "Segnalazioni",
+				"title": "Coda di revisione"
+			},
+			"subtitle": "I membri segnalano un messaggio o un utente; i tuoi moderatori lo esaminano.",
+			"title": "Segnalazioni"
+		},
 		"roles": {
 			"configurable": "Ruoli configurabili",
 			"configurable_help": "Assegna ruoli per le funzioni principali del bot, come moderazione e assegnazione automatica.",
 			"form_aria": "Modulo impostazioni ruoli",
 			"general_options": "Opzioni generali",
+			"groups": {
+				"join": "Assegnati all'ingresso",
+				"moderation": "Moderazione",
+				"restrictions": "Restrizioni",
+				"staff": "Staff"
+			},
+			"not_set": "non impostato",
 			"restricted": "Ruoli ristretti",
 			"restricted_help": "Ruoli applicati quando viene usato un comando di restrizione.",
 			"subtitle": "Configura i ruoli che WolfStar utilizza per la moderazione, i permessi e l'automazione.",
 			"title": "Ruoli"
 		},
-		"save_failed": "Salvataggio non riuscito"
+		"save_failed": "Salvataggio non riuscito",
+		"setup": {
+			"back": "Torna a {step}",
+			"channels": {
+				"automod_help": "Qui compare ogni messaggio che un filtro elimina o segnala.",
+				"automod_label": "Log dell'auto-moderazione",
+				"description": "Scegli i canali dei moduli che hai attivato. Lascia vuoto un campo e quel log resta spento.",
+				"events_help": "Ingressi, uscite, messaggi eliminati e modificati, cambiamenti di ruoli e canali. Ogni evento potrà avere un canale tutto suo, più tardi, in Eventi.",
+				"events_label": "Log degli eventi",
+				"moderation_help": "Ban, kick, timeout e avvisi vengono pubblicati qui come casi.",
+				"moderation_label": "Log della moderazione",
+				"none": "Nessuno dei moduli che hai scelto pubblica in un canale. Torna indietro per attivarne uno, oppure continua.",
+				"note": "Tieni questi canali per lo staff. WolfStar ha bisogno di Visualizzare il canale e Inviare messaggi in ognuno.",
+				"title": "Dove deve pubblicare WolfStar?"
+			},
+			"close_aria": "Salta la configurazione per ora",
+			"description": "Scegli i moduli, i canali, i ruoli e la lingua con cui WolfStar parte in questo server.",
+			"done_description": "Le tue scelte sono salvate. Tutto resta modificabile nella dashboard.",
+			"done_title": "WolfStar è configurato su {name}",
+			"finish": "Termina la configurazione",
+			"language": {
+				"description": "La lingua in cui WolfStar risponde su questo server.",
+				"help": "È la lingua del server, valida per tutto il server. Non è la lingua della dashboard.",
+				"label": "Lingua del server",
+				"title": "Scegli una lingua"
+			},
+			"modules": {
+				"description": "Scegli cosa deve fare WolfStar qui. Ogni modulo è un interruttore che potrai cambiare più tardi, quindi nulla di ciò che segue è definitivo.",
+				"recommended": "Consigliato",
+				"title": "Configuriamo {name}",
+				"turn_on": "Attiva {name}"
+			},
+			"next": "Continua con {step}",
+			"rail_note": "Salta qualsiasi passaggio. Ogni impostazione resta poi nella dashboard.",
+			"rail_title": "Configurazione di WolfStar",
+			"resume_action": "Riprendi la configurazione",
+			"resume_description": "Hai saltato la configurazione. Riparti da dove eri, ci vuole un minuto.",
+			"resume_title": "Termina la configurazione di {name}",
+			"review": {
+				"description": "Ecco cosa WolfStar configurerà su {name}. Viene salvato come un'unica voce nell'attività delle impostazioni.",
+				"edit": "Modifica",
+				"edit_aria": "Modifica {label}",
+				"none": "Nessuno",
+				"none_on": "Nessuno attivo",
+				"not_set": "Non impostato",
+				"rows": {
+					"admin": "Ruoli amministratore",
+					"automod_log": "Log dell'auto-moderazione",
+					"event_log": "Log degli eventi",
+					"language": "Lingua del server",
+					"moderation_log": "Log della moderazione",
+					"moderator": "Ruoli moderatore",
+					"modules": "Moduli",
+					"muted": "Ruolo di silenziamento"
+				},
+				"title": "Quando vuoi, è tutto pronto"
+			},
+			"roles": {
+				"admin_help": "Gli amministratori possono usare ogni comando di moderazione e gestione. Se non ne imposti, lo è chiunque abbia Gestire il server.",
+				"admin_label": "Ruoli amministratore",
+				"description": "WolfStar usa questi ruoli per decidere chi può eseguire i suoi comandi per lo staff.",
+				"moderator_help": "I moderatori possono usare quasi ogni comando di moderazione. Se non ne imposti, lo è chiunque possa bannare i membri.",
+				"moderator_label": "Ruoli moderatore",
+				"muted_help": "Assegnato ai membri silenziati. Se non ne imposti uno, WolfStar propone di crearlo la prima volta che silenzi qualcuno.",
+				"muted_label": "Ruolo di silenziamento",
+				"none": "Nessun ruolo",
+				"title": "Chi gestisce questo server?"
+			},
+			"skip": "Salta per ora",
+			"skipped_description": "Potrai riprenderla dalla panoramica.",
+			"skipped_title": "Configurazione saltata",
+			"step_names": {
+				"channels": "Canali",
+				"language": "Lingua",
+				"modules": "Moduli",
+				"review": "Riepilogo",
+				"roles": "Ruoli"
+			},
+			"step_of": "Passaggio {step} di {total}",
+			"steps_aria": "Passaggi della configurazione",
+			"title": "Configura WolfStar su {name}"
+		},
+		"toggle_aria": "Attiva o disattiva {title}"
 	},
 	"settings": {
 		"entries": {
-			"channelsIgnoreAll": {
-				"description": "Canali esclusi da tutti i tipi di registrazione.",
-				"name": "Tutti i log"
+			"appealsBans": {
+				"description": "",
+				"name": ""
 			},
-			"channelsIgnoreMessageDelete": {
-				"description": "Canali esclusi dalla registrazione dei messaggi eliminati.",
-				"name": "Log messaggi eliminati"
+			"appealsChannel": {
+				"description": "",
+				"name": ""
 			},
-			"channelsIgnoreMessageEdit": {
-				"description": "Canali esclusi dalla registrazione dei messaggi modificati.",
-				"name": "Log messaggi modificati"
+			"appealsEnabled": {
+				"description": "",
+				"name": ""
 			},
-			"channelsIgnoreReactionAdd": {
-				"description": "Canali esclusi dalla registrazione delle reazioni.",
-				"name": "Log reazioni aggiunte"
+			"appealsMutes": {
+				"description": "",
+				"name": ""
 			},
-			"channelsLogsChannelCreate": {
+			"appealsQuestions": {
+				"description": "",
+				"name": ""
+			},
+			"appealsTimeouts": {
+				"description": "",
+				"name": ""
+			},
+			"automodChannel": {
+				"description": "Riceve un messaggio di log quando una regola della moderazione automatica agisce su un messaggio.",
+				"name": "Log dell'automoderazione"
+			},
+			"automodTrackNative": {
+				"description": "Registra anche le azioni delle regole dell'AutoMod di Discord.",
+				"name": "Segui l'AutoMod di Discord"
+			},
+			"commandsDisabledChannels": {
+				"description": "Qui ogni comando viene ignorato, qualunque siano le sue impostazioni.",
+				"name": "Canali disattivati"
+			},
+			"honeypotAction": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotChannel": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotDirectMessage": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotKeepActive": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotLogChannel": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotRandomName": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotWarning": {
+				"description": "",
+				"name": ""
+			},
+			"logsBoosts": {
+				"description": "",
+				"name": ""
+			},
+			"logsChannelCreate": {
 				"description": "Riceve un messaggio di log quando viene creato un nuovo canale.",
 				"name": "Log creazione canale"
 			},
-			"channelsLogsChannelDelete": {
+			"logsChannelDelete": {
 				"description": "Riceve un messaggio di log quando un canale viene eliminato.",
 				"name": "Log eliminazione canale"
 			},
-			"channelsLogsChannelUpdate": {
+			"logsChannelUpdate": {
 				"description": "Riceve un messaggio di log quando un canale viene aggiornato, incluse le modifiche apportate.",
 				"name": "Log aggiornamento canale"
 			},
-			"channelsLogsEmojiCreate": {
+			"logsEmojiCreate": {
 				"description": "Riceve un messaggio di log quando viene creata una nuova emoji.",
 				"name": "Log creazione emoji"
 			},
-			"channelsLogsEmojiDelete": {
+			"logsEmojiDelete": {
 				"description": "Riceve un messaggio di log quando un'emoji viene eliminata.",
 				"name": "Log eliminazione emoji"
 			},
-			"channelsLogsEmojiUpdate": {
+			"logsEmojiUpdate": {
 				"description": "Riceve un messaggio di log quando un'emoji viene aggiornata, incluse le modifiche apportate.",
 				"name": "Log aggiornamento emoji"
 			},
-			"channelsLogsImage": {
+			"logsEvents": {
+				"description": "",
+				"name": ""
+			},
+			"logsExpressions": {
+				"description": "",
+				"name": ""
+			},
+			"logsIgnoreAll": {
+				"description": "Canali esclusi da tutti i tipi di registrazione.",
+				"name": "Tutti i log"
+			},
+			"logsIgnoreMessages": {
+				"description": "Canali esclusi dalla registrazione dei messaggi eliminati e modificati.",
+				"name": "Log dei messaggi"
+			},
+			"logsIgnoreReactions": {
+				"description": "Canali esclusi dalla registrazione delle reazioni.",
+				"name": "Log delle reazioni"
+			},
+			"logsImage": {
 				"description": "Riceve copie ricaricate delle immagini pubblicate nel server.",
 				"name": "Log immagini"
 			},
-			"channelsLogsMemberAdd": {
+			"logsIntegrations": {
+				"description": "",
+				"name": ""
+			},
+			"logsInvites": {
+				"description": "",
+				"name": ""
+			},
+			"logsMemberAdd": {
 				"description": "Riceve un messaggio di log quando un membro si unisce al server.",
 				"name": "Log membro aggiunto"
 			},
-			"channelsLogsMemberNicknameUpdate": {
+			"logsMemberNicknameUpdate": {
 				"description": "Riceve un messaggio di log quando un membro cambia il suo nickname.",
 				"name": "Log aggiornamento nickname"
 			},
-			"channelsLogsMemberRemove": {
+			"logsMemberRemove": {
 				"description": "Riceve un messaggio di log quando un membro abbandona, viene espulso o bannato dal server.",
 				"name": "Log membro rimosso"
 			},
-			"channelsLogsMemberRolesUpdate": {
-				"description": "Riceve un messaggio di log quando un membro ottiene o perde un ruolo.",
-				"name": "Log ruoli membro"
-			},
-			"channelsLogsMemberUsernameUpdate": {
+			"logsMemberUsernameUpdate": {
 				"description": "Riceve un messaggio di log quando un membro cambia il suo nome utente.",
 				"name": "Log aggiornamento nome utente"
 			},
-			"channelsLogsMessageDelete": {
+			"logsMessageDelete": {
 				"description": "Riceve un messaggio di log quando un messaggio viene eliminato.",
 				"name": "Log messaggi eliminati"
 			},
-			"channelsLogsMessageDeleteNsfw": {
+			"logsMessageDeleteNsfw": {
 				"description": "Riceve un messaggio di log quando un messaggio da un canale NSFW viene eliminato.",
 				"name": "Log messaggi NSFW eliminati"
 			},
-			"channelsLogsMessageUpdate": {
+			"logsMessageUpdate": {
 				"description": "Riceve un messaggio di log quando un messaggio viene modificato.",
 				"name": "Log messaggi modificati"
 			},
-			"channelsLogsMessageUpdateNsfw": {
+			"logsMessageUpdateNsfw": {
 				"description": "Riceve un messaggio di log quando un messaggio da un canale NSFW viene modificato.",
 				"name": "Log messaggi NSFW modificati"
 			},
-			"channelsLogsModeration": {
-				"description": "Riceve tutti i log dei casi di moderazione. Necessario per il funzionamento degli eventi di moderazione.",
-				"name": "Log di moderazione"
+			"logsMessageUpdateStyle": {
+				"description": "",
+				"name": ""
 			},
-			"channelsLogsPrune": {
+			"logsPrune": {
 				"description": "Riceve un messaggio di log quando i messaggi vengono eliminati in blocco.",
 				"name": "Log eliminazione in blocco"
 			},
-			"channelsLogsReaction": {
+			"logsReactionEmojiAdd": {
 				"description": "Riceve un messaggio di log quando viene aggiunta una reazione a un messaggio.",
-				"name": "Log reazioni"
+				"name": "Log reazioni aggiunte"
 			},
-			"channelsLogsRoleCreate": {
+			"logsReactionEmojiIncludeTwemoji": {
+				"description": "Quando un membro reagisce con una Twemoji, la reazione viene inviata ai canali di log delle reazioni.",
+				"name": "Reazioni Twemoji"
+			},
+			"logsReactionEmojiRemove": {
+				"description": "Riceve un messaggio di log quando una reazione viene rimossa da un messaggio.",
+				"name": "Log reazioni rimosse"
+			},
+			"logsRoleCreate": {
 				"description": "Riceve un messaggio di log quando viene creato un nuovo ruolo.",
 				"name": "Log creazione ruolo"
 			},
-			"channelsLogsRoleDelete": {
+			"logsRoleDelete": {
 				"description": "Riceve un messaggio di log quando un ruolo viene eliminato.",
 				"name": "Log eliminazione ruolo"
 			},
-			"channelsLogsRoleUpdate": {
+			"logsRoleUpdate": {
 				"description": "Riceve un messaggio di log quando un ruolo viene aggiornato, incluse le modifiche apportate.",
 				"name": "Log aggiornamento ruolo"
 			},
-			"channelsLogsServerUpdate": {
+			"logsServerUpdate": {
 				"description": "Riceve un messaggio di log quando le impostazioni del server vengono aggiornate, incluse le modifiche apportate.",
 				"name": "Log aggiornamento server"
 			},
-			"eventsBanAdd": {
-				"description": "Un log di moderazione anonimo viene pubblicato quando un membro viene bannato.",
-				"title": "Ban aggiunto"
+			"logsThreads": {
+				"description": "",
+				"name": ""
 			},
-			"eventsBanRemove": {
-				"description": "Un log di moderazione anonimo viene pubblicato quando viene rimosso il ban di un membro.",
-				"title": "Ban revocato"
+			"logsWebhooks": {
+				"description": "",
+				"name": ""
 			},
-			"eventsTwemojiReactions": {
-				"description": "Quando un membro reagisce con un Twemoji, la reazione viene inviata al canale dei log delle reazioni.",
-				"title": "Reazioni Twemoji"
+			"moderationChannel": {
+				"description": "Riceve tutti i log dei casi di moderazione. Necessario perché le opzioni qui sotto funzionino.",
+				"name": "Log di moderazione"
 			},
-			"messagesIgnoreChannels": {
-				"description": "Canali esclusi dalla registrazione dei messaggi eliminati, modificati e delle reazioni aggiunte.",
-				"name": "Log eliminazione, modifica messaggi e aggiunta reazioni"
+			"moderationConfirmRecentMinutes": {
+				"description": "",
+				"name": ""
 			},
-			"messagesModerationAutoDelete": {
-				"description": "Elimina il messaggio del comando per mantenere l'anonimato del moderatore.",
-				"name": "Nascondi messaggio"
+			"moderationDehoist": {
+				"description": "",
+				"name": ""
 			},
-			"messagesModerationDm": {
-				"description": "Invia al membro sanzionato un messaggio privato con il motivo e la durata.",
-				"name": "Messaggio all'utente"
+			"moderationTrackBans": {
+				"description": "Apre un caso di moderazione quando un membro viene bannato o sbannato manualmente.",
+				"name": "Registra i ban manuali"
 			},
-			"messagesModerationMessageDisplay": {
-				"description": "Pubblica un messaggio di conferma dopo l'applicazione di una sanzione.",
-				"name": "Invia risposta di sanzione"
+			"moderationTrackKicks": {
+				"description": "",
+				"name": ""
 			},
-			"messagesModerationReasonDisplay": {
-				"description": "Include il motivo nel messaggio di risposta della sanzione.",
-				"name": "Mostra motivo"
+			"moderationTrackRoles": {
+				"description": "",
+				"name": ""
 			},
-			"messagesModeratorNameDisplay": {
-				"description": "Include il nome del moderatore nel messaggio privato inviato al membro sanzionato.",
-				"name": "Mostra nome moderatore"
+			"moderationTrackTimeouts": {
+				"description": "Apre un caso di moderazione quando un membro viene messo in timeout manualmente.",
+				"name": "Registra i timeout manuali"
+			},
+			"reportsAnonymous": {
+				"description": "Nasconde ai moderatori chi ha inviato la segnalazione.",
+				"name": "Segnalazioni anonime"
+			},
+			"reportsChannel": {
+				"description": "Riceve le segnalazioni inviate dai membri. Le segnalazioni restano disattivate finché non imposti un canale.",
+				"name": "Canale delle segnalazioni"
+			},
+			"reportsNotify": {
+				"description": "Avvisa chi ha segnalato quando un moderatore interviene o archivia la segnalazione.",
+				"name": "Avvisa chi segnala"
+			},
+			"reportsRole": {
+				"description": "Viene menzionato nel canale delle segnalazioni quando ne arriva una nuova.",
+				"name": "Ruolo avvisato"
 			},
 			"rolesAdmin": {
-				"name": "Amministratore",
-				"tooltip": "I ruoli amministratore. Gli amministratori hanno accesso a tutti i comandi di moderazione e gestione. Per impostazione predefinita, chiunque abbia il permesso \"Gestisci server\"."
+				"description": "I ruoli amministratore. Gli amministratori hanno accesso a tutti i comandi di moderazione e gestione. Per impostazione predefinita, chiunque abbia il permesso \"Gestisci server\".",
+				"name": "Amministratore"
 			},
 			"rolesInitial": {
-				"name": "Iniziale",
-				"tooltip": "Il ruolo iniziale, se configurato, viene assegnato agli utenti non appena si uniscono."
+				"description": "I ruoli iniziali vengono assegnati a ogni membro appena entra.",
+				"name": "Iniziale"
+			},
+			"rolesInitialHumans": {
+				"description": "Assegnati ai membri umani appena entrano.",
+				"name": "Iniziali (umani)"
+			},
+			"rolesInitialRobots": {
+				"description": "Assegnati ai bot appena vengono aggiunti al server.",
+				"name": "Iniziali (bot)"
 			},
 			"rolesModerator": {
-				"name": "Moderatore",
-				"tooltip": "I ruoli moderatore. I moderatori hanno accesso a quasi tutti i comandi di moderazione. Per impostazione predefinita, chiunque possa bannare i membri."
+				"description": "I ruoli moderatore. I moderatori hanno accesso a quasi tutti i comandi di moderazione. Per impostazione predefinita, chiunque possa bannare i membri.",
+				"name": "Moderatore"
 			},
 			"rolesMuted": {
-				"name": "Silenziato",
-				"tooltip": "Il ruolo silenziato, se configurato, viene assegnato agli utenti silenziati. Se non è impostato nessun ruolo di silenziamento, ti verrà chiesto di crearne uno."
+				"description": "Il ruolo silenziato, se configurato, viene assegnato agli utenti silenziati. Se non è impostato nessun ruolo di silenziamento, ti verrà chiesto di crearne uno.",
+				"name": "Silenziato"
 			},
 			"rolesPublic": {
-				"name": "Ruoli pubblici",
-				"tooltip": "I ruoli pubblici. Qualsiasi utente può richiederli tramite il comando \"roles\"."
+				"description": "I ruoli pubblici. Qualsiasi utente può richiederli tramite il comando \"roles\".",
+				"name": "Ruoli pubblici"
 			},
 			"rolesRemoveInitial": {
-				"name": "Rimuovi ruolo iniziale",
-				"tooltip": "Quando attivato, ottenere un ruolo pubblico rimuove automaticamente il ruolo iniziale."
+				"description": "Se attivo, richiedere un ruolo pubblico rimuove automaticamente i ruoli iniziali.",
+				"name": "Rimuovi ruolo iniziale"
 			},
 			"rolesRestrictedAttachment": {
-				"name": "Allegato ristretto",
-				"tooltip": "Assegnato ai membri a cui è vietato caricare allegati."
+				"description": "Assegnato ai membri a cui è vietato caricare allegati.",
+				"name": "Allegato ristretto"
 			},
 			"rolesRestrictedEmbed": {
-				"name": "Embed ristretto",
-				"tooltip": "Assegnato ai membri a cui è vietato incorporare link."
+				"description": "Assegnato ai membri a cui è vietato incorporare link.",
+				"name": "Embed ristretto"
 			},
 			"rolesRestrictedEmoji": {
-				"name": "Emoji ristretto",
-				"tooltip": "Assegnato ai membri a cui è vietato usare emoji esterni."
+				"description": "Assegnato ai membri a cui è vietato usare emoji esterni.",
+				"name": "Emoji ristretto"
 			},
 			"rolesRestrictedReaction": {
-				"name": "Reazione ristretta",
-				"tooltip": "Assegnato ai membri le cui reazioni sono limitate."
+				"description": "Assegnato ai membri le cui reazioni sono limitate.",
+				"name": "Reazione ristretta"
 			},
 			"rolesRestrictedVoice": {
-				"name": "Voce ristretta",
-				"tooltip": "Assegnato ai membri a cui è vietato entrare nei canali vocali."
+				"description": "Assegnato ai membri a cui è vietato entrare nei canali vocali.",
+				"name": "Voce ristretta"
 			}
 		}
 	}

@@ -1,55 +1,33 @@
 <template>
-	<div
+	<ul
 		v-if="hasChips"
-		class="flex animate-fade-in flex-wrap gap-3"
-		role="list"
-		aria-label="Command properties"
+		class="flex flex-wrap gap-2"
+		:aria-label="ts('marketing.commands.properties_label')"
 	>
-		<UBadge
-			v-if="command.permissionLevel > 0"
-			color="warning"
-			variant="outline"
-			size="md"
-			role="listitem"
-			:aria-label="`Permission level: ${permissionLevelLabel}`"
-			class="border-warning-300 bg-warning-50 font-semibold text-warning-800 dark:border-warning-700 dark:bg-warning-950/30 dark:text-warning-200"
+		<li
+			v-if="permissionLabel"
+			class="inline-flex h-7 items-center gap-1.5 rounded-full border border-warning/55 bg-warning/12 px-3 text-xs font-semibold text-warning theme-light:text-default"
 		>
-			<template #leading>
-				<UIcon name="i-heroicons-chevron-double-up" class="size-4" aria-hidden="true" />
-			</template>
-			{{ permissionLevelLabel }}
-		</UBadge>
+			<UIcon name="i-heroicons-chevron-double-up" class="size-3.25" aria-hidden="true" />
+			{{ permissionLabel }}
+		</li>
 
-		<UBadge
+		<li
 			v-if="isGuildOnly"
-			color="info"
-			variant="outline"
-			size="md"
-			role="listitem"
-			:aria-label="`Server requirement: ${guildOnlyLabel}`"
-			class="border-info-300 bg-info-50 font-semibold text-info-800 dark:border-info-700 dark:bg-info-950/30 dark:text-info-200"
+			class="inline-flex h-7 items-center gap-1.5 rounded-full border border-(--home-blurple-soft) bg-primary/8 px-3 text-xs font-semibold text-primary"
 		>
-			<template #leading>
-				<UIcon name="i-custom-discord" class="size-4" aria-hidden="true" />
-			</template>
-			{{ guildOnlyLabel }}
-		</UBadge>
+			<UIcon name="i-ic-round-discord" class="size-3.5" aria-hidden="true" />
+			{{ ts("marketing.commands.server_only") }}
+		</li>
 
-		<UBadge
+		<li
 			v-if="command.guarded"
-			color="error"
-			variant="outline"
-			size="md"
-			role="listitem"
-			aria-label="This command cannot be disabled"
-			class="border-error-300 bg-error-50 font-semibold text-error-800 dark:border-error-700 dark:bg-error-950/30 dark:text-error-200"
+			class="inline-flex h-7 items-center gap-1.5 rounded-full border border-error/55 bg-error/12 px-3 text-xs font-semibold text-error theme-light:text-default"
 		>
-			<template #leading>
-				<UIcon name="i-heroicons-lock-closed" class="size-4" aria-hidden="true" />
-			</template>
-			Cannot be disabled
-		</UBadge>
-	</div>
+			<UIcon name="i-heroicons-lock-closed" class="size-3" aria-hidden="true" />
+			{{ ts("marketing.commands.guarded") }}
+		</li>
+	</ul>
 </template>
 
 <script lang="ts" setup>
@@ -57,47 +35,22 @@ const { command } = defineProps<{
 	command: FlattenedCommand;
 }>();
 
-const GUILD_ONLY_PRECONDITIONS = new Set([
-	"Administrator",
-	"DJ",
-	"GuildOnly",
-	"Moderator",
-	"NewsOnly",
-	"NSFW",
-	"TextOnly",
-]);
+const { ts } = useI18n();
 
-const PERMISSION_TITLES: Record<number, string> = {
-	4: "This can only be ran by staff members.",
-	5: "This can only be ran by moderators and administrators.",
-	6: "This can only be ran by administrators.",
-};
+const isGuildOnly = computed(() => isGuildOnlyCommand(command));
 
-const MOBILE_TITLES: Record<number, string> = {
-	4: "Staff members only",
-	5: "Moderators & administrators only",
-	6: "Administrators only",
-};
+const permissionLabel = computed(() => {
+	switch (commandPermissionChip(command)) {
+		case "staff":
+			return ts("marketing.commands.permission_staff");
+		case "moderator":
+			return ts("marketing.commands.permission_moderator");
+		case "administrator":
+			return ts("marketing.commands.permission_administrator");
+		default:
+			return undefined;
+	}
+});
 
-const isGuildOnly = computed(() =>
-	command.preconditions.entries
-		.flatMap((preconditionEntry) => preconditionEntry.entries)
-		.filter(Boolean)
-		.map((entry) => entry.name)
-		.some((predicate) => GUILD_ONLY_PRECONDITIONS.has(predicate)),
-);
-
-const permissionLevelLabel = computed(() =>
-	isSmallScreen.value
-		? MOBILE_TITLES[command.permissionLevel]
-		: PERMISSION_TITLES[command.permissionLevel],
-);
-
-const guildOnlyLabel = computed(() =>
-	isSmallScreen.value ? "Usable in servers only." : "This can only be used in servers.",
-);
-
-const hasChips = computed(
-	() => command.permissionLevel > 0 || isGuildOnly.value || command.guarded,
-);
+const hasChips = computed(() => hasCommandChips(command));
 </script>

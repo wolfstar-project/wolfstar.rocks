@@ -2,10 +2,9 @@ import type { AppSession } from "#nuxt-better-auth";
 import type { EventHandler, EventHandlerRequest, H3Error, H3Event } from "h3";
 import type { CacheOptions } from "nitropack/types";
 import { createHash } from "node:crypto";
+import { createKeyedLock } from "#server/utils/keyed-lock";
 import { type PartialRateLimit, type RateLimit, RateLimitSchema } from "#shared/schemas";
 import { CLIENT_OUTDATED_HEADER } from "#shared/utils/skew-protection";
-import { Collection } from "@discordjs/collection";
-import { AsyncQueue } from "@sapphire/async-queue";
 import { cast, isObject } from "@sapphire/utilities";
 import * as Sentry from "@sentry/nuxt";
 import { useLogger, createError } from "evlog";
@@ -108,20 +107,7 @@ async function resolveHandlerSession(
 // compare-and-swap primitive, so this bounds reservation races to the single
 // server instance; cross-instance races remain possible and are an accepted
 // limitation of the storage backend.
-const rateLimitKeyLocks = new Collection<string, AsyncQueue>();
-
-async function withKeyLock<T>(key: string, fn: () => Promise<T>): Promise<T> {
-	const queue = rateLimitKeyLocks.ensure(key, () => new AsyncQueue());
-	await queue.wait();
-	try {
-		return await fn();
-	} finally {
-		queue.shift();
-		if (queue.remaining === 0) {
-			rateLimitKeyLocks.delete(key);
-		}
-	}
-}
+const withKeyLock = createKeyedLock();
 
 interface FixedWindowState {
 	windowStart?: number;

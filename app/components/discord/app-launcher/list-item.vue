@@ -96,15 +96,17 @@ const ariaLabel = computed(() => {
 
 .discord-app-launcher-list-item {
 	/* Discord row tokens: #35373c hover, #f2f3f5 name, #949ba4 body, #b5bac1 glyphs. */
-	--discord-app-launcher-list-item-hover: oklch(31.4% 0.006 272.93);
-	--discord-app-launcher-list-item-name: oklch(96.2% 0.002 272.93);
-	--discord-app-launcher-list-item-description: oklch(71.01% 0.01 273.13);
-	--discord-app-launcher-list-item-eye: oklch(80.5% 0.008 273.13);
-	--discord-app-launcher-list-item-icon-bg: oklch(32% 0.01 264);
+	--discord-app-launcher-list-item-hover: var(--discord-hover);
+	--discord-app-launcher-list-item-name: var(--discord-chrome-strong);
+	--discord-app-launcher-list-item-description: var(--discord-chrome-muted);
+	--discord-app-launcher-list-item-eye: var(--discord-chrome-secondary);
+	--discord-app-launcher-list-item-icon-bg: oklch(
+		from var(--discord-chrome) calc(l + 0.0535 * var(--discord-raise)) c h
+	);
 	--discord-app-launcher-list-item-wolfstar-bg: oklch(0% 0 0);
-	--discord-app-launcher-list-item-promoted-bg: oklch(91.56% 0.004 272.93);
-	--discord-app-launcher-list-item-promoted-text: oklch(26.65% 0.006 272.93);
-	--discord-app-launcher-list-item-chevron: oklch(80.5% 0.008 273.13);
+	--discord-app-launcher-list-item-promoted-bg: var(--discord-chrome-text);
+	--discord-app-launcher-list-item-promoted-text: var(--discord-chrome);
+	--discord-app-launcher-list-item-chevron: var(--discord-chrome-secondary);
 
 	@apply flex w-full cursor-pointer items-center gap-3 rounded-lg border-0 bg-transparent px-2 py-2 text-left font-whitney;
 }

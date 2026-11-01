@@ -1,360 +1,997 @@
 {
 	"$schema": "../../schemas/marketing.schema.json",
 	"marketing": {
+		"commands": {
+			"categories_heading": "Categorie di comandi",
+			"category_count": "Nessun comando | 1 comando | {count} comandi",
+			"details_label": "Dettagli del comando {command}",
+			"empty_description": "Prova a cambiare la ricerca o sfoglia altre categorie.",
+			"empty_title": "Nessun comando trovato",
+			"examples": "Esempi",
+			"explained_usage": "Uso spiegato",
+			"extended_help": "Guida estesa",
+			"guarded": "Non può essere disattivato",
+			"loading": "Caricamento dei comandi",
+			"no_description": "Ancora nessuna descrizione",
+			"no_details": "Per questo comando non ci sono ancora note d'uso.",
+			"permission_administrator": "Solo amministratori",
+			"permission_moderator": "Solo moderatori e amministratori",
+			"permission_staff": "Solo staff",
+			"possible_formats": "Formati possibili",
+			"properties_label": "Proprietà del comando",
+			"refresh": "Aggiorna",
+			"refresh_label": "Aggiorna l'elenco dei comandi",
+			"reminder": "Promemoria",
+			"results": "Nessun comando trovato | 1 comando trovato | {count} comandi trovati",
+			"search_clear": "Cancella la ricerca",
+			"search_heading": "Cerca comandi",
+			"search_label": "Cerca comandi per nome o descrizione",
+			"search_placeholder": "Cerca comandi...",
+			"server_only": "Solo nei server",
+			"subtitle_highlight": "Tutta la moderazione",
+			"subtitle_lead": "Sfoglia e cerca tra tutti i comandi disponibili del bot.",
+			"subtitle_tail": "a portata di mano.",
+			"title": "Comandi di WolfStar",
+			"try_again": "Riprova",
+			"unavailable_description": "Al momento non è possibile caricare i comandi. Prova ad aggiornare.",
+			"unavailable_title": "Nessun comando disponibile",
+			"usage": "Uso del comando"
+		},
 		"other_apps": {
-			"also_from": "",
-			"explore": "",
-			"eyebrow": "",
-			"invite": "",
-			"invite_pending": "",
-			"logo_alt": "",
-			"staryl_description": "",
-			"title": "",
-			"wolfstar_description": ""
+			"also_from": "Sempre da WolfStar Project",
+			"explore": "Scopri {app}",
+			"eyebrow": "Altre app",
+			"invite": "Invita {app}",
+			"logo_alt": "Logo di {app}",
+			"staryl_description": "Staryl porta su Discord le notifiche di live iniziata e terminata su Twitch.",
+			"title": "Due app, un solo progetto.",
+			"wolfstar_description": "WolfStar unisce moderazione configurabile, registrazione degli eventi del server e impostazioni gestite dalla dashboard."
 		},
 		"staryl": {
 			"commands": {
-				"eyebrow": "",
-				"description": "",
-				"title": ""
+				"eyebrow": "Anteprima dei comandi",
+				"description": "Usa i comandi di iscrizione Twitch di Staryl per inviare le notifiche di live iniziata e terminata nel canale giusto.",
+				"title": "Configura le notifiche di Twitch con Staryl."
 			},
 			"cta": {
-				"ask_in_support": "",
-				"eyebrow": "",
-				"invite": "",
-				"subtitle": "",
-				"subtitle_no_invite": "",
-				"title": ""
+				"ask_in_support": "Chiedi nel supporto",
+				"eyebrow": "Staryl per Discord",
+				"invite": "Invita Staryl",
+				"subtitle": "Invita Staryl ora, oppure entra nel server di supporto se prima vuoi fare una domanda.",
+				"title": "Porta i tuoi streamer nel tuo server."
+			},
+			"features": {
+				"command_hint": "Con {command}",
+				"description": "Un avviso di live con titolo, gioco e anteprima, un messaggio di fine live scritto da te e una prova quando vuoi controllare il canale.",
+				"eyebrow": "Cosa arriva nel canale",
+				"live_body": "Il titolo della live porta al canale, accanto al gioco e alla sua copertina, sopra l'anteprima della live e un pulsante per guardarla.",
+				"live_title": "Inizio della live",
+				"next": "Notifica successiva",
+				"notifications_description": "Ogni iscrizione manda l'inizio o la fine della live di uno streamer in un canale. Scegli un tipo per vedere cosa arriva.",
+				"notifications_title": "Notifiche di Twitch",
+				"offline_body": "Un'iscrizione di fine live pubblica il messaggio che hai scritto, con l'ora in cui la live è finita. Per queste iscrizioni il messaggio è obbligatorio.",
+				"offline_message": "La live di Stella è finita, grazie per averla guardata!",
+				"offline_title": "Fine della live",
+				"ping_body": "Dai un messaggio all'iscrizione e compare sopra la notifica. Se ci menzioni un ruolo, Staryl lo pinga, purché il ruolo si possa menzionare.",
+				"ping_role": "Stream Pings",
+				"ping_title": "Menziona un ruolo",
+				"previous": "Notifica precedente",
+				"test_body": "Una prova fa lo stesso percorso di una notifica vera, così un permesso mancante salta fuori ora e non alla prossima live. È segnata come prova.",
+				"test_notice": "è un'anteprima chiesta da un amministratore del server, non un vero aggiornamento della live.",
+				"test_notice_label": "Notifica di prova",
+				"test_title": "Provala",
+				"title": "Un messaggio per ogni live, nel tuo canale."
 			},
 			"hero": {
-				"brief_aria": "",
-				"brief_label": "",
-				"invite": "",
-				"kicker": "",
-				"no_invite": "",
-				"release": "",
-				"routing_term": "",
-				"routing_value": "",
-				"see_work": "",
-				"setup_term": "",
-				"setup_value": "",
-				"sources_term": "",
-				"sources_value": "",
-				"subtitle": "",
-				"title": "",
-				"view_source": ""
+				"brief_aria": "Riepilogo delle funzioni di Staryl",
+				"brief_label": "Cosa ottiene il tuo server",
+				"invite": "Invita Staryl",
+				"kicker": "Notifiche social open source",
+				"release": "Versione v{version}",
+				"routing_term": "Instradamento",
+				"routing_value": "Un streamer, un canale, un tipo di avviso per iscrizione",
+				"see_work": "Guarda Staryl in azione",
+				"setup_term": "Configurazione",
+				"setup_value": "Funziona con {command}, senza bisogno di dashboard",
+				"sources_term": "Fonti",
+				"sources_value": "Oggi avvisi di live iniziata e terminata su Twitch, altre fonti in programma",
+				"subtitle": "Staryl pubblica un messaggio nel canale che scegli quando uno streamer di Twitch va in live o la termina. Si configura con un solo comando.",
+				"title": "Gli aggiornamenti social, dove il tuo server già si trova.",
+				"view_source": "Vedi il codice"
+			},
+			"notification": {
+				"box_art_alt": "",
+				"footer": "Staryl Twitch Notifications",
+				"game": "Software and Game Development",
+				"game_label": "Gioco",
+				"live_header": "{name} è in live su Twitch!",
+				"message": "Stella è in live, passate a salutare!",
+				"preview_alt": "L'anteprima della live: un editor di codice e la webcam dello streamer.",
+				"stream_title": "Bug fixing in diretta, venite a fare un salto",
+				"test_title": "Notifica di prova",
+				"timestamp": "Oggi alle 17:48",
+				"watch": "Guarda la live"
 			},
 			"proof": {
-				"eyebrow": "",
-				"step_1_body": "",
-				"step_1_title": "",
-				"step_2_body": "",
-				"step_2_title": "",
-				"step_3_body": "",
-				"step_3_title": "",
-				"title": ""
+				"eyebrow": "Cosa fa Staryl",
+				"step_1_body": "Scegli lo streamer. Oggi l'unica fonte è Twitch, e altre sono in programma.",
+				"step_1_title": "Scegli la fonte",
+				"step_2_body": "Ogni iscrizione invia la notifica di live iniziata o terminata di uno streamer in un canale.",
+				"step_2_title": "Instrada l'aggiornamento",
+				"step_3_body": "Il team del server aggiunge, rimuove, mostra, azzera e prova le iscrizioni con i comandi slash di Staryl. Non serve nessuna dashboard.",
+				"step_3_title": "Gestitelo insieme",
+				"title": "Dalla fonte al server, in un solo passaggio."
 			},
 			"seo": {
-				"description": "",
-				"title": ""
+				"description": "Staryl è un'app Discord open source del WolfStar Project che pubblica le notifiche di live iniziata e terminata su Twitch nel canale che scegli.",
+				"title": "Staryl"
+			},
+			"setup": {
+				"add_body": "Lo streamer, il canale, inizio o fine della live e un messaggio facoltativo, obbligatorio per le notifiche di fine live.",
+				"add_title": "Aggiungi una notifica",
+				"eyebrow": "Nessuna dashboard",
+				"index_label": "Il menu /setup",
+				"manage_body": "Rivedi le notifiche del server, rimuovi quelle che scegli o azzerale tutte.",
+				"manage_title": "Gestisci le notifiche",
+				"overview_body": "Quante notifiche ha il server, e dove andare dopo.",
+				"overview_title": "Panoramica",
+				"pages_count": "4 pagine",
+				"see_commands": "Guarda i comandi",
+				"subtitle": "Esegui {command} e Staryl apre il suo menu nel canale, per l'amministratore che l'ha aperto. Quattro pagine coprono tutto quello che serve a un'iscrizione.",
+				"test_body": "Manda un'anteprima per il vero percorso di consegna, per controllare il canale e i permessi del bot.",
+				"test_title": "Prova le notifiche",
+				"title": "Si configura da Discord."
 			},
 			"showcase": {
-				"add_description": "",
-				"add_response": "",
-				"channel_topic": "",
-				"composer_placeholder": "",
-				"remove_description": "",
-				"remove_response": "",
-				"reset_description": "",
-				"reset_response": "",
-				"search_placeholder": "",
-				"show_description": "",
-				"show_embed_offline": "",
-				"show_embed_online": "",
-				"show_embed_title": "",
-				"test_description": "",
-				"test_response": "",
-				"timestamp": ""
+				"add_description": "Aggiungi una nuova iscrizione Twitch per uno streamer.",
+				"add_response": "✅ Fatto! Ogni volta che stella va in live, pubblicherò un nuovo messaggio in #staryl-notifications.",
+				"channel_topic": "Configura le notifiche delle live di Twitch con Staryl.",
+				"composer_placeholder": "Messaggio in #{channel}",
+				"remove_description": "Rimuovi un'iscrizione Twitch per uno streamer.",
+				"remove_response": "✅ Fatto! Non pubblicherò più messaggi in #staryl-notifications quando stella va in live.",
+				"reset_description": "Rimuovi tutte le iscrizioni Twitch da questo server.",
+				"reset_response": "✅ Fatto! 3 iscrizioni sono state rimosse da questo server.",
+				"search_placeholder": "Cerca in WolfStar HQ",
+				"setup_count": "Notifiche attuali:",
+				"setup_description": "Apri il menu interattivo di configurazione di questo server.",
+				"setup_heading": "Configurazione di Staryl",
+				"setup_hint": "Usa il menu qui sotto per aggiungere, gestire o provare una notifica.",
+				"setup_intro": "Configura da un unico posto le notifiche Twitch di questo server.",
+				"setup_placeholder": "Scegli cosa vuoi configurare",
+				"show_description": "Mostra tutte le iscrizioni Twitch di questo server.",
+				"show_embed_offline": "lory — #staryl-notifications → Offline",
+				"show_embed_online": "stella — #staryl-notifications → In live",
+				"show_embed_title": "Iscrizioni Twitch",
+				"test_description": "Invia una notifica di prova per verificare che un'iscrizione esistente funzioni.",
+				"test_response": "✅ Inviata! Controlla #staryl-notifications: la notifica avrà esattamente questo aspetto.",
+				"timestamp": "Oggi alle 15:49"
 			}
 		},
 		"wolfstar": {
 			"commands": {
-				"description": "",
-				"eyebrow": "",
-				"title": ""
+				"description": "Scrivi un comando slash, muoviti tra i suggerimenti con la tastiera e invialo per vedere la risposta di WolfStar.",
+				"eyebrow": "Prova i comandi",
+				"title": "La demo qui sotto funziona come Discord."
 			},
 			"commands_showcase": {
-				"channel_topic": "",
-				"composer_placeholder": "",
-				"mock_catbot_cat": "",
-				"mock_dyno_modlogs": "",
-				"mock_fmbot_addfriend": "",
-				"mock_fmbot_fm": "",
-				"mock_ring_info": "",
-				"mock_utilsbot_poll": "",
-				"search_placeholder": "",
-				"select_aria": "",
-				"timestamp": ""
+				"channel_topic": "Comandi di moderazione di WolfStar: prova un comando slash qui sotto.",
+				"composer_placeholder": "Messaggio in #{channel}",
+				"mock_catbot_cat": "Invia una foto di gatto a caso.",
+				"mock_dyno_modlogs": "Mostra i log di moderazione di un membro.",
+				"mock_fmbot_addfriend": "Aggiungi un amico ai tuoi amici di .fmbot.",
+				"mock_fmbot_fm": "Mostra cosa stai ascoltando in questo momento.",
+				"mock_ring_info": "Ottieni informazioni sul bot.",
+				"mock_utilsbot_poll": "Avvia un sondaggio in questo canale.",
+				"search_placeholder": "Cerca in WolfStar HQ",
+				"select_aria": "Categoria della configurazione del server",
+				"timestamp": "Oggi alle 15:49"
 			},
 			"cta": {
-				"ask_in_support": "",
-				"eyebrow": "",
-				"invite": "",
-				"subtitle": "",
-				"title": ""
+				"ask_in_support": "Chiedi nel supporto",
+				"eyebrow": "WolfStar per Discord",
+				"invite": "Invita WolfStar",
+				"subtitle": "Invita WolfStar ora, oppure entra nel server di supporto se prima vuoi fare una domanda.",
+				"title": "Regole e registro, in un unico posto."
 			},
 			"dashboard": {
-				"browse_commands": "",
-				"eyebrow": "",
-				"index_label": "",
-				"row_1_body": "",
-				"row_1_title": "",
-				"row_2_body": "",
-				"row_2_title": "",
-				"row_3_body": "",
-				"row_3_title": "",
-				"row_4_body": "",
-				"row_4_title": "",
-				"sign_in": "",
-				"subtitle": "",
-				"title": "",
-				"views_count": ""
+				"browse_commands": "Sfoglia i comandi",
+				"eyebrow": "Dashboard",
+				"index_label": "Dentro la dashboard",
+				"row_1_body": "Comportamento generale, canali, ruoli, eventi e accesso ai comandi.",
+				"row_1_title": "Impostazioni del server",
+				"row_2_body": "Filtra per membro, moderatore, azione, data o testo.",
+				"row_2_title": "Cronologia di moderazione",
+				"row_3_body": "Controlla nomi dei comandi, esiti, membri, date e risultati di ricerca.",
+				"row_3_title": "Cronologia dei comandi",
+				"row_4_body": "Guarda chi ha cambiato le impostazioni gestite dalla dashboard e cosa è cambiato.",
+				"row_4_title": "Attività delle impostazioni",
+				"sign_in": "Accedi alla dashboard",
+				"subtitle": "Accedi con Discord, scegli un server che gestisci e configura WolfStar senza modificare file né ricordare comandi di configurazione.",
+				"title": "La sala di controllo fa parte del prodotto.",
+				"views_count": "04 viste"
 			},
 			"fixtures": {
-				"action_ban": "",
-				"action_kick": "",
-				"action_mute": "",
-				"action_softban": "",
-				"action_timeout": "",
-				"action_voice_kick": "",
-				"action_voice_mute": "",
-				"action_warning": "",
-				"button_stop": "",
-				"channel_create_action": "",
-				"channel_create_title": "",
-				"channel_create_tooltip": "",
-				"channel_delete_action": "",
-				"channel_delete_title": "",
-				"channel_delete_tooltip": "",
-				"channel_update_action": "",
-				"channel_update_title": "",
-				"channel_update_tooltip": "",
-				"cmd_ban_description": "",
-				"cmd_ban_tooltip": "",
-				"cmd_case_archive_description": "",
-				"cmd_case_archive_tooltip": "",
-				"cmd_case_delete_description": "",
-				"cmd_case_delete_tooltip": "",
-				"cmd_case_description": "",
-				"cmd_case_edit_description": "",
-				"cmd_case_edit_tooltip": "",
-				"cmd_case_list_description": "",
-				"cmd_case_list_tooltip": "",
-				"cmd_case_tooltip": "",
-				"cmd_case_view_description": "",
-				"cmd_case_view_tooltip": "",
-				"cmd_conf_menu_description": "",
-				"cmd_conf_menu_tooltip": "",
-				"cmd_conf_remove_description": "",
-				"cmd_conf_remove_tooltip": "",
-				"cmd_conf_reset_description": "",
-				"cmd_conf_reset_tooltip": "",
-				"cmd_conf_set_description": "",
-				"cmd_conf_set_tooltip": "",
-				"cmd_conf_show_description": "",
-				"cmd_conf_show_tooltip": "",
-				"cmd_kick_description": "",
-				"cmd_kick_tooltip": "",
-				"cmd_mute_description": "",
-				"cmd_mute_tooltip": "",
-				"cmd_warn_description": "",
-				"cmd_warn_tooltip": "",
-				"embed_case": "",
-				"label_account_created": "",
-				"label_after": "",
-				"label_before": "",
-				"label_changes": "",
-				"label_channel": "",
-				"label_color": "",
-				"label_content": "",
-				"label_created_by": "",
-				"label_deleted_by": "",
-				"label_joined_at": "",
-				"label_moderator": "",
-				"label_reason": "",
-				"label_role": "",
-				"label_roles": "",
-				"label_type": "",
-				"label_updated_by": "",
-				"label_user": "",
-				"member_join_action": "",
-				"member_join_title": "",
-				"member_join_tooltip": "",
-				"member_leave_action": "",
-				"member_leave_title": "",
-				"member_leave_tooltip": "",
-				"menu_currently_at": "",
-				"menu_navigate": "",
-				"message_delete_action": "",
-				"message_delete_title": "",
-				"message_delete_tooltip": "",
-				"message_edit_action": "",
-				"message_edit_title": "",
-				"message_edit_tooltip": "",
-				"reply_case_archived": "",
-				"reply_case_created": "",
-				"reply_case_deleted": "",
-				"reply_case_edited": "",
-				"reply_key_reset": "",
-				"reply_key_updated": "",
-				"reply_key_value": "",
-				"reply_no_cases": "",
-				"role_create_action": "",
-				"role_create_title": "",
-				"role_create_tooltip": "",
-				"role_delete_action": "",
-				"role_delete_title": "",
-				"role_delete_tooltip": "",
-				"role_update_action": "",
-				"role_update_title": "",
-				"role_update_tooltip": "",
-				"select_placeholder": "",
-				"text_edited_message": "",
-				"text_message_deleted": "",
-				"text_name_changed": "",
-				"text_original_message": "",
-				"text_permissions_updated": "",
-				"text_spam": "",
-				"text_text_channel": "",
-				"text_warning": "",
-				"value_not_set": ""
+				"action_ban": "Ban",
+				"action_kick": "Espulsione",
+				"action_mute": "Silenziamento",
+				"action_softban": "Softban",
+				"action_timeout": "Timeout",
+				"action_voice_kick": "Espulsione dal vocale",
+				"action_voice_mute": "Silenziamento vocale",
+				"action_warning": "Avvertimento",
+				"button_reset": "Ripristina",
+				"channel_create_action": "Canale creato",
+				"channel_create_title": "la creazione dei canali",
+				"channel_create_tooltip": "Creazione canale",
+				"channel_delete_action": "Canale eliminato",
+				"channel_delete_title": "l'eliminazione dei canali",
+				"channel_delete_tooltip": "Eliminazione canale",
+				"channel_update_action": "Canale aggiornato",
+				"channel_update_title": "le modifiche ai canali",
+				"channel_update_tooltip": "Modifica canale",
+				"cmd_ban_description": "Colpisci qualcuno con il martello del ban.",
+				"cmd_ban_tooltip": "Ban",
+				"cmd_case_archive_description": "Archivia un caso di moderazione.",
+				"cmd_case_archive_tooltip": "Archivia caso",
+				"cmd_case_delete_description": "Elimina un caso di moderazione.",
+				"cmd_case_delete_tooltip": "Elimina caso",
+				"cmd_case_edit_description": "Modifica un caso di moderazione.",
+				"cmd_case_edit_tooltip": "Modifica caso",
+				"cmd_case_list_description": "Elenca i casi di moderazione.",
+				"cmd_case_list_tooltip": "Elenco casi",
+				"cmd_case_view_description": "Mostra le informazioni di un caso di moderazione.",
+				"cmd_case_view_tooltip": "Vedi caso",
+				"cmd_kick_description": "Colpisci qualcuno con lo 👢.",
+				"cmd_kick_tooltip": "Espelli",
+				"cmd_mute_description": "Silenzia un utente in tutti i canali testuali e vocali.",
+				"cmd_mute_tooltip": "Silenzia",
+				"cmd_settings_export_description": "Esporta in un file le impostazioni e le regole della moderazione automatica del server.",
+				"cmd_settings_export_tooltip": "Esporta impostazioni",
+				"cmd_settings_menu_description": "Apri il menu delle impostazioni del server.",
+				"cmd_settings_menu_tooltip": "Menu impostazioni",
+				"cmd_slowmode_description": "Imposta la modalità lenta del canale, in secondi.",
+				"cmd_slowmode_tooltip": "Modalità lenta",
+				"cmd_timeout_description": "Metti un utente in timeout.",
+				"cmd_timeout_tooltip": "Timeout",
+				"cmd_warn_description": "Dai un avvertimento a qualcuno.",
+				"cmd_warn_tooltip": "Avverti",
+				"embed_case": "Caso {id}",
+				"label_account_created": "Account creato",
+				"label_after": "Dopo",
+				"label_before": "Prima",
+				"label_changes": "Modifiche",
+				"label_channel": "Canale",
+				"label_color": "Colore",
+				"label_content": "Contenuto",
+				"label_created_by": "Creato da",
+				"label_deleted_by": "Eliminato da",
+				"label_joined_at": "Entrato il",
+				"label_moderator": "Moderatore",
+				"label_reason": "Motivo",
+				"label_role": "Ruolo",
+				"label_roles": "Ruoli",
+				"label_type": "Tipo",
+				"label_updated_by": "Aggiornato da",
+				"label_user": "Utente",
+				"member_join_action": "Utente entrato",
+				"member_join_title": "gli ingressi dei membri",
+				"member_join_tooltip": "Ingresso membro",
+				"member_leave_action": "Utente uscito",
+				"member_leave_title": "le uscite dei membri",
+				"member_leave_tooltip": "Uscita membro",
+				"menu_expires": "Questo menu si chiude {time} se non viene usato.",
+				"menu_heading": "Configurazioni principali",
+				"menu_intro": "Seleziona un modulo per configurare le impostazioni di {guild}.",
+				"menu_language": "Lingua",
+				"menu_reset_description": "Riporta le impostazioni di questo modulo ai valori predefiniti.",
+				"menu_reset_title": "Ripristina le configurazioni",
+				"menu_time_zone": "Fuso orario",
+				"menu_updates_channel": "Canale degli aggiornamenti",
+				"message_delete_action": "Messaggio eliminato",
+				"message_delete_title": "i messaggi eliminati",
+				"message_delete_tooltip": "Eliminazione messaggio",
+				"message_edit_action": "Messaggio modificato",
+				"message_edit_title": "i messaggi modificati",
+				"message_edit_tooltip": "Modifica messaggio",
+				"reason_excessive_noise": "troppo rumore",
+				"reason_flooding": "flood in chat",
+				"reason_ignoring_warnings": "avvertimenti ignorati",
+				"reason_repeated_infractions": "infrazioni ripetute",
+				"reply_case_archived": "Caso {id} archiviato.",
+				"reply_case_deleted": "Caso {id} eliminato.",
+				"reply_case_edited": "Caso {id} modificato.",
+				"reply_moderation": "Creato il caso {id} | {user}.",
+				"reply_moderation_reason": "Con il motivo: {reason}",
+				"reply_no_cases": "Non ci sono casi di moderazione con i filtri selezionati.",
+				"reply_settings_exported": "Ecco la configurazione del server: {settings} impostazioni e {rules} regole della moderazione automatica. Non contiene ruoli, canali e utenti, né i ruoli e i canali esenti delle regole.",
+				"reply_slowmode_set": "La modalità lenta di questo canale è stata impostata a {duration}.",
+				"role_create_action": "Ruolo creato",
+				"role_create_title": "la creazione dei ruoli",
+				"role_create_tooltip": "Creazione ruolo",
+				"role_delete_action": "Ruolo eliminato",
+				"role_delete_title": "l'eliminazione dei ruoli",
+				"role_delete_tooltip": "Eliminazione ruolo",
+				"role_update_action": "Ruolo aggiornato",
+				"role_update_title": "le modifiche ai ruoli",
+				"role_update_tooltip": "Modifica ruolo",
+				"select_placeholder": "Seleziona un modulo",
+				"text_edited_message": "Messaggio modificato",
+				"text_message_deleted": "Questo messaggio è stato eliminato",
+				"text_name_changed": "Nome cambiato da #old-general a #general",
+				"text_original_message": "Messaggio originale",
+				"text_permissions_updated": "Permessi aggiornati",
+				"text_spam": "spam",
+				"text_text_channel": "Canale testuale",
+				"text_warning": "Avvertimento",
+				"value_in_fifteen_minutes": "tra 15 minuti",
+				"value_not_set": "Non impostato",
+				"value_ten_seconds": "10 secondi"
 			},
 			"hero": {
-				"automod_term": "",
-				"automod_value": "",
-				"brief_aria": "",
-				"brief_label": "",
-				"dashboard_term": "",
-				"dashboard_value": "",
-				"history_term": "",
-				"history_value": "",
-				"invite": "",
-				"kicker": "",
-				"release": "",
-				"see_work": "",
-				"subtitle": "",
-				"title": "",
-				"view_source": ""
+				"automod_term": "AutoMod",
+				"automod_value": "Filtri dei messaggi configurabili e regole di inasprimento",
+				"brief_aria": "Riepilogo delle funzioni di WolfStar",
+				"brief_label": "Cosa ottiene il tuo team",
+				"dashboard_term": "Dashboard",
+				"dashboard_value": "Ruoli, canali, eventi, comandi e filtri",
+				"history_term": "Cronologia",
+				"history_value": "Attività di moderazione, comandi e impostazioni",
+				"invite": "Invita WolfStar",
+				"kicker": "Moderazione open source per Discord",
+				"release": "Versione v{version}",
+				"see_work": "Guarda WolfStar in azione",
+				"subtitle": "WolfStar filtra i messaggi molesti, registra la cronologia di moderazione e dei comandi, e dà al tuo team un unico posto per gestire le impostazioni del server.",
+				"title": "Moderazione, con ogni azione registrata.",
+				"view_source": "Vedi il codice"
 			},
 			"proof": {
-				"eyebrow": "",
-				"step_1_body": "",
-				"step_1_cta": "",
-				"step_1_title": "",
-				"step_2_body": "",
-				"step_2_cta": "",
-				"step_2_title": "",
-				"step_3_body": "",
-				"step_3_cta": "",
-				"step_3_title": "",
-				"title": ""
+				"eyebrow": "Cosa fa WolfStar",
+				"step_1_body": "Scegli quali messaggi WolfStar deve intercettare, cosa succede al messaggio e quando le infrazioni ripetute diventano un avvertimento, un timeout, un'espulsione o un ban.",
+				"step_1_cta": "Prova una regola AutoMod",
+				"step_1_title": "Imposta la regola",
+				"step_2_body": "Invia gli eventi in tempo reale su Discord e rivedi in seguito nella dashboard moderazione, avvertimenti, comandi e attività delle impostazioni.",
+				"step_2_cta": "Esamina il flusso dei log",
+				"step_2_title": "Conserva il registro",
+				"step_3_body": "Gestisci canali, ruoli, eventi, accesso ai comandi e filtri di moderazione dalla stessa dashboard, con accesso autenticato.",
+				"step_3_cta": "Guarda cosa copre la dashboard",
+				"step_3_title": "Rivedetelo insieme",
+				"title": "Un unico sistema, dal primo avvertimento all'ultima revisione."
 			},
 			"seo": {
-				"description": "",
-				"title": ""
+				"description": "WolfStar offre ai team di moderazione di Discord un'AutoMod configurabile, una cronologia consultabile di moderazione e comandi, e un'unica dashboard per le impostazioni del server.",
+				"title": "Home"
 			},
 			"showcase": {
-				"act_on": "",
-				"action_alert_body": "",
-				"action_alert_label": "",
-				"action_delete_body": "",
-				"action_delete_label": "",
-				"action_log_body": "",
-				"action_log_label": "",
-				"alert": "",
-				"automod_actions_intro": "",
-				"automod_attachments_alert": "",
-				"automod_attachments_title": "",
-				"automod_attachments_tooltip": "",
-				"automod_capitals_alert": "",
-				"automod_capitals_title": "",
-				"automod_capitals_tooltip": "",
-				"automod_intro": "",
-				"automod_invites_alert": "",
-				"automod_invites_title": "",
-				"automod_invites_tooltip": "",
-				"automod_links_alert": "",
-				"automod_links_title": "",
-				"automod_links_tooltip": "",
-				"automod_mentions_alert": "",
-				"automod_mentions_title": "",
-				"automod_mentions_tooltip": "",
-				"automod_newlines_alert": "",
-				"automod_newlines_title": "",
-				"automod_newlines_tooltip": "",
-				"automod_reactions_alert": "",
-				"automod_reactions_title": "",
-				"automod_reactions_tooltip": "",
-				"automod_spam_alert": "",
-				"automod_spam_title": "",
-				"automod_spam_tooltip": "",
-				"automod_words_alert": "",
-				"automod_words_title": "",
-				"automod_words_tooltip": "",
-				"btn_temporary": "",
-				"btn_undo": "",
-				"channel_automod": "",
-				"channel_logs": "",
-				"channel_modlog": "",
-				"embed_action": "",
-				"embed_case": "",
-				"embed_log": "",
-				"embed_reason": "",
-				"embed_reason_value": "",
-				"embed_type": "",
-				"embed_user": "",
-				"escalation_action_body": "",
-				"escalation_action_label": "",
-				"escalation_intro": "",
-				"escalation_threshold_body": "",
-				"escalation_threshold_label": "",
-				"feature_automod_description": "",
-				"feature_automod_title": "",
-				"feature_logging_description": "",
-				"feature_logging_title": "",
-				"feature_moderation_description": "",
-				"feature_moderation_title": "",
-				"header_description": "",
-				"header_eyebrow": "",
-				"header_title": "",
-				"keep_track_of": "",
-				"logging_dashboard_intro": "",
-				"logging_intro": "",
-				"logging_item_filter": "",
-				"logging_item_views": "",
-				"mod_copy_audit": "",
-				"mod_copy_search": "",
-				"msg_attachments": "",
-				"msg_capitals": "",
-				"msg_capitals_strong": "",
-				"msg_invites": "",
-				"msg_links": "",
-				"msg_mentions": "",
-				"msg_newlines": "",
-				"msg_newlines_end": "",
-				"msg_reactions": "",
-				"msg_spam": "",
-				"msg_words": "",
-				"msg_words_strong": "",
-				"next_automod": "",
-				"next_logging": "",
-				"next_moderation": "",
-				"prev_automod": "",
-				"prev_logging": "",
-				"prev_moderation": "",
-				"server_suffix": "",
-				"suite_for": "",
-				"suite_subject": ""
+				"act_on": "WolfStar può intervenire in caso di {subject}",
+				"action_alert_body": "inviare un messaggio che avvisa l'utente dell'infrazione.",
+				"action_alert_label": "Avvisare l'utente:",
+				"action_delete_body": "eliminare il messaggio che ha causato l'infrazione, mantenendo puliti i tuoi canali.",
+				"action_delete_label": "Eliminare il messaggio:",
+				"action_log_body": "inviare un messaggio nel canale dei log di moderazione, visibile ai moderatori.",
+				"action_log_label": "Pubblicare un log di moderazione:",
+				"alert": "Ciao {user}, {reason}",
+				"automod_actions_intro": "A ogni infrazione, WolfStar può:",
+				"automod_attachments_alert": "gli allegati non sono consentiti in questo canale.",
+				"automod_attachments_title": "allegati",
+				"automod_attachments_tooltip": "Allegati",
+				"automod_capitals_alert": "per favore, usa meno lettere maiuscole.",
+				"automod_capitals_title": "lettere maiuscole",
+				"automod_capitals_tooltip": "Maiuscole",
+				"automod_intro": "Scegli quali messaggi fanno scattare una regola, poi decidi come risponde WolfStar.",
+				"automod_invites_alert": "i link d'invito non sono consentiti in questo canale.",
+				"automod_invites_title": "inviti",
+				"automod_invites_tooltip": "Inviti",
+				"automod_links_alert": "hai inviato link che qui non sono consentiti.",
+				"automod_links_title": "link non consentiti",
+				"automod_links_tooltip": "Link",
+				"automod_mentions_alert": "hai menzionato troppe persone.",
+				"automod_mentions_title": "menzioni eccessive",
+				"automod_mentions_tooltip": "Menzioni",
+				"automod_newlines_alert": "il tuo messaggio contiene troppe righe.",
+				"automod_newlines_title": "troppe righe",
+				"automod_newlines_tooltip": "Righe",
+				"automod_reactions_alert": "non puoi reagire con quell'emoji.",
+				"automod_reactions_title": "reazioni non consentite",
+				"automod_reactions_tooltip": "Reazioni",
+				"automod_spam_alert": "per favore, evita di ripubblicare lo stesso messaggio più volte.",
+				"automod_spam_title": "spam",
+				"automod_spam_tooltip": "Spam",
+				"automod_words_alert": "hai scritto qualcosa che in questo server non è consentito.",
+				"automod_words_title": "parole vietate",
+				"automod_words_tooltip": "Parole",
+				"btn_temporary": "Temporaneo",
+				"btn_undo": "Annulla",
+				"channel_automod": "automod-demo",
+				"channel_logs": "log-server",
+				"channel_modlog": "log-moderazione",
+				"embed_action": "Azione",
+				"embed_case": "Caso {id}",
+				"embed_log": "Log #{id}",
+				"embed_reason": "Motivo",
+				"embed_reason_value": "spam",
+				"embed_type": "Tipo",
+				"embed_user": "Utente",
+				"escalation_action_body": "avvertimento, timeout, espulsione o ban, con una durata temporanea o permanente dove previsto.",
+				"escalation_action_label": "Imposta l'azione:",
+				"escalation_intro": "Le infrazioni ripetute possono far scattare una regola di inasprimento separata:",
+				"escalation_threshold_body": "scegli quante infrazioni in un intervallo di tempo fanno scattare l'azione.",
+				"escalation_threshold_label": "Imposta la soglia:",
+				"feature_automod_description": "Scorri esempi reali di filtri e guarda insieme il messaggio, la risposta e i controlli di inasprimento.",
+				"feature_automod_title": "Configura la regola prima che scatti",
+				"feature_logging_description": "Scegli quali eventi del server arrivano su Discord, poi cerca nella dashboard la cronologia di moderazione, comandi e impostazioni.",
+				"feature_logging_title": "Eventi in tempo reale e una cronologia da rivedere",
+				"feature_moderation_description": "Ogni azione di moderazione conserva i dettagli che servono al tuo team per rivederla.",
+				"feature_moderation_title": "Ogni azione conserva il suo contesto.",
+				"header_description": "Usa i controlli per esaminare lo stesso flusso di moderazione che il tuo team configura e rivede.",
+				"header_eyebrow": "Tour del prodotto",
+				"header_title": "Segui una regola dall'attivazione alla revisione.",
+				"keep_track_of": "Tieni d'occhio {subject}",
+				"logging_dashboard_intro": "Nella dashboard puoi:",
+				"logging_intro": "Invia gli eventi di membri, canali, ruoli, messaggi e moderazione nei canali Discord che il tuo team già segue.",
+				"logging_item_filter": "Filtrare la cronologia di moderazione per membro, moderatore, azione, data o testo.",
+				"logging_item_views": "Tenere gli esiti dei comandi e l'attività delle impostazioni della dashboard in viste separate e consultabili.",
+				"mod_copy_audit": "WolfStar può anche registrare le azioni di moderazione supportate fatte direttamente su Discord, con il motivo del registro di controllo.",
+				"mod_copy_search": "Cerca nella cronologia di moderazione per membro, moderatore, azione, data o testo. Ogni voce tiene insieme l'azione e il motivo.",
+				"msg_attachments": "Avete visto questo????",
+				"msg_capitals": "POSSO SCRIVERE TUTTO IN MAIUSCOLO,",
+				"msg_capitals_strong": "E WOLFSTAR NON MI FERMERÀ!",
+				"msg_invites": "Entrate tutti nel mio server!",
+				"msg_links": "Guardate tutti questi link!",
+				"msg_mentions": "Notatemi tutti!",
+				"msg_newlines": "Ihihihih",
+				"msg_newlines_end": "Quante righe!",
+				"msg_reactions": "Ciao a tutti! Ho una notizia fantastica!",
+				"msg_spam": "Ragazzi guardatemi!",
+				"msg_words": "Vorrei dirti che sei una persona {word}.",
+				"msg_words_strong": "disgustosa",
+				"next_automod": "Funzione AutoMod successiva",
+				"next_logging": "Evento di log successivo",
+				"next_moderation": "Azione di moderazione successiva",
+				"prev_automod": "Funzione AutoMod precedente",
+				"prev_logging": "Evento di log precedente",
+				"prev_moderation": "Azione di moderazione precedente",
+				"server_suffix": "— WolfStar HQ",
+				"suite_for": "Una suite completa per {subject}",
+				"suite_subject": "i log di moderazione"
+			},
+			"commands_catalogue": {
+				"archive_create": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"archive_list": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"archive_show": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"autodelete_disable": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"autodelete_enable": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"autodelete_list": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"automessage_disable": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"automessage_enable": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"automessage_list": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"autopurge_disable": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"autopurge_enable": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"autopurge_list": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"automod_add": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"select": ""
+				},
+				"automod_create": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"select": ""
+				},
+				"automod_delete": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"automod_edit": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"select": ""
+				},
+				"automod_ignore": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"select": ""
+				},
+				"automod_list": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"select": ""
+				},
+				"automod_remove": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"select": ""
+				},
+				"automod_show": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"select": ""
+				},
+				"ban_remove": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"softban": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"note": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"setnickname": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"voicekick": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"role_add": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"role_remove": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"warn_remove": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"mute_remove": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"timeout_remove": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"vmute_add": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"vmute_remove": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"restrict_attachment": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"restrict_embed": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"restrict_emoji": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"restrict_reaction": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"restrict_voice": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"unrestrict_attachment": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"unrestrict_embed": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"unrestrict_emoji": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"unrestrict_reaction": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"unrestrict_voice": {
+					"tooltip": "",
+					"description": "",
+					"reason": ""
+				},
+				"commands": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"select": ""
+				},
+				"dehoist": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"honeypot_disable": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"honeypot_edit": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"honeypot_setup": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"honeypot_show": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"lockdown": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"mute_create": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"permission_nodes_add": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"permission_nodes_remove": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"permission_nodes_reset": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"permission_nodes_show": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"permissions": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"prune_age": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_any": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_attachments": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_author": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_bots": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_embeds": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_endswith": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_humans": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_images": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_includes": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_invites": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_links": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_match": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_mentions": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_pins": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_startswith": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"prune_you": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"reasons_add": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"reasons_list": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"reasons_remove": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"report": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"reports_block": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"reports_history": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"reports_unblock": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"role_rules_add": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"role_rules_list": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"role_rules_remove": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"roles_browse": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"button": ""
+				},
+				"roles_claim": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"roles_list": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"roles_unclaim": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"settings_user": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"button": ""
+				},
+				"sticky_nickname": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"sticky_roles_add": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"sticky_roles_remove": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"sticky_roles_reset": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"sticky_roles_show": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"warn_thresholds_add": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"warn_thresholds_list": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"warn_thresholds_remove": {
+					"tooltip": "",
+					"description": "",
+					"reply": ""
+				},
+				"whois_channel": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"footer": ""
+				},
+				"whois_emoji": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"whois_role": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"whois_server": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": ""
+				},
+				"whois_user": {
+					"tooltip": "",
+					"description": "",
+					"title": "",
+					"reply": "",
+					"footer": ""
+				}
 			}
 		}
 	}

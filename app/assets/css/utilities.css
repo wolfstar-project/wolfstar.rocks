@@ -51,6 +51,34 @@
 	background-color: var(--spectrum-purple);
 }
 
+/*
+ * A card of the dashboard. The surface variables come from the dashboard layout
+ * (`.console`); the fallbacks keep it usable in isolation, e.g. in Storybook.
+ */
+@utility console-card {
+	position: relative;
+	padding: 1.25rem;
+	overflow: hidden;
+	background-color: var(--console-surface, var(--ink-700));
+	border: 1px solid var(--home-border-subtle);
+	border-radius: 0.5rem;
+	box-shadow: var(--console-shadow-low, none);
+
+	/* On a phone the cards are rounder, as Discord draws them there. */
+	@media (width < 40rem) {
+		border-radius: 0.75rem;
+	}
+}
+
+/* The small uppercase label that names a group of rows inside a card. */
+@utility console-label {
+	font-size: 0.6875rem;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--ui-text-muted);
+}
+
 @utility shadow-glow {
 	box-shadow: var(--home-shadow-glow);
 }
@@ -461,5 +489,27 @@
 
 	.animate-on-scroll {
 		animation: none !important;
+	}
+}
+
+/* The secondary action of a dialog: an outlined button on the panel, next to
+   the filled primary one. */
+@utility dialog-cancel {
+	/* DaisyUI paints a button from these, so they are set as well. */
+	--btn-bg: transparent;
+	--btn-border: var(--field-border);
+	--btn-fg: var(--ui-text-highlighted);
+	--btn-shadow: none;
+	border: 1px solid var(--field-border);
+	/* Outranks the background Nuxt UI gives a neutral outline button. */
+	background-color: transparent !important;
+	color: var(--ui-text-highlighted);
+
+	&:hover:not(:disabled) {
+		background-color: color-mix(
+			in oklab,
+			var(--ui-text-highlighted) 6%,
+			transparent
+		) !important;
 	}
 }

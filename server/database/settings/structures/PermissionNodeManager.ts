@@ -2,6 +2,7 @@ import type { PermissionsNode, ReadonlyGuildData } from "#server/database/settin
 import type { APIGuildMember, APIRole, APIUser } from "discord-api-types/v10";
 import { CommandMatcher } from "#server/database/settings/utils/matchers";
 import { useApi } from "#server/utils/shared";
+import { isAccessEntry } from "#shared/utils/dashboard-access";
 import { Collection } from "@discordjs/collection";
 import { createError } from "evlog";
 
@@ -69,6 +70,9 @@ export class PermissionNodeManager {
 		}
 
 		const previous = nodes[nodeIndex]!;
+		if (isAccessEntry(previous)) {
+			throw dashboardEntryError();
+		}
 		if (
 			(action === PermissionNodeAction.Allow && previous.allow.includes(command)) ||
 			(action === PermissionNodeAction.Deny && previous.deny.includes(command))
@@ -117,6 +121,9 @@ export class PermissionNodeManager {
 
 		const property = this.getName(action);
 		const previous = nodes[nodeIndex]!;
+		if (isAccessEntry(previous)) {
+			throw dashboardEntryError();
+		}
 		const commandIndex = previous[property].indexOf(command);
 		if (commandIndex === -1) {
 			throw createError({
@@ -175,13 +182,15 @@ export class PermissionNodeManager {
 		this.#cachedRawPermissionRoles = nodes;
 		this.#cachedRawPermissionUsers = settings.permissionsUsers;
 
-		if (nodes.length === 0) {
+		// A dashboard access rule is not a command node, and never runs as one.
+		const commandNodes = nodes.filter((node) => !isAccessEntry(node));
+		if (commandNodes.length === 0) {
 			this.sorted.clear();
 			return nodes;
 		}
 
 		// Generate sorted data and detect useless nodes to remove
-		const { pendingToAdd, pendingToRemove } = await this.generateSorted(settings, nodes);
+		const { pendingToAdd, pendingToRemove } = await this.generateSorted(settings, commandNodes);
 
 		const sorted = new Collection<string, PermissionsManagerNode>();
 		for (const pending of pendingToAdd) {
@@ -212,7 +221,7 @@ export class PermissionNodeManager {
 		const permissionNodeRoles = this.#cachedRawPermissionUsers;
 		const memberId = member.user.id;
 		for (const node of permissionNodeRoles) {
-			if (node.id !== memberId) {
+			if (node.id !== memberId || isAccessEntry(node)) {
 				continue;
 			}
 			if (await CommandMatcher.matchAny(node.allow, commandName)) {
@@ -329,4 +338,13 @@ export class PermissionNodeManager {
 interface PermissionsManagerNode {
 	allow: Set<string>;
 	deny: Set<string>;
+}
+
+function dashboardEntryError() {
+	return createError({
+		message: "This entry is a dashboard access rule",
+		status: 400,
+		why: "The role or member has a dashboard access rule, which holds no commands",
+		fix: "Edit the rule from the dashboard access section instead",
+	});
 }

@@ -6,7 +6,27 @@
 		"skip_to_content": ""
 	},
 	"blog": {
-		"rss": ""
+		"article_links": "",
+		"avatar_alt": "",
+		"back": "",
+		"copy_url": "",
+		"edit_article": "",
+		"image_alt": "",
+		"join_support": "",
+		"link_copied": "",
+		"links": "",
+		"on_platform": "",
+		"rss": "",
+		"star_github": "",
+		"toc": ""
+	},
+	"changelog": {
+		"back": "",
+		"cover_alt": "",
+		"description": "",
+		"empty": "",
+		"github_releases": "",
+		"title": ""
 	},
 	"common": {
 		"appearance": "",
@@ -57,10 +77,11 @@
 		"x_aria": ""
 	},
 	"header": {
+		"account_loading": "",
 		"add_app": "",
 		"brand": "",
+		"dashboard": "",
 		"home": "",
-		"profile": "",
 		"settings": "",
 		"sign_in": "",
 		"sign_in_discord": "",
@@ -87,7 +108,9 @@
 		"moderation_logs": "",
 		"moderation_logs_description": "",
 		"moderation_tools": "",
-		"moderation_tools_description": ""
+		"moderation_tools_description": "",
+		"staryl_description": "",
+		"wolfstar_description": ""
 	},
 	"nuxtSiteConfig": {
 		"description": "",
@@ -102,12 +125,7 @@
 		"title": ""
 	},
 	"user_menu": {
-		"account_menu": "",
-		"avatar_alt": "",
-		"avatar_fallback": "",
-		"profile": "",
 		"report_bug": "",
-		"sign_out": "",
-		"user_menu_for": ""
+		"sign_out": ""
 	}
 }

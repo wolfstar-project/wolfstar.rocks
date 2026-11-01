@@ -27,6 +27,11 @@ export interface OauthFlattenedGuild extends PartialOauthFlattenedGuild {
 	permissions: number;
 	manageable: boolean;
 	wolfstarIsIn: boolean;
+	/**
+	 * The server has no settings stored yet, so the dashboard offers its setup.
+	 * Only `/api/guilds/:guild` sets it, and only when it is true.
+	 */
+	setupPending?: boolean;
 }
 
 export interface OauthFlattenedUser {
@@ -350,8 +355,26 @@ export interface FlattenedMember {
 
 // #region Command
 
+/**
+ * An entry of the bot's `GET /commands`. Every subcommand is an entry of its
+ * own, named by its full path (`ban add`, `warn-thresholds list`); a command
+ * without subcommands is a single entry. The entries come sorted by name.
+ */
 export interface FlattenedCommand {
 	category: string;
+
+	/**
+	 * The second directory of the command's file, which a rule of the bot can
+	 * target (`Category.SubCategory.*`). An older bot does not send it.
+	 */
+	subCategory?: string | null;
+
+	/**
+	 * The command the entry belongs to, by the name the settings use (the bot's
+	 * piece name: `ban`, `warnThresholds`). An older bot does not send it, and
+	 * then `name` is the command.
+	 */
+	command?: string;
 
 	description: string;
 
@@ -366,7 +389,8 @@ export interface FlattenedCommand {
 	preconditions: Preconditions;
 }
 export interface WolfCommand extends FlattenedCommand {
-	aliases: string[];
+	/** Always `[]` from the bot's API. */
+	alias: string[];
 	subCategory: string;
 }
 

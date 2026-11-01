@@ -28,7 +28,7 @@ describe("DiscordAppLauncher", () => {
 		expect(wrapper.find(".discord-app-launcher-handle").exists()).toBe(true);
 		expect(wrapper.findAll(".discord-app-launcher-promo")).toHaveLength(4);
 		expect(wrapper.text()).toContain("WolfStar Beta");
-		expect(wrapper.text()).toContain("conf menu");
+		expect(wrapper.text()).toContain("settings server");
 		expect(wrapper.text()).toContain("Wordle");
 		expect(wrapper.find(".discord-app-launcher-promo-garden-title").text()).toContain("Magic");
 		expect(wrapper.find(".discord-app-launcher-promo-garden-title").text()).toContain("Garden");
@@ -250,10 +250,10 @@ describe("DiscordAppLauncher", () => {
 		const selected = wrapper.emitted("select");
 		expect(selected).toHaveLength(1);
 		expect(selected?.[0]?.[0]).toMatchObject({
-			id: "wolfstar-conf-menu",
-			tileTitle: "conf menu",
+			id: "wolfstar-settings-menu",
+			tileTitle: "settings server",
 			kind: "command",
-			commandName: "conf menu",
+			commandName: "settings server",
 		});
 	});
 

@@ -1,5 +1,6 @@
 <template>
 	<div ref="rootRef" class="discord-string-select-menu" @focusout="onFocusOut">
+		<!-- The listbox exists only while open: pointing at it when closed is a reference to nothing. -->
 		<button
 			:id="triggerId"
 			ref="triggerRef"
@@ -9,17 +10,37 @@
 			role="combobox"
 			:aria-haspopup="'listbox'"
 			:aria-expanded="isOpen"
-			:aria-controls="listboxId"
+			:aria-controls="isOpen ? listboxId : undefined"
 			:aria-activedescendant="activeDescendant"
-			:aria-label="ariaLabel"
+			:aria-label="ariaLabel ?? ts('discord.select.aria')"
 			:disabled="disabled"
 			@click="toggle"
 		>
+			<!-- The chosen option keeps its emoji in the trigger, as in Discord. -->
+			<img
+				v-if="selectedEmoji?.kind === 'image'"
+				:src="selectedEmoji.value"
+				alt=""
+				draggable="false"
+				class="discord-string-select-menu-value-emoji"
+			/>
+			<UIcon
+				v-else-if="selectedEmoji?.kind === 'icon'"
+				:name="selectedEmoji.value"
+				class="discord-string-select-menu-value-emoji"
+				aria-hidden="true"
+			/>
+			<span
+				v-else-if="selectedEmoji"
+				class="discord-string-select-menu-value-emoji"
+				aria-hidden="true"
+				>{{ selectedEmoji.value }}</span
+			>
 			<span
 				class="discord-string-select-menu-value"
 				:class="{ 'discord-string-select-menu-placeholder': !selectedOption }"
 			>
-				{{ selectedOption?.label ?? placeholder }}
+				{{ selectedOption?.label ?? placeholder ?? ts("discord.select.placeholder") }}
 			</span>
 			<!-- Skyra ExpandMore chevron: points down when closed, rotates -180deg when open. -->
 			<svg
@@ -59,7 +80,7 @@
 						:id="listboxId"
 						class="discord-string-select-menu-listbox"
 						role="listbox"
-						:aria-label="ariaLabel"
+						:aria-label="ariaLabel ?? ts('discord.select.aria')"
 					>
 						<DiscordStringSelectMenuOption
 							v-for="(option, index) in options"
@@ -96,12 +117,8 @@ interface StringSelectMenuEmits {
 </script>
 
 <script setup lang="ts">
-const {
-	options,
-	placeholder = "Make a selection",
-	disabled = false,
-	ariaLabel = "Select an option",
-} = defineProps<StringSelectMenuProps>();
+const { ts } = useI18n();
+const { options, placeholder, disabled = false, ariaLabel } = defineProps<StringSelectMenuProps>();
 
 const emit = defineEmits<StringSelectMenuEmits>();
 
@@ -122,6 +139,16 @@ const activeIndex = ref(-1);
 const selectedOption = computed(() =>
 	options.find((option) => option.value === selectedValue.value),
 );
+
+/** The chosen option's emoji: an image path, an Iconify name, or Unicode text. */
+const selectedEmoji = computed(() => {
+	const emoji = selectedOption.value?.emoji;
+	if (!emoji) return null;
+	if (emoji.includes("http") || emoji.startsWith("/") || emoji.startsWith("./")) {
+		return { kind: "image" as const, value: emoji };
+	}
+	return { kind: emoji.includes(":") ? ("icon" as const) : ("text" as const), value: emoji };
+});
 
 const activeDescendant = computed(() =>
 	isOpen.value && activeIndex.value >= 0 ? optionId(activeIndex.value) : undefined,
@@ -319,12 +346,12 @@ useEventListener(
 
 .discord-string-select-menu-trigger {
 	/* Skyra dark select trigger tones (bg/border + text). */
-	--discord-string-select-menu-bg: oklch(20% 0.012 264);
-	--discord-string-select-menu-border: oklch(20% 0.012 264);
+	--discord-string-select-menu-bg: var(--discord-server);
+	--discord-string-select-menu-border: var(--discord-server);
 	--discord-string-select-menu-border-hover: oklch(0% 0 0);
-	--discord-string-select-menu-text: oklch(90% 0.012 250);
-	--discord-string-select-menu-placeholder-text: oklch(72% 0.01 260);
-	--discord-string-select-menu-chevron: oklch(90% 0.012 250);
+	--discord-string-select-menu-text: var(--discord-chrome-text);
+	--discord-string-select-menu-placeholder-text: var(--discord-chrome-muted);
+	--discord-string-select-menu-chevron: var(--discord-chrome-text);
 
 	@apply box-border flex h-9 min-h-9 w-full items-center justify-between gap-2 rounded border px-2 text-sm font-medium;
 	background-color: var(--discord-string-select-menu-bg);
@@ -351,6 +378,10 @@ useEventListener(
 	@apply min-w-0 truncate;
 }
 
+.discord-string-select-menu-value-emoji {
+	@apply size-[1.375em] shrink-0 object-contain;
+}
+
 .discord-string-select-menu-placeholder {
 	color: var(--discord-string-select-menu-placeholder-text);
 }
@@ -367,8 +398,8 @@ useEventListener(
 
 .discord-string-select-menu-panel {
 	/* Skyra panel surface; max-height 190px; z-index 1002 via inline style. */
-	--discord-string-select-menu-panel-bg: oklch(26% 0.012 260);
-	--discord-string-select-menu-panel-border: oklch(20% 0.012 264);
+	--discord-string-select-menu-panel-bg: var(--discord-chrome);
+	--discord-string-select-menu-panel-border: var(--discord-server);
 	--discord-string-select-menu-panel-shadow: oklch(0% 0 0 / 0.45);
 	--discord-string-select-menu-panel-scroll-track: oklch(0% 0 0 / 0);
 	--discord-string-select-menu-panel-scroll-thumb: oklch(0% 0 0 / 0.3);

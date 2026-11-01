@@ -1,5 +1,6 @@
 import type { DiscordProfile } from "better-auth/social-providers";
-import { createDiscordProviderOptions } from "#server/utils/discord/provider";
+import { createDiscordProviderOptions, DISCORD_OAUTH_SCOPES } from "#server/utils/discord/provider";
+import { COMMAND_PERMISSIONS_SCOPE } from "#shared/utils/command-permissions";
 import { discord } from "better-auth/social-providers";
 import { describe, expect, it } from "vitest";
 
@@ -109,5 +110,18 @@ describe("createDiscordProviderOptions", () => {
 			email: "wolfstar@example.com",
 			image: "https://cdn.discordapp.com/avatars/242043489611808769/hash.png",
 		});
+	});
+});
+
+describe("command permissions scope", () => {
+	it("is asked at every sign-in", async () => {
+		expect(COMMAND_PERMISSIONS_SCOPE).toBe("applications.commands.permissions.update");
+		expect(DISCORD_OAUTH_SCOPES).toStrictEqual([
+			"guilds",
+			"guilds.members.read",
+			COMMAND_PERMISSIONS_SCOPE,
+		]);
+		const url = await createAuthorizationURL();
+		expect(url.searchParams.get("scope")?.split(" ")).toContain(COMMAND_PERMISSIONS_SCOPE);
 	});
 });

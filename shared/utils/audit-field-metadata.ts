@@ -3,21 +3,37 @@
  * Mirrors the WolfStar bot's configuration.ts key registry for use in audit log rendering.
  *
  * CONTRACT:
- * - label: verbatim string from shared/utils/settingsDataEntries.ts (name or title field).
+ * - label: verbatim `name` from shared/utils/settingsDataEntries.ts.
  *   Do NOT rename, abbreviate, or transform these strings.
  * - type: AuditFieldType — controls which renderer formatTypedValue uses.
  * - array: true when the GuildData field stores an array of IDs (e.g. rolesAdmin = string[]).
  */
 
-import { isRoleArrayKey } from "../schemas/roles";
+import { GUILD_MODULES } from "./guild-modules";
 import {
+	HoneypotTrapSettings,
+	ConfigurableAppealChannels,
+	ConfigurableAppealQuestions,
+	ConfigurableAppealSwitch,
+	ConfigurableAppealToggles,
+	ConfigurableAutomodChannels,
+	ConfigurableAutomodToggles,
+	ConfigurableCommandChannels,
+	ConfigurableHoneypotChannels,
+	ConfigurableHoneypotToggles,
 	ConfigurableIgnoreChannels,
+	ConfigurableLogChoices,
+	ConfigurableLogDeliveryToggles,
 	ConfigurableLoggingChannels,
-	ConfigurableMessageEvents,
-	ConfigurableModerationEvents,
-	ConfigurableModerationKeys,
-	ConfigurableRemoveInitialRole,
+	ConfigurableLogToggles,
+	ConfigurableModerationChannels,
+	ConfigurableModerationNumbers,
+	ConfigurableModerationToggles,
+	ConfigurableReportChannels,
+	ConfigurableReportRoles,
+	ConfigurableReportToggles,
 	ConfigurableRoles,
+	ConfigurableRoleToggles,
 } from "./settingsDataEntries";
 
 export type AuditFieldType =
@@ -37,56 +53,127 @@ export interface AuditFieldMetadata {
 	array: boolean;
 }
 
-export const AUDIT_FIELD_METADATA: Readonly<Record<string, AuditFieldMetadata>> = {
-	[ConfigurableRemoveInitialRole.key]: {
-		label: ConfigurableRemoveInitialRole.name,
-		type: "boolean",
-		array: false,
-	},
-	...Object.fromEntries(
-		ConfigurableRoles.map((entry): [string, AuditFieldMetadata] => [
+function fields(
+	entries: readonly { key: string; name: string }[],
+	type: AuditFieldType,
+	array: boolean,
+): [string, AuditFieldMetadata][] {
+	return entries.map((entry) => [entry.key, { label: entry.name, type, array }]);
+}
+
+/** English labels of the module flags, which have no entry list of their own. */
+const MODULE_LABELS: Record<(typeof GUILD_MODULES)[number]["key"], string> = {
+	modulesAutomod: "Auto-moderation Module",
+	modulesModeration: "Moderation Module",
+	modulesRoles: "Roles Module",
+	modulesLogs: "Events Module",
+};
+
+/** The flags of `Modules` of the modules that are set up in a table of their own. */
+const AUTO_MODULE_LABELS = {
+	modulesAutodelete: "Auto-Delete Module",
+	modulesAutopurge: "Auto-Purge Module",
+	modulesAutomessage: "Auto-Message Module",
+};
+
+/**
+ * `modulesCommands` is no longer a setting, but audit rows that changed it stay
+ * in the activity feed.
+ */
+const LEGACY_MODULE_LABELS = {
+	modulesCommands: "Commands Module",
+} as const;
+
+export const AUDIT_FIELD_METADATA: Readonly<Record<string, AuditFieldMetadata>> =
+	Object.fromEntries([
+		...fields(ConfigurableRoleToggles, "boolean", false),
+		...ConfigurableRoles.map((entry): [string, AuditFieldMetadata] => [
 			entry.key,
-			{ label: entry.name, type: "role", array: isRoleArrayKey(entry.key) },
+			{ label: entry.name, type: "role", array: entry.many },
 		]),
-	),
-	...Object.fromEntries(
-		ConfigurableLoggingChannels.map((entry): [string, AuditFieldMetadata] => [
-			entry.key,
-			{ label: entry.name, type: "channel", array: false },
+		...fields(ConfigurableModerationChannels, "channel", false),
+		...fields(ConfigurableModerationToggles, "boolean", false),
+		...fields(ConfigurableModerationNumbers, "integer", false),
+		...fields(ConfigurableAutomodChannels, "channel", false),
+		...fields(ConfigurableAutomodToggles, "boolean", false),
+		...fields(ConfigurableLoggingChannels, "channel", false),
+		...fields(ConfigurableIgnoreChannels, "channel", true),
+		...fields(ConfigurableLogToggles, "boolean", false),
+		...fields(ConfigurableLogDeliveryToggles, "boolean", false),
+		...fields(ConfigurableLogChoices, "string", false),
+		...fields(ConfigurableCommandChannels, "channel", true),
+		...fields(ConfigurableReportChannels, "channel", false),
+		...fields(ConfigurableReportRoles, "role", false),
+		...fields(ConfigurableReportToggles, "boolean", false),
+		...fields([HoneypotTrapSettings.honeypotChannel], "channel", false),
+		...fields([HoneypotTrapSettings.honeypotAction], "string", false),
+		...fields([HoneypotTrapSettings.honeypotWarning], "boolean", false),
+		...fields(ConfigurableHoneypotChannels, "channel", false),
+		...fields(ConfigurableHoneypotToggles, "boolean", false),
+		...fields(ConfigurableAppealSwitch, "boolean", false),
+		...fields(ConfigurableAppealChannels, "channel", false),
+		...fields(ConfigurableAppealToggles, "boolean", false),
+		...fields(ConfigurableAppealQuestions, "string", true),
+		...GUILD_MODULES.map((module): [string, AuditFieldMetadata] => [
+			module.key,
+			{ label: MODULE_LABELS[module.key], type: "boolean", array: false },
 		]),
-	),
-	...Object.fromEntries(
-		ConfigurableIgnoreChannels.map((entry): [string, AuditFieldMetadata] => [
-			entry.key,
-			{ label: entry.name, type: "channel", array: true },
-		]),
-	),
-	...Object.fromEntries(
-		[...ConfigurableModerationEvents, ...ConfigurableMessageEvents].map(
-			(entry): [string, AuditFieldMetadata] => [
-				entry.key,
-				{ label: entry.title, type: "boolean", array: false },
+		...Object.entries({ ...AUTO_MODULE_LABELS, ...LEGACY_MODULE_LABELS }).map(
+			([key, label]): [string, AuditFieldMetadata] => [
+				key,
+				{ label, type: "boolean", array: false },
 			],
 		),
-	),
-	...Object.fromEntries(
-		ConfigurableModerationKeys.map((entry): [string, AuditFieldMetadata] => [
-			entry.key,
-			{ label: entry.name, type: "boolean", array: false },
-		]),
-	),
+		["language", { label: "Language", type: "language", array: false }],
+		["timezone", { label: "Time Zone", type: "string", array: false }],
+		["commandsDisabled", { label: "Disabled Commands", type: "command-name", array: true }],
+	] satisfies [string, AuditFieldMetadata][]);
+
+/**
+ * Settings that only changed name between the V6 and V7 schemas. Audit rows
+ * written before the move keep their old keys forever, so the activity feed
+ * still has to label and resolve them.
+ */
+const LEGACY_AUDIT_FIELD_ALIASES: Readonly<Record<string, string>> = {
+	channelsIgnoreAll: "logsIgnoreAll",
+	channelsIgnoreReactionAdd: "logsIgnoreReactions",
+	channelsLogsChannelCreate: "logsChannelCreate",
+	channelsLogsChannelDelete: "logsChannelDelete",
+	channelsLogsChannelUpdate: "logsChannelUpdate",
+	channelsLogsEmojiCreate: "logsEmojiCreate",
+	channelsLogsEmojiDelete: "logsEmojiDelete",
+	channelsLogsEmojiUpdate: "logsEmojiUpdate",
+	channelsLogsImage: "logsImage",
+	channelsLogsMemberAdd: "logsMemberAdd",
+	channelsLogsMemberNicknameUpdate: "logsMemberNicknameUpdate",
+	channelsLogsMemberRemove: "logsMemberRemove",
+	channelsLogsMemberUsernameUpdate: "logsMemberUsernameUpdate",
+	channelsLogsMessageDelete: "logsMessageDelete",
+	channelsLogsMessageDeleteNsfw: "logsMessageDeleteNsfw",
+	channelsLogsMessageUpdate: "logsMessageUpdate",
+	channelsLogsMessageUpdateNsfw: "logsMessageUpdateNsfw",
+	channelsLogsModeration: "moderationChannel",
+	channelsLogsPrune: "logsPrune",
+	channelsLogsReaction: "logsReactionEmojiAdd",
+	channelsLogsRoleCreate: "logsRoleCreate",
+	channelsLogsRoleDelete: "logsRoleDelete",
+	channelsLogsRoleUpdate: "logsRoleUpdate",
+	channelsLogsServerUpdate: "logsServerUpdate",
+	disabledChannels: "commandsDisabledChannels",
+	disabledCommands: "commandsDisabled",
+	eventsTwemojiReactions: "logsReactionEmojiIncludeTwemoji",
+	rolesInitialBots: "rolesInitialRobots",
+};
+
+/** Settings the schema no longer has, kept so old rows stay readable. */
+const LEGACY_AUDIT_FIELD_METADATA: Readonly<Record<string, AuditFieldMetadata>> = {
 	prefix: { label: "Prefix", type: "string", array: false },
-	language: { label: "Language", type: "language", array: false },
-	disabledCommands: { label: "Disabled Commands", type: "command-name", array: true },
-	disabledCommandsChannels: {
-		label: "Disabled Commands Channels",
-		type: "channel",
-		array: true,
-	},
+	logsCommand: { label: "Command Logs", type: "channel", array: false },
+	logsSettings: { label: "Settings Logs", type: "channel", array: false },
 };
 
 export function humanizeKey(key: string): string {
-	// "channelsLogsMemberAdd" -> "Channels Logs Member Add"
+	// "logsMemberAdd" -> "Logs Member Add"
 	// "foo.bar.bazQux" -> "Foo Bar Baz Qux"
 	return key
 		.replace(/\./g, " ")
@@ -97,5 +184,13 @@ export function humanizeKey(key: string): string {
 }
 
 export function getAuditFieldMetadata(key: string): AuditFieldMetadata {
-	return AUDIT_FIELD_METADATA[key] ?? { label: humanizeKey(key), type: "unknown", array: false };
+	return (
+		AUDIT_FIELD_METADATA[key] ??
+		AUDIT_FIELD_METADATA[LEGACY_AUDIT_FIELD_ALIASES[key] ?? ""] ??
+		LEGACY_AUDIT_FIELD_METADATA[key] ?? {
+			label: humanizeKey(key),
+			type: "unknown",
+			array: false,
+		}
+	);
 }

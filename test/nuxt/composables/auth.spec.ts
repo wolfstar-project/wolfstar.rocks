@@ -40,13 +40,15 @@ describe("guildAddURL", () => {
 		expect(url).toContain("integration_type=0");
 	});
 
-	it("should not force a non-interactive code grant flow", () => {
+	it("should send the admin back to the guild page, and stay interactive", () => {
 		const url = guildAddURL("123");
 		const parsedUrl = new URL(url);
 
+		expect(parsedUrl.searchParams.get("redirect_uri")).toBe(guildRedirectURI());
+		expect(parsedUrl.searchParams.get("redirect_uri")).toMatch(/\/oauth\/guild$/);
+		expect(parsedUrl.searchParams.get("response_type")).toBe("code");
+		// `prompt=none` would skip the consent screen, so the bot could not be invited:
 		expect(parsedUrl.searchParams.has("prompt")).toBe(false);
-		expect(parsedUrl.searchParams.has("response_type")).toBe(false);
-		expect(parsedUrl.searchParams.has("redirect_uri")).toBe(false);
 	});
 });
 

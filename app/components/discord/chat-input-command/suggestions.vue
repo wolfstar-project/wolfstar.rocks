@@ -24,7 +24,7 @@
 						>
 							<div
 								role="listbox"
-								:aria-label="listboxLabel"
+								:aria-label="listboxText"
 								class="discord-slash-command-suggestions-list"
 							>
 								<!-- Default rail: continuous scroll (FU header + rows + bot groups). -->
@@ -41,7 +41,7 @@
 											class="discord-slash-command-suggestions-header-icon"
 											aria-hidden="true"
 										/>
-										Frequently Used
+										{{ ts("discord.suggestions.frequently_used") }}
 									</p>
 									<slot name="frequently-used" />
 								</section>
@@ -52,7 +52,7 @@
 								<!-- Mobile DOM: list above rail; desktop CSS orders rail left of list. -->
 								<nav
 									class="discord-slash-command-suggestions-sidebar-scroll no-scrollbar"
-									:aria-label="railLabel"
+									:aria-label="railText"
 								>
 									<div class="discord-slash-command-suggestions-sidebar">
 										<button
@@ -63,8 +63,8 @@
 													selectedApp === null,
 											}"
 											:aria-pressed="selectedApp === null"
-											title="Frequently Used"
-											aria-label="Frequently Used"
+											:title="ts('discord.suggestions.frequently_used')"
+											:aria-label="ts('discord.suggestions.frequently_used')"
 											@click="selectedApp = null"
 										>
 											<span
@@ -104,7 +104,7 @@
 				<div
 					v-if="slots['frequently-used'] && slots.matched"
 					role="listbox"
-					:aria-label="matchedLabel"
+					:aria-label="matchedText"
 					class="discord-slash-command-suggestions-matched"
 				>
 					<slot name="matched" />
@@ -118,7 +118,7 @@
 				>
 					<div
 						role="listbox"
-						:aria-label="listboxLabel"
+						:aria-label="listboxText"
 						class="discord-slash-command-suggestions-list"
 					>
 						<slot name="matched" />
@@ -131,7 +131,7 @@
 					:max-thumb-height="40"
 					class="discord-slash-command-suggestions-scroll"
 				>
-					<div role="listbox" :aria-label="listboxLabel">
+					<div role="listbox" :aria-label="listboxText">
 						<slot />
 					</div>
 				</DiscordScrollbar>
@@ -158,21 +158,21 @@ interface SlashCommandSuggestionsSlots {
 </script>
 
 <script setup lang="ts">
+const { ts } = useI18n();
 defineSlots<SlashCommandSuggestionsSlots>();
 
-const {
-	listboxLabel = "Slash command suggestions",
-	matchedLabel = "Matched slash command",
-	prefix,
-	railLabel = "Applications",
-} = defineProps<SlashCommandSuggestionsProps>();
+const { listboxLabel, matchedLabel, prefix, railLabel } =
+	defineProps<SlashCommandSuggestionsProps>();
 
 /** `null` shows the frequently used list; an app name filters to that app's commands. */
 const selectedApp = defineModel<SlashCommandAppName | null>("selectedApp", { default: null });
 
 const slots = useSlots();
 
-const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
+const ariaLabel = computed(() => ts("discord.suggestions.for_prefix", { prefix }));
+const listboxText = computed(() => listboxLabel ?? ts("discord.suggestions.listbox"));
+const matchedText = computed(() => matchedLabel ?? ts("discord.suggestions.matched"));
+const railText = computed(() => railLabel ?? ts("discord.suggestions.rail"));
 </script>
 
 <style scoped>
@@ -180,14 +180,18 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 
 .discord-slash-command-suggestions {
 	/* Discord autocomplete surfaces aligned to desktop dark sidebar / server layers. */
-	--discord-slash-command-suggestions-bg: oklch(23.47% 0.005 272.95);
-	--discord-slash-command-suggestions-border: oklch(100% 0 0 / 0.06);
-	--discord-slash-command-suggestions-sidebar: oklch(19.34% 0.004 273.16);
-	--discord-slash-command-suggestions-sidebar-active: oklch(28.84% 0.007 272.93);
-	--discord-slash-command-suggestions-sidebar-hover: oklch(26.65% 0.006 272.93);
-	--discord-slash-command-suggestions-sidebar-icon: oklch(71.01% 0.01 273.13);
-	--discord-slash-command-suggestions-header: oklch(71.01% 0.01 273.13);
-	--discord-slash-command-suggestions-divider: oklch(71.01% 0.01 273.13 / 0.16);
+	--discord-slash-command-suggestions-bg: var(--discord-sidebar);
+	--discord-slash-command-suggestions-border: oklch(
+		from var(--discord-chrome-strong) l c h / 0.06
+	);
+	--discord-slash-command-suggestions-sidebar: var(--discord-server);
+	--discord-slash-command-suggestions-sidebar-active: var(--discord-active);
+	--discord-slash-command-suggestions-sidebar-hover: var(--discord-hover);
+	--discord-slash-command-suggestions-sidebar-icon: var(--discord-chrome-muted);
+	--discord-slash-command-suggestions-header: var(--discord-chrome-muted);
+	--discord-slash-command-suggestions-divider: oklch(
+		from var(--discord-chrome-muted) l c h / 0.16
+	);
 	--discord-slash-command-suggestions-rail-width: 48px;
 	/* Continuous list viewport (~header + ~7 rows). */
 	--discord-slash-command-suggestions-height: calc(2rem + 7 * 3rem);
@@ -199,17 +203,6 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	@apply mx-4 mb-2 overflow-hidden rounded font-whitney;
 	background-color: var(--discord-slash-command-suggestions-bg);
 	border: 1px solid var(--discord-slash-command-suggestions-border);
-}
-
-:global([data-theme="light"]) .discord-slash-command-suggestions {
-	--discord-slash-command-suggestions-bg: oklch(98.17% 0.002 264);
-	--discord-slash-command-suggestions-border: oklch(21.15% 0.009 264 / 0.08);
-	--discord-slash-command-suggestions-sidebar: oklch(95.74% 0.004 264);
-	--discord-slash-command-suggestions-sidebar-active: oklch(92.64% 0.006 264);
-	--discord-slash-command-suggestions-sidebar-hover: oklch(93.74% 0.005 264);
-	--discord-slash-command-suggestions-sidebar-icon: oklch(47.12% 0.012 264);
-	--discord-slash-command-suggestions-header: oklch(47.12% 0.012 264);
-	--discord-slash-command-suggestions-divider: oklch(21.15% 0.009 264 / 0.08);
 }
 
 @media (width < 48rem) {

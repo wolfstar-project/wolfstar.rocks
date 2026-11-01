@@ -20,7 +20,6 @@
 
 					<div class="mt-9 flex flex-col gap-3 sm:flex-row">
 						<UButton
-							v-if="inviteUrl !== '#'"
 							:to="inviteUrl"
 							size="xl"
 							color="primary"
@@ -30,7 +29,7 @@
 							{{ ts("marketing.staryl.hero.invite") }}
 						</UButton>
 						<UButton
-							to="#staryl-showcase"
+							to="#features"
 							:locale="false"
 							size="xl"
 							color="neutral"
@@ -42,26 +41,21 @@
 						</UButton>
 					</div>
 
+					<!-- Staryl's own version, not the site's build. -->
 					<p class="mt-6 text-sm text-muted">
-						<span
-							v-if="inviteUrl === '#'"
-							class="font-medium text-base-content/80"
-							data-testid="staryl-hero-availability"
-						>
-							{{ ts("marketing.staryl.hero.no_invite") }}
-						</span>
-						<template v-else>
-							{{ ts("marketing.staryl.hero.release", { version: buildVersion }) }} ·
+						<template v-if="release">
+							{{ ts("marketing.staryl.hero.release", { version: release.version }) }}
+							·
 							<NuxtTime
-								:datetime="buildTime"
+								:datetime="release.time"
 								month="short"
 								day="numeric"
 								year="numeric"
 							/>
+							·
 						</template>
-						·
 						<NuxtLink
-							to="https://github.com/wolfstar-project/wolfstar.rocks"
+							to="https://github.com/wolfstar-project/staryl"
 							target="_blank"
 							rel="noopener noreferrer"
 							class="font-medium text-base-content underline decoration-base-content/25 underline-offset-4 hover:decoration-base-content"
@@ -117,15 +111,15 @@
 </template>
 
 <script setup lang="ts">
-const { buildTime, buildVersion, inviteUrl } = defineProps<{
-	buildTime: Date;
-	buildVersion: string;
+const { inviteUrl, release = null } = defineProps<{
 	inviteUrl: string;
+	/** Left out when GitHub could not be reached at build time. */
+	release?: StarylRelease | null;
 }>();
 
 const { ts } = useI18n();
 
-const SETUP_COMMAND = "/subscriptions twitch";
+const SETUP_COMMAND = "/setup";
 </script>
 
 <style scoped>
@@ -157,11 +151,13 @@ const SETUP_COMMAND = "/subscriptions twitch";
 }
 
 .staryl-hero-brief {
-	border-block: 1px solid var(--home-border-subtle);
+	@apply rounded-xl p-7 shadow-lg;
+	background-color: var(--color-base-300);
+	border: 1px solid var(--home-border-subtle);
 }
 
 .staryl-hero-brief-header {
-	@apply flex items-center gap-4 py-5;
+	@apply flex items-center gap-4 pb-5;
 }
 
 .staryl-hero-brief-row {
@@ -170,7 +166,7 @@ const SETUP_COMMAND = "/subscriptions twitch";
 }
 
 .staryl-hero-brief-row dt {
-	@apply font-mono text-sm font-semibold text-base-content;
+	@apply font-mono text-sm font-semibold text-primary;
 }
 
 .staryl-hero-brief-row dd {

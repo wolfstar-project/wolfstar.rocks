@@ -12,6 +12,7 @@ Defined in `shared/audit/actions.ts`:
 | --------------------------- | ------------------------------ | --------------------------------------------- |
 | `guildSettingsUpdate`       | `guild.settings.update`        | PATCH guild settings succeeds                 |
 | `guildSettingsAccessDenied` | `guild.settings.access-denied` | `canManage()` throws                          |
+| `userSettingsUpdate`        | `user.settings.update`         | PATCH `/api/users/settings` succeeds          |
 | `userLogin`                 | `user.login`                   | Not currently invoked anywhere in server code |
 | `userLogout`                | `user.logout`                  | Not currently invoked anywhere in server code |
 | `sessionRefresh`            | `session.refresh`              | Not currently invoked anywhere in server code |

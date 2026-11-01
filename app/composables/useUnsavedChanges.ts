@@ -24,6 +24,12 @@ export function useUnsavedChanges(hasChanges: Ref<boolean>) {
 			return;
 		}
 
+		// A change of the query alone, such as the phone's list and page of
+		// `/app` (`?screen=page`), leaves the staged edits where they are.
+		if (to.path === from.path) {
+			return;
+		}
+
 		if (hasChanges.value && !isSameGuildManageArea(to, from)) {
 			pendingRoute.value = to.fullPath;
 			showDialog.value = true;

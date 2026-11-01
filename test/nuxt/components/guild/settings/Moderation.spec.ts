@@ -1,9 +1,11 @@
 import type { GuildData } from "#server/database";
-import { ConfigurableModerationKeys } from "#shared/utils/settingsDataEntries";
+import { ConfigurableModerationToggles } from "#shared/utils/settingsDataEntries";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 import Moderation from "~/components/guild/settings/Moderation.vue";
+import NumberField from "~/components/guild/settings/NumberField.vue";
+import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 import { createMockGuildData } from "~~/test/mocks/guildData";
 
 const mockGuildSettings = ref<GuildData | undefined>(createMockGuildData("123456789012345678"));
@@ -27,6 +29,10 @@ mockNuxtImport("useGuildSettingsChanges", () => () => ({
 
 mockNuxtImport("useToast", () => () => ({
 	add: mockToastAdd,
+}));
+
+mockNuxtImport("useGuildData", () => () => ({
+	guildData: ref(createMockOauthFlattenedGuild({ id: "123456789012345678" })),
 }));
 
 function getSwitch(wrapper: Awaited<ReturnType<typeof mountSuspended>>, label: string) {
@@ -80,7 +86,7 @@ describe("moderation guild settings", () => {
 
 		await nextTick();
 
-		for (const setting of ConfigurableModerationKeys) {
+		for (const setting of ConfigurableModerationToggles) {
 			expect(getSwitch(wrapper, `Toggle ${setting.name}`).exists()).toBeTruthy();
 		}
 	});
@@ -90,35 +96,90 @@ describe("moderation guild settings", () => {
 
 		await nextTick();
 
-		expect(wrapper.text()).toContain("Punishment Settings");
+		expect(wrapper.text()).toContain("Moderation");
 		expect(wrapper.text()).toContain(
-			"Configure how WolfStar handles moderation actions like bans, kicks, and mutes.",
+			"Where cases are logged, which manual actions open one, and how member reports are reviewed.",
 		);
 	});
 
+	// Reports are set up next to the cases they can close into, not on a page
+	// of their own, and the queue of filed reports follows them.
+	it("groups the settings into a Cases and a Reports card, then the review queue", async () => {
+		const wrapper = await mountSuspended(Moderation);
+
+		await nextTick();
+
+		const headings = wrapper.findAll("section h2").map((heading) => heading.text());
+		expect(headings).toHaveLength(3);
+		expect(headings).toEqual(expect.arrayContaining(["Cases", "Reports", "Review queue"]));
+		const sectionTitled = (title: string) =>
+			wrapper
+				.findAll("section")
+				.find(
+					(section) => section.find("h2").exists() && section.find("h2").text() === title,
+				);
+		const cases = sectionTitled("Cases");
+		const reports = sectionTitled("Reports");
+		expect(cases?.text()).toContain("Moderation Logs");
+		expect(reports?.text()).toContain("Reports Channel");
+		expect(reports?.text()).toContain("Notified Role");
+		expect(reports?.text()).toContain("Anonymous Reports");
+	});
+
 	it("initializes toggle states from guildSettings", async () => {
+		mockGuildSettings.value = createMockGuildData("123456789012345678", {
+			moderationTrackTimeouts: true,
+		});
 		const wrapper = await mountSuspended(Moderation);
 
 		await nextTick();
 		await nextTick();
 
-		expect(readSwitchState(wrapper, "Toggle Hide Message")).toBe(false);
-		expect(readSwitchState(wrapper, "Toggle Send Punishment Response")).toBe(true);
+		expect(readSwitchState(wrapper, "Toggle Track Manual Bans")).toBe(false);
+		expect(readSwitchState(wrapper, "Toggle Track Manual Timeouts")).toBe(true);
+	});
+
+	it("stages only the key a toggle edits", async () => {
+		const wrapper = await mountSuspended(Moderation);
+
+		await nextTick();
+		await nextTick();
+
+		await getSwitch(wrapper, "Toggle Track Manual Bans").trigger("click");
+		await nextTick();
+
+		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+			moderationTrackBans: true,
+		});
+	});
+
+	it("switches the moderation module from the card at the top", async () => {
+		const wrapper = await mountSuspended(Moderation);
+
+		await nextTick();
+		await nextTick();
+
+		await getSwitch(wrapper, "Toggle Moderation").trigger("click");
+		await nextTick();
+
+		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+			modulesModeration: false,
+		});
 	});
 
 	it("syncs state when guildSettings change externally", async () => {
 		const wrapper = await mountSuspended(Moderation);
 
 		await nextTick();
-		expect(readSwitchState(wrapper, "Toggle Hide Message")).toBe(false);
+		expect(readSwitchState(wrapper, "Toggle Track Manual Bans")).toBe(false);
 
 		mockGuildSettings.value = createMockGuildData("123456789012345678", {
-			messagesModerationAutoDelete: true,
+			moderationTrackBans: true,
 		});
 		await nextTick();
 		await nextTick();
 
-		expect(readSwitchState(wrapper, "Toggle Hide Message")).toBe(true);
+		expect(readSwitchState(wrapper, "Toggle Track Manual Bans")).toBe(true);
 	});
 
 	it("has correct aria-labels for accessibility", async () => {
@@ -126,11 +187,42 @@ describe("moderation guild settings", () => {
 
 		await nextTick();
 
-		for (const setting of ConfigurableModerationKeys) {
+		for (const setting of ConfigurableModerationToggles) {
 			const switchElement = getSwitch(wrapper, `Toggle ${setting.name}`);
 
 			expect(switchElement.exists()).toBeTruthy();
 			expect(switchElement.attributes("aria-label")).toBe(`Toggle ${setting.name}`);
 		}
+	});
+
+	it("asks for the confirm window of a recent case in minutes, from the saved settings", async () => {
+		mockGuildSettings.value = createMockGuildData("123456789012345678", {
+			moderationConfirmRecentMinutes: 5,
+		});
+		const wrapper = await mountSuspended(Moderation);
+
+		await nextTick();
+		await nextTick();
+
+		const field = wrapper.findComponent(NumberField);
+		expect(field.text()).toContain("Confirm a Second Action");
+		expect(field.text()).toContain("minutes");
+		expect(field.find("input").element.value).toBe("5");
+	});
+
+	it("holds a confirm window past the range to its end before staging it", async () => {
+		const wrapper = await mountSuspended(Moderation);
+
+		await nextTick();
+		await nextTick();
+
+		const input = wrapper.findComponent(NumberField).findComponent({ name: "UInputNumber" });
+		input.vm.$emit("update:modelValue", 99);
+		await nextTick();
+		await nextTick();
+
+		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+			moderationConfirmRecentMinutes: 60,
+		});
 	});
 });

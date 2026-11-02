@@ -1,4 +1,5 @@
 import type { DashboardAuditChanges } from "#shared/types/audit-log";
+import { isDeepEqual } from "#shared/utils/isDeepEqual";
 import { auditDiff } from "evlog";
 
 // Ported from the WolfStar bot's auditLogEmbeds.ts — traverses a JSON-patch path.
@@ -13,12 +14,11 @@ export function getNestedValue(obj: Record<string, unknown>, path: string): unkn
 	return current;
 }
 
+// evlog compares lists by identity, and the two snapshots are parsed apart, so
+// it replaces every list a save carries, changed or not.
 function isEquivalentDefault(a: unknown, b: unknown): boolean {
-	if (a === b) return true;
 	if ((a === null || a === undefined) && (b === null || b === undefined)) return true;
-	if (Array.isArray(a) && Array.isArray(b) && a.length === 0 && b.length === 0) return true;
-	if (a === "" && b === "") return true;
-	return false;
+	return isDeepEqual(a, b);
 }
 
 // Remove shallow ancestor keys that are prefixes of deeper keys in the same category.
@@ -90,7 +90,12 @@ export function compactSettingsChanges(
 		}
 		return entry;
 	});
-	return { v: 2, patch };
+	return {
+		v: 2,
+		patch: patch.filter(
+			(entry) => entry.op !== "replace" || !isEquivalentDefault(entry.from, entry.value),
+		),
+	};
 }
 
 function groupOps(ops: CompactSettingsChangeOp[]): DashboardAuditChanges {
@@ -98,16 +103,17 @@ function groupOps(ops: CompactSettingsChangeOp[]): DashboardAuditChanges {
 	const removed: Record<string, unknown> = {};
 	const changed: Record<string, { from: unknown; to: unknown }> = {};
 
-	for (const op of ops.slice(0, 25)) {
+	// Rows written before the unchanged lists were left out still carry them,
+	// so they go before the cap, or they would push the real changes out.
+	const real = ops.filter((op) => op.op !== "replace" || !isEquivalentDefault(op.from, op.value));
+	for (const op of real.slice(0, 25)) {
 		const key = op.path.replace(/^\//, "").replaceAll("/", ".");
 		if (op.op === "add") {
 			added[key] = op.value;
 		} else if (op.op === "remove") {
 			removed[key] = op.from;
-		} else if (op.op === "replace") {
-			if (!isEquivalentDefault(op.from, op.value)) {
-				changed[key] = { from: op.from, to: op.value };
-			}
+		} else {
+			changed[key] = { from: op.from, to: op.value };
 		}
 	}
 

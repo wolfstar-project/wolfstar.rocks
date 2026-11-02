@@ -70,45 +70,54 @@ const WORKER_DEFAULTS = {
 const SENTRY_DSN =
 	"https://f22c05b1dea46bdd3465501f81b3c94d@o4505160005451776.ingest.us.sentry.io/4508811185356800";
 
+function requireEnv(name: string): string {
+	const value = process.env[name];
+	if (!value) throw new Error(`${name} is required to build the production Worker.`);
+	return value;
+}
+
 /**
  * The production Worker. Its database goes through a Hyperdrive with query
  * caching off, so a setting read back after a save is the saved one. The ids
  * are of resources in the WolfStar Cloudflare account, not secrets;
  * `CLOUDFLARE_HYPERDRIVE_ID` and `NUXT_OAUTH_DISCORD_CLIENT_ID` come from the
- * deploy workflow.
+ * deploy workflow, and the build stops without them: `vars` replaces what the
+ * dashboard holds, so an empty client id would deploy and break sign-in.
  *
  * The secrets are set as on {@link ALPHA_WORKER}, with `--name wolfstar-rocks`.
  */
-const PRODUCTION_WORKER = {
-	...WORKER_DEFAULTS,
-	d1_databases: [
-		{
-			binding: CLOUDFLARE_BINDINGS.contentDatabase,
-			database_id: "7b7f274b-c8f3-47ec-adfc-96fb6f88e13c",
-			database_name: "wolfstar-content",
+function createProductionWorker() {
+	return {
+		...WORKER_DEFAULTS,
+		d1_databases: [
+			{
+				binding: CLOUDFLARE_BINDINGS.contentDatabase,
+				database_id: "7b7f274b-c8f3-47ec-adfc-96fb6f88e13c",
+				database_name: "wolfstar-content",
+			},
+		],
+		hyperdrive: [
+			{
+				binding: CLOUDFLARE_BINDINGS.database,
+				id: requireEnv("CLOUDFLARE_HYPERDRIVE_ID"),
+			},
+		],
+		kv_namespaces: [
+			{ binding: CLOUDFLARE_BINDINGS.cache, id: "cdf129317a7c43dcb1197fb60d0d70f6" },
+			{ binding: CLOUDFLARE_BINDINGS.rateLimit, id: "6e08faf1027944438a30c813f9bde840" },
+			{ binding: CLOUDFLARE_BINDINGS.skewProtection, id: "416c6dd69b3a4bf7a1cfca13ba1a5955" },
+		],
+		name: "wolfstar-rocks",
+		routes: [{ custom_domain: true, pattern: "wolfstar.rocks" }],
+		vars: {
+			NUXT_OAUTH_DISCORD_CLIENT_ID: requireEnv("NUXT_OAUTH_DISCORD_CLIENT_ID"),
+			NUXT_PUBLIC_API_BASE_URL: "https://api.wolfstar.rocks",
+			NUXT_PUBLIC_ENVIRONMENT: "production",
+			NUXT_PUBLIC_SITE_URL: "https://wolfstar.rocks",
+			SENTRY_DSN,
 		},
-	],
-	hyperdrive: [
-		{
-			binding: CLOUDFLARE_BINDINGS.database,
-			id: process.env.CLOUDFLARE_HYPERDRIVE_ID ?? "",
-		},
-	],
-	kv_namespaces: [
-		{ binding: CLOUDFLARE_BINDINGS.cache, id: "cdf129317a7c43dcb1197fb60d0d70f6" },
-		{ binding: CLOUDFLARE_BINDINGS.rateLimit, id: "6e08faf1027944438a30c813f9bde840" },
-		{ binding: CLOUDFLARE_BINDINGS.skewProtection, id: "416c6dd69b3a4bf7a1cfca13ba1a5955" },
-	],
-	name: "wolfstar-rocks",
-	routes: [{ custom_domain: true, pattern: "wolfstar.rocks" }],
-	vars: {
-		NUXT_OAUTH_DISCORD_CLIENT_ID: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID ?? "",
-		NUXT_PUBLIC_API_BASE_URL: "https://api.wolfstar.rocks",
-		NUXT_PUBLIC_ENVIRONMENT: "production",
-		NUXT_PUBLIC_SITE_URL: "https://wolfstar.rocks",
-		SENTRY_DSN,
-	},
-} satisfies WranglerConfig;
+	} satisfies WranglerConfig;
+}
 
 /**
  * The alpha Worker. It shares the database of the WolfStar Alpha bot, the
@@ -154,7 +163,7 @@ const ALPHA_WORKER = {
 } satisfies WranglerConfig;
 
 /** The Worker this build deploys to. */
-export const WORKER = isProductionWorker ? PRODUCTION_WORKER : ALPHA_WORKER;
+export const WORKER = isProductionWorker ? createProductionWorker() : ALPHA_WORKER;
 
 /**
  * Fills the env with the Worker's own `vars` on the Workers build, leaving any

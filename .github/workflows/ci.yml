@@ -327,7 +327,7 @@ jobs:
         env:
           NITRO_PRESET: cloudflare_module
           CLOUDFLARE_WORKER: production
-          CLOUDFLARE_HYPERDRIVE_ID: 00000000000000000000000000000000
+          CLOUDFLARE_HYPERDRIVE_ID: "00000000000000000000000000000000"
           NODE_OPTIONS: --max-old-space-size=8192
           NUXT_BETTER_AUTH_SECRET: only-for-the-prerender-of-this-check
           NUXT_OAUTH_DISCORD_CLIENT_ID: "0"

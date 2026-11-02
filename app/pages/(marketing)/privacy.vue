@@ -219,39 +219,10 @@
 							Analytics
 						</h2>
 						<p class="mb-4 leading-relaxed text-base-content">
-							We use Cloudflare Analytics to understand how visitors use our website.
-							This helps us improve the user experience and identify issues.
-						</p>
-						<p class="mb-3 leading-relaxed text-base-content">
-							Cloudflare Analytics is designed with privacy in mind:
-						</p>
-						<ul class="list-none space-y-2 pl-0 text-base-content">
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
-								<span>It does not use cookies</span>
-							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
-								<span>It does not collect personal identifiers</span>
-							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
-								<span>It does not track users across websites</span>
-							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
-								<span>All data is aggregated and anonymised</span>
-							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
-								<span>Data is collected server-side, not from your browser</span>
-							</li>
-						</ul>
-						<p class="mt-4 leading-relaxed text-base-content">
-							The only information collected includes: page URLs, referrer,
-							country/region, device type, browser, and operating system. This data
-							cannot be used to identify individual users. All analytics data is
-							processed server-side by our hosting provider.
+							Cloudflare, our hosting provider, keeps aggregated statistics about
+							traffic to the site, which we use to understand how it is used and to
+							identify issues. We do not add an analytics script or analytics cookies
+							to the site.
 						</p>
 					</section>
 

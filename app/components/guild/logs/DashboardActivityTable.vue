@@ -167,9 +167,14 @@ const columns = computed<TableColumn<Row>[]>(() => [
 		header: ts("guild_logs.columns.action"),
 		cell: ({ row }) =>
 			h("div", { class: "flex min-w-0 items-center gap-2.5" }, [
+				// The cell does not wrap, so a long sentence ends in an ellipsis
+				// before the button instead of running under it.
 				h(
 					"span",
-					{ class: "min-w-0 flex-auto leading-[1.45]" },
+					{
+						class: "min-w-0 flex-auto truncate leading-[1.45]",
+						title: row.original.parts.map((part) => part.text).join(""),
+					},
 					row.original.parts.map((part) =>
 						h("span", { class: part.strong ? "logs-strong" : undefined }, part.text),
 					),

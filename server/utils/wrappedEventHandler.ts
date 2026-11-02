@@ -103,7 +103,7 @@ async function resolveHandlerSession(
 }
 
 // In-process keyed mutex that serializes read-modify-write cycles per storage
-// key. The production driver (Cloudflare KV over HTTP) exposes no atomic
+// key. The production driver (Cloudflare KV) exposes no atomic
 // compare-and-swap primitive, so this bounds reservation races to the single
 // server instance; cross-instance races remain possible and are an accepted
 // limitation of the storage backend.

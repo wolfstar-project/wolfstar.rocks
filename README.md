@@ -12,7 +12,6 @@ Link][invite-link] · [Support Server][discord-link] ·
 
 <!-- SHIELD GROUP -->
 
-[![Netlify deploy status badge][netlify-status-shield]][netlify-status-link]
 [![GitHub latest release badge][github-release-shield]][github-release-link]
 [![GitHub last commit badge][github-last-commit-shield]][github-last-commit-link]<br/>
 [![Discord community badge][discord-shield]][discord-link]
@@ -397,10 +396,6 @@ Copyright © 2024 [WolfStar][profile-link]. <br /> This project is
   https://shieldcn.dev/github/stars/wolfstar-project/wolfstar.rocks?variant=branded
 [issues-link]:
   https://img.shields.io/github/issues/wolfstar-project/wolfstar.rocks.svg?style=flat
-[netlify-status-shield]:
-  https://api.netlify.com/api/v1/badges/80592647-d7bf-49b3-b82c-d0a3b3d7b3d0/deploy-status
-[netlify-status-link]:
-  https://app.netlify.com/projects/wolfstar-rocks-et34281/deploys
 [official-site]: https://wolfstar.rocks
 [codspeed-link]:
   https://codspeed.io/wolfstar-project/wolfstar.rocks?utm_source=badge

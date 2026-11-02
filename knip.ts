@@ -6,6 +6,9 @@ const config: KnipConfig = {
 		".": {
 			entry: [
 				"service-worker/sw.ts",
+				/** Loaded by path on a Worker: Nitro's `plugins` and `modules/cache.ts` */
+				"server/cloudflare/sentry.ts",
+				"shared/utils/storage/cloudflare-kv-fallback.ts",
 				"taze.config.ts",
 				"modules/**/*.ts",
 				".lighthouserc.cjs",

@@ -1,19 +1,19 @@
-import netlifyNuxt from "@netlify/nuxt";
 import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
 import { isCI, isTest, provider } from "std-env";
 import {
-	ALPHA_WORKER,
-	applyAlphaWorkerEnv,
+	applyWorkerEnv,
 	CLOUDFLARE_BINDINGS,
+	isAlphaWorker,
 	isCloudflareBuild,
+	WORKER,
 } from "./config/cloudflare.ts";
 import { currentLocales, datetimeFormats, numberFormats } from "./config/i18n.ts";
 import { pwa } from "./config/pwa.ts";
 import { LOCALE_BUNDLES_DIR } from "./modules/i18n-locale-bundles.ts";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig.ts";
 
-applyAlphaWorkerEnv();
+applyWorkerEnv();
 
 const runtimeConfig = generateRuntimeConfig();
 const isStorybook = process.env.STORYBOOK === "true" || process.env.VITEST_STORYBOOK === "true";
@@ -57,7 +57,6 @@ export default defineNuxtConfig({
 				extends: "auto",
 			},
 		],
-		...(isTest || isCI || isStorybook || isCloudflareBuild ? [] : [netlifyNuxt]),
 	],
 
 	// @nuxtjs/better-auth. Redirect targets are centralised here so route rules,
@@ -122,9 +121,9 @@ export default defineNuxtConfig({
 
 	$production: {
 		image: {
-			// On the alpha Worker, through the zone's image transformations, which
-			// accept the zone's own images and the origins Netlify allows.
-			provider: isCloudflareBuild ? "cloudflare" : "netlify",
+			// On a Worker, through the zone's image transformations. The Node build
+			// of the browser tests resizes them itself.
+			provider: isCloudflareBuild ? "cloudflare" : "ipx",
 		},
 		modules: ["nuxt-security"],
 		sentry: {
@@ -241,11 +240,7 @@ export default defineNuxtConfig({
 	},
 
 	htmlValidator: {
-		enabled:
-			!isCI ||
-			(provider !== "netlify" &&
-				provider !== "cloudflare_workers" &&
-				!!process.env.VALIDATE_HTML),
+		enabled: !isCI || (provider !== "cloudflare_workers" && !!process.env.VALIDATE_HTML),
 		options: {
 			rules: {
 				"meta-refresh": "off",
@@ -330,12 +325,13 @@ export default defineNuxtConfig({
 		"/profile": { redirect: { to: "/app", statusCode: 301 }, prerender: false, robots: false },
 		"/account": { redirect: { to: "/app", statusCode: 301 }, prerender: false, robots: false },
 		"/starly": { appLayout: "default", robots: true },
+		"/wolfstar-v7": { redirect: { statusCode: 301, to: "/blog/wolfstar-v7" } },
 
 		// Static pages
 		// The alpha bot's commands change with each image it runs, so the alpha
 		// Worker renders the page and keeps it an hour instead of freezing it at
 		// build time.
-		"/commands": isCloudflareBuild
+		"/commands": isAlphaWorker
 			? { appLayout: "default", robots: true, swr: 60 * 60 }
 			: { appLayout: "default", prerender: true, robots: true },
 		"/staryl": { appLayout: "default", prerender: true, robots: true },
@@ -397,7 +393,7 @@ export default defineNuxtConfig({
 	nitro: {
 		...(isCloudflareBuild
 			? {
-					cloudflare: { deployConfig: true, nodeCompat: true, wrangler: ALPHA_WORKER },
+					cloudflare: { deployConfig: true, nodeCompat: true, wrangler: WORKER },
 					// A Worker refuses I/O across requests, so the database client is made
 					// per request and found through `useEvent()` (server/database/prisma.ts).
 					experimental: { asyncContext: true },
@@ -650,10 +646,8 @@ export default defineNuxtConfig({
 	},
 
 	skewProtection: {
-		// Same Netlify Blobs backend as the cache/fetch-cache Nitro storage mounts
-		// (see modules/cache.ts); falls back to the module's fs cache elsewhere.
 		// The Workers build keeps it in a KV namespace of its own, the way the
-		// module's Cloudflare guide sets it up.
+		// module's Cloudflare guide sets it up; elsewhere it is the module's fs cache.
 		storage: isCloudflareBuild
 			? { binding: CLOUDFLARE_BINDINGS.skewProtection, driver: "cloudflare-kv-binding" }
 			: {
@@ -694,15 +688,12 @@ export default defineNuxtConfig({
 					"'self'",
 					"wss:",
 					"ws:",
-					"https://ingesteer.services-prod.nsvcs.net", // Used by Netlify for telemetry (error, performance etc.)
 					"https://cdn.wolfstar.rocks",
 					"https://cdn.discordapp.com",
 					"https://media.discordapp.net",
 					"https://discord.com",
 					"https://api.iconify.design",
 					"https://ungh.cc", // Changelog page fetches GitHub releases from ungh.cc on client-side navigation
-					"https://*.netlify.com",
-					"https://*.netlify.app",
 					"https://wolfstar.rocks", // Better Auth's client calls the configured site URL directly (e.g. /api/auth/get-session), not just relative paths
 					"https://*.wolfstar.rocks",
 					"https://*.ingest.us.sentry.io",

@@ -23,8 +23,8 @@ export interface AuthRateLimitStorageDriver {
 export function createAuthSecondaryStorage(storage: AuthRateLimitStorageDriver): SecondaryStorage {
 	// In-process keyed mutex serializing the read-modify-write cycles of
 	// increment() and getAndDelete() per storage key, mirroring
-	// server/utils/wrappedEventHandler.ts. The production driver (Cloudflare KV
-	// over HTTP) exposes no atomic increment or get-and-delete primitive, so
+	// server/utils/wrappedEventHandler.ts. The production driver (Cloudflare KV)
+	// exposes no atomic increment or get-and-delete primitive, so
 	// this only bounds races to a single server instance; cross-instance races
 	// remain possible and are an accepted limitation of the storage backend.
 	const withKeyLock = createKeyedLock();

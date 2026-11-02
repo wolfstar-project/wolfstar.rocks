@@ -3,8 +3,8 @@
  *
  * Better Auth validates `Origin`/`Referer` on every cookie-bound request and
  * rejects anything not in `trustedOrigins`. The production hostnames are known
- * up front, but Netlify deploy previews get a generated hostname per branch and
- * per PR, so a hardcoded array locks sign-in out of every preview deploy.
+ * up front, but the checks run per request against host patterns, so a
+ * subdomain of the site signs in without being listed one by one.
  *
  * `@nuxtjs/better-auth` caches the Better Auth instance (keyed on `__explicit__`
  * once `runtimeConfig.public.siteUrl` is set), so a request-derived origin
@@ -16,14 +16,13 @@
 /**
  * Host patterns allowed to run the auth flow. `*` matches a single label, so
  * `*.wolfstar.rocks` covers `beta.` and `main.` but not a nested attacker
- * subdomain, and `*.netlify.app` covers deploy previews.
+ * subdomain.
  */
 export const TRUSTED_HOST_PATTERNS = [
 	"localhost",
 	"127.0.0.1",
 	"wolfstar.rocks",
 	"*.wolfstar.rocks",
-	"*.netlify.app",
 ] as const;
 
 /**

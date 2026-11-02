@@ -6,8 +6,8 @@ const MARKETING_PAGES = [
 	{ path: "/staryl", heading: /social updates, where your server already is/i },
 ] as const;
 
-/** Netlify image-proxy path prefix — 404s from this path are CDN infra noise, not app errors. */
-const NETLIFY_IMAGE_PROXY_PATH = "/.netlify/images";
+/** Image-proxy path prefix: 404s from this path are infra noise, not app errors. */
+const IMAGE_PROXY_PATH = "/_ipx";
 
 test.describe("Hydration", () => {
 	test.describe("responds 200", () => {
@@ -59,9 +59,9 @@ test.describe("Hydration", () => {
 					msg.type() === "error" ||
 					(msg.type() === "warning" && msg.text().includes("[nuxt]"))
 				) {
-					// Ignore Netlify image-proxy 404s — these are infra noise, not app errors
+					// Ignore image-proxy 404s: these are infra noise, not app errors
 					const text = msg.text();
-					if (text.includes(NETLIFY_IMAGE_PROXY_PATH)) return;
+					if (text.includes(IMAGE_PROXY_PATH)) return;
 					consoleErrors.push(text);
 				}
 			});

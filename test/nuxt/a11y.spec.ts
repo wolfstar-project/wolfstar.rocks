@@ -1155,7 +1155,7 @@ describe("component accessibility audits", () => {
 		it("gives the external links accessible names that announce a new tab", async () => {
 			const wrapper = await mountSuspended(AppFooter);
 			expect(
-				wrapper.find("[aria-label='Powered by Netlify - opens in new tab']").exists(),
+				wrapper.find("[aria-label='Powered by Cloudflare - opens in new tab']").exists(),
 			).toBe(true);
 			expect(
 				wrapper.find("[aria-label='Visit WolfStar on GitHub - opens in new tab']").exists(),

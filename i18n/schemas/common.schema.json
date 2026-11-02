@@ -199,10 +199,10 @@
 				"other_apps": {
 					"type": "string"
 				},
-				"powered_by_netlify": {
+				"powered_by_cloudflare": {
 					"type": "string"
 				},
-				"powered_by_netlify_aria": {
+				"powered_by_cloudflare_aria": {
 					"type": "string"
 				},
 				"privacy": {

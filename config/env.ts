@@ -4,30 +4,16 @@ import packageJson from "../package.json" with { type: "json" };
 import { getNextVersion } from "../scripts/next-version.ts";
 
 /**
- * Whether this is a build of a GitHub PR.
- * @see {@link https://docs.github.com/en/actions/reference/workflows-and-actions/variables}
- */
-const isPR = process.env.GITHUB_EVENT_NAME === "pull_request";
-
-/** Pull request number: GitHub names a PR's ref `<number>/merge`. */
-const prNumber = isPR ? (process.env.GITHUB_REF_NAME?.split("/")[0] ?? null) : null;
-
-/**
- * Git branch, from Workers Builds or from GitHub Actions.
+ * The branch of a Workers Build.
  * @see {@link https://developers.cloudflare.com/workers/ci-cd/builds/configuration/#environment-variables}
  */
-const gitBranch =
-	process.env.WORKERS_CI_BRANCH || process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF_NAME;
+const gitBranch = process.env.WORKERS_CI_BRANCH;
 
 export const isCanary =
 	(process.env.NODE_ENV === "production" ||
 		process.env.NODE_ENV === "preview" ||
 		process.env.NODE_ENV === "canary") &&
-	gitBranch === "main" &&
-	!isPR;
-
-/** Whether this is a build of a branch other than the ones that deploy to production or canary. */
-const isPreview = isPR || (!!gitBranch && gitBranch !== "main" && gitBranch !== "release");
+	gitBranch === "main";
 
 const git = simpleGit();
 
@@ -95,13 +81,12 @@ export async function getEnv(isDevelopment: boolean) {
 		getGitInfo(),
 		getVersion(),
 	]);
-	const env = isDevelopment ? "dev" : isCanary ? "canary" : isPreview ? "preview" : "release";
+	const env = isDevelopment ? "dev" : isCanary ? "canary" : "release";
 	return {
 		version,
 		commit,
 		shortCommit,
 		branch,
 		env,
-		prNumber,
 	} as const;
 }

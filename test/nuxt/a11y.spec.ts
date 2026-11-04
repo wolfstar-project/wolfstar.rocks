@@ -51,7 +51,9 @@ import {
 	DashboardSkeleton,
 	ErrorPage,
 	OauthStatusPanel,
+	GuildAppealsEmojiPicker,
 	GuildAppealsFormEditor,
+	GuildAppealsQueue,
 	GuildAppealsForms,
 	GuildAuditChanges,
 	GuildAutomodDurationInput,
@@ -954,7 +956,7 @@ describe("component accessibility audits", () => {
 				createMockGuildData(GUILD_ID, { appealsEnabled: true, appealsThread: "private" }),
 			);
 			const component = await mountSuspended(GuildSettingsAppeals, {
-				global: { stubs: { GuildAppealsForms: true } },
+				global: { stubs: { GuildAppealsForms: true, GuildAppealsQueue: true } },
 			});
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
@@ -1011,6 +1013,95 @@ describe("component accessibility audits", () => {
 			await vi.waitFor(() => expect(component.text()).toContain("Mute appeal"));
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildAppealsQueue", () => {
+		it("should have no accessibility violations with a pending and a decided appeal", async () => {
+			const GUILD_ID = "123456789012345680";
+			const user = { id: "111111111111111111", displayName: "alt_account", avatar: null };
+			registerEndpoint(`/api/guilds/${GUILD_ID}/appeals`, {
+				method: "GET",
+				handler: () => ({
+					entries: [
+						{
+							id: "1",
+							caseId: 42,
+							caseType: "Ban",
+							formName: "Ban appeal",
+							user,
+							status: "pending",
+							answers: [
+								{
+									questionId: "a",
+									label: "What happened?",
+									value: "That was my brother.",
+								},
+								{
+									questionId: "b",
+									label: "What will change?",
+									value: "I changed my password.",
+								},
+							],
+							reason: null,
+							reviewer: null,
+							createdAt: "2026-11-04T10:02:00.000Z",
+							decidedAt: null,
+						},
+						{
+							id: "2",
+							caseId: 46,
+							caseType: "Timeout",
+							formName: null,
+							user: { ...user, id: "222222222222222222", displayName: "loud_user" },
+							status: "denied",
+							answers: [
+								{
+									questionId: "a",
+									label: "Why?",
+									value: "I was hyped for the event.",
+								},
+							],
+							reason: "Too soon.",
+							reviewer: { ...user, id: "333333333333333333", displayName: "mod_one" },
+							createdAt: "2026-11-03T16:20:00.000Z",
+							decidedAt: "2026-11-03T18:00:00.000Z",
+						},
+					],
+					total: 2,
+					counts: { accepted: 0, denied: 1, pending: 1 },
+					canReview: true,
+				}),
+			});
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+			const component = await mountSuspended(GuildAppealsQueue);
+			await vi.waitFor(() => expect(component.text()).toContain("@alt_account"));
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildAppealsEmojiPicker", () => {
+		it("should have no accessibility violations with the picker open", async () => {
+			const component = await mountSuspended(GuildAppealsEmojiPicker, {
+				props: {
+					modelValue: "😀",
+					servers: [{ id: "123456789012345678", name: "wolf", animated: false }],
+				},
+				attachTo: document.body,
+			});
+			await component.get('button[aria-haspopup="dialog"]').trigger("click");
+			await vi.waitFor(
+				() =>
+					expect(
+						document.querySelector('[data-cell][aria-label="grinning face"]'),
+					).not.toBeNull(),
+				{ timeout: 20_000 },
+			);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+			component.unmount();
 		});
 	});
 

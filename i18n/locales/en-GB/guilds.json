@@ -117,6 +117,42 @@
 				"restricted_roles_help": "",
 				"save": ""
 			},
+			"emoji": {
+				"categories": {
+					"activities": "",
+					"food": "",
+					"nature": "",
+					"objects": "",
+					"people": "",
+					"server": "",
+					"smileys": "",
+					"symbols": "",
+					"travel": ""
+				},
+				"categories_aria": "",
+				"dialog_aria": "",
+				"hint": "",
+				"load_failed": "",
+				"loading": "",
+				"none": "",
+				"none_help": "",
+				"remove": "",
+				"results": "",
+				"retry": "",
+				"search_aria": "",
+				"search_clear": "",
+				"search_placeholder": "",
+				"skin_tone": "",
+				"tones": {
+					"dark": "",
+					"default": "",
+					"light": "",
+					"medium": "",
+					"medium_dark": "",
+					"medium_light": ""
+				},
+				"trigger_aria": ""
+			},
 			"form_aria": "",
 			"form_notice": "",
 			"form_notice_title": "",
@@ -183,6 +219,70 @@
 			"off_title": "",
 			"on_summary": "",
 			"per_member": "",
+			"queue": {
+				"accept": "",
+				"accept_aria": "",
+				"case_number": "",
+				"decision": {
+					"at": "",
+					"by": "",
+					"reason": ""
+				},
+				"deny": "",
+				"deny_aria": "",
+				"description": "",
+				"dialog": {
+					"accept_description": "",
+					"accept_title": "",
+					"cancel": "",
+					"deny_description": "",
+					"deny_title": "",
+					"reason_help": "",
+					"reason_label": "",
+					"reason_placeholder": ""
+				},
+				"empty": {
+					"accepted_description": "",
+					"accepted_title": "",
+					"all_description": "",
+					"all_title": "",
+					"denied_description": "",
+					"denied_title": "",
+					"pending_description": "",
+					"pending_title": ""
+				},
+				"errors": {
+					"caseGone": "",
+					"decided": "",
+					"failed": "",
+					"generic": "",
+					"invalid": "",
+					"noAccess": "",
+					"undoFailed": "",
+					"unknown": ""
+				},
+				"filter_aria": "",
+				"filters": {
+					"all": ""
+				},
+				"load_failed": "",
+				"no_review": "",
+				"retry": "",
+				"show_more": "",
+				"showing": "",
+				"status": {
+					"accepted": "",
+					"denied": "",
+					"pending": ""
+				},
+				"title": "",
+				"toasts": {
+					"accepted": "",
+					"denied": "",
+					"failed": "",
+					"waiting": ""
+				}
+			},
 			"review_title": "",
 			"settings_title": "",
 			"subtitle": "",

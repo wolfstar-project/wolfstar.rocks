@@ -1,13 +1,16 @@
 import type { AutoModerationRule } from "#shared/utils/automod-rules";
+import { checkAutoModerationLogChannel } from "#server/utils/automod/log-channel";
 import {
 	auditAutoModerationRuleChange,
 	authorizeAutoModerationManager,
 	throwAutoModerationRuleError,
+	throwInvalidLogChannel,
 	throwInvalidRuleBody,
 	useManagedGuild,
 } from "#server/utils/automod/route";
 import { updateAutoModerationRule } from "#server/utils/automod/rules";
 import { parseAutoModerationRulePatch } from "#server/utils/automod/validation";
+import { isSnowflake } from "#shared/utils/snowflake";
 
 /**
  * `PATCH /api/guilds/:guild/automod/rules/:rule`: edits a rule. The body has
@@ -19,6 +22,19 @@ export default defineWrappedResponseHandler(
 		const { guild } = useManagedGuild(event);
 		const ruleId = getRouterParam(event, "rule") ?? "";
 		const body: unknown = await readBody(event);
+
+		// Discord is asked before the write queue, which holds a lock while it
+		// runs: a log channel the bot cannot post in is refused, as the bot's
+		// own route refuses it. Only a channel is checked, `null` puts the logs
+		// back in the moderation channel.
+		const logChannelId =
+			typeof body === "object" && body !== null && "logChannelId" in body
+				? body.logChannelId
+				: undefined;
+		if (typeof logChannelId === "string" && isSnowflake(logChannelId)) {
+			const channelError = await checkAutoModerationLogChannel(guild, logChannelId);
+			if (channelError !== null) throwInvalidLogChannel(channelError);
+		}
 
 		// The body is validated against the rule the database has inside the
 		// write queue, so its options merge on current values and not on a

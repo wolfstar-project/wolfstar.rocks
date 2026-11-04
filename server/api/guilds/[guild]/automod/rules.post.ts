@@ -1,7 +1,9 @@
+import { checkAutoModerationLogChannel } from "#server/utils/automod/log-channel";
 import {
 	auditAutoModerationRuleChange,
 	authorizeAutoModerationManager,
 	throwAutoModerationRuleError,
+	throwInvalidLogChannel,
 	throwInvalidRuleBody,
 	useManagedGuild,
 } from "#server/utils/automod/route";
@@ -28,6 +30,9 @@ export default defineWrappedResponseHandler(
 
 		const parsed = parseAutoModerationRulePatch(type, body);
 		if (parsed.errors) throwInvalidRuleBody(parsed.errors);
+
+		const channelError = await checkAutoModerationLogChannel(guild, parsed.data.logChannelId);
+		if (channelError !== null) throwInvalidLogChannel(channelError);
 
 		const { name: _name, ...data } = parsed.data;
 		const rule = await createAutoModerationRule(guild.id, name, type, data).catch(

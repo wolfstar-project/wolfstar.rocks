@@ -12,6 +12,7 @@ export type AutomodRuleErrorCode =
 	| "nameInvalid"
 	| "unknown"
 	| "invalid"
+	| "logChannel"
 	| "generic";
 
 export type AutomodRuleResult<Value = void> =
@@ -30,6 +31,7 @@ const KNOWN_ERROR_CODES = new Set<string>([
 	"nameInvalid",
 	"unknown",
 	"invalid",
+	"logChannel",
 ]);
 
 function readErrorCode(error: unknown): AutomodRuleErrorCode {

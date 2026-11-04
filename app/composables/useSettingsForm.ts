@@ -8,6 +8,7 @@ import {
 	SETTING_NUMBER_RANGES,
 	type ChoiceSettingKey,
 	type NumberSettingKey,
+	type TextSettingKey,
 } from "#shared/utils/settings-choices";
 
 interface SettingsFormKeys<
@@ -16,6 +17,7 @@ interface SettingsFormKeys<
 	Toggle extends ToggleSettingKey,
 	Count extends NumberSettingKey,
 	Choice extends ChoiceSettingKey,
+	Text extends TextSettingKey,
 > {
 	/** Settings that hold one channel or role, or nothing. */
 	one?: readonly One[];
@@ -27,6 +29,11 @@ interface SettingsFormKeys<
 	numbers?: readonly Count[];
 	/** Settings that hold one word of a fixed set. */
 	choices?: readonly Choice[];
+	/**
+	 * Settings that hold a text the server writes, or nothing. The form holds
+	 * nothing as an empty text, which a text field can show.
+	 */
+	texts?: readonly Text[];
 }
 
 /**
@@ -44,8 +51,10 @@ export function useSettingsForm<
 	Toggle extends ToggleSettingKey = never,
 	Count extends NumberSettingKey = never,
 	Choice extends ChoiceSettingKey = never,
->(keys: SettingsFormKeys<One, Many, Toggle, Count, Choice>) {
-	type FormState = Pick<GuildData, One | Many | Toggle | Count | Choice>;
+	Text extends TextSettingKey = never,
+>(keys: SettingsFormKeys<One, Many, Toggle, Count, Choice, Text>) {
+	type KeyedState = Pick<GuildData, One | Many | Toggle | Count | Choice>;
+	type FormState = KeyedState & Record<Text, string>;
 
 	const { ts } = useI18n();
 	const toast = useToast();
@@ -56,6 +65,7 @@ export function useSettingsForm<
 	const toggles = keys.toggles ?? [];
 	const numbers = keys.numbers ?? [];
 	const choices = keys.choices ?? [];
+	const texts = keys.texts ?? [];
 
 	function readState(): FormState {
 		const settings = guildSettings.value;
@@ -85,7 +95,9 @@ export function useSettingsForm<
 				(settings?.[key] ?? SETTING_CHOICES[key][0]) as GuildData[Choice],
 			);
 		}
-		return values as FormState;
+		const textValues: Partial<Record<Text, string>> = {};
+		for (const key of texts) textValues[key] = settings?.[key] ?? "";
+		return { ...values, ...textValues } as FormState;
 	}
 
 	const state = reactive(readState()) as FormState;
@@ -99,7 +111,7 @@ export function useSettingsForm<
 		() => {
 			const next = readState();
 			const changed: Partial<FormState> = {};
-			for (const key of [...one, ...many, ...toggles, ...numbers, ...choices]) {
+			for (const key of [...one, ...many, ...toggles, ...numbers, ...choices, ...texts]) {
 				if (!isDeepEqual(state[key], next[key])) {
 					Object.assign(changed, { [key]: next[key] });
 				}
@@ -115,11 +127,18 @@ export function useSettingsForm<
 
 	function mapToGuildData(formState: FormState): Partial<GuildData> {
 		const changes: Partial<GuildData> = {};
-		for (const key of one) setGuildDataChange(changes, key, formState[key]);
-		for (const key of many) setGuildDataChange(changes, key, formState[key]);
-		for (const key of toggles) setGuildDataChange(changes, key, formState[key]);
-		for (const key of numbers) setGuildDataChange(changes, key, formState[key]);
-		for (const key of choices) setGuildDataChange(changes, key, formState[key]);
+		const keyed: KeyedState = formState;
+		const written: Record<Text, string> = formState;
+		for (const key of one) setGuildDataChange(changes, key, keyed[key]);
+		for (const key of many) setGuildDataChange(changes, key, keyed[key]);
+		for (const key of toggles) setGuildDataChange(changes, key, keyed[key]);
+		for (const key of numbers) setGuildDataChange(changes, key, keyed[key]);
+		for (const key of choices) setGuildDataChange(changes, key, keyed[key]);
+		// Not trimmed here: the saved settings are read back into the form on
+		// every edit, which would eat a space as it is typed. The server trims.
+		for (const key of texts) {
+			setGuildDataChange(changes, key, (written[key] || null) as GuildData[Text]);
+		}
 		return changes;
 	}
 
@@ -141,7 +160,7 @@ export function useSettingsForm<
 	return {
 		mapToGuildData,
 		onError,
-		schema: buildSettingsFormSchema({ choices, many, numbers, one, toggles }),
+		schema: buildSettingsFormSchema({ choices, many, numbers, one, texts, toggles }),
 		state,
 	};
 }

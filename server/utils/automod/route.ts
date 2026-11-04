@@ -52,6 +52,14 @@ export function throwInvalidRuleBody(errors: readonly string[]): never {
 }
 
 /**
+ * Answers a request whose log channel the bot cannot post in, with its own
+ * code so the rule editor shows it at the field rather than as a bad body.
+ */
+export function throwInvalidLogChannel(error: string): never {
+	throw ruleError(400, "Log channel unusable", { code: "logChannel", errors: [error] });
+}
+
+/**
  * Records a change to the rules of a guild in the audit chain. A rule has no
  * settings key of its own, so its fields are filed under `automodRule.<name>`.
  */

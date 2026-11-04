@@ -25,6 +25,8 @@ const rule: AutoModerationRule = {
 	options: { minimum: 15, maximum: 50 },
 	escalation: [{ action: "Ban", duration: null }],
 	escalationDuration: 86_400_000,
+	response: "{user}, no shouting in {channel}.",
+	logChannelId: "345678901234567890",
 };
 
 describe("auto-moderation rule draft", () => {
@@ -76,6 +78,23 @@ describe("auto-moderation rule draft", () => {
 		const draft = automodRuleToDraft(words);
 		(draft.options.words as string[]).push("eggs");
 		expect(words.options).toStrictEqual({ words: ["spam"] });
+	});
+
+	it("sends an empty custom alert as none, and trims the one it sends", () => {
+		const draft = automodRuleToDraft({ ...rule, response: null });
+		expect(draft.response).toBe("");
+		expect(automodRuleDraftToBody(draft).response).toBeNull();
+
+		draft.response = "   ";
+		expect(automodRuleDraftToBody(draft).response).toBeNull();
+
+		draft.response = "  Calm down, {user}.  ";
+		expect(automodRuleDraftToBody(draft).response).toBe("Calm down, {user}.");
+	});
+
+	it("keeps the moderation log channel as null", () => {
+		const draft = automodRuleToDraft({ ...rule, logChannelId: null });
+		expect(automodRuleDraftToBody(draft).logChannelId).toBeNull();
 	});
 
 	it("trims the name it sends", () => {

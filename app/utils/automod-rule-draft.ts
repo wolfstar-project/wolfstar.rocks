@@ -4,6 +4,7 @@ import {
 	getDefaultAutoModerationRule,
 	getDefaultAutoModerationRuleOptions,
 	MaximumAutoModerationRuleNameLength,
+	type AutoModerationEscalationAction,
 	type AutoModerationHardAction,
 	type AutoModerationRule,
 	type AutoModerationRuleType,
@@ -13,7 +14,7 @@ import { toRaw } from "vue";
 export type AutomodRuleOptionValue = number | boolean | string[];
 
 export interface AutomodEscalationDraft {
-	action: AutoModerationHardAction;
+	action: AutoModerationEscalationAction;
 	/** Milliseconds; `0` for a permanent action. */
 	duration: number;
 }
@@ -40,6 +41,10 @@ export interface AutomodRuleDraft {
 	options: Record<string, AutomodRuleOptionValue>;
 	escalation: AutomodEscalationDraft[];
 	escalationDuration: number;
+	/** The custom alert; empty for the line of the rule's type. */
+	response: string;
+	/** `null` for the moderation channel. */
+	logChannelId: string | null;
 }
 
 type RuleFields = Omit<AutoModerationRule, "id" | "guildId">;
@@ -61,11 +66,13 @@ function toDraft(rule: RuleFields): AutomodRuleDraft {
 		// A rule held in a `ref` hands out reactive proxies, which
 		// `structuredClone` refuses to copy.
 		options: structuredClone(toRaw(rule.options)) as Record<string, AutomodRuleOptionValue>,
-		escalation: rule.escalation.map((step) => ({
-			action: step.action,
-			duration: step.duration ?? 0,
-		})),
+		// `None` is no step: the stored escalation never holds one.
+		escalation: rule.escalation.flatMap((step) =>
+			step.action === "None" ? [] : [{ action: step.action, duration: step.duration ?? 0 }],
+		),
 		escalationDuration: rule.escalationDuration,
+		response: rule.response ?? "",
+		logChannelId: rule.logChannelId,
 	};
 }
 
@@ -111,6 +118,9 @@ export function automodRuleDraftToBody(draft: AutomodRuleDraft): AutomodRuleCrea
 			duration: step.duration > 0 ? step.duration : null,
 		})),
 		escalationDuration: draft.escalationDuration,
+		// An empty response is none, as the bot reads it:
+		response: draft.response.trim() || null,
+		logChannelId: draft.logChannelId,
 	};
 }
 

@@ -65,7 +65,7 @@ export interface AccessRole {
 /**
  * The rule that decides for a member: their own first, else the one of their
  * highest role that has one, by position, and of two roles at the same position
- * the one with the higher id, as Discord orders them. `null` when no rule names
+ * the one with the lower id, the older one, as Discord orders them. `null` when no rule names
  * them, and the admin check decides.
  */
 export function resolveAccess(
@@ -91,7 +91,7 @@ export function resolveAccess(
 		if (
 			highest === null ||
 			role.position > highest.position ||
-			(role.position === highest.position && BigInt(role.id) > BigInt(highest.id))
+			(role.position === highest.position && BigInt(role.id) < BigInt(highest.id))
 		) {
 			highest = role;
 		}

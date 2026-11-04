@@ -5,7 +5,7 @@ import type {
 	SingleSettingKey,
 	ToggleSettingKey,
 } from "../types/configurableData";
-import type { ChoiceSettingKey, NumberSettingKey } from "./settings-choices";
+import type { ChoiceSettingKey, NumberSettingKey, TextSettingKey } from "./settings-choices";
 
 /**
  * The dashboard-managed settings of the V7 contract, grouped the way the
@@ -156,6 +156,57 @@ export const ConfigurableModerationToggles: SettingEntry<ToggleSettingKey>[] = [
 		name: "Dehoist Names",
 		description:
 			"Cleans the names of the members when they join or change them: what lists a name above the others goes, and fancy fonts, symbols and emojis become plain letters. Accents stay, and sticky nicknames and members who can manage nicknames are left alone.",
+	},
+	{
+		key: "moderationDefaultWarnThresholds",
+		name: "Default Warning Thresholds",
+		description:
+			"While the server has no warning thresholds of its own, 3 warnings mute for 30 minutes (a timeout when there is no muted role), 5 kick and 7 ban. The ones added with /warn-thresholds add replace them.",
+	},
+];
+
+/** The channels `/lockdown channels:configured` locks together. */
+export const ModerationLockdownChannels: SettingEntry<"moderationLockdownChannels"> = {
+	key: "moderationLockdownChannels",
+	name: "Lockdown Channels",
+	description:
+		"The channels /lockdown channels:configured locks and unlocks together, up to 25: the ones a raid writes in, not the ones the staff and the bots work in. A deleted channel leaves the list.",
+};
+
+/**
+ * What the moderation commands answer in the channel instead of the bot's own
+ * line, in the order of the commands.
+ */
+export const ConfigurableModerationResponses: SettingEntry<TextSettingKey>[] = [
+	{
+		key: "messagesResponseBan",
+		name: "Ban Response",
+		description: "After /ban add. The case number and the reason stay under it.",
+	},
+	{
+		key: "messagesResponseUnban",
+		name: "Unban Response",
+		description: "After /ban remove. The case number and the reason stay under it.",
+	},
+	{
+		key: "messagesResponseSoftban",
+		name: "Softban Response",
+		description: "After /softban. The case number and the reason stay under it.",
+	},
+	{
+		key: "messagesResponseKick",
+		name: "Kick Response",
+		description: "After /kick. The case number and the reason stay under it.",
+	},
+	{
+		key: "messagesResponseMute",
+		name: "Mute Response",
+		description: "After /mute add. The case number and the reason stay under it.",
+	},
+	{
+		key: "messagesResponseUnmute",
+		name: "Unmute Response",
+		description: "After /mute remove. The case number and the reason stay under it.",
 	},
 ];
 
@@ -485,10 +536,40 @@ export const ConfigurableHoneypotToggles: SettingEntry<ToggleSettingKey>[] = [
 		description: "The bots cannot avoid the channel by its name.",
 	},
 	{
+		key: "honeypotChaosName",
+		name: "Random Characters as Name",
+		description:
+			"The daily name is random characters instead of a name from WolfStar's list, against the bots that keep a list of channel names. While on, it takes the place of the daily rename.",
+	},
+	{
 		key: "honeypotKeepActive",
 		name: "Keep Honeypot Active",
 		description:
 			"WolfStar sends a message there every day, so the channel does not look abandoned.",
+	},
+	{
+		key: "honeypotForwardMessage",
+		name: "Forward the Caught Message",
+		description:
+			"Forwards what the member sent to the catches channel before WolfStar deletes it, attachments included. Needs a catches channel.",
+	},
+	{
+		key: "honeypotTimeoutFirst",
+		name: "Time Out First",
+		description:
+			"Times the member out for an hour before the softban or the ban, so a hacked account that comes back at once still cannot write. A kick gets no timeout.",
+	},
+	{
+		key: "honeypotRecentDelete",
+		name: "Delete Only Recent Messages",
+		description:
+			"A softban or a ban deletes what the member sent in the last 15 minutes instead of the last hour, which keeps more of the history of the channels.",
+	},
+	{
+		key: "honeypotEnsureDeletion",
+		name: "Ensure Deletion",
+		description:
+			"Two minutes after the action, WolfStar looks for what the member left in the channels and deletes it, since a ban does not always delete everything.",
 	},
 ];
 

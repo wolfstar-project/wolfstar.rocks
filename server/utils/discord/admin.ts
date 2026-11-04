@@ -1,4 +1,4 @@
-import type { APIGuild, APIGuildMember, APIRole } from "discord-api-types/v10";
+import type { APIGuild, APIGuildMember, APIOverwrite, APIRole } from "discord-api-types/v10";
 import { PermissionsBits } from "#shared/utils/bits";
 import { cast } from "@sapphire/utilities";
 import { hasAtLeastOneKeyInMap } from "@sapphire/utilities/hasAtLeastOneKeyInMap";
@@ -46,4 +46,37 @@ export function memberPermissions(guild: APIGuild, member: APIGuildMember): bigi
 	return rawPermissions !== undefined
 		? BigInt(rawPermissions)
 		: computePermissions(member.roles, guild.roles);
+}
+
+/**
+ * A member's permissions in a channel, in Discord's order: the server-wide
+ * ones, then `@everyone`'s overwrite, the member's roles' together, and the
+ * member's own. Administrator holds every permission whatever the overwrites.
+ */
+export function memberChannelPermissions(
+	guild: APIGuild,
+	member: APIGuildMember,
+	channel: { permission_overwrites?: readonly APIOverwrite[] },
+): bigint {
+	let permissions = memberPermissions(guild, member);
+	if ((permissions & PermissionFlagsBits.Administrator) !== 0n) return ~0n;
+
+	const overwrites = channel.permission_overwrites ?? [];
+	const everyone = overwrites.find((overwrite) => overwrite.id === guild.id);
+	if (everyone) permissions = (permissions & ~BigInt(everyone.deny)) | BigInt(everyone.allow);
+
+	const held = new Set(member.roles);
+	let allow = 0n;
+	let deny = 0n;
+	for (const overwrite of overwrites) {
+		if (overwrite.id !== guild.id && held.has(overwrite.id)) {
+			allow |= BigInt(overwrite.allow);
+			deny |= BigInt(overwrite.deny);
+		}
+	}
+	permissions = (permissions & ~deny) | allow;
+
+	const own = overwrites.find((overwrite) => overwrite.id === member.user.id);
+	if (own) permissions = (permissions & ~BigInt(own.deny)) | BigInt(own.allow);
+	return permissions;
 }

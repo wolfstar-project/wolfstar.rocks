@@ -1,13 +1,16 @@
 import {
+	AutoModerationEscalationActions,
 	AutoModerationHardActions,
 	AutoModerationRuleLimits,
 	getDefaultAutoModerationRule,
 	MaximumAutoModerationRuleEscalationSteps,
 	MaximumAutoModerationRuleListLength,
 	MaximumAutoModerationRuleNameLength,
+	MaximumAutoModerationRuleResponseLength,
 	MaximumAutoModerationSoftAction,
 	normalizeAutoModerationRuleEscalation,
 	normalizeAutoModerationRuleOptions,
+	type AutoModerationEscalationAction,
 	type AutoModerationHardAction,
 	type AutoModerationRuleData,
 	type AutoModerationRuleType,
@@ -160,7 +163,7 @@ export function parseAutoModerationRulePatch(
 		} else {
 			const { maximum } = AutoModerationRuleLimits.hardActionDuration;
 			errors.push(
-				`escalation: Expected an array of at most ${MaximumAutoModerationRuleEscalationSteps} steps, each an action (${AutoModerationHardActions.join(", ")}) and a duration: null, or an integer between 1 and ${maximum}, which a Timeout requires.`,
+				`escalation: Expected an array of at most ${MaximumAutoModerationRuleEscalationSteps} steps, each an action (${AutoModerationEscalationActions.join(", ")}) and a duration: null, or an integer between 1 and ${maximum}, which a Timeout requires.`,
 			);
 		}
 	}
@@ -173,6 +176,31 @@ export function parseAutoModerationRulePatch(
 			errors.push(
 				`escalationDuration: Expected an integer between ${minimum} and ${maximum}.`,
 			);
+	}
+
+	if (body.response !== undefined) {
+		// An empty response is none, the alert says the line of the type:
+		if (
+			body.response === null ||
+			(typeof body.response === "string" && body.response.trim().length === 0)
+		)
+			data.response = null;
+		else if (
+			typeof body.response === "string" &&
+			body.response.trim().length <= MaximumAutoModerationRuleResponseLength
+		)
+			data.response = body.response.trim();
+		else
+			errors.push(
+				`response: Expected null or a string of at most ${MaximumAutoModerationRuleResponseLength} characters.`,
+			);
+	}
+
+	// Whether the bot can post in the channel is checked by the route, which asks Discord:
+	if (body.logChannelId !== undefined) {
+		if (body.logChannelId === null || isSnowflake(body.logChannelId))
+			data.logChannelId = body.logChannelId;
+		else errors.push("logChannelId: Expected null or an ID.");
 	}
 
 	if (body.options !== undefined) {
@@ -232,7 +260,8 @@ function isEscalationStep(value: unknown): boolean {
 	if (!isObject(value)) return false;
 
 	const { action, duration } = value as { action?: unknown; duration?: unknown };
-	if (!AutoModerationHardActions.includes(action as AutoModerationHardAction)) return false;
+	if (!AutoModerationEscalationActions.includes(action as AutoModerationEscalationAction))
+		return false;
 	if (duration === null || duration === undefined) return action !== "Timeout";
 	return isInteger(duration, 1, AutoModerationRuleLimits.hardActionDuration.maximum);
 }

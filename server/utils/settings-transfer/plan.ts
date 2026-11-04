@@ -194,8 +194,8 @@ export function getPlannedSettings(plan: ConfigurationPlan): Partial<GuildData> 
 
 /**
  * The writes of a plan to the rules. A rule is edited with the fields that
- * differ and nothing else, so its exempt roles and channels are the ones the
- * guild has; a rule that is created starts from the defaults of its type,
+ * differ and nothing else, so its exempt roles and channels and its log
+ * channel are the ones the guild has; a rule that is created starts from the defaults of its type,
  * which have none, and one that is made again to change place takes the ones
  * of the rule it replaces, which is deleted.
  */
@@ -217,6 +217,7 @@ export function getPlannedRules(plan: ConfigurationPlan): AutoModerationRulePlan
 				: {
 						ignoredRoles: replaces.ignoredRoles,
 						ignoredChannels: replaces.ignoredChannels,
+						logChannelId: replaces.logChannelId,
 					}),
 		})),
 	};

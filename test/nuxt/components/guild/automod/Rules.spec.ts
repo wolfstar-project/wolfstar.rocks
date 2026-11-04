@@ -56,6 +56,17 @@ describe("GuildAutomodRules", () => {
 		expect(wrapper.text()).toMatch(/\d of 2 enabled/);
 	});
 
+	it("shows a rule that takes no hard action without a duration", async () => {
+		mockRules.value = [
+			{ ...makeRule("1", "Echo"), hardAction: "None", hardActionDuration: 600_000 },
+		];
+		const wrapper = await mountSuspended(Rules);
+
+		const [item] = wrapper.findAll("li");
+		expect(item!.text()).toContain("No action");
+		expect(item!.text()).not.toContain("No action ·");
+	});
+
 	it("narrows the list to the rules a search matches by name or type", async () => {
 		const wrapper = await mountSuspended(Rules);
 		const search = wrapper.get('input[placeholder="Search rules by name or type…"]');

@@ -257,6 +257,7 @@ const ERROR_KEYS: Record<AutomodRuleErrorCode, string> = {
 	generic: "guild_settings.automod.rules.errors.generic",
 	invalid: "guild_settings.automod.rules.errors.invalid",
 	limit: "guild_settings.automod.rules.errors.limit",
+	logChannel: "guild_settings.automod.rules.errors.logChannel",
 	nameInvalid: "guild_settings.automod.rules.errors.nameInvalid",
 	nameTaken: "guild_settings.automod.rules.errors.nameTaken",
 	unknown: "guild_settings.automod.rules.errors.unknown",
@@ -280,7 +281,8 @@ function thresholdLabel(rule: AutoModerationRule) {
 
 function actionLabel(rule: AutoModerationRule) {
 	const action = ts(AUTOMOD_HARD_ACTION_KEYS[rule.hardAction]);
-	return rule.hardActionDuration
+	// No punishment lasts no time, whatever duration the rule kept:
+	return rule.hardActionDuration && rule.hardAction !== "None"
 		? `${action} · ${formatCompactDuration(rule.hardActionDuration)}`
 		: action;
 }

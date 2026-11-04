@@ -208,5 +208,20 @@ describe("honeypot guild settings", () => {
 				honeypotDirectMessage: false,
 			});
 		});
+
+		it.each([
+			["Forward the Caught Message", "honeypotForwardMessage"],
+			["Time Out First", "honeypotTimeoutFirst"],
+			["Delete Only Recent Messages", "honeypotRecentDelete"],
+			["Random Characters as Name", "honeypotChaosName"],
+			["Ensure Deletion", "honeypotEnsureDeletion"],
+		])("stages %s, off until it is switched on", async (name, key) => {
+			const wrapper = await mountReady();
+
+			await wrapper.find(`[aria-label="Toggle ${name}"]`).trigger("click");
+			await nextTick();
+
+			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({ [key]: true });
+		});
 	});
 });

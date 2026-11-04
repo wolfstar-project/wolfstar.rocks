@@ -167,6 +167,7 @@
 							<GuildAutomodDurationInput
 								v-model="draft.hardActionDuration"
 								:label="ts('guild_settings.automod.rules.editor.duration')"
+								:disabled="draft.hardAction === 'None'"
 							/>
 						</UFormField>
 					</div>
@@ -179,6 +180,12 @@
 					</legend>
 					<p class="text-[0.8125rem] text-muted">
 						{{ ts("guild_settings.automod.rules.editor.escalation_help") }}
+					</p>
+					<p
+						v-if="mode === 'rule' && draft.hardAction === 'None'"
+						class="text-[0.8125rem] text-warning"
+					>
+						{{ ts("guild_settings.automod.rules.editor.escalation_no_action") }}
 					</p>
 
 					<ol v-if="draft.escalation.length > 0" class="space-y-2">
@@ -196,7 +203,7 @@
 							>
 								<USelect
 									v-model="step.action"
-									:items="hardActionItems"
+									:items="escalationActionItems"
 									class="w-full"
 								/>
 							</UFormField>
@@ -249,6 +256,52 @@
 							:label="ts('guild_settings.automod.rules.editor.escalation_duration')"
 						/>
 					</UFormField>
+				</fieldset>
+
+				<fieldset v-if="mode === 'rule'" class="space-y-4">
+					<legend class="editor-heading">
+						<span>{{ ts("guild_settings.automod.rules.editor.alert_and_logs") }}</span>
+						<span aria-hidden="true"></span>
+					</legend>
+					<UFormField
+						:label="ts('guild_settings.automod.rules.editor.response')"
+						:help="
+							ts('guild_settings.automod.rules.editor.response_help', {
+								placeholders: responsePlaceholders,
+							})
+						"
+						:hint="`${draft.response.trim().length}/${MaximumAutoModerationRuleResponseLength}`"
+					>
+						<UTextarea
+							v-model="draft.response"
+							:maxlength="MaximumAutoModerationRuleResponseLength"
+							:placeholder="
+								ts('guild_settings.automod.rules.editor.response_placeholder')
+							"
+							:rows="2"
+							autoresize
+							class="w-full"
+						/>
+					</UFormField>
+					<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+						<div class="space-y-1">
+							<SelectChannel
+								v-model="draft.logChannelId"
+								layout="field"
+								:guild="guild"
+								:label="ts('guild_settings.automod.rules.editor.log_channel')"
+								:tooltip-title="
+									ts('guild_settings.automod.rules.editor.log_channel_help')
+								"
+								:empty-label="
+									ts('guild_settings.automod.rules.editor.log_channel_default')
+								"
+							/>
+							<p v-if="logChannelError" class="text-sm text-error" role="alert">
+								{{ logChannelError }}
+							</p>
+						</div>
+					</div>
 				</fieldset>
 
 				<fieldset v-if="mode !== 'escalation'" class="space-y-4">
@@ -310,11 +363,14 @@
 import type { DeepReadonly } from "@sapphire/utilities";
 import type { AutomodRuleCreate, AutomodRuleErrorCode } from "~/composables/useAutomodRules";
 import {
+	AutoModerationEscalationActions,
 	AutoModerationHardActions,
 	AutoModerationRuleLimits,
 	AutoModerationRuleOptionLimits,
 	MaximumAutoModerationRuleEscalationSteps,
 	MaximumAutoModerationRuleNameLength,
+	MaximumAutoModerationRuleResponseLength,
+	AutoModerationRuleResponsePlaceholders,
 	type AutoModerationRule,
 	type AutoModerationRuleType,
 } from "#shared/utils/automod-rules";
@@ -389,6 +445,7 @@ const OPTION_LABEL_KEYS: Record<string, string> = {
 	maximum: "guild_settings.automod.options.maximum",
 	minimum: "guild_settings.automod.options.minimum",
 	perChannel: "guild_settings.automod.options.perChannel",
+	queueSize: "guild_settings.automod.options.queueSize",
 	timePeriod: "guild_settings.automod.options.timePeriod",
 	weighted: "guild_settings.automod.options.weighted",
 	words: "guild_settings.automod.options.words",
@@ -399,6 +456,22 @@ const hardActionItems = computed(() =>
 		label: ts(AUTOMOD_HARD_ACTION_KEYS[value]),
 		value,
 	})),
+);
+
+const escalationActionItems = computed(() =>
+	AutoModerationEscalationActions.map((value) => ({
+		label: ts(AUTOMOD_HARD_ACTION_KEYS[value]),
+		value,
+	})),
+);
+
+// Written out as the server must type them, so they are not translated.
+const responsePlaceholders = AutoModerationRuleResponsePlaceholders.map((name) => `{${name}}`).join(
+	", ",
+);
+
+const logChannelError = computed(() =>
+	errorCode === "logChannel" ? ts("guild_settings.automod.rules.errors.logChannel") : undefined,
 );
 
 const draft = reactive<AutomodRuleDraft>(createAutomodRuleDraft(type));

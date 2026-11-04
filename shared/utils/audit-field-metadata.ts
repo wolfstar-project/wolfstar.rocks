@@ -28,12 +28,14 @@ import {
 	ConfigurableLogToggles,
 	ConfigurableModerationChannels,
 	ConfigurableModerationNumbers,
+	ConfigurableModerationResponses,
 	ConfigurableModerationToggles,
 	ConfigurableReportChannels,
 	ConfigurableReportRoles,
 	ConfigurableReportToggles,
 	ConfigurableRoles,
 	ConfigurableRoleToggles,
+	ModerationLockdownChannels,
 } from "./settingsDataEntries";
 
 export type AuditFieldType =
@@ -94,6 +96,8 @@ export const AUDIT_FIELD_METADATA: Readonly<Record<string, AuditFieldMetadata>> 
 		...fields(ConfigurableModerationChannels, "channel", false),
 		...fields(ConfigurableModerationToggles, "boolean", false),
 		...fields(ConfigurableModerationNumbers, "integer", false),
+		...fields([ModerationLockdownChannels], "channel", true),
+		...fields(ConfigurableModerationResponses, "string", false),
 		...fields(ConfigurableAutomodChannels, "channel", false),
 		...fields(ConfigurableAutomodToggles, "boolean", false),
 		...fields(ConfigurableLoggingChannels, "channel", false),

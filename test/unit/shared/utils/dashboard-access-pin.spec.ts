@@ -54,7 +54,7 @@ const cases: [
 		[createAccessEntry(LOW, "allow"), createAccessEntry(HIGH, "deny")],
 	],
 	[
-		"the higher id of two roles at a position",
+		"the lower id of two roles at a position",
 		[LOW, TIED],
 		[],
 		[createAccessEntry(LOW, "allow"), createAccessEntry(TIED, "deny")],

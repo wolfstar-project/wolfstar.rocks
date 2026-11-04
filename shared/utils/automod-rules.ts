@@ -26,6 +26,7 @@ export const AutoModerationRuleTypes = [
 	"MaskedLinks",
 	"MassMentions",
 	"MentionsCooldown",
+	"MessageDuplicates",
 	"MessageSpam",
 	"Newlines",
 	"Phishing",
@@ -42,6 +43,7 @@ export type AutoModerationRuleType = (typeof AutoModerationRuleTypes)[number];
  * The hard actions a rule can take, as the `GuildAutoModerationHardAction` enum stores them.
  */
 export const AutoModerationHardActions = [
+	"None",
 	"Warning",
 	"Timeout",
 	"Mute",
@@ -51,6 +53,14 @@ export const AutoModerationHardActions = [
 	"VoiceKick",
 ] as const;
 export type AutoModerationHardAction = (typeof AutoModerationHardActions)[number];
+
+/**
+ * The hard actions the escalation of a rule can step up to: every one, but taking none.
+ */
+export const AutoModerationEscalationActions = AutoModerationHardActions.filter(
+	(action): action is Exclude<AutoModerationHardAction, "None"> => action !== "None",
+);
+export type AutoModerationEscalationAction = (typeof AutoModerationEscalationActions)[number];
 
 /**
  * The bits a rule's `softAction` is made of, as the bot's
@@ -112,6 +122,8 @@ export interface AutoModerationRuleOptionsMap {
 	StickersCooldown: { maximum: number; timePeriod: number };
 	/** Every message with a native poll of Discord infringes the rule. */
 	Polls: Record<string, never>;
+	/** At least `maximum` identical messages among the last `queueSize` of a channel, whoever sent them. */
+	MessageDuplicates: { maximum: number; queueSize: number };
 }
 
 export type AutoModerationRuleOptions = AutoModerationRuleOptionsMap[AutoModerationRuleType];
@@ -144,6 +156,13 @@ export interface AutoModerationRule<Type extends AutoModerationRuleType = AutoMo
 	escalation: AutoModerationRuleEscalationStep[];
 	/** How long a hard action counts towards the escalation, in milliseconds. */
 	escalationDuration: number;
+	/**
+	 * What the alert of the rule says instead of the line of its type, with `{user}`, `{rule}` and `{channel}` where
+	 * the member, the name of the rule and the channel go; `null` for the line of the type.
+	 */
+	response: string | null;
+	/** Where the log of the rule goes instead of the moderation channel; `null` for the moderation channel. */
+	logChannelId: Snowflake | null;
 }
 
 /**
@@ -163,6 +182,10 @@ export type AutoModerationRuleData = Omit<AutoModerationRule, "id" | "guildId">;
 /** The most rules a guild can have. */
 export const MaximumAutoModerationRules = 25;
 export const MaximumAutoModerationRuleNameLength = 50;
+/** The most characters the custom response of a rule has. */
+export const MaximumAutoModerationRuleResponseLength = 200;
+/** What the custom response of a rule can name, written between curly brackets. */
+export const AutoModerationRuleResponsePlaceholders = ["user", "rule", "channel"] as const;
 /** The most entries a list of the options of a rule holds (words, allowed links, allowed invites). */
 export const MaximumAutoModerationRuleListLength = 200;
 
@@ -171,7 +194,7 @@ const MaximumDuration = 2 ** 31 - 1;
 
 export const AutoModerationRuleLimits = {
 	hardActionDuration: { minimum: 0, maximum: MaximumDuration },
-	thresholdMaximum: { minimum: 0, maximum: 100 },
+	thresholdMaximum: { minimum: 0, maximum: 1000 },
 	thresholdDuration: { minimum: 0, maximum: MaximumDuration },
 	escalationDuration: { minimum: 60_000, maximum: MaximumDuration },
 } as const;
@@ -184,7 +207,7 @@ export const MaximumAutoModerationRuleEscalationSteps = 10;
  */
 export const AutoModerationRuleOptionLimits = {
 	Capitals: { minimum: { minimum: 5, maximum: 2000 }, maximum: { minimum: 10, maximum: 100 } },
-	Newlines: { maximum: { minimum: 1, maximum: 100 } },
+	Newlines: { maximum: { minimum: 1, maximum: 2000 } },
 	Zalgo: { maximum: { minimum: 1, maximum: 20 } },
 	Duplicates: { characters: { minimum: 3, maximum: 200 }, words: { minimum: 2, maximum: 100 } },
 	Characters: { maximum: { minimum: 50, maximum: 4000 } },
@@ -206,6 +229,10 @@ export const AutoModerationRuleOptionLimits = {
 	StickersCooldown: {
 		maximum: { minimum: 1, maximum: 50 },
 		timePeriod: { minimum: 1, maximum: 600 },
+	},
+	MessageDuplicates: {
+		maximum: { minimum: 2, maximum: 100 },
+		queueSize: { minimum: 10, maximum: 100 },
 	},
 } as const;
 
@@ -244,6 +271,7 @@ export function getDefaultAutoModerationRuleOptions<Type extends AutoModerationR
 		MaskedLinks: {},
 		StickersCooldown: { maximum: 3, timePeriod: 60 },
 		Polls: {},
+		MessageDuplicates: { maximum: 5, queueSize: 50 },
 	};
 	return structuredClone(defaults[type]);
 }
@@ -269,6 +297,8 @@ export function getDefaultAutoModerationRule<Type extends AutoModerationRuleType
 		options: getDefaultAutoModerationRuleOptions(type),
 		escalation: [],
 		escalationDuration: 86_400_000,
+		response: null,
+		logChannelId: null,
 	};
 }
 
@@ -287,12 +317,13 @@ export function normalizeAutoModerationRuleEscalation(
 		if (typeof entry !== "object" || entry === null) continue;
 
 		const { action, duration } = entry as { action?: unknown; duration?: unknown };
-		if (!AutoModerationHardActions.includes(action as AutoModerationHardAction)) continue;
+		if (!AutoModerationEscalationActions.includes(action as AutoModerationEscalationAction))
+			continue;
 
 		const { maximum } = AutoModerationRuleLimits.hardActionDuration;
 		const valid = typeof duration === "number" && Number.isFinite(duration) && duration > 0;
 		steps.push({
-			action: action as AutoModerationHardAction,
+			action: action as AutoModerationEscalationAction,
 			duration: valid ? Math.min(maximum, Math.trunc(duration)) : null,
 		});
 	}
@@ -302,7 +333,8 @@ export function normalizeAutoModerationRuleEscalation(
 
 /**
  * The hard action a rule takes on a member, given how many it took on them lately: its own the first time, then the
- * steps of its escalation, the last of which is repeated.
+ * steps of its escalation, the last of which is repeated. A rule whose hard action is `None` takes none, whatever steps
+ * it kept from before: `None` is no step of an escalation.
  *
  * @param rule - The rule the member reached the threshold of.
  * @param strikes - How many hard actions the rule took on the member within its `escalationDuration`, before this one.
@@ -311,6 +343,7 @@ export function resolveAutoModerationRulePunishment(
 	rule: Pick<AutoModerationRule, "hardAction" | "hardActionDuration" | "escalation">,
 	strikes: number,
 ): AutoModerationRuleEscalationStep {
+	if (rule.hardAction === "None") return { action: "None", duration: null };
 	const base = { action: rule.hardAction, duration: rule.hardActionDuration };
 	if (strikes <= 0) return base;
 	return rule.escalation[Math.min(strikes, rule.escalation.length) - 1] ?? base;

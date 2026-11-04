@@ -28,6 +28,11 @@ export const TransferableSettings = [
 	["honeypot.warning", "honeypotWarning"],
 	["honeypot.random-name", "honeypotRandomName"],
 	["honeypot.keep-active", "honeypotKeepActive"],
+	["honeypot.forward-message", "honeypotForwardMessage"],
+	["honeypot.timeout-first", "honeypotTimeoutFirst"],
+	["honeypot.recent-delete", "honeypotRecentDelete"],
+	["honeypot.chaos-name", "honeypotChaosName"],
+	["honeypot.ensure-deletion", "honeypotEnsureDeletion"],
 	["appeals.enabled", "appealsEnabled"],
 	["appeals.bans", "appealsBans"],
 	["appeals.mutes", "appealsMutes"],
@@ -42,6 +47,13 @@ export const TransferableSettings = [
 	["moderation.track-kicks", "moderationTrackKicks"],
 	["moderation.confirm-recent", "moderationConfirmRecentMinutes"],
 	["moderation.dehoist", "moderationDehoist"],
+	["moderation.default-warn-thresholds", "moderationDefaultWarnThresholds"],
+	["moderation.response-ban", "messagesResponseBan"],
+	["moderation.response-unban", "messagesResponseUnban"],
+	["moderation.response-softban", "messagesResponseSoftban"],
+	["moderation.response-kick", "messagesResponseKick"],
+	["moderation.response-mute", "messagesResponseMute"],
+	["moderation.response-unmute", "messagesResponseUnmute"],
 	["reports.anonymous", "reportsAnonymous"],
 	["reports.notify", "reportsNotify"],
 	["roles.remove-initial", "rolesRemoveInitial"],
@@ -67,8 +79,8 @@ export const RemovedSettings: ReadonlySet<string> = new Set(["modules.commands"]
 
 /**
  * The fields of a rule of the file. What names something of the server
- * (`ignoredRoles`, `ignoredChannels`) and what is of the database (`id`,
- * `guildId`) are not in it.
+ * (`ignoredRoles`, `ignoredChannels`, `logChannelId`) and what is of the
+ * database (`id`, `guildId`) are not in it.
  */
 export const ConfigurationRuleFields = [
 	"name",
@@ -82,6 +94,7 @@ export const ConfigurationRuleFields = [
 	"options",
 	"escalation",
 	"escalationDuration",
+	"response",
 ] as const satisfies readonly (keyof AutoModerationRuleData)[];
 
 export type ConfigurationRule = Pick<
@@ -110,6 +123,7 @@ export function toConfigurationRule(rule: ConfigurationRule): ConfigurationRule 
 		options: rule.options,
 		escalation: rule.escalation,
 		escalationDuration: rule.escalationDuration,
+		response: rule.response,
 	};
 }
 

@@ -257,6 +257,7 @@ const ERROR_KEYS: Record<AutomodRuleErrorCode, string> = {
 	generic: "guild_settings.automod.rules.errors.generic",
 	invalid: "guild_settings.automod.rules.errors.invalid",
 	limit: "guild_settings.automod.rules.errors.limit",
+	logChannel: "guild_settings.automod.rules.errors.logChannel",
 	nameInvalid: "guild_settings.automod.rules.errors.nameInvalid",
 	nameTaken: "guild_settings.automod.rules.errors.nameTaken",
 	unknown: "guild_settings.automod.rules.errors.unknown",
@@ -280,7 +281,8 @@ function thresholdLabel(rule: AutoModerationRule) {
 
 function actionLabel(rule: AutoModerationRule) {
 	const action = ts(AUTOMOD_HARD_ACTION_KEYS[rule.hardAction]);
-	return rule.hardActionDuration
+	// No punishment lasts no time, whatever duration the rule kept:
+	return rule.hardActionDuration && rule.hardAction !== "None"
 		? `${action} · ${formatCompactDuration(rule.hardActionDuration)}`
 		: action;
 }
@@ -397,8 +399,13 @@ async function saveRule(body: AutomodRuleCreate) {
 	saving.value = true;
 	editorErrorCode.value = null;
 	const target = editedRule.value;
-	// The type of an existing rule cannot change, so it is not sent back.
-	const { type: _type, ...changes } = body;
+	// The type of an existing rule cannot change, so it is not sent back. Nor
+	// is a log channel that did not change: the server asks Discord about any
+	// channel it is given, and one that lost a permission since would refuse
+	// every other edit of the rule.
+	const { type: _type, logChannelId, ...rest } = body;
+	const changes =
+		target && logChannelId === target.logChannelId ? rest : { ...rest, logChannelId };
 	const result = target ? await updateRule(target.id, changes) : await createRule(body);
 	saving.value = false;
 

@@ -148,4 +148,63 @@ describe("parseSettingsChanges", () => {
 			}
 		}
 	});
+
+	it("reads a command response trimmed, and an empty one as the bot's own line", () => {
+		expect(
+			parseSettingsChanges([
+				["messagesResponseBan", "  {user} was banned for {reason}.  "],
+				["messagesResponseKick", "   "],
+				["messagesResponseMute", null],
+			]).data,
+		).toStrictEqual({
+			messagesResponseBan: "{user} was banned for {reason}.",
+			messagesResponseKick: null,
+			messagesResponseMute: null,
+		});
+	});
+
+	it("refuses a command response longer than the bot takes", () => {
+		const result = parseSettingsChanges([["messagesResponseUnban", "a".repeat(201)]]);
+		expect(result.errors).toStrictEqual([
+			"messagesResponseUnban: Expected a text of at most 200 characters.",
+		]);
+		expect(parseSettingsChanges([["messagesResponseUnban", 4]]).errors).toHaveLength(1);
+	});
+
+	it("takes at most 25 lockdown channels", () => {
+		const channels = Array.from({ length: 26 }, (_, index) =>
+			String(100_000_000_000_000_000n + BigInt(index)),
+		);
+		expect(
+			parseSettingsChanges([["moderationLockdownChannels", channels.slice(0, 25)]]).data,
+		).toStrictEqual({ moderationLockdownChannels: channels.slice(0, 25) });
+		expect(
+			parseSettingsChanges([["moderationLockdownChannels", channels]]).errors,
+		).toStrictEqual(["moderationLockdownChannels: Expected at most 25 IDs."]);
+		// The same channel twice is one channel:
+		expect(
+			parseSettingsChanges([["moderationLockdownChannels", [CHANNEL, CHANNEL]]]).data,
+		).toStrictEqual({ moderationLockdownChannels: [CHANNEL] });
+	});
+
+	it("switches the new honeypot and warning threshold options", () => {
+		expect(
+			parseSettingsChanges([
+				["moderationDefaultWarnThresholds", false],
+				["honeypotForwardMessage", true],
+				["honeypotTimeoutFirst", true],
+				["honeypotRecentDelete", true],
+				["honeypotChaosName", true],
+				["honeypotEnsureDeletion", true],
+			]).data,
+		).toStrictEqual({
+			moderationDefaultWarnThresholds: false,
+			honeypotForwardMessage: true,
+			honeypotTimeoutFirst: true,
+			honeypotRecentDelete: true,
+			honeypotChaosName: true,
+			honeypotEnsureDeletion: true,
+		});
+		expect(parseSettingsChanges([["honeypotChaosName", "yes"]]).errors).toHaveLength(1);
+	});
 });

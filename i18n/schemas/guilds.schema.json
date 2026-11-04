@@ -694,6 +694,9 @@
 								"Mute": {
 									"type": "string"
 								},
+								"None": {
+									"type": "string"
+								},
 								"Softban": {
 									"type": "string"
 								},
@@ -737,6 +740,9 @@
 									"type": "string"
 								},
 								"perChannel": {
+									"type": "string"
+								},
+								"queueSize": {
 									"type": "string"
 								},
 								"timePeriod": {
@@ -805,6 +811,9 @@
 										"action": {
 											"type": "string"
 										},
+										"alert_and_logs": {
+											"type": "string"
+										},
 										"back": {
 											"type": "string"
 										},
@@ -844,6 +853,9 @@
 										"escalation_help": {
 											"type": "string"
 										},
+										"escalation_no_action": {
+											"type": "string"
+										},
 										"escalation_remove_aria": {
 											"type": "string"
 										},
@@ -868,6 +880,15 @@
 										"list_placeholder": {
 											"type": "string"
 										},
+										"log_channel": {
+											"type": "string"
+										},
+										"log_channel_default": {
+											"type": "string"
+										},
+										"log_channel_help": {
+											"type": "string"
+										},
 										"name": {
 											"type": "string"
 										},
@@ -878,6 +899,15 @@
 											"type": "string"
 										},
 										"permanent_hint": {
+											"type": "string"
+										},
+										"response": {
+											"type": "string"
+										},
+										"response_help": {
+											"type": "string"
+										},
+										"response_placeholder": {
 											"type": "string"
 										},
 										"save": {
@@ -932,6 +962,9 @@
 											"type": "string"
 										},
 										"limit": {
+											"type": "string"
+										},
+										"logChannel": {
 											"type": "string"
 										},
 										"nameInvalid": {
@@ -1178,6 +1211,18 @@
 									"additionalProperties": false
 								},
 								"MentionsCooldown": {
+									"type": "object",
+									"properties": {
+										"description": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"MessageDuplicates": {
 									"type": "object",
 									"properties": {
 										"description": {
@@ -2203,10 +2248,37 @@
 						"form_aria": {
 							"type": "string"
 						},
+						"lockdown_count": {
+							"type": "string"
+						},
+						"lockdown_dialog_title": {
+							"type": "string"
+						},
+						"lockdown_empty": {
+							"type": "string"
+						},
+						"lockdown_help": {
+							"type": "string"
+						},
+						"lockdown_search": {
+							"type": "string"
+						},
+						"lockdown_title": {
+							"type": "string"
+						},
+						"lockdown_too_many": {
+							"type": "string"
+						},
 						"minutes": {
 							"type": "string"
 						},
 						"module_hint": {
+							"type": "string"
+						},
+						"responses_help": {
+							"type": "string"
+						},
+						"responses_title": {
 							"type": "string"
 						},
 						"subtitle": {
@@ -2836,7 +2908,43 @@
 							},
 							"additionalProperties": false
 						},
+						"honeypotChaosName": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
 						"honeypotDirectMessage": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"honeypotEnsureDeletion": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"honeypotForwardMessage": {
 							"type": "object",
 							"properties": {
 								"description": {
@@ -2873,6 +2981,30 @@
 							"additionalProperties": false
 						},
 						"honeypotRandomName": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"honeypotRecentDelete": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"honeypotTimeoutFirst": {
 							"type": "object",
 							"properties": {
 								"description": {
@@ -3304,6 +3436,78 @@
 							},
 							"additionalProperties": false
 						},
+						"messagesResponseBan": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"messagesResponseKick": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"messagesResponseMute": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"messagesResponseSoftban": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"messagesResponseUnban": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"messagesResponseUnmute": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
 						"moderationChannel": {
 							"type": "object",
 							"properties": {
@@ -3328,7 +3532,31 @@
 							},
 							"additionalProperties": false
 						},
+						"moderationDefaultWarnThresholds": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
 						"moderationDehoist": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"moderationLockdownChannels": {
 							"type": "object",
 							"properties": {
 								"description": {

@@ -46,5 +46,47 @@ export function clampSettingNumber(
 	return Math.min(maximum, Math.max(minimum, Math.round(value)));
 }
 
+/**
+ * The list settings that hold fewer entries than the
+ * `MAXIMUM_SETTING_LIST_LENGTH` every list has, with how many. The bot's
+ * `moderation.lockdown-channels` takes 25: `/lockdown` changes them one by one.
+ */
+export const SETTING_LIST_LIMITS = {
+	moderationLockdownChannels: 25,
+} as const satisfies {
+	[Key in keyof GuildData]?: GuildData[Key] extends string[] ? number : never;
+};
+
+/**
+ * The settings that hold a text the server writes, or nothing, with the most
+ * characters the bot takes for each: the custom responses of the moderation
+ * commands (its `MaximumModerationResponseLength`).
+ */
+export const SETTING_TEXT_LIMITS = {
+	messagesResponseBan: 200,
+	messagesResponseUnban: 200,
+	messagesResponseSoftban: 200,
+	messagesResponseKick: 200,
+	messagesResponseMute: 200,
+	messagesResponseUnmute: 200,
+} as const satisfies {
+	[Key in keyof GuildData]?: GuildData[Key] extends string | null ? number : never;
+};
+
+/** A setting that holds a text of {@link SETTING_TEXT_LIMITS}. */
+export type TextSettingKey = keyof typeof SETTING_TEXT_LIMITS;
+
+/**
+ * What a custom response of a moderation command can name, written between
+ * curly brackets: the bot replaces them whatever their case.
+ */
+export const MODERATION_RESPONSE_PLACEHOLDERS = [
+	"user",
+	"reason",
+	"case",
+	"moderator",
+	"duration",
+] as const;
+
 /** How many questions of `appealsQuestions` the bot asks: the first five (its `MaximumAppealQuestions`). */
 export const MAXIMUM_ASKED_APPEAL_QUESTIONS = 5;

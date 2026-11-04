@@ -2,7 +2,11 @@ import {
 	MaximumAutoModerationRuleIgnored,
 	parseAutoModerationRulePatch,
 } from "#server/utils/automod/validation";
-import { MaximumAutoModerationRuleListLength } from "#shared/utils/automod-rules";
+import {
+	MaximumAutoModerationRuleListLength,
+	MaximumAutoModerationRuleResponseLength,
+	resolveAutoModerationRulePunishment,
+} from "#shared/utils/automod-rules";
 import { describe, expect, it } from "vitest";
 
 const ROLE = "123456789012345678";
@@ -157,5 +161,69 @@ describe("parseAutoModerationRulePatch", () => {
 				{ action: "Ban", duration: null },
 			],
 		});
+	});
+
+	it("takes no hard action, but no step of an escalation that takes none", () => {
+		expect(parseAutoModerationRulePatch("Words", { hardAction: "None" }).data).toStrictEqual({
+			hardAction: "None",
+		});
+		expect(
+			parseAutoModerationRulePatch("Words", {
+				escalation: [{ action: "None", duration: null }],
+			}).errors,
+		).toHaveLength(1);
+	});
+
+	it("reads a custom alert trimmed, and an empty one as none", () => {
+		expect(
+			parseAutoModerationRulePatch("Words", { response: "  {user}, mind {rule}.  " }).data,
+		).toStrictEqual({ response: "{user}, mind {rule}." });
+		expect(parseAutoModerationRulePatch("Words", { response: "   " }).data).toStrictEqual({
+			response: null,
+		});
+		expect(parseAutoModerationRulePatch("Words", { response: null }).data).toStrictEqual({
+			response: null,
+		});
+	});
+
+	it("refuses a custom alert that is too long or not a text", () => {
+		const long = "a".repeat(MaximumAutoModerationRuleResponseLength + 1);
+		expect(parseAutoModerationRulePatch("Words", { response: long }).errors).toHaveLength(1);
+		expect(parseAutoModerationRulePatch("Words", { response: 4 }).errors).toHaveLength(1);
+	});
+
+	it("reads a log channel as an ID or null", () => {
+		expect(parseAutoModerationRulePatch("Words", { logChannelId: ROLE }).data).toStrictEqual({
+			logChannelId: ROLE,
+		});
+		expect(parseAutoModerationRulePatch("Words", { logChannelId: null }).data).toStrictEqual({
+			logChannelId: null,
+		});
+		expect(
+			parseAutoModerationRulePatch("Words", { logChannelId: "general" }).errors,
+		).toHaveLength(1);
+	});
+
+	it("reads the options of an identical messages rule within their limits", () => {
+		expect(
+			parseAutoModerationRulePatch("MessageDuplicates", {
+				options: { maximum: 1, queueSize: 500 },
+			}).data,
+		).toStrictEqual({ options: { maximum: 2, queueSize: 100 } });
+	});
+});
+
+describe("resolveAutoModerationRulePunishment", () => {
+	it("takes no action for a rule without one, whatever steps it kept", () => {
+		expect(
+			resolveAutoModerationRulePunishment(
+				{
+					hardAction: "None",
+					hardActionDuration: 60_000,
+					escalation: [{ action: "Ban", duration: null }],
+				},
+				2,
+			),
+		).toStrictEqual({ action: "None", duration: null });
 	});
 });

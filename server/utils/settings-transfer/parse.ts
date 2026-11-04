@@ -1,3 +1,4 @@
+import { getDefaultGuildSettings } from "#server/database/settings/constants";
 import { parseSettingsChanges } from "#server/database/settings/validation";
 import { parseAutoModerationRulePatch } from "#server/utils/automod/validation";
 import {
@@ -110,9 +111,12 @@ function parseSettings(section: unknown, issues: ConfigurationIssue[]) {
 		}
 
 		const path = `settings.${name}`;
-		// `null` resets a setting to its default in a settings request; a file says what a setting is:
+		// `null` resets a setting to its default in a settings request; a file
+		// says what a setting is, which is `null` only for a setting that can be
+		// nothing, as a command response that is the bot's own line:
 		if (value === null) {
-			issues.push({ path, message: "Expected a value." });
+			if (getDefaultGuildSettings()[key] === null) settings.push({ name, key, value: null });
+			else issues.push({ path, message: "Expected a value." });
 			continue;
 		}
 

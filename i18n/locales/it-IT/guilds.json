@@ -230,6 +230,7 @@
 				"Ban": "Ban",
 				"Kick": "Espulsione",
 				"Mute": "Silenziamento",
+				"None": "",
 				"Softban": "Softban",
 				"Timeout": "Timeout",
 				"VoiceKick": "Espulsione dal vocale",
@@ -245,6 +246,7 @@
 				"maximum": "Massimo",
 				"minimum": "Lunghezza minima",
 				"perChannel": "",
+				"queueSize": "",
 				"timePeriod": "Intervallo di tempo (secondi)",
 				"weighted": "Conta una menzione di ruolo come due e @everyone come cinque",
 				"words": "Parole"
@@ -267,6 +269,7 @@
 				"edit_aria": "Modifica la regola {name}",
 				"editor": {
 					"action": "Azione",
+					"alert_and_logs": "",
 					"back": "Indietro",
 					"cancel": "Annulla",
 					"create": "Crea la regola",
@@ -280,6 +283,7 @@
 					"escalation_duration": "Le punizioni contano per",
 					"escalation_duration_help": "Per quanto tempo una punizione conta per il passaggio successivo.",
 					"escalation_help": "Cosa sostituisce la punizione per i membri che continuano a raggiungere la soglia. L'ultimo passaggio si ripete.",
+					"escalation_no_action": "",
 					"escalation_remove_aria": "Rimuovi il passaggio {index}",
 					"escalation_step": "Passaggio {index}",
 					"exemptions": "Esenzioni",
@@ -288,10 +292,16 @@
 					"ignored_channels": "Canali ignorati",
 					"ignored_roles": "Ruoli ignorati",
 					"list_placeholder": "Scrivi e premi Invio",
+					"log_channel": "",
+					"log_channel_default": "",
+					"log_channel_help": "",
 					"name": "Nome",
 					"name_placeholder": "es. Niente link d'invito",
 					"options": "Cosa cerca",
 					"permanent_hint": "Lascia 0 per un'azione permanente.",
+					"response": "",
+					"response_help": "",
+					"response_placeholder": "",
 					"save": "Salva la regola",
 					"soft_actions": "A ogni infrazione",
 					"soft_actions_help": "Si applica ogni volta che un messaggio viola la regola.",
@@ -310,6 +320,7 @@
 					"generic": "Qualcosa è andato storto. Riprova.",
 					"invalid": "Il server ha rifiutato uno dei valori. Controlla i campi e riprova.",
 					"limit": "Questo server ha già il numero massimo di regole.",
+					"logChannel": "",
 					"nameInvalid": "Usa un nome da 1 a 50 caratteri che non sia solo un numero.",
 					"nameRequired": "Dai un nome alla regola.",
 					"nameTaken": "Esiste già una regola con questo nome.",
@@ -394,6 +405,10 @@
 				"MentionsCooldown": {
 					"description": "Più menzioni di un membro del massimo nell'intervallo di tempo.",
 					"name": "Frequenza delle menzioni"
+				},
+				"MessageDuplicates": {
+					"description": "",
+					"name": ""
 				},
 				"MessageSpam": {
 					"description": "Più messaggi di un membro in un canale del massimo nell'intervallo di tempo.",
@@ -733,8 +748,17 @@
 		"moderation": {
 			"cases_title": "Casi",
 			"form_aria": "Modulo impostazioni moderazione",
+			"lockdown_count": "",
+			"lockdown_dialog_title": "",
+			"lockdown_empty": "",
+			"lockdown_help": "",
+			"lockdown_search": "",
+			"lockdown_title": "",
+			"lockdown_too_many": "",
 			"minutes": "",
 			"module_hint": "Disattivandolo WolfStar rifiuta i comandi di moderazione, come /ban e /warn. Le impostazioni qui sotto si possono comunque cambiare.",
+			"responses_help": "",
+			"responses_title": "",
 			"subtitle": "Dove vengono registrati i casi, quali azioni manuali ne aprono uno e come vengono esaminate le segnalazioni dei membri.",
 			"title": "Moderazione"
 		},
@@ -944,7 +968,19 @@
 				"description": "",
 				"name": ""
 			},
+			"honeypotChaosName": {
+				"description": "",
+				"name": ""
+			},
 			"honeypotDirectMessage": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotEnsureDeletion": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotForwardMessage": {
 				"description": "",
 				"name": ""
 			},
@@ -957,6 +993,14 @@
 				"name": ""
 			},
 			"honeypotRandomName": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotRecentDelete": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotTimeoutFirst": {
 				"description": "",
 				"name": ""
 			},
@@ -1100,6 +1144,30 @@
 				"description": "",
 				"name": ""
 			},
+			"messagesResponseBan": {
+				"description": "",
+				"name": ""
+			},
+			"messagesResponseKick": {
+				"description": "",
+				"name": ""
+			},
+			"messagesResponseMute": {
+				"description": "",
+				"name": ""
+			},
+			"messagesResponseSoftban": {
+				"description": "",
+				"name": ""
+			},
+			"messagesResponseUnban": {
+				"description": "",
+				"name": ""
+			},
+			"messagesResponseUnmute": {
+				"description": "",
+				"name": ""
+			},
 			"moderationChannel": {
 				"description": "Riceve tutti i log dei casi di moderazione. Necessario perché le opzioni qui sotto funzionino.",
 				"name": "Log di moderazione"
@@ -1108,7 +1176,15 @@
 				"description": "",
 				"name": ""
 			},
+			"moderationDefaultWarnThresholds": {
+				"description": "",
+				"name": ""
+			},
 			"moderationDehoist": {
+				"description": "",
+				"name": ""
+			},
+			"moderationLockdownChannels": {
 				"description": "",
 				"name": ""
 			},

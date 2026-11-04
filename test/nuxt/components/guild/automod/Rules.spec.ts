@@ -56,6 +56,17 @@ describe("GuildAutomodRules", () => {
 		expect(wrapper.text()).toMatch(/\d of 2 enabled/);
 	});
 
+	it("shows a rule that takes no hard action without a duration", async () => {
+		mockRules.value = [
+			{ ...makeRule("1", "Echo"), hardAction: "None", hardActionDuration: 600_000 },
+		];
+		const wrapper = await mountSuspended(Rules);
+
+		const [item] = wrapper.findAll("li");
+		expect(item!.text()).toContain("No action");
+		expect(item!.text()).not.toContain("No action ·");
+	});
+
 	it("narrows the list to the rules a search matches by name or type", async () => {
 		const wrapper = await mountSuspended(Rules);
 		const search = wrapper.get('input[placeholder="Search rules by name or type…"]');
@@ -107,6 +118,32 @@ describe("GuildAutomodRules", () => {
 		await nextTick();
 
 		expect(mockUpdateRule).toHaveBeenCalledExactlyOnceWith("1", { enabled: false });
+	});
+
+	it("sends the log channel of an edited rule only when it changed", async () => {
+		const LOGS = "345678901234567890";
+		mockRules.value = [{ ...makeRule("1", "Bad words"), logChannelId: LOGS }];
+		mockUpdateRule.mockResolvedValue({ ok: true, value: mockRules.value[0] });
+		const wrapper = await mountSuspended(Rules);
+
+		await wrapper.find('[aria-label="Edit rule Bad words"]').trigger("click");
+		await nextTick();
+		const editor = wrapper.findComponent({ name: "GuildAutomodRuleEditor" });
+		const body = { ...makeRule("1", "Bad words"), logChannelId: LOGS };
+
+		editor.vm.$emit("save", body);
+		await nextTick();
+		expect(mockUpdateRule).toHaveBeenLastCalledWith(
+			"1",
+			expect.not.objectContaining({ logChannelId: expect.anything() }),
+		);
+
+		editor.vm.$emit("save", { ...body, logChannelId: null });
+		await nextTick();
+		expect(mockUpdateRule).toHaveBeenLastCalledWith(
+			"1",
+			expect.objectContaining({ logChannelId: null }),
+		);
 	});
 
 	it("tells the admin when a toggle is refused", async () => {

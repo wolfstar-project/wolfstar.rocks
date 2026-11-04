@@ -9,7 +9,12 @@ import {
 	type UniqueRoleSet,
 } from "#server/database/settings/types";
 import { createAccessEntry } from "#shared/utils/dashboard-access";
-import { SETTING_NUMBER_RANGES } from "#shared/utils/settings-choices";
+import {
+	SETTING_LIST_LIMITS,
+	SETTING_NUMBER_RANGES,
+	SETTING_TEXT_LIMITS,
+	type TextSettingKey,
+} from "#shared/utils/settings-choices";
 import { isSnowflake } from "#shared/utils/snowflake";
 
 /** The most entries a list setting holds (roles, channels, commands, nodes). */
@@ -49,6 +54,34 @@ function snowflake(value: unknown): string {
 
 const validateSnowflake: Validator = (value) => snowflake(value);
 const validateSnowflakes: Validator = (value) => [...new Set(list(value, snowflake))];
+
+/** IDs, as {@link validateSnowflakes} reads them, of which at most `maximum` different ones. */
+function snowflakesUpTo(maximum: number): Validator {
+	return (value) => {
+		const ids = validateSnowflakes(value) as string[];
+		return ids.length <= maximum ? ids : fail(`Expected at most ${maximum} IDs.`);
+	};
+}
+
+/**
+ * A text the server writes, as the bot's `string` settings take it: the
+ * spaces around are dropped, and an empty text is none, so the bot writes its
+ * own line again.
+ */
+function text(maximum: number): Validator {
+	return (value) => {
+		if (typeof value !== "string") fail("Expected a text.");
+		const trimmed = value.trim();
+		if (trimmed.length === 0) return null;
+		return trimmed.length <= maximum
+			? trimmed
+			: fail(`Expected a text of at most ${maximum} characters.`);
+	};
+}
+
+const TextValidators = Object.fromEntries(
+	Object.entries(SETTING_TEXT_LIMITS).map(([key, maximum]) => [key, text(maximum)]),
+) as Record<TextSettingKey, Validator>;
 const validateBoolean: Validator = (value) =>
 	typeof value === "boolean" ? value : fail("Expected a boolean.");
 
@@ -145,12 +178,16 @@ const validateStickyRoles: Validator = (value) =>
 	});
 
 /**
- * The settings whose column is stored as-is and is not a boolean. Every other
- * `value` column is a boolean, which {@link validatorFor} checks from the
- * default, so a column added to `Columns` without an entry here still gets a
- * validator rather than being written unchecked.
+ * The settings that are not checked by the kind of their column alone: the
+ * ones stored as-is that are not booleans, and the lists that hold fewer IDs
+ * than every list may. Every other `value` column is a boolean, which
+ * {@link validatorFor} checks from the default, so a column added to `Columns`
+ * without an entry here still gets a validator rather than being written
+ * unchecked.
  */
 const ValueValidators: Partial<Record<StoredKey, Validator>> = {
+	...TextValidators,
+	moderationLockdownChannels: snowflakesUpTo(SETTING_LIST_LIMITS.moderationLockdownChannels),
 	language: validateLanguage,
 	timezone: validateTimeZone,
 	commandsDisabled: validateCommandNames,
@@ -184,12 +221,12 @@ const refuse: Validator = () => fail("This setting cannot be changed from the da
 function validatorFor(key: StoredKey): Validator {
 	if (BOT_ONLY_SETTINGS.has(key)) return refuse;
 
+	const explicit = ValueValidators[key];
+	if (explicit) return explicit;
+
 	const { kind } = Columns[key];
 	if (kind === "snowflake") return validateSnowflake;
 	if (kind === "snowflakes") return validateSnowflakes;
-
-	const explicit = ValueValidators[key];
-	if (explicit) return explicit;
 
 	if (typeof getDefaultGuildSettings()[key] === "boolean") return validateBoolean;
 	return refuse;

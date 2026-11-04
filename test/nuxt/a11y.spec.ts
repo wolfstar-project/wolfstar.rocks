@@ -69,6 +69,7 @@ import {
 	GuildSettingsHoneypot,
 	GuildSettingsLogsBulkChannel,
 	GuildSettingsLogsSelectionBar,
+	GuildSettingsModeration,
 	GuildSettingsSection,
 	GuildSetupWizard,
 	GuildSettingsToggleRow,
@@ -921,6 +922,22 @@ describe("component accessibility audits", () => {
 			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
 			useGuildSettings().setGuildSettings(createMockGuildData(GUILD_ID, settings));
 			const component = await mountSuspended(GuildSettingsHoneypot);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildSettingsModeration", () => {
+		it("should have no accessibility violations with a command response set", async () => {
+			const GUILD_ID = "123456789012345678";
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+			useGuildSettings().setGuildSettings(
+				createMockGuildData(GUILD_ID, { messagesResponseBan: "{user} was banned." }),
+			);
+			const component = await mountSuspended(GuildSettingsModeration, {
+				global: { stubs: { GuildReviewQueue: true } },
+			});
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
 		});

@@ -28,11 +28,13 @@ function toRule(row: Pick<Row, keyof AutoModerationRuleData | "id" | "guildId">)
 		options: normalizeAutoModerationRuleOptions(row.type, row.options),
 		escalation: normalizeAutoModerationRuleEscalation(row.escalation),
 		escalationDuration: row.escalationDuration,
+		response: row.response,
+		logChannelId: row.logChannelId === null ? null : String(row.logChannelId),
 	} satisfies AutoModerationRule;
 }
 
 function toColumns(data: Partial<AutoModerationRuleData>) {
-	const { ignoredRoles, ignoredChannels, ...rest } = data;
+	const { ignoredRoles, ignoredChannels, logChannelId, ...rest } = data;
 	return {
 		...rest,
 		...(ignoredRoles === undefined
@@ -41,6 +43,9 @@ function toColumns(data: Partial<AutoModerationRuleData>) {
 		...(ignoredChannels === undefined
 			? {}
 			: { ignoredChannels: ignoredChannels.map((id) => BigInt(id)) }),
+		...(logChannelId === undefined
+			? {}
+			: { logChannelId: logChannelId === null ? null : BigInt(logChannelId) }),
 	};
 }
 
@@ -81,11 +86,13 @@ export async function insertAutoModerationRule(
 ): Promise<AutoModerationRule> {
 	const id = BigInt(guildId);
 	await orm.public.Guild.upsert({ create: { id, language }, update: { id } });
+	const { ignoredRoles, ignoredChannels, logChannelId, ...rest } = data;
 	const row = await orm.public.GuildAutoModerationRule.create({
-		...data,
+		...rest,
 		guildId: id,
-		ignoredRoles: data.ignoredRoles.map((role) => BigInt(role)),
-		ignoredChannels: data.ignoredChannels.map((channel) => BigInt(channel)),
+		ignoredRoles: ignoredRoles.map((role) => BigInt(role)),
+		ignoredChannels: ignoredChannels.map((channel) => BigInt(channel)),
+		logChannelId: logChannelId === null ? null : BigInt(logChannelId),
 	});
 	return toRule(row);
 }

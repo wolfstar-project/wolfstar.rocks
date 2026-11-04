@@ -230,6 +230,7 @@
 				"Ban": "Ban",
 				"Kick": "Kick",
 				"Mute": "Mute",
+				"None": "No action",
 				"Softban": "Softban",
 				"Timeout": "Timeout",
 				"VoiceKick": "Voice kick",
@@ -245,6 +246,7 @@
 				"maximum": "Maximum",
 				"minimum": "Minimum length",
 				"perChannel": "Count everyone in the channel together",
+				"queueSize": "Latest messages compared",
 				"timePeriod": "Time period (seconds)",
 				"weighted": "Count a role mention as two and @everyone as five",
 				"words": "Words"
@@ -267,6 +269,7 @@
 				"edit_aria": "Edit rule {name}",
 				"editor": {
 					"action": "Action",
+					"alert_and_logs": "Alert and logs",
 					"back": "Back",
 					"cancel": "Cancel",
 					"create": "Create rule",
@@ -280,6 +283,7 @@
 					"escalation_duration": "Punishments count for",
 					"escalation_duration_help": "How long a punishment counts towards the next step.",
 					"escalation_help": "What replaces the punishment for members who keep reaching the threshold. The last step repeats.",
+					"escalation_no_action": "This rule takes no hard action, so its escalation does not apply.",
 					"escalation_remove_aria": "Remove step {index}",
 					"escalation_step": "Step {index}",
 					"exemptions": "Exemptions",
@@ -288,10 +292,16 @@
 					"ignored_channels": "Ignored channels",
 					"ignored_roles": "Ignored roles",
 					"list_placeholder": "Type and press Enter",
+					"log_channel": "Log channel",
+					"log_channel_default": "The moderation log channel",
+					"log_channel_help": "Where the logs of this rule go instead of the moderation log channel.",
 					"name": "Name",
 					"name_placeholder": "e.g. No invite links",
 					"options": "What it looks for",
 					"permanent_hint": "Leave at 0 for a permanent action.",
+					"response": "Custom alert",
+					"response_help": "What the alert says instead of the line of the rule's type. {placeholders} are replaced where you write them.",
+					"response_placeholder": "Empty for the line of the rule's type",
 					"save": "Save rule",
 					"soft_actions": "On every infraction",
 					"soft_actions_help": "Applied each time a message breaks the rule.",
@@ -310,6 +320,7 @@
 					"generic": "Something went wrong. Please try again.",
 					"invalid": "The server refused one of the values. Check the fields and try again.",
 					"limit": "This server already has the maximum number of rules.",
+					"logChannel": "WolfStar cannot post logs in that channel. Give it View Channel, Send Messages and Embed Links there, or pick another one.",
 					"nameInvalid": "Use a name of 1 to 50 characters that isn't just a number.",
 					"nameRequired": "Give the rule a name.",
 					"nameTaken": "There is already a rule with that name.",
@@ -394,6 +405,10 @@
 				"MentionsCooldown": {
 					"description": "More mentions from one member than the maximum within the time period.",
 					"name": "Mention cooldown"
+				},
+				"MessageDuplicates": {
+					"description": "The same message sent again and again in a channel, by anyone: at least the maximum among the latest messages compared.",
+					"name": "Identical messages"
 				},
 				"MessageSpam": {
 					"description": "More messages from one member in a channel than the maximum within the time period.",
@@ -733,8 +748,17 @@
 		"moderation": {
 			"cases_title": "Cases",
 			"form_aria": "Moderation settings form",
+			"lockdown_count": "{count} of {maximum} channels",
+			"lockdown_dialog_title": "Lockdown channels",
+			"lockdown_empty": "No lockdown channels",
+			"lockdown_help": "Text, announcement, voice, stage, forum and media channels, and categories.",
+			"lockdown_search": "Search channels",
+			"lockdown_title": "Lockdown",
+			"lockdown_too_many": "A lockdown takes at most {maximum} channels. Remove some before you save.",
 			"minutes": "minutes",
 			"module_hint": "Turning this off makes WolfStar refuse the moderation commands, such as /ban and /warn. The settings below can still be changed.",
+			"responses_help": "What WolfStar answers in the channel instead of its own line. Write {placeholders} where each goes. Leave a response empty for WolfStar's own line.",
+			"responses_title": "Command responses",
 			"subtitle": "Where cases are logged, which manual actions open one, and how member reports are reviewed.",
 			"title": "Moderation"
 		},
@@ -944,9 +968,21 @@
 				"description": "Nobody is caught while it is not set.",
 				"name": "Honeypot Channel"
 			},
+			"honeypotChaosName": {
+				"description": "The daily name is random characters instead of a name from WolfStar's list, against the bots that keep a list of channel names. While on, it takes the place of the daily rename.",
+				"name": "Random Characters as Name"
+			},
 			"honeypotDirectMessage": {
 				"description": "Tells the member it caught why, in a direct message. A hacked account that is softbanned can come back once its owner has it again.",
 				"name": "Tell Caught Members Why"
+			},
+			"honeypotEnsureDeletion": {
+				"description": "Two minutes after the action, WolfStar looks for what the member left in the channels and deletes it, since a ban does not always delete everything.",
+				"name": "Ensure Deletion"
+			},
+			"honeypotForwardMessage": {
+				"description": "Forwards what the member sent to the catches channel before WolfStar deletes it, attachments included. Needs a catches channel.",
+				"name": "Forward the Caught Message"
 			},
 			"honeypotKeepActive": {
 				"description": "WolfStar sends a message there every day, so the channel does not look abandoned.",
@@ -959,6 +995,14 @@
 			"honeypotRandomName": {
 				"description": "The bots cannot avoid the channel by its name.",
 				"name": "Rename Honeypot Daily"
+			},
+			"honeypotRecentDelete": {
+				"description": "A softban or a ban deletes what the member sent in the last 15 minutes instead of the last hour, which keeps more of the history of the channels.",
+				"name": "Delete Only Recent Messages"
+			},
+			"honeypotTimeoutFirst": {
+				"description": "Times the member out for an hour before the softban or the ban, so a hacked account that comes back at once still cannot write. A kick gets no timeout.",
+				"name": "Time Out First"
 			},
 			"honeypotWarning": {
 				"description": "Without it the channel says nothing, which is harder for a bot to learn to avoid, and for a member too.",
@@ -1100,6 +1144,30 @@
 				"description": "WolfStar creates a webhook in each log channel, whose name and avatar you can change. Without Manage Webhooks a channel gets the logs as before; the moderation log and the reports are always WolfStar's own messages.",
 				"name": "Send Through Webhooks"
 			},
+			"messagesResponseBan": {
+				"description": "After /ban add. The case number and the reason stay under it.",
+				"name": "Ban Response"
+			},
+			"messagesResponseKick": {
+				"description": "After /kick. The case number and the reason stay under it.",
+				"name": "Kick Response"
+			},
+			"messagesResponseMute": {
+				"description": "After /mute add. The case number and the reason stay under it.",
+				"name": "Mute Response"
+			},
+			"messagesResponseSoftban": {
+				"description": "After /softban. The case number and the reason stay under it.",
+				"name": "Softban Response"
+			},
+			"messagesResponseUnban": {
+				"description": "After /ban remove. The case number and the reason stay under it.",
+				"name": "Unban Response"
+			},
+			"messagesResponseUnmute": {
+				"description": "After /mute remove. The case number and the reason stay under it.",
+				"name": "Unmute Response"
+			},
 			"moderationChannel": {
 				"description": "Receives all moderation case logs. Required for the options below to work.",
 				"name": "Moderation Logs"
@@ -1108,9 +1176,17 @@
 				"description": "Asks before acting on a member who got a case within these minutes, so two moderators do not punish twice. 0 never asks.",
 				"name": "Confirm a Second Action"
 			},
+			"moderationDefaultWarnThresholds": {
+				"description": "While the server has no warning thresholds of its own, 3 warnings mute for 30 minutes (a timeout when there is no muted role), 5 kick and 7 ban. The ones added with /warn-thresholds add replace them.",
+				"name": "Default Warning Thresholds"
+			},
 			"moderationDehoist": {
 				"description": "Cleans the names of the members when they join or change them: what lists a name above the others goes, and fancy fonts, symbols and emojis become plain letters. Accents stay, and sticky nicknames and members who can manage nicknames are left alone.",
 				"name": "Dehoist Names"
+			},
+			"moderationLockdownChannels": {
+				"description": "The channels /lockdown channels:configured locks and unlocks together, up to 25: the ones a raid writes in, not the ones the staff and the bots work in. A deleted channel leaves the list.",
+				"name": "Lockdown Channels"
 			},
 			"moderationTrackBans": {
 				"description": "Opens a moderation case when a member is banned or unbanned by hand.",

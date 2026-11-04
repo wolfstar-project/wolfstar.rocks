@@ -67,6 +67,79 @@
 				</div>
 			</section>
 
+			<section class="console-card" :aria-labelledby="lockdownHeadingId">
+				<div class="moderation-card-heading">
+					<h2 :id="lockdownHeadingId">
+						{{ ts("guild_settings.moderation.lockdown_title") }}
+					</h2>
+					<span aria-hidden="true"></span>
+				</div>
+				<p class="mt-1.5 text-[0.8125rem] text-muted">
+					{{ ts("guild_settings.moderation.lockdown_help") }}
+				</p>
+				<div class="mt-4">
+					<SelectChannels
+						v-model="state.moderationLockdownChannels"
+						layout="chips"
+						:guild="guildData"
+						:channel-types="LOCKDOWN_CHANNEL_TYPES"
+						:label="translateEntry(ModerationLockdownChannels, 'name')"
+						:tooltip-title="translateEntry(ModerationLockdownChannels, 'description')"
+						:empty-label="ts('guild_settings.moderation.lockdown_empty')"
+						:dialog-title="ts('guild_settings.moderation.lockdown_dialog_title')"
+						:search-placeholder="ts('guild_settings.moderation.lockdown_search')"
+						:count-label="
+							(count) =>
+								ts('guild_settings.moderation.lockdown_count', {
+									count,
+									maximum: MAXIMUM_LOCKDOWN_CHANNELS,
+								})
+						"
+					/>
+					<p v-if="tooManyLockdownChannels" class="mt-2 text-sm text-error" role="alert">
+						{{
+							ts("guild_settings.moderation.lockdown_too_many", {
+								maximum: MAXIMUM_LOCKDOWN_CHANNELS,
+							})
+						}}
+					</p>
+				</div>
+			</section>
+
+			<section class="console-card" :aria-labelledby="responsesHeadingId">
+				<div class="moderation-card-heading">
+					<h2 :id="responsesHeadingId">
+						{{ ts("guild_settings.moderation.responses_title") }}
+					</h2>
+					<span aria-hidden="true"></span>
+				</div>
+				<p class="mt-1.5 text-[0.8125rem] text-muted">
+					{{
+						ts("guild_settings.moderation.responses_help", {
+							placeholders: responsePlaceholders,
+						})
+					}}
+				</p>
+
+				<div class="moderation-fields">
+					<UFormField
+						v-for="config in ConfigurableModerationResponses"
+						:key="config.key"
+						:name="config.key"
+						:label="translateEntry(config, 'name')"
+						:description="translateEntry(config, 'description')"
+						:hint="`${state[config.key].trim().length}/${SETTING_TEXT_LIMITS[config.key]}`"
+					>
+						<UInput
+							v-model="state[config.key]"
+							:maxlength="SETTING_TEXT_LIMITS[config.key]"
+							autocomplete="off"
+							class="w-full"
+						/>
+					</UFormField>
+				</div>
+			</section>
+
 			<section class="console-card" :aria-labelledby="reportsHeadingId">
 				<div class="moderation-card-heading">
 					<h2 :id="reportsHeadingId">{{ ts("guild_settings.reports.title") }}</h2>
@@ -117,20 +190,54 @@
 
 <script setup lang="ts">
 import {
+	MODERATION_RESPONSE_PLACEHOLDERS,
+	SETTING_LIST_LIMITS,
+	SETTING_TEXT_LIMITS,
+} from "#shared/utils/settings-choices";
+import {
 	ConfigurableModerationChannels,
+	ConfigurableModerationResponses,
 	ConfigurableModerationNumbers,
 	ConfigurableModerationToggles,
 	ConfigurableReportChannels,
 	ConfigurableReportRoles,
 	ConfigurableReportToggles,
+	ModerationLockdownChannels,
 } from "#shared/utils/settingsDataEntries";
+import { ChannelType } from "discord-api-types/v10";
 
 const { ts } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
 const { guildData } = useGuildData();
 
 const casesHeadingId = useId();
+const lockdownHeadingId = useId();
+const responsesHeadingId = useId();
 const reportsHeadingId = useId();
+
+const MAXIMUM_LOCKDOWN_CHANNELS = SETTING_LIST_LIMITS.moderationLockdownChannels;
+
+// The picker takes any number, the save does not: said here, next to the
+// list, before the save is refused.
+const tooManyLockdownChannels = computed(
+	() => state.moderationLockdownChannels.length > MAXIMUM_LOCKDOWN_CHANNELS,
+);
+
+// What `/lockdown channel:` takes, but the threads, which a lockdown locks one
+// by one. Read in setup, not at module scope: see the `discord-api-types` SSR
+// note in CLAUDE.md.
+const LOCKDOWN_CHANNEL_TYPES = [
+	ChannelType.GuildText,
+	ChannelType.GuildAnnouncement,
+	ChannelType.GuildVoice,
+	ChannelType.GuildStageVoice,
+	ChannelType.GuildCategory,
+	ChannelType.GuildForum,
+	ChannelType.GuildMedia,
+];
+
+// Written out as the bot reads them, so they are not translated.
+const responsePlaceholders = MODERATION_RESPONSE_PLACEHOLDERS.map((name) => `{${name}}`).join(", ");
 
 // Reports are reviewed by the same moderators and can close into a case, so
 // they are set up on this page rather than on one of their own.
@@ -145,7 +252,9 @@ const { mapToGuildData, onError, schema, state } = useSettingsForm({
 		...ConfigurableModerationToggles.map((entry) => entry.key),
 		...ConfigurableReportToggles.map((entry) => entry.key),
 	],
+	many: ["moderationLockdownChannels"],
 	numbers: ConfigurableModerationNumbers.map((entry) => entry.key),
+	texts: ConfigurableModerationResponses.map((entry) => entry.key),
 });
 </script>
 

@@ -104,14 +104,22 @@ describe("moderation guild settings", () => {
 
 	// Reports are set up next to the cases they can close into, not on a page
 	// of their own, and the queue of filed reports follows them.
-	it("groups the settings into a Cases and a Reports card, then the review queue", async () => {
+	it("groups the settings into cards, then the review queue", async () => {
 		const wrapper = await mountSuspended(Moderation);
 
 		await nextTick();
 
 		const headings = wrapper.findAll("section h2").map((heading) => heading.text());
-		expect(headings).toHaveLength(3);
-		expect(headings).toEqual(expect.arrayContaining(["Cases", "Reports", "Review queue"]));
+		expect(headings).toHaveLength(5);
+		expect(headings).toEqual(
+			expect.arrayContaining([
+				"Cases",
+				"Lockdown",
+				"Command responses",
+				"Reports",
+				"Review queue",
+			]),
+		);
 		const sectionTitled = (title: string) =>
 			wrapper
 				.findAll("section")
@@ -224,5 +232,77 @@ describe("moderation guild settings", () => {
 		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
 			moderationConfirmRecentMinutes: 60,
 		});
+	});
+
+	it("shows a saved command response, and stages an emptied one as the bot's own line", async () => {
+		mockGuildSettings.value = createMockGuildData("123456789012345678", {
+			messagesResponseBan: "{user} was banned for {reason}.",
+		});
+		const wrapper = await mountSuspended(Moderation);
+
+		await nextTick();
+		await nextTick();
+
+		const field = wrapper
+			.findAllComponents({ name: "UFormField" })
+			.find((candidate) => candidate.text().includes("Ban Response"));
+		const input = field?.find("input");
+		expect(input?.element.value).toBe("{user} was banned for {reason}.");
+		expect(field?.text()).toContain("31/200");
+
+		await input?.setValue("");
+		await nextTick();
+
+		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+			messagesResponseBan: null,
+		});
+	});
+
+	it("stages a typed command response as it is written", async () => {
+		const wrapper = await mountSuspended(Moderation);
+
+		await nextTick();
+		await nextTick();
+
+		const input = wrapper
+			.findAllComponents({ name: "UFormField" })
+			.find((candidate) => candidate.text().includes("Kick Response"))
+			?.find("input");
+		await input?.setValue("{user} is out ");
+		await nextTick();
+
+		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+			messagesResponseKick: "{user} is out ",
+		});
+	});
+
+	it("offers the lockdown channels in a card of their own", async () => {
+		const wrapper = await mountSuspended(Moderation);
+
+		await nextTick();
+		await nextTick();
+
+		const lockdown = wrapper
+			.findAll("section")
+			.find(
+				(section) =>
+					section.find("h2").exists() && section.find("h2").text() === "Lockdown",
+			);
+		expect(lockdown?.text()).toContain("Lockdown Channels");
+		expect(lockdown?.text()).toContain("No lockdown channels");
+	});
+
+	it("says when more lockdown channels are picked than a lockdown takes", async () => {
+		mockGuildSettings.value = createMockGuildData("123456789012345678", {
+			moderationLockdownChannels: Array.from({ length: 26 }, (_, index) =>
+				String(100_000_000_000_000_000n + BigInt(index)),
+			),
+		});
+		const wrapper = await mountSuspended(Moderation);
+
+		await nextTick();
+		await nextTick();
+
+		expect(wrapper.text()).toContain("A lockdown takes at most 25 channels.");
 	});
 });

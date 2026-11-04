@@ -230,6 +230,7 @@
 				"Ban": "",
 				"Kick": "",
 				"Mute": "",
+				"None": "",
 				"Softban": "",
 				"Timeout": "",
 				"VoiceKick": "",
@@ -245,6 +246,7 @@
 				"maximum": "",
 				"minimum": "",
 				"perChannel": "",
+				"queueSize": "",
 				"timePeriod": "",
 				"weighted": "",
 				"words": ""
@@ -267,6 +269,7 @@
 				"edit_aria": "",
 				"editor": {
 					"action": "",
+					"alert_and_logs": "",
 					"back": "",
 					"cancel": "",
 					"create": "",
@@ -280,6 +283,7 @@
 					"escalation_duration": "",
 					"escalation_duration_help": "",
 					"escalation_help": "",
+					"escalation_no_action": "",
 					"escalation_remove_aria": "",
 					"escalation_step": "",
 					"exemptions": "",
@@ -288,10 +292,16 @@
 					"ignored_channels": "",
 					"ignored_roles": "",
 					"list_placeholder": "",
+					"log_channel": "",
+					"log_channel_default": "",
+					"log_channel_help": "",
 					"name": "",
 					"name_placeholder": "",
 					"options": "",
 					"permanent_hint": "",
+					"response": "",
+					"response_help": "",
+					"response_placeholder": "",
 					"save": "",
 					"soft_actions": "",
 					"soft_actions_help": "",
@@ -310,6 +320,7 @@
 					"generic": "",
 					"invalid": "",
 					"limit": "",
+					"logChannel": "",
 					"nameInvalid": "",
 					"nameRequired": "",
 					"nameTaken": "",
@@ -392,6 +403,10 @@
 					"name": ""
 				},
 				"MentionsCooldown": {
+					"description": "",
+					"name": ""
+				},
+				"MessageDuplicates": {
 					"description": "",
 					"name": ""
 				},
@@ -733,8 +748,17 @@
 		"moderation": {
 			"cases_title": "",
 			"form_aria": "Formulario de configuración de moderación",
+			"lockdown_count": "",
+			"lockdown_dialog_title": "",
+			"lockdown_empty": "",
+			"lockdown_help": "",
+			"lockdown_search": "",
+			"lockdown_title": "",
+			"lockdown_too_many": "",
 			"minutes": "",
 			"module_hint": "",
+			"responses_help": "",
+			"responses_title": "",
 			"subtitle": "",
 			"title": ""
 		},
@@ -944,7 +968,19 @@
 				"description": "",
 				"name": ""
 			},
+			"honeypotChaosName": {
+				"description": "",
+				"name": ""
+			},
 			"honeypotDirectMessage": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotEnsureDeletion": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotForwardMessage": {
 				"description": "",
 				"name": ""
 			},
@@ -957,6 +993,14 @@
 				"name": ""
 			},
 			"honeypotRandomName": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotRecentDelete": {
+				"description": "",
+				"name": ""
+			},
+			"honeypotTimeoutFirst": {
 				"description": "",
 				"name": ""
 			},
@@ -1100,6 +1144,30 @@
 				"description": "",
 				"name": ""
 			},
+			"messagesResponseBan": {
+				"description": "",
+				"name": ""
+			},
+			"messagesResponseKick": {
+				"description": "",
+				"name": ""
+			},
+			"messagesResponseMute": {
+				"description": "",
+				"name": ""
+			},
+			"messagesResponseSoftban": {
+				"description": "",
+				"name": ""
+			},
+			"messagesResponseUnban": {
+				"description": "",
+				"name": ""
+			},
+			"messagesResponseUnmute": {
+				"description": "",
+				"name": ""
+			},
 			"moderationChannel": {
 				"description": "",
 				"name": "Registros de moderación"
@@ -1108,7 +1176,15 @@
 				"description": "",
 				"name": ""
 			},
+			"moderationDefaultWarnThresholds": {
+				"description": "",
+				"name": ""
+			},
 			"moderationDehoist": {
+				"description": "",
+				"name": ""
+			},
+			"moderationLockdownChannels": {
 				"description": "",
 				"name": ""
 			},

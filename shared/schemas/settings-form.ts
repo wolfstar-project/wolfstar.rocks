@@ -2,6 +2,7 @@ import {
 	array,
 	boolean,
 	integer,
+	maxLength,
 	maxValue,
 	minValue,
 	nullable,
@@ -16,9 +17,12 @@ import {
 } from "valibot";
 import {
 	SETTING_CHOICES,
+	SETTING_LIST_LIMITS,
 	SETTING_NUMBER_RANGES,
+	SETTING_TEXT_LIMITS,
 	type ChoiceSettingKey,
 	type NumberSettingKey,
+	type TextSettingKey,
 } from "../utils/settings-choices";
 
 export interface SettingsFormSpec {
@@ -32,6 +36,8 @@ export interface SettingsFormSpec {
 	numbers?: readonly NumberSettingKey[];
 	/** Settings that hold one word of a fixed set. */
 	choices?: readonly ChoiceSettingKey[];
+	/** Settings that hold a text the server writes, empty for none. */
+	texts?: readonly TextSettingKey[];
 }
 
 /**
@@ -47,8 +53,13 @@ export function buildSettingsFormSchema(
 	for (const key of spec.one ?? []) {
 		shape[key] = nullable(string());
 	}
+	const listLimits: Partial<Record<string, number>> = SETTING_LIST_LIMITS;
 	for (const key of spec.many ?? []) {
-		shape[key] = optional(array(string()), []);
+		const limit = listLimits[key];
+		shape[key] =
+			limit === undefined
+				? optional(array(string()), [])
+				: optional(pipe(array(string()), maxLength(limit)), []);
 	}
 	for (const key of spec.toggles ?? []) {
 		shape[key] = optional(boolean(), false);
@@ -59,6 +70,9 @@ export function buildSettingsFormSchema(
 	}
 	for (const key of spec.choices ?? []) {
 		shape[key] = picklist(SETTING_CHOICES[key]);
+	}
+	for (const key of spec.texts ?? []) {
+		shape[key] = nullable(pipe(string(), maxLength(SETTING_TEXT_LIMITS[key])));
 	}
 
 	return object(shape);

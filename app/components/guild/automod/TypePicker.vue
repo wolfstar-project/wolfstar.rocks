@@ -58,10 +58,12 @@ const emit = defineEmits<{
 
 const { ts } = useI18n();
 
-// A rule that counts what a member sends over a time period limits a rate; the
-// others judge one message by what is in it.
+// A rule that counts what is sent over a time period, or over the latest
+// messages of a channel, limits a rate; the others judge one message by what
+// is in it.
 function isRateLimit(type: AutoModerationRuleType): boolean {
-	return "timePeriod" in getDefaultAutoModerationRuleOptions(type);
+	const options = getDefaultAutoModerationRuleOptions(type);
+	return "timePeriod" in options || "queueSize" in options;
 }
 
 const contentHeadingId = useId();

@@ -1,7 +1,7 @@
 import type { HoneypotAction, ReadonlyGuildData } from "#server/database/settings/types";
 import type { APIGuild, APIGuildMember, APIOverwrite } from "discord-api-types/v10";
 import { applicationId } from "#server/utils/command-permissions/discord";
-import { memberPermissions } from "#server/utils/discord/admin";
+import { memberChannelPermissions } from "#server/utils/discord/admin";
 import { ChannelType, PermissionFlagsBits } from "discord-api-types/v10";
 import { createError } from "evlog";
 
@@ -60,45 +60,12 @@ interface HoneypotChannelInput {
 	action: HoneypotAction;
 }
 
-/**
- * A member's permissions in a channel, in Discord's order: the server-wide
- * ones, then `@everyone`'s overwrite, the member's roles' together, and the
- * member's own. Administrator holds every permission whatever the overwrites.
- */
-function channelPermissions(
-	guild: APIGuild,
-	member: APIGuildMember,
-	channel: HoneypotChannelCandidate,
-): bigint {
-	let permissions = memberPermissions(guild, member);
-	if ((permissions & PermissionFlagsBits.Administrator) !== 0n) return ~0n;
-
-	const overwrites = channel.permission_overwrites ?? [];
-	const everyone = overwrites.find((overwrite) => overwrite.id === guild.id);
-	if (everyone) permissions = (permissions & ~BigInt(everyone.deny)) | BigInt(everyone.allow);
-
-	const held = new Set(member.roles);
-	let allow = 0n;
-	let deny = 0n;
-	for (const overwrite of overwrites) {
-		if (overwrite.id !== guild.id && held.has(overwrite.id)) {
-			allow |= BigInt(overwrite.allow);
-			deny |= BigInt(overwrite.deny);
-		}
-	}
-	permissions = (permissions & ~deny) | allow;
-
-	const own = overwrites.find((overwrite) => overwrite.id === member.user.id);
-	if (own) permissions = (permissions & ~BigInt(own.deny)) | BigInt(own.allow);
-	return permissions;
-}
-
 function missingIn(
 	input: HoneypotChannelInput,
 	channel: HoneypotChannelCandidate,
 	required: Record<string, bigint>,
 ): string[] {
-	const held = channelPermissions(input.guild, input.bot, channel);
+	const held = memberChannelPermissions(input.guild, input.bot, channel);
 	return Object.entries(required)
 		.filter(([, flag]) => (held & flag) !== flag)
 		.map(([name]) => name);

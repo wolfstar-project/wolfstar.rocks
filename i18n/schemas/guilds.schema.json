@@ -2266,6 +2266,9 @@
 						"lockdown_title": {
 							"type": "string"
 						},
+						"lockdown_too_many": {
+							"type": "string"
+						},
 						"minutes": {
 							"type": "string"
 						},

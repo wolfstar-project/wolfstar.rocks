@@ -754,6 +754,7 @@
 			"lockdown_help": "Text, announcement, voice, stage, forum and media channels, and categories.",
 			"lockdown_search": "Search channels",
 			"lockdown_title": "Lockdown",
+			"lockdown_too_many": "A lockdown takes at most {maximum} channels. Remove some before you save.",
 			"minutes": "minutes",
 			"module_hint": "Turning this off makes WolfStar refuse the moderation commands, such as /ban and /warn. The settings below can still be changed.",
 			"responses_help": "What WolfStar answers in the channel instead of its own line. Write {placeholders} where each goes. Leave a response empty for WolfStar's own line.",

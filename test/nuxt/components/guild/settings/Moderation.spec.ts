@@ -291,4 +291,18 @@ describe("moderation guild settings", () => {
 		expect(lockdown?.text()).toContain("Lockdown Channels");
 		expect(lockdown?.text()).toContain("No lockdown channels");
 	});
+
+	it("says when more lockdown channels are picked than a lockdown takes", async () => {
+		mockGuildSettings.value = createMockGuildData("123456789012345678", {
+			moderationLockdownChannels: Array.from({ length: 26 }, (_, index) =>
+				String(100_000_000_000_000_000n + BigInt(index)),
+			),
+		});
+		const wrapper = await mountSuspended(Moderation);
+
+		await nextTick();
+		await nextTick();
+
+		expect(wrapper.text()).toContain("A lockdown takes at most 25 channels.");
+	});
 });

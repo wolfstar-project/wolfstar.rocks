@@ -754,6 +754,7 @@
 			"lockdown_help": "",
 			"lockdown_search": "",
 			"lockdown_title": "",
+			"lockdown_too_many": "",
 			"minutes": "",
 			"module_hint": "Disattivandolo WolfStar rifiuta i comandi di moderazione, come /ban e /warn. Le impostazioni qui sotto si possono comunque cambiare.",
 			"responses_help": "",

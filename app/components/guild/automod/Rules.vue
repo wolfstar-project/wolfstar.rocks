@@ -399,8 +399,13 @@ async function saveRule(body: AutomodRuleCreate) {
 	saving.value = true;
 	editorErrorCode.value = null;
 	const target = editedRule.value;
-	// The type of an existing rule cannot change, so it is not sent back.
-	const { type: _type, ...changes } = body;
+	// The type of an existing rule cannot change, so it is not sent back. Nor
+	// is a log channel that did not change: the server asks Discord about any
+	// channel it is given, and one that lost a permission since would refuse
+	// every other edit of the rule.
+	const { type: _type, logChannelId, ...rest } = body;
+	const changes =
+		target && logChannelId === target.logChannelId ? rest : { ...rest, logChannelId };
 	const result = target ? await updateRule(target.id, changes) : await createRule(body);
 	saving.value = false;
 

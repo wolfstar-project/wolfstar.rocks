@@ -120,6 +120,32 @@ describe("GuildAutomodRules", () => {
 		expect(mockUpdateRule).toHaveBeenCalledExactlyOnceWith("1", { enabled: false });
 	});
 
+	it("sends the log channel of an edited rule only when it changed", async () => {
+		const LOGS = "345678901234567890";
+		mockRules.value = [{ ...makeRule("1", "Bad words"), logChannelId: LOGS }];
+		mockUpdateRule.mockResolvedValue({ ok: true, value: mockRules.value[0] });
+		const wrapper = await mountSuspended(Rules);
+
+		await wrapper.find('[aria-label="Edit rule Bad words"]').trigger("click");
+		await nextTick();
+		const editor = wrapper.findComponent({ name: "GuildAutomodRuleEditor" });
+		const body = { ...makeRule("1", "Bad words"), logChannelId: LOGS };
+
+		editor.vm.$emit("save", body);
+		await nextTick();
+		expect(mockUpdateRule).toHaveBeenLastCalledWith(
+			"1",
+			expect.not.objectContaining({ logChannelId: expect.anything() }),
+		);
+
+		editor.vm.$emit("save", { ...body, logChannelId: null });
+		await nextTick();
+		expect(mockUpdateRule).toHaveBeenLastCalledWith(
+			"1",
+			expect.objectContaining({ logChannelId: null }),
+		);
+	});
+
 	it("tells the admin when a toggle is refused", async () => {
 		mockUpdateRule.mockResolvedValue({ ok: false, code: "unknown" });
 		const wrapper = await mountSuspended(Rules);

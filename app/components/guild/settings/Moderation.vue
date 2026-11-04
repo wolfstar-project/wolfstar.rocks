@@ -96,6 +96,13 @@
 								})
 						"
 					/>
+					<p v-if="tooManyLockdownChannels" class="mt-2 text-sm text-error" role="alert">
+						{{
+							ts("guild_settings.moderation.lockdown_too_many", {
+								maximum: MAXIMUM_LOCKDOWN_CHANNELS,
+							})
+						}}
+					</p>
 				</div>
 			</section>
 
@@ -209,6 +216,12 @@ const responsesHeadingId = useId();
 const reportsHeadingId = useId();
 
 const MAXIMUM_LOCKDOWN_CHANNELS = SETTING_LIST_LIMITS.moderationLockdownChannels;
+
+// The picker takes any number, the save does not: said here, next to the
+// list, before the save is refused.
+const tooManyLockdownChannels = computed(
+	() => state.moderationLockdownChannels.length > MAXIMUM_LOCKDOWN_CHANNELS,
+);
 
 // What `/lockdown channel:` takes, but the threads, which a lockdown locks one
 // by one. Read in setup, not at module scope: see the `discord-api-types` SSR

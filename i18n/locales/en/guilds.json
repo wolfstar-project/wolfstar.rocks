@@ -157,7 +157,7 @@
 				"move_down_aria": "Move form {name} down",
 				"move_up_aria": "Move form {name} up",
 				"new": "Create form",
-				"questions_count": "{count} questions",
+				"questions_count": "No questions | 1 question | {count} questions",
 				"retry": "Try again",
 				"takes": "What the form takes",
 				"title": "Forms",

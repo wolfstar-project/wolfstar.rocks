@@ -1,4 +1,4 @@
-import { readAppealForms, reorderAppealForms } from "#server/utils/appeals/forms";
+import { reorderAppealForms } from "#server/utils/appeals/forms";
 import {
 	auditAppealFormChange,
 	authorizeAppealFormManager,
@@ -26,9 +26,13 @@ export default defineWrappedResponseHandler(
 		};
 		if (!isStringArray(ids)) throwInvalidFormBody(["ids: Expected an array of IDs."]);
 
-		const before = (await readAppealForms(guild.id)).map((form) => form.name);
-		const forms = await reorderAppealForms(guild.id, ids).catch(throwAppealFormError);
+		// The order it replaced comes from the write itself, read under its lock:
+		// a move that finished meanwhile would make an earlier read lie to the audit.
+		const { before: replaced, forms } = await reorderAppealForms(guild.id, ids).catch(
+			throwAppealFormError,
+		);
 
+		const before = replaced.map((form) => form.name);
 		const after = forms.map((form) => form.name);
 		if (before.some((name, index) => name !== after[index])) {
 			auditAppealFormChange(event, before, after, null);

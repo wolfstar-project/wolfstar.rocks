@@ -182,6 +182,8 @@ const LEGACY_AUDIT_FIELD_METADATA: Readonly<Record<string, AuditFieldMetadata>> 
 	prefix: { label: "Prefix", type: "string", array: false },
 	logsCommand: { label: "Command Logs", type: "channel", array: false },
 	logsSettings: { label: "Settings Logs", type: "channel", array: false },
+	// The questions of the appeals became forms: rows written before still carry the key.
+	appealsQuestions: { label: "Appeal Form Questions", type: "string", array: true },
 };
 
 export function humanizeKey(key: string): string {

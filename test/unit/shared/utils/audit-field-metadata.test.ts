@@ -94,6 +94,15 @@ describe("getAuditFieldMetadata", () => {
 		});
 	});
 
+	// The questions became forms, but audit rows written before still carry the key.
+	it("still reads the appeal questions of an audit row written before the forms", () => {
+		expect(getAuditFieldMetadata("appealsQuestions")).toStrictEqual({
+			label: "Appeal Form Questions",
+			type: "string",
+			array: true,
+		});
+	});
+
 	it("returns humanized fallback for an unknown key", () => {
 		expect(getAuditFieldMetadata("foo.bar")).toStrictEqual({
 			label: "Foo Bar",

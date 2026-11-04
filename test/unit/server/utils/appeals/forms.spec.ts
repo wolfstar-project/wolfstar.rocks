@@ -91,6 +91,19 @@ describe("appeal form service", () => {
 			});
 		});
 
+		// A deleted form leaves a gap, so the number of forms is not the next place.
+		it("puts a new form after the highest place, not at the number of forms", async () => {
+			storage.fetchAppealForms.mockResolvedValue([makeForm("3", "Third", 2)]);
+
+			await createAppealForm(GUILD_ID, { name: "Fourth", questions: [question] });
+
+			expect(storage.insertAppealForm).toHaveBeenCalledWith(
+				expect.anything(),
+				GUILD_ID,
+				expect.objectContaining({ position: 3 }),
+			);
+		});
+
 		it("refuses a form that asks nothing", async () => {
 			expect(await codeOf(createAppealForm(GUILD_ID, { name: "Empty" }))).toBe("invalid");
 			expect(
@@ -223,8 +236,9 @@ describe("appeal form service", () => {
 		});
 
 		it("writes only the forms whose place changes", async () => {
-			const forms = await reorderAppealForms(GUILD_ID, ["2", "1", "3"]);
+			const { before, forms } = await reorderAppealForms(GUILD_ID, ["2", "1", "3"]);
 
+			expect(before.map((form) => form.id)).toStrictEqual(["1", "2", "3"]);
 			expect(forms.map((form) => [form.id, form.position])).toStrictEqual([
 				["2", 0],
 				["1", 1],

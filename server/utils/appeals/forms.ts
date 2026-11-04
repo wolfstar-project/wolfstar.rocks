@@ -129,7 +129,9 @@ export function createAppealForm(
 			...getDefaultAppealForm(),
 			...data,
 			name: validateName(forms, data.name),
-			position: forms.length,
+			// After the highest place, not at `forms.length`: a deleted form leaves a gap,
+			// and a new form must still come last.
+			position: forms.reduce((highest, form) => Math.max(highest, form.position), -1) + 1,
 		}).catch(rethrowNameTaken);
 	});
 }
@@ -196,18 +198,25 @@ export function deleteAppealForm(guildId: Snowflake, formId: string): Promise<Ap
 	});
 }
 
+export interface AppealFormReorder {
+	/** The forms in the order the write found them: read under the lock, so an audit of it is exact. */
+	before: AppealForm[];
+	/** The forms in their new order. */
+	forms: AppealForm[];
+}
+
 /**
  * Puts the forms of a guild in the order of `ids`, which has to name every
  * form of the guild once. Only a form whose place changes is written.
  *
- * @returns The forms, in their new order.
+ * @returns The forms in their new order, and in the one they had.
  * @throws {@linkcode AppealFormError} When `ids` misses a form, names one
  * twice or names one the guild does not have.
  */
 export function reorderAppealForms(
 	guildId: Snowflake,
 	ids: readonly string[],
-): Promise<AppealForm[]> {
+): Promise<AppealFormReorder> {
 	return writeAppealForms(guildId, async (forms, orm) => {
 		if (ids.length !== forms.length || new Set(ids).size !== ids.length) {
 			throw new AppealFormError("invalid");
@@ -226,6 +235,6 @@ export function reorderAppealForms(
 			}
 			reordered.push({ ...form, position });
 		}
-		return reordered;
+		return { before: [...forms], forms: reordered };
 	});
 }

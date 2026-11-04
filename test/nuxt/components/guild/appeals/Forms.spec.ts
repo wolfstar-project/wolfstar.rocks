@@ -71,7 +71,7 @@ describe("GuildAppealsForms", () => {
 		expect(cards[0]!.text()).toContain("For bans.");
 		expect(cards[0]!.text()).toContain("Bans");
 		expect(cards[0]!.text()).not.toContain("Every kind");
-		expect(cards[0]!.text()).toContain("1 questions");
+		expect(cards[0]!.text()).toContain("1 question");
 		expect(cards[1]!.text()).toContain("Every kind");
 		expect(cards[1]!.text()).toContain("Locked");
 		expect(wrapper.text()).toContain("2 of 10 forms");
@@ -116,6 +116,19 @@ describe("GuildAppealsForms", () => {
 		await nextTick();
 
 		expect(mockReorderForms).toHaveBeenCalledExactlyOnceWith(["2", "1"]);
+	});
+
+	// A move answers with the whole list: a switch saved meanwhile would be put back.
+	it("keeps every switch still while a move is being saved", async () => {
+		mockReorderForms.mockReturnValue(new Promise(() => {}));
+		const wrapper = await mountSuspended(Forms);
+
+		await wrapper.find('[aria-label="Move form Ban appeal down"]').trigger("click");
+		await nextTick();
+
+		expect(
+			wrapper.find('[aria-label="Enable form Mute appeal"]').attributes("disabled"),
+		).toBeDefined();
 	});
 
 	it("asks before deleting a form, then deletes it", async () => {

@@ -98,7 +98,7 @@
 					</div>
 					<USwitch
 						:model-value="form.enabled"
-						:disabled="busyFormId === form.id"
+						:disabled="busyFormId !== null"
 						:aria-label="
 							ts('guild_settings.appeals.forms.enable_aria', { name: form.name })
 						"
@@ -121,9 +121,10 @@
 					</li>
 					<li class="form-badge">
 						{{
-							ts("guild_settings.appeals.forms.questions_count", {
-								count: form.questions.length,
-							})
+							tc(
+								"guild_settings.appeals.forms.questions_count",
+								form.questions.length,
+							)
 						}}
 					</li>
 				</ul>
@@ -230,7 +231,7 @@ import {
 } from "#shared/utils/appeal-forms";
 import { APPEAL_CASE_TYPE_KEYS } from "~/utils/appeal-form-labels";
 
-const { ts } = useI18n();
+const { ts, tc } = useI18n();
 const toast = useToast();
 const { guildData } = useGuildData();
 const { activeGuildId } = useActiveGuild();
@@ -257,6 +258,8 @@ const editedForm = ref<AppealForm | null>(null);
 const editorErrorCode = ref<AppealFormErrorCode | null>(null);
 const formToDelete = ref<AppealForm | null>(null);
 const saving = ref(false);
+// One write at a time: a move answers with the whole list, which would put back
+// the switch of a form saved meanwhile if the two answers arrived out of order.
 const busyFormId = ref<string | null>(null);
 
 /** The kinds of case a form takes, by name, in the order the settings list them. */

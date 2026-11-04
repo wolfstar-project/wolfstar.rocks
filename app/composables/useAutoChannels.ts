@@ -83,7 +83,7 @@ export function useAutoChannels<Slug extends AutoChannelSlug>(
 	async function setRow(channelId: string, body: Data): Promise<AutoChannelResult<Row>> {
 		const requestGuildId = id.value;
 		const result = await run(() =>
-			$fetch<Row>(`${base.value}/${channelId}`, { body, method: "PUT" }),
+			$fetch<Row, string, "PUT">(`${base.value}/${channelId}`, { body, method: "PUT" }),
 		);
 		if (result.ok) {
 			patchRows(requestGuildId, (current) =>

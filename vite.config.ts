@@ -601,10 +601,6 @@ export default defineConfig({
 										public: {
 											clientId: "test-discord-client-id",
 										},
-										session: {
-											password:
-												"ci-dummy-session-key-for-prerender-only-not-for-production",
-										},
 									},
 									vue: { runtimeCompiler: true },
 									// Off for Vitest browser: VTU emit capture breaks with viteEnvironmentApi.
@@ -612,7 +608,6 @@ export default defineConfig({
 										payloadExtraction: false,
 										viteEnvironmentApi: false,
 									},
-									// @ts-expect-error -- pwa config is not in the base NuxtConfig type
 									pwa: { pwaAssets: { disabled: true } },
 									sentry: { enabled: false },
 									sitemap: { enabled: false },

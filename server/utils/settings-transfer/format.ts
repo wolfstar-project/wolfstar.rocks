@@ -37,7 +37,11 @@ export const TransferableSettings = [
 	["appeals.bans", "appealsBans"],
 	["appeals.mutes", "appealsMutes"],
 	["appeals.timeouts", "appealsTimeouts"],
-	["appeals.questions", "appealsQuestions"],
+	["appeals.anonymous", "appealsAnonymous"],
+	["appeals.thread", "appealsThread"],
+	["appeals.cooldown-days", "appealsCooldownDays"],
+	["appeals.max-active", "appealsMaxActive"],
+	["appeals.block-on-denial", "appealsBlockOnDenial"],
 	["logs.message-update-style", "logsMessageUpdateStyle"],
 	["logs.reaction-emoji-include-twemoji", "logsReactionEmojiIncludeTwemoji"],
 	["logs.webhooks", "logsWebhooks"],
@@ -73,9 +77,13 @@ export function getTransferableSettingName(key: TransferableSettingKey): string 
 
 /**
  * The settings the bot no longer has, which a file exported before may still
- * hold: an import leaves them out instead of reporting them.
+ * hold: an import leaves them out instead of reporting them. The questions of
+ * the appeals became the first form of the guild, which a file does not carry.
  */
-export const RemovedSettings: ReadonlySet<string> = new Set(["modules.commands"]);
+export const RemovedSettings: ReadonlySet<string> = new Set([
+	"appeals.questions",
+	"modules.commands",
+]);
 
 /**
  * The fields of a rule of the file. What names something of the server

@@ -59,6 +59,13 @@ export const MessageUpdateStyles =
 	SETTING_CHOICES.logsMessageUpdateStyle satisfies readonly MessageUpdateStyle[];
 
 /**
+ * Whether each appeal gets a thread for the staff, and of which kind, as the
+ * bot's `appeals.thread` stores it in a text column: `public` on the message
+ * of the appeal, `private` in the channel, `none` at all.
+ */
+export const AppealThreadModes = SETTING_CHOICES.appealsThread;
+
+/**
  * An entry of `permissions.users` or `permissions.roles`: a legacy permission
  * node, or a dashboard access rule (see `#shared/utils/dashboard-access`).
  */

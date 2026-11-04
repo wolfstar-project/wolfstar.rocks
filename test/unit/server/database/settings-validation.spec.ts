@@ -187,6 +187,43 @@ describe("parseSettingsChanges", () => {
 		).toStrictEqual({ moderationLockdownChannels: [CHANNEL] });
 	});
 
+	it("reads the appeal settings the forms came with", () => {
+		expect(
+			parseSettingsChanges([
+				["appealsThread", "private"],
+				["appealsCooldownDays", 365],
+				["appealsMaxActive", 10],
+				["appealsManagerRoles", [ROLE, ROLE]],
+				["appealsAnonymous", true],
+				["appealsBlockOnDenial", true],
+			]).data,
+		).toStrictEqual({
+			appealsThread: "private",
+			appealsCooldownDays: 365,
+			appealsMaxActive: 10,
+			appealsManagerRoles: [ROLE],
+			appealsAnonymous: true,
+			appealsBlockOnDenial: true,
+		});
+		expect(
+			parseSettingsChanges([
+				["appealsThread", "secret"],
+				["appealsCooldownDays", 366],
+				["appealsMaxActive", 0],
+			]).errors,
+		).toStrictEqual([
+			"appealsThread: Expected one of none, public, private.",
+			"appealsCooldownDays: Expected a whole number from 0 to 365.",
+			"appealsMaxActive: Expected a whole number from 1 to 10.",
+		]);
+	});
+
+	// The questions became the first form of the guild; the column stays
+	// unread until the bot drops it.
+	it("no longer knows the appeal questions", () => {
+		expect(parseSettingsChanges([["appealsQuestions", ["Why?"]]]).errors).toHaveLength(1);
+	});
+
 	it("switches the new honeypot and warning threshold options", () => {
 		expect(
 			parseSettingsChanges([

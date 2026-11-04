@@ -217,7 +217,15 @@ export const Columns = {
 		appealsBans: ["bans", "value"],
 		appealsMutes: ["mutes", "value"],
 		appealsTimeouts: ["timeouts", "value"],
-		appealsQuestions: ["questions", "value"],
+		// `questions` is not read: the bot stopped reading it for the forms,
+		// and the column waits for this app to stop selecting it before it goes.
+		appealsManagerRoles: ["managerRoles", "snowflakes"],
+		appealsPingRoles: ["pingRoles", "snowflakes"],
+		appealsAnonymous: ["anonymous", "value"],
+		appealsThread: ["thread", "value"],
+		appealsCooldownDays: ["cooldownDays", "value"],
+		appealsMaxActive: ["maxActive", "value"],
+		appealsBlockOnDenial: ["blockOnDenial", "value"],
 	}),
 	...columns("GuildPermissions", {
 		permissionsUsers: ["users", "value"],

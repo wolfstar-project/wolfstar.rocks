@@ -169,11 +169,191 @@
 				"appeals": {
 					"type": "object",
 					"properties": {
-						"add_question": {
-							"type": "string"
-						},
 						"appealable_title": {
 							"type": "string"
+						},
+						"case_types": {
+							"type": "object",
+							"properties": {
+								"ban": {
+									"type": "string"
+								},
+								"mute": {
+									"type": "string"
+								},
+								"timeout": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"days": {
+							"type": "string"
+						},
+						"editor": {
+							"type": "object",
+							"properties": {
+								"access": {
+									"type": "string"
+								},
+								"add_option": {
+									"type": "string"
+								},
+								"add_question": {
+									"type": "string"
+								},
+								"cancel": {
+									"type": "string"
+								},
+								"case_types": {
+									"type": "string"
+								},
+								"case_types_help": {
+									"type": "string"
+								},
+								"content": {
+									"type": "string"
+								},
+								"create": {
+									"type": "string"
+								},
+								"create_title": {
+									"type": "string"
+								},
+								"description": {
+									"type": "string"
+								},
+								"edit_title": {
+									"type": "string"
+								},
+								"enabled": {
+									"type": "string"
+								},
+								"enabled_help": {
+									"type": "string"
+								},
+								"form": {
+									"type": "string"
+								},
+								"form_description": {
+									"type": "string"
+								},
+								"form_description_placeholder": {
+									"type": "string"
+								},
+								"help": {
+									"type": "string"
+								},
+								"help_help": {
+									"type": "string"
+								},
+								"icon": {
+									"type": "string"
+								},
+								"icon_help": {
+									"type": "string"
+								},
+								"images_only": {
+									"type": "string"
+								},
+								"label": {
+									"type": "string"
+								},
+								"lock_reason": {
+									"type": "string"
+								},
+								"lock_reason_help": {
+									"type": "string"
+								},
+								"long": {
+									"type": "string"
+								},
+								"long_help": {
+									"type": "string"
+								},
+								"max_choices": {
+									"type": "string"
+								},
+								"max_files": {
+									"type": "string"
+								},
+								"max_length": {
+									"type": "string"
+								},
+								"max_length_help": {
+									"type": "string"
+								},
+								"min_choices": {
+									"type": "string"
+								},
+								"min_files": {
+									"type": "string"
+								},
+								"min_files_help": {
+									"type": "string"
+								},
+								"move_down_aria": {
+									"type": "string"
+								},
+								"move_up_aria": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								},
+								"name_placeholder": {
+									"type": "string"
+								},
+								"no_role": {
+									"type": "string"
+								},
+								"option_aria": {
+									"type": "string"
+								},
+								"options": {
+									"type": "string"
+								},
+								"options_help": {
+									"type": "string"
+								},
+								"placeholder": {
+									"type": "string"
+								},
+								"question_title": {
+									"type": "string"
+								},
+								"questions": {
+									"type": "string"
+								},
+								"questions_help": {
+									"type": "string"
+								},
+								"remove_aria": {
+									"type": "string"
+								},
+								"remove_option_aria": {
+									"type": "string"
+								},
+								"required": {
+									"type": "string"
+								},
+								"required_roles": {
+									"type": "string"
+								},
+								"required_roles_help": {
+									"type": "string"
+								},
+								"restricted_roles": {
+									"type": "string"
+								},
+								"restricted_roles_help": {
+									"type": "string"
+								},
+								"save": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
 						},
 						"form_aria": {
 							"type": "string"
@@ -182,6 +362,180 @@
 							"type": "string"
 						},
 						"form_notice_title": {
+							"type": "string"
+						},
+						"forms": {
+							"type": "object",
+							"properties": {
+								"count": {
+									"type": "string"
+								},
+								"delete": {
+									"type": "string"
+								},
+								"delete_aria": {
+									"type": "string"
+								},
+								"delete_description": {
+									"type": "string"
+								},
+								"delete_title": {
+									"type": "string"
+								},
+								"edit": {
+									"type": "string"
+								},
+								"edit_aria": {
+									"type": "string"
+								},
+								"empty_description": {
+									"type": "string"
+								},
+								"empty_title": {
+									"type": "string"
+								},
+								"enable_aria": {
+									"type": "string"
+								},
+								"errors": {
+									"type": "object",
+									"properties": {
+										"generic": {
+											"type": "string"
+										},
+										"icon": {
+											"type": "string"
+										},
+										"invalid": {
+											"type": "string"
+										},
+										"limit": {
+											"type": "string"
+										},
+										"nameInvalid": {
+											"type": "string"
+										},
+										"nameRequired": {
+											"type": "string"
+										},
+										"nameTaken": {
+											"type": "string"
+										},
+										"noQuestion": {
+											"type": "string"
+										},
+										"options": {
+											"type": "string"
+										},
+										"range": {
+											"type": "string"
+										},
+										"required": {
+											"type": "string"
+										},
+										"roles": {
+											"type": "string"
+										},
+										"tooLong": {
+											"type": "string"
+										},
+										"tooMany": {
+											"type": "string"
+										},
+										"tooManyRoles": {
+											"type": "string"
+										},
+										"unknown": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"every_kind": {
+									"type": "string"
+								},
+								"help": {
+									"type": "string"
+								},
+								"load_failed": {
+									"type": "string"
+								},
+								"loading_aria": {
+									"type": "string"
+								},
+								"locked": {
+									"type": "string"
+								},
+								"move_down_aria": {
+									"type": "string"
+								},
+								"move_up_aria": {
+									"type": "string"
+								},
+								"new": {
+									"type": "string"
+								},
+								"questions_count": {
+									"type": "string"
+								},
+								"retry": {
+									"type": "string"
+								},
+								"takes": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"toasts": {
+									"type": "object",
+									"properties": {
+										"created": {
+											"type": "string"
+										},
+										"deleted": {
+											"type": "string"
+										},
+										"saved": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								}
+							},
+							"additionalProperties": false
+						},
+						"kinds": {
+							"type": "object",
+							"properties": {
+								"attachment": {
+									"type": "string"
+								},
+								"attachment_help": {
+									"type": "string"
+								},
+								"choice": {
+									"type": "string"
+								},
+								"choice_help": {
+									"type": "string"
+								},
+								"display": {
+									"type": "string"
+								},
+								"display_help": {
+									"type": "string"
+								},
+								"text": {
+									"type": "string"
+								},
+								"text_help": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"limits_title": {
 							"type": "string"
 						},
 						"off_body": {
@@ -196,31 +550,10 @@
 						"on_summary": {
 							"type": "string"
 						},
-						"question_aria": {
+						"per_member": {
 							"type": "string"
 						},
-						"question_placeholder": {
-							"type": "string"
-						},
-						"questions_count": {
-							"type": "string"
-						},
-						"questions_empty": {
-							"type": "string"
-						},
-						"questions_extra": {
-							"type": "string"
-						},
-						"questions_full": {
-							"type": "string"
-						},
-						"questions_help": {
-							"type": "string"
-						},
-						"questions_title": {
-							"type": "string"
-						},
-						"remove_question": {
+						"review_title": {
 							"type": "string"
 						},
 						"settings_title": {
@@ -231,6 +564,30 @@
 						},
 						"switch_aria": {
 							"type": "string"
+						},
+						"thread": {
+							"type": "object",
+							"properties": {
+								"none": {
+									"type": "string"
+								},
+								"none_help": {
+									"type": "string"
+								},
+								"private": {
+									"type": "string"
+								},
+								"private_help": {
+									"type": "string"
+								},
+								"public": {
+									"type": "string"
+								},
+								"public_help": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
 						},
 						"title": {
 							"type": "string"
@@ -301,13 +658,13 @@
 						"editor": {
 							"type": "object",
 							"properties": {
+								"autodelete_subtitle": {
+									"type": "string"
+								},
 								"automessage_interval_help": {
 									"type": "string"
 								},
 								"automessage_subtitle": {
-									"type": "string"
-								},
-								"autodelete_subtitle": {
 									"type": "string"
 								},
 								"autopurge_interval_help": {
@@ -2191,16 +2548,16 @@
 						"errors": {
 							"type": "object",
 							"properties": {
-								"same_channel": {
+								"log_permissions": {
 									"type": "string"
 								},
-								"unknown_channel": {
+								"same_channel": {
 									"type": "string"
 								},
 								"trap_permissions": {
 									"type": "string"
 								},
-								"log_permissions": {
+								"unknown_channel": {
 									"type": "string"
 								}
 							},
@@ -2776,7 +3133,31 @@
 				"entries": {
 					"type": "object",
 					"properties": {
+						"appealsAnonymous": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
 						"appealsBans": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"appealsBlockOnDenial": {
 							"type": "object",
 							"properties": {
 								"description": {
@@ -2800,7 +3181,43 @@
 							},
 							"additionalProperties": false
 						},
+						"appealsCooldownDays": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
 						"appealsEnabled": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"appealsManagerRoles": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"appealsMaxActive": {
 							"type": "object",
 							"properties": {
 								"description": {
@@ -2824,7 +3241,19 @@
 							},
 							"additionalProperties": false
 						},
-						"appealsQuestions": {
+						"appealsPingRoles": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"appealsThread": {
 							"type": "object",
 							"properties": {
 								"description": {

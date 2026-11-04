@@ -1,6 +1,7 @@
 import { Columns, isStoredKey, type StoredKey } from "#server/database/settings/columns";
 import { getDefaultGuildSettings } from "#server/database/settings/constants";
 import {
+	AppealThreadModes,
 	HoneypotActions,
 	MessageUpdateStyles,
 	type GuildData,
@@ -13,6 +14,7 @@ import {
 	SETTING_LIST_LIMITS,
 	SETTING_NUMBER_RANGES,
 	SETTING_TEXT_LIMITS,
+	type NumberSettingKey,
 	type TextSettingKey,
 } from "#shared/utils/settings-choices";
 import { isSnowflake } from "#shared/utils/snowflake";
@@ -21,8 +23,6 @@ import { isSnowflake } from "#shared/utils/snowflake";
 export const MAXIMUM_SETTING_LIST_LENGTH = 250;
 const MAXIMUM_COMMAND_NAME_LENGTH = 32;
 const MAXIMUM_UNIQUE_ROLE_SET_NAME_LENGTH = 32;
-/** The longest a recent case asks for a confirmation, as the bot's `moderation.confirm-recent`. */
-const MAXIMUM_CONFIRM_RECENT_MINUTES = SETTING_NUMBER_RANGES.moderationConfirmRecentMinutes.maximum;
 
 // BCP 47 tags as the bot ships them: `en-US`, `es-419`, `pt-BR`, …
 const LANGUAGE_PATTERN = /^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/u;
@@ -107,22 +107,18 @@ function oneOf(values: readonly string[]): Validator {
 			: fail(`Expected one of ${values.join(", ")}.`);
 }
 
-const validateConfirmRecentMinutes: Validator = (value) =>
-	Number.isInteger(value) &&
-	(value as number) >= 0 &&
-	(value as number) <= MAXIMUM_CONFIRM_RECENT_MINUTES
-		? value
-		: fail(`Expected a whole number of minutes from 0 to ${MAXIMUM_CONFIRM_RECENT_MINUTES}.`);
+/** A whole number within the range the bot accepts for `key`. */
+function wholeNumber(key: NumberSettingKey): Validator {
+	const { maximum, minimum } = SETTING_NUMBER_RANGES[key];
+	return (value) =>
+		Number.isInteger(value) && (value as number) >= minimum && (value as number) <= maximum
+			? value
+			: fail(`Expected a whole number from ${minimum} to ${maximum}.`);
+}
 
-// Any text, as the bot's `appeals.questions` takes it: the bot trims them and
-// asks the first five when it opens a form, so a longer or blank one is kept.
-const validateAppealQuestions: Validator = (value) => [
-	...new Set(
-		list(value, (item) =>
-			typeof item === "string" ? item : fail("Expected questions as text."),
-		),
-	),
-];
+const NumberValidators = Object.fromEntries(
+	Object.keys(SETTING_NUMBER_RANGES).map((key) => [key, wholeNumber(key as NumberSettingKey)]),
+) as Record<NumberSettingKey, Validator>;
 
 const validateCommandNames: Validator = (value) => [
 	...new Set(
@@ -187,14 +183,14 @@ const validateStickyRoles: Validator = (value) =>
  */
 const ValueValidators: Partial<Record<StoredKey, Validator>> = {
 	...TextValidators,
+	...NumberValidators,
 	moderationLockdownChannels: snowflakesUpTo(SETTING_LIST_LIMITS.moderationLockdownChannels),
 	language: validateLanguage,
 	timezone: validateTimeZone,
 	commandsDisabled: validateCommandNames,
 	honeypotAction: oneOf(HoneypotActions),
 	logsMessageUpdateStyle: oneOf(MessageUpdateStyles),
-	moderationConfirmRecentMinutes: validateConfirmRecentMinutes,
-	appealsQuestions: validateAppealQuestions,
+	appealsThread: oneOf(AppealThreadModes),
 	permissionsUsers: validatePermissionNodes,
 	permissionsRoles: validatePermissionNodes,
 	rolesUniqueRoleSets: validateUniqueRoleSets,

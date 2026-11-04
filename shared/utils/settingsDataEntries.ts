@@ -613,11 +613,56 @@ export const ConfigurableAppealToggles: SettingEntry<ToggleSettingKey>[] = [
 	},
 ];
 
-export const ConfigurableAppealQuestions: SettingEntry<ListSettingKey>[] = [
+/** Who reviews the appeals besides the moderators, and who is told of a new one. */
+export const ConfigurableAppealRoles: SettingEntry<ListSettingKey>[] = [
 	{
-		key: "appealsQuestions",
-		name: "Appeal Form Questions",
-		description: "One question per field of the form. WolfStar asks the first five.",
+		key: "appealsManagerRoles",
+		name: "Appeal Manager Roles",
+		description:
+			"Review the appeals besides the moderators and the administrators: they can approve and deny them.",
+	},
+	{
+		key: "appealsPingRoles",
+		name: "Appeal Ping Roles",
+		description: "Mentioned in the appeals channel when an appeal arrives.",
+	},
+];
+
+/** How the staff is set up to review: the one choice among the appeal settings. */
+export const AppealThreadSetting = {
+	key: "appealsThread",
+	name: "Appeal Threads",
+	description: "Whether each appeal gets a thread for the staff, and of which kind.",
+} as const satisfies SettingEntry<"appealsThread">;
+
+export const ConfigurableAppealReviewToggles: SettingEntry<ToggleSettingKey>[] = [
+	{
+		key: "appealsAnonymous",
+		name: "Anonymous Decisions",
+		description:
+			"The member is never told who decided their appeal. The appeals channel still shows it.",
+	},
+];
+
+export const ConfigurableAppealNumbers: SettingEntry<NumberSettingKey>[] = [
+	{
+		key: "appealsCooldownDays",
+		name: "Appeal Cooldown",
+		description: "How many days a member waits to appeal again after a denial. 0 is no wait.",
+	},
+	{
+		key: "appealsMaxActive",
+		name: "Pending Appeals per Member",
+		description: "How many appeals a member can have waiting for a decision at once.",
+	},
+];
+
+export const ConfigurableAppealLimitToggles: SettingEntry<ToggleSettingKey>[] = [
+	{
+		key: "appealsBlockOnDenial",
+		name: "Block on Denial",
+		description:
+			"A denial blocks the member from appealing again until the staff unblocks them with /appeal unblock.",
 	},
 ];
 

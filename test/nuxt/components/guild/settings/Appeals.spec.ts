@@ -3,6 +3,7 @@ import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 import Appeals from "~/components/guild/settings/Appeals.vue";
+import NumberField from "~/components/guild/settings/NumberField.vue";
 import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 import { createMockGuildData } from "~~/test/mocks/guildData";
 
@@ -32,16 +33,15 @@ mockNuxtImport("useGuildData", () => () => ({
 mockNuxtImport("useToast", () => () => ({ add: vi.fn() }));
 
 async function mountReady() {
-	const wrapper = await mountSuspended(Appeals);
+	const wrapper = await mountSuspended(Appeals, {
+		global: { stubs: { GuildAppealsForms: true } },
+	});
 	await nextTick();
 	await nextTick();
 	return wrapper;
 }
 
-function button(wrapper: Awaited<ReturnType<typeof mountReady>>, text: string) {
-	return wrapper.findAll("button").find((candidate) => candidate.text() === text);
-}
-
+// Accessibility audits for GuildSettingsAppeals live in test/nuxt/a11y.spec.ts.
 describe("appeals guild settings", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
@@ -59,72 +59,70 @@ describe("appeals guild settings", () => {
 		expect(wrapper.text()).toContain("The appeal form is in development");
 	});
 
-	it("is off until switched on, then shows what can be appealed", async () => {
+	it("is off until switched on, then shows the settings and the forms", async () => {
 		const wrapper = await mountReady();
 
 		expect(wrapper.text()).toContain("Appeals are off");
 		expect(wrapper.text()).not.toContain("What can be appealed");
+		expect(wrapper.findComponent({ name: "GuildAppealsForms" }).exists()).toBe(false);
 
 		await wrapper.find('[aria-label="Let the members appeal"]').trigger("click");
 		await nextTick();
 
 		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({ appealsEnabled: true });
 		expect(wrapper.text()).toContain("What can be appealed");
-		expect(wrapper.text()).toContain("Form questions");
+		expect(wrapper.text()).toContain("Review");
+		expect(wrapper.text()).toContain("Limits");
+		expect(wrapper.findComponent({ name: "GuildAppealsForms" }).exists()).toBe(true);
 	});
 
-	describe("form questions", () => {
+	describe("while on", () => {
 		beforeEach(() => {
-			mockGuildSettings.value = createMockGuildData(GUILD_ID, {
-				appealsEnabled: true,
-				appealsQuestions: ["Why were you punished?"],
-			});
+			mockGuildSettings.value = createMockGuildData(GUILD_ID, { appealsEnabled: true });
 		});
 
-		it("adds a question, and not a blank one or a copy", async () => {
+		it("stages the kind of thread picked for the staff", async () => {
 			const wrapper = await mountReady();
-			const input = wrapper.find('[aria-label="New question"]');
 
-			await input.setValue("   ");
-			expect(button(wrapper, "Add question")?.attributes("disabled")).toBeDefined();
-			await input.setValue(" Why were you punished? ");
-			expect(button(wrapper, "Add question")?.attributes("disabled")).toBeDefined();
-
-			await input.setValue("  What will you do differently?  ");
-			await button(wrapper, "Add question")!.trigger("click");
+			await wrapper.find('[role="radio"][value="private"]').trigger("click");
 			await nextTick();
 
 			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
-				appealsQuestions: ["Why were you punished?", "What will you do differently?"],
+				appealsThread: "private",
 			});
-			expect((input.element as HTMLInputElement).value).toBe("");
 		});
 
-		it("removes a question", async () => {
-			const wrapper = await mountReady();
-
-			await wrapper
-				.find('[aria-label="Remove the question Why were you punished?"]')
-				.trigger("click");
-			await nextTick();
-
-			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({ appealsQuestions: [] });
-			expect(wrapper.text()).toContain(
-				"No questions: the form asks why the case should be undone.",
-			);
-		});
-
-		it("stops at the five questions the bot asks, and says which are not asked", async () => {
+		it("shows the cooldown in days and holds one past the range to its end", async () => {
 			mockGuildSettings.value = createMockGuildData(GUILD_ID, {
 				appealsEnabled: true,
-				appealsQuestions: ["1", "2", "3", "4", "5", "6"],
+				appealsCooldownDays: 14,
 			});
 			const wrapper = await mountReady();
 
-			expect(wrapper.find('[aria-label="New question"]').exists()).toBe(false);
-			expect(wrapper.text()).toContain("Five questions is the most a form asks.");
-			expect(wrapper.text()).toContain("WolfStar asks the first five");
-			expect(wrapper.text()).toContain("5 / 5");
+			const field = wrapper
+				.findAllComponents(NumberField)
+				.find((candidate) => candidate.text().includes("Appeal Cooldown"));
+			expect(field!.text()).toContain("days");
+			expect(field!.find("input").element.value).toBe("14");
+
+			field!.findComponent({ name: "UInputNumber" }).vm.$emit("update:modelValue", 400);
+			await nextTick();
+			await nextTick();
+
+			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+				appealsCooldownDays: 365,
+			});
+		});
+
+		it("stages the block on denial", async () => {
+			const wrapper = await mountReady();
+
+			await wrapper.find('[aria-label="Toggle Block on Denial"]').trigger("click");
+			await nextTick();
+
+			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+				appealsBlockOnDenial: true,
+			});
 		});
 	});
 });

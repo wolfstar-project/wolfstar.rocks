@@ -51,6 +51,8 @@ import {
 	DashboardSkeleton,
 	ErrorPage,
 	OauthStatusPanel,
+	GuildAppealsFormEditor,
+	GuildAppealsForms,
 	GuildAuditChanges,
 	GuildAutomodDurationInput,
 	GuildCommandsDiscordPermissions,
@@ -944,19 +946,129 @@ describe("component accessibility audits", () => {
 	});
 
 	describe("GuildSettingsAppeals", () => {
-		it("should have no accessibility violations with the questions open", async () => {
+		it("should have no accessibility violations with the appeals on", async () => {
 			const GUILD_ID = "123456789012345678";
 			useActiveGuild().selectGuild(GUILD_ID);
 			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
 			useGuildSettings().setGuildSettings(
-				createMockGuildData(GUILD_ID, {
-					appealsEnabled: true,
-					appealsQuestions: ["Why were you punished?"],
-				}),
+				createMockGuildData(GUILD_ID, { appealsEnabled: true, appealsThread: "private" }),
 			);
-			const component = await mountSuspended(GuildSettingsAppeals);
+			const component = await mountSuspended(GuildSettingsAppeals, {
+				global: { stubs: { GuildAppealsForms: true } },
+			});
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildAppealsForms", () => {
+		it("should have no accessibility violations with two forms", async () => {
+			const GUILD_ID = "123456789012345679";
+			const question = {
+				id: "why",
+				kind: "text",
+				label: "Why?",
+				long: true,
+				maxLength: 1000,
+				required: true,
+			};
+			registerEndpoint(`/api/guilds/${GUILD_ID}/appeals/forms`, {
+				method: "GET",
+				handler: () => [
+					{
+						id: "1",
+						guildId: GUILD_ID,
+						name: "Ban appeal",
+						description: "For bans only.",
+						icon: "🔨",
+						enabled: true,
+						lockReason: null,
+						types: [0],
+						requiredRoles: [],
+						restrictedRoles: [],
+						questions: [question],
+						position: 0,
+					},
+					{
+						id: "2",
+						guildId: GUILD_ID,
+						name: "Mute appeal",
+						description: null,
+						icon: null,
+						enabled: false,
+						lockReason: "Closed for the week.",
+						types: [],
+						requiredRoles: [],
+						restrictedRoles: [],
+						questions: [question],
+						position: 1,
+					},
+				],
+			});
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+			const component = await mountSuspended(GuildAppealsForms);
+			await vi.waitFor(() => expect(component.text()).toContain("Mute appeal"));
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildAppealsFormEditor", () => {
+		it("should have no accessibility violations with the editor open", async () => {
+			const GUILD_ID = "123456789012345678";
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+			const component = await mountSuspended(GuildAppealsFormEditor, {
+				props: {
+					open: true,
+					guild: createMockOauthFlattenedGuild({ id: GUILD_ID }),
+					form: {
+						id: "1",
+						guildId: GUILD_ID,
+						name: "Ban appeal",
+						description: "For bans only.",
+						icon: "🔨",
+						enabled: false,
+						lockReason: "Closed for the week.",
+						types: [0],
+						requiredRoles: [],
+						restrictedRoles: [],
+						questions: [
+							{
+								id: "why",
+								kind: "text",
+								label: "Why?",
+								placeholder: "Be honest",
+								long: true,
+								maxLength: 1000,
+								required: true,
+							},
+							{
+								id: "which",
+								kind: "choice",
+								label: "Which rule?",
+								options: [
+									{ label: "Spam", value: "a" },
+									{ label: "Insults", value: "b" },
+								],
+								min: 1,
+								max: 1,
+								required: true,
+							},
+						],
+						position: 0,
+					},
+				},
+				attachTo: document.body,
+			});
+			await vi.waitFor(() =>
+				expect(document.querySelector('[role="dialog"] form')).not.toBeNull(),
+			);
+			const panel = document.querySelector('[role="dialog"]');
+			const results = await runAxe(component, { include: panel ? [panel] : [] });
+			expect(results.violations).toEqual([]);
+			component.unmount();
 		});
 	});
 

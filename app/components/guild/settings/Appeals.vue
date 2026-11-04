@@ -86,28 +86,79 @@
 					</div>
 				</section>
 
-				<section class="console-card" :aria-labelledby="questionsHeadingId">
+				<section class="console-card" :aria-labelledby="reviewHeadingId">
 					<div class="appeals-card-heading">
-						<h2 :id="questionsHeadingId">
-							{{ ts("guild_settings.appeals.questions_title") }}
+						<h2 :id="reviewHeadingId">
+							{{ ts("guild_settings.appeals.review_title") }}
 						</h2>
 						<span class="appeals-card-rule" aria-hidden="true"></span>
-						<UBadge color="primary" variant="soft" class="font-semibold">
-							{{
-								ts("guild_settings.appeals.questions_count", {
-									count: Math.min(
-										state.appealsQuestions.length,
-										MAXIMUM_ASKED_APPEAL_QUESTIONS,
-									),
-									maximum: MAXIMUM_ASKED_APPEAL_QUESTIONS,
-								})
-							}}
-						</UBadge>
 					</div>
-					<p class="mt-1.5 mb-3 text-[0.8125rem] text-muted">
-						{{ ts("guild_settings.appeals.questions_help") }}
+					<div class="mt-4 grid gap-5 md:grid-cols-2">
+						<SelectRoles
+							v-for="config in ConfigurableAppealRoles"
+							:key="config.key"
+							v-model="state[config.key]"
+							layout="chips"
+							:guild="guildData"
+							:label="translateEntry(config, 'name')"
+							:tooltip-title="translateEntry(config, 'description')"
+							:empty-label="ts('select.none')"
+						/>
+					</div>
+					<h3 class="mt-5 text-[0.8125rem] font-semibold text-muted">
+						{{ translateEntry(AppealThreadSetting, "name") }}
+					</h3>
+					<p class="mt-1 text-[0.8125rem] text-muted">
+						{{ translateEntry(AppealThreadSetting, "description") }}
 					</p>
-					<GuildSettingsAppealQuestions v-model="state.appealsQuestions" />
+					<GuildSettingsChoiceCards
+						v-model="state.appealsThread"
+						class="mt-3"
+						name="appealsThread"
+						:label="translateEntry(AppealThreadSetting, 'name')"
+						:options="threadOptions"
+						label-hidden
+					/>
+					<div class="mt-3">
+						<GuildSettingsToggleRow
+							v-for="config in ConfigurableAppealReviewToggles"
+							:key="config.key"
+							v-model="state[config.key]"
+							:name="config.key"
+							:title="translateEntry(config, 'name')"
+							:description="translateEntry(config, 'description')"
+						/>
+					</div>
+				</section>
+
+				<section class="console-card" :aria-labelledby="limitsHeadingId">
+					<div class="appeals-card-heading">
+						<h2 :id="limitsHeadingId">
+							{{ ts("guild_settings.appeals.limits_title") }}
+						</h2>
+						<span class="appeals-card-rule" aria-hidden="true"></span>
+					</div>
+					<div class="mt-4 grid gap-5 md:grid-cols-2">
+						<GuildSettingsNumberField
+							v-for="config in ConfigurableAppealNumbers"
+							:key="config.key"
+							v-model="state[config.key]"
+							:name="config.key"
+							:label="translateEntry(config, 'name')"
+							:description="translateEntry(config, 'description')"
+							:unit="numberUnits[config.key]"
+						/>
+					</div>
+					<div class="mt-3">
+						<GuildSettingsToggleRow
+							v-for="config in ConfigurableAppealLimitToggles"
+							:key="config.key"
+							v-model="state[config.key]"
+							:name="config.key"
+							:title="translateEntry(config, 'name')"
+							:description="translateEntry(config, 'description')"
+						/>
+					</div>
 				</section>
 			</template>
 
@@ -125,13 +176,20 @@
 			</section>
 		</div>
 	</GuildSettingsForm>
+
+	<!-- Not settings: the forms are rows of their own, written as they are edited. -->
+	<GuildAppealsForms v-if="state.appealsEnabled" class="mt-5" />
 </template>
 
 <script setup lang="ts">
-import { MAXIMUM_ASKED_APPEAL_QUESTIONS } from "#shared/utils/settings-choices";
+import type { NumberSettingKey } from "#shared/utils/settings-choices";
 import {
+	AppealThreadSetting,
 	ConfigurableAppealChannels,
-	ConfigurableAppealQuestions,
+	ConfigurableAppealLimitToggles,
+	ConfigurableAppealNumbers,
+	ConfigurableAppealReviewToggles,
+	ConfigurableAppealRoles,
 	ConfigurableAppealSwitch,
 	ConfigurableAppealToggles,
 } from "#shared/utils/settingsDataEntries";
@@ -142,13 +200,44 @@ const { guildData } = useGuildData();
 
 const headId = useId();
 const settingsHeadingId = useId();
-const questionsHeadingId = useId();
+const reviewHeadingId = useId();
+const limitsHeadingId = useId();
 const offHeadingId = useId();
+
+const numberUnits = computed<Partial<Record<NumberSettingKey, string>>>(() => ({
+	appealsCooldownDays: ts("guild_settings.appeals.days"),
+	appealsMaxActive: ts("guild_settings.appeals.per_member"),
+}));
+
+const threadOptions = computed(() => [
+	{
+		value: "none",
+		label: ts("guild_settings.appeals.thread.none"),
+		description: ts("guild_settings.appeals.thread.none_help"),
+	},
+	{
+		value: "public",
+		label: ts("guild_settings.appeals.thread.public"),
+		description: ts("guild_settings.appeals.thread.public_help"),
+	},
+	{
+		value: "private",
+		label: ts("guild_settings.appeals.thread.private"),
+		description: ts("guild_settings.appeals.thread.private_help"),
+	},
+]);
 
 const { mapToGuildData, onError, schema, state } = useSettingsForm({
 	one: ConfigurableAppealChannels.map((entry) => entry.key),
-	many: ConfigurableAppealQuestions.map((entry) => entry.key),
-	toggles: [...ConfigurableAppealSwitch, ...ConfigurableAppealToggles].map((entry) => entry.key),
+	many: ConfigurableAppealRoles.map((entry) => entry.key),
+	toggles: [
+		...ConfigurableAppealSwitch,
+		...ConfigurableAppealToggles,
+		...ConfigurableAppealReviewToggles,
+		...ConfigurableAppealLimitToggles,
+	].map((entry) => entry.key),
+	numbers: ConfigurableAppealNumbers.map((entry) => entry.key),
+	choices: ["appealsThread"],
 });
 </script>
 

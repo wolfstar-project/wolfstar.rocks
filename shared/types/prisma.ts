@@ -1,4 +1,5 @@
 import type { AuditEventChanges, PermissionsNode, UniqueRoleSet } from "#server/database";
+import type { AppealQuestion } from "#shared/utils/appeal-forms";
 import type {
 	AutoModerationRuleEscalationStep,
 	AutoModerationRuleOptions,
@@ -6,6 +7,28 @@ import type {
 
 type StoredAuditEventChanges = AuditEventChanges;
 type StoredAutoModerationRuleOptions = AutoModerationRuleOptions;
+type StoredAppealQuestion = AppealQuestion;
+
+/**
+ * A file of an answer to an `attachment` question, which the website keeps
+ * under `key`. Mirrors `AppealFile` in the bot's `settings/appeals/types.ts`.
+ */
+interface StoredAppealFile {
+	key: string;
+	name: string;
+	size: number;
+	contentType: string;
+}
+
+/**
+ * The answer to a question of an appeal, with the label the question had, so
+ * one that is renamed or deleted still reads. Mirrors `AppealAnswer` in the
+ * bot's `settings/appeals/types.ts`; nothing reads it here yet.
+ */
+type StoredAppealAnswer =
+	| { questionId: string; kind: "text"; label: string; value: string }
+	| { questionId: string; kind: "choice"; label: string; value: string[] }
+	| { questionId: string; kind: "attachment"; label: string; value: StoredAppealFile[] };
 
 /**
  * A message the bot saved in a member's history (`MessageHistory`), as it was
@@ -39,5 +62,7 @@ declare global {
 		type AutoModerationRuleOptions = StoredAutoModerationRuleOptions;
 		type AutoModerationRuleEscalation = AutoModerationRuleEscalationStep[];
 		type MessageHistoryMessages = StoredMessageHistoryMessage[];
+		type AppealFormQuestions = StoredAppealQuestion[];
+		type AppealAnswers = StoredAppealAnswer[];
 	}
 }

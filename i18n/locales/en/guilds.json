@@ -55,27 +55,146 @@
 			"title": "Dashboard access"
 		},
 		"appeals": {
-			"add_question": "Add question",
 			"appealable_title": "What can be appealed",
+			"case_types": {
+				"ban": "Bans",
+				"mute": "Mutes",
+				"timeout": "Timeouts"
+			},
+			"days": "days",
+			"editor": {
+				"access": "Who can use it",
+				"add_option": "Add option",
+				"add_question": "Add question",
+				"cancel": "Cancel",
+				"case_types": "Kinds of case",
+				"case_types_help": "None picked means every kind the settings allow.",
+				"content": "Text",
+				"create": "Create form",
+				"create_title": "New form",
+				"description": "What the page asks a member who appeals with this form.",
+				"edit_title": "Edit {name}",
+				"enabled": "Enabled",
+				"enabled_help": "A disabled form is listed as locked and takes no appeal.",
+				"form": "Form",
+				"form_description": "Description",
+				"form_description_placeholder": "Shown under the name of the form on the page.",
+				"help": "Help",
+				"help_help": "Shown under the field.",
+				"icon": "Icon",
+				"icon_help": "An emoji, or a custom emoji written as <:name:id>.",
+				"images_only": "Images only",
+				"label": "Label",
+				"lock_reason": "Lock reason",
+				"lock_reason_help": "What the page says next to the locked form.",
+				"long": "Paragraph",
+				"long_help": "A text area instead of a single line.",
+				"max_choices": "Most picks",
+				"max_files": "Most files",
+				"max_length": "Longest answer",
+				"max_length_help": "In characters, 10 to 1000.",
+				"min_choices": "Fewest picks",
+				"min_files": "Fewest files",
+				"min_files_help": "0 lets the member skip the question. 5 files at most per appeal.",
+				"move_down_aria": "Move question {index} down",
+				"move_up_aria": "Move question {index} up",
+				"name": "Name",
+				"name_placeholder": "e.g. Ban appeal",
+				"no_role": "No role",
+				"option_aria": "Option {index}",
+				"options": "Options",
+				"options_help": "2 to 10 options. The member picks among them.",
+				"placeholder": "Placeholder",
+				"question_title": "Question {index}",
+				"questions": "Questions",
+				"questions_help": "Up to {maximum} questions, asked in this order. At least one must ask something.",
+				"remove_aria": "Remove question {index}",
+				"remove_option_aria": "Remove option {index}",
+				"required": "Required",
+				"required_roles": "Required roles",
+				"required_roles_help": "The member needs one of them. A banned member has no role, so a form that requires one can't take a ban.",
+				"restricted_roles": "Kept-out roles",
+				"restricted_roles_help": "A member who has one of them can't use the form.",
+				"save": "Save form"
+			},
 			"form_aria": "Appeals settings form",
 			"form_notice": "The direct message of a punishment links to an appeal page on WolfStar.rocks that does not open a form yet. What you set here applies once it does.",
 			"form_notice_title": "The appeal form is in development",
+			"forms": {
+				"count": "{count} of {max} forms",
+				"delete": "Delete",
+				"delete_aria": "Delete form {name}",
+				"delete_description": "The form {name} is deleted. The appeals sent with it keep their answers. This cannot be undone.",
+				"delete_title": "Delete this form?",
+				"edit": "Edit",
+				"edit_aria": "Edit form {name}",
+				"empty_description": "Without a form, the page asks one question: why the case should be undone. Create a form to ask your own.",
+				"empty_title": "No forms yet",
+				"enable_aria": "Enable form {name}",
+				"errors": {
+					"generic": "Something went wrong. Please try again.",
+					"icon": "Use an emoji, or a custom emoji written as <:name:id>.",
+					"invalid": "The server refused one of the values. Check the fields and try again.",
+					"limit": "This server already has the maximum number of forms.",
+					"nameInvalid": "Use a name of 1 to 100 characters that isn't just a number.",
+					"nameRequired": "Give the form a name.",
+					"nameTaken": "There is already a form with that name.",
+					"noQuestion": "Add a question the member answers: a text block alone asks nothing.",
+					"options": "Give the question 2 to 10 options, each with a label.",
+					"range": "Check the numbers: the smallest can't be above the largest, and both must fit the limits.",
+					"required": "This field is required.",
+					"roles": "A role can't be both required and kept out.",
+					"tooLong": "This text is too long.",
+					"tooMany": "A form asks at most 5 questions.",
+					"tooManyRoles": "A form names at most 25 roles in each list.",
+					"unknown": "This form no longer exists. Reload the page."
+				},
+				"every_kind": "Every kind",
+				"help": "The page offers the forms in this order. A disabled form is listed as locked.",
+				"load_failed": "The forms could not be loaded.",
+				"loading_aria": "Loading the forms",
+				"locked": "Locked",
+				"move_down_aria": "Move form {name} down",
+				"move_up_aria": "Move form {name} up",
+				"new": "Create form",
+				"questions_count": "No questions | 1 question | {count} questions",
+				"retry": "Try again",
+				"takes": "What the form takes",
+				"title": "Forms",
+				"toasts": {
+					"created": "Form \"{name}\" created",
+					"deleted": "Form \"{name}\" deleted",
+					"saved": "Form \"{name}\" saved"
+				}
+			},
+			"kinds": {
+				"attachment": "Attachment",
+				"attachment_help": "Files the member uploads, such as screenshots.",
+				"choice": "Choice",
+				"choice_help": "Fixed options the member picks among.",
+				"display": "Text block",
+				"display_help": "Shown to the member and not answered.",
+				"text": "Text",
+				"text_help": "A line or a paragraph the member writes."
+			},
+			"limits_title": "Limits",
 			"off_body": "Turn them on and the direct message of a ban, a mute or a timeout links to the appeal page of this server.",
 			"off_summary": "Nobody can appeal a case.",
 			"off_title": "Appeals are off",
 			"on_summary": "Members can appeal the cases chosen below.",
-			"question_aria": "New question",
-			"question_placeholder": "e.g. What will you do differently?",
-			"questions_count": "{count} / {maximum}",
-			"questions_empty": "No questions: the form asks why the case should be undone.",
-			"questions_extra": "WolfStar asks the first five; the others are kept, but not asked.",
-			"questions_full": "Five questions is the most a form asks.",
-			"questions_help": "One question per field of the form. A waiting appeal shows its answers under the questions of the moment, so change them when none is pending.",
-			"questions_title": "Form questions",
-			"remove_question": "Remove the question {question}",
+			"per_member": "per member",
+			"review_title": "Review",
 			"settings_title": "Settings",
 			"subtitle": "Members appeal their bans, mutes and timeouts on WolfStar.rocks, from the link in the direct message of the punishment.",
 			"switch_aria": "Let the members appeal",
+			"thread": {
+				"none": "None",
+				"none_help": "No thread. /appeal send takes the case number instead.",
+				"private": "Private",
+				"private_help": "Opened in the channel for the ping and manager roles. WolfStar needs Create Private Threads; with no such role, or in an announcement channel, the thread is public.",
+				"public": "Public",
+				"public_help": "Opened on the message of the appeal, for everyone who sees the channel."
+			},
 			"title": "Appeals"
 		},
 		"auto": {
@@ -99,9 +218,9 @@
 			},
 			"count": "{count} / {maximum}",
 			"editor": {
+				"autodelete_subtitle": "Delete the messages sent in a channel, at once or a delay after.",
 				"automessage_interval_help": "Every {duration}. From 10 minutes to 14 days.",
 				"automessage_subtitle": "Send a message in a channel every interval.",
-				"autodelete_subtitle": "Delete the messages sent in a channel, at once or a delay after.",
 				"autopurge_interval_help": "Every {duration}. From 5 minutes to 14 days.",
 				"autopurge_subtitle": "Purge a channel every interval, of every message or of the ones that match.",
 				"bots": "Bots and webhooks too",
@@ -729,10 +848,10 @@
 			"copied_title": "Command copied",
 			"copy_setup": "Copy /honeypot setup",
 			"errors": {
+				"log_permissions": "WolfStar needs View Channel, Send Messages and Embed Links in the catches channel. Give it those there, or pick another channel.",
 				"same_channel": "The catches can't be reported in the honeypot channel itself. Pick another channel for them, or none.",
-				"unknown_channel": "The honeypot needs a text channel of the server. Pick another channel.",
 				"trap_permissions": "WolfStar needs View Channel, Send Messages, Read Message History, Manage Messages, and Kick or Ban Members in the honeypot channel. Give it those there, or pick another channel.",
-				"log_permissions": "WolfStar needs View Channel, Send Messages and Embed Links in the catches channel. Give it those there, or pick another channel."
+				"unknown_channel": "The honeypot needs a text channel of the server. Pick another channel."
 			},
 			"form_aria": "Honeypot settings form",
 			"not_reported": "Not reported",
@@ -924,25 +1043,49 @@
 	},
 	"settings": {
 		"entries": {
+			"appealsAnonymous": {
+				"description": "The member is never told who decided their appeal. The appeals channel still shows it.",
+				"name": "Anonymous Decisions"
+			},
 			"appealsBans": {
 				"description": "Banned members can appeal; they do not need to be in the server.",
 				"name": "Appealable Bans"
+			},
+			"appealsBlockOnDenial": {
+				"description": "A denial blocks the member from appealing again until the staff unblocks them with /appeal unblock.",
+				"name": "Block on Denial"
 			},
 			"appealsChannel": {
 				"description": "Where the moderators accept or deny them. An appeal sent while it is not set never reaches them.",
 				"name": "Appeals Channel"
 			},
+			"appealsCooldownDays": {
+				"description": "How many days a member waits to appeal again after a denial. 0 is no wait.",
+				"name": "Appeal Cooldown"
+			},
 			"appealsEnabled": {
 				"description": "Lets the members appeal their bans, mutes and timeouts.",
 				"name": "Appeals"
+			},
+			"appealsManagerRoles": {
+				"description": "Review the appeals besides the moderators and the administrators: they can approve and deny them.",
+				"name": "Appeal Manager Roles"
+			},
+			"appealsMaxActive": {
+				"description": "How many appeals a member can have waiting for a decision at once.",
+				"name": "Pending Appeals per Member"
 			},
 			"appealsMutes": {
 				"description": "Muted members can appeal their mute.",
 				"name": "Appealable Mutes"
 			},
-			"appealsQuestions": {
-				"description": "One question per field of the form. WolfStar asks the first five.",
-				"name": "Appeal Form Questions"
+			"appealsPingRoles": {
+				"description": "Mentioned in the appeals channel when an appeal arrives.",
+				"name": "Appeal Ping Roles"
+			},
+			"appealsThread": {
+				"description": "Whether each appeal gets a thread for the staff, and of which kind.",
+				"name": "Appeal Threads"
 			},
 			"appealsTimeouts": {
 				"description": "Members can appeal a timeout while it lasts.",

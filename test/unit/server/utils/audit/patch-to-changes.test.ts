@@ -113,14 +113,14 @@ describe("compactSettingsChanges (plan 008 write-time payload)", () => {
 	});
 
 	it("leaves out a list whose items did not change", () => {
-		const question = "What would you do differently to avoid being punished again?";
+		const user = "1563165337543770143";
 		const compact = compactSettingsChanges(
-			{ appealsQuestions: [], rolesInitialHumans: ["1563165337543770142"] },
-			{ appealsQuestions: [question], rolesInitialHumans: ["1563165337543770142"] },
+			{ reportsBlockedUsers: [], rolesInitialHumans: ["1563165337543770142"] },
+			{ reportsBlockedUsers: [user], rolesInitialHumans: ["1563165337543770142"] },
 		);
 
 		expect(compact.patch).toEqual([
-			{ op: "replace", path: "/appealsQuestions", value: [question], from: [] },
+			{ op: "replace", path: "/reportsBlockedUsers", value: [user], from: [] },
 		]);
 	});
 
@@ -200,11 +200,11 @@ describe("patchToChanges compact (v2) rows", () => {
 	});
 
 	it("skips the unchanged lists a stored v2 row replaced", () => {
-		const question = "What would you do differently to avoid being punished again?";
+		const user = "1563165337543770143";
 		const result = patchToChanges({
 			v: 2,
 			patch: [
-				{ op: "replace", path: "/appealsQuestions", value: [question], from: [question] },
+				{ op: "replace", path: "/reportsBlockedUsers", value: [user], from: [user] },
 				{ op: "replace", path: "/rolesInitialHumans", value: ["r1"], from: ["r1"] },
 				{ op: "replace", path: "/prefix", value: "?", from: "!" },
 			],

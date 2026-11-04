@@ -3,13 +3,15 @@ import type { GuildData } from "#server/database";
 /**
  * The settings whose value is one word of a fixed set, with that set in the
  * order the dashboard offers it. The words are the bot's enums
- * (`HoneypotAction` and `MessageUpdateStyle` in its contract), so the server
- * checks a write against the very list the form shows.
+ * (`HoneypotAction` and `MessageUpdateStyle` in its contract) and, for the
+ * thread of an appeal, the words its `AppealThreadModes` lists in a text
+ * column, so the server checks a write against the very list the form shows.
  */
 export const SETTING_CHOICES = {
 	// The mildest first.
 	honeypotAction: ["Kick", "Softban", "Ban"],
 	logsMessageUpdateStyle: ["Difference", "Separate"],
+	appealsThread: ["none", "public", "private"],
 } as const satisfies { [Key in keyof GuildData]?: readonly GuildData[Key][] };
 
 /** A setting that holds one word of {@link SETTING_CHOICES}. */
@@ -18,10 +20,14 @@ export type ChoiceSettingKey = keyof typeof SETTING_CHOICES;
 /**
  * The settings that hold a whole number, with the range the bot accepts for
  * each. `moderationConfirmRecentMinutes` is the bot's `moderation.confirm-recent`,
- * in minutes, where 0 never asks.
+ * in minutes, where 0 never asks. `appealsCooldownDays` is its
+ * `appeals.cooldown-days`, where 0 is no wait, and `appealsMaxActive` its
+ * `appeals.max-active`.
  */
 export const SETTING_NUMBER_RANGES = {
 	moderationConfirmRecentMinutes: { maximum: 60, minimum: 0 },
+	appealsCooldownDays: { maximum: 365, minimum: 0 },
+	appealsMaxActive: { maximum: 10, minimum: 1 },
 } as const satisfies {
 	[Key in keyof GuildData]?: GuildData[Key] extends number
 		? { maximum: number; minimum: number }
@@ -87,6 +93,3 @@ export const MODERATION_RESPONSE_PLACEHOLDERS = [
 	"moderator",
 	"duration",
 ] as const;
-
-/** How many questions of `appealsQuestions` the bot asks: the first five (its `MaximumAppealQuestions`). */
-export const MAXIMUM_ASKED_APPEAL_QUESTIONS = 5;

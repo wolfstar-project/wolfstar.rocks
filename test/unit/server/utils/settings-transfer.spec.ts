@@ -127,7 +127,12 @@ describe("parseConfigurationFile", () => {
 	it("leaves out a setting this dashboard does not manage and says so, and ignores a removed one", () => {
 		const parsed = read({
 			version: 1,
-			settings: { "music.volume": 50, "modules.commands": false, "language": "it-IT" },
+			settings: {
+				"music.volume": 50,
+				"modules.commands": false,
+				"appeals.questions": ["Why?"],
+				"language": "it-IT",
+			},
 		});
 
 		expect(parsed.unsupported).toStrictEqual(["music.volume"]);
@@ -142,7 +147,9 @@ describe("parseConfigurationFile", () => {
 				"honeypot.action": "Ban",
 				"logs.message-update-style": "Separate",
 				"moderation.confirm-recent": 10,
-				"appeals.questions": ["Why?", "Why?", " "],
+				"appeals.thread": "private",
+				"appeals.cooldown-days": 30,
+				"appeals.max-active": 3,
 			},
 		});
 
@@ -154,8 +161,9 @@ describe("parseConfigurationFile", () => {
 			honeypotAction: "Ban",
 			logsMessageUpdateStyle: "Separate",
 			moderationConfirmRecentMinutes: 10,
-			// The bot drops the copies only, and trims when it opens a form:
-			appealsQuestions: ["Why?", " "],
+			appealsThread: "private",
+			appealsCooldownDays: 30,
+			appealsMaxActive: 3,
 		});
 		expect(
 			issuesOf({
@@ -164,24 +172,19 @@ describe("parseConfigurationFile", () => {
 					"timezone": "Mars/Olympus",
 					"honeypot.action": "Mute",
 					"moderation.confirm-recent": 61,
-					"appeals.questions": "Why?",
+					"appeals.thread": "secret",
+					"appeals.cooldown-days": 366,
+					"appeals.max-active": 0,
 				},
 			}).map((issue) => issue.path),
 		).toStrictEqual([
 			"settings.timezone",
 			"settings.honeypot.action",
 			"settings.moderation.confirm-recent",
-			"settings.appeals.questions",
+			"settings.appeals.thread",
+			"settings.appeals.cooldown-days",
+			"settings.appeals.max-active",
 		]);
-	});
-
-	it("imports the appeal questions it exports, however long, as the bot does", () => {
-		const questions = ["x".repeat(1001), "1", "2", "3", "4", "5"];
-		const parsed = read(createConfigurationFile(settings({ appealsQuestions: questions }), []));
-
-		expect(parsed.settings.find(({ key }) => key === "appealsQuestions")?.value).toStrictEqual(
-			questions,
-		);
 	});
 
 	it("leaves the rules alone when the file has no automod section", () => {

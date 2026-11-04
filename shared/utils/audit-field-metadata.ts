@@ -12,8 +12,12 @@
 import { GUILD_MODULES } from "./guild-modules";
 import {
 	HoneypotTrapSettings,
+	AppealThreadSetting,
 	ConfigurableAppealChannels,
-	ConfigurableAppealQuestions,
+	ConfigurableAppealLimitToggles,
+	ConfigurableAppealNumbers,
+	ConfigurableAppealReviewToggles,
+	ConfigurableAppealRoles,
 	ConfigurableAppealSwitch,
 	ConfigurableAppealToggles,
 	ConfigurableAutomodChannels,
@@ -117,7 +121,11 @@ export const AUDIT_FIELD_METADATA: Readonly<Record<string, AuditFieldMetadata>> 
 		...fields(ConfigurableAppealSwitch, "boolean", false),
 		...fields(ConfigurableAppealChannels, "channel", false),
 		...fields(ConfigurableAppealToggles, "boolean", false),
-		...fields(ConfigurableAppealQuestions, "string", true),
+		...fields(ConfigurableAppealRoles, "role", true),
+		...fields([AppealThreadSetting], "string", false),
+		...fields(ConfigurableAppealReviewToggles, "boolean", false),
+		...fields(ConfigurableAppealNumbers, "integer", false),
+		...fields(ConfigurableAppealLimitToggles, "boolean", false),
 		...GUILD_MODULES.map((module): [string, AuditFieldMetadata] => [
 			module.key,
 			{ label: MODULE_LABELS[module.key], type: "boolean", array: false },
@@ -174,6 +182,8 @@ const LEGACY_AUDIT_FIELD_METADATA: Readonly<Record<string, AuditFieldMetadata>> 
 	prefix: { label: "Prefix", type: "string", array: false },
 	logsCommand: { label: "Command Logs", type: "channel", array: false },
 	logsSettings: { label: "Settings Logs", type: "channel", array: false },
+	// The questions of the appeals became forms: rows written before still carry the key.
+	appealsQuestions: { label: "Appeal Form Questions", type: "string", array: true },
 };
 
 export function humanizeKey(key: string): string {

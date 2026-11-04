@@ -55,27 +55,146 @@
 			"title": ""
 		},
 		"appeals": {
-			"add_question": "",
 			"appealable_title": "",
+			"case_types": {
+				"ban": "",
+				"mute": "",
+				"timeout": ""
+			},
+			"days": "",
+			"editor": {
+				"access": "",
+				"add_option": "",
+				"add_question": "",
+				"cancel": "",
+				"case_types": "",
+				"case_types_help": "",
+				"content": "",
+				"create": "",
+				"create_title": "",
+				"description": "",
+				"edit_title": "",
+				"enabled": "",
+				"enabled_help": "",
+				"form": "",
+				"form_description": "",
+				"form_description_placeholder": "",
+				"help": "",
+				"help_help": "",
+				"icon": "",
+				"icon_help": "",
+				"images_only": "",
+				"label": "",
+				"lock_reason": "",
+				"lock_reason_help": "",
+				"long": "",
+				"long_help": "",
+				"max_choices": "",
+				"max_files": "",
+				"max_length": "",
+				"max_length_help": "",
+				"min_choices": "",
+				"min_files": "",
+				"min_files_help": "",
+				"move_down_aria": "",
+				"move_up_aria": "",
+				"name": "",
+				"name_placeholder": "",
+				"no_role": "",
+				"option_aria": "",
+				"options": "",
+				"options_help": "",
+				"placeholder": "",
+				"question_title": "",
+				"questions": "",
+				"questions_help": "",
+				"remove_aria": "",
+				"remove_option_aria": "",
+				"required": "",
+				"required_roles": "",
+				"required_roles_help": "",
+				"restricted_roles": "",
+				"restricted_roles_help": "",
+				"save": ""
+			},
 			"form_aria": "",
 			"form_notice": "",
 			"form_notice_title": "",
+			"forms": {
+				"count": "",
+				"delete": "",
+				"delete_aria": "",
+				"delete_description": "",
+				"delete_title": "",
+				"edit": "",
+				"edit_aria": "",
+				"empty_description": "",
+				"empty_title": "",
+				"enable_aria": "",
+				"errors": {
+					"generic": "",
+					"icon": "",
+					"invalid": "",
+					"limit": "",
+					"nameInvalid": "",
+					"nameRequired": "",
+					"nameTaken": "",
+					"noQuestion": "",
+					"options": "",
+					"range": "",
+					"required": "",
+					"roles": "",
+					"tooLong": "",
+					"tooMany": "",
+					"tooManyRoles": "",
+					"unknown": ""
+				},
+				"every_kind": "",
+				"help": "",
+				"load_failed": "",
+				"loading_aria": "",
+				"locked": "",
+				"move_down_aria": "",
+				"move_up_aria": "",
+				"new": "",
+				"questions_count": "",
+				"retry": "",
+				"takes": "",
+				"title": "",
+				"toasts": {
+					"created": "",
+					"deleted": "",
+					"saved": ""
+				}
+			},
+			"kinds": {
+				"attachment": "",
+				"attachment_help": "",
+				"choice": "",
+				"choice_help": "",
+				"display": "",
+				"display_help": "",
+				"text": "",
+				"text_help": ""
+			},
+			"limits_title": "",
 			"off_body": "",
 			"off_summary": "",
 			"off_title": "",
 			"on_summary": "",
-			"question_aria": "",
-			"question_placeholder": "",
-			"questions_count": "",
-			"questions_empty": "",
-			"questions_extra": "",
-			"questions_full": "",
-			"questions_help": "",
-			"questions_title": "",
-			"remove_question": "",
+			"per_member": "",
+			"review_title": "",
 			"settings_title": "",
 			"subtitle": "",
 			"switch_aria": "",
+			"thread": {
+				"none": "",
+				"none_help": "",
+				"private": "",
+				"private_help": "",
+				"public": "",
+				"public_help": ""
+			},
 			"title": ""
 		},
 		"auto": {
@@ -99,9 +218,9 @@
 			},
 			"count": "",
 			"editor": {
+				"autodelete_subtitle": "",
 				"automessage_interval_help": "",
 				"automessage_subtitle": "",
-				"autodelete_subtitle": "",
 				"autopurge_interval_help": "",
 				"autopurge_subtitle": "",
 				"bots": "",
@@ -729,10 +848,10 @@
 			"copied_title": "",
 			"copy_setup": "",
 			"errors": {
+				"log_permissions": "",
 				"same_channel": "",
-				"unknown_channel": "",
 				"trap_permissions": "",
-				"log_permissions": ""
+				"unknown_channel": ""
 			},
 			"form_aria": "",
 			"not_reported": "",
@@ -924,7 +1043,15 @@
 	},
 	"settings": {
 		"entries": {
+			"appealsAnonymous": {
+				"description": "",
+				"name": ""
+			},
 			"appealsBans": {
+				"description": "",
+				"name": ""
+			},
+			"appealsBlockOnDenial": {
 				"description": "",
 				"name": ""
 			},
@@ -932,7 +1059,19 @@
 				"description": "",
 				"name": ""
 			},
+			"appealsCooldownDays": {
+				"description": "",
+				"name": ""
+			},
 			"appealsEnabled": {
+				"description": "",
+				"name": ""
+			},
+			"appealsManagerRoles": {
+				"description": "",
+				"name": ""
+			},
+			"appealsMaxActive": {
 				"description": "",
 				"name": ""
 			},
@@ -940,7 +1079,11 @@
 				"description": "",
 				"name": ""
 			},
-			"appealsQuestions": {
+			"appealsPingRoles": {
+				"description": "",
+				"name": ""
+			},
+			"appealsThread": {
 				"description": "",
 				"name": ""
 			},

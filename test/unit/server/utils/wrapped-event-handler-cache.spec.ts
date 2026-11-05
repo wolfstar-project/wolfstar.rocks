@@ -222,12 +222,16 @@ describe("defineWrappedCachedResponseHandler cache/auth ordering", () => {
 		});
 
 		await expect(handler(makeEvent("guild-1"))).resolves.toEqual(resolvedBody);
-		expect(rateLimitState.get("rate-limiter-state:manager-user")).toMatchObject({ count: 1 });
+		expect(
+			rateLimitState.get("rate-limiter-state:GET:/api/guilds/guild-1/logs:manager-user"),
+		).toMatchObject({ count: 1 });
 
 		authorize.mockRejectedValue(Object.assign(new Error("Forbidden"), { status: 403 }));
 
 		await expect(handler(makeEvent("guild-1"))).rejects.toThrow("Forbidden");
-		expect(rateLimitState.get("rate-limiter-state:manager-user")).toMatchObject({ count: 1 });
+		expect(
+			rateLimitState.get("rate-limiter-state:GET:/api/guilds/guild-1/logs:manager-user"),
+		).toMatchObject({ count: 1 });
 	});
 
 	it("lets two authorized managers share the same cached result", async () => {

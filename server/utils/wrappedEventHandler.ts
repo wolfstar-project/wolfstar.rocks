@@ -363,7 +363,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 		return await invoke();
 	}
 
-	// Build storage key: global (per-user) by default, or method:path:user when scope === 'route'
+	// Build storage key: method:path:user by default (one counter per route), or one per user for all routes when scope === "global"
 	const { req } = event.node;
 	const { method } = req;
 	const { pathname } = getRequestURL(event);

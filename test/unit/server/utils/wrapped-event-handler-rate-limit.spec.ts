@@ -145,7 +145,9 @@ describe("rate-limit reservations under concurrency", () => {
 		expect(fulfilled).toHaveLength(1);
 		expect(rejected).toHaveLength(1);
 		expect(innerHandler).toHaveBeenCalledTimes(1);
-		expect(storageState.get("rate-limiter-state:user-1")).toMatchObject({ count: 1 });
+		expect(storageState.get("rate-limiter-state:GET:/api/test:user-1")).toMatchObject({
+			count: 1,
+		});
 	});
 
 	it("rolls back only the failing request's own reservation", async () => {
@@ -177,7 +179,9 @@ describe("rate-limit reservations under concurrency", () => {
 
 		// Request A (t=1000) failed and must be the one removed; request B's
 		// successful reservation (t=2000) must survive.
-		expect(storageState.get("rate-limiter-state:user-1")).toEqual({ timestamps: [2_000] });
+		expect(storageState.get("rate-limiter-state:GET:/api/test:user-1")).toEqual({
+			timestamps: [2_000],
+		});
 	});
 
 	it("does not rate limit when disabled", async () => {
@@ -212,6 +216,32 @@ describe("rate-limit reservations under concurrency", () => {
 		vi.setSystemTime(12_001);
 		await expect(handler(makeEvent())).resolves.toBe("ok");
 		expect(innerHandler).toHaveBeenCalledTimes(2);
+	});
+
+	it("counts each route on its own, so a busy route cannot starve a strict one", async () => {
+		const g = globalThis as Record<string, unknown>;
+		const originalUrl = g.getRequestURL;
+		const busy = defineWrappedResponseHandler(vi.fn().mockResolvedValue("busy"), {
+			auth: true,
+			rateLimit: { enabled: true, limit: 10, type: "fixed", window: 10_000 },
+		});
+		const strict = defineWrappedResponseHandler(vi.fn().mockResolvedValue("strict"), {
+			auth: true,
+			rateLimit: { enabled: true, limit: 2, type: "fixed", window: 5000 },
+		});
+
+		try {
+			g.getRequestURL = () => new URL("http://localhost/api/guilds/1/settings");
+			for (let i = 0; i < 5; i++) await busy(makeEvent());
+
+			// The same member's first call to another route is theirs to make
+			g.getRequestURL = () => new URL("http://localhost/api/guilds/1/members");
+			await expect(strict(makeEvent())).resolves.toBe("strict");
+			await expect(strict(makeEvent())).resolves.toBe("strict");
+			await expect(strict(makeEvent())).rejects.toThrow("Too Many Requests");
+		} finally {
+			g.getRequestURL = originalUrl;
+		}
 	});
 
 	it("fails open when the rate-limit storage cannot be read", async () => {

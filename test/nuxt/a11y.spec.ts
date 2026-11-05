@@ -51,6 +51,7 @@ import {
 	DashboardSkeleton,
 	ErrorPage,
 	OauthStatusPanel,
+	GuildActivityChart,
 	GuildAppealsFormEditor,
 	GuildAppealsForms,
 	GuildAuditChanges,
@@ -643,6 +644,24 @@ describe("component accessibility audits", () => {
 				props: {
 					keys: ["logsMessageDelete", "logsRoleCreate"],
 					values: { logsMessageDelete: null, logsRoleCreate: null },
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildActivityChart", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(GuildActivityChart, {
+				props: {
+					days: ["Fri", "Sat", "Sun", "Mon", "Tue", "Wed", "Thu"].map((label, index) => ({
+						key: `2026-11-0${index + 1}`,
+						label,
+						count: index === 5 ? 5 : index === 3 ? 1 : 0,
+					})),
+					label: "Moderation actions per day: Fri 0, Sat 0, Sun 0, Mon 1, Tue 0, Wed 5, Thu 0",
+					formatCount: (value: number) => String(value),
 				},
 			});
 			const results = await runAxe(component);

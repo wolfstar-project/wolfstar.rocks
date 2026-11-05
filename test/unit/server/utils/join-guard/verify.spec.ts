@@ -159,6 +159,15 @@ describe("readJoinGuardVerifyPage", () => {
 		expect(mocks.userApi.getConnections).not.toHaveBeenCalled();
 	});
 
+	it("asks to sign in again when Discord does not give the connections", async () => {
+		mocks.userApi.getConnections.mockRejectedValue(new Error("Discord is down"));
+
+		const page = await readJoinGuardVerifyPage(event, GUILD, NOW);
+
+		// Not a member with no linked account: there is a way to try again.
+		expect(page.needsConnections).toBe(true);
+	});
+
 	it("reads no connections, and asks for none, when the guild does not read them", async () => {
 		mocks.settings.joinGuardConnections = false;
 

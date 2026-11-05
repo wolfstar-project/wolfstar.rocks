@@ -134,7 +134,7 @@ export function countLinkedAccounts(connections: readonly APIConnection[]): numb
 /**
  * Whether the member's sign-in granted `connections`, and how many verified
  * accounts they linked to Discord. Nothing of the connections is kept but the
- * count; a list Discord does not give reads as none.
+ * count; a list Discord does not give reads as not granted.
  */
 async function readLinkedAccounts(
 	accessToken: string,
@@ -148,7 +148,9 @@ async function readLinkedAccounts(
 			count: countLinkedAccounts(await userApi(accessToken).users.getConnections()),
 		};
 	} catch {
-		return { granted: true, count: 0 };
+		// Not "granted with no links": the member would be refused for a missing
+		// linked account with nothing to fix. Not granted asks them to sign in again.
+		return { granted: false, count: 0 };
 	}
 }
 

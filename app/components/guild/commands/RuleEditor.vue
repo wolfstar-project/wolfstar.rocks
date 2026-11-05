@@ -559,6 +559,44 @@ function discordRefusal(): string | null {
 	return null;
 }
 
+/** Says the rule changed since it was read, and reads it again. */
+async function reportConflict() {
+	toast.add({
+		color: "warning",
+		icon: "heroicons:arrow-path",
+		title: ts("guild_settings.command_rules.editor.conflict_title", { name: name.value }),
+		description: ts("guild_settings.command_rules.editor.conflict_description"),
+	});
+	await load();
+}
+
+/**
+ * Whether WolfStar's rule is still the one this editor read. A save that only
+ * sends Discord's side makes no request that checks the revision, and Discord's
+ * own check covers Discord's permissions only, so without this another
+ * administrator's change to the rule would be replaced by the old one in Discord.
+ */
+async function ruleIsCurrent(guild: string, ruled: string, state: CommandRuleState) {
+	try {
+		const now = await $fetch<CommandRuleState>(
+			`/api/guilds/${guild}/command-rules/${encodeURIComponent(ruled)}`,
+		);
+		if (now.revision === state.revision) return true;
+		await reportConflict();
+	} catch {
+		toast.add({
+			color: "error",
+			icon: "heroicons:x-circle",
+			title: ts("guild_settings.command_rules.editor.save_failed_title"),
+			description: ts("guild_settings.command_rules.editor.save_failed_description", {
+				name: name.value,
+				message: ts("guild_settings.please_try_again"),
+			}),
+		});
+	}
+	return false;
+}
+
 /** Saves WolfStar's rule; `false` when it was refused, which says why. */
 async function saveInWolfStar(guild: string, ruled: string, state: CommandRuleState) {
 	try {
@@ -580,15 +618,7 @@ async function saveInWolfStar(guild: string, ruled: string, state: CommandRuleSt
 		return true;
 	} catch (error) {
 		if (errorCode(error) === "conflict") {
-			toast.add({
-				color: "warning",
-				icon: "heroicons:arrow-path",
-				title: ts("guild_settings.command_rules.editor.conflict_title", {
-					name: name.value,
-				}),
-				description: ts("guild_settings.command_rules.editor.conflict_description"),
-			});
-			await load();
+			await reportConflict();
 		} else {
 			toast.add({
 				color: "error",
@@ -685,8 +715,16 @@ async function save() {
 	// Taken before the save, which changes the stored rule they are read against.
 	const commandId = discordId.value;
 	const rows = discordWrite.value;
+	// Pinned: a refused save re-reads Discord, and an untouched switch follows what
+	// Discord holds, so it would turn itself off and the next save would send nothing.
+	discordPicked.value = discordOn.value;
 	try {
-		if (changedInWolfStar(state) && !(await saveInWolfStar(guild, ruled, state))) return;
+		const writesDiscord = Boolean(commandId && rows);
+		if (changedInWolfStar(state)) {
+			if (!(await saveInWolfStar(guild, ruled, state))) return;
+		} else if (writesDiscord && !(await ruleIsCurrent(guild, ruled, state))) {
+			return;
+		}
 		if (commandId && rows && !(await saveInDiscord(commandId, rows))) return;
 		toast.add({
 			color: "success",

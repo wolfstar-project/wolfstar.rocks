@@ -603,6 +603,42 @@ describe("GuildCommandsRuleEditor", () => {
 			);
 		});
 
+		it("does not copy a rule to Discord that changed in WolfStar since it was read", async () => {
+			stored = { ...stored, onlyAllowed: true, rule: rule({ allowedChannels: [MOD_CHAT] }) };
+			await mountRead();
+			discordSwitch()?.click();
+			await nextTick();
+
+			// Another administrator changes the rule while this editor is open.
+			stored = { ...stored, onlyAllowed: false, rule: rule(), revision: 5 };
+			button("Save rules").click();
+
+			await vi.waitFor(() =>
+				expect(mockToastAdd).toHaveBeenCalledWith(
+					expect.objectContaining({ color: "warning", title: "archive changed" }),
+				),
+			);
+			expect(discordPut).toBeUndefined();
+			expect(rulePut).toBeUndefined();
+		});
+
+		it("keeps the switch where it was left when Discord changed under a refused save", async () => {
+			discordRows = [{ id: STAFF, type: 1, permission: true }];
+			await mountRead();
+			expect(discordSwitch()?.getAttribute("aria-checked")).toBe("true");
+
+			// Someone clears the command's permissions in Discord meanwhile.
+			discordRows = [];
+			discordPutError = { status: 409, code: "conflict" };
+			button("Save rules").click();
+
+			await vi.waitFor(() => expect(discordPut).toBeDefined());
+			await vi.waitFor(() =>
+				expect(dialog().textContent).toContain("Saved in WolfStar, not in Discord"),
+			);
+			expect(discordSwitch()?.getAttribute("aria-checked")).toBe("true");
+		});
+
 		it("keeps what WolfStar saved and says why when Discord refuses", async () => {
 			discordPutError = { status: 403, code: "role-above" };
 			const wrapper = await mountRead();

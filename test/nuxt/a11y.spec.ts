@@ -1146,8 +1146,8 @@ describe("component accessibility audits", () => {
 			);
 			const panel = document.querySelector('[role="dialog"]');
 			const results = await runAxe(component, { include: panel ? [panel] : [] });
+			expect(results.violations).toEqual([]);
 			component.unmount();
-			return results.violations;
 		});
 	});
 

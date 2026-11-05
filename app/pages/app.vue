@@ -36,8 +36,12 @@
 			</span>
 		</header>
 
+		<!-- The Home's appeals: the member's own cases, a page of the Home. -->
+		<ClientOnly v-if="!activeGuildId && homePage === 'appeals'">
+			<DashboardMyAppeals :guild-id="appealGuildId" />
+		</ClientOnly>
 		<!-- The Home is a conversation: it scrolls its own log above the footer. -->
-		<ClientOnly v-if="!activeGuildId">
+		<ClientOnly v-else-if="!activeGuildId">
 			<DashboardDirectMessageThread>
 				<template #notice>
 					<DashboardServersNotice />
@@ -75,6 +79,11 @@ import { DashboardSkeleton } from "#components";
 import * as Sentry from "@sentry/nuxt";
 
 definePageMeta({
+	// The bot's direct message of a ban, a mute or a timeout links a member to
+	// `/appeal/<server>`, which opens the Home on their appeals. The server is
+	// optional only because Vue Router warns of an alias with a param its
+	// record lacks; `/appeal` alone opens the appeals too.
+	alias: ["/appeal/:guild(\\d{17,20})?"],
 	auth: "user",
 	layout: "dashboard",
 	path: "/app",
@@ -173,18 +182,37 @@ const sectionProps = computed(() => {
 	return section.value === "commands" ? { commands: commands.value } : {};
 });
 
-const { thread } = useDirectMessages();
-const navbarTitle = computed(() =>
-	activeGuildId.value ? sectionLabel.value : (thread.value?.name ?? ts("dashboard.dm.title")),
+const { thread, page: homePage, appealGuildId, openAppeals } = useDirectMessages();
+const { selectGuild } = useActiveGuild();
+
+// The link of the bot opens the Home on the appeals, with its server listed.
+const route = useRoute();
+if (route.path === "/appeal" || route.path.startsWith("/appeal/")) {
+	const linkedGuild = "guild" in route.params ? route.params.guild : undefined;
+	selectGuild(null);
+	openAppeals(
+		typeof linkedGuild === "string" && isValidGuildId(linkedGuild) ? linkedGuild : undefined,
+	);
+}
+
+const homeTitle = computed(() =>
+	homePage.value === "appeals"
+		? ts("dashboard.my_appeals.title")
+		: (thread.value?.name ?? ts("dashboard.dm.title")),
 );
-const navbarSubtitle = computed(() =>
-	activeGuildId.value ? guildData.value?.name : ts("dashboard.dm.direct_message"),
-);
-const title = computed(() =>
-	activeGuildId.value
-		? `${sectionLabel.value} · ${guildData.value?.name ?? ""}`
-		: `${navbarTitle.value} · ${ts("dashboard.dm.title")}`,
-);
+const navbarTitle = computed(() => (activeGuildId.value ? sectionLabel.value : homeTitle.value));
+const navbarSubtitle = computed(() => {
+	if (activeGuildId.value) return guildData.value?.name;
+	return homePage.value === "appeals"
+		? ts("dashboard.my_appeals.subtitle")
+		: ts("dashboard.dm.direct_message");
+});
+const title = computed(() => {
+	if (activeGuildId.value) return `${sectionLabel.value} · ${guildData.value?.name ?? ""}`;
+	return homePage.value === "appeals"
+		? navbarTitle.value
+		: `${navbarTitle.value} · ${ts("dashboard.dm.title")}`;
+});
 
 // Fetch only the data required by the active section.
 // Channels / Events / Roles do not use commands or languages, so we skip

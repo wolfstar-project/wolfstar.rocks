@@ -54,7 +54,7 @@ const { ts } = useI18n();
 
 .trust-bar {
 	@apply h-1.5 rounded-full;
-	background-color: var(--ui-border, oklch(50% 0 0 / 0.2));
+	background-color: var(--ui-border);
 }
 
 .trust-bar--error {

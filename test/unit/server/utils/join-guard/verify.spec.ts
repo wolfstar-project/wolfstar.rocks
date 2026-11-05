@@ -6,7 +6,7 @@ vi.mock("#server/database/prisma", () => ({ db: { orm: { root: true } } }));
 const mocks = vi.hoisted(() => ({
 	settings: {} as Record<string, unknown>,
 	runtimeConfig: { public: { turnstileSiteKey: "site-key" }, turnstileSecretKey: "secret" },
-	readSettings: vi.fn(),
+	readFreshSettings: vi.fn(),
 	fetchLatestJoinGuardCheckpoint: vi.fn(),
 	submitJoinGuardRequest: vi.fn(),
 	fetchJoinGuardRuleRow: vi.fn(),
@@ -21,7 +21,10 @@ const mocks = vi.hoisted(() => ({
 	botApi: { getMember: vi.fn() },
 }));
 
-vi.mock("#server/database/settings/functions", () => ({ readSettings: mocks.readSettings }));
+vi.mock("#server/database/settings/functions", () => ({
+	// Fresh, not cached: another instance or the bot may have changed the checks
+	readFreshSettings: mocks.readFreshSettings,
+}));
 vi.mock("#server/database/settings/joinguard/checkpoints", () => ({
 	fetchLatestJoinGuardCheckpoint: mocks.fetchLatestJoinGuardCheckpoint,
 }));
@@ -102,7 +105,7 @@ beforeEach(() => {
 		joinGuardSharedBans: true,
 		joinGuardMinimumTrust: 2,
 	};
-	mocks.readSettings.mockImplementation(() => mocks.settings);
+	mocks.readFreshSettings.mockImplementation(() => mocks.settings);
 	mocks.getGuild.mockResolvedValue({ id: GUILD, name: "Wolves", icon: null });
 	mocks.getCurrentToken.mockResolvedValue({ access_token: "member-token" });
 	mocks.userApi.getCurrent.mockResolvedValue({

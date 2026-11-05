@@ -10,7 +10,7 @@ import type {
 import type { APIConnection, APIUser, Snowflake } from "discord-api-types/v10";
 import type { H3Event } from "h3";
 import { db } from "#server/database/prisma";
-import { readSettings } from "#server/database/settings/functions";
+import { readFreshSettings } from "#server/database/settings/functions";
 import {
 	fetchLatestJoinGuardCheckpoint,
 	type JoinGuardCheckpointRecord,
@@ -207,7 +207,7 @@ export async function readJoinGuardVerifyGuestPage(
 	return {
 		signedIn: false,
 		guild: toVerifyGuild(guild),
-		checks: checksOf(await readSettings(guildId)),
+		checks: checksOf(await readFreshSettings(guildId)),
 	};
 }
 
@@ -316,7 +316,7 @@ export async function readJoinGuardVerifyPage(
 ): Promise<JoinGuardVerifyPage> {
 	const [{ guild, botPresent }, settings, account] = await Promise.all([
 		readVerifyGuild(event, guildId),
-		readSettings(guildId),
+		readFreshSettings(guildId),
 		readVerifyAccount(event),
 	]);
 
@@ -382,7 +382,7 @@ export async function submitJoinGuardVerification(
 ): Promise<{ requestId: string; trust: JoinGuardTrustResult }> {
 	const [{ botPresent }, settings, account] = await Promise.all([
 		readVerifyGuild(event, guildId),
-		readSettings(guildId),
+		readFreshSettings(guildId),
 		readVerifyAccount(event),
 	]);
 	if (!botPresent || !isCheckpointOn(settings)) throw new JoinGuardVerifyError("unavailable");

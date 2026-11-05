@@ -256,6 +256,6 @@ async function confirmDelete() {
 
 .jg-empty-icon {
 	@apply flex size-13 items-center justify-center rounded-full;
-	background-color: var(--console-active, oklch(50% 0 0 / 0.12));
+	background-color: var(--console-active);
 }
 </style>

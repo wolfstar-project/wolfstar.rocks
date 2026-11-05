@@ -104,7 +104,7 @@ const tone = computed(() => joinGuardRuleTone(rule));
 
 .jg-chip {
 	@apply inline-flex h-6 items-center rounded-full px-2.25 text-xs font-semibold whitespace-nowrap text-highlighted;
-	background-color: var(--console-active, oklch(50% 0 0 / 0.12));
+	background-color: var(--console-active);
 }
 
 .jg-chip--error {

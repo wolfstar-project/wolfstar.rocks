@@ -388,3 +388,27 @@ No contract change and no migration: the columns and their JSON type stay as the
   a node with two empty lists (verified in its `PermissionNodeManager` and `matchAny`), which matches
   nothing and never throws. Both `canManage`s guard different APIs, so nothing breaks, but
   `docs/arch/auth.md` says it until the bot's pull request lands.
+
+## Update 2026-11-05: one set of rules, also in Discord
+
+The separate "Discord permissions" card (app default card, one card per command, review and send) is gone.
+Each command has one set of rules, edited in its rule editor, which WolfStar applies and which "Also in
+Discord" also writes as the command's Discord permissions:
+
+- The editor edits every list now, members included, and `*` (the "Every command" row). Category targets
+  (`Moderation.*`) stay read-only, set with `/commands`. The route keeps the status of `*` as `/commands`
+  set it.
+- Translation (`commandRuleOverwrites`): one row per allowed role (allow), ignored role (deny), allowed member
+  (allow), ignored member (deny), allowed channel (allow), ignored channel (deny); `@everyone` denied when only
+  the allowed may run it; All channels denied when some channels are allowed. `*` goes to the app default.
+- Nothing stores the switch. It reads as on when the command has Discord permissions of its own; when they
+  are not the translation of the stored rule (changed in Discord), the editor says so, saving with the switch
+  on replaces them, turning it off clears them, and the tile says "Different in Discord".
+- The WolfStar rule is saved first, then Discord's set through `PUT …/command-permissions/:commandId` with
+  the snapshot the page read. If Discord refuses, the WolfStar rule stays saved and the editor stays open with
+  the reason; a save again only sends Discord's side. A save is refused before anything is sent past 100
+  rows, without the scope, or without Manage Server / Manage Roles.
+- What Discord cannot say: it lets a member in when any of their roles is allowed, where WolfStar goes by the
+  highest listed role (the editor notes it when a rule both allows and ignores roles); a command with its own
+  Discord permissions does not use the app default, where WolfStar applies `*` and group rules together with
+  the command's own; group rules are never written to Discord.

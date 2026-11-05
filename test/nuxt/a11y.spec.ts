@@ -61,7 +61,6 @@ import {
 	GuildAppealsForms,
 	GuildAuditChanges,
 	GuildAutomodDurationInput,
-	GuildCommandsDiscordPermissions,
 	GuildCommandsRuleEditor,
 	GuildCommandsRuleList,
 	GuildLogsCaseDetail,
@@ -74,6 +73,7 @@ import {
 	GuildSettingsAutoMessage,
 	GuildSettingsAutomod,
 	GuildSettingsAutoPurge,
+	GuildSettingsDisabledCommands,
 	GuildSettingsHoneypot,
 	GuildSettingsLogsBulkChannel,
 	GuildSettingsLogsSelectionBar,
@@ -772,13 +772,10 @@ describe("component accessibility audits", () => {
 		});
 	});
 
-	describe("GuildCommandsDiscordPermissions", () => {
+	describe("GuildSettingsDisabledCommands", () => {
 		const GUILD_ID = "123456789012345678";
 
-		it.each([
-			["authorized", true],
-			["waiting for the scope", false],
-		])("should have no accessibility violations when %s", async (_state, scopeGranted) => {
+		it("should have no accessibility violations with the row of every command", async () => {
 			clearNuxtData();
 			registerEndpoint(`/api/guilds/${GUILD_ID}/command-permissions`, {
 				method: "GET",
@@ -799,23 +796,35 @@ describe("component accessibility audits", () => {
 						],
 					},
 					snapshot: "x",
-					authorization: { scopeGranted, manageGuild: true, manageRoles: true },
+					authorization: { scopeGranted: true, manageGuild: true, manageRoles: true },
 				}),
-			});
-			registerEndpoint(`/api/guilds/${GUILD_ID}/members/search`, {
-				method: "GET",
-				handler: () => [],
 			});
 			useActiveGuild().selectGuild(GUILD_ID);
 			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
-			const component = await mountSuspended(GuildCommandsDiscordPermissions, {
-				route: "/?tab=discord",
-			});
-			await vi.waitFor(() =>
-				expect(component.text()).toContain(
-					scopeGranted ? "App default" : "Authorize with Discord",
-				),
+			useGuildSettings().setGuildSettings(
+				createMockGuildData(GUILD_ID, {
+					commandsRestrictions: [
+						{ command: "ban", allowedRoles: ["300000000000000001"] },
+						{ format: 2 },
+					],
+				}),
 			);
+			const component = await mountSuspended(GuildSettingsDisabledCommands, {
+				props: {
+					commands: [
+						{
+							category: "Moderation",
+							description: "Ban a member",
+							extendedHelp: {},
+							guarded: false,
+							name: "ban",
+							permissionLevel: 5,
+							preconditions: { entries: [], mode: 0, runCondition: 0 },
+						},
+					],
+				},
+			});
+			await vi.waitFor(() => expect(component.text()).toContain("Also in Discord"));
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
 			component.unmount();
@@ -849,19 +858,48 @@ describe("component accessibility audits", () => {
 
 	describe("GuildCommandsRuleEditor", () => {
 		const GUILD_ID = "123456789012345678";
+		const APP_ID = "500000000000000001";
 
-		it("should have no accessibility violations with the editor open", async () => {
-			registerEndpoint(`/api/guilds/${GUILD_ID}/command-rules/archive`, {
+		function withDiscord(scopeGranted: boolean, registered: boolean) {
+			clearNuxtData();
+			registerEndpoint(`/api/guilds/${GUILD_ID}/command-permissions`, {
 				method: "GET",
 				handler: () => ({
-					command: "archive",
+					applicationId: APP_ID,
+					commands: [
+						{
+							id: registered ? "600000000000000001" : null,
+							name: "archive",
+							command: "archive",
+							category: "Moderation",
+							description: "Archive",
+						},
+					],
+					// Not the rule as stored: the editor says so.
+					permissions: {
+						"600000000000000001": [
+							{ id: "300000000000000002", type: 1, permission: true },
+						],
+						[APP_ID]: [{ id: "333333333333333333", type: 3, permission: false }],
+					},
+					snapshot: "x",
+					authorization: { scopeGranted, manageGuild: true, manageRoles: true },
+				}),
+			});
+		}
+
+		function withRule(target: string) {
+			registerEndpoint(`/api/guilds/${GUILD_ID}/command-rules/${target}`, {
+				method: "GET",
+				handler: () => ({
+					command: target,
 					enabled: true,
 					onlyAllowed: true,
 					rule: {
-						command: "archive",
+						command: target,
 						allowedChannels: ["333333333333333333"],
 						ignoredChannels: [],
-						allowedRoles: [],
+						allowedRoles: ["300000000000000002"],
 						ignoredRoles: ["300000000000000001"],
 						allowedUsers: ["200000000000000001"],
 						ignoredUsers: [],
@@ -869,39 +907,80 @@ describe("component accessibility audits", () => {
 					revision: 1,
 				}),
 			});
+			registerEndpoint(`/api/guilds/${GUILD_ID}/members/search`, {
+				method: "GET",
+				handler: () => [],
+			});
+		}
+
+		async function auditOpenEditor(
+			props: Pick<
+				InstanceType<typeof GuildCommandsRuleEditor>["$props"],
+				"command" | "inherited"
+			>,
+			waitFor: string,
+		) {
 			useActiveGuild().selectGuild(GUILD_ID);
 			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
 			const component = await mountSuspended(GuildCommandsRuleEditor, {
-				props: {
-					open: true,
-					command: {
-						name: "archive",
-						label: "archive",
-						category: "Moderation",
-						description: "Save and read the recent messages of members.",
-						subCategory: null,
-					},
-					inherited: [
-						{
-							command: "Moderation.*",
-							allowedChannels: [],
-							ignoredChannels: ["333333333333333333"],
-							allowedRoles: [],
-							ignoredRoles: [GUILD_ID],
-							allowedUsers: [],
-							ignoredUsers: [],
-						},
-					],
-				},
+				props: { open: true, ...props },
 				attachTo: document.body,
 			});
-			await vi.waitFor(() =>
-				expect(document.querySelector('[role="dialog"] form')).not.toBeNull(),
-			);
-			const panel = document.querySelector('[role="dialog"]');
+			// Another spec may have left its own dialog open: take this editor's
+			const editorDialog = () =>
+				[...document.querySelectorAll('[role="dialog"]')].find((dialog) =>
+					dialog.textContent?.includes(waitFor),
+				);
+			await vi.waitFor(() => expect(editorDialog()).toBeDefined());
+			const panel = editorDialog();
 			const results = await runAxe(component, { include: panel ? [panel] : [] });
-			expect(results.violations).toEqual([]);
 			component.unmount();
+			return results.violations;
+		}
+
+		const archive = {
+			name: "archive",
+			label: "archive",
+			category: "Moderation",
+			description: "Save and read the recent messages of members.",
+			subCategory: null,
+		};
+
+		it.each([
+			["also in Discord, differently", true, true, "are not these rules"],
+			["registered nowhere in Discord", true, false, "Not registered with Discord here"],
+		])(
+			"should have no accessibility violations %s",
+			async (_state, scopeGranted, registered, waitFor) => {
+				withDiscord(scopeGranted, registered);
+				withRule("archive");
+				const violations = await auditOpenEditor(
+					{
+						command: archive,
+						inherited: [
+							{
+								command: "Moderation.*",
+								allowedChannels: [],
+								ignoredChannels: ["333333333333333333"],
+								allowedRoles: [],
+								ignoredRoles: [GUILD_ID],
+								allowedUsers: [],
+								ignoredUsers: [],
+							},
+						],
+					},
+					waitFor,
+				);
+				expect(violations).toEqual([]);
+			},
+		);
+
+		it("should have no accessibility violations for every command, waiting for the scope", async () => {
+			withDiscord(false, true);
+			withRule("*");
+			expect(
+				await auditOpenEditor({ command: "*" }, "Discord uses these for every command"),
+			).toEqual([]);
 		});
 	});
 

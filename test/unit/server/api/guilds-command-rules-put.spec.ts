@@ -115,10 +115,12 @@ describe("PUT /api/guilds/:guild/command-rules/:command", () => {
 			ignoredChannels: [],
 			allowedRoles: [],
 			ignoredRoles: [],
+			allowedUsers: [U1],
+			ignoredUsers: [],
 		};
 	});
 
-	it("writes the status and the rule together, keeping the member lists", async () => {
+	it("writes the status and the rule together, the members included", async () => {
 		const response = await callHandler({} as H3Event);
 
 		expect(mocks.write).toHaveBeenCalledWith({
@@ -295,5 +297,68 @@ describe("PUT /api/guilds/:guild/command-rules/:command", () => {
 		mocks.command = "ban add";
 
 		await expect(callHandler({} as H3Event)).rejects.toMatchObject({ status: 400 });
+	});
+
+	it("drops a member the editor took out", async () => {
+		mocks.body = { ...mocks.body, allowedUsers: [] };
+
+		await callHandler({} as H3Event);
+
+		expect(mocks.write).toHaveBeenCalledWith(
+			expect.objectContaining({
+				commandsRestrictions: expect.arrayContaining([
+					expect.objectContaining({ command: "ban", allowedUsers: [] }),
+				]),
+			}),
+		);
+	});
+
+	describe("the rule of every command", () => {
+		beforeEach(() => {
+			mocks.command = "*";
+			mocks.settings = {
+				commandsDisabled: ["*"],
+				commandsRestrictions: [{ command: "*", ignoredChannels: [C2] }, { format: 2 }],
+			};
+			mocks.firstRow.mockResolvedValue({
+				disabled: [...mocks.settings.commandsDisabled],
+				disabledInChannels: [...mocks.settings.commandsRestrictions],
+			});
+			mocks.body = {
+				...mocks.body,
+				revision: readCommandRuleState(mocks.settings, "*", GUILD).revision,
+				enabled: true,
+				allowedUsers: [],
+				ignoredRoles: [R1],
+			};
+		});
+
+		it("saves it, a command or not, and keeps the status /commands set", async () => {
+			await callHandler({} as H3Event);
+
+			expect(mocks.fetchCommands).not.toHaveBeenCalled();
+			expect(mocks.write).toHaveBeenCalledWith({
+				commandsDisabled: ["*"],
+				commandsRestrictions: [
+					expect.objectContaining({
+						command: "*",
+						allowedChannels: [C1],
+						ignoredChannels: [],
+						ignoredRoles: [R1],
+					}),
+					{ format: 2 },
+				],
+			});
+		});
+
+		it("audits it under its target", async () => {
+			await callHandler({} as H3Event);
+
+			const [event] = mocks.audit.mock.calls[0] as [Record<string, unknown>];
+			const changes = event.changes as { patch: { path: string }[] };
+			expect(changes.patch.map((entry) => entry.path)).toContain(
+				"/commandsRestrictions/*/ignoredRoles",
+			);
+		});
 	});
 });

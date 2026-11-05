@@ -1,10 +1,11 @@
 import { snapshotOf, type Overwrite } from "#shared/utils/command-permissions";
-import { runSequentialSaves, stageRows, type SaveOutcome } from "~/utils/command-permissions-run";
+import { EVERY_COMMAND } from "#shared/utils/command-rules";
 
-export interface RegisteredCommandEntry {
+interface RegisteredCommandEntry {
 	/** `null` when Discord has no such command here. */
 	id: string | null;
 	name: string;
+	/** The bot's piece name, which the command's rule targets. */
 	command: string;
 	category: string;
 	description: string;
@@ -20,82 +21,61 @@ export interface CommandPermissionsResponse {
 }
 
 /**
- * Discord's command permissions of a guild and the edits staged on them. Edits
- * stay here until `saveAll` sends them, one command after another; nothing is
- * written as it is edited. With `immediate: false` nothing is asked of Discord
- * until `refresh`.
+ * Discord's own permissions of the bot's commands in a guild, which a command's
+ * rules are written as when they are also in Discord. The tiles and the rule
+ * editor share them through the key, and a write updates them for both.
  */
-export function useCommandPermissions(
-	guildId: MaybeRefOrGetter<string | null>,
-	{ immediate = true }: { immediate?: boolean } = {},
-) {
-	const { data, pending, refresh, error } = useFetch<CommandPermissionsResponse>(
+export function useCommandPermissions(guildId: MaybeRefOrGetter<string | null>) {
+	const { data, error, pending, refresh } = useFetch<CommandPermissionsResponse>(
 		() => `/api/guilds/${toValue(guildId)}/command-permissions`,
 		{
 			key: computed(() => `command-permissions:${toValue(guildId)}`),
-			immediate: immediate && toValue(guildId) !== null,
+			immediate: toValue(guildId) !== null,
 		},
 	);
 
-	// Kept per guild beyond this page, so a section switch does not drop them.
-	const { drafts, settle } = useCommandPermissionDrafts(guildId);
-
-	const savedRows = (commandId: string): Overwrite[] => data.value?.permissions[commandId] ?? [];
-	const rowsOf = (commandId: string): Overwrite[] =>
-		drafts.value[commandId]?.rows ?? savedRows(commandId);
-
-	/** The rows a command's draft was made on, or Discord's rows without a draft. */
-	const baseRows = (commandId: string): Overwrite[] =>
-		drafts.value[commandId]?.base ?? savedRows(commandId);
-
-	function setRows(commandId: string, rows: Overwrite[]) {
-		drafts.value = stageRows(drafts.value, commandId, rows, savedRows(commandId));
+	/**
+	 * The Discord id of a rule's target: the application id, the app default,
+	 * for every command, and `null` for a command Discord has not registered here
+	 * or while the permissions are not read.
+	 */
+	function commandIdOf(target: string): string | null {
+		if (!data.value) return null;
+		if (target === EVERY_COMMAND) return data.value.applicationId;
+		return data.value.commands.find((entry) => entry.command === target)?.id ?? null;
 	}
 
-	const resetToDefault = (commandId: string) => setRows(commandId, []);
-
-	function discard(commandId: string) {
-		const next = { ...drafts.value };
-		delete next[commandId];
-		drafts.value = next;
+	/** A command's rows as read; empty when it has none, and so uses the app default. */
+	function rowsOf(commandId: string): Overwrite[] {
+		return data.value?.permissions[commandId] ?? [];
 	}
 
-	const changedCommandIds = computed(() => Object.keys(drafts.value));
-
-	async function saveAll(): Promise<SaveOutcome> {
+	/**
+	 * Replaces a command's whole set with `rows`. The write sends the snapshot
+	 * of the set as read, so Discord's set changed since is refused (409) and not
+	 * overwritten. Throws what the route answers.
+	 */
+	async function write(commandId: string, rows: Overwrite[]): Promise<void> {
 		const id = toValue(guildId);
-		if (!id) return { sent: [], failed: null };
-		// Captured with the guild: the admin may switch guilds before the writes end.
-		const staged = { ...drafts.value };
-		const list = Object.entries(staged).map(([commandId, draft]) => ({
-			commandId,
-			permissions: draft.rows,
-			// The rows the edit was made on, not the ones a later reload brought.
-			snapshot: snapshotOf({ [commandId]: draft.base }),
-		}));
-		const outcome = await runSequentialSaves(list, async (commandId, body) => {
-			await $fetch(`/api/guilds/${id}/command-permissions/${commandId}`, {
+		if (!id) return;
+		const saved = await $fetch<{ permissions: Overwrite[] }>(
+			`/api/guilds/${id}/command-permissions/${commandId}`,
+			{
 				method: "PUT",
-				body,
-			});
-		});
-		settle(id, staged, outcome.sent);
-		await refresh();
-		return outcome;
+				body: {
+					snapshot: snapshotOf({ [commandId]: rowsOf(commandId) }),
+					permissions: rows,
+				},
+			},
+		);
+		// The admin may have moved to another guild meanwhile.
+		if (data.value && toValue(guildId) === id) {
+			data.value = {
+				...data.value,
+				permissions: { ...data.value.permissions, [commandId]: saved.permissions },
+			};
+		}
 	}
 
-	return {
-		baseRows,
-		changedCommandIds,
-		data,
-		discard,
-		error,
-		pending,
-		refresh,
-		resetToDefault,
-		rowsOf,
-		saveAll,
-		savedRows,
-		setRows,
-	};
+	return { commandIdOf, data, error, pending, refresh, rowsOf, write };
 }

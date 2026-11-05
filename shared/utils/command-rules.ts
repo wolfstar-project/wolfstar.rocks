@@ -39,18 +39,8 @@ export const COMMAND_RULE_LISTS = [
 	"ignoredUsers",
 ] as const satisfies readonly CommandRuleList[];
 
-/**
- * The lists the dashboard edits. The member lists are only set with
- * `/commands` in Discord, and a save from the dashboard keeps them.
- */
-export const EDITABLE_COMMAND_RULE_LISTS = [
-	"allowedChannels",
-	"ignoredChannels",
-	"allowedRoles",
-	"ignoredRoles",
-] as const satisfies readonly CommandRuleList[];
-
-export type EditableCommandRuleList = (typeof EDITABLE_COMMAND_RULE_LISTS)[number];
+/** The target of the rule every command follows besides its own. */
+export const EVERY_COMMAND = "*";
 
 /**
  * The commands a server can neither disable nor rule: `settings` and
@@ -171,7 +161,7 @@ export function withoutEveryone(rule: CommandRule, guildId: string): CommandRule
 
 /** Whether the target of a rule is a group of commands and not a command. */
 export function isCommandGroupTarget(target: string): boolean {
-	return target === "*" || target.endsWith(".*");
+	return target === EVERY_COMMAND || target.endsWith(".*");
 }
 
 /**
@@ -297,12 +287,10 @@ export function setCommandRule(rules: readonly CommandRule[], rule: CommandRule)
 }
 
 /**
- * The rule to store from what the dashboard picked: the edited lists come from
- * `picked`, and the member lists, which the dashboard does not show, stay as
- * `stored` has them. The dashboard's side of the bot's
- * `keepHiddenRestrictionEntries`; the dashboard lists every entry, so no entry
- * of an edited list is hidden from it. `@everyone` follows `onlyAllowed`, the
- * status of the rule, whatever the picked roles hold.
+ * The rule to store from what the dashboard picked: every list comes from
+ * `picked`. The dashboard lists every entry, so none of them is hidden from it
+ * and the bot's `keepHiddenRestrictionEntries` keeps nothing here. `@everyone`
+ * follows `onlyAllowed`, the status of the rule, whatever the picked roles hold.
  */
 export function applyCommandRuleEdit(
 	stored: CommandRule,
@@ -310,7 +298,7 @@ export function applyCommandRuleEdit(
 	guildId: string,
 ): CommandRule {
 	const next: CommandRule = { ...stored };
-	for (const list of EDITABLE_COMMAND_RULE_LISTS) next[list] = readList(picked[list]);
+	for (const list of COMMAND_RULE_LISTS) next[list] = readList(picked[list]);
 	const { ignoredRoles } = withoutEveryone(next, guildId);
 	next.ignoredRoles = picked.onlyAllowed ? [...ignoredRoles, guildId] : ignoredRoles;
 	return next;
@@ -373,8 +361,8 @@ export function readCommandRuleState(
 	};
 }
 
-/** What the dashboard picks of a rule: the lists it edits, and its status. */
-interface CommandRulePick extends Readonly<Record<EditableCommandRuleList, readonly string[]>> {
+/** What the dashboard picks of a rule: its lists, and its status. */
+interface CommandRulePick extends Readonly<Record<CommandRuleList, readonly string[]>> {
 	onlyAllowed: boolean;
 }
 
@@ -386,7 +374,7 @@ export interface CommandRuleEdit extends CommandRulePick {
 /**
  * The settings after a save of a command's editor, as the bot's `/commands`
  * writes them: `commandsDisabled` names the command or not, and
- * `commandsRestrictions` holds its rule with the member lists kept. Every
+ * `commandsRestrictions` holds its rule. Every
  * other rule is written back as the bot reads it, so an entry of the older
  * `{ channel, commands }` shape becomes the channels each command ignores.
  */

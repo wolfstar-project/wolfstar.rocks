@@ -1,8 +1,11 @@
+import type { CommandRule } from "#shared/utils/command-rules";
 import {
 	allChannelsId,
 	applyChanges,
 	assertOverwriteLimit,
 	changedRows,
+	commandDiscordState,
+	commandRuleOverwrites,
 	diffOverwrites,
 	everyoneId,
 	isAppDefault,
@@ -165,5 +168,113 @@ describe("changedRows", () => {
 		const after = [role(ROLE_A, false), role(ROLE_B, true)];
 		expect(changedRows(before, after)).toEqual([role(ROLE_A, false), role(ROLE_B, true)]);
 		expect(changedRows(before, before)).toEqual([]);
+	});
+});
+
+const USER_A = "500000000000000101";
+const USER_B = "500000000000000102";
+const CHANNEL_Y = "400000000000000002";
+
+const user = (id: string, permission: boolean): Overwrite => ({
+	id,
+	type: ApplicationCommandPermissionType.User,
+	permission,
+});
+
+function rule(lists: Partial<Omit<CommandRule, "command">> = {}): CommandRule {
+	return {
+		command: "ban",
+		allowedChannels: [],
+		ignoredChannels: [],
+		allowedRoles: [],
+		ignoredRoles: [],
+		allowedUsers: [],
+		ignoredUsers: [],
+		...lists,
+	};
+}
+
+describe("commandRuleOverwrites", () => {
+	it("makes nothing of a rule that rules nothing", () => {
+		expect(commandRuleOverwrites(rule(), GUILD)).toEqual([]);
+	});
+
+	it("allows what the rule allows and denies what it ignores, one row each", () => {
+		const rows = commandRuleOverwrites(
+			rule({
+				allowedRoles: [ROLE_A],
+				ignoredRoles: [ROLE_B],
+				allowedUsers: [USER_A],
+				ignoredUsers: [USER_B],
+				ignoredChannels: [CHANNEL_Y],
+			}),
+			GUILD,
+		);
+		expect(
+			overwritesEqual(rows, [
+				role(ROLE_A, true),
+				role(ROLE_B, false),
+				user(USER_A, true),
+				user(USER_B, false),
+				channel(CHANNEL_Y, false),
+			]),
+		).toBe(true);
+		expect(rows).toHaveLength(5);
+	});
+
+	it("denies @everyone when only the allowed may run it", () => {
+		const rows = commandRuleOverwrites(
+			rule({ allowedRoles: [ROLE_A], ignoredRoles: [GUILD] }),
+			GUILD,
+		);
+		expect(rows).toContainEqual(role(everyoneId(GUILD), false));
+		expect(rows).toHaveLength(2);
+	});
+
+	it("denies All channels besides the allowed ones", () => {
+		const rows = commandRuleOverwrites(rule({ allowedChannels: [CHANNEL_X] }), GUILD);
+		expect(
+			overwritesEqual(rows, [channel(CHANNEL_X, true), channel(allChannelsId(GUILD), false)]),
+		).toBe(true);
+	});
+
+	it("denies an id the rule both allows and ignores, as the bot reads ignored first", () => {
+		const rows = commandRuleOverwrites(
+			rule({ allowedRoles: [ROLE_A], ignoredRoles: [ROLE_A] }),
+			GUILD,
+		);
+		expect(rows).toEqual([role(ROLE_A, false)]);
+	});
+
+	it("counts what Discord keeps against the limit", () => {
+		const roles = Array.from({ length: 99 }, (_, index) =>
+			String(300000000000000100n + BigInt(index)),
+		);
+		const rows = commandRuleOverwrites(
+			rule({ allowedRoles: roles, allowedChannels: [CHANNEL_X] }),
+			GUILD,
+		);
+		// 99 roles, the channel, and All channels.
+		expect(rows).toHaveLength(MAXIMUM_COMMAND_OVERWRITES + 1);
+	});
+});
+
+describe("commandDiscordState", () => {
+	const ruled = rule({ allowedRoles: [ROLE_A] });
+
+	it("is off while the command has no permissions of its own", () => {
+		expect(commandDiscordState(undefined, ruled, GUILD)).toBe("off");
+		expect(commandDiscordState([], ruled, GUILD)).toBe("off");
+	});
+
+	it("matches when Discord holds the rule's rows, in any order", () => {
+		expect(commandDiscordState([role(ROLE_A, true)], ruled, GUILD)).toBe("matching");
+	});
+
+	it("differs when the rows were changed in Discord", () => {
+		expect(commandDiscordState([role(ROLE_A, false)], ruled, GUILD)).toBe("different");
+		expect(commandDiscordState([role(ROLE_A, true), role(ROLE_B, true)], ruled, GUILD)).toBe(
+			"different",
+		);
 	});
 });

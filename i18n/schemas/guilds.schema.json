@@ -2221,168 +2221,6 @@
 					},
 					"additionalProperties": false
 				},
-				"command_permissions": {
-					"type": "object",
-					"properties": {
-						"added": {
-							"type": "string"
-						},
-						"administrator_note": {
-							"type": "string"
-						},
-						"all_channels": {
-							"type": "string"
-						},
-						"allow": {
-							"type": "string"
-						},
-						"allowed": {
-							"type": "string"
-						},
-						"app_default": {
-							"type": "string"
-						},
-						"app_default_note": {
-							"type": "string"
-						},
-						"authorize": {
-							"type": "string"
-						},
-						"changed_count": {
-							"type": "string"
-						},
-						"channels": {
-							"type": "string"
-						},
-						"conflict": {
-							"type": "string"
-						},
-						"conflict_title": {
-							"type": "string"
-						},
-						"count_aria": {
-							"type": "string"
-						},
-						"denied": {
-							"type": "string"
-						},
-						"deny": {
-							"type": "string"
-						},
-						"error_channel": {
-							"type": "string"
-						},
-						"error_command": {
-							"type": "string"
-						},
-						"error_permissions": {
-							"type": "string"
-						},
-						"error_rate_limited": {
-							"type": "string"
-						},
-						"error_refused": {
-							"type": "string"
-						},
-						"error_role_above": {
-							"type": "string"
-						},
-						"error_scope": {
-							"type": "string"
-						},
-						"error_unknown_channel": {
-							"type": "string"
-						},
-						"error_unknown_command": {
-							"type": "string"
-						},
-						"error_unknown_role": {
-							"type": "string"
-						},
-						"everyone": {
-							"type": "string"
-						},
-						"failed_title": {
-							"type": "string"
-						},
-						"flipped": {
-							"type": "string"
-						},
-						"keep_editing": {
-							"type": "string"
-						},
-						"load_failed": {
-							"type": "string"
-						},
-						"member": {
-							"type": "string"
-						},
-						"members": {
-							"type": "string"
-						},
-						"missing": {
-							"type": "string"
-						},
-						"missing_title": {
-							"type": "string"
-						},
-						"not_registered": {
-							"type": "string"
-						},
-						"not_set": {
-							"type": "string"
-						},
-						"over_limit": {
-							"type": "string"
-						},
-						"preview_description": {
-							"type": "string"
-						},
-						"preview_title": {
-							"type": "string"
-						},
-						"reload": {
-							"type": "string"
-						},
-						"removed": {
-							"type": "string"
-						},
-						"review": {
-							"type": "string"
-						},
-						"roles": {
-							"type": "string"
-						},
-						"scope_needed": {
-							"type": "string"
-						},
-						"send": {
-							"type": "string"
-						},
-						"sending": {
-							"type": "string"
-						},
-						"sent_before_stop": {
-							"type": "string"
-						},
-						"status_custom": {
-							"type": "string"
-						},
-						"status_default": {
-							"type": "string"
-						},
-						"subtitle": {
-							"type": "string"
-						},
-						"title": {
-							"type": "string"
-						},
-						"use_app_default": {
-							"type": "string"
-						}
-					},
-					"additionalProperties": false
-				},
 				"command_rules": {
 					"type": "object",
 					"properties": {
@@ -2394,6 +2232,105 @@
 						},
 						"allowed_users": {
 							"type": "string"
+						},
+						"discord": {
+							"type": "object",
+							"properties": {
+								"authorize": {
+									"type": "string"
+								},
+								"badge": {
+									"type": "string"
+								},
+								"badge_different": {
+									"type": "string"
+								},
+								"badge_matching": {
+									"type": "string"
+								},
+								"count": {
+									"type": "string"
+								},
+								"description": {
+									"type": "string"
+								},
+								"different": {
+									"type": "string"
+								},
+								"error_channel": {
+									"type": "string"
+								},
+								"error_command": {
+									"type": "string"
+								},
+								"error_conflict": {
+									"type": "string"
+								},
+								"error_permissions": {
+									"type": "string"
+								},
+								"error_rate_limited": {
+									"type": "string"
+								},
+								"error_refused": {
+									"type": "string"
+								},
+								"error_role_above": {
+									"type": "string"
+								},
+								"error_scope": {
+									"type": "string"
+								},
+								"error_unknown_channel": {
+									"type": "string"
+								},
+								"error_unknown_command": {
+									"type": "string"
+								},
+								"error_unknown_role": {
+									"type": "string"
+								},
+								"every_note": {
+									"type": "string"
+								},
+								"failed_title": {
+									"type": "string"
+								},
+								"load_failed": {
+									"type": "string"
+								},
+								"missing": {
+									"type": "string"
+								},
+								"not_registered": {
+									"type": "string"
+								},
+								"over": {
+									"type": "string"
+								},
+								"over_toast": {
+									"type": "string"
+								},
+								"refused_title": {
+									"type": "string"
+								},
+								"role_order": {
+									"type": "string"
+								},
+								"scope_needed": {
+									"type": "string"
+								},
+								"scope_toast": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"wolfstar_only": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
 						},
 						"editor": {
 							"type": "object",
@@ -2408,6 +2345,12 @@
 									"type": "string"
 								},
 								"allowed_roles_hint": {
+									"type": "string"
+								},
+								"allowed_users": {
+									"type": "string"
+								},
+								"allowed_users_hint": {
 									"type": "string"
 								},
 								"also_applies": {
@@ -2437,6 +2380,15 @@
 								"enabled_hint_off": {
 									"type": "string"
 								},
+								"every_name": {
+									"type": "string"
+								},
+								"every_subtitle": {
+									"type": "string"
+								},
+								"every_title": {
+									"type": "string"
+								},
 								"form_aria": {
 									"type": "string"
 								},
@@ -2452,10 +2404,13 @@
 								"ignored_roles_hint": {
 									"type": "string"
 								},
-								"load_failed": {
+								"ignored_users": {
 									"type": "string"
 								},
-								"members_kept": {
+								"ignored_users_hint": {
+									"type": "string"
+								},
+								"load_failed": {
 									"type": "string"
 								},
 								"note_allowed": {
@@ -2491,10 +2446,19 @@
 								"saved_description": {
 									"type": "string"
 								},
+								"saved_description_discord": {
+									"type": "string"
+								},
+								"saved_every_description": {
+									"type": "string"
+								},
+								"saved_every_description_discord": {
+									"type": "string"
+								},
 								"saved_title": {
 									"type": "string"
 								},
-								"summary_none": {
+								"summary_discord": {
 									"type": "string"
 								},
 								"summary_off": {
@@ -2552,6 +2516,15 @@
 							"type": "string"
 						},
 						"enabled_count": {
+							"type": "string"
+						},
+						"every": {
+							"type": "string"
+						},
+						"every_aria": {
+							"type": "string"
+						},
+						"every_hint": {
 							"type": "string"
 						},
 						"form_aria": {

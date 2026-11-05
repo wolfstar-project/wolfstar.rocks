@@ -296,11 +296,14 @@
 }
 
 /*
- * daisyUI gives the root a `scrollbar-color` in `@layer base`, and a browser
- * that is given one draws its own bar, arrows included, and ignores the
- * `::-webkit-scrollbar` parts of the console's scrollbar above. Outside any
- * layer, so that the order of the plugin's output cannot put it back; Firefox
- * has no parts, and keeps the colour it is given there.
+ * The Nuxt UI components do not use daisyUI, but `@plugin "daisyui"` above is
+ * still loaded for its themes, and its base styles
+ * (`daisyui/base/scrollbar.css`) give the root a `scrollbar-color` in
+ * `@layer base`. A browser that is given one draws its own bar, arrows
+ * included, and ignores the `::-webkit-scrollbar` parts of the console's
+ * scrollbar above. Outside any layer, so that the order of the plugin's output
+ * cannot put it back; Firefox has no parts, and keeps the colour it is given
+ * there. This reset can go when the plugin does.
  */
 @supports not (-moz-appearance: none) {
 	:root {

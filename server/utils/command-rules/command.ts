@@ -3,15 +3,15 @@ import { CommandRuleNameSchema } from "#shared/schemas/command-rules";
 import { createError } from "evlog";
 import { safeParse } from "valibot";
 
-/** The command of the path of a command rules route, by the bot's piece name. */
+/** The command of the path of a command rules route, by the bot's piece name, or `*`. */
 export function getCommandRuleParam(event: H3Event): string {
 	const result = safeParse(CommandRuleNameSchema, getRouterParam(event, "command"));
 	if (!result.success) {
 		throw createError({
 			message: "Invalid command name",
 			status: 400,
-			why: "The command in the path is not a command name",
-			fix: "Use the command's name as commandsDisabled holds it, such as ban or warnThresholds",
+			why: "The command in the path is not a command name or *",
+			fix: "Use the command's name as commandsDisabled holds it, such as ban or warnThresholds, or * for every command",
 		});
 	}
 	return result.output;

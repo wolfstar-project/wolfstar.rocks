@@ -7,6 +7,41 @@
 			{{ ts("guild_settings.commands.subtitle") }}
 		</p>
 
+		<button
+			type="button"
+			class="command-every"
+			aria-haspopup="dialog"
+			:aria-label="ts('guild_settings.commands.every_aria')"
+			:aria-describedby="everyId"
+			@click="openEditor(EVERY_COMMAND, $event)"
+		>
+			<span class="command-every-tile" aria-hidden="true">
+				<UIcon name="ph:asterisk-bold" class="size-4.5" />
+			</span>
+			<span class="min-w-0 flex-1">
+				<span class="block text-[0.9375rem] font-bold">
+					{{ ts("guild_settings.commands.every") }}
+				</span>
+				<span class="mt-0.5 block text-xs text-muted">
+					{{ ts("guild_settings.commands.every_hint") }}
+				</span>
+			</span>
+			<span :id="everyId" class="flex shrink-0 flex-wrap justify-end gap-1.5">
+				<span class="command-pill">
+					{{ tc("guild_settings.command_rules.editor.count", everyRuleCount) }}
+				</span>
+				<span v-if="everyDiscord" class="command-pill">
+					<UIcon name="ic:round-discord" class="size-3.25" aria-hidden="true" />
+					{{ everyDiscord }}
+				</span>
+			</span>
+			<UIcon
+				name="ic:round-chevron-right"
+				class="size-4.5 shrink-0 text-muted"
+				aria-hidden="true"
+			/>
+		</button>
+
 		<div v-if="loading" class="space-y-2">
 			<USkeleton v-for="i in 5" :key="i" class="h-11 w-full" />
 		</div>
@@ -31,7 +66,9 @@
 				>
 					<template #default="{ open }">
 						<button type="button" class="command-category">
-							<span class="truncate text-base">{{ category }}</span>
+							<span class="truncate text-[1.0625rem] font-medium">{{
+								category
+							}}</span>
 							<span class="ml-auto font-mono text-xs text-muted">
 								{{
 									ts("guild_settings.commands.enabled_count", {
@@ -50,7 +87,9 @@
 					</template>
 
 					<template #content>
-						<div class="grid grid-cols-1 gap-2 pt-1 pb-3 sm:grid-cols-2 xl:grid-cols-4">
+						<div
+							class="grid grid-cols-1 gap-3 px-1 pt-3.5 pb-1.5 md:grid-cols-2 xl:grid-cols-4"
+						>
 							<button
 								v-for="command in getCommandsByCategory(category)"
 								:key="command.name"
@@ -68,7 +107,7 @@
 							>
 								<span class="min-w-0 flex-1">
 									<span
-										class="block truncate font-mono text-[0.8125rem] font-bold"
+										class="block truncate font-mono text-[0.8125rem] font-semibold"
 									>
 										{{ command.label }}
 									</span>
@@ -111,12 +150,27 @@
 											)
 										}}
 									</span>
+									<span
+										v-if="discordLabel(command)"
+										class="command-rules"
+										:title="discordLabel(command)"
+									>
+										<UIcon
+											name="ic:round-discord"
+											class="size-3"
+											aria-hidden="true"
+										/>
+										<span aria-hidden="true">
+											{{ ts("guild_settings.command_rules.discord.badge") }}
+										</span>
+										<span class="sr-only">{{ discordLabel(command) }}</span>
+									</span>
 								</span>
 							</button>
 						</div>
 
 						<div
-							class="flex flex-wrap justify-end gap-2 border-t border-(--home-border-subtle) py-3"
+							class="mx-1 mt-1.5 flex flex-wrap justify-end gap-2 border-t border-(--home-border-subtle) pt-2 pb-2.5"
 						>
 							<UButton
 								color="neutral"
@@ -182,9 +236,9 @@
 	<GuildCommandsRuleEditor
 		v-model:open="editorOpen"
 		:command="editedCommand"
-		:inherited="editedCommand ? inheritedRules(editedCommand) : []"
-		:disabled-by="editedCommand ? disabledByGroup(editedCommand) : undefined"
-		:staged-enabled="editedCommand ? stagedStatusOf(editedCommand.name) : undefined"
+		:inherited="tileCommand ? inheritedRules(tileCommand) : []"
+		:disabled-by="tileCommand ? disabledByGroup(tileCommand) : undefined"
+		:staged-enabled="tileCommand ? stagedStatusOf(tileCommand.name) : undefined"
 		:opener="editorOpener"
 		@saved="onRuleSaved"
 	/>
@@ -199,8 +253,11 @@ import type * as v from "valibot";
 import type { DisableableCommand } from "~/utils/command-settings";
 // oxlint-disable-next-line typescript/consistent-type-imports
 import { disabledCommandsSchema } from "#shared/schemas";
+import { commandDiscordState } from "#shared/utils/command-permissions";
 import {
+	EVERY_COMMAND,
 	countCommandRuleEntries,
+	findCommandRule,
 	findMatchingCommandRules,
 	matchesCommandRuleTarget,
 	readCommandRules,
@@ -220,6 +277,8 @@ const DEFAULT_CATEGORY = "Moderation";
 const { ts, tc } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
 const toast = useToast();
+const route = useRoute();
+const router = useRouter();
 const { guildData } = useGuildData();
 const { activeGuildId } = useActiveGuild();
 const { guildSettings, originalGuildSettings, setGuildSettings } = useGuildSettings();
@@ -233,10 +292,15 @@ const {
 
 const expandedCategory = ref<string | undefined>(DEFAULT_CATEGORY);
 const tileIdBase = useId();
+const everyId = useId();
 
 const editorOpen = ref(false);
-const editedCommand = ref<DisableableCommand | null>(null);
+const editedCommand = ref<DisableableCommand | typeof EVERY_COMMAND | null>(null);
 const editorOpener = ref<HTMLElement | null>(null);
+/** The command of the tile the editor opened from; none for every command's rule. */
+const tileCommand = computed(() =>
+	editedCommand.value === EVERY_COMMAND ? null : editedCommand.value,
+);
 
 // One entry per command: the bot lists each subcommand on its own, but the
 // settings turn off a whole command, by the name in `command`.
@@ -330,6 +394,47 @@ function ruleCount(command: DisableableCommand): number {
 	return ruleCounts.value.get(command.name) ?? 0;
 }
 
+const everyRuleCount = computed(() =>
+	countCommandRuleEntries([findCommandRule(rules.value, EVERY_COMMAND)], guildId.value),
+);
+
+// Whether Discord applies a rule too is read from Discord: nothing else stores it.
+const discordPermissions = useCommandPermissions(activeGuildId);
+
+function discordStateOf(target: string) {
+	const commandId = discordPermissions.commandIdOf(target);
+	if (!commandId) return "off";
+	return commandDiscordState(
+		discordPermissions.rowsOf(commandId),
+		findCommandRule(rules.value, target),
+		guildId.value,
+	);
+}
+
+/** What a tile says of Discord: nothing while only WolfStar applies the command's rules. */
+function discordLabel(command: DisableableCommand): string | undefined {
+	switch (discordStateOf(command.name)) {
+		case "matching":
+			return ts("guild_settings.command_rules.discord.badge_matching");
+		case "different":
+			return ts("guild_settings.command_rules.discord.badge_different");
+		case "off":
+			return undefined;
+	}
+}
+
+const everyDiscord = computed(() => {
+	if (!discordPermissions.data.value) return undefined;
+	switch (discordStateOf(EVERY_COMMAND)) {
+		case "matching":
+			return ts("guild_settings.command_rules.discord.badge_matching");
+		case "different":
+			return ts("guild_settings.command_rules.discord.badge_different");
+		case "off":
+			return ts("guild_settings.command_rules.discord.wolfstar_only");
+	}
+});
+
 /** The rules of a command that its editor only shows: the ones of its groups. */
 function inheritedRules(command: DisableableCommand) {
 	return findMatchingCommandRules(rules.value, command).filter(
@@ -381,11 +486,30 @@ function stagedStatusOf(name: string): boolean | undefined {
 	return isEnabled === undefined || isEnabled === storedEnabled ? undefined : isEnabled;
 }
 
-function openEditor(command: DisableableCommand, event: MouseEvent) {
+function openEditor(command: DisableableCommand | typeof EVERY_COMMAND, event?: MouseEvent) {
 	editedCommand.value = command;
-	editorOpener.value = event.currentTarget instanceof HTMLElement ? event.currentTarget : null;
+	editorOpener.value = event?.currentTarget instanceof HTMLElement ? event.currentTarget : null;
 	editorOpen.value = true;
 }
+
+// Back from the sign-in that lets the editor write to Discord: its command opens
+// again, once the page is there for the dialog to open over.
+onMounted(() => {
+	watch(
+		() => [loading.value, route.query.rules] as const,
+		([isLoading, ruled]) => {
+			if (isLoading || typeof ruled !== "string") return;
+			const command =
+				ruled === EVERY_COMMAND
+					? EVERY_COMMAND
+					: disableableCommands.value.find((entry) => entry.name === ruled);
+			if (command) openEditor(command);
+			const { rules: _, ...query } = route.query;
+			void router.replace({ query });
+		},
+		{ immediate: true },
+	);
+});
 
 /**
  * Takes in what the editor saved. The tiles' form rebases when the stored
@@ -459,8 +583,31 @@ watch(
 <style scoped>
 @reference "@/assets/css/main.css";
 
+.command-every {
+	@apply mb-1.5 flex w-full cursor-pointer items-center gap-3 rounded-[10px] px-3.5 py-3 text-left;
+	border: 1px solid var(--field-border);
+	background-color: var(--console-surface, transparent);
+}
+
+.command-every:hover {
+	background-color: var(--console-hover);
+}
+
+.command-every:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: 2px;
+}
+
+.command-every-tile {
+	@apply flex size-9 shrink-0 items-center justify-center rounded-[10px] bg-primary/12 text-primary;
+}
+
+.command-pill {
+	@apply inline-flex h-6 items-center gap-1.5 rounded-full bg-base-content/8 px-2.25 text-xs font-semibold whitespace-nowrap text-toned;
+}
+
 .command-category {
-	@apply flex min-h-12.5 w-full cursor-pointer items-center gap-3 border-0 bg-transparent px-2 text-left;
+	@apply flex min-h-11 w-full cursor-pointer items-center gap-3 border-0 bg-transparent px-2 py-1.5 text-left;
 }
 
 .command-category:hover {
@@ -474,7 +621,7 @@ watch(
 }
 
 .command-tile {
-	@apply flex min-w-0 cursor-pointer items-center gap-3 rounded-lg bg-transparent px-3 py-2.5 text-left;
+	@apply flex min-h-13.5 min-w-0 cursor-pointer items-center gap-3 rounded-lg bg-transparent px-3 py-2.5 text-left;
 	border: 1px solid var(--home-border-subtle);
 }
 
@@ -487,11 +634,11 @@ watch(
 }
 
 .command-state {
-	@apply inline-flex h-6 items-center gap-1.5 rounded-full px-2.5 text-xs font-bold;
+	@apply inline-flex h-5.5 items-center gap-1.5 rounded-full px-2 text-[0.6875rem] font-semibold;
 }
 
 .command-rules {
-	@apply inline-flex items-center gap-1 font-mono text-[0.6875rem] whitespace-nowrap text-muted;
+	@apply inline-flex items-center gap-1 text-[0.6875rem] whitespace-nowrap text-muted;
 }
 
 .command-state--on {

@@ -1,13 +1,20 @@
 <template>
 	<div class="flex min-w-0 flex-col gap-1">
-		<p :id="labelId" class="text-[0.9375rem]">{{ label }}</p>
-		<p v-if="description" class="text-[0.8125rem] text-muted">{{ description }}</p>
+		<p :id="labelId" :class="field ? 'text-sm font-medium' : 'text-[0.9375rem]'">
+			{{ label }}
+		</p>
+		<p v-if="description && !field" :id="descriptionId" class="text-[0.8125rem] text-muted">
+			{{ description }}
+		</p>
 		<div
-			class="mt-1.5 flex flex-wrap items-center gap-2"
+			class="flex flex-wrap items-center gap-2"
+			:class="field ? 'mt-0.5' : 'mt-1.5'"
 			role="group"
 			:aria-labelledby="labelId"
+			:aria-describedby="description ? descriptionId : undefined"
 		>
-			<span v-if="ids.length === 0" class="text-[0.8125rem] text-muted">
+			<!-- A field's empty state is its add button alone. -->
+			<span v-if="ids.length === 0 && !field" class="text-[0.8125rem] text-muted">
 				{{ emptyLabel ?? ts("select.nothing_chosen") }}
 			</span>
 			<span v-for="id in ids" :key="id" class="member-picker-chip">
@@ -51,6 +58,13 @@
 				{{ ts("guild_member_picker.add") }}
 			</button>
 		</div>
+		<p
+			v-if="description && field"
+			:id="descriptionId"
+			class="mt-0.5 text-[0.8125rem] leading-normal text-muted"
+		>
+			{{ description }}
+		</p>
 
 		<UModal
 			v-model:open="open"
@@ -122,6 +136,7 @@ const {
 	description,
 	emptyLabel,
 	disabled = false,
+	field = false,
 } = defineProps<{
 	/** The picked members, by id. */
 	ids: readonly string[];
@@ -130,6 +145,8 @@ const {
 	description?: string;
 	emptyLabel?: string;
 	disabled?: boolean;
+	/** Laid out as a select field: a field's label, and the description under the chips. */
+	field?: boolean;
 }>();
 
 const emit = defineEmits<{ "update:ids": [value: string[]] }>();
@@ -137,6 +154,7 @@ const emit = defineEmits<{ "update:ids": [value: string[]] }>();
 const { ts } = useI18n();
 
 const labelId = useId();
+const descriptionId = useId();
 const open = ref(false);
 const query = ref("");
 const { results, pending } = useGuildMemberSearch(() => guildId, query);

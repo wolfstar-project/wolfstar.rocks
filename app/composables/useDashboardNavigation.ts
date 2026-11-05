@@ -11,14 +11,11 @@
 export function useDashboardNavigation() {
 	const { activeGuildId, pendingNavigation, section, selectGuild, setSection } = useActiveGuild();
 	const { guildSettingsChanges } = useGuildSettingsChanges();
-	const { hasDrafts: hasCommandPermissionDrafts } = useCommandPermissionDrafts();
 
-	// Unsent command permission edits are staged changes too.
 	const hasStagedChanges = computed(
 		() =>
-			(guildSettingsChanges.value !== undefined &&
-				Object.keys(guildSettingsChanges.value).length > 0) ||
-			hasCommandPermissionDrafts.value,
+			guildSettingsChanges.value !== undefined &&
+			Object.keys(guildSettingsChanges.value).length > 0,
 	);
 
 	function goToSection(slug: string) {

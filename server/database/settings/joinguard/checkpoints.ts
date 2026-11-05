@@ -7,7 +7,6 @@ import type {
 import type { Snowflake } from "discord-api-types/v10";
 import { isRowId } from "#server/database/settings/ids";
 import { asTimestampString, timestampStringToDate } from "#server/utils/timestamp-string";
-import { and } from "@prisma/orm-postgres/orm-client";
 
 type Orm = Database["orm"];
 type CheckpointRow = Omit<Models.public_JoinGuardCheckpoint, "guild" | "rule">;
@@ -94,15 +93,15 @@ export async function fetchJoinGuardCheckpointPage(
 	if (cursor !== undefined && !isRowId(cursor)) return { rows: [], nextCursor: null };
 
 	const since = toTimestamp(now - JoinGuardQueueWindow);
-	const rows = await orm.public.JoinGuardCheckpoint.where({
+	// Who waits is listed however long ago they were stopped: with a timeout of 0
+	// nobody kicks them, and the "waiting" count counts them all.
+	let query = orm.public.JoinGuardCheckpoint.where({
 		guildId: BigInt(guildId),
 		...(status === "all" ? {} : { status }),
-	})
-		.where((row) =>
-			cursor === undefined
-				? row.createdAt.gte(since)
-				: and(row.createdAt.gte(since), row.id.lt(BigInt(cursor))),
-		)
+	});
+	if (status !== "Waiting") query = query.where((row) => row.createdAt.gte(since));
+	if (cursor !== undefined) query = query.where((row) => row.id.lt(BigInt(cursor)));
+	const rows = await query
 		.orderBy((row) => row.id.desc())
 		// One more than the page, to know whether another page follows:
 		.limit(limit + 1)
@@ -140,16 +139,17 @@ export async function countJoinGuardCheckpoints(
 		),
 	]);
 
-	const [Waiting = 0, Verified = 0, Kicked = 0, Banned = 0, Left = 0] = totals.map(({ total }) =>
-		Number(total),
+	const [windowedWaiting = 0, Verified = 0, Kicked = 0, Banned = 0, Left = 0] = totals.map(
+		({ total }) => Number(total),
 	);
 	return {
 		counts: {
-			Waiting,
+			// The Waiting filter lists everyone who waits, so it counts them all.
+			Waiting: Number(waiting.total),
 			Verified,
 			Kicked,
 			Banned,
-			all: Waiting + Verified + Kicked + Banned + Left,
+			all: windowedWaiting + Verified + Kicked + Banned + Left,
 		},
 		waiting: Number(waiting.total),
 	};

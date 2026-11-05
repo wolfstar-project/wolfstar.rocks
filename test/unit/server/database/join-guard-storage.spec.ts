@@ -237,6 +237,8 @@ describe("the queue", () => {
 		});
 
 		expect(calls.where[0]).toStrictEqual({ guildId: BigInt(GUILD), status: "Waiting" });
+		// Whoever waits is listed however old the row is: no window, no cursor.
+		expect(calls.where).toHaveLength(1);
 		expect(calls.orderBy).toBe(1);
 		expect(calls.limit).toBe(3);
 		expect(page.rows.map((row) => row.id)).toStrictEqual(["9", "8"]);
@@ -254,6 +256,8 @@ describe("the queue", () => {
 		});
 
 		expect(calls.where[0]).toStrictEqual({ guildId: BigInt(GUILD) });
+		// The other statuses stay in the last 7 days, and after the cursor.
+		expect(calls.where).toHaveLength(3);
 		expect(page.nextCursor).toBeNull();
 	});
 
@@ -271,7 +275,7 @@ describe("the queue", () => {
 		expect(where).not.toHaveBeenCalled();
 	});
 
-	it("counts the 7 days by status, Left in all only, and who waits now", async () => {
+	it("counts the 7 days by status, Left in all only, and everyone who waits under Waiting", async () => {
 		const totals: Record<string, number> = {
 			Waiting: 3,
 			Verified: 4,
@@ -292,7 +296,7 @@ describe("the queue", () => {
 		const orm = { public: { JoinGuardCheckpoint: { where } } };
 
 		expect(await countJoinGuardCheckpoints(orm as never, GUILD, NOW)).toStrictEqual({
-			counts: { Waiting: 3, Verified: 4, Kicked: 2, Banned: 1, all: 15 },
+			counts: { Waiting: 6, Verified: 4, Kicked: 2, Banned: 1, all: 15 },
 			waiting: 6,
 		});
 		expect(JoinGuardQueueWindow).toBe(7 * 86_400_000);

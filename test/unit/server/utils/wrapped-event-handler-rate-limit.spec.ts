@@ -16,8 +16,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
  * races remain a documented limitation.
  */
 
-const { storageState, gate, mockRequireUserSession } = vi.hoisted(() => {
+const { storageState, storageTtl, gate, mockRequireUserSession } = vi.hoisted(() => {
 	const storageState = new Map<string, unknown>();
+	const storageTtl = new Map<string, number | undefined>();
 
 	// Gate lets tests pause storage reads so two requests interleave
 	// deterministically: both read before either writes.
@@ -36,8 +37,9 @@ const { storageState, gate, mockRequireUserSession } = vi.hoisted(() => {
 					finish();
 				}
 			}),
-		setItem: async (key: string, value: unknown) => {
+		setItem: async (key: string, value: unknown, options?: { ttl?: number }) => {
 			storageState.set(key, value);
+			storageTtl.set(key, options?.ttl);
 		},
 	});
 	g.requireUserSession = mockRequireUserSession;
@@ -54,7 +56,7 @@ const { storageState, gate, mockRequireUserSession } = vi.hoisted(() => {
 		return clone;
 	};
 
-	return { storageState, gate, mockRequireUserSession };
+	return { storageState, storageTtl, gate, mockRequireUserSession };
 });
 
 vi.mock("evlog", () => ({
@@ -107,6 +109,7 @@ describe("rate-limit reservations under concurrency", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		storageState.clear();
+		storageTtl.clear();
 		gate.pending = [];
 		gate.hold = false;
 		mockRequireUserSession.mockResolvedValue({ user: { id: "user-1" } });
@@ -266,6 +269,24 @@ describe("rate-limit reservations under concurrency", () => {
 		} finally {
 			g.getRequestURL = originalUrl;
 		}
+	});
+
+	it("lets a counter expire with its window, so idle routes leave nothing behind", async () => {
+		const fixed = defineWrappedResponseHandler(vi.fn().mockResolvedValue("ok"), {
+			auth: true,
+			rateLimit: { enabled: true, limit: 3, type: "fixed", window: 10_000 },
+		});
+		await fixed(makeEvent());
+		expect(storageTtl.get("rate-limiter-state:GET:/api/test:user-1")).toBe(10);
+
+		storageTtl.clear();
+		storageState.clear();
+		const sliding = defineWrappedResponseHandler(vi.fn().mockResolvedValue("ok"), {
+			auth: true,
+			rateLimit: { enabled: true, limit: 3, type: "sliding", window: 30_000 },
+		});
+		await sliding(makeEvent());
+		expect(storageTtl.get("rate-limiter-state:GET:/api/test:user-1")).toBe(30);
 	});
 
 	it("fails open when the rate-limit storage cannot be read", async () => {

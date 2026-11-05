@@ -56,11 +56,13 @@ describe("GuildActivityChart", () => {
 		expect(wrapper.findAll(".activity-bar--top")).toHaveLength(0);
 	});
 
-	it("is one image named after every day and its count", async () => {
+	it("is one image, named with the label it is given, whose day names are not read again", async () => {
 		const wrapper = await mount([1, 2, 3, 4, 5, 6, 7]);
 
+		expect(wrapper.findAll('[role="img"]')).toHaveLength(1);
 		expect(wrapper.get('[role="img"]').attributes("aria-label")).toBe(
 			"Moderation actions per day",
 		);
+		expect(wrapper.get(".activity-days").attributes("aria-hidden")).toBe("true");
 	});
 });

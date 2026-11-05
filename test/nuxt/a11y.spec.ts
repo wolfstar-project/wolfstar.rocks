@@ -501,7 +501,7 @@ describe("component accessibility audits", () => {
 
 			it("should have no accessibility violations when closed", async () => {
 				const component = await mountSuspended(DiscordStringSelectMenu, {
-					props: { options: selectOptions, label: "Configuration category" },
+					props: { options: selectOptions, ariaLabel: "Configuration category" },
 				});
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
@@ -509,7 +509,7 @@ describe("component accessibility audits", () => {
 
 			it("should have no accessibility violations when open", async () => {
 				const component = await mountSuspended(DiscordStringSelectMenu, {
-					props: { options: selectOptions, label: "Configuration category" },
+					props: { options: selectOptions, ariaLabel: "Configuration category" },
 					attachTo: document.body,
 				});
 				await component.find("button[role='combobox']").trigger("click");

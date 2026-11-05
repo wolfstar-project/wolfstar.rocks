@@ -12,6 +12,8 @@ const body = {
 	ignoredChannels: [],
 	allowedRoles: [],
 	ignoredRoles: [],
+	allowedUsers: [],
+	ignoredUsers: [],
 };
 
 describe("CommandRulePutSchema", () => {
@@ -29,6 +31,18 @@ describe("CommandRulePutSchema", () => {
 		expect(safeParse(CommandRulePutSchema, { ...body, revision: 2 ** 32 }).success).toBe(false);
 		const { ignoredRoles: _, ...missing } = body;
 		expect(safeParse(CommandRulePutSchema, missing).success).toBe(false);
+		const { ignoredUsers: __, ...noMembers } = body;
+		expect(safeParse(CommandRulePutSchema, noMembers).success).toBe(false);
+	});
+
+	it("takes the members, by snowflake", () => {
+		expect(
+			safeParse(CommandRulePutSchema, { ...body, allowedUsers: ["500000000000000001"] })
+				.success,
+		).toBe(true);
+		expect(safeParse(CommandRulePutSchema, { ...body, ignoredUsers: ["stella"] }).success).toBe(
+			false,
+		);
 	});
 });
 
@@ -37,5 +51,11 @@ describe("CommandRuleNameSchema", () => {
 		expect(safeParse(CommandRuleNameSchema, "warnThresholds").success).toBe(true);
 		expect(safeParse(CommandRuleNameSchema, "ban add").success).toBe(false);
 		expect(safeParse(CommandRuleNameSchema, "").success).toBe(false);
+	});
+
+	it("takes every command, but not a category, which only /commands sets", () => {
+		expect(safeParse(CommandRuleNameSchema, "*").success).toBe(true);
+		expect(safeParse(CommandRuleNameSchema, "Moderation.*").success).toBe(false);
+		expect(safeParse(CommandRuleNameSchema, "**").success).toBe(false);
 	});
 });

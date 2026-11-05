@@ -70,7 +70,7 @@ export default defineWrappedResponseHandler(
 				status: 403,
 				code: "scope-missing",
 				why: "Your Discord sign-in does not include the permission to change command permissions",
-				fix: "Authorize with Discord again from the command permissions tab",
+				fix: "Authorize with Discord again from the rules of the command",
 			});
 		}
 

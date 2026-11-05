@@ -35,7 +35,10 @@ export const RateLimitSchema = object({
 		),
 		5,
 	),
-	scope: optional(picklist(["global", "route"]), "global"),
+	// One counter per route. A `global` counter is shared by every route a member
+	// calls, but each route checks it against its own limit and window, so a page
+	// that loads one busy route is refused on the strict one before its first call.
+	scope: optional(picklist(["global", "route"]), "route"),
 	type: optional(picklist(["fixed", "sliding"]), "fixed"),
 	whitelist: optional(array(string()), []),
 	window: optional(

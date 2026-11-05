@@ -1,18 +1,23 @@
 <template>
-	<ul class="divide-y divide-(--home-border-subtle)">
-		<li v-for="row in rows" :key="row.target" class="py-3 first:pt-0 last:pb-0">
-			<p class="text-sm font-semibold">{{ row.name }}</p>
-			<p v-if="row.onlyAllowed" class="mt-0.5 text-[0.8125rem] text-muted">
-				{{ ts("guild_settings.command_rules.editor.only_allowed") }}
+	<ul>
+		<li v-for="row in rows" :key="row.target" class="rule-row">
+			<p class="flex flex-wrap items-center gap-2">
+				<span class="text-sm font-bold">{{ row.name }}</span>
+				<span v-if="row.onlyAllowed" class="rule-pill">
+					{{ ts("guild_settings.command_rules.editor.only_allowed") }}
+				</span>
 			</p>
-			<dl
-				v-if="row.lists.length > 0"
-				class="mt-1.5 grid gap-x-4 gap-y-1 text-[0.8125rem] sm:grid-cols-[max-content_1fr]"
-			>
-				<template v-for="list in row.lists" :key="list.key">
-					<dt class="text-muted">{{ list.label }}</dt>
-					<dd>{{ list.values.join(", ") }}</dd>
-				</template>
+			<dl v-if="row.lists.length > 0" class="mt-1.5">
+				<div
+					v-for="list in row.lists"
+					:key="list.key"
+					class="grid gap-x-3 gap-y-0.5 py-0.75 sm:grid-cols-[8rem_minmax(0,1fr)]"
+				>
+					<dt class="text-xs font-semibold text-muted">{{ list.label }}</dt>
+					<dd class="text-[0.8125rem] wrap-anywhere text-toned">
+						{{ list.values.join(", ") }}
+					</dd>
+				</div>
 			</dl>
 		</li>
 	</ul>
@@ -113,3 +118,16 @@ const rows = computed(() =>
 	}),
 );
 </script>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+.rule-row {
+	@apply py-3;
+	border-top: 1px solid var(--home-border-subtle);
+}
+
+.rule-pill {
+	@apply inline-flex h-6 items-center rounded-full bg-base-content/8 px-2.25 text-xs font-semibold whitespace-nowrap text-toned;
+}
+</style>

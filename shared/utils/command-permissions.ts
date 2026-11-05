@@ -1,5 +1,7 @@
+import type { CommandRule } from "#shared/utils/command-rules";
 import {
 	APIApplicationCommandPermissionsConstant,
+	ApplicationCommandPermissionType,
 	type APIApplicationCommandPermission,
 } from "discord-api-types/v10";
 
@@ -177,4 +179,56 @@ export function snapshotOf(sets: Readonly<Record<string, readonly Overwrite[]>>)
 			normalizeOverwrites(sets[key] ?? []).map((row) => [row.type, row.id, row.permission]),
 		]),
 	);
+}
+
+/**
+ * A command rule as Discord's own permissions of its command: one row per role,
+ * member and channel it lists, allowed or denied as the rule lists it.
+ * `@everyone` among the ignored roles, the rule's "only the allowed" status, is
+ * Discord's `@everyone` row, and allowed channels deny All channels besides
+ * them. An id in both lists is denied, as the bot reads ignored before allowed.
+ *
+ * Discord decides between the rows otherwise than WolfStar between the
+ * entries: it lets a member in when any of their roles is allowed, where
+ * WolfStar goes by the highest role listed, so an ignored role above an
+ * allowed one only holds in WolfStar. Discord also uses the app default only
+ * for a command without permissions of its own, where WolfStar applies the
+ * rule of every command (`*`) and of a group together with the command's own.
+ */
+export function commandRuleOverwrites(rule: CommandRule, guildId: string): Overwrite[] {
+	const rows: Overwrite[] = [];
+	const add = (
+		type: ApplicationCommandPermissionType,
+		ids: readonly string[],
+		permission: boolean,
+	) => {
+		for (const id of ids) rows.push({ id, type, permission });
+	};
+	add(ApplicationCommandPermissionType.Role, rule.allowedRoles, true);
+	add(ApplicationCommandPermissionType.User, rule.allowedUsers, true);
+	add(ApplicationCommandPermissionType.Channel, rule.allowedChannels, true);
+	if (rule.allowedChannels.length > 0) {
+		add(ApplicationCommandPermissionType.Channel, [allChannelsId(guildId)], false);
+	}
+	add(ApplicationCommandPermissionType.Role, rule.ignoredRoles, false);
+	add(ApplicationCommandPermissionType.User, rule.ignoredUsers, false);
+	add(ApplicationCommandPermissionType.Channel, rule.ignoredChannels, false);
+	return normalizeOverwrites(rows);
+}
+
+/**
+ * Whether Discord applies a command's rule too, read from Discord since nothing
+ * stores it: `off` when the command has no permissions of its own, `matching`
+ * when they are the rule's (`commandRuleOverwrites`), and `different` when they
+ * are not, as when they were changed in Discord since.
+ */
+export function commandDiscordState(
+	rows: readonly Overwrite[] | undefined,
+	rule: CommandRule,
+	guildId: string,
+): "off" | "matching" | "different" {
+	if (usesAppDefault(rows)) return "off";
+	return overwritesEqual(rows ?? [], commandRuleOverwrites(rule, guildId))
+		? "matching"
+		: "different";
 }

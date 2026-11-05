@@ -46,6 +46,8 @@ const noEdit = {
 	ignoredChannels: [],
 	allowedRoles: [],
 	ignoredRoles: [],
+	allowedUsers: [],
+	ignoredUsers: [],
 };
 
 describe("readCommandRules", () => {
@@ -314,12 +316,14 @@ describe("setCommandRule", () => {
 });
 
 describe("applyCommandRuleEdit", () => {
-	it("keeps the member lists the dashboard does not edit", () => {
+	it("takes every list from what was picked, members included, without duplicates", () => {
 		const stored = rule("ban", { allowedRoles: [R1], allowedUsers: [U1], ignoredUsers: [U1] });
-		const next = applyCommandRuleEdit(stored, { ...noEdit, ignoredChannels: [C1, C1] }, GUILD);
-		expect(next).toEqual(
-			rule("ban", { ignoredChannels: [C1], allowedUsers: [U1], ignoredUsers: [U1] }),
+		const next = applyCommandRuleEdit(
+			stored,
+			{ ...noEdit, ignoredChannels: [C1, C1], ignoredUsers: [U1] },
+			GUILD,
 		);
+		expect(next).toEqual(rule("ban", { ignoredChannels: [C1], ignoredUsers: [U1] }));
 	});
 
 	it("stores the status as @everyone, whatever the picked roles hold", () => {
@@ -404,7 +408,7 @@ describe("writeCommandRule", () => {
 		).toEqual(["kick"]);
 	});
 
-	it("keeps the members and the rules of other commands", () => {
+	it("writes the members picked, and keeps the rules of other commands", () => {
 		const settings = {
 			commandsDisabled: [],
 			commandsRestrictions: [
@@ -416,14 +420,25 @@ describe("writeCommandRule", () => {
 		const { commandsRestrictions } = writeCommandRule(
 			settings,
 			"ban",
-			{ ...noEdit, enabled: true, allowedChannels: [C1] },
+			{ ...noEdit, enabled: true, allowedChannels: [C1], ignoredUsers: [U1] },
 			GUILD,
 		);
 		expect(commandsRestrictions).toEqual([
 			rule("kick", { ignoredChannels: [C2] }),
-			rule("ban", { allowedChannels: [C1], allowedUsers: [U1] }),
+			rule("ban", { allowedChannels: [C1], ignoredUsers: [U1] }),
 			MARKER,
 		]);
+	});
+
+	it("writes the rule of every command like the rule of a command", () => {
+		const settings = { commandsDisabled: [], commandsRestrictions: [MARKER] };
+		const { commandsRestrictions } = writeCommandRule(
+			settings,
+			"*",
+			{ ...noEdit, enabled: true, ignoredRoles: [R1] },
+			GUILD,
+		);
+		expect(commandsRestrictions).toEqual([rule("*", { ignoredRoles: [R1] }), MARKER]);
 	});
 
 	it("keeps the rules of a group, which the dashboard does not edit", () => {

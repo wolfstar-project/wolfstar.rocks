@@ -91,22 +91,4 @@ describe("the dashboard's update prompt", () => {
 		await vi.waitFor(() => expect(promptShown()).toBe(true));
 		wrapper.unmount();
 	});
-
-	it("waits while command permissions are unsent", async () => {
-		useActiveGuild().selectGuild(GUILD_ID);
-		const wrapper = await mountLayout();
-		await vi.waitFor(() => expect(useGuildData().guildData.value?.id).toBe(GUILD_ID), {
-			timeout: 10_000,
-		});
-		const { discardAll, drafts } = useCommandPermissionDrafts();
-		drafts.value = { "987654321098765432": { base: [], rows: [] } };
-		deployNewerBuild();
-
-		await vi.waitFor(() => expect(promptOpen()).toBe(true), { timeout: 10_000 });
-		expect(promptShown()).toBe(false);
-
-		discardAll();
-		await vi.waitFor(() => expect(promptShown()).toBe(true));
-		wrapper.unmount();
-	});
 });

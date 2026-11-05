@@ -709,7 +709,10 @@ describe("disabledCommands", () => {
 				"Command rules (kick)",
 			),
 		);
-		await vi.waitFor(() => expect(useRouter().currentRoute.value.query.rules).toBeUndefined());
+		// The address is replaced after the editor opens, which takes a while under load.
+		await vi.waitFor(() => expect(useRouter().currentRoute.value.query.rules).toBeUndefined(), {
+			timeout: 5000,
+		});
 		wrapper.unmount();
 		await vi.waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull());
 	});

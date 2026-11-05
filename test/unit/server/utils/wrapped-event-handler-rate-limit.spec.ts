@@ -92,6 +92,7 @@ import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler"
 function makeEvent(): H3Event {
 	return {
 		node: { req: { method: "GET", socket: {} } },
+		context: {},
 		headers: new Headers(),
 	} as unknown as H3Event;
 }
@@ -239,6 +240,29 @@ describe("rate-limit reservations under concurrency", () => {
 			await expect(strict(makeEvent())).resolves.toBe("strict");
 			await expect(strict(makeEvent())).resolves.toBe("strict");
 			await expect(strict(makeEvent())).rejects.toThrow("Too Many Requests");
+		} finally {
+			g.getRequestURL = originalUrl;
+		}
+	});
+
+	it("counts the calls to one route together, whatever the IDs in its path", async () => {
+		const g = globalThis as Record<string, unknown>;
+		const originalUrl = g.getRequestURL;
+		const handler = defineWrappedResponseHandler(vi.fn().mockResolvedValue("ok"), {
+			auth: true,
+			rateLimit: { enabled: true, limit: 2, type: "fixed", window: 5000 },
+		});
+		const eventFor = (guild: string) => {
+			g.getRequestURL = () => new URL(`http://localhost/api/guilds/${guild}/members`);
+			const event = makeEvent();
+			event.context = { matchedRoute: { path: "/api/guilds/:guild/members" } };
+			return event;
+		};
+
+		try {
+			await handler(eventFor("1"));
+			await handler(eventFor("2"));
+			await expect(handler(eventFor("3"))).rejects.toThrow("Too Many Requests");
 		} finally {
 			g.getRequestURL = originalUrl;
 		}

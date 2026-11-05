@@ -366,10 +366,13 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 	// Build storage key: method:path:user by default (one counter per route), or one per user for all routes when scope === "global"
 	const { req } = event.node;
 	const { method } = req;
+	// The route's pattern (`/api/guilds/:guild/settings`), not the URL: with the
+	// URL each guild or row would get a counter of its own, so the limit would
+	// not be the route's and the storage would grow with every ID a member opens
 	const { pathname } = getRequestURL(event);
 	const normalizedPath =
 		pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
-	const scopeKey = `${method}:${normalizedPath}`;
+	const scopeKey = `${method}:${event.context.matchedRoute?.path ?? normalizedPath}`;
 	const storageKey =
 		scope === "route" ? `rate-limiter-state:${scopeKey}:${id}` : `rate-limiter-state:${id}`;
 

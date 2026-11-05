@@ -1,4 +1,5 @@
 import { botApiFetch } from "#server/utils/bot-api/session";
+import { auditAppealDenied, auditAppealSent } from "#server/utils/my-appeals/audit";
 import {
 	parseAppealSubmission,
 	readAppealFormParam,
@@ -25,11 +26,20 @@ export default defineWrappedResponseHandler(
 		if (parsed.errors) throwInvalidAppealSubmission(parsed.errors);
 
 		const { user } = await getCurrentUser(event);
+		const sender = { id: user.id, username: user.username };
 		const appeal = await botApiFetch<unknown>(user.id, `/appeals/${guildId}/${formId}`, {
 			method: "POST",
 			body: parsed.data,
-		}).catch(throwBotRefusal);
+		}).catch((error: unknown) => {
+			try {
+				return throwBotRefusal(error);
+			} catch (refusal) {
+				auditAppealDenied(event, { guildId, sender }, refusal);
+				throw refusal;
+			}
+		});
 
+		auditAppealSent(event, { guildId, sender, caseId: parsed.data.caseId, formId });
 		setResponseStatus(event, 201);
 		return appeal;
 	},

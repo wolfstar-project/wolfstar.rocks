@@ -108,7 +108,9 @@ const STATUS_MESSAGES: Readonly<Record<number, string>> = {
 
 /** The status and body of an error `$fetch` threw for the bot's API, when it is one. */
 function readBotError(error: unknown): { status: number; body: unknown } | null {
-	if (!isObject(error)) return null;
+	// Not `isObject()`: it takes plain objects only, and what ofetch throws is a
+	// `FetchError`, so every refusal of the bot read as the bot being unreachable.
+	if (typeof error !== "object" || error === null) return null;
 	const { status, data } = error as { status?: unknown; data?: unknown };
 	return typeof status === "number" ? { status, body: data } : null;
 }

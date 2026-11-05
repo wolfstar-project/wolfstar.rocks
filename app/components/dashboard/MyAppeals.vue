@@ -11,7 +11,7 @@
 						{{ ts("dashboard.my_appeals.intro") }}
 					</p>
 				</div>
-				<UBadge v-if="status === 'success'" color="primary" variant="soft" class="shrink-0">
+				<UBadge v-if="loaded" color="primary" variant="soft" class="shrink-0">
 					{{ summary }}
 				</UBadge>
 			</div>
@@ -103,11 +103,15 @@ const { guildId = null } = defineProps<{
 const { ts } = useI18n();
 const headingId = useId();
 
-const { entries, error, loadPage, openCount, refresh, status, submit } = useMyAppeals({
+const { entries, error, loadPage, loaded, openCount, refresh, status, submit } = useMyAppeals({
 	guild: () => guildId,
+	live: true,
 });
 
-const isLoading = computed(() => status.value === "pending" || status.value === "idle");
+// Only the first read: the reads of the open list keep the cases on screen.
+const isLoading = computed(
+	() => !loaded.value && (status.value === "pending" || status.value === "idle"),
+);
 const hasFailed = computed(() => status.value === "error" && Boolean(error.value));
 
 // Relative times read from one clock, ticking each minute while the page is open.

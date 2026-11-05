@@ -2,7 +2,7 @@ import type { AppealPage, MyAppealEntry, MyAppealsResponse } from "#shared/utils
 import type { H3Event } from "h3";
 import { registerEndpoint } from "@nuxt/test-utils/runtime";
 import { createError, getQuery } from "h3";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const GUILD = "234567890123456789";
 
@@ -106,6 +106,59 @@ describe("useMyAppeals", () => {
 		});
 		expect(lastBody).toStrictEqual({ caseId: 212, answers: { why: "Sorry." } });
 		expect(listCalls).toBeGreaterThan(before);
+	});
+
+	describe("while the list is shown", () => {
+		const setVisibility = (state: DocumentVisibilityState) => {
+			Object.defineProperty(document, "visibilityState", {
+				configurable: true,
+				value: state,
+			});
+			document.dispatchEvent(new Event("visibilitychange"));
+		};
+
+		afterEach(() => {
+			vi.useRealTimers();
+			setVisibility("visible");
+		});
+
+		it("reads it again every minute, so a decision of the staff shows without a reload", async () => {
+			vi.useFakeTimers({ toFake: ["setInterval", "clearInterval", "Date"] });
+			const { loaded, status } = useMyAppeals({ live: true });
+			await vi.waitUntil(() => status.value === "success", { timeout: 2000 });
+			const before = listCalls;
+
+			vi.advanceTimersByTime(60_000);
+			await vi.waitUntil(() => listCalls > before, { timeout: 2000 });
+			// The cases stay on screen while it reads them again.
+			expect(loaded.value).toBe(true);
+		});
+
+		it("does not read it while the tab is hidden, and reads it when the tab comes back", async () => {
+			vi.useFakeTimers({ toFake: ["setInterval", "clearInterval", "Date"] });
+			const { status } = useMyAppeals({ live: true });
+			await vi.waitUntil(() => status.value === "success", { timeout: 2000 });
+			const before = listCalls;
+
+			setVisibility("hidden");
+			vi.advanceTimersByTime(120_000);
+			await new Promise((resolve) => requestAnimationFrame(resolve));
+			expect(listCalls).toBe(before);
+
+			setVisibility("visible");
+			await vi.waitUntil(() => listCalls > before, { timeout: 2000 });
+		});
+
+		it("is not read again when only the badge of the Home counts the cases", async () => {
+			vi.useFakeTimers({ toFake: ["setInterval", "clearInterval", "Date"] });
+			const { status } = useMyAppeals();
+			await vi.waitUntil(() => status.value === "success", { timeout: 2000 });
+			const before = listCalls;
+
+			vi.advanceTimersByTime(120_000);
+			await new Promise((resolve) => requestAnimationFrame(resolve));
+			expect(listCalls).toBe(before);
+		});
 	});
 
 	it("gives the code the bot refused the appeal with, and generic for one it does not know", async () => {

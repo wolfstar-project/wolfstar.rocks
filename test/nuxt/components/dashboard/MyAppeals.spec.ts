@@ -106,6 +106,8 @@ const COOLDOWN = makeEntry({
 const mockEntries = ref<MyAppealEntry[]>([]);
 const mockStatus = ref<"idle" | "pending" | "success" | "error">("success");
 const mockError = ref<Error | null>(null);
+// Read once already, whatever the status of the read running now.
+const mockLoaded = ref<boolean | null>(null);
 const mockRefresh = vi.fn();
 const mockLoadPage = vi.fn();
 const mockSubmit = vi.fn();
@@ -117,6 +119,7 @@ mockNuxtImport("useMyAppeals", () => (params: unknown) => {
 		entries: mockEntries,
 		error: mockError,
 		loadPage: mockLoadPage,
+		loaded: computed(() => mockLoaded.value ?? mockStatus.value === "success"),
 		openCount: computed(
 			() => mockEntries.value.filter((entry) => entry.status === "open").length,
 		),
@@ -143,6 +146,7 @@ describe("DashboardMyAppeals", () => {
 		vi.clearAllMocks();
 		mockEntries.value = [OPEN, PENDING, DENIED, CLOSED];
 		mockStatus.value = "success";
+		mockLoaded.value = null;
 		mockError.value = null;
 		mockLoadPage.mockReturnValue(new Promise(() => {}));
 	});
@@ -225,6 +229,18 @@ describe("DashboardMyAppeals", () => {
 		const failed = await mount();
 		await failed.get('[role="alert"] button').trigger("click");
 		expect(mockRefresh).toHaveBeenCalled();
+	});
+
+	it("keeps the cases on screen while the open list is read again", async () => {
+		mockEntries.value = [OPEN];
+		mockLoaded.value = true;
+		mockStatus.value = "pending";
+		const wrapper = await mount();
+
+		expect(wrapper.find('[aria-label="Loading your cases"]').exists()).toBe(false);
+		expect(wrapper.text()).toContain("Pixel Parlor");
+		// It asks for the list to be read again while it is shown.
+		expect(mockUseMyAppeals.mock.calls.at(-1)![0]).toMatchObject({ live: true });
 	});
 
 	it("lists the server of the bot's link and opens the dialog on its one open case", async () => {

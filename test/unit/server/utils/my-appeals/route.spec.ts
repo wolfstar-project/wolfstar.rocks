@@ -91,6 +91,19 @@ describe("throwBotRefusal", () => {
 		});
 	});
 
+	it("reads the refusal off what ofetch throws, an error and not a plain object", async () => {
+		const { FetchError } = await import("ofetch");
+		const thrown = Object.assign(new FetchError("[POST] /appeals: 409 Conflict"), {
+			status: 409,
+			data: { error: "appealed" },
+		});
+
+		expect(failureOf(() => throwBotRefusal(thrown))).toMatchObject({
+			statusCode: 409,
+			data: { code: "appealed" },
+		});
+	});
+
 	it("reads a code it does not know as generic, and a bare 404 as a server the bot does not know", () => {
 		expect(
 			failureOf(() => throwBotRefusal({ status: 403, data: { error: "explode" } })),

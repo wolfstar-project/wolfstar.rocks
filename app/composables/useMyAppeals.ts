@@ -16,6 +16,13 @@ export type MyAppealResult<Value = void> =
 
 const BASE = "/api/users/appeals";
 
+/**
+ * How often the list is read again while it is shown, and the shortest wait
+ * between two reads: the route takes five reads in ten seconds from a member.
+ */
+const LIVE_INTERVAL = 60_000;
+const LIVE_MIN_GAP = 15_000;
+
 function readErrorCode(error: unknown): MyAppealErrorCode {
 	const fetchError = error as {
 		statusCode?: unknown;
@@ -48,10 +55,15 @@ async function attempt<Value>(request: () => Promise<Value>): Promise<MyAppealRe
  *
  * @param guild A server the member is not in, to list too: the one of the
  * bot's link, which a banned member follows.
+ * @param live Whether the list is shown, and so read again every minute while
+ * the tab is visible and when it comes back: a decision of the staff, or the
+ * end of a cooldown, shows without a reload. Only the page that lists the
+ * cases asks for it, so the badge of the Home does not read it twice.
  */
 export function useMyAppeals({
 	guild,
-}: { guild?: MaybeRefOrGetter<string | null | undefined> } = {}) {
+	live = false,
+}: { guild?: MaybeRefOrGetter<string | null | undefined>; live?: boolean } = {}) {
 	const extra = computed(() => toValue(guild) ?? null);
 
 	const asyncData = usePersistedAsyncData(
@@ -63,7 +75,24 @@ export function useMyAppeals({
 		{ watch: [extra] },
 	);
 
+	if (live && import.meta.client) {
+		const visibility = useDocumentVisibility();
+		let lastRead = Date.now();
+		const readAgain = () => {
+			if (visibility.value !== "visible" || asyncData.status.value === "pending") return;
+			if (Date.now() - lastRead < LIVE_MIN_GAP) return;
+			lastRead = Date.now();
+			void asyncData.refresh();
+		};
+		useIntervalFn(readAgain, LIVE_INTERVAL);
+		watch(visibility, (state) => {
+			if (state === "visible") readAgain();
+		});
+	}
+
 	const entries = computed(() => asyncData.data.value?.entries ?? []);
+	/** The list was read once: a later read keeps it shown while it runs. */
+	const loaded = computed(() => asyncData.data.value != null);
 	const openCount = computed(() => asyncData.data.value?.openCount ?? 0);
 
 	function loadPage(guildId: string) {
@@ -88,6 +117,7 @@ export function useMyAppeals({
 		entries,
 		error: asyncData.error,
 		loadPage,
+		loaded,
 		openCount,
 		refresh: asyncData.refresh,
 		status: asyncData.status,

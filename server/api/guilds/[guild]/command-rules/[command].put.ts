@@ -12,6 +12,7 @@ import { guildSettingsAccessDenied, guildSettingsUpdate } from "#shared/audit/ac
 import { CommandRulePutSchema } from "#shared/schemas/command-rules";
 import {
 	COMMAND_RULE_LISTS,
+	EVERY_COMMAND,
 	PROTECTED_COMMANDS,
 	findCommandRule,
 	readCommandRuleState,
@@ -74,18 +75,22 @@ function deniedProtected(event: H3Event, command: string): void {
 
 /**
  * `PUT /api/guilds/:guild/command-rules/:command`: turns a command on or off
- * and sets the lists of its rule the dashboard edits, as the bot's `/commands`
- * saves them (`interaction-handlers/commands.ts`). The member lists are kept.
- * A save whose revision is not the stored one is refused, since it would undo
- * what someone saved since the editor opened.
+ * and sets the lists of its rule, as the bot's `/commands` saves them
+ * (`interaction-handlers/commands.ts`). `:command` may be `*`, the rule of
+ * every command, whose status stays what `/commands` set: the dashboard does
+ * not turn every command off. A save whose revision is not the stored one is
+ * refused, since it would undo what someone saved since the editor opened.
  */
 export default defineWrappedResponseHandler(
 	async (event): Promise<CommandRuleSaved> => {
 		const { guild, member } = useManagedGuild(event);
 		const command = getCommandRuleParam(event);
 		const body = await readValidatedBody(event, (value) => parse(CommandRulePutSchema, value));
+		const every = command === EVERY_COMMAND;
 
-		const { known, guarded } = await findRuledCommand(command);
+		const { known, guarded } = every
+			? { known: true, guarded: false }
+			: await findRuledCommand(command);
 		if (!known) {
 			throw createError({
 				message: "Unknown command",
@@ -115,8 +120,11 @@ export default defineWrappedResponseHandler(
 			commandsDisabled: [...trx.settings.commandsDisabled],
 			commandsRestrictions: trx.settings.commandsRestrictions,
 		};
+		const edit = every
+			? { ...body, enabled: !before.commandsDisabled.includes(command) }
+			: body;
 		await trx
-			.write(writeCommandRule(trx.settings, command, body, guild.id))
+			.write(writeCommandRule(trx.settings, command, edit, guild.id))
 			.submit(undefined, assertCommandSettingsUnchanged(guild.id, before));
 		const changes = auditedChanges(before, trx.settings, command, guild.id);
 

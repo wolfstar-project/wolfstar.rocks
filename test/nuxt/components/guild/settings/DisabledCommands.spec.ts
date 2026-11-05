@@ -103,6 +103,50 @@ registerEndpoint("/api/guilds/123456789012345678/command-rules/ban", {
 	},
 });
 
+const APP_ID = "500000000000000009";
+const KICK_ID = "600000000000000002";
+const MUTE_ID = "600000000000000003";
+
+registerEndpoint("/api/guilds/123456789012345678/command-permissions", {
+	method: "GET",
+	handler: () => ({
+		applicationId: APP_ID,
+		commands: [
+			{ id: KICK_ID, name: "kick", command: "kick", category: "Moderation", description: "" },
+			{ id: MUTE_ID, name: "mute", command: "mute", category: "Moderation", description: "" },
+		],
+		permissions: {
+			// The rule of kick, as Discord's permissions.
+			[KICK_ID]: [{ id: "400000000000000001", type: 3, permission: false }],
+			// Not the rule of mute: changed in Discord.
+			[MUTE_ID]: [{ id: "300000000000000001", type: 1, permission: false }],
+		},
+		snapshot: "x",
+		authorization: { scopeGranted: true, manageGuild: true, manageRoles: true },
+	}),
+});
+
+for (const target of ["kick", "*"]) {
+	registerEndpoint(`/api/guilds/123456789012345678/command-rules/${target}`, {
+		method: "GET",
+		handler: () => ({
+			command: target,
+			enabled: true,
+			onlyAllowed: false,
+			rule: {
+				command: target,
+				allowedChannels: [],
+				ignoredChannels: [],
+				allowedRoles: [],
+				ignoredRoles: [],
+				allowedUsers: [],
+				ignoredUsers: [],
+			},
+			revision: 1,
+		}),
+	});
+}
+
 // Mock commands data with multiple categories
 const mockCommands: FlattenedCommand[] = [
 	{
@@ -203,7 +247,29 @@ function readCommandEnabled(wrapper: MountedDisabledCommands, commandName: strin
 	return state!.textContent?.includes("On") === true;
 }
 
+// Every wrapper is unmounted after its test: one left mounted keeps reading the
+// address, and would open its own editor for a command it names.
+const mountedWrappers: { unmount: () => void }[] = [];
+
+async function mountCommands(
+	options: Parameters<typeof mountSuspended<typeof DisabledCommands>>[1],
+) {
+	const wrapper = await mountSuspended(DisabledCommands, options);
+	mountedWrappers.push(wrapper);
+	return wrapper;
+}
+
 describe("disabledCommands", () => {
+	afterEach(() => {
+		for (const wrapper of mountedWrappers.splice(0)) {
+			try {
+				wrapper.unmount();
+			} catch {
+				// Unmounted by its test already.
+			}
+		}
+	});
+
 	beforeEach(() => {
 		// Clear mocks between tests
 		vi.clearAllMocks();
@@ -215,7 +281,7 @@ describe("disabledCommands", () => {
 	});
 
 	it("renders all command categories as collapsible sections", async () => {
-		const wrapper = await mountSuspended(DisabledCommands, {
+		const wrapper = await mountCommands({
 			props: {
 				commands: mockCommands,
 			},
@@ -252,7 +318,7 @@ describe("disabledCommands", () => {
 	});
 
 	it("displays commands in grid for each category", async () => {
-		const wrapper = await mountSuspended(DisabledCommands, {
+		const wrapper = await mountCommands({
 			props: {
 				commands: mockCommands,
 			},
@@ -290,7 +356,7 @@ describe("disabledCommands", () => {
 	});
 
 	it("toggles category open/closed on trigger click", async () => {
-		const wrapper = await mountSuspended(DisabledCommands, {
+		const wrapper = await mountCommands({
 			props: {
 				commands: mockCommands,
 			},
@@ -327,7 +393,7 @@ describe("disabledCommands", () => {
 	});
 
 	it("only one category open at a time (single-open behavior)", async () => {
-		const wrapper = await mountSuspended(DisabledCommands, {
+		const wrapper = await mountCommands({
 			props: {
 				commands: mockCommands,
 			},
@@ -374,7 +440,7 @@ describe("disabledCommands", () => {
 	});
 
 	it("category action buttons work (enable all, disable all, reset)", async () => {
-		const wrapper = await mountSuspended(DisabledCommands, {
+		const wrapper = await mountCommands({
 			props: {
 				commands: mockCommands,
 			},
@@ -445,7 +511,7 @@ describe("disabledCommands", () => {
 			permissionLevel: 5,
 			preconditions: { entries: [], mode: 0, runCondition: 0 },
 		});
-		const wrapper = await mountSuspended(DisabledCommands, {
+		const wrapper = await mountCommands({
 			props: {
 				commands: [
 					entry("ban add", "ban"),
@@ -475,7 +541,7 @@ describe("disabledCommands", () => {
 	});
 
 	it("does not mark form as changed on initial render", async () => {
-		const wrapper = await mountSuspended(DisabledCommands, {
+		const wrapper = await mountCommands({
 			props: {
 				commands: mockCommands,
 			},
@@ -491,7 +557,7 @@ describe("disabledCommands", () => {
 	});
 
 	it("opens Moderation first, the one category most servers come for", async () => {
-		const wrapper = await mountSuspended(DisabledCommands, {
+		const wrapper = await mountCommands({
 			props: { commands: mockCommands },
 		});
 		const tile = (name: string) =>
@@ -502,7 +568,7 @@ describe("disabledCommands", () => {
 	});
 
 	it("tells on each tile its status and how many rules it has", async () => {
-		const wrapper = await mountSuspended(DisabledCommands, {
+		const wrapper = await mountCommands({
 			props: { commands: mockCommands },
 		});
 
@@ -511,7 +577,7 @@ describe("disabledCommands", () => {
 		expect(kick.textContent).toContain("On");
 		expect(kick.textContent).toContain("1 rule");
 
-		// Members count too: the rule holds them, and the editor keeps them.
+		// Members count too: the rule holds them, and the editor edits them.
 		expect(getCommandCard(wrapper, "mute").textContent).toContain("3 rules");
 
 		const ban = getCommandCard(wrapper, "ban");
@@ -521,7 +587,7 @@ describe("disabledCommands", () => {
 	});
 
 	it("names each tile for what it opens, and describes it by its status", async () => {
-		const wrapper = await mountSuspended(DisabledCommands, {
+		const wrapper = await mountCommands({
 			props: { commands: mockCommands },
 		});
 
@@ -548,7 +614,7 @@ describe("disabledCommands", () => {
 					{ format: 2 },
 				],
 			});
-			const wrapper = await mountSuspended(DisabledCommands, {
+			const wrapper = await mountCommands({
 				props: { commands: mockCommands },
 			});
 
@@ -563,7 +629,7 @@ describe("disabledCommands", () => {
 				commandsRestrictions: [{ command: "kick", allowedRoles: ["300000000000000001"] }],
 			});
 			useActiveGuild().selectGuild("123456789012345678");
-			const wrapper = await mountSuspended(DisabledCommands, {
+			const wrapper = await mountCommands({
 				props: { commands: mockCommands },
 			});
 
@@ -572,7 +638,7 @@ describe("disabledCommands", () => {
 
 		it("shows off what a group turned off, and a save keeps the group", async () => {
 			Object.assign(mockGuildSettings, { commandsDisabled: ["Moderation.*", "ban"] });
-			const wrapper = await mountSuspended(DisabledCommands, {
+			const wrapper = await mountCommands({
 				props: { commands: mockCommands },
 			});
 
@@ -591,8 +657,65 @@ describe("disabledCommands", () => {
 		});
 	});
 
+	it("opens the rules of every command from a row above the commands", async () => {
+		useActiveGuild().selectGuild("123456789012345678");
+		const wrapper = await mountCommands({
+			props: { commands: mockCommands },
+			attachTo: document.body,
+		});
+		const every = wrapper.get('button[aria-label="Rules of every command"]');
+
+		expect(every.attributes("aria-haspopup")).toBe("dialog");
+		expect(every.text()).toContain("The rules every command follows, besides its own.");
+		expect(every.text()).toContain("No rules");
+		await vi.waitFor(() => expect(every.text()).toContain("WolfStar only"));
+
+		await every.trigger("click");
+		await vi.waitFor(() =>
+			expect(document.querySelector('[role="dialog"]')?.textContent).toContain(
+				"What every command uses together with its own rules.",
+			),
+		);
+		wrapper.unmount();
+		await vi.waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull());
+	});
+
+	it("marks the tiles whose rules Discord applies too", async () => {
+		useActiveGuild().selectGuild("123456789012345678");
+		const wrapper = await mountCommands({
+			props: { commands: mockCommands },
+		});
+
+		await vi.waitFor(() =>
+			expect(getCommandCard(wrapper, "kick").textContent).toContain("Also in Discord"),
+		);
+		expect(getCommandCard(wrapper, "kick").querySelector("[title]")?.textContent).toContain(
+			"Discord",
+		);
+		expect(getCommandCard(wrapper, "mute").textContent).toContain("Different in Discord");
+		expect(getCommandCard(wrapper, "ban").textContent).not.toContain("Discord");
+	});
+
+	it("opens the rules of a command named in the address, back from the sign-in", async () => {
+		useActiveGuild().selectGuild("123456789012345678");
+		const wrapper = await mountCommands({
+			props: { commands: mockCommands },
+			route: "/?rules=kick",
+			attachTo: document.body,
+		});
+
+		await vi.waitFor(() =>
+			expect(document.querySelector('[role="dialog"]')?.textContent).toContain(
+				"Command rules (kick)",
+			),
+		);
+		await vi.waitFor(() => expect(useRouter().currentRoute.value.query.rules).toBeUndefined());
+		wrapper.unmount();
+		await vi.waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull());
+	});
+
 	it("adds a channel where no command runs, one at a time", async () => {
-		const wrapper = await mountSuspended(DisabledCommands, {
+		const wrapper = await mountCommands({
 			props: { commands: mockCommands },
 		});
 		const picker = wrapper.findComponent({ name: "SelectChips" });
@@ -606,7 +729,7 @@ describe("disabledCommands", () => {
 
 	it("edits a command's rules from its tile and keeps both statuses in step", async () => {
 		useActiveGuild().selectGuild("123456789012345678");
-		const wrapper = await mountSuspended(DisabledCommands, {
+		const wrapper = await mountCommands({
 			props: { commands: mockCommands },
 			attachTo: document.body,
 		});
@@ -641,7 +764,9 @@ describe("disabledCommands", () => {
 				commandsDisabled: ["kick", "mute"],
 			}),
 		);
-		await vi.waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull());
+		await vi.waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull(), {
+			timeout: 5000,
+		});
 		wrapper.unmount();
 	});
 });

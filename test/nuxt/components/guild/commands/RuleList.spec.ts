@@ -76,7 +76,7 @@ describe("GuildCommandsRuleList", () => {
 			props: { rules: [rule("Tools.*", { allowedRoles: [HIGH], ignoredRoles: [GUILD_ID] })] },
 		});
 
-		expect(wrapper.text()).toContain("Only the allowed roles and users");
+		expect(wrapper.text()).toContain("Only the allowed roles and members");
 		expect(wrapper.text()).not.toContain("Not for roles");
 		expect(wrapper.text()).not.toContain(GUILD_ID);
 	});

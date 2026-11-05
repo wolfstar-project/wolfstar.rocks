@@ -20,8 +20,8 @@ mockNuxtImport("useGuildData", () => () => ({
 	guildData: ref(createMockOauthFlattenedGuild({ id: GUILD_ID })),
 }));
 
-// The cards around it have specs of their own.
-const stubs = { GuildSettingsDisabledCommands: true, GuildCommandsDiscordPermissions: true };
+// The card around it has a spec of its own.
+const stubs = { GuildSettingsDisabledCommands: true };
 
 function mount() {
 	return mountSuspended(Commands, { props: { commands: [] }, global: { stubs } });
@@ -50,12 +50,35 @@ describe("GuildSettingsCommands", () => {
 		});
 		const wrapper = await mount();
 
-		expect(wrapper.findAll("li > p:first-child").map((name) => name.text())).toEqual([
+		// Every command's rule has a row of its own above the commands.
+		expect(wrapper.findAll("li > p > span:first-child").map((name) => name.text())).toEqual([
 			"Moderation · Management",
 			"Moderation",
-			"Every command",
 		]);
 		expect(wrapper.text()).toContain("the most specific one");
-		expect(wrapper.text()).toContain("/commands");
+		expect(wrapper.text()).toContain("Change them with /commands in Discord.");
+	});
+
+	it("leaves the card out when every command has the only rule of a group", async () => {
+		mockGuildSettings.value = createMockGuildData(GUILD_ID, {
+			commandsRestrictions: [{ command: "*", ignoredChannels: [CHANNEL] }, { format: 2 }],
+		});
+		const wrapper = await mount();
+
+		expect(wrapper.text()).not.toContain("Rules of a group of commands");
+	});
+
+	it("says when a group keeps its commands to the allowed roles and members", async () => {
+		useActiveGuild().selectGuild(GUILD_ID);
+		mockGuildSettings.value = createMockGuildData(GUILD_ID, {
+			commandsRestrictions: [
+				{ command: "Moderation.*", ignoredRoles: [GUILD_ID], allowedChannels: [CHANNEL] },
+				{ format: 2 },
+			],
+		});
+		const wrapper = await mount();
+
+		expect(wrapper.get("li > p").text()).toContain("Only the allowed roles and members");
+		expect(wrapper.text()).toContain("Only in");
 	});
 });

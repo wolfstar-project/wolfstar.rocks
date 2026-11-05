@@ -182,17 +182,14 @@ const sectionProps = computed(() => {
 	return section.value === "commands" ? { commands: commands.value } : {};
 });
 
-const { thread, page: homePage, appealGuildId, openAppeals } = useDirectMessages();
-const { selectGuild } = useActiveGuild();
+const { thread, page: homePage, appealGuildId } = useDirectMessages();
 
 // The link of the bot opens the Home on the appeals, with its server listed.
 const route = useRoute();
 if (route.path === "/appeal" || route.path.startsWith("/appeal/")) {
-	const linkedGuild = "guild" in route.params ? route.params.guild : undefined;
-	selectGuild(null);
-	openAppeals(
-		typeof linkedGuild === "string" && isValidGuildId(linkedGuild) ? linkedGuild : undefined,
-	);
+	const appealLink = useAppealLink();
+	appealLink.open("guild" in route.params ? route.params.guild : undefined);
+	onMounted(appealLink.showPage);
 }
 
 const homeTitle = computed(() =>

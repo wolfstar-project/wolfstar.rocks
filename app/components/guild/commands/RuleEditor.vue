@@ -430,7 +430,13 @@ const roleOrderGap = computed(() =>
 			withoutEveryone(edited.value, guildId.value).ignoredRoles.length > 0
 		: false,
 );
-const alsoInDiscord = computed(() => discord.value.kind === "registered" && discordOn.value);
+// What the copy claims: Discord holds permissions for the command once this is
+// saved. A rule with nothing in it translates to none, so a switch left on over
+// it writes nothing and must not say Discord applies the rules.
+const alsoInDiscord = computed(
+	() =>
+		discord.value.kind === "registered" && (discordWrite.value ?? storedRows.value).length > 0,
+);
 
 const summary = computed(() => {
 	const rules =

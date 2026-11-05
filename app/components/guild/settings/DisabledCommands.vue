@@ -497,12 +497,12 @@ function openEditor(command: DisableableCommand | typeof EVERY_COMMAND, event?: 
 onMounted(() => {
 	watch(
 		() => [loading.value, route.query.rules] as const,
-		([isLoading, rules]) => {
-			if (isLoading || typeof rules !== "string") return;
+		([isLoading, ruled]) => {
+			if (isLoading || typeof ruled !== "string") return;
 			const command =
-				rules === EVERY_COMMAND
+				ruled === EVERY_COMMAND
 					? EVERY_COMMAND
-					: disableableCommands.value.find((entry) => entry.name === rules);
+					: disableableCommands.value.find((entry) => entry.name === ruled);
 			if (command) openEditor(command);
 			const { rules: _, ...query } = route.query;
 			void router.replace({ query });

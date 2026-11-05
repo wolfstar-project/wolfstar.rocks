@@ -315,7 +315,7 @@ API word for one row).
 ### app default
 
 **Is:** the command permissions every command without permissions of its own uses. Discord shows such a
-command as synced; one with its own is "Custom" here.
+command as synced; the dashboard has no word for one with its own, it just says "Also in Discord".
 
 **Never:** global permissions, synced permissions.
 

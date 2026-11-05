@@ -502,6 +502,16 @@ describe("GuildCommandsRuleEditor", () => {
 			);
 		});
 
+		it("does not say Discord applies a rule with nothing in it", async () => {
+			await mountRead();
+
+			discordSwitch()?.click();
+			await nextTick();
+
+			// An empty rule translates to no permissions: nothing would reach Discord.
+			expect(dialog().textContent).not.toContain("· also in Discord");
+		});
+
 		it("clears what Discord holds when turned off", async () => {
 			stored.rule = rule({ allowedRoles: [STAFF] });
 			discordRows = [{ id: STAFF, type: 1, permission: true }];

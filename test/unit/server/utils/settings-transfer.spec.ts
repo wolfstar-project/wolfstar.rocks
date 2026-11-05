@@ -140,15 +140,49 @@ describe("parseConfigurationFile", () => {
 		const parsed = read({
 			version: 2,
 			settings: {
-				"join-guard.enabled": true,
+				"honeypot.reinvite": true,
 				"modules.commands": false,
 				"appeals.questions": ["Why?"],
 				"language": "it-IT",
 			},
 		});
 
-		expect(parsed.unsupported).toStrictEqual(["join-guard.enabled"]);
+		expect(parsed.unsupported).toStrictEqual(["honeypot.reinvite"]);
 		expect(parsed.settings.map(({ name }) => name)).toStrictEqual(["language"]);
+	});
+
+	it("imports the join guard's settings the bot writes, as the dashboard saves them", () => {
+		const parsed = read({
+			version: 2,
+			settings: {
+				"join-guard.enabled": true,
+				"join-guard.checkpoint": true,
+				"join-guard.checkpoint-timeout": 7200,
+				"join-guard.minimum-trust": 2,
+				"join-guard.direct-message-content": "Verify on {server}.",
+			},
+		});
+
+		expect(parsed.unsupported).toStrictEqual([]);
+		expect(parsed.settings.map(({ name }) => name)).toStrictEqual([
+			"join-guard.enabled",
+			"join-guard.checkpoint",
+			"join-guard.checkpoint-timeout",
+			"join-guard.minimum-trust",
+			"join-guard.direct-message-content",
+		]);
+	});
+
+	it("refuses a join guard setting the bot could not run", () => {
+		const issues = issuesOf({
+			version: 2,
+			settings: { "join-guard.checkpoint-timeout": 60, "join-guard.minimum-trust": 9 },
+		});
+
+		expect(issues.map((issue) => issue.path)).toStrictEqual([
+			"settings.join-guard.checkpoint-timeout",
+			"settings.join-guard.minimum-trust",
+		]);
 	});
 
 	it("refuses a setting the bot does not have, or one that depends on the server", () => {

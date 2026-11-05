@@ -6,10 +6,15 @@ import type { AutoModerationRule } from "#shared/utils/automod-rules";
 // read by the other.
 
 /**
- * The version of the file. It changes when a file of the previous version can
- * no longer be read, which a setting or a field that is added does not do.
+ * The version of the file an export writes. It changes when a file of the
+ * previous version can no longer be read as it is, which a setting or a field
+ * that is added does not do. Version 1 is also the file of the bot before V7,
+ * which an import still reads, to move a server to V7.
  */
-export const ConfigurationFileVersion = 1;
+export const ConfigurationFileVersion = 2;
+
+/** The versions an import reads: the one an export writes, and the ones before it, which the import upgrades. */
+export const ReadableConfigurationFileVersions: readonly number[] = [1, ConfigurationFileVersion];
 
 /** The most bytes of a file an import reads. */
 export const MaximumConfigurationFileSize = 1024 * 1024;
@@ -23,6 +28,24 @@ export interface ConfigurationIssue {
 	message: string;
 }
 
+/**
+ * What a file of the bot before V7 has that an import cannot carry over, with
+ * how to set it by hand. The import goes on without it, so it is shown with
+ * the preview instead of refusing the file. `path` is where in the file, as for
+ * a {@linkcode ConfigurationIssue}; the reasons are the server's own text.
+ */
+export type ConfigurationNotice =
+	/** A renamed setting whose value V7 refuses: `target` is set by hand. */
+	| { kind: "settingFailed"; path: string; name: string; target: string; reason: string }
+	/** A setting V7 has nothing for, which was changed from the default of the bot before V7. */
+	| { kind: "noEquivalent"; path: string; name: string }
+	/** The reaction filter, which V7 has no rule for. */
+	| { kind: "reactionFilter"; path: string; name: string }
+	/** A filter that became a rule, changed to fit the limits of V7. */
+	| { kind: "ruleAdjusted"; path: string; rule: string; detail: string }
+	/** A filter that could not become a rule: the rule is created by hand. */
+	| { kind: "ruleFailed"; path: string; rule: string; reason: string };
+
 /** A setting an import changes, by its name in the file. */
 export interface ConfigurationSettingChange {
 	name: string;
@@ -32,6 +55,13 @@ export interface ConfigurationSettingChange {
 
 /** What an import does to the auto-moderation rules, by their names. */
 export interface ConfigurationRulesChange {
+	/**
+	 * `replace` when the rules of the server become the ones of the file;
+	 * `add` when the file has no `automod` section and its filters of the bot
+	 * before V7 are added to the rules of the server, one with the name of a
+	 * rule of the server taking its place.
+	 */
+	mode: "replace" | "add";
 	created: string[];
 	/** The rules that keep their place and have fields that differ. */
 	updated: { name: string; fields: string[] }[];
@@ -44,10 +74,12 @@ export interface ConfigurationRulesChange {
 /** What an import would do, or did, to a server. */
 export interface ConfigurationPreview {
 	settings: ConfigurationSettingChange[];
-	/** `null` when the file has no `automod` section: the rules of the server are left alone. */
+	/** `null` when the import leaves the rules of the server alone. */
 	rules: ConfigurationRulesChange | null;
 	/** The settings of the file this dashboard does not manage: they are left out. */
 	unsupported: string[];
+	/** What a file of the bot before V7 has that is not imported, shown even when nothing changes. */
+	notices: ConfigurationNotice[];
 	/** Whether the server already is as the file says. */
 	isEmpty: boolean;
 }

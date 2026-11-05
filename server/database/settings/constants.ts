@@ -97,6 +97,13 @@ export function getDefaultGuildSettings(): DefaultGuildData {
 			moderationDehoist: false,
 			moderationLockdownChannels: [],
 			moderationDefaultWarnThresholds: true,
+			// The bot's default since wolfstar-project/wolfstar#372, which the pinned
+			// contract (`@default(false)`) predates: a row this app creates writes
+			// every column, so `false` here would turn the direct messages off.
+			messagesModerationDm: true,
+			messagesModerationReasonDisplay: true,
+			messagesModerationMessageDisplay: true,
+			messagesModeratorNameDisplay: true,
 			messagesResponseBan: null,
 			messagesResponseUnban: null,
 			messagesResponseSoftban: null,

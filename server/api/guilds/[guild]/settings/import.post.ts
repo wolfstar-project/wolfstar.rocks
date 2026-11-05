@@ -14,6 +14,7 @@ import {
 } from "#server/utils/settings-transfer/plan";
 import { guildSettingsUpdate } from "#shared/audit/actions";
 import { ConfigurationImportSchema } from "#shared/schemas";
+import { MaximumAutoModerationRules } from "#shared/utils/automod-rules";
 import { createError, useLogger, withAuditMethods } from "evlog";
 import { parse } from "valibot";
 
@@ -50,7 +51,10 @@ export default defineWrappedResponseHandler(
 				throw createError({
 					message: "The server changed while the file was being read",
 					status: 409,
-					why: "A list of a rule of the file is longer than the server allows by now",
+					why:
+						error.reason === "ruleLimit"
+							? `The rules the file adds would take the server past ${MaximumAutoModerationRules} rules by now`
+							: "A list of a rule of the file is longer than the server allows by now",
 					fix: "Read the file again",
 				});
 			},

@@ -2,6 +2,7 @@ import { getDefaultGuildSettings } from "#server/database/settings/constants";
 import { parseSettingsChanges } from "#server/database/settings/validation";
 import { parseAutoModerationRulePatch } from "#server/utils/automod/validation";
 import {
+	BotOnlySettings,
 	findTransferableSetting,
 	RemovedSettings,
 	toConfigurationRule,
@@ -9,6 +10,12 @@ import {
 	type ConfigurationRule,
 	type TransferableSettingKey,
 } from "#server/utils/settings-transfer/format";
+import {
+	convertLegacySettings,
+	getLegacyFilterPrefix,
+	isLegacySetting,
+	type LegacyConversion,
+} from "#server/utils/settings-transfer/legacy";
 import {
 	AutoModerationRuleTypes,
 	getDefaultAutoModerationRule,
@@ -20,7 +27,11 @@ import {
 	type AutoModerationRule,
 	type AutoModerationRuleType,
 } from "#shared/utils/automod-rules";
-import { ConfigurationFileVersion, type ConfigurationIssue } from "#shared/utils/settings-transfer";
+import {
+	ReadableConfigurationFileVersions,
+	type ConfigurationIssue,
+	type ConfigurationNotice,
+} from "#shared/utils/settings-transfer";
 import { isObject } from "@sapphire/utilities";
 
 /** What a file holds once every value of it was validated. */
@@ -31,6 +42,16 @@ export interface ParsedConfiguration {
 	unsupported: string[];
 	/** The rules of the file, `null` when it has no `automod` section: the rules of the guild are left alone. */
 	rules: ConfigurationRule[] | null;
+	/**
+	 * The rules the filters of the bot before V7 became when the file has no
+	 * `automod` section: they are added to the rules the guild has when the
+	 * import is written (one with the name of a rule of the guild takes its
+	 * place), see `getImportedRules`. Empty when the file has an `automod`
+	 * section, which holds them.
+	 */
+	addedRules: ConfigurationRule[];
+	/** What a file of the bot before V7 has that could not be imported, and how to set it by hand. */
+	notices: ConfigurationNotice[];
 }
 
 export type ParseConfigurationResult =
@@ -45,7 +66,11 @@ const FileFields = new Set(["version", "exportedAt", "settings", "automod"]);
  * Nothing is written, and nothing is dropped silently: the file is accepted
  * whole or refused with everything that is wrong in it. A setting that is not
  * one of the file is refused when the bot has no such setting either way, and
- * left out, and reported, when this dashboard does not manage it.
+ * left out, and reported, when this dashboard does not manage it. A file of
+ * version 1 can be one of the bot before V7, whose settings are converted
+ * (see `convertLegacySettings`): what of them cannot be is not a reason to
+ * refuse the file, which is all the admin has of that bot, and is told in the
+ * `notices` instead.
  *
  * @param text The content of the file.
  * @param rules The rules of the guild the file is imported in: a list of a rule can be as long as the one the rule of
@@ -69,11 +94,11 @@ export function parseConfigurationFile(
 	if (typeof version !== "number" || !Number.isInteger(version)) {
 		return failure([{ path: "version", message: "The file has no version." }]);
 	}
-	if (version !== ConfigurationFileVersion) {
+	if (!ReadableConfigurationFileVersions.includes(version)) {
 		return failure([
 			{
 				path: "version",
-				message: `Version ${version} is not supported: expected ${ConfigurationFileVersion}.`,
+				message: `Version ${version} is not supported: expected ${ReadableConfigurationFileVersions.join(" or ")}.`,
 			},
 		]);
 	}
@@ -84,53 +109,175 @@ export function parseConfigurationFile(
 			issues.push({ path: field, message: `Unknown field "${field}".` });
 	}
 
-	const { settings, unsupported } = parseSettings(record.settings, issues);
+	const { settings, unsupported, legacy } = parseSettings(record.settings, version, issues);
 	const parsedRules = parseRules(record.automod, rules, issues);
+	const notices: ConfigurationNotice[] = [];
+	const addedRules =
+		legacy === null ? [] : importLegacy(legacy, settings, parsedRules, rules, notices);
+
 	return issues.length === 0
-		? { ok: true, value: { settings, unsupported, rules: parsedRules } }
+		? { ok: true, value: { settings, unsupported, rules: parsedRules, addedRules, notices } }
 		: failure(issues);
 }
 
-function parseSettings(section: unknown, issues: ConfigurationIssue[]) {
+function parseSettings(section: unknown, version: number, issues: ConfigurationIssue[]) {
 	const settings: ParsedConfiguration["settings"] = [];
 	const unsupported: string[] = [];
-	if (section === undefined) return { settings, unsupported };
+	if (section === undefined) return { settings, unsupported, legacy: null };
 
 	if (!isObject(section)) {
 		issues.push({ path: "settings", message: "Expected an object." });
-		return { settings, unsupported };
+		return { settings, unsupported, legacy: null };
 	}
 
+	// The settings of the bot before V7, which only a file of version 1 has, are converted after the others:
+	const legacy: Record<string, unknown> = {};
 	for (const [name, value] of Object.entries(section as Record<string, unknown>)) {
 		if (RemovedSettings.has(name)) continue;
 
+		const path = `settings.${name}`;
 		const key = findTransferableSetting(name);
 		if (key === null) {
-			unsupported.push(name);
-			continue;
-		}
-
-		const path = `settings.${name}`;
-		// `null` resets a setting to its default in a settings request; a file
-		// says what a setting is, which is `null` only for a setting that can be
-		// nothing, as a command response that is the bot's own line:
-		if (value === null) {
-			if (getDefaultGuildSettings()[key] === null) settings.push({ name, key, value: null });
-			else issues.push({ path, message: "Expected a value." });
-			continue;
-		}
-
-		const parsed = parseSettingsChanges([[key, value]]);
-		if (parsed.errors) {
-			for (const error of parsed.errors) {
-				issues.push({ path, message: error.replace(/^[^:]+: /u, "") });
+			if (BotOnlySettings.has(name)) unsupported.push(name);
+			else if (version === 1 && isLegacySetting(name)) legacy[name] = value;
+			else {
+				issues.push({
+					path,
+					message: `"${name}" is not a setting a file carries: it does not exist, or it depends on the server.`,
+				});
 			}
 			continue;
 		}
-		settings.push({ name, key, value: (parsed.data as Record<string, unknown>)[key] });
+
+		const result = validateSetting(key, value);
+		if (result.ok) settings.push({ name, key, value: result.value });
+		else issues.push({ path, message: result.message });
 	}
 
-	return { settings, unsupported };
+	return {
+		settings,
+		unsupported,
+		legacy: Object.keys(legacy).length === 0 ? null : convertLegacySettings(legacy),
+	};
+}
+
+type ValueResult = { ok: true; value: unknown } | { ok: false; message: string };
+
+/** Validates the value of a setting as a settings request is, with what a file means by `null`. */
+function validateSetting(key: TransferableSettingKey, value: unknown): ValueResult {
+	// `null` resets a setting to its default in a settings request; a file
+	// says what a setting is, which is `null` only for a setting that can be
+	// nothing, as a command response that is the bot's own line:
+	if (value === null) {
+		return getDefaultGuildSettings()[key] === null
+			? { ok: true, value: null }
+			: { ok: false, message: "Expected a value." };
+	}
+
+	const parsed = parseSettingsChanges([[key, value]]);
+	if (parsed.errors) {
+		return {
+			ok: false,
+			message: parsed.errors.map((error) => error.replace(/^[^:]+: /u, "")).join(" "),
+		};
+	}
+	return { ok: true, value: (parsed.data as Record<string, unknown>)[key] };
+}
+
+/**
+ * Imports what the settings of the bot before V7 became, see
+ * `convertLegacySettings`. What cannot be imported is told, with how to set it
+ * by hand, instead of refusing the file.
+ *
+ * @param fileRules - The rules of the file, which the rules the filters became are added to; `null` when it has no
+ * `automod` section.
+ * @param current - The rules of the guild, which the names and the limit are checked against without an `automod`
+ * section. The ones it has when the import is written are used again then.
+ * @returns The rules the filters became, to add to the ones of the guild, when the file has no `automod` section:
+ * the bot before V7 had no rule to replace the others with.
+ */
+function importLegacy(
+	legacy: LegacyConversion,
+	settings: ParsedConfiguration["settings"],
+	fileRules: ConfigurationRule[] | null,
+	current: readonly AutoModerationRule[],
+	notices: ConfigurationNotice[],
+): ConfigurationRule[] {
+	notices.push(...legacy.notices);
+	for (const conversion of legacy.settings) importLegacySetting(conversion, settings, notices);
+
+	const added: ConfigurationRule[] = [];
+	const rules = fileRules ?? current.map((rule) => toConfigurationRule(rule));
+	// The rules added that take no place of a rule of the guild:
+	let created = 0;
+	for (const entry of legacy.rules) {
+		const name = String(entry.name);
+		const path = `settings.${getLegacyFilterPrefix(name).slice(0, -1)}`;
+		const failed = (reason: string) =>
+			notices.push({ kind: "ruleFailed", path, rule: name, reason });
+
+		const ruleIssues: ConfigurationIssue[] = [];
+		const rule = parseRule(entry, path, current, ruleIssues);
+		if (rule === null || ruleIssues.length > 0) {
+			failed(ruleIssues.map((issue) => issue.message).join(" "));
+			continue;
+		}
+
+		const lower = rule.name.toLowerCase();
+		const exists = rules.some((other) => other.name.toLowerCase() === lower);
+		if (fileRules !== null && exists) {
+			failed(`Two rules are named "${rule.name}".`);
+		} else if (!exists && rules.length + created >= MaximumAutoModerationRules) {
+			failed(
+				`The server already has ${MaximumAutoModerationRules} rules, which is the most it can have.`,
+			);
+		} else if (fileRules !== null) {
+			fileRules.push(rule);
+		} else {
+			added.push(rule);
+			if (!exists) created += 1;
+		}
+	}
+
+	return added;
+}
+
+/**
+ * Imports a renamed setting of the bot before V7 as the setting of V7 it
+ * became. The entries of a list that V7 refuses are left out one by one, and
+ * the others are imported.
+ */
+function importLegacySetting(
+	{ name, value, from }: LegacyConversion["settings"][number],
+	settings: ParsedConfiguration["settings"],
+	notices: ConfigurationNotice[],
+) {
+	const key = findTransferableSetting(name);
+	// The file has the setting under its name in V7 too, which is the one it was exported with last:
+	if (key === null || settings.some((setting) => setting.key === key)) return;
+
+	const path = `settings.${from[0] ?? name}`;
+	const failed = (shown: string, reason: string) =>
+		notices.push({ kind: "settingFailed", path, name: shown, target: name, reason });
+
+	if (!Array.isArray(getDefaultGuildSettings()[key])) {
+		const result = validateSetting(key, value);
+		if (result.ok) settings.push({ name, key, value: result.value });
+		else failed(from.join(", "), result.message);
+		return;
+	}
+
+	const kept: unknown[] = [];
+	for (const entry of Array.isArray(value) ? value : [value]) {
+		const result = validateSetting(key, [entry]);
+		if (result.ok) kept.push(entry);
+		else failed(typeof entry === "string" ? entry : JSON.stringify(entry), result.message);
+	}
+
+	// The entries that are left are held to the length of the list as a whole:
+	const result = validateSetting(key, kept);
+	if (result.ok) settings.push({ name, key, value: result.value });
+	else failed(from[0] ?? name, result.message);
 }
 
 function parseRules(

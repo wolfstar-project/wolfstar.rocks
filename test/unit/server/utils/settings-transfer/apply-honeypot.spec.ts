@@ -27,6 +27,7 @@ vi.mock("#server/utils/automod/rules", () => ({
 }));
 vi.mock("#server/utils/settings-transfer/plan", () => ({
 	findOversizedRuleLists: () => [],
+	getImportedRules: () => null,
 	getPlannedRules: () => ({ create: [], update: [], remove: [] }),
 	getPlannedSettings: () => mocks.plannedSettings,
 	planConfigurationImport: () => ({

@@ -21,7 +21,7 @@ mockNuxtImport("useToast", () => () => ({ add: mockToastAdd }));
 let answer: ConfigurationImportResponse = {
 	ok: true,
 	applied: false,
-	preview: { settings: [], rules: null, unsupported: [], isEmpty: true },
+	preview: { settings: [], rules: null, unsupported: [], notices: [], isEmpty: true },
 };
 let requests = 0;
 
@@ -83,13 +83,15 @@ describe("guild settings transfer", () => {
 			preview: {
 				settings: [{ name: "modules.automod", before: true, after: false }],
 				rules: {
+					mode: "replace",
 					created: ["Fresh"],
 					updated: [],
 					moved: [],
 					removed: ["Old"],
 					unchanged: 0,
 				},
-				unsupported: ["music.volume"],
+				unsupported: ["join-guard.enabled"],
+				notices: [],
 				isEmpty: false,
 			},
 		};
@@ -101,8 +103,86 @@ describe("guild settings transfer", () => {
 		// The label and the names stay apart, as Vue drops a space that opens an element:
 		expect(dialogText()).toContain("Created (1): Fresh");
 		expect(dialogText()).toContain("Deleted (1): Old");
-		expect(dialogText()).toContain("music.volume");
+		expect(dialogText()).toContain(
+			"The rules of this server that are not in the file are deleted.",
+		);
+		expect(dialogText()).toContain("join-guard.enabled");
+		expect(dialogText()).not.toContain("Not imported");
 		expect(mockSetGuildSettings).not.toHaveBeenCalled();
+	});
+
+	it("lists what a file of the bot before V7 does not import, with how to set it by hand, even when nothing changes", async () => {
+		answer = {
+			ok: true,
+			applied: false,
+			preview: {
+				settings: [],
+				rules: null,
+				unsupported: [],
+				notices: [
+					{
+						kind: "settingFailed",
+						path: "settings.messages.moderation-dm",
+						name: "messages.moderation-dm",
+						target: "moderation.direct-message",
+						reason: "Expected a boolean.",
+					},
+					{ kind: "noEquivalent", path: "settings.prefix", name: "prefix" },
+					{
+						kind: "ruleFailed",
+						path: "settings.selfmod.invites",
+						rule: "Invites",
+						reason: 'Two rules are named "Invites".',
+					},
+				],
+				isEmpty: true,
+			},
+		};
+		const wrapper = await mountSuspended(Transfer);
+
+		await chooseFile(wrapper, "{}");
+		await vi.waitFor(() => expect(dialogText()).toContain("Not imported (3)"));
+
+		expect(dialogText()).toContain("There is nothing to import.");
+		expect(dialogText()).toContain(
+			"messages.moderation-dm could not be imported: Expected a boolean. Set moderation.direct-message by hand from the dashboard.",
+		);
+		expect(dialogText()).toContain("so there is nothing to set by hand.");
+		expect(dialogText()).toContain("Create the rule by hand in Auto Moderation");
+		const dialog = document.body.querySelector('[role="dialog"]');
+		const labels = Array.from(dialog?.querySelectorAll("button") ?? [], (entry) =>
+			entry.textContent?.trim(),
+		);
+		expect(labels).not.toContain("Import");
+	});
+
+	it("says the filters of the old bot are added to the rules, not that the other rules are deleted", async () => {
+		answer = {
+			ok: true,
+			applied: false,
+			preview: {
+				settings: [],
+				rules: {
+					mode: "add",
+					created: ["Links"],
+					updated: [],
+					moved: [],
+					// A rule of the server with the name of a filter, of another type, is made again:
+					removed: ["Links"],
+					unchanged: 2,
+				},
+				unsupported: [],
+				notices: [],
+				isEmpty: false,
+			},
+		};
+		const wrapper = await mountSuspended(Transfer);
+
+		await chooseFile(wrapper, "{}");
+		await vi.waitFor(() => expect(dialogText()).toContain("Created (1): Links"));
+
+		expect(dialogText()).toContain("A rule of this server with the same name is replaced");
+		expect(dialogText()).not.toContain("are not in the file are deleted");
 	});
 
 	it("lists the problems of a file it refuses, and offers nothing to confirm", async () => {

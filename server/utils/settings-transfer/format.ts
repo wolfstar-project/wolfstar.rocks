@@ -9,7 +9,8 @@ import { ConfigurationFileVersion } from "#shared/utils/settings-transfer";
  * A setting names something of the server it was written in (a role, a
  * channel, a user, a set of them) unless it is of a kind that is the same in
  * every server, so only those are in the file. A setting of a file that is not
- * listed here is read, and left out.
+ * listed here is left out when the bot has it ({@linkcode BotOnlySettings}),
+ * and refused otherwise.
  *
  * @remarks Mirrors `getPortableKeys()` in the bot, which is built from its
  * schema: add a setting here when its column is added to `columns.ts`.
@@ -52,6 +53,10 @@ export const TransferableSettings = [
 	["moderation.confirm-recent", "moderationConfirmRecentMinutes"],
 	["moderation.dehoist", "moderationDehoist"],
 	["moderation.default-warn-thresholds", "moderationDefaultWarnThresholds"],
+	["moderation.direct-message", "messagesModerationDm"],
+	["moderation.display-reason", "messagesModerationReasonDisplay"],
+	["moderation.display-message", "messagesModerationMessageDisplay"],
+	["moderation.display-moderator", "messagesModeratorNameDisplay"],
 	["moderation.response-ban", "messagesResponseBan"],
 	["moderation.response-unban", "messagesResponseUnban"],
 	["moderation.response-softban", "messagesResponseSoftban"],
@@ -63,6 +68,7 @@ export const TransferableSettings = [
 	["roles.remove-initial", "rolesRemoveInitial"],
 ] as const satisfies readonly (readonly [name: string, key: StoredKey])[];
 
+export type TransferableSettingName = (typeof TransferableSettings)[number][0];
 export type TransferableSettingKey = (typeof TransferableSettings)[number][1];
 
 const SettingsByName: ReadonlyMap<string, TransferableSettingKey> = new Map(TransferableSettings);
@@ -70,6 +76,33 @@ const SettingsByName: ReadonlyMap<string, TransferableSettingKey> = new Map(Tran
 export function findTransferableSetting(name: string): TransferableSettingKey | null {
 	return SettingsByName.get(name) ?? null;
 }
+
+/**
+ * The settings of the file of the bot that this dashboard does not manage: an
+ * import leaves them out and says so, where a name nobody has refuses the file.
+ *
+ * @remarks The rest of `getPortableKeys()` in the bot: a setting moves to
+ * {@linkcode TransferableSettings} once its column is in `columns.ts` and the
+ * dashboard may write it.
+ */
+export const BotOnlySettings: ReadonlySet<string> = new Set([
+	"modules.autodelete",
+	"modules.autopurge",
+	"modules.automessage",
+	"modules.reports",
+	"modules.honeypot",
+	"honeypot.reinvite",
+	"honeypot.recreate",
+	"join-guard.enabled",
+	"join-guard.direct-message",
+	"join-guard.direct-message-content",
+	"join-guard.checkpoint",
+	"join-guard.checkpoint-timeout",
+	"join-guard.minimum-trust",
+	"join-guard.captcha",
+	"join-guard.connections",
+	"join-guard.shared-bans",
+]);
 
 export function getTransferableSettingName(key: TransferableSettingKey): string {
 	return TransferableSettings.find(([, entry]) => entry === key)?.[0] ?? key;

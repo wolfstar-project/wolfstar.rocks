@@ -12,4 +12,5 @@ export * from "./member-search";
 export * from "./command-permissions";
 export * from "./command-rules";
 export * from "./appeal-queue";
+export * from "./join-guard";
 export * from "./my-appeals";

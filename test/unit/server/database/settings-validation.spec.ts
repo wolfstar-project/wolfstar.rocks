@@ -245,3 +245,60 @@ describe("parseSettingsChanges", () => {
 		expect(parseSettingsChanges([["honeypotChaosName", "yes"]]).errors).toHaveLength(1);
 	});
 });
+
+describe("the join guard settings", () => {
+	it("are written from the dashboard as the bot takes them", () => {
+		const result = parseSettingsChanges([
+			["joinGuardEnabled", true],
+			["joinGuardCheckpointTimeout", 0],
+			["joinGuardMinimumTrust", 3],
+			["joinGuardDirectMessageContent", "  Verify on the site, {server}.  "],
+			["joinGuardPendingRole", ROLE],
+			["joinGuardCheckpointChannel", CHANNEL],
+			["joinGuardAllowedUsers", ["345678901234567890", "345678901234567890"]],
+		]);
+
+		expect(result.errors).toBeUndefined();
+		expect(result.data).toStrictEqual({
+			joinGuardEnabled: true,
+			joinGuardCheckpointTimeout: 0,
+			joinGuardMinimumTrust: 3,
+			joinGuardDirectMessageContent: "Verify on the site, {server}.",
+			joinGuardPendingRole: ROLE,
+			joinGuardCheckpointChannel: CHANNEL,
+			joinGuardAllowedUsers: ["345678901234567890"],
+		});
+	});
+
+	it("take a checkpoint timeout of 0, or of one hour to a week", () => {
+		for (const seconds of [0, 3600, 604_800]) {
+			expect(
+				parseSettingsChanges([["joinGuardCheckpointTimeout", seconds]]).errors,
+			).toBeUndefined();
+		}
+		for (const seconds of [1, 3599, 604_801, 3600.5, "3600"]) {
+			expect(
+				parseSettingsChanges([["joinGuardCheckpointTimeout", seconds]]).errors,
+			).toStrictEqual([
+				"joinGuardCheckpointTimeout: Expected 0 or a whole number of seconds from 3600 to 604800.",
+			]);
+		}
+	});
+
+	it("take a minimum trust of 1 to 3, and a direct message of 500 characters at most", () => {
+		expect(parseSettingsChanges([["joinGuardMinimumTrust", 0]]).errors).toHaveLength(1);
+		expect(parseSettingsChanges([["joinGuardMinimumTrust", 4]]).errors).toHaveLength(1);
+		expect(
+			parseSettingsChanges([["joinGuardDirectMessageContent", "a".repeat(501)]]).errors,
+		).toHaveLength(1);
+	});
+
+	it("leave the message of the checkpoint's button to the bot", () => {
+		expect(BOT_ONLY_SETTINGS.has("joinGuardCheckpointMessage")).toBe(true);
+		expect(
+			parseSettingsChanges([["joinGuardCheckpointMessage", CHANNEL]]).errors,
+		).toStrictEqual([
+			"joinGuardCheckpointMessage: This setting cannot be changed from the dashboard.",
+		]);
+	});
+});

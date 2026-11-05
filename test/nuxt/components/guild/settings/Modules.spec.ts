@@ -73,12 +73,12 @@ describe("modules guild settings", () => {
 
 		// Moderation, Roles and the Events are on; the honeypot is set up in
 		// Discord and the three lists of channels have no switch, so they always
-		// open; a module that is off has to be enabled first, and the appeals are
-		// off until their switch is on.
+		// open; a module that is off has to be enabled first, and the appeals and
+		// the join guard are off until their switch is on.
 		expect(buttonsLabelled("Configure")).toHaveLength(7);
-		expect(buttonsLabelled("Enable first")).toHaveLength(GUILD_MODULES.length - 3 + 1);
-		// The flags of `Modules`, the appeals and the three Auto-* modules.
-		expect(wrapper.findAll('[aria-label^="Toggle "]')).toHaveLength(GUILD_MODULES.length + 4);
+		expect(buttonsLabelled("Enable first")).toHaveLength(GUILD_MODULES.length - 3 + 2);
+		// The flags of `Modules`, the appeals, the join guard and the three Auto-* modules.
+		expect(wrapper.findAll('[aria-label^="Toggle "]')).toHaveLength(GUILD_MODULES.length + 5);
 	});
 
 	it("tells whether the honeypot is set up, from its channel", async () => {
@@ -168,8 +168,8 @@ describe("modules guild settings", () => {
 		expect(state.modulesAutomod).toBe(false);
 		expect(state.modulesLogs).toBe(true);
 		expect(enabledCount).toBe(6);
-		// The flags of `Modules`, and the switch of the appeals.
-		expect(wrapper.text()).toContain("6 / 8 enabled");
+		// The flags of `Modules`, and the switches of the appeals and the join guard.
+		expect(wrapper.text()).toContain("6 / 9 enabled");
 	});
 
 	it("enables and disables every module at once", async () => {
@@ -186,7 +186,7 @@ describe("modules guild settings", () => {
 
 		await enableAll!.trigger("click");
 		await nextTick();
-		expect(getSetupState(wrapper).enabledCount).toBe(GUILD_MODULES.length + 4);
+		expect(getSetupState(wrapper).enabledCount).toBe(GUILD_MODULES.length + 5);
 
 		await disableAll!.trigger("click");
 		await nextTick();

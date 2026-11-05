@@ -11,6 +11,7 @@ import {
 	assertKeepsDashboardAccess,
 } from "#server/utils/dashboard-access";
 import { assertHoneypotIsUsable } from "#server/utils/honeypot/permissions";
+import { assertJoinGuardRolesDiffer } from "#server/utils/join-guard/settings";
 import { guildSettingsAccessDenied, guildSettingsUpdate } from "#shared/audit/actions";
 import { SettingsUpdateSchema } from "#shared/schemas";
 import { isNullOrUndefined, isNullishOrEmpty } from "@sapphire/utilities";
@@ -148,6 +149,8 @@ export default defineWrappedResponseHandler(
 		// The bot sets the honeypot up from these settings once told of the write:
 		// a channel it could not use is refused here, as `/honeypot setup` refuses it.
 		await assertHoneypotIsUsable(guild, trx.settings, settingsData);
+		// The bot's `manageableRole` serializer refuses one role for both, as this does:
+		assertJoinGuardRolesDiffer(trx.settings, settingsData);
 
 		const beforeSettings = JSON.parse(serializeSettings(trx.settings)) as Record<
 			string,

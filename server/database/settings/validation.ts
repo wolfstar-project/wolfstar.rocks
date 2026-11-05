@@ -10,6 +10,7 @@ import {
 	type UniqueRoleSet,
 } from "#server/database/settings/types";
 import { createAccessEntry } from "#shared/utils/dashboard-access";
+import { JoinGuardCheckpointTimeoutHours, SecondsPerHour } from "#shared/utils/join-guard";
 import {
 	SETTING_LIST_LIMITS,
 	SETTING_NUMBER_RANGES,
@@ -18,6 +19,12 @@ import {
 	type TextSettingKey,
 } from "#shared/utils/settings-choices";
 import { isSnowflake } from "#shared/utils/snowflake";
+
+/** The bot's `JoinGuardCheckpointTimeoutLimits`, in seconds. */
+const JoinGuardCheckpointTimeoutLimits = {
+	minimum: JoinGuardCheckpointTimeoutHours.minimum * SecondsPerHour,
+	maximum: JoinGuardCheckpointTimeoutHours.maximum * SecondsPerHour,
+} as const;
 
 /** The most entries a list setting holds (roles, channels, commands, nodes). */
 export const MAXIMUM_SETTING_LIST_LENGTH = 250;
@@ -167,6 +174,21 @@ const validateUniqueRoleSets: Validator = (value) =>
 		return { name, roles: [...new Set(list(item.roles, snowflake))] };
 	});
 
+/**
+ * How long a member waits at the checkpoint before the bot kicks them, in
+ * seconds, as the bot's `isJoinGuardCheckpointTimeout()` reads it: `0` never
+ * kicks, otherwise one hour to a week.
+ */
+const validateCheckpointTimeout: Validator = (value) =>
+	Number.isSafeInteger(value) &&
+	(value === 0 ||
+		((value as number) >= JoinGuardCheckpointTimeoutLimits.minimum &&
+			(value as number) <= JoinGuardCheckpointTimeoutLimits.maximum))
+		? value
+		: fail(
+				`Expected 0 or a whole number of seconds from ${JoinGuardCheckpointTimeoutLimits.minimum} to ${JoinGuardCheckpointTimeoutLimits.maximum}.`,
+			);
+
 const validateStickyRoles: Validator = (value) =>
 	list(value, (item): StickyRole => {
 		if (!isPlainObject(item)) fail("Expected sticky roles.");
@@ -194,6 +216,7 @@ const ValueValidators: Partial<Record<StoredKey, Validator>> = {
 	permissionsUsers: validatePermissionNodes,
 	permissionsRoles: validatePermissionNodes,
 	rolesUniqueRoleSets: validateUniqueRoleSets,
+	joinGuardCheckpointTimeout: validateCheckpointTimeout,
 };
 
 /**
@@ -203,13 +226,14 @@ const ValueValidators: Partial<Record<StoredKey, Validator>> = {
  * `PUT /api/guilds/:guild/command-rules/:command`; and a change of
  * `updatesChannel` has to move the
  * follow of the support server's announcements, which only the bot does
- * (`syncUpdatesChannelFollow`). The join guard is set up with the bot too, as
- * long as no page of the dashboard writes it: its keys have no validators yet.
+ * (`syncUpdatesChannelFollow`); and `joinGuardCheckpointMessage` is the
+ * message of the checkpoint's button, which the bot writes when it posts it
+ * (the dashboard asks for that with a `PostButton` request).
  */
 export const BOT_ONLY_SETTINGS: ReadonlySet<string> = new Set<string>([
 	"commandsRestrictions",
 	"updatesChannel",
-	...Object.keys(Columns).filter((key) => key.startsWith("joinGuard")),
+	"joinGuardCheckpointMessage",
 ]);
 
 const refuse: Validator = () => fail("This setting cannot be changed from the dashboard.");

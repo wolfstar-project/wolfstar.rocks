@@ -79,6 +79,13 @@ export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
 	},
 	{
 		group: "modules",
+		icon: "ic:round-verified-user",
+		labelKey: "dashboard.nav.joinguard",
+		moduleKey: "joinGuardEnabled",
+		slug: "joinguard",
+	},
+	{
+		group: "modules",
 		icon: "ic:round-rate-review",
 		labelKey: "dashboard.nav.appeals",
 		moduleKey: "appealsEnabled",

@@ -11,3 +11,4 @@ export * from "./dashboard-access";
 export * from "./member-search";
 export * from "./command-permissions";
 export * from "./command-rules";
+export * from "./join-guard";

@@ -2596,6 +2596,834 @@
 					},
 					"additionalProperties": false
 				},
+				"joinguard": {
+					"type": "object",
+					"properties": {
+						"allow": {
+							"type": "object",
+							"properties": {
+								"form_aria": {
+									"type": "string"
+								},
+								"help": {
+									"type": "string"
+								},
+								"members": {
+									"type": "string"
+								},
+								"nobody": {
+									"type": "string"
+								},
+								"roles": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"checkpoint": {
+							"type": "object",
+							"properties": {
+								"captcha": {
+									"type": "string"
+								},
+								"captcha_help": {
+									"type": "string"
+								},
+								"channel": {
+									"type": "string"
+								},
+								"channel_help": {
+									"type": "string"
+								},
+								"checks_title": {
+									"type": "string"
+								},
+								"connections": {
+									"type": "string"
+								},
+								"connections_help": {
+									"type": "string"
+								},
+								"copied_description": {
+									"type": "string"
+								},
+								"copied_title": {
+									"type": "string"
+								},
+								"copy_link": {
+									"type": "string"
+								},
+								"form_aria": {
+									"type": "string"
+								},
+								"hours": {
+									"type": "string"
+								},
+								"minimum_trust": {
+									"type": "string"
+								},
+								"no_channel": {
+									"type": "string"
+								},
+								"no_pending_role": {
+									"type": "string"
+								},
+								"no_verified_role": {
+									"type": "string"
+								},
+								"note": {
+									"type": "string"
+								},
+								"pending_role": {
+									"type": "string"
+								},
+								"pending_role_help": {
+									"type": "string"
+								},
+								"post_button": {
+									"type": "string"
+								},
+								"post_failed_title": {
+									"type": "string"
+								},
+								"post_needs_channel": {
+									"type": "string"
+								},
+								"posted_description": {
+									"type": "string"
+								},
+								"posted_title": {
+									"type": "string"
+								},
+								"shared_bans": {
+									"type": "string"
+								},
+								"shared_bans_help": {
+									"type": "string"
+								},
+								"switch": {
+									"type": "string"
+								},
+								"switch_help": {
+									"type": "string"
+								},
+								"the_channel": {
+									"type": "string"
+								},
+								"timeout": {
+									"type": "string"
+								},
+								"timeout_aria": {
+									"type": "string"
+								},
+								"timeout_help": {
+									"type": "string"
+								},
+								"timeout_never": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"trust_help": {
+									"type": "object",
+									"properties": {
+										"1": {
+											"type": "string"
+										},
+										"2": {
+											"type": "string"
+										},
+										"3": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"trust_scale": {
+									"type": "string"
+								},
+								"verified_role": {
+									"type": "string"
+								},
+								"verified_role_help": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"chips": {
+							"type": "object",
+							"properties": {
+								"account_age": {
+									"type": "string"
+								},
+								"alert": {
+									"type": "string"
+								},
+								"ban": {
+									"type": "string"
+								},
+								"checkpoint": {
+									"type": "string"
+								},
+								"default_avatar": {
+									"type": "string"
+								},
+								"direct_message": {
+									"type": "string"
+								},
+								"generated_name": {
+									"type": "string"
+								},
+								"kick": {
+									"type": "string"
+								},
+								"name_contains": {
+									"type": "string"
+								},
+								"unverified_bot": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"editor": {
+							"type": "object",
+							"properties": {
+								"account_age": {
+									"type": "string"
+								},
+								"account_age_help": {
+									"type": "string"
+								},
+								"actions": {
+									"type": "string"
+								},
+								"alert": {
+									"type": "string"
+								},
+								"alert_aria": {
+									"type": "string"
+								},
+								"alert_help": {
+									"type": "string"
+								},
+								"ban": {
+									"type": "string"
+								},
+								"ban_help": {
+									"type": "string"
+								},
+								"cancel": {
+									"type": "string"
+								},
+								"checkpoint": {
+									"type": "string"
+								},
+								"checkpoint_help": {
+									"type": "string"
+								},
+								"checkpoint_off": {
+									"type": "string"
+								},
+								"conditions": {
+									"type": "string"
+								},
+								"create": {
+									"type": "string"
+								},
+								"days": {
+									"type": "string"
+								},
+								"days_aria": {
+									"type": "string"
+								},
+								"default_avatar": {
+									"type": "string"
+								},
+								"default_avatar_help": {
+									"type": "string"
+								},
+								"delete": {
+									"type": "string"
+								},
+								"description": {
+									"type": "string"
+								},
+								"direct_message": {
+									"type": "string"
+								},
+								"direct_message_help": {
+									"type": "string"
+								},
+								"edit_title": {
+									"type": "string"
+								},
+								"enabled": {
+									"type": "string"
+								},
+								"generated_name": {
+									"type": "string"
+								},
+								"generated_name_help": {
+									"type": "string"
+								},
+								"kick": {
+									"type": "string"
+								},
+								"kick_help": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								},
+								"name_contains": {
+									"type": "string"
+								},
+								"name_contains_aria": {
+									"type": "string"
+								},
+								"name_contains_help": {
+									"type": "string"
+								},
+								"name_contains_placeholder": {
+									"type": "string"
+								},
+								"name_placeholder": {
+									"type": "string"
+								},
+								"new_title": {
+									"type": "string"
+								},
+								"pick_channel": {
+									"type": "string"
+								},
+								"pick_role": {
+									"type": "string"
+								},
+								"role": {
+									"type": "string"
+								},
+								"role_aria": {
+									"type": "string"
+								},
+								"role_help": {
+									"type": "string"
+								},
+								"save": {
+									"type": "string"
+								},
+								"unverified_bot": {
+									"type": "string"
+								},
+								"unverified_bot_help": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"failures": {
+							"type": "object",
+							"properties": {
+								"Failed": {
+									"type": "string"
+								},
+								"InvalidRequest": {
+									"type": "string"
+								},
+								"MissingPermissions": {
+									"type": "string"
+								},
+								"NoChannel": {
+									"type": "string"
+								},
+								"NotAllowed": {
+									"type": "string"
+								},
+								"NotMember": {
+									"type": "string"
+								},
+								"NotWaiting": {
+									"type": "string"
+								},
+								"Refused": {
+									"type": "string"
+								},
+								"RoleNotManageable": {
+									"type": "string"
+								},
+								"UnknownChannel": {
+									"type": "string"
+								},
+								"UnknownGuild": {
+									"type": "string"
+								},
+								"unknown": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"form_aria": {
+							"type": "string"
+						},
+						"members_stopped": {
+							"type": "string"
+						},
+						"notices": {
+							"type": "object",
+							"properties": {
+								"count": {
+									"type": "string"
+								},
+								"direct_message": {
+									"type": "string"
+								},
+								"direct_message_help": {
+									"type": "string"
+								},
+								"form_aria": {
+									"type": "string"
+								},
+								"log": {
+									"type": "string"
+								},
+								"log_help": {
+									"type": "string"
+								},
+								"message": {
+									"type": "string"
+								},
+								"message_help": {
+									"type": "string"
+								},
+								"message_placeholder": {
+									"type": "string"
+								},
+								"not_logged": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"off_body": {
+							"type": "string"
+						},
+						"off_summary": {
+							"type": "string"
+						},
+						"off_title": {
+							"type": "string"
+						},
+						"on_summary": {
+							"type": "string"
+						},
+						"problems": {
+							"type": "object",
+							"properties": {
+								"account_age": {
+									"type": "string"
+								},
+								"actions": {
+									"type": "string"
+								},
+								"checkpoint_off": {
+									"type": "string"
+								},
+								"conditions": {
+									"type": "string"
+								},
+								"hard_action_conflict": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								},
+								"name_contains": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"queue": {
+							"type": "object",
+							"properties": {
+								"created": {
+									"type": "string"
+								},
+								"decided": {
+									"type": "object",
+									"properties": {
+										"checkpoint": {
+											"type": "string"
+										},
+										"moderator": {
+											"type": "string"
+										},
+										"rule": {
+											"type": "string"
+										},
+										"timeout": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"empty": {
+									"type": "string"
+								},
+								"filter_aria": {
+									"type": "string"
+								},
+								"filters": {
+									"type": "object",
+									"properties": {
+										"all": {
+											"type": "string"
+										},
+										"banned": {
+											"type": "string"
+										},
+										"kicked": {
+											"type": "string"
+										},
+										"verified": {
+											"type": "string"
+										},
+										"waiting": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"help": {
+									"type": "string"
+								},
+								"kick": {
+									"type": "string"
+								},
+								"kick_aria": {
+									"type": "string"
+								},
+								"kick_confirm": {
+									"type": "string"
+								},
+								"kick_description": {
+									"type": "string"
+								},
+								"kick_title": {
+									"type": "string"
+								},
+								"kicked_description": {
+									"type": "string"
+								},
+								"kicked_title": {
+									"type": "string"
+								},
+								"list_aria": {
+									"type": "string"
+								},
+								"load_failed": {
+									"type": "string"
+								},
+								"load_more": {
+									"type": "string"
+								},
+								"load_more_failed": {
+									"type": "string"
+								},
+								"reason": {
+									"type": "string"
+								},
+								"reason_placeholder": {
+									"type": "string"
+								},
+								"refresh": {
+									"type": "string"
+								},
+								"sending": {
+									"type": "string"
+								},
+								"signals": {
+									"type": "object",
+									"properties": {
+										"default_avatar": {
+											"type": "string"
+										},
+										"generated_name": {
+											"type": "string"
+										},
+										"linked_accounts": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"status": {
+									"type": "object",
+									"properties": {
+										"banned": {
+											"type": "string"
+										},
+										"kicked": {
+											"type": "string"
+										},
+										"left": {
+											"type": "string"
+										},
+										"verified": {
+											"type": "string"
+										},
+										"waiting": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"stopped_by": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"verified_description": {
+									"type": "string"
+								},
+								"verified_title": {
+									"type": "string"
+								},
+								"verify": {
+									"type": "string"
+								},
+								"verify_aria": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"requests": {
+							"type": "object",
+							"properties": {
+								"failed": {
+									"type": "string"
+								},
+								"generic": {
+									"type": "string"
+								},
+								"invalid": {
+									"type": "string"
+								},
+								"not_waiting": {
+									"type": "string"
+								},
+								"timeout": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"unknown": {
+									"type": "string"
+								},
+								"unreachable": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"rules": {
+							"type": "object",
+							"properties": {
+								"count": {
+									"type": "string"
+								},
+								"delete": {
+									"type": "string"
+								},
+								"delete_aria": {
+									"type": "string"
+								},
+								"delete_confirm": {
+									"type": "string"
+								},
+								"delete_description": {
+									"type": "string"
+								},
+								"delete_title": {
+									"type": "string"
+								},
+								"edit": {
+									"type": "string"
+								},
+								"edit_aria": {
+									"type": "string"
+								},
+								"empty_description": {
+									"type": "string"
+								},
+								"empty_title": {
+									"type": "string"
+								},
+								"errors": {
+									"type": "object",
+									"properties": {
+										"generic": {
+											"type": "string"
+										},
+										"invalid": {
+											"type": "string"
+										},
+										"limit": {
+											"type": "string"
+										},
+										"nameTaken": {
+											"type": "string"
+										},
+										"unknown": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"help": {
+									"type": "string"
+								},
+								"load_failed": {
+									"type": "string"
+								},
+								"loading_aria": {
+									"type": "string"
+								},
+								"new": {
+									"type": "string"
+								},
+								"retry": {
+									"type": "string"
+								},
+								"then": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"toasts": {
+									"type": "object",
+									"properties": {
+										"applies": {
+											"type": "string"
+										},
+										"created": {
+											"type": "string"
+										},
+										"deleted": {
+											"type": "string"
+										},
+										"saved": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"toggle_aria": {
+									"type": "string"
+								},
+								"unknown_channel": {
+									"type": "string"
+								},
+								"unknown_role": {
+									"type": "string"
+								},
+								"when": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"stopped_badge": {
+							"type": "string"
+						},
+						"subtitle": {
+							"type": "string"
+						},
+						"summary": {
+							"type": "object",
+							"properties": {
+								"account_age": {
+									"type": "string"
+								},
+								"ban": {
+									"type": "string"
+								},
+								"checkpoint": {
+									"type": "string"
+								},
+								"default_avatar": {
+									"type": "string"
+								},
+								"direct_message": {
+									"type": "string"
+								},
+								"generated_name": {
+									"type": "string"
+								},
+								"kick": {
+									"type": "string"
+								},
+								"name_contains": {
+									"type": "string"
+								},
+								"role": {
+									"type": "string"
+								},
+								"sentence": {
+									"type": "string"
+								},
+								"sentence_alert": {
+									"type": "string"
+								},
+								"unverified_bot": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"switch_aria": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						},
+						"trust": {
+							"type": "object",
+							"properties": {
+								"0": {
+									"type": "string"
+								},
+								"1": {
+									"type": "string"
+								},
+								"2": {
+									"type": "string"
+								},
+								"3": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"waiting_badge": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"moderation": {
 					"type": "object",
 					"properties": {
@@ -2681,6 +3509,9 @@
 									"type": "string"
 								},
 								"honeypot": {
+									"type": "string"
+								},
+								"joinguard": {
 									"type": "string"
 								},
 								"moderation": {
@@ -4248,6 +5079,225 @@
 								}
 							},
 							"additionalProperties": false
+						}
+					},
+					"additionalProperties": false
+				}
+			},
+			"additionalProperties": false
+		},
+		"verify": {
+			"type": "object",
+			"properties": {
+				"a_server": {
+					"type": "string"
+				},
+				"captcha_failed": {
+					"type": "string"
+				},
+				"done_body": {
+					"type": "string"
+				},
+				"done_title": {
+					"type": "string"
+				},
+				"gaps": {
+					"type": "object",
+					"properties": {
+						"account_age": {
+							"type": "string"
+						},
+						"avatar": {
+							"type": "string"
+						},
+						"badges": {
+							"type": "string"
+						},
+						"linked_account": {
+							"type": "string"
+						},
+						"shared_ban": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"guest": {
+					"type": "object",
+					"properties": {
+						"body": {
+							"type": "string"
+						},
+						"sign_in": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"load_failed_body": {
+					"type": "string"
+				},
+				"load_failed_title": {
+					"type": "string"
+				},
+				"loading": {
+					"type": "string"
+				},
+				"open_discord": {
+					"type": "string"
+				},
+				"reads": {
+					"type": "string"
+				},
+				"result": {
+					"type": "object",
+					"properties": {
+						"captcha": {
+							"type": "string"
+						},
+						"captcha_unavailable": {
+							"type": "string"
+						},
+						"failed": {
+							"type": "string"
+						},
+						"not_waiting": {
+							"type": "string"
+						},
+						"rate_limited": {
+							"type": "string"
+						},
+						"refused": {
+							"type": "string"
+						},
+						"shared_ban": {
+							"type": "string"
+						},
+						"timeout": {
+							"type": "string"
+						},
+						"trust": {
+							"type": "string"
+						},
+						"unavailable": {
+							"type": "string"
+						},
+						"unreachable": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"retry": {
+					"type": "string"
+				},
+				"seo_description": {
+					"type": "string"
+				},
+				"states": {
+					"type": "object",
+					"properties": {
+						"banned_body": {
+							"type": "string"
+						},
+						"banned_title": {
+							"type": "string"
+						},
+						"kicked_body": {
+							"type": "string"
+						},
+						"kicked_title": {
+							"type": "string"
+						},
+						"left_body": {
+							"type": "string"
+						},
+						"left_title": {
+							"type": "string"
+						},
+						"not_stopped_body": {
+							"type": "string"
+						},
+						"not_stopped_title": {
+							"type": "string"
+						},
+						"unavailable_body": {
+							"type": "string"
+						},
+						"unavailable_title": {
+							"type": "string"
+						},
+						"verified_body": {
+							"type": "string"
+						},
+						"verified_title": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"this_server": {
+					"type": "string"
+				},
+				"title": {
+					"type": "string"
+				},
+				"trust": {
+					"type": "object",
+					"properties": {
+						"minimum": {
+							"type": "string"
+						},
+						"minimum_mark": {
+							"type": "string"
+						},
+						"scale_aria": {
+							"type": "string"
+						},
+						"yours": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"unknown_body": {
+					"type": "string"
+				},
+				"unknown_title": {
+					"type": "string"
+				},
+				"waiting": {
+					"type": "object",
+					"properties": {
+						"below_minimum": {
+							"type": "string"
+						},
+						"body": {
+							"type": "string"
+						},
+						"captcha_first": {
+							"type": "string"
+						},
+						"connections": {
+							"type": "string"
+						},
+						"link_accounts": {
+							"type": "string"
+						},
+						"sending": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						},
+						"to_reach": {
+							"type": "string"
+						},
+						"verify": {
+							"type": "string"
 						}
 					},
 					"additionalProperties": false

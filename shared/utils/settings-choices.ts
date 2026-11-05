@@ -28,6 +28,10 @@ export const SETTING_NUMBER_RANGES = {
 	moderationConfirmRecentMinutes: { maximum: 60, minimum: 0 },
 	appealsCooldownDays: { maximum: 365, minimum: 0 },
 	appealsMaxActive: { maximum: 10, minimum: 1 },
+	// In seconds, which the page edits in hours: 0 never kicks, otherwise one
+	// hour to a week (the bot's `JoinGuardCheckpointTimeoutLimits`).
+	joinGuardCheckpointTimeout: { maximum: 604_800, minimum: 0 },
+	joinGuardMinimumTrust: { maximum: 3, minimum: 1 },
 } as const satisfies {
 	[Key in keyof GuildData]?: GuildData[Key] extends number
 		? { maximum: number; minimum: number }
@@ -75,6 +79,8 @@ export const SETTING_TEXT_LIMITS = {
 	messagesResponseKick: 200,
 	messagesResponseMute: 200,
 	messagesResponseUnmute: 200,
+	// What the join guard's direct message says; empty, the bot writes its own.
+	joinGuardDirectMessageContent: 500,
 } as const satisfies {
 	[Key in keyof GuildData]?: GuildData[Key] extends string | null ? number : never;
 };

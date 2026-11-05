@@ -66,10 +66,15 @@ export function useMyAppeals({
 }: { guild?: MaybeRefOrGetter<string | null | undefined>; live?: boolean } = {}) {
 	const extra = computed(() => toValue(guild) ?? null);
 
-	const readList = () =>
-		$fetch<MyAppealsResponse>(BASE, {
+	// Every read is counted, the async data's own too, so a read in the
+	// background that a newer one overtook does not bring back older cards.
+	let reads = 0;
+	const readList = () => {
+		reads += 1;
+		return $fetch<MyAppealsResponse>(BASE, {
 			query: extra.value ? { guild: extra.value } : {},
 		});
+	};
 
 	const asyncData = usePersistedAsyncData(() => `me:appeals:${extra.value ?? "none"}`, readList, {
 		watch: [extra],
@@ -78,15 +83,24 @@ export function useMyAppeals({
 	if (live && import.meta.client) {
 		const visibility = useDocumentVisibility();
 		let lastRead = Date.now();
-		// Not `refresh()`: a failed read clears the data of an async data, and a
-		// network blip or a rate limit would swap the cases for an error. This one
-		// keeps what is shown when it fails, and the next one tries again.
 		const readAgain = async () => {
 			if (visibility.value !== "visible" || asyncData.status.value === "pending") return;
 			if (Date.now() - lastRead < LIVE_MIN_GAP) return;
 			lastRead = Date.now();
+			// Nothing is shown but the failure: `refresh()` clears it when the read works.
+			if (asyncData.status.value === "error") {
+				await asyncData.refresh();
+				return;
+			}
+			// Not `refresh()` otherwise: a failed read clears the data of an async
+			// data, and a network blip or a rate limit would swap the cases for an
+			// error. This one keeps what is shown when it fails, and the next one
+			// tries again.
 			try {
-				asyncData.data.value = await readList();
+				const answer = readList();
+				const read = reads;
+				const list = await answer;
+				if (read === reads) asyncData.data.value = list;
 			} catch {
 				// Kept as it is.
 			}

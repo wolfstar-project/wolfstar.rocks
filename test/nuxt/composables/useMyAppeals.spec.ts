@@ -35,6 +35,9 @@ const PAGE: AppealPage = {
 
 let listCalls = 0;
 let listFails = false;
+// What the list answers when it is asked, and a gate that holds the next answer back.
+let listAnswer: () => MyAppealsResponse;
+let listGate: Promise<void> | null = null;
 let lastQuery: Record<string, unknown> = {};
 let lastBody: unknown;
 let pageAnswer: () => AppealPage;
@@ -42,11 +45,17 @@ let submitAnswer: () => unknown;
 
 registerEndpoint("/api/users/appeals", {
 	method: "GET",
-	handler: (event) => {
+	handler: async (event) => {
 		listCalls += 1;
 		if (listFails) throw createError({ statusCode: 429, statusMessage: "Too Many Requests" });
 		lastQuery = getQuery(event);
-		return { entries: [entry(`${GUILD}:212`)], openCount: 1 } satisfies MyAppealsResponse;
+		const answer = listAnswer();
+		if (listGate) {
+			const gate = listGate;
+			listGate = null;
+			await gate;
+		}
+		return answer;
 	},
 });
 
@@ -65,6 +74,8 @@ describe("useMyAppeals", () => {
 	beforeEach(() => {
 		listCalls = 0;
 		listFails = false;
+		listAnswer = () => ({ entries: [entry(`${GUILD}:212`)], openCount: 1 });
+		listGate = null;
 		lastQuery = {};
 		lastBody = undefined;
 		pageAnswer = () => PAGE;
@@ -155,6 +166,45 @@ describe("useMyAppeals", () => {
 			listFails = false;
 			vi.advanceTimersByTime(60_000);
 			await vi.waitUntil(() => listCalls > before + 1, { timeout: 2000 });
+		});
+
+		it("drops a read in the background that a newer read overtook", async () => {
+			vi.useFakeTimers({ toFake: ["setInterval", "clearInterval", "Date"] });
+			const { entries, status, submit } = useMyAppeals({ live: true });
+			await vi.waitUntil(() => status.value === "success", { timeout: 2000 });
+
+			// The background read is answered with the case still open, but late:
+			let release!: () => void;
+			listGate = new Promise((resolve) => (release = resolve));
+			const before = listCalls;
+			vi.advanceTimersByTime(60_000);
+			await vi.waitUntil(() => listCalls > before, { timeout: 2000 });
+
+			// Meanwhile the member appeals, and the list read after it says so.
+			listAnswer = () => ({
+				entries: [{ ...entry(`${GUILD}:212`), status: "pending" }],
+				openCount: 0,
+			});
+			await submit(GUILD, null, 212, { why: "Sorry." });
+			expect(entries.value[0]?.status).toBe("pending");
+
+			release();
+			await new Promise((resolve) => setTimeout(resolve, 50));
+			expect(entries.value[0]?.status).toBe("pending");
+		});
+
+		it("shows the cases again once a read works after a failed one", async () => {
+			vi.useFakeTimers({ toFake: ["setInterval", "clearInterval", "Date"] });
+			listFails = true;
+			const { entries, error, status } = useMyAppeals({ live: true });
+			await vi.waitUntil(() => status.value === "error", { timeout: 2000 });
+
+			listFails = false;
+			vi.advanceTimersByTime(60_000);
+			await vi.waitUntil(() => status.value === "success", { timeout: 2000 });
+
+			expect(error.value).toBeFalsy();
+			expect(entries.value.map((item) => item.key)).toStrictEqual([`${GUILD}:212`]);
 		});
 
 		it("does not read it while the tab is hidden, and reads it when the tab comes back", async () => {

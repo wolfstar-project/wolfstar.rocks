@@ -35,7 +35,7 @@ describe("DashboardContextCard", () => {
 		const wrapper = await mountSuspended(DashboardContextCard, { route: "/app?screen=page" });
 
 		expect(wrapper.text()).toContain("WolfStar HQ");
-		expect(wrapper.text()).toContain("2 of 8 modules on");
+		expect(wrapper.text()).toContain("2 of 9 modules on");
 	});
 
 	it("offers the switch of a module section, bound to its staged setting", async () => {

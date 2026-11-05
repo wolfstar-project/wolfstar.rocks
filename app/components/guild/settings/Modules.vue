@@ -210,6 +210,14 @@ const moduleCards: AnyModuleCard[] = [
 		section: "honeypot",
 	},
 	{
+		descriptionKey: "guild_settings.modules.descriptions.joinguard",
+		icon: "lucide:shield-check",
+		key: "joinGuardEnabled",
+		kind: "switch",
+		labelKey: "dashboard.nav.joinguard",
+		section: "joinguard",
+	},
+	{
 		descriptionKey: "guild_settings.modules.descriptions.appeals",
 		icon: "lucide:scale",
 		key: "appealsEnabled",

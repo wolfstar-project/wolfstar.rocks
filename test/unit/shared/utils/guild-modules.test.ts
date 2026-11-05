@@ -55,6 +55,7 @@ describe("guild modules registry", () => {
 			"modulesRoles",
 			"modulesLogs",
 			"appealsEnabled",
+			"joinGuardEnabled",
 			"modulesAutodelete",
 			"modulesAutopurge",
 			"modulesAutomessage",

@@ -141,6 +141,7 @@ const asyncComponentMap: Record<string, ReturnType<typeof defineAsyncComponent>>
 		"form",
 	),
 	honeypot: sectionComponent(() => import("~/components/guild/settings/Honeypot.vue"), "form"),
+	joinguard: sectionComponent(() => import("~/components/guild/settings/JoinGuard.vue"), "form"),
 	modules: sectionComponent(() => import("~/components/guild/settings/Modules.vue"), "modules"),
 	roles: sectionComponent(() => import("~/components/guild/settings/Roles.vue"), "form"),
 };

@@ -55,6 +55,13 @@ import {
 	GuildAppealsForms,
 	GuildAuditChanges,
 	GuildAutomodDurationInput,
+	GuildJoinguardAllowList,
+	GuildJoinguardCheckpoint,
+	GuildJoinguardNotices,
+	GuildJoinguardQueue,
+	GuildJoinguardRuleCard,
+	GuildJoinguardRuleEditor,
+	GuildJoinguardRules,
 	GuildCommandsRuleEditor,
 	GuildCommandsRuleList,
 	GuildLogsCaseDetail,
@@ -69,6 +76,7 @@ import {
 	GuildSettingsAutoPurge,
 	GuildSettingsDisabledCommands,
 	GuildSettingsHoneypot,
+	GuildSettingsJoinGuard,
 	GuildSettingsLogsBulkChannel,
 	GuildSettingsLogsSelectionBar,
 	GuildSettingsModeration,
@@ -79,6 +87,7 @@ import {
 	IconsWolfstar,
 	SectionHeader,
 	Separator,
+	VerifyTrustMeter,
 
 	// #region Staryl components
 	StarylCommandsSection,
@@ -93,8 +102,9 @@ import {
 import { mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
 import { createError } from "h3";
 import { describe, expect, it, vi } from "vitest";
+import VerifyPage from "~/pages/verify/[guild].vue";
 import { MOCK_AUDIT_ENTRY, MOCK_MODERATION_ENTRY } from "~~/test/mocks/auditLogs";
-import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
+import { createMockOauthFlattenedGuild, createMockRole } from "~~/test/mocks/discord";
 import { createMockGuildData } from "~~/test/mocks/guildData";
 import { runAxe } from "./utils/axe";
 
@@ -1035,6 +1045,209 @@ describe("component accessibility audits", () => {
 			const component = await mountSuspended(GuildSettingsAppeals, {
 				global: { stubs: { GuildAppealsForms: true } },
 			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("Join Guard", () => {
+		const GUILD_ID = "123456789012345670";
+		const ROLE_ID = "300000000000000001";
+		const now = Date.now();
+		const rule = {
+			accountAgeMax: 7 * 86_400,
+			alertChannelId: null,
+			createdAt: now,
+			defaultAvatar: true,
+			directMessage: true,
+			enabled: true,
+			generatedName: false,
+			hardAction: null,
+			id: "r1",
+			name: "Fresh accounts",
+			nameContains: null,
+			roleId: ROLE_ID,
+			sendToCheckpoint: true,
+			unverifiedBot: false,
+		} as const;
+		const entry = {
+			accountCreatedAt: now - 5 * 86_400_000,
+			caseId: null,
+			createdAt: now - 3_600_000,
+			defaultAvatar: true,
+			expiresAt: null,
+			generatedName: true,
+			id: "c1",
+			linkedAccounts: 0,
+			member: { avatarUrl: null, displayName: "Sunny", id: "111", username: "sunny.art" },
+			moderator: null,
+			resolution: null,
+			resolvedAt: null,
+			ruleId: "r1",
+			ruleName: "Fresh accounts",
+			status: "Waiting",
+			trust: 1,
+		} as const;
+		const queuePage = {
+			counts: { all: 2, Banned: 0, Kicked: 0, Verified: 1, Waiting: 1 },
+			entries: [
+				entry,
+				{
+					...entry,
+					id: "c2",
+					resolution: "Checkpoint",
+					status: "Verified",
+					trust: 2,
+				},
+			],
+			nextCursor: "c2",
+			waiting: 1,
+		};
+
+		function openGuild(settings: Record<string, unknown> = {}) {
+			registerEndpoint(`/api/guilds/${GUILD_ID}/joinguard/rules`, {
+				method: "GET",
+				handler: () => ({
+					rules: [
+						rule,
+						{
+							...rule,
+							enabled: false,
+							id: "r2",
+							name: "Bots",
+							hardAction: "Kick",
+							roleId: null,
+							sendToCheckpoint: false,
+						},
+					],
+				}),
+			});
+			registerEndpoint(`/api/guilds/${GUILD_ID}/joinguard/checkpoints`, {
+				method: "GET",
+				handler: () => queuePage,
+			});
+			registerEndpoint(`/api/guilds/${GUILD_ID}/members/search`, {
+				method: "GET",
+				handler: () => [],
+			});
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(
+				createMockOauthFlattenedGuild({
+					id: GUILD_ID,
+					roles: [createMockRole({ id: ROLE_ID, name: "Quarantine" })],
+				}),
+			);
+			useGuildSettings().setGuildSettings(
+				createMockGuildData(GUILD_ID, {
+					joinGuardCheckpoint: true,
+					joinGuardEnabled: true,
+					joinGuardAllowedUsers: ["200000000000000099"],
+					...settings,
+				}),
+			);
+		}
+
+		it("GuildSettingsJoinGuard has no accessibility violations while on", async () => {
+			openGuild();
+			const component = await mountSuspended(GuildSettingsJoinGuard);
+			await vi.waitFor(() => expect(component.text()).toContain("Fresh accounts"));
+			await vi.waitFor(() => expect(component.text()).toContain("@sunny.art"));
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("GuildSettingsJoinGuard has no accessibility violations while off", async () => {
+			openGuild({ joinGuardEnabled: false });
+			const component = await mountSuspended(GuildSettingsJoinGuard);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("GuildJoinguardRules has no accessibility violations", async () => {
+			openGuild();
+			const component = await mountSuspended(GuildJoinguardRules);
+			await vi.waitFor(() => expect(component.text()).toContain("Bots"));
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("GuildJoinguardRuleCard has no accessibility violations", async () => {
+			openGuild();
+			const component = await mountSuspended(GuildJoinguardRuleCard, { props: { rule } });
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("GuildJoinguardRuleEditor has no accessibility violations while open", async () => {
+			openGuild();
+			const component = await mountSuspended(GuildJoinguardRuleEditor, {
+				attachTo: document.body,
+				props: {
+					checkpointOn: false,
+					errorCode: "limit",
+					guild: createMockOauthFlattenedGuild({ id: GUILD_ID }),
+					open: true,
+					rule,
+				},
+			});
+			await vi.waitFor(() =>
+				expect(document.querySelector('[role="dialog"] form')).not.toBeNull(),
+			);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+			component.unmount();
+		});
+
+		it("GuildJoinguardCheckpoint has no accessibility violations", async () => {
+			openGuild({ joinGuardCheckpointTimeout: 86_400 });
+			const component = await mountSuspended(GuildJoinguardCheckpoint);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("GuildJoinguardAllowList has no accessibility violations", async () => {
+			openGuild({ joinGuardAllowedRoles: [ROLE_ID] });
+			const component = await mountSuspended(GuildJoinguardAllowList);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("GuildJoinguardNotices has no accessibility violations", async () => {
+			openGuild({ joinGuardDirectMessageContent: "{server} checks new accounts." });
+			const component = await mountSuspended(GuildJoinguardNotices);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("GuildJoinguardQueue has no accessibility violations with a request in flight", async () => {
+			openGuild();
+			const queue = useJoinGuardQueue({ filter: "all", guildId: GUILD_ID });
+			await vi.waitFor(() => expect(queue.entries.value).toHaveLength(2));
+			queue.rowRequests.value = { c1: { kind: "Verify", state: "sending" } };
+			const component = await mountSuspended(GuildJoinguardQueue, {
+				props: { filter: "all", queue },
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("VerifyTrustMeter has no accessibility violations", async () => {
+			const component = await mountSuspended(VerifyTrustMeter, {
+				props: { level: 1, minimum: 2 },
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("the verification page has no accessibility violations for a visitor", async () => {
+			registerEndpoint(`/api/verify/${GUILD_ID}`, {
+				method: "GET",
+				handler: () => {
+					throw createError({ statusCode: 401, statusMessage: "Unauthorized" });
+				},
+			});
+			const component = await mountSuspended(VerifyPage, { route: `/verify/${GUILD_ID}` });
+			await vi.waitFor(() => expect(component.text()).toContain("Sign in with Discord"));
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
 		});

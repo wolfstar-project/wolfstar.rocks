@@ -70,6 +70,17 @@ const WORKER_DEFAULTS = {
 const SENTRY_DSN =
 	"https://f22c05b1dea46bdd3465501f81b3c94d@o4505160005451776.ingest.us.sentry.io/4508811185356800";
 
+/**
+ * A plain variable the build was given, or none. `vars` replaces what the
+ * dashboard holds on every deploy, so a public value the Worker needs at run
+ * time, such as the Turnstile site key, has to be listed here to survive it. A
+ * Worker built without it just has no captcha widget to offer.
+ */
+function optionalVar(name: string): Record<string, string> {
+	const value = process.env[name];
+	return value ? { [name]: value } : {};
+}
+
 function requireEnv(name: string): string {
 	const value = process.env[name];
 	if (!value) throw new Error(`${name} is required to build the production Worker.`);
@@ -85,6 +96,7 @@ function requireEnv(name: string): string {
  * dashboard holds, so an empty client id would deploy and break sign-in.
  *
  * The secrets are set as on {@link ALPHA_WORKER}, with `--name wolfstar-rocks`.
+ * The Turnstile site key is a public repository variable of the deploy workflow.
  */
 function createProductionWorker() {
 	return {
@@ -114,6 +126,7 @@ function createProductionWorker() {
 			NUXT_PUBLIC_API_BASE_URL: "https://api.wolfstar.rocks",
 			NUXT_PUBLIC_ENVIRONMENT: "production",
 			NUXT_PUBLIC_SITE_URL: "https://wolfstar.rocks",
+			...optionalVar("NUXT_PUBLIC_TURNSTILE_SITE_KEY"),
 			SENTRY_DSN,
 		},
 	} satisfies WranglerConfig;
@@ -158,6 +171,7 @@ const ALPHA_WORKER = {
 		// Keeps the alpha site's events apart from production's in Sentry.
 		NUXT_PUBLIC_ENVIRONMENT: "alpha",
 		NUXT_PUBLIC_SITE_URL: "https://alpha.wolfstar.rocks",
+		...optionalVar("NUXT_PUBLIC_TURNSTILE_SITE_KEY"),
 		SENTRY_DSN,
 	},
 } satisfies WranglerConfig;

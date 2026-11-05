@@ -78,18 +78,10 @@
 					{{ ts("guild_settings.general.mod_actions_total", { count: moderationTotal }) }}
 				</span>
 			</div>
-			<UChart
-				type="bar"
-				:data="activityDays"
-				index="label"
-				:categories="[
-					{ key: 'count', label: ts('guild_settings.general.mod_actions_title') },
-				]"
-				:colors="['var(--color-primary)']"
-				:legend="false"
-				:height="180"
-				:format="formatCount"
-				:aria-label="chartAria"
+			<GuildActivityChart
+				:days="activityDays"
+				:label="chartAria"
+				:format-count="formatCount"
 			/>
 			<p v-if="isChartPartial" class="mt-3 text-xs text-muted">
 				{{ ts("guild_settings.general.mod_actions_partial", { count: CHART_ENTRY_LIMIT }) }}
@@ -327,7 +319,7 @@ const activityDays = computed(() =>
 );
 const isChartPartial = computed(() => moderationTotal.value > moderationEntries.value.length);
 
-// The y axis picks its own ticks; a count of actions is never fractional.
+// A count of actions is never fractional.
 const countFormat = computed(
 	() => new Intl.NumberFormat(locale.value, { maximumFractionDigits: 0 }),
 );

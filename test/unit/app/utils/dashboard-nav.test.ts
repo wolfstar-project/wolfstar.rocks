@@ -47,6 +47,7 @@ describe("DASHBOARD_NAV", () => {
 			"roles",
 			"channels",
 			"honeypot",
+			"joinguard",
 			"appeals",
 			"autodelete",
 			"autopurge",
@@ -62,6 +63,7 @@ describe("DASHBOARD_NAV", () => {
 	it("knows what turns the events, the honeypot and the appeals on", () => {
 		expect(findDashboardNavItem("channels")?.moduleKey).toBe("modulesLogs");
 		expect(findDashboardNavItem("appeals")?.moduleKey).toBe("appealsEnabled");
+		expect(findDashboardNavItem("joinguard")?.moduleKey).toBe("joinGuardEnabled");
 		expect(findDashboardNavItem("honeypot")?.requiredKey).toBe("honeypotChannel");
 	});
 

@@ -181,6 +181,9 @@
 						"honeypot": {
 							"type": "string"
 						},
+						"joinguard": {
+							"type": "string"
+						},
 						"logs": {
 							"type": "string"
 						},

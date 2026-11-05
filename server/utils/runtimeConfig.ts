@@ -53,6 +53,9 @@ export function generateRuntimeConfig() {
 			// the base URL is inferred per request and Discord callbacks drift between
 			// the apex domain, deploy previews, and platform-generated hostnames.
 			siteUrl: process.env.NUXT_PUBLIC_SITE_URL || "",
+			// The public key of the Turnstile widget of the verification page
+			// (`/verify/<guild>`); empty when the site has no Turnstile set up.
+			turnstileSiteKey: process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || "",
 			sentry: {
 				dsn: process.env.SENTRY_DSN,
 				tracesSampleRate: parseTracesSampleRate(
@@ -65,6 +68,9 @@ export function generateRuntimeConfig() {
 			org: process.env.SENTRY_ORG,
 			project: process.env.SENTRY_PROJECT,
 		},
+		// The secret the verification page checks a Turnstile token with
+		// (`siteverify`). Server only: it never reaches the client, nor a log.
+		turnstileSecretKey: process.env.NUXT_TURNSTILE_SECRET_KEY || "",
 		// Consumed by `server/auth.config.ts`. Cookie attributes are deliberately
 		// absent: Better Auth owns them, and forcing `sameSite: "strict"` would drop
 		// the OAuth state cookie on the cross-site redirect back from Discord.

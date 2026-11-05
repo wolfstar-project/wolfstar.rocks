@@ -319,6 +319,9 @@ export default defineNuxtConfig({
 		},
 		// Legacy entry points that forward into `/app`: sign-in gated, never indexed.
 		"/guilds/**": { auth: { only: "user", redirectTo: "/login" }, robots: false },
+		// The join guard's verification page: public, about one member, and
+		// drawn in the browser from their session, so never prerendered or indexed.
+		"/verify/**": { prerender: false, robots: false },
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
 		// Deprecated: the page moved into `/app` (server list) and the preferences
 		// dialog (theme/locale/motion). Kept as permanent redirects for old links.
@@ -733,6 +736,10 @@ export default defineNuxtConfig({
 					"https://wolfstar.rocks",
 					// Allow Sentry's runtime assets when Replay is enabled via CDN
 					"https://browser.sentry-cdn.com",
+					// Cloudflare Turnstile, loaded by the verification page only
+					// (`/verify/<guild>`); its widget is an iframe of the same origin,
+					// which `frame-src: https:` already allows.
+					"https://challenges.cloudflare.com",
 				],
 				"script-src-attr": ["'self'", "'unsafe-inline'"],
 				"style-src": [

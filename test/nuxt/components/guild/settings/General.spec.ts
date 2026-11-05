@@ -35,9 +35,6 @@ const mockGuildData = ref(
 // Two members' reports wait for a moderator; the tile reads only the count.
 registerEndpoint("/api/guilds/123456789012345678/reports", () => ({ entries: [], total: 2 }));
 
-// UChart's tooltip needs the UApp provider the real app wraps every page in.
-const chartStub = { stubs: { UChart: true } };
-
 const mockToastAdd = vi.fn();
 const mockCopy = vi.fn();
 const mockCopied = ref(false);
@@ -98,7 +95,6 @@ describe("general guild settings", () => {
 
 	it("renders the language select and no prefix field", async () => {
 		const wrapper = await mountSuspended(General, {
-			global: chartStub,
 			props: {
 				languages: ["en-US", "es-ES", "de-DE"],
 			},
@@ -114,7 +110,6 @@ describe("general guild settings", () => {
 
 	it("initializes state from guildSettings", async () => {
 		const wrapper = await mountSuspended(General, {
-			global: chartStub,
 			props: {
 				languages: ["en-US", "es-ES", "de-DE"],
 			},
@@ -130,7 +125,6 @@ describe("general guild settings", () => {
 
 	it("mapToGuildData correctly transforms form state", async () => {
 		const wrapper = await mountSuspended(General, {
-			global: chartStub,
 			props: {
 				languages: ["en-US", "es-ES", "de-DE"],
 			},
@@ -161,7 +155,6 @@ describe("general guild settings", () => {
 
 	it("renders language options from prop", async () => {
 		const wrapper = await mountSuspended(General, {
-			global: chartStub,
 			props: {
 				languages: ["en-US", "es-ES", "de-DE"],
 			},
@@ -198,23 +191,20 @@ describe("general guild settings", () => {
 
 	it("plots the last seven days of moderation actions as a bar chart", async () => {
 		const wrapper = await mountSuspended(General, {
-			global: chartStub,
 			props: { languages: ["en-US"] },
 		});
 
 		await nextTick();
 
-		const chart = wrapper.findComponent({ name: "UChart" });
+		const chart = wrapper.findComponent({ name: "GuildActivityChart" });
 		expect(chart.exists()).toBe(true);
-		expect(chart.props("type")).toBe("bar");
-		expect(chart.props("index")).toBe("label");
-		expect(chart.props("data")).toHaveLength(7);
+		expect(chart.props("days")).toHaveLength(7);
+		expect(chart.find('[role="img"]').attributes("aria-label")).toContain("Mon");
 	});
 
 	describe("information section", () => {
 		it("renders server statistics from guildData", async () => {
 			const wrapper = await mountSuspended(General, {
-				global: chartStub,
 				props: { languages: ["en-US"] },
 			});
 
@@ -251,7 +241,6 @@ describe("general guild settings", () => {
 
 		it("edits the time zone of the server and tells the time it is there", async () => {
 			const wrapper = await mountSuspended(General, {
-				global: chartStub,
 				props: { languages: ["en-US"] },
 			});
 
@@ -274,7 +263,6 @@ describe("general guild settings", () => {
 
 		it("calls copy with server id and toast options when Copy Server ID is clicked", async () => {
 			const wrapper = await mountSuspended(General, {
-				global: chartStub,
 				props: { languages: ["en-US"] },
 			});
 
@@ -300,7 +288,6 @@ describe("general guild settings", () => {
 			mockCopied.value = true;
 
 			const wrapper = await mountSuspended(General, {
-				global: chartStub,
 				props: { languages: ["en-US"] },
 			});
 
@@ -311,7 +298,6 @@ describe("general guild settings", () => {
 
 		it("renders Need Help? link pointing to support Discord", async () => {
 			const wrapper = await mountSuspended(General, {
-				global: chartStub,
 				props: { languages: ["en-US"] },
 			});
 

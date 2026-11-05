@@ -28,6 +28,24 @@ describe("the Worker a build deploys to", () => {
 		expect(worker.vars.NUXT_OAUTH_DISCORD_CLIENT_ID).toBe("client-id");
 	});
 
+	it.each(["production", undefined])(
+		"keeps the Turnstile site key in the vars of the %s Worker, so a deploy does not drop it",
+		async (worker) => {
+			vi.stubEnv("CLOUDFLARE_WORKER", worker);
+			vi.stubEnv("NUXT_PUBLIC_TURNSTILE_SITE_KEY", "site-key");
+
+			expect((await loadWorker()).vars).toMatchObject({
+				NUXT_PUBLIC_TURNSTILE_SITE_KEY: "site-key",
+			});
+		},
+	);
+
+	it("lists no Turnstile site key when the build was given none", async () => {
+		vi.stubEnv("NUXT_PUBLIC_TURNSTILE_SITE_KEY", "");
+
+		expect((await loadWorker()).vars).not.toHaveProperty("NUXT_PUBLIC_TURNSTILE_SITE_KEY");
+	});
+
 	it.each(["CLOUDFLARE_HYPERDRIVE_ID", "NUXT_OAUTH_DISCORD_CLIENT_ID"])(
 		"fails the production build when %s is missing",
 		async (name) => {

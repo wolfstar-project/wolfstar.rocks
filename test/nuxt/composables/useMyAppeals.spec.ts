@@ -34,6 +34,7 @@ const PAGE: AppealPage = {
 };
 
 let listCalls = 0;
+let listFails = false;
 let lastQuery: Record<string, unknown> = {};
 let lastBody: unknown;
 let pageAnswer: () => AppealPage;
@@ -43,6 +44,7 @@ registerEndpoint("/api/users/appeals", {
 	method: "GET",
 	handler: (event) => {
 		listCalls += 1;
+		if (listFails) throw createError({ statusCode: 429, statusMessage: "Too Many Requests" });
 		lastQuery = getQuery(event);
 		return { entries: [entry(`${GUILD}:212`)], openCount: 1 } satisfies MyAppealsResponse;
 	},
@@ -62,6 +64,7 @@ registerEndpoint(`/api/users/appeals/${GUILD}/builtin`, {
 describe("useMyAppeals", () => {
 	beforeEach(() => {
 		listCalls = 0;
+		listFails = false;
 		lastQuery = {};
 		lastBody = undefined;
 		pageAnswer = () => PAGE;
@@ -132,6 +135,26 @@ describe("useMyAppeals", () => {
 			await vi.waitUntil(() => listCalls > before, { timeout: 2000 });
 			// The cases stay on screen while it reads them again.
 			expect(loaded.value).toBe(true);
+		});
+
+		it("keeps the cases when a read in the background fails, and tries again", async () => {
+			vi.useFakeTimers({ toFake: ["setInterval", "clearInterval", "Date"] });
+			const { entries, error, status } = useMyAppeals({ live: true });
+			await vi.waitUntil(() => status.value === "success", { timeout: 2000 });
+			const before = listCalls;
+
+			listFails = true;
+			vi.advanceTimersByTime(60_000);
+			await vi.waitUntil(() => listCalls > before, { timeout: 2000 });
+			await new Promise((resolve) => requestAnimationFrame(resolve));
+
+			expect(entries.value.map((item) => item.key)).toStrictEqual([`${GUILD}:212`]);
+			expect(status.value).toBe("success");
+			expect(error.value).toBeFalsy();
+
+			listFails = false;
+			vi.advanceTimersByTime(60_000);
+			await vi.waitUntil(() => listCalls > before + 1, { timeout: 2000 });
 		});
 
 		it("does not read it while the tab is hidden, and reads it when the tab comes back", async () => {

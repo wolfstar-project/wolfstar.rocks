@@ -66,27 +66,34 @@ export function useMyAppeals({
 }: { guild?: MaybeRefOrGetter<string | null | undefined>; live?: boolean } = {}) {
 	const extra = computed(() => toValue(guild) ?? null);
 
-	const asyncData = usePersistedAsyncData(
-		() => `me:appeals:${extra.value ?? "none"}`,
-		() =>
-			$fetch<MyAppealsResponse>(BASE, {
-				query: extra.value ? { guild: extra.value } : {},
-			}),
-		{ watch: [extra] },
-	);
+	const readList = () =>
+		$fetch<MyAppealsResponse>(BASE, {
+			query: extra.value ? { guild: extra.value } : {},
+		});
+
+	const asyncData = usePersistedAsyncData(() => `me:appeals:${extra.value ?? "none"}`, readList, {
+		watch: [extra],
+	});
 
 	if (live && import.meta.client) {
 		const visibility = useDocumentVisibility();
 		let lastRead = Date.now();
-		const readAgain = () => {
+		// Not `refresh()`: a failed read clears the data of an async data, and a
+		// network blip or a rate limit would swap the cases for an error. This one
+		// keeps what is shown when it fails, and the next one tries again.
+		const readAgain = async () => {
 			if (visibility.value !== "visible" || asyncData.status.value === "pending") return;
 			if (Date.now() - lastRead < LIVE_MIN_GAP) return;
 			lastRead = Date.now();
-			void asyncData.refresh();
+			try {
+				asyncData.data.value = await readList();
+			} catch {
+				// Kept as it is.
+			}
 		};
-		useIntervalFn(readAgain, LIVE_INTERVAL);
+		useIntervalFn(() => void readAgain(), LIVE_INTERVAL);
 		watch(visibility, (state) => {
-			if (state === "visible") readAgain();
+			if (state === "visible") void readAgain();
 		});
 	}
 

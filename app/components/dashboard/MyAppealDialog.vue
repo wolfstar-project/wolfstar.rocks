@@ -156,6 +156,8 @@ const answers = ref<AppealDraftAnswers>({});
 const showMissing = ref(false);
 const sendError = ref<MyAppealErrorCode | null>(null);
 const isSending = ref(false);
+// Counts the times the dialog opened, so a send knows if it is still the one it was made from.
+let opening = 0;
 
 const TYPE_KEYS: Record<MyAppealEntry["case"]["type"], string> = {
 	Ban: "dashboard.my_appeals.types.ban",
@@ -238,9 +240,15 @@ const closedReason = computed(() => {
 
 const errorMessage = computed(() => {
 	if (sendError.value) return ts(ERROR_KEYS[sendError.value]);
-	return showMissing.value && missing.value.length > 0
-		? ts("dashboard.my_appeals.dialog.required_error")
-		: "";
+	if (!showMissing.value || missing.value.length === 0) return "";
+	// A choice with too few options picked is not always one marked with *.
+	const tooFew = missing.value.some((id) => {
+		const answer = answers.value[id];
+		return Array.isArray(answer) && answer.length > 0;
+	});
+	return tooFew
+		? ts("dashboard.my_appeals.dialog.incomplete_error")
+		: ts("dashboard.my_appeals.dialog.required_error");
 });
 
 function lockLine(form: AppealPageForm): string {
@@ -275,6 +283,8 @@ watch(
 	() => [open.value, entry] as const,
 	([isOpen, current]) => {
 		if (!isOpen || !current) return;
+		opening += 1;
+		isSending.value = false;
 		answers.value = {};
 		showMissing.value = false;
 		sendError.value = null;
@@ -292,30 +302,37 @@ watch(selectedKey, () => {
 
 async function send() {
 	const form = selectedForm.value;
-	if (!entry || !form || !canSend.value) return;
+	// The case is read once: the member may close the dialog while it sends
+	// and open it on another, which the answer must not be shown on.
+	const current = entry;
+	if (!current || !form || !canSend.value) return;
 	sendError.value = null;
 	if (missing.value.length > 0) {
 		showMissing.value = true;
 		return;
 	}
+	const sentFrom = opening;
 	isSending.value = true;
 	const result = await submit(
-		entry.guild.id,
+		current.guild.id,
 		form.id,
-		entry.case.id,
+		current.case.id,
 		buildSubmission(form, answers.value),
 	);
-	isSending.value = false;
+	const isSameOpening = sentFrom === opening;
+	if (isSameOpening) isSending.value = false;
 	if (!result.ok) {
-		sendError.value = result.code;
+		if (isSameOpening) sendError.value = result.code;
 		return;
 	}
+	// The appeal was sent whichever case is open now, so the member is told,
+	// under the server it went to; only its own opening is closed.
 	toast.add({
 		color: "success",
 		description: ts("dashboard.my_appeals.dialog.sent_description"),
-		title: ts("dashboard.my_appeals.dialog.sent", { server: entry.guild.name }),
+		title: ts("dashboard.my_appeals.dialog.sent", { server: current.guild.name }),
 	});
-	open.value = false;
+	if (isSameOpening) open.value = false;
 }
 </script>
 

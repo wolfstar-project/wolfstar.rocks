@@ -2,7 +2,7 @@ import { requestAppealDecision } from "#server/utils/appeals/queue";
 import {
 	auditAppealDecision,
 	parseAppealDecisionBody,
-	throwAppealQueueError,
+	refuseAppealDecision,
 	throwInvalidAppealRequest,
 } from "#server/utils/appeals/queue-route";
 import { authorizeAppealFormManager, useManagedGuild } from "#server/utils/appeals/route";
@@ -12,7 +12,8 @@ import { authorizeAppealFormManager, useManagedGuild } from "#server/utils/appea
  * deny a pending appeal. The body is `{ decision: "Approve" | "Deny", reason?: string }`.
  * Answers 202 `{ requestId }`: the bot decides, see
  * `GET /api/guilds/:guild/appeals/requests/:request` for how it went. 403
- * `{ code: "noAccess" }` when who asks does not review the appeals, 404
+ * `{ code: "noAccess" }` when who asks does not review the appeals, which is
+ * audited as a denied attempt, 404
  * `{ code: "unknown" }`, 409 `{ code: "decided" }` when it was decided already.
  */
 export default defineWrappedResponseHandler(
@@ -30,7 +31,7 @@ export default defineWrappedResponseHandler(
 			appealId,
 			decision,
 			reason,
-		}).catch(throwAppealQueueError);
+		}).catch((error: unknown) => refuseAppealDecision(event, error));
 
 		auditAppealDecision(event, { caseId, decision, reason });
 		setResponseStatus(event, 202);

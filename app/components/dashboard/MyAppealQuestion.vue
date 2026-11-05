@@ -72,7 +72,7 @@
 			</label>
 		</div>
 		<p v-if="isMissing" :id="errorId" class="mt-1.5 text-[0.8125rem] text-error">
-			{{ ts("dashboard.my_appeals.dialog.required_field") }}
+			{{ choiceError }}
 		</p>
 	</fieldset>
 
@@ -95,6 +95,7 @@
 
 <script setup lang="ts">
 import type { AppealQuestion } from "#shared/utils/appeal-forms";
+import { missingChoices } from "~/utils/my-appeals";
 
 /** The answer, the text typed or the values picked. */
 const answer = defineModel<string | string[]>({ default: "" });
@@ -105,7 +106,7 @@ const { question, isMissing = false } = defineProps<{
 	isMissing?: boolean;
 }>();
 
-const { ts } = useI18n();
+const { tc, ts } = useI18n();
 const groupName = useId();
 const labelId = useId();
 const helpId = useId();
@@ -129,6 +130,14 @@ const single = computed({
 });
 
 const isFull = computed(() => question.kind === "choice" && many.value.length >= question.max);
+
+// Some options picked, but fewer than the question asks for: say how many more.
+const choiceError = computed(() => {
+	const short = question.kind === "choice" ? missingChoices(question, many.value) : 0;
+	return short > 0 && many.value.length > 0
+		? tc("dashboard.my_appeals.dialog.choices_missing", short)
+		: ts("dashboard.my_appeals.dialog.required_field");
+});
 
 const describedBy = computed(() => {
 	const ids: string[] = [];

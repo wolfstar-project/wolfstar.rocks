@@ -3,7 +3,7 @@ import type { H3Event } from "h3";
 import { AppealQueueError } from "#server/utils/appeals/queue-error";
 import { useManagedGuild } from "#server/utils/appeals/route";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
-import { guildSettingsUpdate } from "#shared/audit/actions";
+import { guildSettingsAccessDenied, guildSettingsUpdate } from "#shared/audit/actions";
 import { AppealQueueQuerySchema } from "#shared/schemas/appeal-queue";
 import { isAppealDecision, MaximumAppealDecisionReasonLength } from "#shared/utils/appeal-queue";
 import { useLogger, withAuditMethods } from "evlog";
@@ -115,4 +115,25 @@ export function auditAppealDecision(
 			),
 		}),
 	);
+}
+
+/**
+ * Answers a request to decide an appeal that was refused, as
+ * {@linkcode throwAppealQueueError} does. A manager of the dashboard who does
+ * not review the appeals is denied, and that is audited, as the settings
+ * routes audit a member who cannot manage the guild.
+ */
+export function refuseAppealDecision(event: H3Event, error: unknown): never {
+	if (error instanceof AppealQueueError && error.code === "noAccess") {
+		const { guild, member } = useManagedGuild(event);
+		withAuditMethods(useLogger(event)).audit(
+			guildSettingsAccessDenied({
+				actor: { type: "user", id: member.user.id, displayName: member.user.username },
+				target: { type: "guild", id: guild.id },
+				outcome: "denied",
+				reason: "Not allowed to review the appeals",
+			}),
+		);
+	}
+	return throwAppealQueueError(error);
 }

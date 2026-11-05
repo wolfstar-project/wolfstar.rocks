@@ -147,7 +147,7 @@
 					</li>
 				</ul>
 
-				<div v-if="entries.length < total" class="mt-3 flex items-center gap-3">
+				<div v-if="hasMore" class="mt-3 flex flex-wrap items-center gap-3">
 					<p class="text-[0.8125rem] text-muted">
 						{{
 							ts("guild_settings.appeals.queue.showing", {
@@ -161,12 +161,15 @@
 						variant="outline"
 						size="sm"
 						class="dialog-cancel"
-						:loading="status === 'pending'"
-						@click="limit += AppealQueuePageSize"
+						:loading="isLoadingMore"
+						@click="loadMore()"
 					>
 						{{ ts("guild_settings.appeals.queue.show_more") }}
 					</UButton>
 				</div>
+				<p v-if="loadMoreFailed" class="mt-2 text-[0.8125rem] text-error" role="alert">
+					{{ ts("guild_settings.appeals.queue.more_failed") }}
+				</p>
 			</template>
 		</div>
 
@@ -187,9 +190,13 @@ import type {
 	AppealQueueFilter,
 	AppealStatus,
 } from "#shared/utils/appeal-queue";
-import type { AppealDecisionErrorCode, AppealDecisionResult } from "~/composables/useAppealQueue";
+import type {
+	AppealDecisionErrorCode,
+	AppealDecisionResult,
+	AppealLateResult,
+} from "~/composables/useAppealQueue";
 import type { LogsPillTone } from "../logs/Pill.vue";
-import { AppealQueueFilters, AppealQueuePageSize } from "#shared/utils/appeal-queue";
+import { AppealQueueFilters } from "#shared/utils/appeal-queue";
 import { avatarURL } from "#shared/utils/discord";
 
 /**
@@ -205,16 +212,25 @@ const toast = useToast();
 const headingId = useId();
 
 const selected = ref<AppealQueueFilter>("pending");
-const limit = ref(AppealQueuePageSize);
-// A filter starts from its first page.
-watch(selected, () => {
-	limit.value = AppealQueuePageSize;
-});
 
-const { busyId, canReview, counts, decide, entries, refresh, status, total } = useAppealQueue({
+const {
+	busyId,
+	canReview,
+	counts,
+	decide,
+	entries,
+	hasMore,
+	isLoadingMore,
+	loadMore,
+	loadMoreFailed,
+	refresh,
+	status,
+	total,
+} = useAppealQueue({
 	guildId: activeGuildId,
 	filter: selected,
-	limit,
+	// The bot answered a decision after the toast said it had not yet.
+	onLateResult: (result: AppealLateResult, decision: AppealDecision) => notify(result, decision),
 });
 
 const STATUS_TONES: Record<AppealStatus, LogsPillTone> = {

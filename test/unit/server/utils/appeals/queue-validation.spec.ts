@@ -9,6 +9,7 @@ import {
 	parseAppealQueueQuery,
 	throwAppealQueueError,
 } from "#server/utils/appeals/queue-route";
+import { MaximumAppealQueueOffset } from "#shared/schemas/appeal-queue";
 import {
 	AppealQueuePageSize,
 	MaximumAppealDecisionReasonLength,
@@ -44,12 +45,19 @@ describe("parseAppealQueueQuery", () => {
 		});
 	});
 
+	it("reads the furthest page it allows", () => {
+		expect(parseAppealQueueQuery({ offset: String(MaximumAppealQueueOffset) }).offset).toBe(
+			MaximumAppealQueueOffset,
+		);
+	});
+
 	it("refuses an unknown status, and a page that is too large or negative, with the field", () => {
 		for (const query of [
 			{ status: "open" },
 			{ limit: String(MaximumAppealQueueLimit + 1) },
 			{ limit: "0" },
 			{ offset: "-1" },
+			{ offset: String(MaximumAppealQueueOffset + 1) },
 			{ limit: "many" },
 		]) {
 			const error = dataOf(() => parseAppealQueueQuery(query));

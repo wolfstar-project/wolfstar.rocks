@@ -266,6 +266,7 @@
 					"all": "All"
 				},
 				"load_failed": "The appeals could not be loaded.",
+				"more_failed": "The next appeals could not be loaded. Select Show more to try again.",
 				"no_review": "You can see the appeals, but you do not review them: moderators and the appeal manager roles do.",
 				"retry": "Try again",
 				"show_more": "Show more",

@@ -802,6 +802,9 @@
 								"load_failed": {
 									"type": "string"
 								},
+								"more_failed": {
+									"type": "string"
+								},
 								"no_review": {
 									"type": "string"
 								},

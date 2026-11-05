@@ -10,6 +10,7 @@ import {
 	formsForCase,
 	guildInitials,
 	missingAnswers,
+	missingChoices,
 } from "~/utils/my-appeals";
 
 const NOW = new Date("2026-11-04T12:00:00Z");
@@ -53,6 +54,20 @@ const SHOTS: AppealQuestion = {
 	min: 0,
 };
 const INFO: AppealQuestion = { id: "info", kind: "display", content: "Be honest." };
+const CHANGES = {
+	id: "changes",
+	kind: "choice",
+	label: "What will you do differently?",
+	max: 4,
+	min: 2,
+	options: [
+		{ label: "Read the rules", value: "rules" },
+		{ label: "Take a break", value: "break" },
+		{ label: "Ask the staff", value: "ask" },
+		{ label: "Mute the channel", value: "mute" },
+	],
+	required: false,
+} satisfies AppealQuestion;
 
 function form(overrides: Partial<AppealPageForm>): AppealPageForm {
 	return {
@@ -145,6 +160,29 @@ describe("missingAnswers", () => {
 
 	it("is empty once every required question is answered", () => {
 		expect(missingAnswers({ questions }, { rules: ["yes"], why: "I was wrong" })).toEqual([]);
+	});
+
+	it("lists a choice with fewer options picked than it asks for, required or not", () => {
+		const choices = [CHANGES, { ...CHANGES, id: "must", required: true }];
+
+		expect(
+			missingAnswers({ questions: choices }, { changes: ["rules"], must: ["ask"] }),
+		).toEqual(["changes", "must"]);
+		expect(missingAnswers({ questions: choices }, { must: ["ask", "break"] })).toEqual([]);
+	});
+});
+
+describe("missingChoices", () => {
+	it("says how many more options a choice needs", () => {
+		expect(missingChoices(CHANGES, ["rules"])).toBe(1);
+		expect(missingChoices({ ...CHANGES, min: 3 }, ["rules"])).toBe(2);
+		expect(missingChoices(CHANGES, ["rules", "break"])).toBe(0);
+	});
+
+	it("needs nothing of an optional choice left empty, and its minimum of a required one", () => {
+		expect(missingChoices(CHANGES, [])).toBe(0);
+		expect(missingChoices(CHANGES, undefined)).toBe(0);
+		expect(missingChoices({ ...CHANGES, required: true }, [])).toBe(2);
 	});
 });
 

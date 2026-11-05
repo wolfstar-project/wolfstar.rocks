@@ -201,6 +201,75 @@ describe("DashboardMyAppealDialog", () => {
 		expect(wrapper.emitted("update:open")?.at(-1)).toStrictEqual([false]);
 	});
 
+	it("says how many more options a choice needs before sending", async () => {
+		const changes: AppealQuestion = {
+			id: "changes",
+			kind: "choice",
+			label: "What will you do differently?",
+			min: 2,
+			max: 3,
+			options: [
+				{ label: "Read the rules", value: "rules" },
+				{ label: "Take a break", value: "break" },
+				{ label: "Ask the staff", value: "ask" },
+			],
+			required: false,
+		};
+		loadPage.mockResolvedValue({
+			ok: true,
+			value: page({ forms: [form({ questions: [WHY, changes] })] }),
+		});
+		await mount();
+		await ready();
+		const textarea = dialog().querySelector<HTMLTextAreaElement>("textarea")!;
+		textarea.value = "It was my brother.";
+		textarea.dispatchEvent(new Event("input"));
+		dialog().querySelector<HTMLInputElement>('input[value="rules"]')!.click();
+		await nextTick();
+		sendButton().click();
+
+		await vi.waitFor(() => expect(dialog().textContent).toContain("Pick 1 more."));
+		expect(dialog().textContent).toContain("Some answers are missing or need more choices.");
+		expect(submit).not.toHaveBeenCalled();
+	});
+
+	it("keeps a send from an earlier opening off the case opened since", async () => {
+		let release: (value: { ok: true; value: undefined }) => void = () => {};
+		submit.mockReturnValue(
+			new Promise((resolve) => {
+				release = resolve;
+			}),
+		);
+		const wrapper = await mount();
+		await ready();
+		const textarea = dialog().querySelector<HTMLTextAreaElement>("textarea")!;
+		textarea.value = "It was my brother.";
+		textarea.dispatchEvent(new Event("input"));
+		dialog().querySelector<HTMLInputElement>('input[value="yes"]')!.click();
+		await nextTick();
+		sendButton().click();
+		await vi.waitFor(() => expect(submit).toHaveBeenCalled());
+
+		const other: MyAppealEntry = {
+			...ENTRY,
+			key: "345678901234567890:300",
+			guild: { id: "345678901234567890", name: "Quiet Corner", icon: null },
+			case: { ...ENTRY.case, id: 300 },
+		};
+		await wrapper.setProps({ open: false });
+		await wrapper.setProps({ entry: other, open: true });
+		await vi.waitFor(() => expect(dialog().textContent).toContain("Appeal to Quiet Corner"));
+		release({ ok: true, value: undefined });
+
+		await vi.waitFor(() => expect(mockToastAdd).toHaveBeenCalled());
+		expect(mockToastAdd.mock.calls[0]![0]).toMatchObject({
+			title: "Appeal sent to Pixel Parlor",
+		});
+		await nextTick();
+		expect(wrapper.emitted("update:open")).toBeUndefined();
+		expect(dialog().textContent).toContain("Appeal to Quiet Corner");
+	});
+
 	it("says why the bot refused the appeal", async () => {
 		submit.mockResolvedValue({ ok: false, code: "appealed" });
 		await mount();

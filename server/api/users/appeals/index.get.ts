@@ -1,7 +1,7 @@
 import type { MyAppealGuild } from "#shared/utils/my-appeals";
 import { readMyAppeals } from "#server/utils/my-appeals/list";
-import { isSnowflake } from "#shared/utils/snowflake";
-import { createError } from "evlog";
+import { MyAppealsQuerySchema } from "#shared/schemas/my-appeals";
+import { parse } from "valibot";
 
 /**
  * `GET /api/users/appeals?guild=<id>`: the member's own cases that can be
@@ -11,14 +11,9 @@ import { createError } from "evlog";
  */
 export default defineWrappedResponseHandler(
 	async (event) => {
-		const { guild } = getQuery(event);
-		if (guild !== undefined && !isSnowflake(guild)) {
-			throw createError({
-				message: "Invalid server",
-				status: 400,
-				why: "guild: Expected an ID.",
-			});
-		}
+		const { guild } = await getValidatedQuery(event, (query) =>
+			parse(MyAppealsQuerySchema, query),
+		);
 
 		const { user, guilds } = await getCurrentUser(event);
 		const known: MyAppealGuild[] = guilds.map((entry) => ({
@@ -27,7 +22,7 @@ export default defineWrappedResponseHandler(
 			icon: entry.icon ?? null,
 		}));
 		// A banned member is not in the server any more: the bot has to know it.
-		if (typeof guild === "string" && !known.some((entry) => entry.id === guild)) {
+		if (guild !== undefined && !known.some((entry) => entry.id === guild)) {
 			const fetched = await getGuild(guild).catch(() => null);
 			if (fetched)
 				known.unshift({ id: fetched.id, name: fetched.name, icon: fetched.icon ?? null });

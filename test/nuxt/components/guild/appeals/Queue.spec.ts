@@ -1,5 +1,5 @@
 import type { AppealQueueEntry, AppealQueueFilter } from "#shared/utils/appeal-queue";
-import type { AppealDecisionResult } from "~/composables/useAppealQueue";
+import type { AppealDecisionResult, AppealLateResult } from "~/composables/useAppealQueue";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
@@ -38,6 +38,10 @@ const mockStatus = ref<"idle" | "pending" | "success" | "error">("success");
 const mockBusyId = ref<string | null>(null);
 const mockDecide = vi.fn();
 const mockRefresh = vi.fn();
+const mockHasMore = ref(false);
+const mockIsLoadingMore = ref(false);
+const mockLoadMore = vi.fn();
+const mockLoadMoreFailed = ref(false);
 const mockToastAdd = vi.fn();
 const mockUseAppealQueue = vi.fn();
 
@@ -50,6 +54,10 @@ mockNuxtImport("useAppealQueue", () => (params: unknown) => {
 		decide: mockDecide,
 		entries: mockEntries,
 		error: ref(null),
+		hasMore: mockHasMore,
+		isLoadingMore: mockIsLoadingMore,
+		loadMore: mockLoadMore,
+		loadMoreFailed: mockLoadMoreFailed,
 		refresh: mockRefresh,
 		status: mockStatus,
 		total: mockTotal,
@@ -71,7 +79,7 @@ async function mount() {
 function params() {
 	return mockUseAppealQueue.mock.calls.at(-1)![0] as {
 		filter: { value: AppealQueueFilter };
-		limit: { value: number };
+		onLateResult: (result: AppealLateResult, decision: "Approve" | "Deny") => void;
 	};
 }
 
@@ -108,6 +116,9 @@ describe("GuildAppealsQueue", () => {
 		mockCanReview.value = true;
 		mockStatus.value = "success";
 		mockBusyId.value = null;
+		mockHasMore.value = false;
+		mockIsLoadingMore.value = false;
+		mockLoadMoreFailed.value = false;
 		mockDecide.mockResolvedValue({ ok: true, state: "done" } satisfies AppealDecisionResult);
 	});
 
@@ -153,7 +164,7 @@ describe("GuildAppealsQueue", () => {
 		expect(text).toContain("I will read the rules.");
 	});
 
-	it("filters by status, with the count of each, and starts from the first page", async () => {
+	it("filters by status, with the count of each", async () => {
 		const wrapper = await mount();
 
 		const pills = wrapper.findAll("button.queue-filter");
@@ -170,7 +181,6 @@ describe("GuildAppealsQueue", () => {
 		await nextTick();
 
 		expect(params().filter.value).toBe("denied");
-		expect(params().limit.value).toBe(25);
 		expect(wrapper.findAll("button.queue-filter")[2]!.attributes("aria-pressed")).toBe("true");
 	});
 
@@ -315,15 +325,53 @@ describe("GuildAppealsQueue", () => {
 		expect(mockRefresh).toHaveBeenCalledOnce();
 	});
 
-	it("loads the next page, behind the rows it has", async () => {
-		mockTotal.value = 40;
+	it("asks for the next page, behind the rows it has", async () => {
+		mockTotal.value = 140;
+		mockHasMore.value = true;
 		const wrapper = await mount();
 
-		expect(wrapper.text()).toContain("Showing 2 of 40");
+		expect(wrapper.text()).toContain("Showing 2 of 140");
 		const more = wrapper.findAll("button").find((button) => button.text() === "Show more");
 		await more!.trigger("click");
-		await nextTick();
 
-		expect(params().limit.value).toBe(50);
+		expect(mockLoadMore).toHaveBeenCalledOnce();
+	});
+
+	it("offers no next page once every appeal is shown", async () => {
+		mockTotal.value = 140;
+		const wrapper = await mount();
+
+		expect(wrapper.findAll("button").some((button) => button.text() === "Show more")).toBe(
+			false,
+		);
+	});
+
+	it("says when the next page could not be loaded, and keeps the rows", async () => {
+		mockTotal.value = 140;
+		mockHasMore.value = true;
+		mockLoadMoreFailed.value = true;
+		const wrapper = await mount();
+
+		expect(wrapper.get('[role="alert"]').text()).toContain(
+			"The next appeals could not be loaded",
+		);
+		expect(wrapper.findAll("li.queue-row")).toHaveLength(2);
+	});
+
+	it("tells the staff when the bot answers a decision late", async () => {
+		await mount();
+
+		params().onLateResult({ ok: true, state: "done" }, "Deny");
+		params().onLateResult({ ok: false, code: "undoFailed" }, "Approve");
+
+		expect(mockToastAdd).toHaveBeenCalledWith(
+			expect.objectContaining({ color: "success", title: "Appeal denied" }),
+		);
+		expect(mockToastAdd).toHaveBeenCalledWith(
+			expect.objectContaining({
+				color: "error",
+				description: "The case could not be undone, so the appeal is still pending.",
+			}),
+		);
 	});
 });

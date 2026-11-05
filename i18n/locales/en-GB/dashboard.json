@@ -73,11 +73,13 @@
 				"blocked_reason": "",
 				"cancel": "",
 				"choice_hint": "",
+				"choices_missing": "",
 				"drop": "",
 				"files_disabled": "",
 				"files_required": "",
 				"foot": "",
 				"form_label": "",
+				"incomplete_error": "",
 				"loading": "",
 				"locked": "",
 				"locks": {

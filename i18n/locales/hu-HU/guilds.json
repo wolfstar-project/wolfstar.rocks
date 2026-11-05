@@ -266,6 +266,7 @@
 					"all": ""
 				},
 				"load_failed": "",
+				"more_failed": "",
 				"no_review": "",
 				"retry": "",
 				"show_more": "",

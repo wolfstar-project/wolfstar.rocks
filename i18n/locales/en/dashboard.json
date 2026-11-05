@@ -73,11 +73,13 @@
 				"blocked_reason": "{server} does not take your appeals: {reason}",
 				"cancel": "Cancel",
 				"choice_hint": "Pick {min} to {max}.",
+				"choices_missing": "Pick {count} more. | Pick 1 more. | Pick {count} more.",
 				"drop": "Drop images here or click to add them",
 				"files_disabled": "Sending files from the website is not ready yet.",
 				"files_required": "Sending files from the website is not ready yet, and this form asks for them, so it cannot be sent from here.",
 				"foot": "The staff sees your answers and your case. WolfStar tells you in a direct message when they decide.",
 				"form_label": "Form",
+				"incomplete_error": "Some answers are missing or need more choices.",
 				"loading": "Loading the form of the server",
 				"locked": "Locked · {reason}",
 				"locks": {

@@ -1,4 +1,4 @@
-import type { AppealQuestion } from "#shared/utils/appeal-forms";
+import type { AppealChoiceQuestion, AppealQuestion } from "#shared/utils/appeal-forms";
 import type {
 	AppealPage,
 	AppealPageForm,
@@ -78,23 +78,39 @@ export function formNeedsFiles(form: Pick<AppealPageForm, "questions">): boolean
 	return form.questions.some((question) => question.kind === "attachment" && question.min > 0);
 }
 
-function isAnswered(question: AppealQuestion, answer: string | string[] | undefined): boolean {
-	if (question.kind === "text") return typeof answer === "string" && answer.trim().length > 0;
-	if (question.kind === "choice") return Array.isArray(answer) && answer.length > 0;
-	return true;
+/**
+ * How many more options a choice question needs picked before the bot takes
+ * it: none once it has its `min`, or when it may be left empty and is. A
+ * question picked at all needs its `min`, required or not.
+ */
+export function missingChoices(
+	question: Pick<AppealChoiceQuestion, "min" | "required">,
+	answer: string | string[] | undefined,
+): number {
+	const picked = Array.isArray(answer) ? answer.length : 0;
+	if (picked === 0 && !question.required) return 0;
+	return Math.max(Math.max(question.min, 1) - picked, 0);
 }
 
-/** The questions a required answer is missing for, by their ID. */
+function isMissing(question: AppealQuestion, answer: string | string[] | undefined): boolean {
+	if (question.kind === "text") {
+		return question.required && !(typeof answer === "string" && answer.trim().length > 0);
+	}
+	if (question.kind === "choice") return missingChoices(question, answer) > 0;
+	return false;
+}
+
+/**
+ * The questions whose answer is missing or too short to send, by their ID:
+ * a required one left empty, and a choice with fewer options picked than it
+ * asks for.
+ */
 export function missingAnswers(
 	form: Pick<AppealPageForm, "questions">,
 	answers: AppealDraftAnswers,
 ): string[] {
 	return form.questions.flatMap((question) =>
-		(question.kind === "text" || question.kind === "choice") &&
-		question.required &&
-		!isAnswered(question, answers[question.id])
-			? [question.id]
-			: [],
+		isMissing(question, answers[question.id]) ? [question.id] : [],
 	);
 }
 

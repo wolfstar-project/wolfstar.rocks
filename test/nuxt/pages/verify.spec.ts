@@ -1,7 +1,7 @@
 import type { JoinGuardVerifyPage } from "#shared/utils/join-guard";
 import type { JoinGuardPassState } from "~/composables/useJoinGuardVerify";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 import VerifyPage from "~/pages/verify/[guild].vue";
 
@@ -16,6 +16,7 @@ const mockStatus = ref<"idle" | "pending" | "success" | "error">("success");
 const mockVerify = vi.fn();
 const mockError = ref<{ statusCode: number } | null>(null);
 const mockSignIn = vi.fn();
+const mockRefresh = vi.fn();
 
 mockNuxtImport("useSignIn", () => () => ({
 	error: ref(null),
@@ -31,7 +32,7 @@ mockNuxtImport("useJoinGuardVerify", () => () => ({
 	page: mockPage,
 	pass: mockPass,
 	ready: computed(() => true),
-	refresh: vi.fn(),
+	refresh: mockRefresh,
 	signedIn: computed(() => mockLoggedIn.value),
 	status: mockStatus,
 	verify: mockVerify,
@@ -50,12 +51,17 @@ function page(overrides: Partial<JoinGuardVerifyPage> = {}): JoinGuardVerifyPage
 	};
 }
 
+// Unmounted after each test, so a page left from an earlier one does not hear
+// the window's events of the next.
+const mounted: { unmount: () => void }[] = [];
+
 async function mountPage() {
 	// The captcha loads Cloudflare's script; the page is tested without it.
 	const wrapper = await mountSuspended(VerifyPage, {
 		global: { stubs: { VerifyTurnstile: true } },
 		route: `/verify/${GUILD_ID}`,
 	});
+	mounted.push(wrapper);
 	await nextTick();
 	return wrapper;
 }
@@ -65,6 +71,10 @@ function verifyButton(wrapper: Awaited<ReturnType<typeof mountPage>>) {
 }
 
 describe("verification page", () => {
+	afterEach(() => {
+		for (const wrapper of mounted.splice(0)) wrapper.unmount();
+	});
+
 	beforeEach(() => {
 		vi.clearAllMocks();
 		mockLoggedIn.value = true;
@@ -125,6 +135,28 @@ describe("verification page", () => {
 		expect(mockSignIn).toHaveBeenCalledWith(
 			expect.objectContaining({ scopes: ["connections"] }),
 		);
+	});
+
+	it("measures the trust again when a member below the minimum fixed it", async () => {
+		mockPage.value = page({
+			trust: { level: 1, linkedAccounts: 0, missing: ["avatar"] },
+		});
+		const wrapper = await mountPage();
+
+		const again = wrapper.findAll("button").find((b) => b.text() === "Check again");
+		await again!.trigger("click");
+		expect(mockRefresh).toHaveBeenCalledTimes(1);
+
+		// Back from Discord in another tab: the page reads the trust again by itself.
+		window.dispatchEvent(new Event("focus"));
+		expect(mockRefresh).toHaveBeenCalledTimes(2);
+	});
+
+	it("does not read the trust again on focus once it is enough", async () => {
+		await mountPage();
+
+		window.dispatchEvent(new Event("focus"));
+		expect(mockRefresh).not.toHaveBeenCalled();
 	});
 
 	it("waits for the captcha before it lets the member verify", async () => {

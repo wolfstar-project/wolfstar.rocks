@@ -1748,6 +1748,7 @@
 		"unknown_title": "",
 		"waiting": {
 			"below_minimum": "",
+			"check_again": "",
 			"body": "",
 			"captcha_first": "",
 			"connections": "",

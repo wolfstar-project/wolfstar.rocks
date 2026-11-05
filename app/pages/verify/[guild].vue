@@ -200,9 +200,20 @@
 						<span v-if="pass.state === 'sending'" class="text-[0.8125rem] text-muted">
 							{{ ts("verify.waiting.sending") }}
 						</span>
-						<span v-else-if="belowMinimum" class="text-[0.8125rem] text-muted">
-							{{ ts("verify.waiting.below_minimum") }}
-						</span>
+						<template v-else-if="belowMinimum">
+							<span class="text-[0.8125rem] text-muted">
+								{{ ts("verify.waiting.below_minimum") }}
+							</span>
+							<UButton
+								color="neutral"
+								variant="outline"
+								size="sm"
+								:loading="status === 'pending'"
+								@click="refresh()"
+							>
+								{{ ts("verify.waiting.check_again") }}
+							</UButton>
+						</template>
 						<span
 							v-else-if="needsCaptcha && !captchaToken"
 							class="text-[0.8125rem] text-muted"
@@ -334,6 +345,17 @@ const needsCaptcha = computed(
 	() => page.value?.checks.captcha === true && page.value.captchaSiteKey !== null,
 );
 const captchaToken = ref<string | null>(null);
+
+// A member below the minimum fixes it on Discord, in another tab: the trust is
+// measured again when they come back, so Verify opens without a reload.
+useEventListener(
+	() => (import.meta.client ? window : undefined),
+	"focus",
+	() => {
+		if (page.value?.state === "waiting" && belowMinimum.value && status.value !== "pending")
+			void refresh();
+	},
+);
 
 const canVerify = computed(
 	() =>

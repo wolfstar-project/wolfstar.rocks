@@ -1748,6 +1748,7 @@
 		"unknown_title": "WolfStar isn't in this server",
 		"waiting": {
 			"below_minimum": "Your trust is below what the server asks.",
+			"check_again": "Check again",
 			"body": "{server} holds your account at its checkpoint. Once your trust reaches what the server asks, verify to get in.",
 			"captcha_first": "Solve the captcha first.",
 			"connections": "This server counts the accounts linked to your Discord. Sign in again so WolfStar can read which ones are linked.",

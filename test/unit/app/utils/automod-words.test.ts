@@ -140,6 +140,11 @@ describe("findCoveredAutomodWords", () => {
 		expect(covered.has("good")).toBe(false);
 	});
 
+	it("does not call a word covered when only some of its alternatives are", () => {
+		expect(findCoveredAutomodWords(["bad", "b[ae]d"]).has("b[ae]d")).toBe(false);
+		expect(findCoveredAutomodWords(["b[ae]d", "bad"]).get("bad")).toBe("b[ae]d");
+	});
+
 	it("does not take a word that goes on for the whole one", () => {
 		expect(findCoveredAutomodWords(["bad", "bad*"]).get("bad*")).toBeUndefined();
 	});

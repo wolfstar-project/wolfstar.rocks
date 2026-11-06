@@ -136,4 +136,17 @@ describe("GuildAutomodWordsEditor", () => {
 		expect(wrapper.findAll("mark").map((mark) => mark.text())).toStrictEqual(["b.a.d"]);
 		expect(wrapper.text()).toContain("Caught: b.a.d");
 	});
+
+	it("saves a word the advanced field wrote with * at both ends of the letters", async () => {
+		const { wrapper, updates } = await mountEditor([]);
+
+		const toggle = wrapper
+			.findAll("button")
+			.find((button) => button.text().startsWith("Advanced"));
+		await toggle!.trigger("click");
+		await wrapper.find('input[maxlength="64"]').setValue("**ab");
+		await submitWord(wrapper);
+
+		expect(updates.at(-1)).toStrictEqual(["**ab"]);
+	});
 });

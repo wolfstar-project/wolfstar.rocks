@@ -220,6 +220,15 @@ const visible = computed(() => {
 		.filter((entry) => needle.length === 0 || entry.word.includes(needle));
 });
 
+// A word typed or edited but not added yet is a change the rule form would lose.
+defineExpose({
+	hasPending: computed(() =>
+		editingIndex.value === null
+			? candidate.value.trim().length > 0
+			: candidate.value.trim() !== editingWord.value,
+	),
+});
+
 function saveWord(word: string) {
 	if (editingIndex.value === null) {
 		words.value = [...words.value, word];

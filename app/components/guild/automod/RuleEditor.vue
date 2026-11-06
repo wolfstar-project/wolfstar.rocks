@@ -61,6 +61,7 @@
 							<span aria-hidden="true"></span>
 						</legend>
 						<LazyGuildAutomodWordsEditor
+							ref="wordsEditor"
 							:model-value="listOption('words')"
 							@update:model-value="draft.options.words = $event"
 						/>
@@ -505,6 +506,7 @@ const draft = reactive<AutomodRuleDraft>(createAutomodRuleDraft(type));
 const submitted = ref(false);
 const snapshot = ref("");
 const confirmingDiscard = ref(false);
+const wordsEditor = useTemplateRef("wordsEditor");
 
 // The form is filled when the modal opens rather than when the prop changes,
 // so reopening it after a cancel never shows the abandoned edit.
@@ -528,7 +530,8 @@ watch(
 // Closing a form with changes asks first, whichever way it is closed: the
 // cancel button, the close button, Escape or a click outside.
 function requestOpen(value: boolean) {
-	if (value || saving || JSON.stringify(draft) === snapshot.value) {
+	const pendingWord = wordsEditor.value?.hasPending === true;
+	if (value || saving || (JSON.stringify(draft) === snapshot.value && !pendingWord)) {
 		open.value = value;
 		return;
 	}

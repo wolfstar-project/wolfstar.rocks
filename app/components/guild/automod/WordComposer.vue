@@ -251,6 +251,9 @@ const alternativesOpen = ref(false);
 const advancedOpen = ref(false);
 const raw = ref("");
 const simpleAvailable = ref(true);
+// The wildcard and bracket restrictions of the simple field apply to what is typed there, not to a saved word the
+// advanced field wrote, such as `**ab`.
+const typedInSimple = ref(false);
 const attempted = ref(false);
 
 function load(word: string) {
@@ -270,6 +273,7 @@ watch(
 watch(raw, (word) => (candidate.value = word.trim()), { immediate: true });
 
 function syncFromSimple() {
+	typedInSimple.value = true;
 	const length = [...letters.value].length;
 	alternatives.value = Object.fromEntries(
 		Object.entries(alternatives.value).filter(([position]) => Number(position) < length),
@@ -283,6 +287,7 @@ function syncFromSimple() {
 }
 
 function syncFromRaw() {
+	typedInSimple.value = false;
 	const draft = parseAutomodWord(raw.value.trim());
 	simpleAvailable.value = draft !== null;
 	if (draft === null) return;
@@ -334,7 +339,7 @@ const alternativeSummary = computed(() =>
 
 const check = computed(() => checkAutomodWord(raw.value, others));
 const lettersProblem = computed(() =>
-	simpleAvailable.value ? checkAutomodWordLetters(letters.value) : null,
+	simpleAvailable.value && typedInSimple.value ? checkAutomodWordLetters(letters.value) : null,
 );
 
 function problemMessage(problem: AutomodWordProblem) {

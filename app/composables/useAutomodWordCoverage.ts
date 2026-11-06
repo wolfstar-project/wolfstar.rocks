@@ -50,6 +50,7 @@ export function useAutomodWordCoverage(words: MaybeRefOrGetter<readonly string[]
 			covered.value = new Map();
 			return;
 		}
+		stopWorker();
 		const active = start();
 		if (active === null) {
 			covered.value = findCoveredAutomodWords(list);

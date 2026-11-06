@@ -84,4 +84,26 @@ describe("GuildAutomodRuleEditor", () => {
 		expect(document.body.textContent).toContain("Words (1/200)");
 		wrapper.unmount();
 	});
+
+	it("asks before it drops a word that was typed but not added", async () => {
+		const { wrapper, opens } = await mountRuleEditor();
+		await vi.waitFor(() =>
+			expect(
+				document.querySelector('input[placeholder="for example: idiot"]'),
+			).not.toBeNull(),
+		);
+		const field = document.querySelector<HTMLInputElement>(
+			'input[placeholder="for example: idiot"]',
+		)!;
+		field.value = "idiot";
+		field.dispatchEvent(new Event("input"));
+		await wrapper.vm.$nextTick();
+
+		button("Cancel")!.click();
+		await wrapper.vm.$nextTick();
+
+		expect(opens).toStrictEqual([]);
+		expect(document.body.textContent).toContain("You have changes that are not saved.");
+		wrapper.unmount();
+	});
 });

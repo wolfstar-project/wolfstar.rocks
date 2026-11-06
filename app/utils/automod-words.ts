@@ -212,23 +212,55 @@ export function automodWordExamples(word: string): AutomodWordExample[] {
 		}));
 }
 
+/** The characters a group takes, a range by its two ends. */
+function groupCharacters(group: string) {
+	const characters = new Set<string>();
+	const rest = group.replaceAll(/(.)-(.)/g, (_, from: string, to: string) => {
+		characters.add(from);
+		characters.add(to);
+		return "";
+	});
+	for (const character of rest) characters.add(character);
+	return [...characters];
+}
+
+/**
+ * The texts a word is written for: its first characters, then each other character of each group in turn, so a word
+ * is only reported as covered when the other one takes all of them.
+ */
+function samplesOf(word: string): string[] {
+	const core = automodWordCore(word);
+	const base = automodWordSample(word);
+	const samples = new Set([base]);
+	for (const match of core.matchAll(GROUP)) {
+		for (const character of groupCharacters(match[0].slice(1, -1))) {
+			const before = core.slice(0, match.index).replaceAll(GROUP, (group) => group.charAt(1));
+			const after = core
+				.slice(match.index + match[0].length)
+				.replaceAll(GROUP, (group) => group.charAt(1));
+			samples.add(`${before}${character}${after}`);
+		}
+	}
+	return [...samples];
+}
+
 function contextsOf(word: string) {
-	const sample = automodWordSample(word);
+	const samples = samplesOf(word);
 	switch (automodWordMode(word)) {
 		case "whole":
-			return [sample];
+			return samples;
 		case "continues":
-			return [sample, `${sample}zq`];
+			return samples.flatMap((sample) => [sample, `${sample}zq`]);
 		case "prefixed":
-			return [sample, `zq${sample}`];
+			return samples.flatMap((sample) => [sample, `zq${sample}`]);
 		case "anywhere":
-			return [sample, `zq${sample}zq`];
+			return samples.flatMap((sample) => [sample, `zq${sample}zq`]);
 	}
 }
 
 /**
  * For each word of a list, another word of the list that already takes what it takes, found by trying the other words
- * on the messages the word is written for. It is a guide, not a proof: a group is tried with its first character.
+ * on the messages the word is written for, with each character of its groups. It is a guide, not a proof: a range is tried by its two ends.
  */
 export function findCoveredAutomodWords(words: readonly string[]): Map<string, string> {
 	const expressions = words.map((word) => [word, compileAutomodWords([word])] as const);

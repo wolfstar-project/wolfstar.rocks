@@ -74,6 +74,8 @@ export function useAutomodWordPreview(
 		}
 
 		const id = ++lastId;
+		// A slow check still running would hold the new one behind it, and its timeout would end the wrong job.
+		stopWorker();
 		const active = startWorker();
 		if (active === null) {
 			runOnPage(list, message);

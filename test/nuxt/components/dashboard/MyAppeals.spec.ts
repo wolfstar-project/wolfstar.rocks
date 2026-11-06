@@ -257,6 +257,31 @@ describe("DashboardMyAppeals", () => {
 		expect(mockLoadPage).toHaveBeenCalledWith(PIXEL);
 	});
 
+	it("opens the dialog on the newest case of the bot's link when its server has several", async () => {
+		mockEntries.value = [
+			OPEN,
+			makeEntry({
+				key: "newer",
+				case: {
+					id: 230,
+					type: "Mute",
+					reason: "Spam in #memes",
+					createdAt: new Date(Date.now() - HOUR).toISOString(),
+					duration: null,
+					state: "active",
+				},
+			}),
+		];
+		await mount(PIXEL);
+
+		// The direct message of the bot is about the case it just opened.
+		await vi.waitFor(() =>
+			expect(document.querySelector('[role="dialog"]')?.textContent).toContain(
+				"Case #230 · Mute · Spam in #memes",
+			),
+		);
+	});
+
 	it("opens the dialog from a card", async () => {
 		const wrapper = await mount();
 		await wrapper.findAll("article")[0]!.get("button").trigger("click");

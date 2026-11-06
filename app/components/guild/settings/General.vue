@@ -69,7 +69,7 @@
 	</dl>
 
 	<div class="grid gap-4 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
-		<section class="console-card" :aria-labelledby="chartHeadingId">
+		<section class="console-card flex flex-col" :aria-labelledby="chartHeadingId">
 			<div class="mb-4.5 flex items-baseline justify-between gap-3">
 				<h3 :id="chartHeadingId" class="text-base font-semibold">
 					{{ ts("guild_settings.general.mod_actions_title") }}
@@ -78,14 +78,24 @@
 					{{ ts("guild_settings.general.mod_actions_total", { count: moderationTotal }) }}
 				</span>
 			</div>
-			<GuildActivityChart
-				:days="activityDays"
-				:label="chartAria"
-				:format-count="formatCount"
-			/>
-			<p v-if="isChartPartial" class="mt-3 text-xs text-muted">
-				{{ ts("guild_settings.general.mod_actions_partial", { count: CHART_ENTRY_LIMIT }) }}
-			</p>
+			<!-- The card stretches to its neighbour: the chart sits at the bottom, not the top. -->
+			<div class="mt-auto">
+				<UChart
+					type="bar"
+					class="activity-chart"
+					:definition="chartDefinition"
+					:height="chartHeight"
+					:tooltip="false"
+					:aria-label="chartAria"
+				/>
+				<p v-if="isChartPartial" class="mt-3 text-xs text-muted">
+					{{
+						ts("guild_settings.general.mod_actions_partial", {
+							count: CHART_ENTRY_LIMIT,
+						})
+					}}
+				</p>
+			</div>
 		</section>
 
 		<GuildModulesSummary />
@@ -325,6 +335,16 @@ const countFormat = computed(
 );
 const formatCount = (value: number) => countFormat.value.format(value);
 
+// The mockup's plot at each width: phone, foldable, tablet, desktop.
+const chartHeight = computed(() => {
+	if (breakpoints.smaller("sm").value) return 120;
+	if (breakpoints.smaller("md").value) return 130;
+	if (breakpoints.smaller("lg").value) return 160;
+	return 180;
+});
+
+const chartDefinition = computed(() => moderationActivityChart(activityDays.value, formatCount));
+
 // A server nobody has changed yet reads differently from a quiet week.
 const hasNoActivityEver = computed(
 	() => latestAuditStatus.value === "success" && latestAuditEntries.value.length === 0,
@@ -485,6 +505,12 @@ async function onError(event: FormErrorEvent) {
 
 <style scoped>
 @reference "@/assets/css/main.css";
+
+/* The days under the bars and the counts over them, as the mockup sets them. */
+.activity-chart :deep(text) {
+	font-family: var(--font-mono);
+	font-size: 0.6875rem;
+}
 
 .setup-resume {
 	@apply flex flex-wrap items-center gap-3 rounded-[10px] px-3.5 py-3;

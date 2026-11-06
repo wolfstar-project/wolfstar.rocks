@@ -196,10 +196,12 @@ describe("general guild settings", () => {
 
 		await nextTick();
 
-		const chart = wrapper.findComponent({ name: "GuildActivityChart" });
+		const chart = wrapper.findComponent({ name: "UChart" });
 		expect(chart.exists()).toBe(true);
-		expect(chart.props("days")).toHaveLength(7);
-		expect(chart.find('[role="img"]').attributes("aria-label")).toContain("Mon");
+		expect(chart.props("type")).toBe("bar");
+		// Drawn from its own definition: narrow bars with their counts, no y axis.
+		expect(chart.props("definition")).toBeDefined();
+		expect(chart.props("ariaLabel")).toContain("Mon");
 	});
 
 	describe("information section", () => {

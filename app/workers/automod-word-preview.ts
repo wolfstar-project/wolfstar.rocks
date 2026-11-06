@@ -6,11 +6,9 @@ import {
 // Runs the expression of a rule away from the page, as the bot runs it in a worker: a word such as `aaaaaaaab` can take
 // seconds on a long message, and the page ends this worker when it does, instead of freezing.
 
-export interface AutomodWordPreviewRequest {
-	id: number;
-	words: string[];
-	text: string;
-}
+export type AutomodWordPreviewRequest =
+	| { id: number; kind: "matches"; words: string[]; text: string }
+	| { id: number; kind: "covered"; words: string[] };
 
 // The global scope of a worker, which the DOM types do not describe.
 const scope = globalThis as unknown as {
@@ -22,8 +20,12 @@ const scope = globalThis as unknown as {
 };
 
 scope.addEventListener("message", (event) => {
-	const { id, words, text } = event.data;
-	const expression = compileAutomodWords(words);
-	const matches = expression === null ? [] : findAutomodWordMatches(expression, text);
-	scope.postMessage({ id, matches });
+	const request = event.data;
+	if (request.kind === "covered") {
+		scope.postMessage({ id: request.id, covered: [...findCoveredAutomodWords(request.words)] });
+		return;
+	}
+	const expression = compileAutomodWords(request.words);
+	const matches = expression === null ? [] : findAutomodWordMatches(expression, request.text);
+	scope.postMessage({ id: request.id, matches });
 });

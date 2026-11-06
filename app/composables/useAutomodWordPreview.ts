@@ -86,12 +86,19 @@ export function useAutomodWordPreview(
 			stopWorker();
 			status.value = "timeout";
 		}, AutomodWordMatchTimeout);
-		active.postMessage({ id, words: list, text: message });
+		active.postMessage({ id, kind: "matches", words: list, text: message });
 	}, 150);
 
 	watch(
 		() => [toValue(words), toValue(text)] as const,
-		() => void run(),
+		() => {
+			// The offsets of the last message do not fit the new one: drop them now,
+			// not when the debounced run starts.
+			matches.value = [];
+			lastId++;
+			status.value = "running";
+			void run();
+		},
 		{
 			immediate: true,
 			deep: true,

@@ -20,13 +20,20 @@ function wordInput(wrapper: Awaited<ReturnType<typeof mountEditor>>["wrapper"]) 
 	return wrapper.find('input[placeholder="for example: idiot"]');
 }
 
+async function submitWord(wrapper: Awaited<ReturnType<typeof mountEditor>>["wrapper"]) {
+	const add = wrapper
+		.findAll("button")
+		.find((button) => ["Add word", "Save word"].includes(button.text()));
+	await add!.trigger("click");
+}
+
 // Accessibility audits for GuildAutomodWordsEditor live in test/nuxt/a11y.spec.ts.
 describe("GuildAutomodWordsEditor", () => {
 	it("adds a word as the server saves it", async () => {
 		const { wrapper, updates } = await mountEditor([]);
 
 		await wordInput(wrapper).setValue("Bad");
-		await wrapper.find("form").trigger("submit");
+		await submitWord(wrapper);
 
 		expect(updates.at(-1)).toStrictEqual(["bad"]);
 		expect(wrapper.text()).toContain("Words (1/200)");
@@ -37,7 +44,7 @@ describe("GuildAutomodWordsEditor", () => {
 
 		await wordInput(wrapper).setValue("parola");
 		await wrapper.findAll('[role="radio"]')[1]!.trigger("click");
-		await wrapper.find("form").trigger("submit");
+		await submitWord(wrapper);
 
 		expect(updates.at(-1)).toStrictEqual(["parola*"]);
 	});
@@ -46,7 +53,7 @@ describe("GuildAutomodWordsEditor", () => {
 		const { wrapper, updates } = await mountEditor([]);
 
 		await wordInput(wrapper).setValue("a");
-		await wrapper.find("form").trigger("submit");
+		await submitWord(wrapper);
 
 		expect(updates).toHaveLength(0);
 		expect(wrapper.text()).toContain("Use at least 2 characters.");
@@ -56,7 +63,7 @@ describe("GuildAutomodWordsEditor", () => {
 		const { wrapper, updates } = await mountEditor([]);
 
 		await wordInput(wrapper).setValue("bad*");
-		await wrapper.find("form").trigger("submit");
+		await submitWord(wrapper);
 
 		expect(updates).toHaveLength(0);
 		expect(wrapper.text()).toContain("Leave out the * here");
@@ -76,7 +83,7 @@ describe("GuildAutomodWordsEditor", () => {
 		await wrapper.find('button[aria-label="Edit “bad”"]').trigger("click");
 		expect((wordInput(wrapper).element as HTMLInputElement).value).toBe("bad");
 		await wordInput(wrapper).setValue("worse");
-		await wrapper.find("form").trigger("submit");
+		await submitWord(wrapper);
 
 		expect(updates.at(-1)).toStrictEqual(["worse", "evil"]);
 	});
@@ -84,7 +91,9 @@ describe("GuildAutomodWordsEditor", () => {
 	it("warns about a word another one already catches", async () => {
 		const { wrapper } = await mountEditor(["bad", "*bad*"]);
 
-		expect(wrapper.text()).toContain("Already caught by “*bad*”");
+		await vi.waitFor(() => expect(wrapper.text()).toContain("Already caught by “*bad*”"), {
+			timeout: 5000,
+		});
 	});
 
 	it("says when the search finds nothing", async () => {

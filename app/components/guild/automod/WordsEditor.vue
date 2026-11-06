@@ -169,7 +169,6 @@ import {
 	automodWordMode,
 	checkAutomodWord,
 	exportAutomodWords,
-	findCoveredAutomodWords,
 	importAutomodWords,
 	type AutomodWordProblem,
 } from "~/utils/automod-words";
@@ -207,7 +206,7 @@ const previewWords = computed(() =>
 		: others.value,
 );
 
-const covered = computed(() => findCoveredAutomodWords(words.value));
+const covered = useAutomodWordCoverage(() => words.value);
 
 const visible = computed(() => {
 	const needle = query.value.trim().toLowerCase();

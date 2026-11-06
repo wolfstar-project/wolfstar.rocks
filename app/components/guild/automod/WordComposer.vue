@@ -1,5 +1,7 @@
 <template>
-	<form class="space-y-4" novalidate :aria-labelledby="headingId" @submit.prevent="submit">
+	<!-- Not a <form>: this sits inside the rule's own form, and a nested one would
+	     submit the whole rule when a word is added. -->
+	<div class="space-y-4" role="group" :aria-labelledby="headingId">
 		<h4 :id="headingId" class="text-sm font-semibold">
 			{{
 				editing === null
@@ -28,6 +30,7 @@
 				spellcheck="false"
 				class="w-full"
 				@update:model-value="syncFromSimple"
+				@keydown.enter.prevent="submit"
 			/>
 		</UFormField>
 
@@ -163,6 +166,7 @@
 							spellcheck="false"
 							class="w-full font-mono"
 							@update:model-value="syncFromRaw"
+							@keydown.enter.prevent="submit"
 						/>
 					</UFormField>
 					<p v-if="!simpleAvailable" class="text-[0.8125rem] text-warning">
@@ -184,18 +188,24 @@
 		</ul>
 
 		<div class="flex flex-wrap gap-2">
-			<UButton type="submit" color="primary" icon="ic:round-add">
+			<UButton type="button" color="primary" icon="ic:round-add" @click="submit">
 				{{
 					editing === null
 						? ts("guild_settings.automod.words_editor.add")
 						: ts("guild_settings.automod.words_editor.save_edit")
 				}}
 			</UButton>
-			<UButton v-if="editing !== null" color="neutral" variant="outline" @click="cancel">
+			<UButton
+				v-if="editing !== null"
+				type="button"
+				color="neutral"
+				variant="outline"
+				@click="cancel"
+			>
 				{{ ts("guild_settings.automod.words_editor.cancel_edit") }}
 			</UButton>
 		</div>
-	</form>
+	</div>
 </template>
 
 <script setup lang="ts">

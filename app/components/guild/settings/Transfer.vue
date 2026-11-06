@@ -193,7 +193,10 @@
 import type { GuildData } from "#server/database";
 import {
 	ConfigurationFileName,
+	getNoticeKey,
 	MaximumConfigurationFileSize,
+	SettingsSetWithTheBot,
+	type ConfigurationImportRequest,
 	type ConfigurationImportResponse,
 	type ConfigurationNotice,
 	type ConfigurationPreview,
@@ -254,10 +257,10 @@ async function exportFile() {
 	}
 }
 
-function importRequest(guildId: string, text: string, apply: boolean) {
+function importRequest(guildId: string, text: string, apply: boolean, notices?: string[]) {
 	return $fetch<ConfigurationImportResponse>(`/api/guilds/${guildId}/settings/import`, {
 		method: "POST",
-		body: { text, apply },
+		body: { text, apply, notices } satisfies ConfigurationImportRequest,
 	});
 }
 
@@ -292,7 +295,9 @@ async function confirmImport() {
 
 	isImporting.value = true;
 	try {
-		const result = await importRequest(current.guildId, current.text, true);
+		// What the preview showed, so an import that would now leave out more is refused:
+		const shown = current.result.ok ? current.result.preview.notices.map(getNoticeKey) : [];
+		const result = await importRequest(current.guildId, current.text, true, shown);
 		if (!result.ok) {
 			review.value = { ...current, result };
 			return;
@@ -327,11 +332,18 @@ function formatValue(value: unknown) {
 function describeNotice(notice: ConfigurationNotice) {
 	switch (notice.kind) {
 		case "settingFailed":
-			return ts("guild_settings.general.transfer.notice_setting_failed", {
-				name: notice.name,
-				target: notice.target,
-				reason: notice.reason,
-			});
+			// The dashboard has no field for some of them: the bot's `/settings` does.
+			return SettingsSetWithTheBot.has(notice.target)
+				? ts("guild_settings.general.transfer.notice_setting_failed_bot", {
+						name: notice.name,
+						target: notice.target,
+						reason: notice.reason,
+					})
+				: ts("guild_settings.general.transfer.notice_setting_failed", {
+						name: notice.name,
+						target: notice.target,
+						reason: notice.reason,
+					});
 		case "noEquivalent":
 			return ts("guild_settings.general.transfer.notice_no_equivalent", {
 				name: notice.name,

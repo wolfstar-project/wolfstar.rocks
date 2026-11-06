@@ -673,6 +673,12 @@ describe("a file of the bot before V7", () => {
 		expect(issuesOf(legacy({ "no.such": true }))).toMatchObject([{ path: "settings.no.such" }]);
 	});
 
+	it("refuses a mistyped setting of a filter, instead of leaving the filter out unsaid", () => {
+		expect(issuesOf(legacy({ "selfmod.links.enabld": true }))).toMatchObject([
+			{ path: "settings.selfmod.links.enabld" },
+		]);
+	});
+
 	it("refuses a setting of the bot before V7 in a file of version 2", () => {
 		expect(
 			issuesOf({ version: 2, settings: { "messages.moderation-dm": true } }),

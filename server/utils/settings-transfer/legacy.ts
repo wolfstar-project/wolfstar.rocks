@@ -65,13 +65,76 @@ const ConvertedFilters: Readonly<Record<string, string>> = {
 	"no-mention-spam.": "Mention spam",
 };
 
+/**
+ * Every setting of the filters of {@linkcode ConvertedFilters}, as the bot
+ * before V7 wrote them: a name is checked whole, so a mistyped one refuses the
+ * file instead of being left out with nothing said.
+ */
+const ConvertedFilterSettings: ReadonlySet<string> = new Set([
+	"selfmod.attachments.enabled",
+	"selfmod.attachments.soft-action",
+	"selfmod.attachments.hard-action",
+	"selfmod.attachments.hard-action-duration",
+	"selfmod.attachments.threshold-maximum",
+	"selfmod.attachments.threshold-duration",
+	"selfmod.capitals.enabled",
+	"selfmod.capitals.minimum",
+	"selfmod.capitals.maximum",
+	"selfmod.capitals.soft-action",
+	"selfmod.capitals.hard-action",
+	"selfmod.capitals.hard-action-duration",
+	"selfmod.capitals.threshold-maximum",
+	"selfmod.capitals.threshold-duration",
+	"selfmod.links.enabled",
+	"selfmod.links.allowed",
+	"selfmod.links.soft-action",
+	"selfmod.links.hard-action",
+	"selfmod.links.hard-action-duration",
+	"selfmod.links.threshold-maximum",
+	"selfmod.links.threshold-duration",
+	"selfmod.invites.enabled",
+	"selfmod.invites.ignored-codes",
+	"selfmod.invites.ignored-guilds",
+	"selfmod.invites.soft-action",
+	"selfmod.invites.hard-action",
+	"selfmod.invites.hard-action-duration",
+	"selfmod.invites.threshold-maximum",
+	"selfmod.invites.threshold-duration",
+	"selfmod.newlines.enabled",
+	"selfmod.newlines.maximum",
+	"selfmod.newlines.soft-action",
+	"selfmod.newlines.hard-action",
+	"selfmod.newlines.hard-action-duration",
+	"selfmod.newlines.threshold-maximum",
+	"selfmod.newlines.threshold-duration",
+	"selfmod.filter.enabled",
+	"selfmod.filter.raw",
+	"selfmod.filter.soft-action",
+	"selfmod.filter.hard-action",
+	"selfmod.filter.hard-action-duration",
+	"selfmod.filter.threshold-maximum",
+	"selfmod.filter.threshold-duration",
+	"selfmod.messages.enabled",
+	"selfmod.messages.maximum",
+	"selfmod.messages.queue-size",
+	"selfmod.messages.soft-action",
+	"selfmod.messages.hard-action",
+	"selfmod.messages.hard-action-duration",
+	"selfmod.messages.threshold-maximum",
+	"selfmod.messages.threshold-duration",
+	"no-mention-spam.enabled",
+	"no-mention-spam.alerts",
+	"no-mention-spam.mentions-allowed",
+	"no-mention-spam.time-period",
+]);
+
 /** Whether a setting is one of the bot before V7 that an import converts or tells about, instead of refusing it. */
 export function isLegacySetting(name: string): boolean {
 	return (
 		Object.hasOwn(RenamedSettings, name) ||
 		Object.hasOwn(SettingsWithoutEquivalent, name) ||
 		Object.hasOwn(ReactionFilterDefaults, name) ||
-		Object.keys(ConvertedFilters).some((prefix) => name.startsWith(prefix))
+		ConvertedFilterSettings.has(name)
 	);
 }
 

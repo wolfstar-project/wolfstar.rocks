@@ -1,4 +1,9 @@
-import type { ConfigurationImportResponse } from "#shared/utils/settings-transfer";
+import type {
+	ConfigurationImportResponse,
+	ConfigurationNotice,
+} from "#shared/utils/settings-transfer";
+import type { H3Event } from "h3";
+import { getNoticeKey } from "#shared/utils/settings-transfer";
 import { mockNuxtImport, mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
@@ -24,12 +29,15 @@ let answer: ConfigurationImportResponse = {
 	preview: { settings: [], rules: null, unsupported: [], notices: [], isEmpty: true },
 };
 let requests = 0;
+let lastBody: Record<string, unknown> | undefined;
 
-// The handler cannot read the request body (see test/nuxt/api/guilds/settings.spec.ts), so it only counts the calls:
+// h3's `readBody` needs Node's `Buffer`, which the browser runner lacks; the
+// handler reads the web request as it is.
 registerEndpoint(`/api/guilds/${GUILD_ID}/settings/import`, {
 	method: "POST",
-	handler: () => {
+	handler: async (event: H3Event) => {
 		requests += 1;
+		lastBody = (await event.web?.request?.json()) as Record<string, unknown>;
 		return answer;
 	},
 });
@@ -53,6 +61,7 @@ describe("guild settings transfer", () => {
 		vi.clearAllMocks();
 		useActiveGuild().selectGuild(GUILD_ID);
 		requests = 0;
+		lastBody = undefined;
 		mockChanges.value = undefined;
 		document.body.innerHTML = "";
 	});
@@ -122,6 +131,13 @@ describe("guild settings transfer", () => {
 				notices: [
 					{
 						kind: "settingFailed",
+						path: "settings.disabled-commands",
+						name: "disabled-commands",
+						target: "commands.disabled",
+						reason: "Expected a list.",
+					},
+					{
+						kind: "settingFailed",
 						path: "settings.messages.moderation-dm",
 						name: "messages.moderation-dm",
 						target: "moderation.direct-message",
@@ -141,11 +157,15 @@ describe("guild settings transfer", () => {
 		const wrapper = await mountSuspended(Transfer);
 
 		await chooseFile(wrapper, "{}");
-		await vi.waitFor(() => expect(dialogText()).toContain("Not imported (3)"));
+		await vi.waitFor(() => expect(dialogText()).toContain("Not imported (4)"));
 
 		expect(dialogText()).toContain("There is nothing to import.");
 		expect(dialogText()).toContain(
-			"messages.moderation-dm could not be imported: Expected a boolean. Set moderation.direct-message by hand from the dashboard.",
+			"disabled-commands could not be imported: Expected a list. Set commands.disabled by hand from the dashboard.",
+		);
+		// The dashboard has no field for these: the bot's command has.
+		expect(dialogText()).toContain(
+			"messages.moderation-dm could not be imported: Expected a boolean. Set moderation.direct-message by hand with /settings in Discord, since the dashboard has no field for it.",
 		);
 		expect(dialogText()).toContain("so there is nothing to set by hand.");
 		expect(dialogText()).toContain("Create the rule by hand in Auto Moderation");
@@ -183,6 +203,37 @@ describe("guild settings transfer", () => {
 
 		expect(dialogText()).toContain("A rule of this server with the same name is replaced");
 		expect(dialogText()).not.toContain("are not in the file are deleted");
+	});
+
+	it("sends back what the preview left out, so an import that would leave out more is refused", async () => {
+		const notice: ConfigurationNotice = {
+			kind: "ruleFailed",
+			path: "settings.selfmod.links",
+			rule: "Links",
+			reason: 'Two rules are named "Links".',
+		};
+		answer = {
+			ok: true,
+			applied: false,
+			preview: {
+				settings: [{ name: "language", before: "en-US", after: "it-IT" }],
+				rules: null,
+				unsupported: [],
+				notices: [notice],
+				isEmpty: false,
+			},
+		};
+		const wrapper = await mountSuspended(Transfer);
+
+		await chooseFile(wrapper, "{}");
+		await vi.waitFor(() => expect(dialogText()).toContain("Not imported (1)"));
+		const confirm = [
+			...document.body.querySelectorAll<HTMLButtonElement>('[role="dialog"] button'),
+		].find((button) => button.textContent?.trim() === "Import");
+		confirm!.click();
+
+		await vi.waitFor(() => expect(lastBody?.apply).toBe(true));
+		expect(lastBody?.notices).toStrictEqual([getNoticeKey(notice)]);
 	});
 
 	it("lists the problems of a file it refuses, and offers nothing to confirm", async () => {

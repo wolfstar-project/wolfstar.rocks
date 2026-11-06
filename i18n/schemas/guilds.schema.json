@@ -2425,6 +2425,9 @@
 								"notice_setting_failed": {
 									"type": "string"
 								},
+								"notice_setting_failed_bot": {
+									"type": "string"
+								},
 								"notices_description": {
 									"type": "string"
 								},

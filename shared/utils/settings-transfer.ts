@@ -90,7 +90,34 @@ export interface ConfigurationImportRequest {
 	text: string;
 	/** Write what the file says; without it the file is only read and what it would change is answered. */
 	apply?: boolean;
+	/**
+	 * With `apply`, the notices the preview showed, as {@linkcode getNoticeKey}
+	 * writes them. The file is read again when it is applied, against the server
+	 * as it is then: a notice the preview did not show, such as a filter left
+	 * out because the server reached its rules meanwhile, refuses the import as
+	 * the server having changed, instead of leaving out what was confirmed.
+	 */
+	notices?: string[];
 }
+
+/**
+ * The name the preview and the import that follows it give a notice, to tell
+ * whether reading the file again found one the preview did not show.
+ */
+export function getNoticeKey(notice: ConfigurationNotice): string {
+	return JSON.stringify(notice);
+}
+
+/**
+ * The settings a file may set that the dashboard has no field for: a notice
+ * that one of them could not be imported points to the bot's `/settings`.
+ */
+export const SettingsSetWithTheBot: ReadonlySet<string> = new Set([
+	"moderation.direct-message",
+	"moderation.display-reason",
+	"moderation.display-message",
+	"moderation.display-moderator",
+]);
 
 export type ConfigurationImportResponse =
 	| { ok: false; issues: ConfigurationIssue[] }

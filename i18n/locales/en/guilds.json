@@ -807,6 +807,7 @@
 				"notice_rule_adjusted": "The {rule} rule was adjusted to the limits of this version: {detail} Check it in Auto Moderation after the import.",
 				"notice_rule_failed": "The {rule} filter could not become an auto-moderation rule: {reason} Create the rule by hand in Auto Moderation, with the values the old bot had.",
 				"notice_setting_failed": "{name} could not be imported: {reason} Set {target} by hand from the dashboard.",
+				"notice_setting_failed_bot": "{name} could not be imported: {reason} Set {target} by hand with /settings in Discord, since the dashboard has no field for it.",
 				"notices_description": "From the file of the bot before V7. The rest is imported without them.",
 				"notices_heading": "Not imported ({count})",
 				"refused_description": "{file} has the problems below. Nothing was changed.",

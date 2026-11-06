@@ -148,6 +148,351 @@
 				"loading_aria": {
 					"type": "string"
 				},
+				"my_appeals": {
+					"type": "object",
+					"properties": {
+						"accepted": {
+							"type": "string"
+						},
+						"appeal": {
+							"type": "string"
+						},
+						"appeal_aria": {
+							"type": "string"
+						},
+						"badge": {
+							"type": "string"
+						},
+						"case_number": {
+							"type": "string"
+						},
+						"closed": {
+							"type": "object",
+							"properties": {
+								"blocked": {
+									"type": "string"
+								},
+								"blocked_reason": {
+									"type": "string"
+								},
+								"cooldown": {
+									"type": "string"
+								},
+								"cooldown_now": {
+									"type": "string"
+								},
+								"maxActive": {
+									"type": "string"
+								},
+								"noForm": {
+									"type": "string"
+								},
+								"off": {
+									"type": "string"
+								},
+								"type_ban": {
+									"type": "string"
+								},
+								"type_mute": {
+									"type": "string"
+								},
+								"type_timeout": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"denied_again": {
+							"type": "string"
+						},
+						"denied_now": {
+							"type": "string"
+						},
+						"dialog": {
+							"type": "object",
+							"properties": {
+								"blocked": {
+									"type": "string"
+								},
+								"blocked_reason": {
+									"type": "string"
+								},
+								"cancel": {
+									"type": "string"
+								},
+								"choice_hint": {
+									"type": "string"
+								},
+								"choices_missing": {
+									"type": "string"
+								},
+								"drop": {
+									"type": "string"
+								},
+								"files_disabled": {
+									"type": "string"
+								},
+								"files_required": {
+									"type": "string"
+								},
+								"foot": {
+									"type": "string"
+								},
+								"form_label": {
+									"type": "string"
+								},
+								"incomplete_error": {
+									"type": "string"
+								},
+								"loading": {
+									"type": "string"
+								},
+								"locked": {
+									"type": "string"
+								},
+								"locks": {
+									"type": "object",
+									"properties": {
+										"cooldown": {
+											"type": "string"
+										},
+										"cooldown_until": {
+											"type": "string"
+										},
+										"disabled": {
+											"type": "string"
+										},
+										"maxActive": {
+											"type": "string"
+										},
+										"missingRole": {
+											"type": "string"
+										},
+										"noEligibleCase": {
+											"type": "string"
+										},
+										"restrictedRole": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"no_form": {
+									"type": "string"
+								},
+								"off": {
+									"type": "string"
+								},
+								"page_failed": {
+									"type": "string"
+								},
+								"required_error": {
+									"type": "string"
+								},
+								"required_field": {
+									"type": "string"
+								},
+								"send": {
+									"type": "string"
+								},
+								"sent": {
+									"type": "string"
+								},
+								"sent_description": {
+									"type": "string"
+								},
+								"subtitle": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"empty_description": {
+							"type": "string"
+						},
+						"empty_title": {
+							"type": "string"
+						},
+						"errors": {
+							"type": "object",
+							"properties": {
+								"appealed": {
+									"type": "string"
+								},
+								"blocked": {
+									"type": "string"
+								},
+								"disabled": {
+									"type": "string"
+								},
+								"generic": {
+									"type": "string"
+								},
+								"invalid": {
+									"type": "string"
+								},
+								"locked": {
+									"type": "string"
+								},
+								"notAppealable": {
+									"type": "string"
+								},
+								"notFound": {
+									"type": "string"
+								},
+								"unavailable": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"filter_aria": {
+							"type": "string"
+						},
+						"filters": {
+							"type": "object",
+							"properties": {
+								"all": {
+									"type": "string"
+								},
+								"decided": {
+									"type": "string"
+								},
+								"open": {
+									"type": "string"
+								},
+								"pending": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"form_builtin": {
+							"type": "string"
+						},
+						"intro": {
+							"type": "string"
+						},
+						"length": {
+							"type": "object",
+							"properties": {
+								"ended": {
+									"type": "string"
+								},
+								"ends": {
+									"type": "string"
+								},
+								"lifted": {
+									"type": "string"
+								},
+								"permanent": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"list_aria": {
+							"type": "string"
+						},
+						"load_failed": {
+							"type": "string"
+						},
+						"loading_aria": {
+							"type": "string"
+						},
+						"open_server": {
+							"type": "string"
+						},
+						"open_server_aria": {
+							"type": "string"
+						},
+						"pending_line": {
+							"type": "string"
+						},
+						"reason_none": {
+							"type": "string"
+						},
+						"retry": {
+							"type": "string"
+						},
+						"staff": {
+							"type": "string"
+						},
+						"status": {
+							"type": "object",
+							"properties": {
+								"accepted": {
+									"type": "string"
+								},
+								"closed": {
+									"type": "string"
+								},
+								"denied": {
+									"type": "string"
+								},
+								"open": {
+									"type": "string"
+								},
+								"pending": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"subtitle": {
+							"type": "string"
+						},
+						"summary_many": {
+							"type": "string"
+						},
+						"summary_none": {
+							"type": "string"
+						},
+						"summary_one": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						},
+						"types": {
+							"type": "object",
+							"properties": {
+								"ban": {
+									"type": "string"
+								},
+								"mute": {
+									"type": "string"
+								},
+								"timeout": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"when": {
+							"type": "object",
+							"properties": {
+								"banned": {
+									"type": "string"
+								},
+								"muted": {
+									"type": "string"
+								},
+								"timed_out": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"your_answers": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"nav": {
 					"type": "object",
 					"properties": {

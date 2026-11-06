@@ -8,15 +8,15 @@ All security-relevant actions are captured via `evlog`'s `log.audit()` pipeline,
 
 Defined in `shared/audit/actions.ts`:
 
-| Action Creator              | Action Name                    | Emitted When                                  |
-| --------------------------- | ------------------------------ | --------------------------------------------- |
-| `guildSettingsUpdate`       | `guild.settings.update`        | PATCH guild settings succeeds                 |
-| `guildSettingsAccessDenied` | `guild.settings.access-denied` | `canManage()` throws                          |
-| `userSettingsUpdate`        | `user.settings.update`         | PATCH `/api/users/settings` succeeds          |
-| `userLogin`                 | `user.login`                   | Not currently invoked anywhere in server code |
-| `userLogout`                | `user.logout`                  | Not currently invoked anywhere in server code |
-| `sessionRefresh`            | `session.refresh`              | Not currently invoked anywhere in server code |
-| `oauthStateInvalid`         | `oauth.state.invalid`          | Not currently invoked anywhere in server code |
+| Action Creator              | Action Name                    | Emitted When                                                                                                                       |
+| --------------------------- | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `guildSettingsUpdate`       | `guild.settings.update`        | PATCH guild settings succeeds, or a member sends an appeal (`appeal.<case>`)                                                       |
+| `guildSettingsAccessDenied` | `guild.settings.access-denied` | `canManage()` throws, a manager who does not review the appeals asks to decide one, or the bot keeps a member from appealing (403) |
+| `userSettingsUpdate`        | `user.settings.update`         | PATCH `/api/users/settings` succeeds                                                                                               |
+| `userLogin`                 | `user.login`                   | Not currently invoked anywhere in server code                                                                                      |
+| `userLogout`                | `user.logout`                  | Not currently invoked anywhere in server code                                                                                      |
+| `sessionRefresh`            | `session.refresh`              | Not currently invoked anywhere in server code                                                                                      |
+| `oauthStateInvalid`         | `oauth.state.invalid`          | Not currently invoked anywhere in server code                                                                                      |
 
 Only exported action creators are listed above. `command.executed` is currently an internal action-name constant; command history is read from `CommandLog`, not emitted through the audit hash chain. `userLogin`, `userLogout`, `sessionRefresh`, and `oauthStateInvalid` were wired to the pre-migration `nuxt-auth-utils` OAuth flow (`server/api/auth/discord.get.ts`, `server/utils/oauth-state.ts`); both files were deleted by the better-auth migration (#297) and nothing currently calls these action creators outside their own unit test. `server/middleware/evlog-auth-identify.ts` only identifies the request actor for enrichment — it does not emit audit events. Treat these four as a known gap (dead code or a missing re-wire) rather than assuming login/logout/refresh/CSRF-failure events are being recorded.
 

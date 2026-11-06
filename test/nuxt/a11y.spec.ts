@@ -1,3 +1,5 @@
+import type { AppealQuestion } from "#shared/utils/appeal-forms";
+import type { AppealPage } from "#shared/utils/my-appeals";
 import {
 	AppCustomThemeEditor,
 	AppCustomThemePanel,
@@ -46,13 +48,17 @@ import {
 	DashboardContextCard,
 	DashboardDirectMessageThread,
 	DashboardDirectMessages,
+	DashboardMyAppealDialog,
+	DashboardMyAppeals,
 	DashboardPageHeader,
 	DashboardSidebar,
 	DashboardSkeleton,
 	ErrorPage,
 	OauthStatusPanel,
 	GuildActivityChart,
+	GuildAppealsEmojiPicker,
 	GuildAppealsFormEditor,
+	GuildAppealsQueue,
 	GuildAppealsForms,
 	GuildAuditChanges,
 	GuildAutomodDurationInput,
@@ -1062,7 +1068,7 @@ describe("component accessibility audits", () => {
 				createMockGuildData(GUILD_ID, { appealsEnabled: true, appealsThread: "private" }),
 			);
 			const component = await mountSuspended(GuildSettingsAppeals, {
-				global: { stubs: { GuildAppealsForms: true } },
+				global: { stubs: { GuildAppealsForms: true, GuildAppealsQueue: true } },
 			});
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
@@ -1322,6 +1328,260 @@ describe("component accessibility audits", () => {
 			await vi.waitFor(() => expect(component.text()).toContain("Mute appeal"));
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildAppealsQueue", () => {
+		it("should have no accessibility violations with a pending and a decided appeal", async () => {
+			const GUILD_ID = "123456789012345680";
+			const user = { id: "111111111111111111", displayName: "alt_account", avatar: null };
+			registerEndpoint(`/api/guilds/${GUILD_ID}/appeals`, {
+				method: "GET",
+				handler: () => ({
+					entries: [
+						{
+							id: "1",
+							caseId: 42,
+							caseType: "Ban",
+							formName: "Ban appeal",
+							user,
+							status: "pending",
+							answers: [
+								{
+									questionId: "a",
+									label: "What happened?",
+									value: "That was my brother.",
+								},
+								{
+									questionId: "b",
+									label: "What will change?",
+									value: "I changed my password.",
+								},
+							],
+							reason: null,
+							reviewer: null,
+							createdAt: "2026-11-04T10:02:00.000Z",
+							decidedAt: null,
+						},
+						{
+							id: "2",
+							caseId: 46,
+							caseType: "Timeout",
+							formName: null,
+							user: { ...user, id: "222222222222222222", displayName: "loud_user" },
+							status: "denied",
+							answers: [
+								{
+									questionId: "a",
+									label: "Why?",
+									value: "I was hyped for the event.",
+								},
+							],
+							reason: "Too soon.",
+							reviewer: { ...user, id: "333333333333333333", displayName: "mod_one" },
+							createdAt: "2026-11-03T16:20:00.000Z",
+							decidedAt: "2026-11-03T18:00:00.000Z",
+						},
+					],
+					total: 2,
+					counts: { accepted: 0, denied: 1, pending: 1 },
+					canReview: true,
+				}),
+			});
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+			const component = await mountSuspended(GuildAppealsQueue);
+			await vi.waitFor(() => expect(component.text()).toContain("@alt_account"));
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("DashboardMyAppeals", () => {
+		const GUILD_ID = "123456789012345681";
+		const guild = { id: GUILD_ID, name: "Pixel Parlor", icon: null };
+		const banCase = {
+			id: 212,
+			type: "Ban" as const,
+			reason: "Advertising",
+			createdAt: "2026-11-01T12:00:00.000Z",
+			duration: null,
+			state: "active" as const,
+		};
+
+		it("should have no accessibility violations with an open and a pending case", async () => {
+			registerEndpoint("/api/users/appeals", {
+				method: "GET",
+				handler: () => ({
+					entries: [
+						{
+							key: "a",
+							guild,
+							case: banCase,
+							status: "open",
+							appeal: null,
+							againAt: null,
+							closed: null,
+						},
+						{
+							key: "b",
+							guild: { ...guild, id: "123456789012345682", name: "Game Night" },
+							case: { ...banCase, id: 88, type: "Timeout", duration: 86_400_000 },
+							status: "pending",
+							appeal: {
+								formName: "Mute or timeout",
+								answers: [
+									{
+										questionId: "why",
+										label: "Why?",
+										value: "Sorry for the spam.",
+									},
+								],
+								createdAt: "2026-11-02T12:00:00.000Z",
+								decidedAt: null,
+								reason: null,
+							},
+							againAt: null,
+							closed: null,
+						},
+					],
+					openCount: 1,
+				}),
+			});
+			const component = await mountSuspended(DashboardMyAppeals);
+			await vi.waitFor(() => expect(component.findAll("article")).toHaveLength(2));
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+			component.unmount();
+		});
+
+		it("should have no accessibility violations with the appeal dialog open", async () => {
+			const formCase = {
+				id: 212,
+				type: "Ban",
+				reason: "Advertising",
+				createdAt: 0,
+				duration: null,
+			};
+			const questions: AppealQuestion[] = [
+				{ id: "info", kind: "display", content: "Be honest." },
+				{
+					id: "why",
+					kind: "text",
+					label: "Why?",
+					help: "In your own words.",
+					long: true,
+					maxLength: 1000,
+					required: true,
+				},
+				{
+					id: "rules",
+					kind: "choice",
+					label: "Did you read the rules?",
+					min: 1,
+					max: 1,
+					options: [
+						{ label: "Yes", value: "yes" },
+						{ label: "Not yet", value: "no" },
+					],
+					required: true,
+				},
+				{
+					id: "where",
+					kind: "choice",
+					label: "Where did it happen?",
+					min: 1,
+					max: 2,
+					options: [
+						{ label: "Chat", value: "chat" },
+						{ label: "Voice", value: "voice" },
+					],
+					required: false,
+				},
+				{
+					id: "shots",
+					kind: "attachment",
+					label: "Screenshots",
+					imagesOnly: true,
+					min: 0,
+					max: 3,
+				},
+			];
+			const form = {
+				id: "ban",
+				name: "Ban appeal",
+				description: "Tell the staff what happened.",
+				icon: "🔨",
+				questions,
+				lockReason: null,
+				lock: null,
+				until: null,
+				cases: [formCase],
+			};
+			const page: AppealPage = {
+				guild,
+				enabled: true,
+				block: null,
+				forms: [
+					form,
+					{
+						...form,
+						id: "promo",
+						name: "Ad or self-promo",
+						lock: "cooldown",
+						lockReason: "Opens again on Monday.",
+						cases: [],
+					},
+				],
+				appeals: [],
+			};
+			const component = await mountSuspended(DashboardMyAppealDialog, {
+				props: {
+					open: true,
+					entry: {
+						key: "a",
+						guild,
+						case: banCase,
+						status: "open",
+						appeal: null,
+						againAt: null,
+						closed: null,
+					},
+					loadPage: () => Promise.resolve({ ok: true, value: page }),
+					submit: () => Promise.resolve({ ok: true, value: undefined }),
+				},
+				attachTo: document.body,
+			});
+			await vi.waitFor(() =>
+				expect(document.querySelector('[role="dialog"] form')).not.toBeNull(),
+			);
+			const panel = document.querySelector('[role="dialog"]');
+			const results = await runAxe(component, { include: panel ? [panel] : [] });
+			expect(results.violations).toEqual([]);
+			component.unmount();
+		});
+	});
+
+	describe("GuildAppealsEmojiPicker", () => {
+		it("should have no accessibility violations with the picker open", async () => {
+			const component = await mountSuspended(GuildAppealsEmojiPicker, {
+				props: {
+					modelValue: "😀",
+					servers: [{ id: "123456789012345678", name: "wolf", animated: false }],
+				},
+				attachTo: document.body,
+			});
+			await component.get('button[aria-haspopup="dialog"]').trigger("click");
+			await vi.waitFor(
+				() =>
+					expect(
+						document.querySelector('[data-cell][aria-label="grinning face"]'),
+					).not.toBeNull(),
+				{ timeout: 20_000 },
+			);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+			component.unmount();
 		});
 	});
 

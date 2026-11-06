@@ -184,9 +184,11 @@ describe("GuildAutomodRules", () => {
 		);
 		card!.click();
 
+		// The picker may still be closing when the form opens: take the form's dialog.
 		await vi.waitFor(() => {
-			const dialog = document.body.querySelector('[role="dialog"]');
-			expect(dialog?.textContent).toContain("New rule");
+			const dialog = [...document.body.querySelectorAll('[role="dialog"]')].find((element) =>
+				element.textContent?.includes("New rule"),
+			);
 			expect(dialog?.textContent).toContain("Message spam");
 		});
 

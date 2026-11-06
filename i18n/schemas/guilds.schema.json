@@ -355,6 +355,114 @@
 							},
 							"additionalProperties": false
 						},
+						"emoji": {
+							"type": "object",
+							"properties": {
+								"categories": {
+									"type": "object",
+									"properties": {
+										"activities": {
+											"type": "string"
+										},
+										"food": {
+											"type": "string"
+										},
+										"nature": {
+											"type": "string"
+										},
+										"objects": {
+											"type": "string"
+										},
+										"people": {
+											"type": "string"
+										},
+										"server": {
+											"type": "string"
+										},
+										"smileys": {
+											"type": "string"
+										},
+										"symbols": {
+											"type": "string"
+										},
+										"travel": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"categories_aria": {
+									"type": "string"
+								},
+								"dialog_aria": {
+									"type": "string"
+								},
+								"hint": {
+									"type": "string"
+								},
+								"load_failed": {
+									"type": "string"
+								},
+								"loading": {
+									"type": "string"
+								},
+								"none": {
+									"type": "string"
+								},
+								"none_help": {
+									"type": "string"
+								},
+								"remove": {
+									"type": "string"
+								},
+								"results": {
+									"type": "string"
+								},
+								"retry": {
+									"type": "string"
+								},
+								"search_aria": {
+									"type": "string"
+								},
+								"search_clear": {
+									"type": "string"
+								},
+								"search_placeholder": {
+									"type": "string"
+								},
+								"skin_tone": {
+									"type": "string"
+								},
+								"tones": {
+									"type": "object",
+									"properties": {
+										"dark": {
+											"type": "string"
+										},
+										"default": {
+											"type": "string"
+										},
+										"light": {
+											"type": "string"
+										},
+										"medium": {
+											"type": "string"
+										},
+										"medium_dark": {
+											"type": "string"
+										},
+										"medium_light": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"trigger_aria": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
 						"form_aria": {
 							"type": "string"
 						},
@@ -552,6 +660,201 @@
 						},
 						"per_member": {
 							"type": "string"
+						},
+						"queue": {
+							"type": "object",
+							"properties": {
+								"accept": {
+									"type": "string"
+								},
+								"accept_aria": {
+									"type": "string"
+								},
+								"case_number": {
+									"type": "string"
+								},
+								"decision": {
+									"type": "object",
+									"properties": {
+										"at": {
+											"type": "string"
+										},
+										"by": {
+											"type": "string"
+										},
+										"reason": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"deny": {
+									"type": "string"
+								},
+								"deny_aria": {
+									"type": "string"
+								},
+								"description": {
+									"type": "string"
+								},
+								"dialog": {
+									"type": "object",
+									"properties": {
+										"accept_description": {
+											"type": "string"
+										},
+										"accept_title": {
+											"type": "string"
+										},
+										"cancel": {
+											"type": "string"
+										},
+										"deny_description": {
+											"type": "string"
+										},
+										"deny_title": {
+											"type": "string"
+										},
+										"reason_help": {
+											"type": "string"
+										},
+										"reason_label": {
+											"type": "string"
+										},
+										"reason_placeholder": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"empty": {
+									"type": "object",
+									"properties": {
+										"accepted_description": {
+											"type": "string"
+										},
+										"accepted_title": {
+											"type": "string"
+										},
+										"all_description": {
+											"type": "string"
+										},
+										"all_title": {
+											"type": "string"
+										},
+										"denied_description": {
+											"type": "string"
+										},
+										"denied_title": {
+											"type": "string"
+										},
+										"pending_description": {
+											"type": "string"
+										},
+										"pending_title": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"errors": {
+									"type": "object",
+									"properties": {
+										"caseGone": {
+											"type": "string"
+										},
+										"decided": {
+											"type": "string"
+										},
+										"failed": {
+											"type": "string"
+										},
+										"generic": {
+											"type": "string"
+										},
+										"invalid": {
+											"type": "string"
+										},
+										"noAccess": {
+											"type": "string"
+										},
+										"undoFailed": {
+											"type": "string"
+										},
+										"unknown": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"filter_aria": {
+									"type": "string"
+								},
+								"filters": {
+									"type": "object",
+									"properties": {
+										"all": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"load_failed": {
+									"type": "string"
+								},
+								"more_failed": {
+									"type": "string"
+								},
+								"no_review": {
+									"type": "string"
+								},
+								"retry": {
+									"type": "string"
+								},
+								"show_more": {
+									"type": "string"
+								},
+								"showing": {
+									"type": "string"
+								},
+								"status": {
+									"type": "object",
+									"properties": {
+										"accepted": {
+											"type": "string"
+										},
+										"denied": {
+											"type": "string"
+										},
+										"pending": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"title": {
+									"type": "string"
+								},
+								"toasts": {
+									"type": "object",
+									"properties": {
+										"accepted": {
+											"type": "string"
+										},
+										"denied": {
+											"type": "string"
+										},
+										"failed": {
+											"type": "string"
+										},
+										"waiting": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								}
+							},
+							"additionalProperties": false
 						},
 						"review_title": {
 							"type": "string"

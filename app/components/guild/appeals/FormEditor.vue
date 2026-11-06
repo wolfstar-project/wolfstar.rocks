@@ -4,6 +4,7 @@
 		:title="title"
 		:description="ts('guild_settings.appeals.editor.description')"
 		:dismissible="!saving"
+		:content="{ onOpenAutoFocus: focusName }"
 		:ui="{ content: 'sm:max-w-205' }"
 	>
 		<template #body>
@@ -20,6 +21,7 @@
 							required
 						>
 							<UInput
+								ref="nameField"
 								v-model="draft.name"
 								:maxlength="AppealFormLimits.name"
 								:placeholder="ts('guild_settings.appeals.editor.name_placeholder')"
@@ -32,17 +34,7 @@
 							:help="ts('guild_settings.appeals.editor.icon_help')"
 							:error="problemText('icon')"
 						>
-							<div class="flex items-center gap-2">
-								<span class="editor-icon-preview" aria-hidden="true">
-									<GuildAppealsFormIcon :icon="draft.icon.trim() || null" />
-								</span>
-								<UInput
-									v-model="draft.icon"
-									:maxlength="AppealFormLimits.icon"
-									autocomplete="off"
-									class="w-36"
-								/>
-							</div>
+							<GuildAppealsEmojiPicker v-model="draft.icon" :servers="serverEmojis" />
 						</UFormField>
 					</div>
 					<UFormField
@@ -92,22 +84,24 @@
 						<span>{{ ts("guild_settings.appeals.editor.access") }}</span>
 						<span aria-hidden="true"></span>
 					</legend>
-					<UFormField
-						:label="ts('guild_settings.appeals.editor.case_types')"
-						:help="ts('guild_settings.appeals.editor.case_types_help')"
-					>
-						<div class="flex flex-wrap gap-x-5 gap-y-2">
-							<UCheckbox
+					<!-- A group of switches, not one field: a form field would give them all its one ID. -->
+					<fieldset class="space-y-2">
+						<legend class="text-sm font-medium text-default">
+							{{ ts("guild_settings.appeals.editor.case_types") }}
+						</legend>
+						<div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+							<USwitch
 								v-for="name in AppealCaseTypeNames"
 								:key="name"
 								:model-value="draft.types.includes(AppealCaseTypes[name])"
 								:label="ts(APPEAL_CASE_TYPE_KEYS[name])"
-								@update:model-value="
-									setType(AppealCaseTypes[name], $event === true)
-								"
+								@update:model-value="setType(AppealCaseTypes[name], $event)"
 							/>
 						</div>
-					</UFormField>
+						<p class="text-sm text-muted">
+							{{ ts("guild_settings.appeals.editor.case_types_help") }}
+						</p>
+					</fieldset>
 					<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 						<SelectRoles
 							v-model="draft.requiredRoles"
@@ -241,6 +235,7 @@ import {
 	APPEAL_QUESTION_KIND_ICONS,
 	APPEAL_QUESTION_KIND_NAME_KEYS,
 } from "~/utils/appeal-form-labels";
+import { usableServerEmojis } from "~/utils/emoji-picker";
 
 const open = defineModel<boolean>("open", { required: true });
 
@@ -268,6 +263,18 @@ const emit = defineEmits<{
 
 const { ts } = useI18n();
 const formId = useId();
+
+// The emoji of the server come first in the picker, and are stored as Discord writes them.
+const serverEmojis = computed(() => usableServerEmojis(guild?.emojis ?? []));
+
+const nameField = useTemplateRef<{ inputRef: HTMLInputElement | null }>("nameField");
+
+// The dialog opens on its first field, not on the close button the browser
+// finds first, which would show a ring on it before anything was asked.
+function focusName(event: Event) {
+	event.preventDefault();
+	void nextTick(() => nameField.value?.inputRef?.focus());
+}
 
 const draft = reactive<AppealFormDraft>(createAppealFormDraft());
 const submitted = ref(false);
@@ -361,12 +368,6 @@ function submit() {
 .editor-heading span:last-child {
 	@apply h-px flex-1;
 	background-color: var(--field-border);
-}
-
-.editor-icon-preview {
-	@apply flex size-10 shrink-0 items-center justify-center rounded-[6px] text-xl;
-	background-color: var(--field-surface);
-	border: 1px solid var(--field-border);
 }
 
 .editor-add-step {

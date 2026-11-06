@@ -34,7 +34,7 @@ mockNuxtImport("useToast", () => () => ({ add: vi.fn() }));
 
 async function mountReady() {
 	const wrapper = await mountSuspended(Appeals, {
-		global: { stubs: { GuildAppealsForms: true } },
+		global: { stubs: { GuildAppealsForms: true, GuildAppealsQueue: true } },
 	});
 	await nextTick();
 	await nextTick();
@@ -59,12 +59,13 @@ describe("appeals guild settings", () => {
 		expect(wrapper.text()).toContain("The appeal form is in development");
 	});
 
-	it("is off until switched on, then shows the settings and the forms", async () => {
+	it("is off until switched on, then shows the settings, the forms and the review queue", async () => {
 		const wrapper = await mountReady();
 
 		expect(wrapper.text()).toContain("Appeals are off");
 		expect(wrapper.text()).not.toContain("What can be appealed");
 		expect(wrapper.findComponent({ name: "GuildAppealsForms" }).exists()).toBe(false);
+		expect(wrapper.findComponent({ name: "GuildAppealsQueue" }).exists()).toBe(false);
 
 		await wrapper.find('[aria-label="Let the members appeal"]').trigger("click");
 		await nextTick();
@@ -74,6 +75,7 @@ describe("appeals guild settings", () => {
 		expect(wrapper.text()).toContain("Review");
 		expect(wrapper.text()).toContain("Limits");
 		expect(wrapper.findComponent({ name: "GuildAppealsForms" }).exists()).toBe(true);
+		expect(wrapper.findComponent({ name: "GuildAppealsQueue" }).exists()).toBe(true);
 	});
 
 	describe("while on", () => {

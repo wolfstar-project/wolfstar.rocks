@@ -133,7 +133,8 @@ function warnChangedOptions(
 	warnings: string[],
 ) {
 	for (const [key, value] of Object.entries(options)) {
-		if (typeof value !== "number" || given[key] === value) continue;
+		// An option a partial file does not have is filled with the default, which changes nothing it said:
+		if (typeof value !== "number" || given[key] === undefined || given[key] === value) continue;
 		warnings.push(
 			`The option "${key}" of the rule "${name}" was changed from ${String(given[key])} to ${value}.`,
 		);

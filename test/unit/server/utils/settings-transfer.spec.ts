@@ -185,9 +185,9 @@ describe("parseConfigurationFile", () => {
 		]);
 	});
 
-	it("refuses a setting the bot does not have, or one that depends on the server", () => {
+	it("refuses a setting nobody has, or one that depends on the server, in a file of version 1", () => {
 		const issues = issuesOf({
-			version: 2,
+			version: 1,
 			settings: { "music.volume": 50, "roles.admin": [ROLE] },
 		});
 
@@ -195,6 +195,16 @@ describe("parseConfigurationFile", () => {
 			"settings.music.volume",
 			"settings.roles.admin",
 		]);
+	});
+
+	it("leaves out and names a setting it does not know in a file of version 2, which a newer bot may write", () => {
+		const parsed = read({
+			version: 2,
+			settings: { "music.volume": 50, "roles.admin": [ROLE], "language": "it-IT" },
+		});
+
+		expect(parsed.unsupported).toStrictEqual(["music.volume", "roles.admin"]);
+		expect(parsed.settings.map(({ name }) => name)).toStrictEqual(["language"]);
 	});
 
 	it("reads the settings of the direct messages of the moderation commands", () => {
@@ -667,6 +677,13 @@ describe("a file of the bot before V7", () => {
 
 		expect(parsed.addedRules).toStrictEqual([]);
 		expect(parsed.notices).toMatchObject([{ kind: "ruleFailed", rule: "Links" }]);
+	});
+
+	it("does not say a filter of a partial file was adjusted for the options it does not have", () => {
+		const parsed = read({ version: 1, settings: { "selfmod.capitals.enabled": true } });
+
+		expect(parsed.addedRules.map((rule) => rule.name)).toStrictEqual(["Capitals"]);
+		expect(parsed.notices).toStrictEqual([]);
 	});
 
 	it("still refuses a setting nobody has", () => {

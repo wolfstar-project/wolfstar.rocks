@@ -5,7 +5,7 @@ import type {
 import type { H3Event } from "h3";
 import { getNoticeKey } from "#shared/utils/settings-transfer";
 import { mockNuxtImport, mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 import Transfer from "~/components/guild/settings/Transfer.vue";
 
@@ -56,7 +56,21 @@ async function chooseFile(wrapper: Awaited<ReturnType<typeof mountSuspended>>, t
 
 const dialogText = () => document.body.textContent ?? "";
 
+// Unmounted after each test, before the next one clears the page: a dialog
+// left open would otherwise be patched into a body it was taken out of.
+const mounted: { unmount: () => void }[] = [];
+
+async function mountTransfer() {
+	const wrapper = await mountSuspended(Transfer);
+	mounted.push(wrapper);
+	return wrapper;
+}
+
 describe("guild settings transfer", () => {
+	afterEach(() => {
+		for (const wrapper of mounted.splice(0)) wrapper.unmount();
+	});
+
 	beforeEach(() => {
 		vi.clearAllMocks();
 		useActiveGuild().selectGuild(GUILD_ID);
@@ -67,7 +81,7 @@ describe("guild settings transfer", () => {
 	});
 
 	it("offers to export and to import", async () => {
-		const wrapper = await mountSuspended(Transfer);
+		const wrapper = await mountTransfer();
 
 		const labels = wrapper.findAll("button").map((button) => button.text());
 
@@ -77,7 +91,7 @@ describe("guild settings transfer", () => {
 
 	it("does not import over changes that are not saved yet", async () => {
 		mockChanges.value = { language: "it-IT" };
-		const wrapper = await mountSuspended(Transfer);
+		const wrapper = await mountTransfer();
 
 		const button = wrapper.findAll("button").find((entry) => entry.text() === "Import");
 
@@ -104,7 +118,7 @@ describe("guild settings transfer", () => {
 				isEmpty: false,
 			},
 		};
-		const wrapper = await mountSuspended(Transfer);
+		const wrapper = await mountTransfer();
 
 		await chooseFile(wrapper, "{}");
 		await vi.waitFor(() => expect(dialogText()).toContain("modules.automod"));
@@ -154,7 +168,7 @@ describe("guild settings transfer", () => {
 				isEmpty: true,
 			},
 		};
-		const wrapper = await mountSuspended(Transfer);
+		const wrapper = await mountTransfer();
 
 		await chooseFile(wrapper, "{}");
 		await vi.waitFor(() => expect(dialogText()).toContain("Not imported (4)"));
@@ -196,7 +210,7 @@ describe("guild settings transfer", () => {
 				isEmpty: false,
 			},
 		};
-		const wrapper = await mountSuspended(Transfer);
+		const wrapper = await mountTransfer();
 
 		await chooseFile(wrapper, "{}");
 		await vi.waitFor(() => expect(dialogText()).toContain("Created (1): Links"));
@@ -223,7 +237,7 @@ describe("guild settings transfer", () => {
 				isEmpty: false,
 			},
 		};
-		const wrapper = await mountSuspended(Transfer);
+		const wrapper = await mountTransfer();
 
 		await chooseFile(wrapper, "{}");
 		await vi.waitFor(() => expect(dialogText()).toContain("Not imported (1)"));
@@ -241,7 +255,7 @@ describe("guild settings transfer", () => {
 			ok: false,
 			issues: [{ path: "settings.language", message: "Expected a language tag." }],
 		};
-		const wrapper = await mountSuspended(Transfer);
+		const wrapper = await mountTransfer();
 
 		await chooseFile(wrapper, "{}");
 		await vi.waitFor(() => expect(dialogText()).toContain("This file cannot be imported"));

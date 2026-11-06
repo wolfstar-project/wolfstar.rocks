@@ -140,6 +140,11 @@ function parseSettings(section: unknown, version: number, issues: ConfigurationI
 		if (key === null) {
 			if (BotOnlySettings.has(name)) unsupported.push(name);
 			else if (version === 1 && isLegacySetting(name)) legacy[name] = value;
+			// A file of version 2 is the bot's, which gains settings this dashboard
+			// learns of later: one it does not know is left out and named, rather
+			// than refusing every export of a newer bot. A setting of the bot before
+			// V7 is not one of those, and still refuses the file.
+			else if (version >= 2 && !isLegacySetting(name)) unsupported.push(name);
 			else {
 				issues.push({
 					path,

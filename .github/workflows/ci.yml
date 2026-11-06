@@ -229,7 +229,9 @@ jobs:
 
       - uses: voidzero-dev/setup-vp@143f5f385f39b1b753ffed1a01ad443811855c8b # v1.16.1
         with:
-          node-version: lts/*
+          # Pinned to 24: the @codspeed/core 5.7.1 prebuild calls a V8 API that
+          # Node 26 removed, so the benchmark process crashes on load there.
+          node-version: "24"
           cache: true
           sfw: true
 

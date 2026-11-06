@@ -104,11 +104,13 @@ import {
 	StarylSetupSection,
 	StarylProductProofSection,
 	// #endregion
+	UChart,
 } from "#components";
 import { mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
 import { createError } from "h3";
 import { describe, expect, it, vi } from "vitest";
 import VerifyPage from "~/pages/verify/[guild].vue";
+import { moderationActivityChart } from "~/utils/moderation-activity";
 import { MOCK_AUDIT_ENTRY, MOCK_MODERATION_ENTRY } from "~~/test/mocks/auditLogs";
 import { createMockOauthFlattenedGuild, createMockRole } from "~~/test/mocks/discord";
 import { createMockGuildData } from "~~/test/mocks/guildData";
@@ -132,6 +134,30 @@ function mountAppHeader() {
 }
 
 describe("component accessibility audits", () => {
+	describe("UChart of the overview", () => {
+		it("is one named image, with the counts of every day in its label", async () => {
+			const days = ["Mon", "Tue", "Wed"].map((label, index) => ({
+				count: index * 2,
+				key: `2026-10-${8 + index}`,
+				label,
+			}));
+			const component = await mountSuspended(UChart, {
+				props: {
+					"aria-label": "Mon 0, Tue 2, Wed 4",
+					"definition": moderationActivityChart(days, String),
+					"height": 180,
+					"tooltip": false,
+					"type": "bar",
+				},
+			});
+			await nextTick();
+
+			expect(component.find("[aria-label='Mon 0, Tue 2, Wed 4']").exists()).toBe(true);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
 	describe("Discord components", () => {
 		describe("DiscordMessages", () => {
 			it("should have no accessibility violations", async () => {

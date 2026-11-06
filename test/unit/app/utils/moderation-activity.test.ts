@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { bucketModerationActivity, moderationActivityStart } from "~/utils/moderation-activity";
+import {
+	ACTIVITY_BUSIEST_FILL,
+	ACTIVITY_QUIET_FILL,
+	bucketModerationActivity,
+	moderationActivityChart,
+	moderationActivityFill,
+	moderationActivityMax,
+	moderationActivityStart,
+} from "~/utils/moderation-activity";
 
 // Wednesday, midday, so no entry sits on a day boundary.
 const NOW = new Date(2026, 9, 14, 12, 0, 0);
@@ -67,5 +75,47 @@ describe("bucketModerationActivity", () => {
 		);
 
 		expect(days.every((day) => day.count === 0)).toBe(true);
+	});
+});
+
+describe("moderation activity chart", () => {
+	const week = [0, 3, 5, 5, 1, 0, 2].map((count, index) => ({
+		count,
+		key: `2026-10-${8 + index}`,
+		label: `d${index}`,
+	}));
+	const quiet = week.map((day) => ({ ...day, count: 0 }));
+
+	it("draws the busiest days in the full colour and the others in a tint", () => {
+		const fill = moderationActivityFill(week);
+
+		expect(week.map((day) => fill(day))).toStrictEqual([
+			ACTIVITY_QUIET_FILL,
+			ACTIVITY_QUIET_FILL,
+			ACTIVITY_BUSIEST_FILL,
+			ACTIVITY_BUSIEST_FILL,
+			ACTIVITY_QUIET_FILL,
+			ACTIVITY_QUIET_FILL,
+			ACTIVITY_QUIET_FILL,
+		]);
+	});
+
+	it("highlights no day of a quiet week", () => {
+		const fill = moderationActivityFill(quiet);
+
+		expect(quiet.map((day) => fill(day))).toStrictEqual(quiet.map(() => ACTIVITY_QUIET_FILL));
+	});
+
+	it("leaves room over the busiest bar, and never collapses the axis to [0, 0]", () => {
+		expect(moderationActivityMax(week)).toBeCloseTo(6);
+		expect(moderationActivityMax(quiet)).toBe(1);
+		expect(moderationActivityMax([])).toBe(1);
+	});
+
+	it("is a chart of a bar, a count and a baseline mark, with no y axis", () => {
+		const chart = moderationActivityChart(week, String);
+
+		expect(chart.marks).toHaveLength(3);
+		expect(chart.scales?.y?.axis).toBe(false);
 	});
 });

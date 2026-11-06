@@ -82,7 +82,7 @@
 				type="bar"
 				class="activity-chart"
 				:definition="chartDefinition"
-				:height="180"
+				:height="chartHeight"
 				:tooltip="false"
 				:aria-label="chartAria"
 			/>
@@ -327,6 +327,14 @@ const countFormat = computed(
 	() => new Intl.NumberFormat(locale.value, { maximumFractionDigits: 0 }),
 );
 const formatCount = (value: number) => countFormat.value.format(value);
+
+// The mockup's plot at each width: phone, foldable, tablet, desktop.
+const chartHeight = computed(() => {
+	if (breakpoints.smaller("sm").value) return 120;
+	if (breakpoints.smaller("md").value) return 130;
+	if (breakpoints.smaller("lg").value) return 160;
+	return 180;
+});
 
 const chartDefinition = computed(() => moderationActivityChart(activityDays.value, formatCount));
 

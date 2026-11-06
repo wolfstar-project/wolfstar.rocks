@@ -14,6 +14,8 @@ import {
 } from "#server/utils/settings-transfer/plan";
 import { guildSettingsUpdate } from "#shared/audit/actions";
 import { ConfigurationImportSchema } from "#shared/schemas";
+import { MaximumAutoModerationRules } from "#shared/utils/automod-rules";
+import { getNoticesDigest } from "#shared/utils/settings-transfer";
 import { createError, useLogger, withAuditMethods } from "evlog";
 import { parse } from "valibot";
 
@@ -44,13 +46,30 @@ export default defineWrappedResponseHandler(
 			};
 		}
 
+		// Read again against the server as it is now: what the preview showed is
+		// what was confirmed, so a notice it did not show means the server changed.
+		if (
+			body.noticesDigest !== undefined &&
+			getNoticesDigest(parsed.value.notices) !== body.noticesDigest
+		) {
+			throw createError({
+				message: "The server changed while the file was being read",
+				status: 409,
+				why: "Reading the file again does not leave out what the preview did",
+				fix: "Read the file again",
+			});
+		}
+
 		const applied = await applyConfigurationImport(guild, parsed.value).catch(
 			(error: unknown) => {
 				if (!(error instanceof ConfigurationImportStaleError)) throw error;
 				throw createError({
 					message: "The server changed while the file was being read",
 					status: 409,
-					why: "A list of a rule of the file is longer than the server allows by now",
+					why:
+						error.reason === "ruleLimit"
+							? `The rules the file adds would take the server past ${MaximumAutoModerationRules} rules by now`
+							: "A list of a rule of the file is longer than the server allows by now",
 					fix: "Read the file again",
 				});
 			},

@@ -4,7 +4,10 @@ import {
 	createConfigurationFile,
 	TransferableSettings,
 } from "#server/utils/settings-transfer/format";
-import { parseConfigurationFile } from "#server/utils/settings-transfer/parse";
+import {
+	parseConfigurationFile,
+	type ParsedConfiguration,
+} from "#server/utils/settings-transfer/parse";
 import {
 	findOversizedRuleLists,
 	getPlannedRules,
@@ -18,6 +21,7 @@ import {
 	type AutoModerationRuleType,
 } from "#shared/utils/automod-rules";
 import { describe, expect, it } from "vitest";
+import legacyFile from "~~/test/fixtures/settings-transfer/legacy-v1.json";
 
 const GUILD_ID = "123456789012345678";
 const ROLE = "234567890123456789";
@@ -73,7 +77,7 @@ describe("createConfigurationFile", () => {
 			new Date("2026-10-18T10:00:00.000Z"),
 		);
 
-		expect(file.version).toBe(1);
+		expect(file.version).toBe(2);
 		expect(file.exportedAt).toBe("2026-10-18T10:00:00.000Z");
 		expect(file.settings.language).toBe("it-IT");
 		expect(file.settings["modules.automod"]).toBe(false);
@@ -105,14 +109,22 @@ describe("parseConfigurationFile", () => {
 		["text that is not JSON", "{", ""],
 		["something that is not an object", "[]", ""],
 		["a file without a version", "{}", "version"],
-		["a version it cannot read", '{"version":2}', "version"],
+		["a version it cannot read", '{"version":3}', "version"],
 	])("refuses %s", (_label, text, path) => {
 		expect(issuesOf(text)[0]?.path).toBe(path);
 	});
 
+	it("reads the versions 1 and 2, and says so of another", () => {
+		expect(read({ version: 1 }).settings).toStrictEqual([]);
+		expect(read({ version: 2 }).settings).toStrictEqual([]);
+		expect(issuesOf({ version: 3 })).toStrictEqual([
+			{ path: "version", message: "Version 3 is not supported: expected 1 or 2." },
+		]);
+	});
+
 	it("refuses a field it does not know, and a value of another type", () => {
 		const issues = issuesOf({
-			version: 1,
+			version: 2,
 			extra: true,
 			settings: { "modules.automod": "yes", "language": null },
 		});
@@ -124,24 +136,92 @@ describe("parseConfigurationFile", () => {
 		]);
 	});
 
-	it("leaves out a setting this dashboard does not manage and says so, and ignores a removed one", () => {
+	it("leaves out a setting of the bot this dashboard does not manage and says so, and ignores a removed one", () => {
 		const parsed = read({
-			version: 1,
+			version: 2,
 			settings: {
-				"music.volume": 50,
+				"honeypot.reinvite": true,
 				"modules.commands": false,
 				"appeals.questions": ["Why?"],
 				"language": "it-IT",
 			},
 		});
 
-		expect(parsed.unsupported).toStrictEqual(["music.volume"]);
+		expect(parsed.unsupported).toStrictEqual(["honeypot.reinvite"]);
 		expect(parsed.settings.map(({ name }) => name)).toStrictEqual(["language"]);
+	});
+
+	it("imports the join guard's settings the bot writes, as the dashboard saves them", () => {
+		const parsed = read({
+			version: 2,
+			settings: {
+				"join-guard.enabled": true,
+				"join-guard.checkpoint": true,
+				"join-guard.checkpoint-timeout": 7200,
+				"join-guard.minimum-trust": 2,
+				"join-guard.direct-message-content": "Verify on {server}.",
+			},
+		});
+
+		expect(parsed.unsupported).toStrictEqual([]);
+		expect(parsed.settings.map(({ name }) => name)).toStrictEqual([
+			"join-guard.enabled",
+			"join-guard.checkpoint",
+			"join-guard.checkpoint-timeout",
+			"join-guard.minimum-trust",
+			"join-guard.direct-message-content",
+		]);
+	});
+
+	it("refuses a join guard setting the bot could not run", () => {
+		const issues = issuesOf({
+			version: 2,
+			settings: { "join-guard.checkpoint-timeout": 60, "join-guard.minimum-trust": 9 },
+		});
+
+		expect(issues.map((issue) => issue.path)).toStrictEqual([
+			"settings.join-guard.checkpoint-timeout",
+			"settings.join-guard.minimum-trust",
+		]);
+	});
+
+	it("refuses a setting nobody has, or one that depends on the server, in a file of version 1", () => {
+		const issues = issuesOf({
+			version: 1,
+			settings: { "music.volume": 50, "roles.admin": [ROLE] },
+		});
+
+		expect(issues.map((issue) => issue.path)).toStrictEqual([
+			"settings.music.volume",
+			"settings.roles.admin",
+		]);
+	});
+
+	it("leaves out and names a setting it does not know in a file of version 2, which a newer bot may write", () => {
+		const parsed = read({
+			version: 2,
+			settings: { "music.volume": 50, "roles.admin": [ROLE], "language": "it-IT" },
+		});
+
+		expect(parsed.unsupported).toStrictEqual(["music.volume", "roles.admin"]);
+		expect(parsed.settings.map(({ name }) => name)).toStrictEqual(["language"]);
+	});
+
+	it("reads the settings of the direct messages of the moderation commands", () => {
+		const parsed = read({
+			version: 2,
+			settings: { "moderation.direct-message": false, "moderation.display-moderator": false },
+		});
+
+		expect(getPlannedSettings(planConfigurationImport(settings(), [], parsed))).toStrictEqual({
+			messagesModerationDm: false,
+			messagesModeratorNameDisplay: false,
+		});
 	});
 
 	it("reads the settings the bot added, and checks their values", () => {
 		const parsed = read({
-			version: 1,
+			version: 2,
 			settings: {
 				"timezone": "Europe/Rome",
 				"honeypot.action": "Ban",
@@ -167,7 +247,7 @@ describe("parseConfigurationFile", () => {
 		});
 		expect(
 			issuesOf({
-				version: 1,
+				version: 2,
 				settings: {
 					"timezone": "Mars/Olympus",
 					"honeypot.action": "Mute",
@@ -188,12 +268,12 @@ describe("parseConfigurationFile", () => {
 	});
 
 	it("leaves the rules alone when the file has no automod section", () => {
-		expect(read({ version: 1 }).rules).toBeNull();
+		expect(read({ version: 2 }).rules).toBeNull();
 	});
 
 	it("refuses every rule that is wrong, with where", () => {
 		const issues = issuesOf({
-			version: 1,
+			version: 2,
 			automod: {
 				rules: [
 					{ name: "123", type: "Newlines" },
@@ -217,7 +297,7 @@ describe("parseConfigurationFile", () => {
 
 	it("gives a rule the default of what the file leaves out", () => {
 		const parsed = read({
-			version: 1,
+			version: 2,
 			automod: { rules: [{ name: "Lines", type: "Newlines" }] },
 		});
 
@@ -231,7 +311,7 @@ describe("parseConfigurationFile", () => {
 describe("planConfigurationImport", () => {
 	it("writes only the settings whose value differs", () => {
 		const parsed = read({
-			version: 1,
+			version: 2,
 			settings: { "language": "en-US", "modules.automod": false, "reports.notify": true },
 		});
 
@@ -256,18 +336,18 @@ describe("planConfigurationImport", () => {
 		const plan = planConfigurationImport(
 			settings(),
 			[rule("Lines")],
-			read({ version: 1, settings: { language: "it-IT" } }),
+			read({ version: 2, settings: { language: "it-IT" } }),
 		);
 
 		expect(plan.rules.remove).toHaveLength(0);
-		expect(summarizeConfigurationPlan(plan, read({ version: 1 })).rules).toBeNull();
+		expect(summarizeConfigurationPlan(plan, read({ version: 2 })).rules).toBeNull();
 	});
 
 	it("edits a rule of the same name in place, and removes the ones the file does not have", () => {
 		const lines = rule("Lines", "Newlines", { ignoredRoles: [ROLE] });
 		const old = rule("Old", "Words");
 		const parsed = read({
-			version: 1,
+			version: 2,
 			automod: { rules: [{ name: "lines", type: "Newlines", enabled: false }] },
 		});
 
@@ -285,7 +365,7 @@ describe("planConfigurationImport", () => {
 
 	it("makes a rule of another type again, and creates one the server has not", () => {
 		const parsed = read({
-			version: 1,
+			version: 2,
 			automod: {
 				rules: [
 					{ name: "Lines", type: "Characters" },
@@ -311,7 +391,7 @@ describe("planConfigurationImport", () => {
 		const first = rule("First", "Newlines", { ignoredRoles: [ROLE] });
 		const second = rule("Second", "Newlines");
 		const parsed = read({
-			version: 1,
+			version: 2,
 			automod: {
 				rules: [
 					{ name: "Second", type: "Newlines" },
@@ -341,6 +421,8 @@ describe("findOversizedRuleLists", () => {
 		const parsed = {
 			settings: [],
 			unsupported: [],
+			addedRules: [],
+			notices: [],
 			rules: [
 				{
 					...getDefaultAutoModerationRule("Words"),
@@ -356,5 +438,297 @@ describe("findOversizedRuleLists", () => {
 		expect(
 			findOversizedRuleLists([rule("Words", "Words", { options: { words } })], parsed),
 		).toStrictEqual([]);
+	});
+});
+
+describe("a file of the bot before V7", () => {
+	/** The file the export of the bot before V7 writes for a server that changed nothing, with the given settings. */
+	const legacy = (overrides: Record<string, unknown> = {}) => ({
+		...legacyFile,
+		settings: { ...legacyFile.settings, ...overrides },
+	});
+	const valueOf = (parsed: ParsedConfiguration, name: string) =>
+		parsed.settings.find((setting) => setting.name === name)?.value;
+	const changesOf = (parsed: ParsedConfiguration, rules: readonly AutoModerationRule[] = []) =>
+		summarizeConfigurationPlan(planConfigurationImport(settings(), rules, parsed), parsed);
+
+	it("reads the file of a server that changed nothing with nothing to tell", () => {
+		const parsed = read(legacy());
+
+		expect(parsed.notices).toStrictEqual([]);
+		expect(parsed.rules).toBeNull();
+		expect(parsed.addedRules).toStrictEqual([]);
+		// The bot before V7 sent no direct message by default, which V7 does: the server keeps what it had.
+		const preview = changesOf(parsed);
+		expect(preview.settings).toStrictEqual([
+			{ name: "moderation.direct-message", before: true, after: false },
+		]);
+		expect(preview.rules).toBeNull();
+	});
+
+	it("gives the settings that were renamed their name in V7", () => {
+		const parsed = read(
+			legacy({
+				"messages.moderation-dm": true,
+				"messages.moderator-name-display": false,
+				"events.ban-add": false,
+				"events.ban-remove": true,
+				"events.timeout": true,
+				"events.twemoji-reactions": true,
+				"disabled-commands": ["ping"],
+				"language": "it-IT",
+			}),
+		);
+
+		expect(parsed.notices).toStrictEqual([]);
+		expect(valueOf(parsed, "moderation.direct-message")).toBe(true);
+		expect(valueOf(parsed, "moderation.display-moderator")).toBe(false);
+		expect(valueOf(parsed, "moderation.track-bans")).toBe(true);
+		expect(valueOf(parsed, "moderation.track-timeouts")).toBe(true);
+		expect(valueOf(parsed, "logs.reaction-emoji-include-twemoji")).toBe(true);
+		expect(valueOf(parsed, "commands.disabled")).toStrictEqual(["ping"]);
+		expect(valueOf(parsed, "language")).toBe("it-IT");
+	});
+
+	it("imports the rest of a value that cannot be converted, and says which setting to set by hand", () => {
+		const tooLong = "a-command-name-that-is-far-too-long";
+		const parsed = read(
+			legacy({
+				"messages.moderation-dm": "yes",
+				"disabled-commands": ["ping", tooLong],
+				"events.timeout": true,
+			}),
+		);
+
+		expect(valueOf(parsed, "moderation.track-timeouts")).toBe(true);
+		expect(valueOf(parsed, "moderation.direct-message")).toBeUndefined();
+		expect(valueOf(parsed, "commands.disabled")).toStrictEqual(["ping"]);
+		expect(parsed.notices).toMatchObject([
+			{
+				kind: "settingFailed",
+				path: "settings.disabled-commands",
+				name: tooLong,
+				target: "commands.disabled",
+			},
+			{
+				kind: "settingFailed",
+				path: "settings.messages.moderation-dm",
+				name: "messages.moderation-dm",
+				target: "moderation.direct-message",
+				reason: "Expected a boolean.",
+			},
+		]);
+	});
+
+	it("tells a setting V7 has nothing for only when it was changed, and the reaction filter once", () => {
+		const parsed = read(
+			legacy({
+				"prefix": "!",
+				"events.include-bots": false,
+				"selfmod.reactions.enabled": true,
+				"selfmod.reactions.maximum": 3,
+			}),
+		);
+
+		expect(parsed.notices).toStrictEqual([
+			{ kind: "noEquivalent", path: "settings.prefix", name: "prefix" },
+			{
+				kind: "reactionFilter",
+				path: "settings.selfmod.reactions.enabled",
+				name: "selfmod.reactions.enabled",
+			},
+		]);
+	});
+
+	it("adds the filters that were changed to the rules of the server, and leaves the others alone", () => {
+		const rules = [rule("Mine", "Words")];
+		const parsed = read(
+			legacy({
+				"selfmod.links.enabled": true,
+				"selfmod.links.allowed": ["wolfstar.rocks"],
+				"selfmod.links.hard-action": 6,
+				"selfmod.links.hard-action-duration": 60_000,
+				"no-mention-spam.enabled": true,
+			}),
+			rules,
+		);
+
+		expect(parsed.notices).toStrictEqual([]);
+		expect(parsed.rules).toBeNull();
+		expect(parsed.addedRules).toMatchObject([
+			{
+				name: "Links",
+				type: "Links",
+				enabled: true,
+				hardAction: "Timeout",
+				hardActionDuration: 60_000,
+				options: { allowed: ["wolfstar.rocks"] },
+			},
+			{ name: "Mention spam", type: "MentionsCooldown", enabled: true, hardAction: "Ban" },
+		]);
+		expect(changesOf(parsed, rules).rules).toStrictEqual({
+			mode: "add",
+			created: ["Links", "Mention spam"],
+			updated: [],
+			moved: [],
+			removed: [],
+			unchanged: 1,
+		});
+	});
+
+	it("edits the rule of a filter the server already has instead of making it twice", () => {
+		const links = rule("Links", "Links", { enabled: false });
+		const parsed = read(legacy({ "selfmod.links.enabled": true }), [links]);
+
+		const writes = getPlannedRules(planConfigurationImport(settings(), [links], parsed));
+
+		expect(writes.create).toStrictEqual([]);
+		expect(writes.remove).toStrictEqual([]);
+		expect(writes.update).toMatchObject([{ id: links.id, data: { enabled: true } }]);
+	});
+
+	it("still makes the rule of a filter when another filter cannot become one", () => {
+		const parsed = read(
+			legacy({
+				"selfmod.invites.enabled": true,
+				"selfmod.invites.ignored-guilds": ["not a server"],
+				"selfmod.links.enabled": true,
+				"events.timeout": true,
+			}),
+		);
+
+		expect(valueOf(parsed, "moderation.track-timeouts")).toBe(true);
+		expect(parsed.notices).toMatchObject([
+			{
+				kind: "ruleFailed",
+				path: "settings.selfmod.invites.ignored-guilds",
+				rule: "Invites",
+			},
+		]);
+		expect(parsed.addedRules).toMatchObject([{ name: "Links", type: "Links", enabled: true }]);
+	});
+
+	it("keeps a rule the server gained after the file was read", () => {
+		const mine = rule("Mine", "Words");
+		const parsed = read(legacy({ "selfmod.links.enabled": true }), [mine]);
+
+		const now = [mine, rule("Added since", "Words")];
+
+		expect(changesOf(parsed, now).rules).toMatchObject({
+			created: ["Links"],
+			removed: [],
+			unchanged: 2,
+		});
+	});
+
+	it("makes no rule out of a filter the file does not have, not even a Mention spam that is off", () => {
+		const mentions = rule("Mention spam", "MentionsCooldown");
+
+		const fewSettings = read({ version: 1, settings: { "messages.moderation-dm": true } }, [
+			mentions,
+		]);
+		expect(fewSettings.addedRules).toStrictEqual([]);
+		expect(changesOf(fewSettings, [mentions]).rules).toBeNull();
+
+		const oneFilter = read(
+			{
+				version: 1,
+				settings: { "messages.moderation-dm": true, "selfmod.links.enabled": true },
+			},
+			[mentions],
+		);
+		expect(oneFilter.addedRules.map(({ name }) => name)).toStrictEqual(["Links"]);
+		expect(changesOf(oneFilter, [mentions]).rules).toMatchObject({
+			created: ["Links"],
+			updated: [],
+			removed: [],
+		});
+	});
+
+	it("makes the rule of a filter the limits of V7 changed, and names the rule in what it tells", () => {
+		const parsed = read(
+			legacy({ "selfmod.capitals.enabled": true, "selfmod.capitals.maximum": 100_000 }),
+		);
+
+		expect(parsed.addedRules).toMatchObject([{ name: "Capitals", options: { maximum: 100 } }]);
+		expect(parsed.notices).toMatchObject([
+			{ kind: "ruleAdjusted", path: "settings.selfmod.capitals", rule: "Capitals" },
+		]);
+	});
+
+	it("adds the filters to the rules of an automod section, and tells a name it already has", () => {
+		const parsed = read({
+			...legacy({ "selfmod.links.enabled": true, "selfmod.capitals.enabled": true }),
+			automod: { rules: [{ name: "Links", type: "Links" }] },
+		});
+
+		expect(parsed.rules?.map(({ name }) => name)).toStrictEqual(["Links", "Capitals"]);
+		expect(parsed.addedRules).toStrictEqual([]);
+		expect(parsed.notices).toMatchObject([
+			{ kind: "ruleFailed", rule: "Links", reason: 'Two rules are named "Links".' },
+		]);
+		expect(changesOf(parsed).rules?.mode).toBe("replace");
+	});
+
+	it("does not add a rule past the limit of the rules of a server", () => {
+		const full = Array.from({ length: 25 }, (_, index) => rule(`Rule ${index}`, "Words"));
+
+		const parsed = read(legacy({ "selfmod.links.enabled": true }), full);
+
+		expect(parsed.addedRules).toStrictEqual([]);
+		expect(parsed.notices).toMatchObject([{ kind: "ruleFailed", rule: "Links" }]);
+	});
+
+	it("does not say a filter of a partial file was adjusted for the options it does not have", () => {
+		const parsed = read({ version: 1, settings: { "selfmod.capitals.enabled": true } });
+
+		expect(parsed.addedRules.map((rule) => rule.name)).toStrictEqual(["Capitals"]);
+		expect(parsed.notices).toStrictEqual([]);
+	});
+
+	it("tells the words of the word filter V7 does not take, instead of losing them unsaid", () => {
+		const parsed = read({
+			version: 1,
+			settings: {
+				"selfmod.filter.enabled": true,
+				"selfmod.filter.raw": ["a", "scam", "x".repeat(40)],
+			},
+		});
+
+		expect(parsed.addedRules[0]?.options).toStrictEqual({ words: ["scam"] });
+		expect(parsed.notices).toMatchObject([
+			{
+				kind: "ruleAdjusted",
+				rule: "Words",
+				detail: expect.stringContaining(`"a", "${"x".repeat(40)}"`),
+			},
+		]);
+	});
+
+	it("still refuses a setting nobody has", () => {
+		expect(issuesOf(legacy({ "no.such": true }))).toMatchObject([{ path: "settings.no.such" }]);
+	});
+
+	it("refuses a mistyped setting of a filter, instead of leaving the filter out unsaid", () => {
+		expect(issuesOf(legacy({ "selfmod.links.enabld": true }))).toMatchObject([
+			{ path: "settings.selfmod.links.enabld" },
+		]);
+	});
+
+	it("refuses a setting of the bot before V7 in a file of version 2", () => {
+		expect(
+			issuesOf({ version: 2, settings: { "messages.moderation-dm": true } }),
+		).toMatchObject([{ path: "settings.messages.moderation-dm" }]);
+	});
+
+	it("shows what was not imported with the preview, even when nothing changes", () => {
+		const parsed = read(legacy({ "prefix": "!", "messages.moderation-dm": true }));
+
+		const preview = changesOf(parsed);
+
+		expect(preview.isEmpty).toBe(true);
+		expect(preview.notices).toStrictEqual([
+			{ kind: "noEquivalent", path: "settings.prefix", name: "prefix" },
+		]);
 	});
 });

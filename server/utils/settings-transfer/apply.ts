@@ -7,11 +7,13 @@ import { writeAutoModerationRules } from "#server/utils/automod/rules";
 import { assertHoneypotIsUsable } from "#server/utils/honeypot/permissions";
 import {
 	findOversizedRuleLists,
+	getImportedRules,
 	getPlannedRules,
 	getPlannedSettings,
 	planConfigurationImport,
 	type ConfigurationPlan,
 } from "#server/utils/settings-transfer/plan";
+import { MaximumAutoModerationRules } from "#shared/utils/automod-rules";
 
 /**
  * What an import throws when the guild changed since the file was read in a
@@ -19,7 +21,12 @@ import {
  * and the file has to be read again.
  */
 export class ConfigurationImportStaleError extends Error {
-	public constructor() {
+	/**
+	 * @param reason What changed: `ruleLimit` when the rules the file adds would
+	 * take the guild past {@linkcode MaximumAutoModerationRules} by now,
+	 * `ruleList` when a list of a rule of the file is longer than the guild allows by now.
+	 */
+	public constructor(public readonly reason: "ruleLimit" | "ruleList") {
 		super("The server changed since the file of the import was read.");
 	}
 }
@@ -48,7 +55,8 @@ export interface AppliedConfiguration {
  *
  * @throws {@linkcode ConfigurationImportStaleError} When a list of a rule of
  * the file is longer than the limit and than the one the rule of the guild has
- * by now.
+ * by now, or when the rules a file of the bot before V7 adds would take the
+ * guild past {@linkcode MaximumAutoModerationRules} rules by now.
  * @throws A 422 when the file changes the honeypot in a way the bot could not
  * carry out, as `settings.patch` refuses it (`assertHoneypotIsUsable()`).
  */
@@ -62,8 +70,13 @@ export async function applyConfigurationImport(
 	// Awaited here: the lock of the settings is released when this function
 	// returns, which a promise that is only returned would do before it settles.
 	return await writeAutoModerationRules(guildId, async (rules) => {
+		// The rules of a file are held to the limit when it is read; the ones added to the rules of the guild are held
+		// to it now, since the guild may have gained rules meanwhile:
+		if ((getImportedRules(rules, parsed)?.length ?? 0) > MaximumAutoModerationRules) {
+			throw new ConfigurationImportStaleError("ruleLimit");
+		}
 		if (findOversizedRuleLists(rules, parsed).length > 0) {
-			throw new ConfigurationImportStaleError();
+			throw new ConfigurationImportStaleError("ruleList");
 		}
 
 		const plan = planConfigurationImport(transaction.settings, rules, parsed);

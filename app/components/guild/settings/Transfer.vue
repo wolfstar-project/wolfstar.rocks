@@ -125,12 +125,34 @@
 								<span class="text-muted">{{ " " + line.names }}</span>
 							</li>
 						</ul>
+						<p v-if="preview.rules?.mode === 'add'" class="mt-2 text-xs text-muted">
+							{{ ts("guild_settings.general.transfer.rules_added") }}
+						</p>
 						<p
-							v-if="preview.rules && preview.rules.removed.length > 0"
+							v-else-if="preview.rules && preview.rules.removed.length > 0"
 							class="mt-2 text-xs text-warning"
 						>
 							{{ ts("guild_settings.general.transfer.rules_warning") }}
 						</p>
+					</section>
+
+					<section v-if="preview.notices.length > 0">
+						<h4 class="font-semibold">
+							{{
+								ts("guild_settings.general.transfer.notices_heading", {
+									count: preview.notices.length,
+								})
+							}}
+						</h4>
+						<p class="mb-2 text-xs text-muted">
+							{{ ts("guild_settings.general.transfer.notices_description") }}
+						</p>
+						<ul class="space-y-2">
+							<li v-for="(notice, index) in preview.notices" :key="index">
+								<code class="font-mono text-xs text-toned">{{ notice.path }}</code>
+								<span class="block">{{ describeNotice(notice) }}</span>
+							</li>
+						</ul>
 					</section>
 
 					<p v-if="preview.unsupported.length > 0" class="text-xs text-muted">
@@ -171,8 +193,12 @@
 import type { GuildData } from "#server/database";
 import {
 	ConfigurationFileName,
+	getNoticesDigest,
 	MaximumConfigurationFileSize,
+	SettingsSetWithTheBot,
+	type ConfigurationImportRequest,
 	type ConfigurationImportResponse,
+	type ConfigurationNotice,
 	type ConfigurationPreview,
 } from "#shared/utils/settings-transfer";
 
@@ -231,10 +257,10 @@ async function exportFile() {
 	}
 }
 
-function importRequest(guildId: string, text: string, apply: boolean) {
+function importRequest(guildId: string, text: string, apply: boolean, noticesDigest?: string) {
 	return $fetch<ConfigurationImportResponse>(`/api/guilds/${guildId}/settings/import`, {
 		method: "POST",
-		body: { text, apply },
+		body: { text, apply, noticesDigest } satisfies ConfigurationImportRequest,
 	});
 }
 
@@ -269,7 +295,11 @@ async function confirmImport() {
 
 	isImporting.value = true;
 	try {
-		const result = await importRequest(current.guildId, current.text, true);
+		// What the preview left out, so an import that would now leave out other things is refused:
+		const digest = current.result.ok
+			? getNoticesDigest(current.result.preview.notices)
+			: undefined;
+		const result = await importRequest(current.guildId, current.text, true, digest);
 		if (!result.ok) {
 			review.value = { ...current, result };
 			return;
@@ -298,6 +328,43 @@ async function confirmImport() {
 
 function formatValue(value: unknown) {
 	return typeof value === "string" ? value : JSON.stringify(value);
+}
+
+/** What a notice says, with how to set by hand what was not imported. */
+function describeNotice(notice: ConfigurationNotice) {
+	switch (notice.kind) {
+		case "settingFailed":
+			// The dashboard has no field for some of them: the bot's `/settings` does.
+			return SettingsSetWithTheBot.has(notice.target)
+				? ts("guild_settings.general.transfer.notice_setting_failed_bot", {
+						name: notice.name,
+						target: notice.target,
+						reason: notice.reason,
+					})
+				: ts("guild_settings.general.transfer.notice_setting_failed", {
+						name: notice.name,
+						target: notice.target,
+						reason: notice.reason,
+					});
+		case "noEquivalent":
+			return ts("guild_settings.general.transfer.notice_no_equivalent", {
+				name: notice.name,
+			});
+		case "reactionFilter":
+			return ts("guild_settings.general.transfer.notice_reaction_filter", {
+				name: notice.name,
+			});
+		case "ruleAdjusted":
+			return ts("guild_settings.general.transfer.notice_rule_adjusted", {
+				rule: notice.rule,
+				detail: notice.detail,
+			});
+		case "ruleFailed":
+			return ts("guild_settings.general.transfer.notice_rule_failed", {
+				rule: notice.rule,
+				reason: notice.reason,
+			});
+	}
 }
 
 const rulesSummary = computed(() => {

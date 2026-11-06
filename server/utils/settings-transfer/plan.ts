@@ -56,6 +56,39 @@ export interface ConfigurationPlan {
 }
 
 /**
+ * The rules of the guild once the file is imported, `null` when the import
+ * leaves them alone.
+ *
+ * The rules the filters of the bot before V7 became (`addedRules`) are added
+ * to the ones the guild has when this is called, which is again when the
+ * import is written, under the lock of the rules: a rule another admin made,
+ * edited or deleted after the preview is kept as it is then. One of them with
+ * the name of a rule of the guild takes its place.
+ *
+ * Mirrors `getImportedRules()` in the bot.
+ *
+ * @param rules The rules of the guild, as the database has them, oldest first.
+ * @param parsed What the file holds, see `parseConfigurationFile`.
+ */
+export function getImportedRules(
+	rules: readonly AutoModerationRule[],
+	parsed: ParsedConfiguration,
+): ConfigurationRule[] | null {
+	if (parsed.rules !== null) return parsed.rules;
+	if (parsed.addedRules.length === 0) return null;
+
+	const imported = rules.map((rule) => toConfigurationRule(rule));
+	for (const rule of parsed.addedRules) {
+		const lower = rule.name.toLowerCase();
+		const index = imported.findIndex((other) => other.name.toLowerCase() === lower);
+		if (index === -1) imported.push(rule);
+		else imported[index] = rule;
+	}
+
+	return imported;
+}
+
+/**
  * Works out what an import changes.
  *
  * - A setting is only written when its value differs, and the settings the
@@ -65,7 +98,8 @@ export interface ConfigurationPlan {
  *   it is edited in place and keeps its ID and its exempt roles and channels.
  *   One of another type is deleted and made again, since the options of a rule
  *   depend on its type. The rules are left alone when the file has no
- *   `automod` section.
+ *   `automod` section, except for the rules a file of the bot before V7 adds
+ *   to them (`addedRules`, see {@linkcode getImportedRules}).
  * - A message is held to the first enabled rule of a type it infringes, so
  *   the order of the rules of a type decides which punishment a member gets.
  *   A rule has no position of its own, it is read by its ID, and one that is
@@ -97,13 +131,14 @@ export function planConfigurationImport(
 		isEmpty: false,
 	};
 
-	if (parsed.rules !== null) {
+	const imported = getImportedRules(rules, parsed);
+	if (imported !== null) {
 		const unmatched = new Map(rules.map((rule) => [rule.name.toLowerCase(), rule]));
 		// The ID of the last rule of each type that stays, `null` once a rule of the type is made: every rule of the
 		// type the file has after it has to be made after it.
 		const last = new Map<AutoModerationRuleType, bigint | null>();
 
-		for (const data of parsed.rules) {
+		for (const data of imported) {
 			const lower = data.name.toLowerCase();
 			const rule = unmatched.get(lower);
 
@@ -163,7 +198,7 @@ export function findOversizedRuleLists(
 	parsed: ParsedConfiguration,
 ): { rule: string; option: string }[] {
 	const oversized: { rule: string; option: string }[] = [];
-	for (const data of parsed.rules ?? []) {
+	for (const data of getImportedRules(rules, parsed) ?? []) {
 		const lower = data.name.toLowerCase();
 		const current = rules.find(
 			(rule) => rule.type === data.type && rule.name.toLowerCase() === lower,
@@ -229,24 +264,26 @@ export function summarizeConfigurationPlan(
 	parsed: ParsedConfiguration,
 ): ConfigurationPreview {
 	const moved = plan.rules.create.filter(({ replaces }) => replaces !== null);
+	const leavesRules = parsed.rules === null && parsed.addedRules.length === 0;
 	return {
 		settings: plan.settings.map(({ name, before, after }) => ({ name, before, after })),
-		rules:
-			parsed.rules === null
-				? null
-				: {
-						created: plan.rules.create
-							.filter(({ replaces }) => replaces === null)
-							.map(({ data }) => data.name),
-						updated: plan.rules.update.map(({ rule, fields }) => ({
-							name: rule.name,
-							fields: fields.map(String),
-						})),
-						moved: moved.map(({ data }) => data.name),
-						removed: plan.rules.remove.map((rule) => rule.name),
-						unchanged: plan.rules.unchanged,
-					},
+		rules: leavesRules
+			? null
+			: {
+					mode: parsed.rules === null ? "add" : "replace",
+					created: plan.rules.create
+						.filter(({ replaces }) => replaces === null)
+						.map(({ data }) => data.name),
+					updated: plan.rules.update.map(({ rule, fields }) => ({
+						name: rule.name,
+						fields: fields.map(String),
+					})),
+					moved: moved.map(({ data }) => data.name),
+					removed: plan.rules.remove.map((rule) => rule.name),
+					unchanged: plan.rules.unchanged,
+				},
 		unsupported: parsed.unsupported,
+		notices: parsed.notices,
 		isEmpty: plan.isEmpty,
 	};
 }

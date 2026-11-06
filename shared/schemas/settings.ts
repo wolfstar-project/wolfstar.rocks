@@ -17,4 +17,5 @@ export const SettingsUpdateSchema = object({
 export const ConfigurationImportSchema = object({
 	text: pipe(string(), maxLength(MaximumConfigurationFileSize)),
 	apply: optional(boolean()),
+	noticesDigest: optional(pipe(string(), maxLength(16))),
 });

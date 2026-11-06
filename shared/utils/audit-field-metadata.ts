@@ -83,6 +83,17 @@ const AUTO_MODULE_LABELS = {
 };
 
 /**
+ * The settings of what the moderation commands tell, which no section edits:
+ * an import of the settings can change them. The labels are the bot's.
+ */
+const MODERATION_MESSAGE_LABELS = {
+	messagesModerationDm: "Direct Message the Members",
+	messagesModerationReasonDisplay: "Show the Reason",
+	messagesModerationMessageDisplay: "Answer in the Channel",
+	messagesModeratorNameDisplay: "Show the Moderator",
+};
+
+/**
  * `modulesCommands` is no longer a setting, but audit rows that changed it stay
  * in the activity feed.
  */
@@ -130,12 +141,14 @@ export const AUDIT_FIELD_METADATA: Readonly<Record<string, AuditFieldMetadata>> 
 			module.key,
 			{ label: MODULE_LABELS[module.key], type: "boolean", array: false },
 		]),
-		...Object.entries({ ...AUTO_MODULE_LABELS, ...LEGACY_MODULE_LABELS }).map(
-			([key, label]): [string, AuditFieldMetadata] => [
-				key,
-				{ label, type: "boolean", array: false },
-			],
-		),
+		...Object.entries({
+			...AUTO_MODULE_LABELS,
+			...MODERATION_MESSAGE_LABELS,
+			...LEGACY_MODULE_LABELS,
+		}).map(([key, label]): [string, AuditFieldMetadata] => [
+			key,
+			{ label, type: "boolean", array: false },
+		]),
 		["language", { label: "Language", type: "language", array: false }],
 		["timezone", { label: "Time Zone", type: "string", array: false }],
 		["commandsDisabled", { label: "Disabled Commands", type: "command-name", array: true }],

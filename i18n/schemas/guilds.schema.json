@@ -1599,6 +1599,15 @@
 										},
 										"type_locked": {
 											"type": "string"
+										},
+										"discard_prompt": {
+											"type": "string"
+										},
+										"keep_editing": {
+											"type": "string"
+										},
+										"discard": {
+											"type": "string"
 										}
 									},
 									"additionalProperties": false
@@ -1997,6 +2006,339 @@
 											"type": "string"
 										},
 										"name": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								}
+							},
+							"additionalProperties": false
+						},
+						"words_editor": {
+							"type": "object",
+							"properties": {
+								"title": {
+									"type": "string"
+								},
+								"help": {
+									"type": "string"
+								},
+								"add_heading": {
+									"type": "string"
+								},
+								"edit_heading": {
+									"type": "string"
+								},
+								"letters": {
+									"type": "string"
+								},
+								"letters_placeholder": {
+									"type": "string"
+								},
+								"letters_help": {
+									"type": "string"
+								},
+								"add": {
+									"type": "string"
+								},
+								"save_edit": {
+									"type": "string"
+								},
+								"cancel_edit": {
+									"type": "string"
+								},
+								"mode": {
+									"type": "object",
+									"properties": {
+										"legend": {
+											"type": "string"
+										},
+										"whole": {
+											"type": "string"
+										},
+										"whole_example": {
+											"type": "string"
+										},
+										"continues": {
+											"type": "string"
+										},
+										"continues_example": {
+											"type": "string"
+										},
+										"prefixed": {
+											"type": "string"
+										},
+										"prefixed_example": {
+											"type": "string"
+										},
+										"anywhere": {
+											"type": "string"
+										},
+										"anywhere_example": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"tolerance": {
+									"type": "object",
+									"properties": {
+										"title": {
+											"type": "string"
+										},
+										"help": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"alternatives": {
+									"type": "object",
+									"properties": {
+										"toggle": {
+											"type": "string"
+										},
+										"help": {
+											"type": "string"
+										},
+										"letter": {
+											"type": "string"
+										},
+										"letter_option": {
+											"type": "string"
+										},
+										"characters": {
+											"type": "string"
+										},
+										"characters_placeholder": {
+											"type": "string"
+										},
+										"example": {
+											"type": "string"
+										},
+										"empty": {
+											"type": "string"
+										},
+										"summary": {
+											"type": "string"
+										},
+										"remove": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"advanced": {
+									"type": "object",
+									"properties": {
+										"toggle": {
+											"type": "string"
+										},
+										"help": {
+											"type": "string"
+										},
+										"field": {
+											"type": "string"
+										},
+										"not_simple": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"preview": {
+									"type": "object",
+									"properties": {
+										"title": {
+											"type": "string"
+										},
+										"field": {
+											"type": "string"
+										},
+										"placeholder": {
+											"type": "string"
+										},
+										"limit": {
+											"type": "string"
+										},
+										"caught": {
+											"type": "string"
+										},
+										"caught_none": {
+											"type": "string"
+										},
+										"running": {
+											"type": "string"
+										},
+										"timeout": {
+											"type": "string"
+										},
+										"error": {
+											"type": "string"
+										},
+										"empty": {
+											"type": "string"
+										},
+										"examples": {
+											"type": "string"
+										},
+										"example_caught": {
+											"type": "string"
+										},
+										"example_passes": {
+											"type": "string"
+										},
+										"kinds": {
+											"type": "object",
+											"properties": {
+												"plain": {
+													"type": "string"
+												},
+												"repeated": {
+													"type": "string"
+												},
+												"separated": {
+													"type": "string"
+												},
+												"continues": {
+													"type": "string"
+												},
+												"prefixed": {
+													"type": "string"
+												},
+												"inside": {
+													"type": "string"
+												}
+											},
+											"additionalProperties": false
+										}
+									},
+									"additionalProperties": false
+								},
+								"list": {
+									"type": "object",
+									"properties": {
+										"heading": {
+											"type": "string"
+										},
+										"search": {
+											"type": "string"
+										},
+										"empty": {
+											"type": "string"
+										},
+										"empty_search": {
+											"type": "string"
+										},
+										"edit": {
+											"type": "string"
+										},
+										"remove": {
+											"type": "string"
+										},
+										"removed": {
+											"type": "string"
+										},
+										"added": {
+											"type": "string"
+										},
+										"updated": {
+											"type": "string"
+										},
+										"covered": {
+											"type": "string"
+										},
+										"modes": {
+											"type": "object",
+											"properties": {
+												"whole": {
+													"type": "string"
+												},
+												"continues": {
+													"type": "string"
+												},
+												"prefixed": {
+													"type": "string"
+												},
+												"anywhere": {
+													"type": "string"
+												}
+											},
+											"additionalProperties": false
+										}
+									},
+									"additionalProperties": false
+								},
+								"import": {
+									"type": "object",
+									"properties": {
+										"open": {
+											"type": "string"
+										},
+										"export": {
+											"type": "string"
+										},
+										"field": {
+											"type": "string"
+										},
+										"file": {
+											"type": "string"
+										},
+										"confirm": {
+											"type": "string"
+										},
+										"cancel": {
+											"type": "string"
+										},
+										"result": {
+											"type": "string"
+										},
+										"skipped_line": {
+											"type": "string"
+										},
+										"file_error": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"problems": {
+									"type": "object",
+									"properties": {
+										"empty": {
+											"type": "string"
+										},
+										"tooShort": {
+											"type": "string"
+										},
+										"tooLong": {
+											"type": "string"
+										},
+										"duplicate": {
+											"type": "string"
+										},
+										"brackets": {
+											"type": "string"
+										},
+										"listFull": {
+											"type": "string"
+										},
+										"edgeWildcard": {
+											"type": "string"
+										},
+										"letterBrackets": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"notes": {
+									"type": "object",
+									"properties": {
+										"innerWildcard": {
+											"type": "string"
+										},
+										"normalized": {
 											"type": "string"
 										}
 									},

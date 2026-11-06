@@ -1,10 +1,11 @@
 <template>
 	<UModal
-		v-model:open="open"
+		:open="open"
 		:title="title"
 		:description="description"
 		:dismissible="!saving"
 		:ui="{ content: 'sm:max-w-205' }"
+		@update:open="requestOpen"
 	>
 		<template #body>
 			<form :id="formId" class="space-y-5" novalidate @submit.prevent="submit">
@@ -53,6 +54,18 @@
 							:aria-label="ts('guild_settings.automod.rules.editor.enabled')"
 						/>
 					</UFormField>
+
+					<fieldset v-if="draft.type === 'Words'" class="space-y-3">
+						<legend class="editor-heading">
+							<span>{{ ts("guild_settings.automod.words_editor.title") }}</span>
+							<span aria-hidden="true"></span>
+						</legend>
+						<LazyGuildAutomodWordsEditor
+							ref="wordsEditor"
+							:model-value="listOption('words')"
+							@update:model-value="draft.options.words = $event"
+						/>
+					</fieldset>
 
 					<fieldset v-if="optionFields.length > 0" class="space-y-4">
 						<legend class="editor-heading">
@@ -330,7 +343,22 @@
 		</template>
 
 		<template #footer>
-			<div class="flex w-full items-center gap-2.5">
+			<div
+				v-if="confirmingDiscard"
+				class="flex w-full flex-wrap items-center gap-2.5"
+				role="alert"
+			>
+				<p class="grow text-sm">
+					{{ ts("guild_settings.automod.rules.editor.discard_prompt") }}
+				</p>
+				<UButton color="neutral" variant="outline" @click="confirmingDiscard = false">
+					{{ ts("guild_settings.automod.rules.editor.keep_editing") }}
+				</UButton>
+				<UButton color="error" @click="discard">
+					{{ ts("guild_settings.automod.rules.editor.discard") }}
+				</UButton>
+			</div>
+			<div v-else class="flex w-full items-center gap-2.5">
 				<UButton
 					v-if="mode === 'rule' && rule === null"
 					color="neutral"
@@ -347,7 +375,7 @@
 					variant="outline"
 					class="dialog-cancel"
 					:disabled="saving"
-					@click="open = false"
+					@click="requestOpen(false)"
 				>
 					{{ ts("guild_settings.automod.rules.editor.cancel") }}
 				</UButton>
@@ -476,6 +504,9 @@ const logChannelError = computed(() =>
 
 const draft = reactive<AutomodRuleDraft>(createAutomodRuleDraft(type));
 const submitted = ref(false);
+const snapshot = ref("");
+const confirmingDiscard = ref(false);
+const wordsEditor = useTemplateRef("wordsEditor");
 
 // The form is filled when the modal opens rather than when the prop changes,
 // so reopening it after a cancel never shows the abandoned edit.
@@ -490,9 +521,27 @@ watch(
 				: applyAutomodRuleDefaults(createAutomodRuleDraft(type), defaults),
 		);
 		submitted.value = false;
+		confirmingDiscard.value = false;
+		snapshot.value = JSON.stringify(draft);
 	},
 	{ immediate: true },
 );
+
+// Closing a form with changes asks first, whichever way it is closed: the
+// cancel button, the close button, Escape or a click outside.
+function requestOpen(value: boolean) {
+	const pendingWord = wordsEditor.value?.hasPending === true;
+	if (value || saving || (JSON.stringify(draft) === snapshot.value && !pendingWord)) {
+		open.value = value;
+		return;
+	}
+	confirmingDiscard.value = true;
+}
+
+function discard() {
+	confirmingDiscard.value = false;
+	open.value = false;
+}
 
 interface OptionField {
 	key: string;
@@ -510,15 +559,26 @@ const optionFields = computed<OptionField[]>(() => {
 		>
 	)[draft.type];
 
-	return Object.entries(draft.options).map(([key, value]): OptionField => {
-		const labelKey = OPTION_LABEL_KEYS[key];
-		const label = labelKey ? ts(labelKey) : key;
-		if (typeof value === "number") {
-			const limit = limits?.[key];
-			return { key, label, kind: "number", minimum: limit?.minimum, maximum: limit?.maximum };
-		}
-		return { key, label, kind: typeof value === "boolean" ? "boolean" : "list" };
-	});
+	return (
+		Object.entries(draft.options)
+			// The words have their own editor.
+			.filter(([key]) => !(draft.type === "Words" && key === "words"))
+			.map(([key, value]): OptionField => {
+				const labelKey = OPTION_LABEL_KEYS[key];
+				const label = labelKey ? ts(labelKey) : key;
+				if (typeof value === "number") {
+					const limit = limits?.[key];
+					return {
+						key,
+						label,
+						kind: "number",
+						minimum: limit?.minimum,
+						maximum: limit?.maximum,
+					};
+				}
+				return { key, label, kind: typeof value === "boolean" ? "boolean" : "list" };
+			})
+	);
 });
 
 function numberOption(key: string): number {

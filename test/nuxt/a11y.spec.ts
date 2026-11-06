@@ -61,6 +61,7 @@ import {
 	GuildAppealsForms,
 	GuildAuditChanges,
 	GuildAutomodDurationInput,
+	GuildAutomodWordsEditor,
 	GuildJoinguardAllowList,
 	GuildJoinguardCheckpoint,
 	GuildJoinguardNotices,
@@ -633,6 +634,24 @@ describe("component accessibility audits", () => {
 		it("should have no accessibility violations", async () => {
 			const component = await mountSuspended(GuildAutomodDurationInput, {
 				props: { label: "Duration", modelValue: 600_000 },
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildAutomodWordsEditor", () => {
+		it("should have no accessibility violations with words", async () => {
+			const component = await mountSuspended(GuildAutomodWordsEditor, {
+				props: { modelValue: ["bad", "*bad*", "parola*"] },
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("should have no accessibility violations when empty", async () => {
+			const component = await mountSuspended(GuildAutomodWordsEditor, {
+				props: { modelValue: [] },
 			});
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);

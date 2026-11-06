@@ -531,7 +531,10 @@
 					"threshold_duration": "Contate nell'arco di",
 					"threshold_maximum": "Infrazioni prima della punizione",
 					"type": "Tipo",
-					"type_locked": "Il tipo di una regola non si può cambiare."
+					"type_locked": "Il tipo di una regola non si può cambiare.",
+					"discard_prompt": "Hai modifiche non salvate. Vuoi chiudere comunque?",
+					"keep_editing": "Continua a modificare",
+					"discard": "Scarta le modifiche"
 				},
 				"empty_description": "Crea una regola per iniziare a filtrare i messaggi su questo server.",
 				"empty_title": "Ancora nessuna regola",
@@ -665,6 +668,117 @@
 				"Zalgo": {
 					"description": "Messaggi in cui un carattere porta più segni combinati del massimo.",
 					"name": "Testo Zalgo"
+				}
+			},
+			"words_editor": {
+				"title": "Parole vietate",
+				"help": "Il filtro agisce sui messaggi che contengono una di queste parole. Maiuscole e minuscole non contano.",
+				"add_heading": "Aggiungi una parola",
+				"edit_heading": "Modifica «{word}»",
+				"letters": "Parola",
+				"letters_placeholder": "per esempio: idiota",
+				"letters_help": "Da {minimum} a {maximum} caratteri. Viene salvata in minuscolo.",
+				"add": "Aggiungi la parola",
+				"save_edit": "Salva la parola",
+				"cancel_edit": "Annulla la modifica",
+				"mode": {
+					"legend": "Come deve comparire",
+					"whole": "Solo la parola intera",
+					"whole_example": "«brutto» prende «che brutto!» ma non «bruttone»",
+					"continues": "Anche se continua",
+					"continues_example": "«parola» prende anche «parolaccia»",
+					"prefixed": "Anche se ha lettere prima",
+					"prefixed_example": "«brutto» prende anche «abbrutto»",
+					"anywhere": "Ovunque nel testo",
+					"anywhere_example": "«brutto» prende anche «imbruttolito», dentro un'altra parola"
+				},
+				"tolerance": {
+					"title": "Ignora sempre lettere ripetute e spazi o punti in mezzo",
+					"help": "WolfStar legge sempre la parola così: «brrrutto», «b.r.u.t.t.o» e «b r u t t o» valgono come «brutto»."
+				},
+				"alternatives": {
+					"toggle": "Alternative per una lettera",
+					"help": "Scegli una lettera, poi scrivi gli altri caratteri con cui si può scrivere.",
+					"letter": "Lettera",
+					"letter_option": "Lettera {position}: «{letter}»",
+					"characters": "Accetta anche",
+					"characters_placeholder": "per esempio: @4",
+					"example": "Per la «a» di «cane», «@4» prende anche «c@ne» e «c4ne».",
+					"empty": "Scrivi prima la parola per sceglierne una lettera.",
+					"summary": "«{letter}» anche come {characters}",
+					"remove": "Togli le alternative per «{letter}»"
+				},
+				"advanced": {
+					"toggle": "Avanzate: modifica il testo salvato",
+					"help": "Il testo che WolfStar salva. Un * all'inizio o alla fine lascia continuare la parola; [abc] accetta uno dei caratteri, [a-z] uno di un intervallo.",
+					"field": "Testo salvato",
+					"not_simple": "Il modulo semplice non può mostrare questa parola: modificala qui."
+				},
+				"preview": {
+					"title": "Prova un messaggio",
+					"field": "Messaggio di prova",
+					"placeholder": "Scrivi un messaggio per vedere cosa prende il filtro",
+					"limit": "Vengono controllati solo i primi {count} caratteri.",
+					"caught": "Preso: {parts}",
+					"caught_none": "In questo messaggio non verrebbe preso niente.",
+					"running": "Controllo in corso…",
+					"timeout": "Il controllo di questo messaggio ha richiesto troppo tempo. Anche WolfStar ci rinuncia, quindi il messaggio non verrebbe filtrato. Prova una parola più corta.",
+					"error": "Il controllo non è partito. Ricarica la pagina per riprovare.",
+					"empty": "Aggiungi una parola o scrivine una sopra per provare un messaggio.",
+					"examples": "Esempi",
+					"example_caught": "Preso",
+					"example_passes": "Passa",
+					"kinds": {
+						"plain": "la parola da sola",
+						"repeated": "una lettera ripetuta",
+						"separated": "punti in mezzo",
+						"continues": "seguita da altre lettere",
+						"prefixed": "con lettere prima",
+						"inside": "dentro un'altra parola"
+					}
+				},
+				"list": {
+					"heading": "Parole ({count}/{maximum})",
+					"search": "Cerca tra le parole",
+					"empty": "Ancora nessuna parola. Aggiungi la prima qui sopra.",
+					"empty_search": "Nessuna parola corrisponde a «{query}».",
+					"edit": "Modifica «{word}»",
+					"remove": "Rimuovi «{word}»",
+					"removed": "«{word}» rimossa.",
+					"added": "«{word}» aggiunta.",
+					"updated": "«{word}» salvata.",
+					"covered": "Già presa da «{other}»",
+					"modes": {
+						"whole": "parola intera",
+						"continues": "può continuare",
+						"prefixed": "lettere prima",
+						"anywhere": "ovunque"
+					}
+				},
+				"import": {
+					"open": "Importa parole",
+					"export": "Esporta parole",
+					"field": "Parole da importare, una per riga",
+					"file": "Scegli un file .txt",
+					"confirm": "Importa queste parole",
+					"cancel": "Annulla l'importazione",
+					"result": "Aggiunte {added}. Saltate {skipped}.",
+					"skipped_line": "«{line}»: {reason}",
+					"file_error": "Il file non si può leggere."
+				},
+				"problems": {
+					"empty": "Scrivi almeno una lettera: due * da soli prenderebbero ogni messaggio.",
+					"tooShort": "Usa almeno {minimum} caratteri.",
+					"tooLong": "Usa al massimo {maximum} caratteri.",
+					"duplicate": "Questa parola è già nell'elenco.",
+					"brackets": "Una [ ha bisogno della sua ], con almeno un carattere in mezzo.",
+					"listFull": "L'elenco è pieno: contiene già {maximum} parole.",
+					"edgeWildcard": "Togli il * da qui e scegli invece «Come deve comparire» qui sotto.",
+					"letterBrackets": "Le parentesi quadre qui hanno un significato loro. Usa invece «Alternative per una lettera»."
+				},
+				"notes": {
+					"innerWildcard": "Il * in mezzo qui conta come un asterisco, non come «lettere qualsiasi». Per prendere la parola ovunque, scegli «Ovunque nel testo».",
+					"normalized": "Verrà salvata come «{word}»."
 				}
 			}
 		},

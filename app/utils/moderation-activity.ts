@@ -1,3 +1,7 @@
+import { barY, defineChart, ruleY, text } from "@tanstack/charts";
+import { scaleBand } from "@tanstack/charts/scales/band";
+import { scaleLinear } from "@tanstack/charts/scales/linear";
+
 export interface ModerationActivityDay {
 	/** Local calendar day, `YYYY-MM-DD`. */
 	key: string;
@@ -54,4 +58,48 @@ export function bucketModerationActivity(
 	}
 
 	return buckets;
+}
+
+/** The widest a bar of the chart gets, whatever the width of the card. */
+const BAR_MAX_WIDTH = 44;
+
+/**
+ * The chart of the overview, as the console mockup draws it, for `UChart`'s
+ * `definition`: narrow bars with their count over them, the busiest day in the
+ * full colour and the others in a tint of it, no y axis and no grid. `UChart`'s
+ * own bar chart stretches each bar across its day and has no labels on bars.
+ */
+export function moderationActivityChart(
+	days: readonly ModerationActivityDay[],
+	formatCount: (value: number) => string,
+) {
+	const busiest = Math.max(0, ...days.map((day) => day.count));
+	const isBusiest = (day: ModerationActivityDay) => busiest > 0 && day.count === busiest;
+	return defineChart({
+		marks: [
+			barY(days, {
+				x: "label",
+				y: "count",
+				fill: (day) =>
+					isBusiest(day)
+						? "var(--color-primary)"
+						: "color-mix(in srgb, var(--color-primary) 45%, var(--field-surface))",
+				maxThickness: BAR_MAX_WIDTH,
+				radius: { end: 4 },
+			}),
+			text(days, {
+				x: "label",
+				y: "count",
+				text: (day) => formatCount(day.count),
+				dy: -8,
+				fill: "var(--ui-text-toned)",
+			}),
+			ruleY([0]),
+		],
+		scales: {
+			x: { scale: () => scaleBand().padding(0.2) },
+			// Room over the busiest bar for its count:
+			y: { scale: scaleLinear().domain([0, Math.max(1, busiest * 1.2)]), axis: false },
+		},
+	});
 }

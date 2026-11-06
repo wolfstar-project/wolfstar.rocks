@@ -78,10 +78,13 @@
 					{{ ts("guild_settings.general.mod_actions_total", { count: moderationTotal }) }}
 				</span>
 			</div>
-			<GuildActivityChart
-				:days="activityDays"
-				:label="chartAria"
-				:format-count="formatCount"
+			<UChart
+				type="bar"
+				class="activity-chart"
+				:definition="chartDefinition"
+				:height="180"
+				:tooltip="false"
+				:aria-label="chartAria"
 			/>
 			<p v-if="isChartPartial" class="mt-3 text-xs text-muted">
 				{{ ts("guild_settings.general.mod_actions_partial", { count: CHART_ENTRY_LIMIT }) }}
@@ -325,6 +328,8 @@ const countFormat = computed(
 );
 const formatCount = (value: number) => countFormat.value.format(value);
 
+const chartDefinition = computed(() => moderationActivityChart(activityDays.value, formatCount));
+
 // A server nobody has changed yet reads differently from a quiet week.
 const hasNoActivityEver = computed(
 	() => latestAuditStatus.value === "success" && latestAuditEntries.value.length === 0,
@@ -485,6 +490,12 @@ async function onError(event: FormErrorEvent) {
 
 <style scoped>
 @reference "@/assets/css/main.css";
+
+/* The days under the bars and the counts over them, as the mockup sets them. */
+.activity-chart :deep(text) {
+	font-family: var(--font-mono);
+	font-size: 0.6875rem;
+}
 
 .setup-resume {
 	@apply flex flex-wrap items-center gap-3 rounded-[10px] px-3.5 py-3;

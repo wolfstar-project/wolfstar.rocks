@@ -179,6 +179,9 @@
 
 	<!-- Not settings: the forms are rows of their own, written as they are edited. -->
 	<GuildAppealsForms v-if="state.appealsEnabled" class="mt-5" />
+
+	<!-- Not settings either: the appeals members sent, which the staff decides. -->
+	<GuildAppealsQueue v-if="state.appealsEnabled" class="mt-5" />
 </template>
 
 <script setup lang="ts">

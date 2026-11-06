@@ -1,13 +1,22 @@
 import type { DirectMessageThread, DirectMessageThreadId } from "~/utils/direct-messages";
 import { DIRECT_MESSAGE_THREADS, unreadNews } from "~/utils/direct-messages";
 
+/** The pages of the Home: a bot's thread, or the member's own appeals. */
+export type HomePage = "thread" | "appeals";
+
 /**
  * The Home's direct messages: which thread is open, what has not been read
  * yet, and the reader's own reactions. Read markers and reactions are kept in
  * this browser; nothing here reaches the server.
+ *
+ * The Home also holds the member's appeals, a page of its own in the sidebar
+ * above the threads, so which of the two is open is kept here too.
  */
 export function useDirectMessages() {
 	const threadId = useState<DirectMessageThreadId>("dm:thread", () => "wolfstar");
+	const page = useState<HomePage>("home:page", () => "thread");
+	// The server of the bot's appeal link, listed even when the member is not in it.
+	const appealGuildId = useState<string | null>("home:appeal-guild", () => null);
 	const lastRead = useLocalStorage<Partial<Record<DirectMessageThreadId, number>>>(
 		"wolfstar-dm-read",
 		{},
@@ -52,12 +61,22 @@ export function useDirectMessages() {
 
 	function openThread(id: DirectMessageThreadId) {
 		threadId.value = id;
+		page.value = "thread";
+	}
+
+	/** Opens the member's appeals, with the server of a link when they came from one. */
+	function openAppeals(guildId?: string) {
+		page.value = "appeals";
+		if (guildId) appealGuildId.value = guildId;
 	}
 
 	return {
+		appealGuildId,
 		hasReacted,
 		markRead,
+		openAppeals,
 		openThread,
+		page,
 		thread,
 		threadId,
 		threads,

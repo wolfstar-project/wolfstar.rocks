@@ -41,6 +41,16 @@ function input(label: string): HTMLInputElement {
 	return found;
 }
 
+function switchOf(label: string): HTMLButtonElement {
+	const found = [...dialog().querySelectorAll<HTMLLabelElement>("label")].find(
+		(element) => element.textContent?.trim() === label,
+	);
+	const control = found?.htmlFor ? document.getElementById(found.htmlFor) : null;
+	if (!(control instanceof HTMLButtonElement))
+		throw new Error(`expected a switch labelled "${label}"`);
+	return control;
+}
+
 async function type(element: HTMLInputElement, value: string) {
 	element.value = value;
 	element.dispatchEvent(new Event("input", { bubbles: true }));
@@ -75,6 +85,41 @@ describe("GuildAppealsFormEditor", () => {
 		expect(dialog().querySelectorAll("li.question-card")).toHaveLength(1);
 		expect(dialog().textContent).toContain("Question 1");
 		expect(dialog().textContent).toContain("Text");
+	});
+
+	// The dialog opens on its first field, not on the close button that comes first.
+	it("opens on the name field", async () => {
+		await mount();
+
+		await vi.waitFor(() => expect(document.activeElement).toBe(input("Name")));
+	});
+
+	it("takes the kinds of case with switches, none picked meaning every kind", async () => {
+		const wrapper = await mount();
+		await type(input("Name"), "Ban appeal");
+		await type(input("Label"), "Why?");
+
+		expect(switchOf("Bans").getAttribute("aria-checked")).toBe("false");
+
+		button("Create form").click();
+		await vi.waitFor(() => expect(wrapper.emitted("save")).toBeDefined());
+		expect(lastSaved(wrapper)!.types).toStrictEqual([]);
+
+		switchOf("Bans").click();
+		switchOf("Timeouts").click();
+		await nextTick();
+		expect(switchOf("Bans").getAttribute("aria-checked")).toBe("true");
+		expect(switchOf("Mutes").getAttribute("aria-checked")).toBe("false");
+
+		button("Create form").click();
+		await vi.waitFor(() => expect(wrapper.emitted("save")).toHaveLength(2));
+		expect(lastSaved(wrapper)!.types).toStrictEqual([0, 15]);
+
+		switchOf("Bans").click();
+		await nextTick();
+		button("Create form").click();
+		await vi.waitFor(() => expect(wrapper.emitted("save")).toHaveLength(3));
+		expect(lastSaved(wrapper)!.types).toStrictEqual([15]);
 	});
 
 	it("refuses to create a form without a name, and says so", async () => {

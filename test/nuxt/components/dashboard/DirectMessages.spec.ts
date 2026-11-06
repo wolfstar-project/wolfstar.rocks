@@ -1,7 +1,12 @@
 import { DashboardDirectMessages, DashboardDirectMessageThread } from "#components";
-import { mountSuspended } from "@nuxt/test-utils/runtime";
-import { beforeEach, describe, expect, it } from "vitest";
+import { mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { DIRECT_MESSAGE_THREADS } from "~/utils/direct-messages";
+
+registerEndpoint("/api/users/appeals", {
+	method: "GET",
+	handler: () => ({ entries: [], openCount: 2 }),
+});
 
 const wolfstarNews = DIRECT_MESSAGE_THREADS.find((thread) => thread.id === "wolfstar")?.news ?? [];
 
@@ -38,12 +43,29 @@ describe("dashboard direct messages", () => {
 		const list = await mountSuspended(DashboardDirectMessages);
 
 		await list.get('input[type="search"]').setValue("star");
-		expect(list.findAll(".dm-row")).toHaveLength(2);
+		expect(list.findAll(".dm-row:not(.dm-row--page)")).toHaveLength(2);
 		await list.get('input[type="search"]').setValue("staryl");
-		expect(list.findAll(".dm-row")).toHaveLength(1);
+		expect(list.findAll(".dm-row:not(.dm-row--page)")).toHaveLength(1);
 
-		await list.get(".dm-row").trigger("click");
+		await list.get(".dm-row:not(.dm-row--page)").trigger("click");
 		expect(useDirectMessages().threadId.value).toBe("staryl");
+		list.unmount();
+	});
+
+	it("switches the Home to the member's appeals, with how many cases can be appealed", async () => {
+		const list = await mountSuspended(DashboardDirectMessages);
+		const row = list.get(".dm-row--page");
+
+		await vi.waitFor(() => expect(row.text()).toContain("2"));
+		expect(row.text()).toContain("Appeals");
+		expect(row.attributes("aria-current")).toBeUndefined();
+
+		await row.trigger("click");
+		expect(useDirectMessages().page.value).toBe("appeals");
+		expect(row.attributes("aria-current")).toBe("page");
+
+		await list.get(".dm-row:not(.dm-row--page)").trigger("click");
+		expect(useDirectMessages().page.value).toBe("thread");
 		list.unmount();
 	});
 });

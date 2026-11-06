@@ -14,6 +14,27 @@
 		</div>
 
 		<nav class="dm-list" :aria-label="ts('dashboard.dm.title')">
+			<!-- The member's own appeals: a page of the Home above the threads. -->
+			<button
+				type="button"
+				class="dm-row dm-row--page"
+				:class="{ 'dm-row--current': page === 'appeals' }"
+				:aria-current="page === 'appeals' ? 'page' : undefined"
+				@click="showAppeals"
+			>
+				<UIcon name="ic:round-balance" class="size-5.5 shrink-0" aria-hidden="true" />
+				<span class="grow truncate text-[0.9375rem] font-semibold">
+					{{ ts("dashboard.my_appeals.title") }}
+				</span>
+				<span v-if="openCount > 0" class="dm-unread">
+					<span aria-hidden="true">{{ openCount }}</span>
+					<span class="sr-only">{{
+						ts("dashboard.my_appeals.badge", { count: openCount })
+					}}</span>
+				</span>
+			</button>
+			<div class="dm-divider" aria-hidden="true"></div>
+
 			<p class="dm-list-label">{{ ts("dashboard.dm.title") }}</p>
 			<button
 				v-for="row of rows"
@@ -69,7 +90,9 @@ const emit = defineEmits<{
 }>();
 
 const { ts } = useI18n();
-const { threads, threadId, openThread, unreadCount } = useDirectMessages();
+const { threads, threadId, openThread, unreadCount, page, openAppeals, appealGuildId } =
+	useDirectMessages();
+const { openCount } = useMyAppeals({ guild: appealGuildId });
 const { user: authUser } = useUserSession();
 const { user: discordUser } = useUser(authUser);
 const readerName = computed(
@@ -93,7 +116,7 @@ const rows = computed(() => {
 					: ts("dashboard.dm.no_messages");
 			return {
 				avatar: thread.avatar,
-				current: thread.id === threadId.value,
+				current: page.value === "thread" && thread.id === threadId.value,
 				id: thread.id,
 				name: thread.name,
 				preview,
@@ -104,6 +127,11 @@ const rows = computed(() => {
 
 function open(id: DirectMessageThreadId) {
 	openThread(id);
+	emit("navigate");
+}
+
+function showAppeals() {
+	openAppeals();
 	emit("navigate");
 }
 </script>
@@ -173,6 +201,20 @@ function open(id: DirectMessageThreadId) {
 .dm-row:focus-visible {
 	outline: 2px solid var(--color-primary);
 	outline-offset: -2px;
+}
+
+.dm-row--page {
+	@apply min-h-10.5 gap-3 pr-2 pl-2.5;
+	color: var(--ui-text-toned);
+}
+
+.dm-row--page.dm-row--current {
+	color: var(--ui-text-highlighted);
+}
+
+.dm-divider {
+	@apply mx-2 mt-2 mb-3 h-px;
+	background-color: var(--home-border-subtle);
 }
 
 .dm-unread {

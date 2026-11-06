@@ -173,17 +173,15 @@
 							/>
 						</li>
 					</ol>
-					<UButton
-						color="neutral"
-						variant="outline"
-						size="sm"
-						icon="ic:round-add"
-						class="mt-2"
+					<button
+						type="button"
+						class="option-add"
 						:disabled="question.options.length >= AppealFormLimits.options.maximum"
 						@click="addOption"
 					>
+						<UIcon name="ic:round-add" class="size-4" aria-hidden="true" />
 						{{ ts("guild_settings.appeals.editor.add_option") }}
-					</UButton>
+					</button>
 				</UFormField>
 				<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
 					<UFormField
@@ -327,9 +325,30 @@ function removeOption(optionIndex: number) {
 <style scoped>
 @reference "@/assets/css/main.css";
 
+/* A veil on the dialog, as the console's step rows are: the fields inside it
+   keep the field surface and read as inset, not as one with the card. */
 .question-card {
-	@apply flex flex-col gap-3 rounded-[8px] p-3;
-	background-color: var(--field-surface);
+	@apply flex flex-col gap-3 rounded-[8px] bg-base-content/8 p-3;
+}
+
+/* Adding an option: the dashed add button of the editors, in a smaller size. */
+.option-add {
+	@apply mt-2 inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-[8px] bg-transparent px-3 text-[0.8125rem] font-semibold;
+	border: 1px dashed var(--field-border);
+	color: var(--ui-text-toned);
+}
+
+.option-add:hover:not(:disabled) {
+	background-color: color-mix(in oklab, var(--field-surface) 60%, transparent);
+}
+
+.option-add:disabled {
+	@apply cursor-default opacity-50;
+}
+
+.option-add:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: -1px;
 }
 
 .question-kind {

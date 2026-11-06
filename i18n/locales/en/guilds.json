@@ -82,7 +82,7 @@
 				"help": "Help",
 				"help_help": "Shown under the field.",
 				"icon": "Icon",
-				"icon_help": "An emoji, or a custom emoji written as <:name:id>.",
+				"icon_help": "Pick an emoji, or one of this server's.",
 				"images_only": "Images only",
 				"label": "Label",
 				"lock_reason": "Lock reason",
@@ -117,6 +117,42 @@
 				"restricted_roles_help": "A member who has one of them can't use the form.",
 				"save": "Save form"
 			},
+			"emoji": {
+				"categories": {
+					"activities": "Activities",
+					"food": "Food & Drink",
+					"nature": "Nature",
+					"objects": "Objects",
+					"people": "People",
+					"server": "This server",
+					"smileys": "Smileys & Emotion",
+					"symbols": "Symbols",
+					"travel": "Travel & Places"
+				},
+				"categories_aria": "Emoji categories",
+				"dialog_aria": "Emoji picker",
+				"hint": "Pick an emoji",
+				"load_failed": "The emoji could not be loaded.",
+				"loading": "Loading emoji…",
+				"none": "No emoji found",
+				"none_help": "Try another word.",
+				"remove": "Remove the icon",
+				"results": "Search results",
+				"retry": "Try again",
+				"search_aria": "Search emoji",
+				"search_clear": "Clear the search",
+				"search_placeholder": "Find the perfect emoji",
+				"skin_tone": "Skin tone",
+				"tones": {
+					"dark": "Dark",
+					"default": "Default",
+					"light": "Light",
+					"medium": "Medium",
+					"medium_dark": "Medium dark",
+					"medium_light": "Medium light"
+				},
+				"trigger_aria": "Pick an icon"
+			},
 			"form_aria": "Appeals settings form",
 			"form_notice": "The direct message of a punishment links to an appeal page on WolfStar.rocks that does not open a form yet. What you set here applies once it does.",
 			"form_notice_title": "The appeal form is in development",
@@ -133,7 +169,7 @@
 				"enable_aria": "Enable form {name}",
 				"errors": {
 					"generic": "Something went wrong. Please try again.",
-					"icon": "Use an emoji, or a custom emoji written as <:name:id>.",
+					"icon": "Pick an emoji from the list.",
 					"invalid": "The server refused one of the values. Check the fields and try again.",
 					"limit": "This server already has the maximum number of forms.",
 					"nameInvalid": "Use a name of 1 to 100 characters that isn't just a number.",
@@ -183,6 +219,71 @@
 			"off_title": "Appeals are off",
 			"on_summary": "Members can appeal the cases chosen below.",
 			"per_member": "per member",
+			"queue": {
+				"accept": "Accept",
+				"accept_aria": "Accept the appeal of {name}",
+				"case_number": "Case #{id}",
+				"decision": {
+					"at": "Decided {time}",
+					"by": "Decided by {name}, {time}",
+					"reason": "Reason: {reason}"
+				},
+				"deny": "Deny",
+				"deny_aria": "Deny the appeal of {name}",
+				"description": "Accepting undoes the case and tells the member; denying only tells them.",
+				"dialog": {
+					"accept_description": "{name} appealed case #{caseId}. Accepting undoes the case and tells them.",
+					"accept_title": "Accept this appeal?",
+					"cancel": "Cancel",
+					"deny_description": "{name} appealed case #{caseId}. Denying only tells them: the case stays.",
+					"deny_title": "Deny this appeal?",
+					"reason_help": "The member reads it in the direct message.",
+					"reason_label": "Reason (optional)",
+					"reason_placeholder": "e.g. Thank you for explaining."
+				},
+				"empty": {
+					"accepted_description": "The appeals you accept show up here.",
+					"accepted_title": "No accepted appeals",
+					"all_description": "When a member appeals a case, it shows up here.",
+					"all_title": "No appeals yet",
+					"denied_description": "The appeals you deny show up here.",
+					"denied_title": "No denied appeals",
+					"pending_description": "Every appeal has been decided. A new one shows up here.",
+					"pending_title": "No appeals waiting"
+				},
+				"errors": {
+					"caseGone": "The case of this appeal is gone.",
+					"decided": "Someone else decided this appeal first.",
+					"failed": "Something went wrong on WolfStar's side. Try again.",
+					"generic": "Something went wrong. Please try again.",
+					"invalid": "WolfStar refused the reason. Shorten it and try again.",
+					"noAccess": "You do not review the appeals of this server.",
+					"undoFailed": "The case could not be undone, so the appeal is still pending.",
+					"unknown": "This appeal no longer exists. Reload the page."
+				},
+				"filter_aria": "Filter the appeals by status",
+				"filters": {
+					"all": "All"
+				},
+				"load_failed": "The appeals could not be loaded.",
+				"more_failed": "The next appeals could not be loaded. Select Show more to try again.",
+				"no_review": "You can see the appeals, but you do not review them: moderators and the appeal manager roles do.",
+				"retry": "Try again",
+				"show_more": "Show more",
+				"showing": "Showing {shown} of {total}",
+				"status": {
+					"accepted": "Accepted",
+					"denied": "Denied",
+					"pending": "Pending"
+				},
+				"title": "Review queue",
+				"toasts": {
+					"accepted": "Appeal accepted",
+					"denied": "Appeal denied",
+					"failed": "The appeal was not decided",
+					"waiting": "WolfStar has not answered yet. The decision will show here once it does."
+				}
+			},
 			"review_title": "Review",
 			"settings_title": "Settings",
 			"subtitle": "Members appeal their bans, mutes and timeouts on WolfStar.rocks, from the link in the direct message of the punishment.",

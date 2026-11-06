@@ -37,6 +37,11 @@ export function parseTracesSampleRate(raw: string | undefined): number {
 
 export function generateRuntimeConfig() {
 	return {
+		// The bridge to the bot's own API, which the member's appeals go through:
+		// the dashboard mints the session cookie the API reads, so the secret is
+		// the bot's `OAUTH_SECRET` and the name its `OAUTH_COOKIE`. Server-only.
+		botApiOauthSecret: process.env.NUXT_BOT_API_OAUTH_SECRET ?? "",
+		botApiOauthCookie: process.env.NUXT_BOT_API_OAUTH_COOKIE || "WOLFSTAR_AUTH",
 		discord: {
 			botToken: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN,
 			clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,

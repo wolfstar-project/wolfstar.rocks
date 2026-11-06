@@ -20,7 +20,11 @@ vi.mock("#server/utils/sentry-metrics", () => ({
 	instrumentBotApiCall: (_route: string, run: () => unknown) => run(),
 }));
 
-import { botApiFetch, encryptBotSession } from "#server/utils/bot-api/session";
+import {
+	BotBridgeSessionToken,
+	botApiFetch,
+	encryptBotSession,
+} from "#server/utils/bot-api/session";
 
 const secret = config.botApiOauthSecret;
 
@@ -96,10 +100,20 @@ describe("botApiFetch", () => {
 		const value = decodeURIComponent(cookie.slice("WOLFSTAR_AUTH=".length));
 		expect(botDecrypt(value, secret)).toStrictEqual({
 			id: "266624760782258186",
-			token: "",
+			token: BotBridgeSessionToken,
 			refresh: "",
 			expires: Date.UTC(2026, 10, 4) + 60_000,
 		});
+	});
+
+	it("carries a token, as the bot's `authenticated()` answers 401 to a session without one", async () => {
+		await botApiFetch("266624760782258186", "/appeals/254360814063058944");
+
+		const [, init] = fetchMock.mock.calls[0] as [string, { headers: Record<string, string> }];
+		const value = decodeURIComponent(
+			(init.headers["Cookie"] ?? "").slice("WOLFSTAR_AUTH=".length),
+		);
+		expect(Boolean(botDecrypt(value, secret)?.token)).toBe(true);
 	});
 
 	it("sends the body of a POST", async () => {

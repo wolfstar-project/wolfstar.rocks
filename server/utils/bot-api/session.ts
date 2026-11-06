@@ -16,6 +16,14 @@ export interface BotSessionData {
 	token: string;
 }
 
+/**
+ * The token of a session minted for one call. The bot's `authenticated()`
+ * answers 401 to a session without a token, but the routes of the appeals read
+ * only the ID: this stands in for the member's Discord token, which stays with
+ * the dashboard.
+ */
+export const BotBridgeSessionToken = "wolfstar.rocks";
+
 /** How long a session minted for one call lives: enough for the call, not for a replay. */
 const SESSION_LIFETIME = 60_000;
 
@@ -36,8 +44,8 @@ export function encryptBotSession(data: BotSessionData, secret: string): string 
 
 /**
  * The cookie a call to the bot's API carries for a user. The routes of the
- * appeals read only the ID, so the session carries no Discord token: the
- * member's own stays with the dashboard. The value is URI-encoded, as the
+ * appeals read only the ID, so the session carries no Discord token, only
+ * `BotBridgeSessionToken`. The value is URI-encoded, as the
  * API's cookie store writes and reads it.
  */
 function botSessionCookie(userId: string): string {
@@ -52,7 +60,12 @@ function botSessionCookie(userId: string): string {
 	}
 
 	const value = encryptBotSession(
-		{ id: userId, token: "", refresh: "", expires: Date.now() + SESSION_LIFETIME },
+		{
+			id: userId,
+			token: BotBridgeSessionToken,
+			refresh: "",
+			expires: Date.now() + SESSION_LIFETIME,
+		},
 		botApiOauthSecret,
 	);
 	return `${botApiOauthCookie}=${encodeURIComponent(value)}`;

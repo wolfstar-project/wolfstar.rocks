@@ -133,12 +133,48 @@ function warnChangedOptions(
 	warnings: string[],
 ) {
 	for (const [key, value] of Object.entries(options)) {
+		if (Array.isArray(value)) {
+			warnDroppedEntries(name, key, given[key], value, warnings);
+			continue;
+		}
 		// An option a partial file does not have is filled with the default, which changes nothing it said:
 		if (typeof value !== "number" || given[key] === undefined || given[key] === value) continue;
 		warnings.push(
 			`The option "${key}" of the rule "${name}" was changed from ${String(given[key])} to ${value}.`,
 		);
 	}
+}
+
+/** How many entries left out of a list a notice names, the rest being counted. */
+const NamedDroppedEntries = 10;
+
+/**
+ * Tells the entries of a list of a filter that V7 does not take, such as the
+ * words of the word filter shorter than 2 or longer than 32 characters: the
+ * old bot took any, and an admin would not otherwise know the rule lost them.
+ */
+function warnDroppedEntries(
+	name: string,
+	key: string,
+	given: unknown,
+	kept: readonly unknown[],
+	warnings: string[],
+) {
+	if (!Array.isArray(given)) return;
+	const keptEntries = new Set(kept);
+	const dropped = given.filter(
+		(entry): entry is string =>
+			typeof entry === "string" &&
+			!keptEntries.has(entry.trim()) &&
+			!keptEntries.has(entry.trim().toLowerCase()),
+	);
+	if (dropped.length === 0) return;
+
+	const named = dropped.slice(0, NamedDroppedEntries).map((entry) => JSON.stringify(entry));
+	const more = dropped.length - named.length;
+	warnings.push(
+		`The ${key} ${named.join(", ")}${more > 0 ? ` and ${more} more` : ""} of the rule "${name}" were left out, as V7 does not take them${key === "words" ? ": a word is 2 to 32 characters" : ""}.`,
+	);
 }
 
 function convertRule(

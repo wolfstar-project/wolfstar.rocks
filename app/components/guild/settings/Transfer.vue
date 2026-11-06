@@ -193,7 +193,7 @@
 import type { GuildData } from "#server/database";
 import {
 	ConfigurationFileName,
-	getNoticeKey,
+	getNoticesDigest,
 	MaximumConfigurationFileSize,
 	SettingsSetWithTheBot,
 	type ConfigurationImportRequest,
@@ -257,10 +257,10 @@ async function exportFile() {
 	}
 }
 
-function importRequest(guildId: string, text: string, apply: boolean, notices?: string[]) {
+function importRequest(guildId: string, text: string, apply: boolean, noticesDigest?: string) {
 	return $fetch<ConfigurationImportResponse>(`/api/guilds/${guildId}/settings/import`, {
 		method: "POST",
-		body: { text, apply, notices } satisfies ConfigurationImportRequest,
+		body: { text, apply, noticesDigest } satisfies ConfigurationImportRequest,
 	});
 }
 
@@ -295,9 +295,11 @@ async function confirmImport() {
 
 	isImporting.value = true;
 	try {
-		// What the preview showed, so an import that would now leave out more is refused:
-		const shown = current.result.ok ? current.result.preview.notices.map(getNoticeKey) : [];
-		const result = await importRequest(current.guildId, current.text, true, shown);
+		// What the preview left out, so an import that would now leave out other things is refused:
+		const digest = current.result.ok
+			? getNoticesDigest(current.result.preview.notices)
+			: undefined;
+		const result = await importRequest(current.guildId, current.text, true, digest);
 		if (!result.ok) {
 			review.value = { ...current, result };
 			return;

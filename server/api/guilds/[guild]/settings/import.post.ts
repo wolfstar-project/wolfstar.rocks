@@ -15,7 +15,7 @@ import {
 import { guildSettingsUpdate } from "#shared/audit/actions";
 import { ConfigurationImportSchema } from "#shared/schemas";
 import { MaximumAutoModerationRules } from "#shared/utils/automod-rules";
-import { getNoticeKey } from "#shared/utils/settings-transfer";
+import { getNoticesDigest } from "#shared/utils/settings-transfer";
 import { createError, useLogger, withAuditMethods } from "evlog";
 import { parse } from "valibot";
 
@@ -48,16 +48,16 @@ export default defineWrappedResponseHandler(
 
 		// Read again against the server as it is now: what the preview showed is
 		// what was confirmed, so a notice it did not show means the server changed.
-		if (body.notices !== undefined) {
-			const shown = new Set(body.notices);
-			if (parsed.value.notices.some((notice) => !shown.has(getNoticeKey(notice)))) {
-				throw createError({
-					message: "The server changed while the file was being read",
-					status: 409,
-					why: "Reading the file again leaves out something the preview imported",
-					fix: "Read the file again",
-				});
-			}
+		if (
+			body.noticesDigest !== undefined &&
+			getNoticesDigest(parsed.value.notices) !== body.noticesDigest
+		) {
+			throw createError({
+				message: "The server changed while the file was being read",
+				status: 409,
+				why: "Reading the file again does not leave out what the preview did",
+				fix: "Read the file again",
+			});
 		}
 
 		const applied = await applyConfigurationImport(guild, parsed.value).catch(

@@ -49,7 +49,7 @@ vi.mock("evlog", async (importOriginal) => ({
 
 import type { H3Event } from "h3";
 import postHandler from "#server/api/guilds/[guild]/settings/import.post";
-import { getNoticeKey } from "#shared/utils/settings-transfer";
+import { getNoticesDigest } from "#shared/utils/settings-transfer";
 
 const callHandler = postHandler as unknown as (event: H3Event) => Promise<unknown>;
 
@@ -75,15 +75,31 @@ describe("POST /api/guilds/:guild/settings/import", () => {
 	it("refuses as the server having changed an import that leaves out more than the preview showed", async () => {
 		// The preview added the Links filter; read again, the server is full by now.
 		mocks.notices = [leftOut];
-		mocks.body = { text: "{}", apply: true, notices: [] };
+		mocks.body = { text: "{}", apply: true, noticesDigest: getNoticesDigest([]) };
 
 		await expect(callHandler({} as H3Event)).rejects.toMatchObject({ status: 409 });
 		expect(mocks.applyConfigurationImport).not.toHaveBeenCalled();
 	});
 
+	it("takes the digest of a preview that left out a great many things", async () => {
+		mocks.notices = Array.from({ length: 600 }, (_, index) => ({
+			...leftOut,
+			rule: `Rule ${index}`,
+		}));
+		mocks.body = {
+			text: "{}",
+			apply: true,
+			noticesDigest: getNoticesDigest(mocks.notices as ConfigurationNotice[]),
+		};
+
+		await callHandler({} as H3Event);
+
+		expect(mocks.applyConfigurationImport).toHaveBeenCalledOnce();
+	});
+
 	it("applies what the preview showed, its notices included", async () => {
 		mocks.notices = [leftOut];
-		mocks.body = { text: "{}", apply: true, notices: [getNoticeKey(leftOut)] };
+		mocks.body = { text: "{}", apply: true, noticesDigest: getNoticesDigest([leftOut]) };
 
 		await callHandler({} as H3Event);
 

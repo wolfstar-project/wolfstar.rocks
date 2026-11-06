@@ -91,21 +91,39 @@ export interface ConfigurationImportRequest {
 	/** Write what the file says; without it the file is only read and what it would change is answered. */
 	apply?: boolean;
 	/**
-	 * With `apply`, the notices the preview showed, as {@linkcode getNoticeKey}
-	 * writes them. The file is read again when it is applied, against the server
-	 * as it is then: a notice the preview did not show, such as a filter left
-	 * out because the server reached its rules meanwhile, refuses the import as
-	 * the server having changed, instead of leaving out what was confirmed.
+	 * With `apply`, the notices the preview showed, as {@linkcode getNoticesDigest}
+	 * sums them up. The file is read again when it is applied, against the server
+	 * as it is then: other notices than the preview's, such as a filter left out
+	 * because the server reached its rules meanwhile, refuse the import as the
+	 * server having changed, instead of leaving out what was confirmed.
 	 */
-	notices?: string[];
+	noticesDigest?: string;
 }
 
 /**
- * The name the preview and the import that follows it give a notice, to tell
- * whether reading the file again found one the preview did not show.
+ * Sums up the notices of a preview in a few characters, whatever their number,
+ * for the import that follows it to tell whether reading the file again found
+ * other ones. Not a secret: a collision only lets through an import whose
+ * server changed in a way the notices would have told.
  */
-export function getNoticeKey(notice: ConfigurationNotice): string {
-	return JSON.stringify(notice);
+export function getNoticesDigest(notices: readonly ConfigurationNotice[]): string {
+	const text = notices
+		.map((notice) => JSON.stringify(notice))
+		.toSorted()
+		.join("\n");
+	// cyrb53, 53 bits from two 32-bit hashes:
+	let first = 0xDEADBEEF;
+	let second = 0x41C6CE57;
+	for (let index = 0; index < text.length; index++) {
+		const code = text.charCodeAt(index);
+		first = Math.imul(first ^ code, 2_654_435_761);
+		second = Math.imul(second ^ code, 1_597_334_677);
+	}
+	first = Math.imul(first ^ (first >>> 16), 2_246_822_507);
+	first ^= Math.imul(second ^ (second >>> 13), 3_266_489_909);
+	second = Math.imul(second ^ (second >>> 16), 2_246_822_507);
+	second ^= Math.imul(first ^ (first >>> 13), 3_266_489_909);
+	return (4_294_967_296 * (2_097_151 & second) + (first >>> 0)).toString(36);
 }
 
 /**

@@ -686,6 +686,25 @@ describe("a file of the bot before V7", () => {
 		expect(parsed.notices).toStrictEqual([]);
 	});
 
+	it("tells the words of the word filter V7 does not take, instead of losing them unsaid", () => {
+		const parsed = read({
+			version: 1,
+			settings: {
+				"selfmod.filter.enabled": true,
+				"selfmod.filter.raw": ["a", "scam", "x".repeat(40)],
+			},
+		});
+
+		expect(parsed.addedRules[0]?.options).toStrictEqual({ words: ["scam"] });
+		expect(parsed.notices).toMatchObject([
+			{
+				kind: "ruleAdjusted",
+				rule: "Words",
+				detail: expect.stringContaining(`"a", "${"x".repeat(40)}"`),
+			},
+		]);
+	});
+
 	it("still refuses a setting nobody has", () => {
 		expect(issuesOf(legacy({ "no.such": true }))).toMatchObject([{ path: "settings.no.such" }]);
 	});

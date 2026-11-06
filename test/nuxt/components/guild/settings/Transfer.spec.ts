@@ -3,7 +3,7 @@ import type {
 	ConfigurationNotice,
 } from "#shared/utils/settings-transfer";
 import type { H3Event } from "h3";
-import { getNoticeKey } from "#shared/utils/settings-transfer";
+import { getNoticesDigest } from "#shared/utils/settings-transfer";
 import { mockNuxtImport, mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
@@ -247,7 +247,7 @@ describe("guild settings transfer", () => {
 		confirm!.click();
 
 		await vi.waitFor(() => expect(lastBody?.apply).toBe(true));
-		expect(lastBody?.notices).toStrictEqual([getNoticeKey(notice)]);
+		expect(lastBody?.noticesDigest).toBe(getNoticesDigest([notice]));
 	});
 
 	it("lists the problems of a file it refuses, and offers nothing to confirm", async () => {

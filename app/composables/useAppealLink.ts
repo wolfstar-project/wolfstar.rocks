@@ -1,5 +1,5 @@
 /**
- * What the bot's link `/appeal/<server>` does: it opens the Home on the
+ * What the bot's link `/app/appeal/<server>` does: it opens the Home on the
  * member's appeals, with that server listed.
  */
 export function useAppealLink() {

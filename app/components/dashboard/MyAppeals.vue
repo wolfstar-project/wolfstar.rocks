@@ -159,16 +159,17 @@ function appealTo(entry: MyAppealEntry) {
 	dialogOpen.value = true;
 }
 
-// The bot's link opens the dialog on the case of its server, once, when that
-// server has exactly one case that can be appealed.
+// The bot's link opens the dialog, once, on the newest case of its server that
+// can be appealed: the direct message is about the case the bot just opened,
+// which its link cannot name, as the case has no number yet when it is sent.
 const openedFor = ref<string | null>(null);
 watchEffect(() => {
 	if (!guildId || openedFor.value === guildId || status.value !== "success") return;
 	openedFor.value = guildId;
-	const open = entries.value.filter(
-		(entry) => entry.guild.id === guildId && entry.status === "open",
-	);
-	if (open.length === 1) appealTo(open[0]!);
+	const newest = entries.value
+		.filter((entry) => entry.guild.id === guildId && entry.status === "open")
+		.toSorted((a, b) => Date.parse(b.case.createdAt) - Date.parse(a.case.createdAt))[0];
+	if (newest) appealTo(newest);
 });
 </script>
 

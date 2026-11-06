@@ -80,10 +80,11 @@ import * as Sentry from "@sentry/nuxt";
 
 definePageMeta({
 	// The bot's direct message of a ban, a mute or a timeout links a member to
-	// `/appeal/<server>`, which opens the Home on their appeals. The server is
-	// optional only because Vue Router warns of an alias with a param its
-	// record lacks; `/appeal` alone opens the appeals too.
-	alias: ["/appeal/:guild(\\d{17,20})?"],
+	// `/app/appeal/<server>`, which opens the Home on their appeals. The server
+	// is optional only because Vue Router warns of an alias with a param its
+	// record lacks; `/app/appeal` alone opens the appeals too. `/appeal/<server>`
+	// is the link of the messages the bot sent before.
+	alias: ["/app/appeal/:guild(\\d{17,20})?", "/appeal/:guild(\\d{17,20})?"],
 	auth: "user",
 	layout: "dashboard",
 	path: "/app",
@@ -187,7 +188,7 @@ const { thread, page: homePage, appealGuildId } = useDirectMessages();
 
 // The link of the bot opens the Home on the appeals, with its server listed.
 const route = useRoute();
-if (route.path === "/appeal" || route.path.startsWith("/appeal/")) {
+if (/^(?:\/app)?\/appeal(?:\/|$)/.test(route.path)) {
 	const appealLink = useAppealLink();
 	appealLink.open("guild" in route.params ? route.params.guild : undefined);
 	onMounted(appealLink.showPage);

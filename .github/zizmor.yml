@@ -10,3 +10,11 @@ rules:
       - enforce-release-source.yml
       - lunaria.yml
       - semantic-pull-requests.yml
+  # The shared announce action follows the default branch of stars-components
+  # on purpose, so a fix to it reaches every repository that posts announcements.
+  # Everything else stays pinned to a commit.
+  unpinned-uses:
+    config:
+      policies:
+        "wolfstar-project/stars-components/*": ref-pin
+        "*": hash-pin

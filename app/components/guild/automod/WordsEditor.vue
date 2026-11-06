@@ -96,6 +96,7 @@
 				:placeholder="ts('guild_settings.automod.words_editor.list.search')"
 				:aria-label="ts('guild_settings.automod.words_editor.list.search')"
 				class="w-full"
+				@keydown.enter.prevent
 			/>
 
 			<p v-if="words.length === 0" class="words-empty">

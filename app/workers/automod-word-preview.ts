@@ -2,6 +2,7 @@ import {
 	compileAutomodWords,
 	findAutomodWordMatches,
 } from "../../shared/utils/automod-word-pattern";
+import { findCoveredAutomodWords } from "../utils/automod-words";
 
 // Runs the expression of a rule away from the page, as the bot runs it in a worker: a word such as `aaaaaaaab` can take
 // seconds on a long message, and the page ends this worker when it does, instead of freezing.
@@ -19,13 +20,16 @@ const scope = globalThis as unknown as {
 	postMessage(message: unknown): void;
 };
 
-scope.addEventListener("message", (event) => {
-	const request = event.data;
+/** What the worker answers to a request. */
+export function answerAutomodWordRequest(request: AutomodWordPreviewRequest) {
 	if (request.kind === "covered") {
-		scope.postMessage({ id: request.id, covered: [...findCoveredAutomodWords(request.words)] });
-		return;
+		return { id: request.id, covered: [...findCoveredAutomodWords(request.words)] };
 	}
 	const expression = compileAutomodWords(request.words);
 	const matches = expression === null ? [] : findAutomodWordMatches(expression, request.text);
-	scope.postMessage({ id: request.id, matches });
-});
+	return { id: request.id, matches };
+}
+
+scope.addEventListener("message", (event) =>
+	scope.postMessage(answerAutomodWordRequest(event.data)),
+);

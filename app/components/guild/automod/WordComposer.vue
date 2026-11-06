@@ -104,6 +104,7 @@
 								spellcheck="false"
 								class="w-full"
 								@update:model-value="setAlternatives(String($event ?? ''))"
+								@keydown.enter.prevent
 							/>
 						</UFormField>
 					</div>

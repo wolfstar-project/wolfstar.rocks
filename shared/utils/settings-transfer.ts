@@ -111,9 +111,10 @@ export function getNoticesDigest(notices: readonly ConfigurationNotice[]): strin
 		.map((notice) => JSON.stringify(notice))
 		.toSorted()
 		.join("\n");
-	// cyrb53, 53 bits from two 32-bit hashes:
-	let first = 0xDEADBEEF;
-	let second = 0x41C6CE57;
+	// cyrb53, 53 bits from two 32-bit hashes; its seeds 0xDEADBEEF and 0x41C6CE57 are
+	// written in decimal, as the linter and the formatter disagree on hex case:
+	let first = 3_735_928_559;
+	let second = 1_103_547_991;
 	for (let index = 0; index < text.length; index++) {
 		const code = text.charCodeAt(index);
 		first = Math.imul(first ^ code, 2_654_435_761);

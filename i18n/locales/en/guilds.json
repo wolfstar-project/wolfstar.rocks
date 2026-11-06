@@ -531,7 +531,10 @@
 					"threshold_duration": "Counted within",
 					"threshold_maximum": "Infractions before punishment",
 					"type": "Type",
-					"type_locked": "The type of a rule can't be changed."
+					"type_locked": "The type of a rule can't be changed.",
+					"discard_prompt": "You have changes that are not saved. Close anyway?",
+					"keep_editing": "Keep editing",
+					"discard": "Discard changes"
 				},
 				"empty_description": "Create a rule to start filtering messages on this server.",
 				"empty_title": "No rules yet",
@@ -665,6 +668,117 @@
 				"Zalgo": {
 					"description": "Messages in which a character carries more combining marks than the maximum.",
 					"name": "Zalgo text"
+				}
+			},
+			"words_editor": {
+				"title": "Blocked words",
+				"help": "The filter acts on a message that holds one of these words. Capital letters do not matter.",
+				"add_heading": "Add a word",
+				"edit_heading": "Edit “{word}”",
+				"letters": "Word",
+				"letters_placeholder": "for example: idiot",
+				"letters_help": "From {minimum} to {maximum} characters. It is saved in lowercase.",
+				"add": "Add word",
+				"save_edit": "Save word",
+				"cancel_edit": "Cancel edit",
+				"mode": {
+					"legend": "How it must appear",
+					"whole": "Only the whole word",
+					"whole_example": "“bad” catches “so bad!” but not “badge”",
+					"continues": "Also when it goes on",
+					"continues_example": "“bad” also catches “badge” and “badly”",
+					"prefixed": "Also with letters before it",
+					"prefixed_example": "“bad” also catches “unbad”",
+					"anywhere": "Anywhere in the text",
+					"anywhere_example": "“bad” also catches “abadon”, inside another word"
+				},
+				"tolerance": {
+					"title": "Always ignores repeated letters and spaces or dots in between",
+					"help": "WolfStar always reads the word this way, so “baaad”, “b.a.d” and “b a d” count as “bad”."
+				},
+				"alternatives": {
+					"toggle": "Alternatives for a letter",
+					"help": "Pick a letter, then type the other characters it can be written with.",
+					"letter": "Letter",
+					"letter_option": "Letter {position}: “{letter}”",
+					"characters": "Also accept",
+					"characters_placeholder": "for example: @4",
+					"example": "For the “a” of “bad”, “@4” also catches “b@d” and “b4d”.",
+					"empty": "Type the word first to pick one of its letters.",
+					"summary": "“{letter}” also as {characters}",
+					"remove": "Remove the alternatives for “{letter}”"
+				},
+				"advanced": {
+					"toggle": "Advanced: edit the saved text",
+					"help": "The text WolfStar saves. A * at the start or the end lets the word go on; [abc] accepts one of the characters, [a-z] any of a range.",
+					"field": "Saved text",
+					"not_simple": "The simple form cannot show this word, so edit it here."
+				},
+				"preview": {
+					"title": "Try a message",
+					"field": "Test message",
+					"placeholder": "Type a message to see what the filter catches",
+					"limit": "Only the first {count} characters are checked.",
+					"caught": "Caught: {parts}",
+					"caught_none": "Nothing in this message would be caught.",
+					"running": "Checking…",
+					"timeout": "Checking this message took too long. WolfStar gives up on it too, so the message would not be filtered. Try a shorter word.",
+					"error": "The check could not run. Reload the page to try again.",
+					"empty": "Add a word or type one above to try a message.",
+					"examples": "Examples",
+					"example_caught": "Caught",
+					"example_passes": "Passes",
+					"kinds": {
+						"plain": "the word itself",
+						"repeated": "a repeated letter",
+						"separated": "dots in between",
+						"continues": "followed by more letters",
+						"prefixed": "with letters before",
+						"inside": "inside another word"
+					}
+				},
+				"list": {
+					"heading": "Words ({count}/{maximum})",
+					"search": "Search the words",
+					"empty": "No words yet. Add the first one above.",
+					"empty_search": "No word matches “{query}”.",
+					"edit": "Edit “{word}”",
+					"remove": "Remove “{word}”",
+					"removed": "Removed “{word}”.",
+					"added": "Added “{word}”.",
+					"updated": "Saved “{word}”.",
+					"covered": "Already caught by “{other}”",
+					"modes": {
+						"whole": "whole word",
+						"continues": "can go on",
+						"prefixed": "letters before",
+						"anywhere": "anywhere"
+					}
+				},
+				"import": {
+					"open": "Import words",
+					"export": "Export words",
+					"field": "Words to import, one per line",
+					"file": "Choose a .txt file",
+					"confirm": "Import these words",
+					"cancel": "Cancel import",
+					"result": "Added {added}. Skipped {skipped}.",
+					"skipped_line": "“{line}”: {reason}",
+					"file_error": "The file could not be read."
+				},
+				"problems": {
+					"empty": "Type at least one letter: two * alone would catch every message.",
+					"tooShort": "Use at least {minimum} characters.",
+					"tooLong": "Use at most {maximum} characters.",
+					"duplicate": "This word is already in the list.",
+					"brackets": "A [ needs its ], with at least one character between them.",
+					"listFull": "The list is full: it holds {maximum} words.",
+					"edgeWildcard": "Leave out the * here and pick “How it must appear” below instead.",
+					"letterBrackets": "Brackets have a meaning of their own here. Use “Alternatives for a letter” instead."
+				},
+				"notes": {
+					"innerWildcard": "The * in the middle counts as an asterisk here, not as “any letters”. To catch the word anywhere, pick “Anywhere in the text”.",
+					"normalized": "It will be saved as “{word}”."
 				}
 			}
 		},

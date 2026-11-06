@@ -531,7 +531,10 @@
 					"threshold_duration": "",
 					"threshold_maximum": "",
 					"type": "",
-					"type_locked": ""
+					"type_locked": "",
+					"discard_prompt": "",
+					"keep_editing": "",
+					"discard": ""
 				},
 				"empty_description": "",
 				"empty_title": "",
@@ -665,6 +668,117 @@
 				"Zalgo": {
 					"description": "",
 					"name": ""
+				}
+			},
+			"words_editor": {
+				"title": "",
+				"help": "",
+				"add_heading": "",
+				"edit_heading": "",
+				"letters": "",
+				"letters_placeholder": "",
+				"letters_help": "",
+				"add": "",
+				"save_edit": "",
+				"cancel_edit": "",
+				"mode": {
+					"legend": "",
+					"whole": "",
+					"whole_example": "",
+					"continues": "",
+					"continues_example": "",
+					"prefixed": "",
+					"prefixed_example": "",
+					"anywhere": "",
+					"anywhere_example": ""
+				},
+				"tolerance": {
+					"title": "",
+					"help": ""
+				},
+				"alternatives": {
+					"toggle": "",
+					"help": "",
+					"letter": "",
+					"letter_option": "",
+					"characters": "",
+					"characters_placeholder": "",
+					"example": "",
+					"empty": "",
+					"summary": "",
+					"remove": ""
+				},
+				"advanced": {
+					"toggle": "",
+					"help": "",
+					"field": "",
+					"not_simple": ""
+				},
+				"preview": {
+					"title": "",
+					"field": "",
+					"placeholder": "",
+					"limit": "",
+					"caught": "",
+					"caught_none": "",
+					"running": "",
+					"timeout": "",
+					"error": "",
+					"empty": "",
+					"examples": "",
+					"example_caught": "",
+					"example_passes": "",
+					"kinds": {
+						"plain": "",
+						"repeated": "",
+						"separated": "",
+						"continues": "",
+						"prefixed": "",
+						"inside": ""
+					}
+				},
+				"list": {
+					"heading": "",
+					"search": "",
+					"empty": "",
+					"empty_search": "",
+					"edit": "",
+					"remove": "",
+					"removed": "",
+					"added": "",
+					"updated": "",
+					"covered": "",
+					"modes": {
+						"whole": "",
+						"continues": "",
+						"prefixed": "",
+						"anywhere": ""
+					}
+				},
+				"import": {
+					"open": "",
+					"export": "",
+					"field": "",
+					"file": "",
+					"confirm": "",
+					"cancel": "",
+					"result": "",
+					"skipped_line": "",
+					"file_error": ""
+				},
+				"problems": {
+					"empty": "",
+					"tooShort": "",
+					"tooLong": "",
+					"duplicate": "",
+					"brackets": "",
+					"listFull": "",
+					"edgeWildcard": "",
+					"letterBrackets": ""
+				},
+				"notes": {
+					"innerWildcard": "",
+					"normalized": ""
 				}
 			}
 		},

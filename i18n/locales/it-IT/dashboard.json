@@ -255,6 +255,24 @@
 			"completed": "Concluso",
 			"open": "In corso"
 		},
+		"case_types": {
+			"ban": "Ban",
+			"kick": "Kick",
+			"mute": "Mute",
+			"restricted_attachment": "Restrizione allegati",
+			"restricted_embed": "Restrizione embed",
+			"restricted_emoji": "Restrizione emoji",
+			"restricted_reaction": "Restrizione reazioni",
+			"restricted_voice": "Restrizione vocale",
+			"role_add": "Ruolo aggiunto",
+			"role_remove": "Ruolo rimosso",
+			"set_nickname": "Cambio nickname",
+			"softban": "Softban",
+			"timeout": "Timeout",
+			"voice_kick": "Kick vocale",
+			"voice_mute": "Mute vocale",
+			"warning": "Avvertimento"
+		},
 		"changes": {
 			"close": "Chiudi",
 			"none": "Nessuno",

@@ -145,8 +145,16 @@ if (warningsOnly) {
 const selectedTypeCode = ref<number | null>(null);
 const actionTypeItems = computed(() => [
 	{ label: ts("guild_logs.all_actions"), value: null },
-	...MODERATION_TYPE_FILTER_VALUES,
+	...MODERATION_TYPE_FILTER_VALUES.map(({ value, label }) => ({
+		label: typeLabel(label),
+		value,
+	})),
 ]);
+
+function typeLabel(typeName: string) {
+	const key = moderationCaseTypeKey(typeName);
+	return key ? ts(key) : ts("guild_logs.unknown");
+}
 
 watch(selectedTypeCode, (value) => {
 	filters.value.typeCode = value ?? undefined;
@@ -266,7 +274,8 @@ const now = new Date();
 
 const rows = computed(() =>
 	entries.value.map((entry) => {
-		const { metadata, typeName } = entry;
+		const { metadata } = entry;
+		const typeName = typeLabel(entry.typeName);
 		const created = entry.createdAt ? new Date(entry.createdAt) : null;
 		const target = entry.targetMember?.user?.username;
 		return {

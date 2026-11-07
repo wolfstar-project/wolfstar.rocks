@@ -1,5 +1,5 @@
 import type { ModerationLogEntry } from "#shared/types/moderation-log";
-import type { ModerationCaseStatus } from "#shared/types/moderation-types";
+import type { ModerationCaseStatus, ModerationTypeName } from "#shared/types/moderation-types";
 import type { LogsPillTone } from "~/components/guild/logs/Pill.vue";
 
 // Punishments that hold until someone lifts them when no duration was given.
@@ -50,4 +50,31 @@ export function moderationCaseTone(entry: Pick<ModerationLogEntry, "metadata" | 
 	return (
 		entry.metadata.undo ? "success" : moderationActionVariant(entry.typeName)
 	) as LogsPillTone;
+}
+
+/** The i18n key of each case type's name, so the bot's identifiers never reach the page. */
+export const MODERATION_CASE_TYPE_KEY = {
+	Ban: "guild_logs.case_types.ban",
+	Kick: "guild_logs.case_types.kick",
+	Mute: "guild_logs.case_types.mute",
+	Softban: "guild_logs.case_types.softban",
+	VoiceKick: "guild_logs.case_types.voice_kick",
+	VoiceMute: "guild_logs.case_types.voice_mute",
+	Warning: "guild_logs.case_types.warning",
+	RestrictedReaction: "guild_logs.case_types.restricted_reaction",
+	RestrictedEmbed: "guild_logs.case_types.restricted_embed",
+	RestrictedAttachment: "guild_logs.case_types.restricted_attachment",
+	RestrictedVoice: "guild_logs.case_types.restricted_voice",
+	SetNickname: "guild_logs.case_types.set_nickname",
+	RoleAdd: "guild_logs.case_types.role_add",
+	RoleRemove: "guild_logs.case_types.role_remove",
+	RestrictedEmoji: "guild_logs.case_types.restricted_emoji",
+	Timeout: "guild_logs.case_types.timeout",
+} as const satisfies Record<ModerationTypeName, string>;
+
+/** The i18n key of a case type's name, `null` for a type the dashboard does not know. */
+export function moderationCaseTypeKey(typeName: string): string | null {
+	return Object.hasOwn(MODERATION_CASE_TYPE_KEY, typeName)
+		? MODERATION_CASE_TYPE_KEY[typeName as ModerationTypeName]
+		: null;
 }

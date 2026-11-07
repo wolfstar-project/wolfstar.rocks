@@ -41,9 +41,6 @@
 								<span class="truncate">{{
 									ts(AUTOMOD_TYPE_NAME_KEYS[draft.type])
 								}}</span>
-								<span class="ml-auto font-mono text-[0.6875rem] text-muted">
-									{{ draft.type }}
-								</span>
 							</div>
 						</UFormField>
 					</div>

@@ -180,7 +180,7 @@ describe("GuildAutomodRules", () => {
 		expect(groups).toStrictEqual(["Content filters", "Rate limits"]);
 
 		const card = [...document.body.querySelectorAll<HTMLButtonElement>(".type-card")].find(
-			(button) => button.textContent?.includes("MessageSpam"),
+			(button) => button.querySelector(".font-bold")?.textContent?.trim() === "Message spam",
 		);
 		card!.click();
 

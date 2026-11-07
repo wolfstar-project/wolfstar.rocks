@@ -23,7 +23,6 @@
 									{{ ts(AUTOMOD_TYPE_NAME_KEYS[type]) }}
 								</span>
 							</span>
-							<span class="font-mono text-[0.625rem] text-muted">{{ type }}</span>
 							<span class="text-xs leading-[1.4] text-muted">
 								{{ ts(AUTOMOD_TYPE_DESCRIPTION_KEYS[type]) }}
 							</span>

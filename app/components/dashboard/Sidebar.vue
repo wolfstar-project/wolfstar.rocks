@@ -18,126 +18,143 @@
 			</template>
 		</div>
 
-		<nav
-			class="dashboard-nav flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto px-2 py-2.5"
-			:aria-label="ts('dashboard.nav_aria')"
-		>
-			<template v-for="(group, groupIndex) of groups" :key="group.id">
-				<div
-					v-if="!group.titled && groupIndex > 0"
-					class="dashboard-nav-divider"
-					aria-hidden="true"
-				></div>
-				<button
-					v-if="group.titled"
-					type="button"
-					class="dashboard-nav-label dashboard-nav-label--toggle"
-					:aria-expanded="isGroupOpen(group.id)"
-					@click="toggleGroup(group.id)"
-				>
-					<UIcon
-						name="ic:round-expand-more"
-						class="size-4 shrink-0 transition-transform"
-						:class="isGroupOpen(group.id) ? undefined : '-rotate-90'"
-						aria-hidden="true"
-					/>
-					<span class="min-w-0 flex-1 text-left">{{ ts(group.labelKey ?? "") }}</span>
-					<span
-						v-if="!isGroupOpen(group.id) && group.hasCurrent"
-						class="size-1.5 shrink-0 rounded-full bg-primary"
-						:title="ts('dashboard.nav_current_group')"
-					></span>
-				</button>
-
-				<template v-if="!group.titled || isGroupOpen(group.id)">
+		<DiscordScrollbar overlay auto-hide themed class="dashboard-nav-scroll">
+			<nav
+				class="dashboard-nav flex flex-col gap-0.5 px-2 py-2.5"
+				:aria-label="ts('dashboard.nav_aria')"
+			>
+				<template v-for="(group, groupIndex) of groups" :key="group.id">
 					<div
-						v-if="group.recent.length > 0"
-						class="flex flex-wrap items-center gap-1.5 pt-0.5 pr-1.5 pb-1 pl-2.5"
+						v-if="!group.titled && groupIndex > 0"
+						class="dashboard-nav-divider"
+						aria-hidden="true"
+					></div>
+					<button
+						v-if="group.titled"
+						type="button"
+						class="dashboard-nav-label dashboard-nav-label--toggle"
+						:aria-expanded="isGroupOpen(group.id)"
+						@click="toggleGroup(group.id)"
 					>
 						<UIcon
-							name="ic:round-access-time"
-							class="size-3.5 shrink-0 text-muted"
-							:title="ts('dashboard.nav_recent')"
-						/>
-						<button
-							v-for="item of group.recent"
-							:key="item.slug"
-							type="button"
-							class="dashboard-nav-chip"
-							@click="open(item.slug)"
-						>
-							<UIcon :name="item.icon" class="size-3 shrink-0" aria-hidden="true" />
-							<span>{{ ts(item.labelKey) }}</span>
-						</button>
-					</div>
-
-					<template v-for="(part, partIndex) of group.parts" :key="part.id">
-						<div
-							v-if="partIndex > 0"
-							class="dashboard-nav-divider"
+							name="ic:round-expand-more"
+							class="size-4 shrink-0 transition-transform"
+							:class="isGroupOpen(group.id) ? undefined : '-rotate-90'"
 							aria-hidden="true"
-						></div>
-						<p v-if="part.titleKey" class="dashboard-nav-label">
-							<UIcon
-								name="ic:round-push-pin"
-								class="size-3 shrink-0"
-								aria-hidden="true"
-							/>
-							<span>{{ ts(part.titleKey) }}</span>
-						</p>
+						/>
+						<span class="min-w-0 flex-1 text-left">{{ ts(group.labelKey ?? "") }}</span>
+						<span
+							v-if="!isGroupOpen(group.id) && group.hasCurrent"
+							class="size-1.5 shrink-0 rounded-full bg-primary"
+							:title="ts('dashboard.nav_current_group')"
+						></span>
+					</button>
 
+					<template v-if="!group.titled || isGroupOpen(group.id)">
 						<div
-							v-for="item of part.items"
-							:key="item.slug"
-							class="dashboard-nav-row"
-							:class="{ 'dashboard-nav-row--current': item.current }"
+							v-if="group.recent.length > 0"
+							class="flex flex-wrap items-center gap-1.5 pt-0.5 pr-1.5 pb-1 pl-2.5"
 						>
+							<UIcon
+								name="ic:round-access-time"
+								class="size-3.5 shrink-0 text-muted"
+								:title="ts('dashboard.nav_recent')"
+							/>
 							<button
+								v-for="item of group.recent"
+								:key="item.slug"
 								type="button"
-								class="dashboard-nav-button"
-								:class="{ 'dashboard-nav-button--current': item.current }"
-								:aria-current="item.current ? 'page' : undefined"
+								class="dashboard-nav-chip"
 								@click="open(item.slug)"
 							>
 								<UIcon
 									:name="item.icon"
-									class="size-4.5 shrink-0"
-									:class="item.current ? 'text-primary' : 'text-muted'"
+									class="size-3 shrink-0"
 									aria-hidden="true"
 								/>
-								<span class="min-w-0 flex-1 truncate">{{ ts(item.labelKey) }}</span>
-								<span v-if="item.comingSoon" class="dashboard-nav-soon">
-									{{ ts("dashboard.coming_soon.badge") }}
-								</span>
-								<span v-if="item.count !== null" class="dashboard-nav-count">
-									{{ item.count }}
-								</span>
-								<span
-									v-if="item.off"
-									class="size-1.5 shrink-0 rounded-full bg-muted"
-									:title="ts('dashboard.nav_module_off')"
-								></span>
-							</button>
-							<button
-								v-if="item.pinnable"
-								type="button"
-								class="dashboard-nav-pin"
-								:class="{ 'dashboard-nav-pin--on': item.pinned }"
-								:aria-pressed="item.pinned"
-								:aria-label="
-									ts(item.pinned ? 'dashboard.nav_unpin' : 'dashboard.nav_pin', {
-										name: ts(item.labelKey),
-									})
-								"
-								@click="togglePin(item.slug)"
-							>
-								<UIcon name="ic:round-push-pin" class="size-4" aria-hidden="true" />
+								<span>{{ ts(item.labelKey) }}</span>
 							</button>
 						</div>
+
+						<template v-for="(part, partIndex) of group.parts" :key="part.id">
+							<div
+								v-if="partIndex > 0"
+								class="dashboard-nav-divider"
+								aria-hidden="true"
+							></div>
+							<p v-if="part.titleKey" class="dashboard-nav-label">
+								<UIcon
+									name="ic:round-push-pin"
+									class="size-3 shrink-0"
+									aria-hidden="true"
+								/>
+								<span>{{ ts(part.titleKey) }}</span>
+							</p>
+
+							<div
+								v-for="item of part.items"
+								:key="item.slug"
+								class="dashboard-nav-row"
+								:class="{ 'dashboard-nav-row--current': item.current }"
+							>
+								<button
+									type="button"
+									class="dashboard-nav-button"
+									:class="{ 'dashboard-nav-button--current': item.current }"
+									:aria-current="item.current ? 'page' : undefined"
+									@click="open(item.slug)"
+								>
+									<UIcon
+										:name="item.icon"
+										class="size-4.5 shrink-0"
+										:class="item.current ? 'text-primary' : 'text-muted'"
+										aria-hidden="true"
+									/>
+									<span class="min-w-0 flex-1 truncate">{{
+										ts(item.labelKey)
+									}}</span>
+									<span v-if="item.comingSoon" class="dashboard-nav-soon">
+										{{ ts("dashboard.coming_soon.badge") }}
+									</span>
+									<span v-if="item.count !== null" class="dashboard-nav-count">
+										{{ item.count }}
+									</span>
+									<span
+										v-if="item.off"
+										class="size-1.5 shrink-0 rounded-full bg-muted"
+										:title="ts('dashboard.nav_module_off')"
+									></span>
+								</button>
+								<button
+									v-if="item.pinnable"
+									type="button"
+									class="dashboard-nav-pin"
+									:class="{ 'dashboard-nav-pin--on': item.pinned }"
+									:aria-pressed="item.pinned"
+									:aria-label="
+										ts(
+											item.pinned
+												? 'dashboard.nav_unpin'
+												: 'dashboard.nav_pin',
+											{
+												name: ts(item.labelKey),
+											},
+										)
+									"
+									@click="togglePin(item.slug)"
+								>
+									<UIcon
+										name="ic:round-push-pin"
+										class="size-4"
+										aria-hidden="true"
+									/>
+								</button>
+							</div>
+						</template>
 					</template>
 				</template>
-			</template>
-		</nav>
+			</nav>
+		</DiscordScrollbar>
 
 		<DashboardAccountCard :floating />
 	</div>
@@ -261,6 +278,10 @@ const groups = computed(() =>
 	@apply flex h-12 shrink-0 items-center gap-2.5 px-3;
 	border-bottom: 1px solid var(--home-border-subtle);
 	box-shadow: var(--console-shadow-low);
+}
+
+.dashboard-nav-scroll {
+	@apply h-full max-h-full min-h-0 flex-1;
 }
 
 /* The list scrolls out above the floating card, never under it. */

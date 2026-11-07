@@ -5,6 +5,8 @@
 			'discord-scrollbar-with-arrows': showArrows,
 			'discord-scrollbar-with-below-viewport': Boolean(slots['below-viewport']),
 			'discord-scrollbar-auto-hide': autoHide,
+			'discord-scrollbar-overlay': overlay,
+			'discord-scrollbar-themed': themed,
 			'discord-scrollbar-scrolling': isScrolling,
 			'discord-scrollbar-scrollable': isScrollable || alwaysShowTrack,
 		}"
@@ -91,6 +93,13 @@ interface DiscordScrollbarProps {
 	focusable?: boolean;
 	/** Accessible name for the focusable viewport; pair with `focusable`. */
 	viewportLabel?: string;
+	/**
+	 * Float the thumb over the content instead of keeping a lane for it, so a
+	 * narrow column (the server rail) keeps its full width.
+	 */
+	overlay?: boolean;
+	/** Tint the thumb from the selected theme's muted text instead of Discord's grey. */
+	themed?: boolean;
 }
 
 interface DiscordScrollbarSlots {
@@ -114,6 +123,8 @@ const {
 	autoHide = false,
 	focusable = false,
 	viewportLabel,
+	overlay = false,
+	themed = false,
 } = defineProps<DiscordScrollbarProps>();
 
 const slots = useSlots();
@@ -230,6 +241,21 @@ function scrollByStep(direction: 1 | -1) {
 
 .discord-scrollbar-scrollable {
 	grid-template-columns: minmax(0, 1fr) var(--discord-scrollbar-gutter);
+}
+
+.discord-scrollbar.discord-scrollbar-themed {
+	--discord-scrollbar-thumb: color-mix(in oklab, var(--ui-text-muted) 45%, transparent);
+	--discord-scrollbar-arrow: color-mix(in oklab, var(--ui-text-muted) 70%, transparent);
+}
+
+/* The thumb floats over the content's right edge: no lane is kept for it. */
+.discord-scrollbar.discord-scrollbar-overlay {
+	@apply relative;
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.discord-scrollbar-overlay .discord-scrollbar-track {
+	@apply pointer-events-none absolute inset-y-0 right-0 z-1;
 }
 
 .discord-scrollbar-body {

@@ -90,4 +90,45 @@ describe("DiscordScrollbar", () => {
 
 		wrapper.unmount();
 	});
+
+	it("floats the thumb over the content and tints it from the theme when asked (positive)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordScrollbar, {
+			props: { alwaysShowTrack: true, overlay: true, themed: true },
+			slots: { default: "<p>content</p>" },
+			attachTo: document.body,
+		});
+		const root = wrapper.find(".discord-scrollbar").element as HTMLElement;
+
+		// ASSERT — one column for the content, the track laid over it
+		expect(root.classList).toContain("discord-scrollbar-overlay");
+		expect(root.classList).toContain("discord-scrollbar-themed");
+		expect(getComputedStyle(root).gridTemplateColumns.split(" ")).toHaveLength(1);
+		const track = wrapper.find(".discord-scrollbar-track").element as HTMLElement;
+		expect(getComputedStyle(track).position).toBe("absolute");
+		expect(getComputedStyle(root).getPropertyValue("--discord-scrollbar-thumb")).toContain(
+			"color-mix",
+		);
+
+		wrapper.unmount();
+	});
+
+	it("keeps a lane for the thumb and Discord's grey by default (negative)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordScrollbar, {
+			props: { alwaysShowTrack: true },
+			slots: { default: "<p>content</p>" },
+			attachTo: document.body,
+		});
+		const root = wrapper.find(".discord-scrollbar").element as HTMLElement;
+
+		// ASSERT
+		expect(root.classList).not.toContain("discord-scrollbar-overlay");
+		expect(getComputedStyle(root).gridTemplateColumns.split(" ")).toHaveLength(2);
+		expect(getComputedStyle(root).getPropertyValue("--discord-scrollbar-thumb")).not.toContain(
+			"color-mix",
+		);
+
+		wrapper.unmount();
+	});
 });

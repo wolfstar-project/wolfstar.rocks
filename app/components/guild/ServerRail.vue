@@ -1,93 +1,101 @@
 <template>
 	<nav class="guild-rail hidden sm:flex" :aria-label="ts('dashboard.server_rail_aria')">
-		<!-- Home: the direct messages, with a pill while open and the unread count. -->
-		<div class="guild-rail-slot">
-			<span
-				class="guild-rail-pill"
-				:class="{ 'guild-rail-pill--on': !currentGuildId }"
-				aria-hidden="true"
-			></span>
-			<button
-				type="button"
-				class="guild-rail-home"
-				:class="{ 'guild-rail-home--active': !currentGuildId }"
-				:aria-current="currentGuildId ? undefined : 'page'"
-				:aria-label="ts('dashboard.dm.home_aria')"
-				:title="ts('dashboard.dm.home_aria')"
-				@click="emit('home')"
-			>
-				<IconsWolfstar class="size-7 text-neutral-content" aria-hidden="true" />
-			</button>
-			<span v-if="totalUnread > 0" class="guild-rail-unread">
-				<span aria-hidden="true">{{ totalUnread }}</span>
-				<span class="sr-only">{{ ts("dashboard.dm.unread", { count: totalUnread }) }}</span>
-			</span>
-		</div>
+		<DiscordScrollbar overlay auto-hide themed class="guild-rail-scroll">
+			<div class="guild-rail-list">
+				<!-- Home: the direct messages, with a pill while open and the unread count. -->
+				<div class="guild-rail-slot">
+					<span
+						class="guild-rail-pill"
+						:class="{ 'guild-rail-pill--on': !currentGuildId }"
+						aria-hidden="true"
+					></span>
+					<button
+						type="button"
+						class="guild-rail-home"
+						:class="{ 'guild-rail-home--active': !currentGuildId }"
+						:aria-current="currentGuildId ? undefined : 'page'"
+						:aria-label="ts('dashboard.dm.home_aria')"
+						:title="ts('dashboard.dm.home_aria')"
+						@click="emit('home')"
+					>
+						<IconsWolfstar class="size-7 text-neutral-content" aria-hidden="true" />
+					</button>
+					<span v-if="totalUnread > 0" class="guild-rail-unread">
+						<span aria-hidden="true">{{ totalUnread }}</span>
+						<span class="sr-only">{{
+							ts("dashboard.dm.unread", { count: totalUnread })
+						}}</span>
+					</span>
+				</div>
 
-		<span class="guild-rail-divider" aria-hidden="true" />
+				<span class="guild-rail-divider" aria-hidden="true" />
 
-		<template v-for="server of servers" :key="server.id">
-			<button
-				v-if="server.wolfstarIsIn"
-				type="button"
-				class="guild-rail-item"
-				:class="server.id === currentGuildId ? 'guild-rail-item--active' : undefined"
-				:aria-current="server.id === currentGuildId ? 'page' : undefined"
-				:aria-label="server.name"
-				:title="server.name"
-				@click="emit('select', server.id)"
-			>
-				<img
-					v-if="resolveGuildIconSrc(server, { size: 128 })"
-					:src="resolveGuildIconSrc(server, { size: 128 })"
-					alt=""
-					class="size-full object-cover"
-					width="48"
-					height="48"
+				<template v-for="server of servers" :key="server.id">
+					<button
+						v-if="server.wolfstarIsIn"
+						type="button"
+						class="guild-rail-item"
+						:class="
+							server.id === currentGuildId ? 'guild-rail-item--active' : undefined
+						"
+						:aria-current="server.id === currentGuildId ? 'page' : undefined"
+						:aria-label="server.name"
+						:title="server.name"
+						@click="emit('select', server.id)"
+					>
+						<img
+							v-if="resolveGuildIconSrc(server, { size: 128 })"
+							:src="resolveGuildIconSrc(server, { size: 128 })"
+							alt=""
+							class="size-full object-cover"
+							width="48"
+							height="48"
+						/>
+						<span v-else aria-hidden="true">{{ server.acronym }}</span>
+					</button>
+					<!-- A server without WolfStar: faded, with a "+", and it invites the bot. -->
+					<a
+						v-else
+						:href="guildAddURL(server.id)"
+						class="guild-rail-invite"
+						:aria-label="ts('guild_card.invite_bot_aria', { name: server.name })"
+						:title="ts('guild_card.invite_bot_aria', { name: server.name })"
+					>
+						<span class="guild-rail-item">
+							<img
+								v-if="resolveGuildIconSrc(server, { size: 128 })"
+								:src="resolveGuildIconSrc(server, { size: 128 })"
+								alt=""
+								class="size-full object-cover"
+								width="48"
+								height="48"
+							/>
+							<span v-else aria-hidden="true">{{ server.acronym }}</span>
+						</span>
+						<span class="guild-rail-invite-badge" aria-hidden="true">
+							<UIcon name="ic:round-add" class="size-3" />
+						</span>
+					</a>
+				</template>
+
+				<USkeleton
+					v-for="n of pending && servers.length === 0 ? 3 : 0"
+					:key="n"
+					class="guild-rail-skeleton"
 				/>
-				<span v-else aria-hidden="true">{{ server.acronym }}</span>
-			</button>
-			<!-- A server without WolfStar: faded, with a "+", and it invites the bot. -->
-			<a
-				v-else
-				:href="guildAddURL(server.id)"
-				class="guild-rail-invite"
-				:aria-label="ts('guild_card.invite_bot_aria', { name: server.name })"
-				:title="ts('guild_card.invite_bot_aria', { name: server.name })"
-			>
-				<span class="guild-rail-item">
-					<img
-						v-if="resolveGuildIconSrc(server, { size: 128 })"
-						:src="resolveGuildIconSrc(server, { size: 128 })"
-						alt=""
-						class="size-full object-cover"
-						width="48"
-						height="48"
-					/>
-					<span v-else aria-hidden="true">{{ server.acronym }}</span>
-				</span>
-				<span class="guild-rail-invite-badge" aria-hidden="true">
-					<UIcon name="ic:round-add" class="size-3" />
-				</span>
-			</a>
-		</template>
 
-		<USkeleton
-			v-for="n of pending && servers.length === 0 ? 3 : 0"
-			:key="n"
-			class="guild-rail-skeleton"
-		/>
+				<span class="guild-rail-divider" aria-hidden="true" />
 
-		<span class="guild-rail-divider" aria-hidden="true" />
-
-		<a
-			:href="invites.WolfStar"
-			class="guild-rail-add"
-			:aria-label="ts('dashboard.server_rail_add')"
-			:title="ts('dashboard.server_rail_add')"
-		>
-			<UIcon name="ic:round-add" class="size-5.5" aria-hidden="true" />
-		</a>
+				<a
+					:href="invites.WolfStar"
+					class="guild-rail-add"
+					:aria-label="ts('dashboard.server_rail_add')"
+					:title="ts('dashboard.server_rail_add')"
+				>
+					<UIcon name="ic:round-add" class="size-5.5" aria-hidden="true" />
+				</a>
+			</div>
+		</DiscordScrollbar>
 	</nav>
 </template>
 
@@ -121,12 +129,21 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 @reference "@/assets/css/main.css";
 
 .guild-rail {
-	@apply shrink-0 flex-col items-center gap-2 overflow-x-hidden overflow-y-auto pt-3;
-	/* As wide as the layout says, and open at the foot for the account card
-	   floating over it (the drawer's rail is as tall as the screen anyway). */
+	@apply min-h-0 shrink-0 flex-col overflow-hidden;
+	/* As wide as the layout says. */
 	width: var(--console-rail-width, 3.75rem);
-	padding-bottom: 4.75rem;
 	background-color: var(--console-rail);
+}
+
+.guild-rail-scroll {
+	@apply h-full max-h-full min-h-0 flex-1;
+}
+
+.guild-rail-list {
+	@apply flex flex-col items-center gap-2 pt-3;
+	/* Open at the foot for the account card floating over it (the drawer's
+	   rail is as tall as the screen anyway). */
+	padding-bottom: 4.75rem;
 }
 
 .guild-rail-home,

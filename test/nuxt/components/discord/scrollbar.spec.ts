@@ -132,37 +132,56 @@ describe("DiscordScrollbar", () => {
 		wrapper.unmount();
 	});
 
-	it("scrolls the content when the thumb is dragged, and a page when the rail is clicked (positive)", async () => {
-		// ARRANGE — a 200px viewport over 1000px of content
+	async function mountTall(props: { overlay?: boolean }) {
+		// A 200px viewport over 1000px of content.
 		const wrapper = await mountSuspended(DiscordScrollbar, {
-			props: { overlay: true },
+			props,
 			slots: { default: '<div style="height: 1000px">tall</div>' },
 			attachTo: document.body,
 		});
 		(wrapper.element as HTMLElement).style.height = "200px";
-		const viewport = wrapper.find(".discord-scrollbar-viewport").element as HTMLElement;
-		const thumb = wrapper.find(".discord-scrollbar-thumb").element as HTMLElement;
-		const rail = wrapper.find(".discord-scrollbar-thumb-rail").element as HTMLElement;
-		await vi.waitFor(() => expect(thumb.style.height).not.toBe("0px"));
+		const parts = {
+			wrapper,
+			viewport: wrapper.find(".discord-scrollbar-viewport").element as HTMLElement,
+			thumb: wrapper.find(".discord-scrollbar-thumb").element as HTMLElement,
+			rail: wrapper.find(".discord-scrollbar-thumb-rail").element as HTMLElement,
+		};
+		await vi.waitFor(() => expect(parts.thumb.style.height).not.toBe("0px"));
+		return parts;
+	}
+
+	const pointer = (type: string, clientY: number, target: HTMLElement) =>
+		target.dispatchEvent(
+			new PointerEvent(type, { bubbles: true, button: 0, clientY, pointerId: 1 }),
+		);
+
+	it("scrolls the content when the thumb is dragged, over the content too (positive)", async () => {
+		// ARRANGE — the overlay thumb is the only part that takes the pointer
+		const { wrapper, viewport, thumb, rail } = await mountTall({ overlay: true });
+		expect(getComputedStyle(thumb).pointerEvents).toBe("auto");
+		expect(getComputedStyle(rail).pointerEvents).toBe("none");
 
 		// ACT — drag the thumb 40px down
-		const at = (type: string, clientY: number, target: HTMLElement) =>
-			target.dispatchEvent(
-				new PointerEvent(type, { bubbles: true, button: 0, clientY, pointerId: 1 }),
-			);
-		at("pointerdown", 10, thumb);
-		at("pointermove", 50, thumb);
-		at("pointerup", 50, thumb);
+		pointer("pointerdown", 10, thumb);
+		pointer("pointermove", 50, thumb);
+		pointer("pointerup", 50, thumb);
 
 		// ASSERT — the content moved by more than the pointer did
 		expect(viewport.scrollTop).toBeGreaterThan(40);
 
-		// ACT — click the rail above the thumb
-		const before = viewport.scrollTop;
-		at("pointerdown", rail.getBoundingClientRect().top + 1, rail);
+		wrapper.unmount();
+	});
+
+	it("moves a page when the rail is clicked beside the thumb (positive)", async () => {
+		// ARRANGE — a lane kept for the thumb, so the rail takes clicks
+		const { wrapper, viewport, rail } = await mountTall({});
+		expect(getComputedStyle(rail).pointerEvents).toBe("auto");
+
+		// ACT — click the rail below the thumb
+		pointer("pointerdown", rail.getBoundingClientRect().bottom - 2, rail);
 
 		// ASSERT
-		await vi.waitFor(() => expect(viewport.scrollTop).toBeLessThan(before));
+		await vi.waitFor(() => expect(viewport.scrollTop).toBeGreaterThan(0));
 
 		wrapper.unmount();
 	});

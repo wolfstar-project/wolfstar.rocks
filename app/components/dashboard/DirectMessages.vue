@@ -13,63 +13,65 @@
 			</label>
 		</div>
 
-		<nav class="dm-list" :aria-label="ts('dashboard.dm.title')">
-			<!-- The member's own appeals: a page of the Home above the threads. -->
-			<button
-				type="button"
-				class="dm-row dm-row--page"
-				:class="{ 'dm-row--current': page === 'appeals' }"
-				:aria-current="page === 'appeals' ? 'page' : undefined"
-				@click="showAppeals"
-			>
-				<UIcon name="ic:round-balance" class="size-5.5 shrink-0" aria-hidden="true" />
-				<span class="grow truncate text-[0.9375rem] font-semibold">
-					{{ ts("dashboard.my_appeals.title") }}
-				</span>
-				<span v-if="openCount > 0" class="dm-unread">
-					<span aria-hidden="true">{{ openCount }}</span>
-					<span class="sr-only">{{
-						ts("dashboard.my_appeals.badge", { count: openCount })
-					}}</span>
-				</span>
-			</button>
-			<div class="dm-divider" aria-hidden="true"></div>
-
-			<p class="dm-list-label">{{ ts("dashboard.dm.title") }}</p>
-			<button
-				v-for="row of rows"
-				:key="row.id"
-				type="button"
-				class="dm-row"
-				:class="{ 'dm-row--current': row.current }"
-				:aria-current="row.current ? 'page' : undefined"
-				@click="open(row.id)"
-			>
-				<img
-					:src="row.avatar"
-					alt=""
-					width="34"
-					height="34"
-					class="size-8.5 rounded-full"
-				/>
-				<span class="flex min-w-0 grow flex-col gap-px">
-					<span class="flex min-w-0 items-center gap-1.5">
-						<span class="truncate text-sm font-semibold">{{ row.name }}</span>
-						<DashboardBotTag />
+		<DiscordScrollbar overlay auto-hide themed class="dm-list-scroll">
+			<nav class="dm-list" :aria-label="ts('dashboard.dm.title')">
+				<!-- The member's own appeals: a page of the Home above the threads. -->
+				<button
+					type="button"
+					class="dm-row dm-row--page"
+					:class="{ 'dm-row--current': page === 'appeals' }"
+					:aria-current="page === 'appeals' ? 'page' : undefined"
+					@click="showAppeals"
+				>
+					<UIcon name="ic:round-balance" class="size-5.5 shrink-0" aria-hidden="true" />
+					<span class="grow truncate text-[0.9375rem] font-semibold">
+						{{ ts("dashboard.my_appeals.title") }}
 					</span>
-					<span class="truncate text-xs text-muted">{{ row.preview }}</span>
-				</span>
-				<span v-if="row.unread > 0" class="dm-unread">
-					<span aria-hidden="true">{{ row.unread }}</span>
-					<span class="sr-only">{{
-						ts("dashboard.dm.unread", { count: row.unread })
-					}}</span>
-				</span>
-			</button>
-			<p v-if="rows.length === 0" class="px-2 py-3 text-[0.8125rem] text-muted">
-				{{ ts("select.nothing_matches") }}
-			</p>
-		</nav>
+					<span v-if="openCount > 0" class="dm-unread">
+						<span aria-hidden="true">{{ openCount }}</span>
+						<span class="sr-only">{{
+							ts("dashboard.my_appeals.badge", { count: openCount })
+						}}</span>
+					</span>
+				</button>
+				<div class="dm-divider" aria-hidden="true"></div>
+
+				<p class="dm-list-label">{{ ts("dashboard.dm.title") }}</p>
+				<button
+					v-for="row of rows"
+					:key="row.id"
+					type="button"
+					class="dm-row"
+					:class="{ 'dm-row--current': row.current }"
+					:aria-current="row.current ? 'page' : undefined"
+					@click="open(row.id)"
+				>
+					<img
+						:src="row.avatar"
+						alt=""
+						width="34"
+						height="34"
+						class="size-8.5 rounded-full"
+					/>
+					<span class="flex min-w-0 grow flex-col gap-px">
+						<span class="flex min-w-0 items-center gap-1.5">
+							<span class="truncate text-sm font-semibold">{{ row.name }}</span>
+							<DashboardBotTag />
+						</span>
+						<span class="truncate text-xs text-muted">{{ row.preview }}</span>
+					</span>
+					<span v-if="row.unread > 0" class="dm-unread">
+						<span aria-hidden="true">{{ row.unread }}</span>
+						<span class="sr-only">{{
+							ts("dashboard.dm.unread", { count: row.unread })
+						}}</span>
+					</span>
+				</button>
+				<p v-if="rows.length === 0" class="px-2 py-3 text-[0.8125rem] text-muted">
+					{{ ts("select.nothing_matches") }}
+				</p>
+			</nav>
+		</DiscordScrollbar>
 
 		<DashboardAccountCard :floating />
 	</div>
@@ -170,8 +172,16 @@ function showAppeals() {
 	color: var(--ui-text-muted);
 }
 
+.dm-list-scroll {
+	@apply h-full max-h-full min-h-0 flex-1;
+}
+
+.dm-sidebar--floating .dm-list-scroll :deep(.discord-scrollbar-track) {
+	bottom: 4.75rem;
+}
+
 .dm-list {
-	@apply flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto px-2 pt-3 pb-2;
+	@apply flex flex-col gap-0.5 px-2 pt-3 pb-2;
 }
 
 /* The list scrolls out above the floating card, never under it. */

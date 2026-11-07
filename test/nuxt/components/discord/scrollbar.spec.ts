@@ -1,5 +1,5 @@
 import { mountSuspended } from "@nuxt/test-utils/runtime";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import DiscordScrollbar from "~/components/discord/scrollbar.vue";
 
 describe("DiscordScrollbar", () => {
@@ -87,6 +87,101 @@ describe("DiscordScrollbar", () => {
 		expect(styles.getPropertyValue("--discord-scrollbar-edge-inset").trim()).toBe("3px");
 		expect(styles.getPropertyValue("--discord-scrollbar-end-inset").trim()).toBe("4px");
 		expect(wrapper.find(".discord-scrollbar-thumb").classes()).toContain("rounded-full");
+
+		wrapper.unmount();
+	});
+
+	it("floats the thumb over the content and tints it from the theme when asked (positive)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordScrollbar, {
+			props: { alwaysShowTrack: true, overlay: true, themed: true },
+			slots: { default: "<p>content</p>" },
+			attachTo: document.body,
+		});
+		const root = wrapper.find(".discord-scrollbar").element as HTMLElement;
+
+		// ASSERT — one column for the content, the track laid over it
+		expect(root.classList).toContain("discord-scrollbar-overlay");
+		expect(root.classList).toContain("discord-scrollbar-themed");
+		expect(getComputedStyle(root).gridTemplateColumns.split(" ")).toHaveLength(1);
+		const track = wrapper.find(".discord-scrollbar-track").element as HTMLElement;
+		expect(getComputedStyle(track).position).toBe("absolute");
+		expect(getComputedStyle(root).getPropertyValue("--discord-scrollbar-thumb")).toContain(
+			"color-mix",
+		);
+
+		wrapper.unmount();
+	});
+
+	it("keeps a lane for the thumb and Discord's grey by default (negative)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordScrollbar, {
+			props: { alwaysShowTrack: true },
+			slots: { default: "<p>content</p>" },
+			attachTo: document.body,
+		});
+		const root = wrapper.find(".discord-scrollbar").element as HTMLElement;
+
+		// ASSERT
+		expect(root.classList).not.toContain("discord-scrollbar-overlay");
+		expect(getComputedStyle(root).gridTemplateColumns.split(" ")).toHaveLength(2);
+		expect(getComputedStyle(root).getPropertyValue("--discord-scrollbar-thumb")).not.toContain(
+			"color-mix",
+		);
+
+		wrapper.unmount();
+	});
+
+	async function mountTall(props: { overlay?: boolean }) {
+		// A 200px viewport over 1000px of content.
+		const wrapper = await mountSuspended(DiscordScrollbar, {
+			props,
+			slots: { default: '<div style="height: 1000px">tall</div>' },
+			attachTo: document.body,
+		});
+		(wrapper.element as HTMLElement).style.height = "200px";
+		const parts = {
+			wrapper,
+			viewport: wrapper.find(".discord-scrollbar-viewport").element as HTMLElement,
+			thumb: wrapper.find(".discord-scrollbar-thumb").element as HTMLElement,
+			rail: wrapper.find(".discord-scrollbar-thumb-rail").element as HTMLElement,
+		};
+		await vi.waitFor(() => expect(parts.thumb.style.height).not.toBe("0px"));
+		return parts;
+	}
+
+	const pointer = (type: string, clientY: number, target: HTMLElement) =>
+		target.dispatchEvent(
+			new PointerEvent(type, { bubbles: true, button: 0, clientY, pointerId: 1 }),
+		);
+
+	it("scrolls the content when the thumb is dragged, over the content too (positive)", async () => {
+		// ARRANGE — the overlay thumb is the only part that takes the pointer
+		const { wrapper, viewport, thumb, rail } = await mountTall({ overlay: true });
+		expect(getComputedStyle(thumb).pointerEvents).toBe("auto");
+		expect(getComputedStyle(rail).pointerEvents).toBe("none");
+
+		// ACT — drag the thumb 40px down
+		pointer("pointerdown", 10, thumb);
+		pointer("pointermove", 50, thumb);
+		pointer("pointerup", 50, thumb);
+
+		// ASSERT — the content moved by more than the pointer did
+		expect(viewport.scrollTop).toBeGreaterThan(40);
+
+		wrapper.unmount();
+	});
+
+	it("moves a page when the rail is clicked beside the thumb (positive)", async () => {
+		// ARRANGE — a lane kept for the thumb, so the rail takes clicks
+		const { wrapper, viewport, rail } = await mountTall({});
+		expect(getComputedStyle(rail).pointerEvents).toBe("auto");
+
+		// ACT — click the rail below the thumb
+		pointer("pointerdown", rail.getBoundingClientRect().bottom - 2, rail);
+
+		// ASSERT
+		await vi.waitFor(() => expect(viewport.scrollTop).toBeGreaterThan(0));
 
 		wrapper.unmount();
 	});

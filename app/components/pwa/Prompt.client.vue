@@ -1,16 +1,18 @@
 <template>
 	<div v-if="visible" style="view-transition-name: pwa-update-prompt">
-		<div
-			class="flex items-center gap-3 rounded-full bg-base-200 px-4 py-3 shadow-lg ring-1 ring-base-100"
-		>
-			<span class="text-lg" aria-hidden="true">✨</span>
-			<div class="text-sm font-medium">{{ ts("pwa.update_available") }}</div>
-			<UButton color="primary" size="xs" :label="ts('pwa.reload')" @click="reload" />
+		<div class="update-notice" role="status">
+			<UIcon
+				name="ic:round-auto-awesome"
+				class="size-5 shrink-0 text-info"
+				aria-hidden="true"
+			/>
+			<p class="grow font-medium">{{ ts("pwa.update_available") }}</p>
+			<UButton color="primary" size="sm" :label="ts('pwa.reload')" @click="reload" />
 			<UButton
 				color="neutral"
 				variant="ghost"
-				size="xs"
-				icon="heroicons:x-mark-20-solid"
+				size="sm"
+				icon="ic:round-close"
 				:aria-label="ts('pwa.dismiss')"
 				@click="dismiss"
 			/>
@@ -101,3 +103,17 @@ if (import.meta.client) {
 	});
 }
 </script>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+/* Same recipe as the dashboard's notices (ServersNotice): 8px corners, a tint of the
+   status colour and a border of it. It floats over the page, so the tint sits on a
+   solid surface instead of on transparency. */
+.update-notice {
+	@apply flex items-center gap-3 rounded-[8px] px-3.5 py-3 text-sm leading-normal shadow-lg;
+	background-color: color-mix(in oklab, var(--color-info) 10%, var(--color-base-100));
+	border: 1px solid color-mix(in oklab, var(--color-info) 30%, transparent);
+	color: var(--ui-text-toned);
+}
+</style>

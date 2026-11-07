@@ -34,7 +34,12 @@
 							:help="ts('guild_settings.appeals.editor.icon_help')"
 							:error="problemText('icon')"
 						>
-							<GuildAppealsEmojiPicker v-model="draft.icon" :servers="serverEmojis" />
+							<GuildAppealsEmojiPicker
+								v-model="draft.icon"
+								:servers="serverEmojis"
+								:server-name="guild?.name"
+								:server-icon="serverIcon"
+							/>
 						</UFormField>
 					</div>
 					<UFormField
@@ -266,6 +271,7 @@ const formId = useId();
 
 // The emoji of the server come first in the picker, and are stored as Discord writes them.
 const serverEmojis = computed(() => usableServerEmojis(guild?.emojis ?? []));
+const serverIcon = computed(() => resolveGuildIconSrc(guild, { size: 32 }));
 
 const nameField = useTemplateRef<{ inputRef: HTMLInputElement | null }>("nameField");
 

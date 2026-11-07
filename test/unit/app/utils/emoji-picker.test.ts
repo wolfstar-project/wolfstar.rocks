@@ -3,24 +3,44 @@ import {
 	emojiShortcode,
 	groupEmojis,
 	matchesEmojiQuery,
+	parseServerEmojiToken,
+	rememberEmoji,
+	RECENT_EMOJI_LIMIT,
 	searchEmojis,
 	serverEmojiToken,
 	serverEmojiUrl,
+	undrawnHexcodes,
 	usableServerEmojis,
 	withSkinTone,
 	type RawEmoji,
 } from "~/utils/emoji-picker";
 
-const tones = ["👍🏻", "👍🏼", "👍🏽", "👍🏾", "👍🏿"].map((unicode) => ({ unicode }));
+const tones = ["👍🏻", "👍🏼", "👍🏽", "👍🏾", "👍🏿"].map((unicode, index) => ({
+	hexcode: `1F44D-1F3F${"BCDEF"[index]}`,
+	unicode,
+}));
 
 const raw: RawEmoji[] = [
-	{ group: 0, label: "grinning face", unicode: "😀", tags: ["grin", "happy"] },
-	{ group: 1, label: "thumbs up", unicode: "👍", tags: ["+1", "yes"], skins: tones },
-	{ group: 1, label: "people holding hands", unicode: "🧑‍🤝‍🧑", skins: [...tones, ...tones] },
-	{ group: 2, label: "light skin tone", unicode: "🏻" },
-	{ group: 9, label: "flag: Italy", unicode: "🇮🇹" },
-	{ label: "regional indicator A", unicode: "🇦" },
-	{ group: 8, label: "check mark button", unicode: "✅" },
+	{ group: 0, hexcode: "1F600", label: "grinning face", unicode: "😀", tags: ["grin", "happy"] },
+	{
+		group: 1,
+		hexcode: "1F44D",
+		label: "thumbs up",
+		unicode: "👍",
+		tags: ["+1", "yes"],
+		skins: tones,
+	},
+	{
+		group: 1,
+		hexcode: "1F9D1-200D-1F91D-200D-1F9D1",
+		label: "people holding hands",
+		unicode: "🧑‍🤝‍🧑",
+		skins: [...tones, ...tones],
+	},
+	{ group: 2, hexcode: "1F3FB", label: "light skin tone", unicode: "🏻" },
+	{ group: 9, hexcode: "1F1EE-1F1F9", label: "flag: Italy", unicode: "🇮🇹" },
+	{ hexcode: "1F1E6", label: "regional indicator A", unicode: "🇦" },
+	{ group: 8, hexcode: "2705", label: "check mark button", unicode: "✅" },
 ];
 
 describe("groupEmojis", () => {
@@ -45,6 +65,33 @@ describe("groupEmojis", () => {
 	it("keeps the five tones of an emoji, and none for one that has twenty-five", () => {
 		expect(sections.people[0]?.skins).toStrictEqual(["👍🏻", "👍🏼", "👍🏽", "👍🏾", "👍🏿"]);
 		expect(sections.people[1]?.skins).toStrictEqual([]);
+	});
+});
+
+describe("the emoji Twemoji cannot draw", () => {
+	it("are the codes of the Emoji versions newer than its release", () => {
+		const undrawn = undrawnHexcodes({
+			"0.6": ["1F600"],
+			"13.1": ["2764-FE0F-200D-1F525"],
+			"17": ["1FAE9"],
+			"18": ["1FAE8", "1F44D"],
+		});
+
+		expect([...undrawn].toSorted()).toStrictEqual(["1F44D", "1FAE8"]);
+	});
+
+	it("are left out of the sections", () => {
+		const sections = groupEmojis(raw, new Set(["1F600"]));
+
+		expect(sections.smileys).toStrictEqual([]);
+		expect(sections.people.map((entry) => entry.emoji)).toContain("👍");
+	});
+
+	it("take the tones of an emoji with them when one of the tones is missing", () => {
+		const sections = groupEmojis(raw, new Set(["1F44D-1F3FD"]));
+
+		expect(sections.people[0]?.emoji).toBe("👍");
+		expect(sections.people[0]?.skins).toStrictEqual([]);
 	});
 });
 
@@ -103,6 +150,23 @@ describe("the emoji of a server", () => {
 		);
 	});
 
+	it("is served moving only when it is asked to", () => {
+		expect(serverEmojiUrl("123456789012345678", 64, true)).toBe(
+			"https://cdn.discordapp.com/emojis/123456789012345678.webp?size=64&animated=true",
+		);
+	});
+
+	it("is read back from what a form stores", () => {
+		expect(parseServerEmojiToken("<:wolf:123456789012345678>")).toStrictEqual({
+			id: "123456789012345678",
+			name: "wolf",
+			animated: false,
+		});
+		expect(parseServerEmojiToken("<a:dance:123456789012345678>")?.animated).toBe(true);
+		expect(parseServerEmojiToken("😀")).toBeNull();
+		expect(parseServerEmojiToken(null)).toBeNull();
+	});
+
 	it("is offered when members can use it and a form can hold its name", () => {
 		expect(
 			usableServerEmojis([
@@ -121,5 +185,21 @@ describe("emojiShortcode", () => {
 		expect(emojiShortcode("grinning face")).toBe(":grinning_face:");
 		expect(emojiShortcode("flag: Italy")).toBe(":flag_italy:");
 		expect(emojiShortcode("A button (blood type)")).toBe(":a_button_blood_type:");
+	});
+});
+
+describe("rememberEmoji", () => {
+	it("puts the emoji first and keeps it once", () => {
+		expect(rememberEmoji(["😀", "👍"], "👍")).toStrictEqual(["👍", "😀"]);
+		expect(rememberEmoji(["😀"], "🔥")).toStrictEqual(["🔥", "😀"]);
+	});
+
+	it("forgets the oldest when the list is full", () => {
+		const full = Array.from({ length: RECENT_EMOJI_LIMIT }, (_, index) => `e${index}`);
+		const next = rememberEmoji(full, "new");
+
+		expect(next).toHaveLength(RECENT_EMOJI_LIMIT);
+		expect(next[0]).toBe("new");
+		expect(next).not.toContain(`e${RECENT_EMOJI_LIMIT - 1}`);
 	});
 });

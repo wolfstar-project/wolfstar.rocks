@@ -25,7 +25,13 @@
 			</button>
 
 			<template #content>
-				<GuildAppealsEmojiPickerPanel :servers="servers" :current="icon" @pick="onPick" />
+				<GuildAppealsEmojiPickerPanel
+					:servers="servers"
+					:current="icon"
+					:server-name="serverName"
+					:server-icon="serverIcon"
+					@pick="onPick"
+				/>
 			</template>
 		</UPopover>
 
@@ -47,9 +53,17 @@ import type { ServerEmoji } from "~/utils/emoji-picker";
 /** What the form stores: an emoji, or `<:name:id>` for one of the server, empty for none. */
 const icon = defineModel<string>({ required: true });
 
-const { servers = [] } = defineProps<{
+const {
+	servers = [],
+	serverName = null,
+	serverIcon = null,
+} = defineProps<{
 	/** The emoji of the server, which the picker offers first. */
 	servers?: readonly ServerEmoji[];
+	/** The name of the server, which titles its emoji in the picker. */
+	serverName?: string | null;
+	/** The icon of the server, drawn beside its name. */
+	serverIcon?: string | null;
 }>();
 
 const { ts } = useI18n();

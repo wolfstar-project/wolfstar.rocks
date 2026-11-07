@@ -67,7 +67,7 @@ describe("GuildAppealsForms", () => {
 		const cards = wrapper.findAll("ol > li.console-card");
 		expect(cards).toHaveLength(2);
 		expect(cards[0]!.text()).toContain("Ban appeal");
-		expect(cards[0]!.text()).toContain("🔨");
+		expect(cards[0]!.find('img[alt="🔨"]').exists()).toBe(true);
 		expect(cards[0]!.text()).toContain("For bans.");
 		expect(cards[0]!.text()).toContain("Bans");
 		expect(cards[0]!.text()).not.toContain("Every kind");

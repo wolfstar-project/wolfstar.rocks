@@ -189,6 +189,9 @@ describe("GuildAppealsEmojiPicker", () => {
 
 		expect(cell("grinning face")!.querySelector("img")).toBeNull();
 		expect(cell("grinning face")!.textContent).toContain("😀");
+		// The character fills the box of the image, whatever font size the button has.
+		const character = cell("grinning face")!.querySelector<HTMLElement>(".twemoji-char")!;
+		expect(Number.parseFloat(getComputedStyle(character).fontSize)).toBeGreaterThan(20);
 	});
 
 	it("marks the first section in the rail until the grid is scrolled", async () => {

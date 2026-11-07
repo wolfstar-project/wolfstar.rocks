@@ -16,7 +16,7 @@
 		:aria-hidden="alt === '' ? 'true' : undefined"
 		:aria-label="alt || undefined"
 	>
-		{{ emoji }}
+		<span class="twemoji-char">{{ emoji }}</span>
 	</span>
 </template>
 
@@ -26,7 +26,7 @@ import { twemojiUrl } from "~/utils/twemoji";
 /**
  * An emoji drawn as Twemoji, the picture Discord shows, not the one the system's
  * font has. Size it with a class (`size-6`). When the image cannot be loaded it
- * falls back to the character, which then takes the font size of its parent.
+ * falls back to the character, drawn to the size of the same box.
  */
 const { emoji, alt } = defineProps<{
 	/** The character, with its skin tone and joiners: `👍🏽`. */
@@ -53,8 +53,16 @@ watch(
 	vertical-align: middle;
 }
 
+/* The character is drawn to the size of its box, so it fills what the image would. */
 .twemoji-glyph {
-	text-align: center;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	container-type: size;
+}
+
+.twemoji-char {
+	font-size: 75cqmin;
 	line-height: 1;
 }
 </style>

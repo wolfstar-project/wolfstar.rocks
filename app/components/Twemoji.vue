@@ -12,6 +12,7 @@
 	<span
 		v-else
 		class="twemoji twemoji-glyph"
+		:role="alt === '' ? undefined : 'img'"
 		:aria-hidden="alt === '' ? 'true' : undefined"
 		:aria-label="alt || undefined"
 	>

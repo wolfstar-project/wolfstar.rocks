@@ -77,10 +77,10 @@
 					:key="section.id"
 					type="button"
 					class="emoji-rail-button"
-					:class="{ 'is-active': activeCategory === section.id }"
+					:class="{ 'is-active': activeSectionId === section.id }"
 					:aria-label="section.label"
 					:title="section.label"
-					:aria-current="activeCategory === section.id ? 'true' : undefined"
+					:aria-current="activeSectionId === section.id ? 'true' : undefined"
 					@click="goTo(section.id)"
 				>
 					<img
@@ -346,10 +346,17 @@ const showTones = ref(false);
 const hovered = ref<Cell | null>(null);
 const activeKey = ref<string | null>(null);
 const collapsed = ref<SectionId[]>([]);
-const activeCategory = ref<SectionId>(servers.length > 0 ? "server" : "smileys");
+// Until the grid is scrolled, the rail marks the first section.
+const scrolledTo = ref<SectionId | null>(null);
 
 // The emoji used last, on this browser and for every server.
-const recent = useLocalStorage<string[]>("wolfstar-emoji-recent", []);
+const storedRecent = useLocalStorage<string[]>("wolfstar-emoji-recent", []);
+// What a browser holds under that key is not always the list this wrote.
+const recent = computed(() =>
+	Array.isArray(storedRecent.value)
+		? storedRecent.value.filter((value) => typeof value === "string")
+		: [],
+);
 
 const searchInput = useTemplateRef<HTMLInputElement>("searchInput");
 const scroller = useTemplateRef<HTMLElement>("scroller");
@@ -360,6 +367,7 @@ onClickOutside(toneRoot, () => {
 });
 
 const searching = computed(() => query.value.trim().length > 0);
+const activeSectionId = computed(() => scrolledTo.value ?? sections.value[0]?.id);
 const serverLabel = computed(() => serverName ?? ts(CATEGORY_KEYS.server));
 
 function serverCell(emoji: ServerEmoji, section: SectionId): Cell {
@@ -522,7 +530,7 @@ const tabKey = computed(() => {
 });
 
 function pick(cell: Cell) {
-	recent.value = rememberEmoji(recent.value, cell.base);
+	storedRecent.value = rememberEmoji(recent.value, cell.base);
 	emit("pick", cell.value);
 }
 
@@ -550,7 +558,7 @@ async function goTo(id: SectionId) {
 	await nextTick();
 	const section = scroller.value?.querySelector<HTMLElement>(`[data-category="${id}"]`);
 	if (section && scroller.value) scroller.value.scrollTop = section.offsetTop;
-	activeCategory.value = id;
+	scrolledTo.value = id;
 }
 
 // The rail marks the section whose title is at the top.
@@ -563,7 +571,7 @@ function onScroll() {
 		if (section.offsetTop > element.scrollTop + 8) break;
 		current = section.dataset.category as SectionId;
 	}
-	if (current) activeCategory.value = current;
+	if (current) scrolledTo.value = current;
 }
 
 /** The button the arrow key leads to, by where the buttons are on the screen. */

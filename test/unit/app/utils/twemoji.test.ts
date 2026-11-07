@@ -17,6 +17,10 @@ describe("twemojiFileName", () => {
 		expect(twemojiFileName("🏳️‍🌈")).toBe("1f3f3-fe0f-200d-1f308");
 		expect(twemojiFileName("👩‍💻")).toBe("1f469-200d-1f4bb");
 	});
+
+	it("uses the name the image has when it differs from the rule", () => {
+		expect(twemojiFileName("👁️‍🗨️")).toBe("1f441-200d-1f5e8");
+	});
 });
 
 describe("twemojiUrl", () => {

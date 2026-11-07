@@ -9,8 +9,14 @@ export const TWEMOJI_VERSION = "17.0.3";
 /** The newest Emoji version that release draws; later emoji have no image. */
 export const TWEMOJI_EMOJI_VERSION = 17;
 
-const ZERO_WIDTH_JOINER = 0x200D;
-const VARIATION_SELECTOR = 0xFE0F;
+const ZERO_WIDTH_JOINER = "‍";
+const VARIATION_SELECTOR = "️";
+
+/** The few files whose name does not follow the rule below. */
+const RENAMED_FILES: Readonly<Record<string, string>> = {
+	// Eye in speech bubble: the image has lost both variation selectors.
+	"1f441-fe0f-200d-1f5e8-fe0f": "1f441-200d-1f5e8",
+};
 
 /**
  * The name of an emoji's file: its code points in lowercase hex, joined by `-`.
@@ -18,12 +24,13 @@ const VARIATION_SELECTOR = 0xFE0F;
  * where the files keep it (`1f3f3-fe0f-200d-1f308` is the rainbow flag).
  */
 export function twemojiFileName(emoji: string): string {
-	const points = Array.from(emoji, (char) => char.codePointAt(0) ?? 0);
-	const joined = points.includes(ZERO_WIDTH_JOINER);
-	return points
-		.filter((point) => joined || point !== VARIATION_SELECTOR)
-		.map((point) => point.toString(16))
+	const chars = Array.from(emoji);
+	const joined = chars.includes(ZERO_WIDTH_JOINER);
+	const name = chars
+		.filter((char) => joined || char !== VARIATION_SELECTOR)
+		.map((char) => (char.codePointAt(0) ?? 0).toString(16))
 		.join("-");
+	return RENAMED_FILES[name] ?? name;
 }
 
 /** Where the image of an emoji is served from: a versioned, immutable path of jsDelivr. */

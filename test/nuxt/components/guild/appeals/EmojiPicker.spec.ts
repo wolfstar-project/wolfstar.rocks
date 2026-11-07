@@ -117,8 +117,9 @@ describe("GuildAppealsEmojiPicker", () => {
 		const { wrapper } = await mount();
 		await open(wrapper);
 
+		// The test setup keeps the address on `data-src`, see test/nuxt/setup.ts.
 		const image = cell("grinning face")!.querySelector("img");
-		expect(image?.getAttribute("src")).toBe(
+		expect(image?.dataset.src).toBe(
 			"https://cdn.jsdelivr.net/gh/jdecked/twemoji@17.0.3/assets/svg/1f600.svg",
 		);
 		expect(cell("grinning face")!.textContent?.trim()).toBe("");
@@ -188,6 +189,23 @@ describe("GuildAppealsEmojiPicker", () => {
 
 		expect(cell("grinning face")!.querySelector("img")).toBeNull();
 		expect(cell("grinning face")!.textContent).toContain("😀");
+	});
+
+	it("marks the first section in the rail until the grid is scrolled", async () => {
+		localStorage.setItem("wolfstar-emoji-recent", JSON.stringify(["👍"]));
+		const { wrapper } = await mount({ servers: [SERVER_EMOJI] });
+		await open(wrapper);
+
+		const marked = panel().querySelector('.emoji-rail [aria-current="true"]');
+		expect(marked?.getAttribute("aria-label")).toBe("Frequently used");
+	});
+
+	it("opens when the browser holds something else under the key of the last used", async () => {
+		localStorage.setItem("wolfstar-emoji-recent", JSON.stringify("not a list"));
+		const { wrapper } = await mount();
+		await open(wrapper);
+
+		expect(panel().querySelector('[data-category="recent"]')).toBeNull();
 	});
 
 	it("marks the icon the form has, and takes it away", async () => {

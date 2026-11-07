@@ -1,3 +1,5 @@
+import { TWEMOJI_EMOJI_VERSION } from "~/utils/twemoji";
+
 /**
  * What the emoji picker of the appeal forms is made of: the Unicode emoji,
  * grouped the way Discord's picker groups them, the server's own, and the text
@@ -38,10 +40,11 @@ const GROUP_CATEGORIES: Readonly<Record<number, UnicodeEmojiCategory>> = {
 /** An emoji as Emojibase's compact data gives it. */
 export interface RawEmoji {
 	group?: number;
+	hexcode: string;
 	label: string;
 	unicode: string;
 	tags?: readonly string[];
-	skins?: readonly { unicode: string }[];
+	skins?: readonly { hexcode: string; unicode: string }[];
 }
 
 export interface EmojiEntry {
@@ -58,8 +61,31 @@ export interface EmojiEntry {
 export const EmojiSkinTones = [0, 1, 2, 3, 4, 5] as const;
 export type EmojiSkinTone = (typeof EmojiSkinTones)[number];
 
-/** Sorts the emoji of Emojibase into the sections of the picker, keeping their order. */
-export function groupEmojis(raw: readonly RawEmoji[]): Record<UnicodeEmojiCategory, EmojiEntry[]> {
+/**
+ * The codes of the emoji that Twemoji has no image for: the ones of an Emoji
+ * version newer than its release. `versions` is Emojibase's `versions/emoji.json`,
+ * the codes of each version, whose keys read like `0.6`, `13.1` and `17`.
+ */
+export function undrawnHexcodes(
+	versions: Readonly<Record<string, readonly string[]>>,
+): Set<string> {
+	const codes = new Set<string>();
+	for (const [version, list] of Object.entries(versions)) {
+		if (Number(version) <= TWEMOJI_EMOJI_VERSION) continue;
+		for (const code of list) codes.add(code);
+	}
+	return codes;
+}
+
+/**
+ * Sorts the emoji of Emojibase into the sections of the picker, keeping their
+ * order. `undrawn` holds the codes to leave out: the emoji Twemoji cannot draw,
+ * and a skin tone it lacks takes the tones of that emoji with it.
+ */
+export function groupEmojis(
+	raw: readonly RawEmoji[],
+	undrawn: ReadonlySet<string> = new Set(),
+): Record<UnicodeEmojiCategory, EmojiEntry[]> {
 	const sections: Record<UnicodeEmojiCategory, EmojiEntry[]> = {
 		smileys: [],
 		people: [],
@@ -72,9 +98,11 @@ export function groupEmojis(raw: readonly RawEmoji[]): Record<UnicodeEmojiCatego
 	};
 	for (const item of raw) {
 		const category = item.group === undefined ? undefined : GROUP_CATEGORIES[item.group];
-		if (category === undefined) continue;
+		if (category === undefined || undrawn.has(item.hexcode)) continue;
 		// Emoji with two people have 25 combinations and no single tone to pick:
-		const skins = item.skins?.length === 5 ? item.skins.map((skin) => skin.unicode) : [];
+		const hasFiveTones =
+			item.skins?.length === 5 && item.skins.every((skin) => !undrawn.has(skin.hexcode));
+		const skins = hasFiveTones ? (item.skins?.map((skin) => skin.unicode) ?? []) : [];
 		sections[category].push({
 			emoji: item.unicode,
 			label: item.label,
@@ -106,53 +134,6 @@ export function matchesEmojiQuery(label: string, tags: readonly string[], query:
 	return words.every((word) => text.includes(word));
 }
 
-/**
- * The fonts the picker draws emoji with: the colour ones of each system first,
- * so a system whose first font for a character is a plain outline of it, as some
- * Linux fonts have for the faces, does not draw the face as one.
- */
-export const EMOJI_FONT_FAMILY =
-	'"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Twemoji Mozilla", sans-serif';
-
-/**
- * Tells whether this browser draws an emoji as one picture. The newest emoji
- * are on a system only after it is updated: before that it draws a box with the
- * code of the character, or the pieces of a sequence side by side, and a picker
- * that offered them would offer what the member cannot see. Discord draws its
- * own images and has no such emoji; this asks the canvas instead.
- *
- * A glyph that is part of the font takes the colour the canvas is filled with,
- * and an emoji does not, so red in the picture is a character the emoji font
- * does not have; a sequence is as wide as one emoji when it is drawn as one.
- */
-export function createEmojiSupportCheck(): (emoji: string) => boolean {
-	const size = 24;
-	const canvas = document.createElement("canvas");
-	canvas.width = size;
-	canvas.height = size;
-	const context = canvas.getContext("2d", { willReadFrequently: true });
-	if (!context) return () => true;
-
-	context.textBaseline = "top";
-	context.font = `${size - 6}px ${EMOJI_FONT_FAMILY}`;
-	const single = context.measureText("😀").width;
-
-	return (emoji) => {
-		if (emoji.includes("\u200D") && context.measureText(emoji).width > single * 1.5)
-			return false;
-
-		context.clearRect(0, 0, size, size);
-		context.fillStyle = "#f00";
-		context.fillText(emoji, 0, 0);
-		const { data } = context.getImageData(0, 0, size, size);
-		for (let offset = 0; offset < data.length; offset += 4) {
-			const [red = 0, green = 0, blue = 0, alpha = 0] = data.subarray(offset, offset + 4);
-			if (alpha > 200 && red > 220 && green < 40 && blue < 40) return false;
-		}
-		return true;
-	};
-}
-
 /** The emoji of a section that a search finds. */
 export function searchEmojis(entries: readonly EmojiEntry[], query: string): EmojiEntry[] {
 	return entries.filter((entry) => matchesEmojiQuery(entry.label, entry.tags, query));
@@ -170,9 +151,20 @@ export function serverEmojiToken(emoji: ServerEmoji): string {
 	return `<${emoji.animated ? "a" : ""}:${emoji.name}:${emoji.id}>`;
 }
 
-/** Where Discord serves the image of an emoji of a server. */
-export function serverEmojiUrl(id: string, size = 48): string {
-	return `https://cdn.discordapp.com/emojis/${id}.webp?size=${size}`;
+/**
+ * Where Discord serves the image of an emoji of a server. An animated one is
+ * served as its first frame unless `animated` asks for it to move.
+ */
+export function serverEmojiUrl(id: string, size = 48, animated = false): string {
+	return `https://cdn.discordapp.com/emojis/${id}.webp?size=${size}${animated ? "&animated=true" : ""}`;
+}
+
+/** The emoji of a server a form stores as `<:name:id>`, or `null` for any other text. */
+export function parseServerEmojiToken(value: string | null | undefined): ServerEmoji | null {
+	const match = value?.match(/^<(a?):(\w{2,32}):(\d{17,20})>$/u);
+	if (!match) return null;
+	const [, animated, name, id] = match;
+	return { id: id!, name: name!, animated: animated === "a" };
 }
 
 /** The emoji of a server the picker offers: the ones members can use, with a name a form can hold. */
@@ -192,4 +184,12 @@ export function emojiShortcode(label: string): string {
 		.toLowerCase()
 		.replaceAll(/[^\p{L}\p{N}]+/gu, "_")
 		.replaceAll(/^_+|_+$/gu, "")}:`;
+}
+
+/** How many emoji the picker remembers as the ones a member used last. */
+export const RECENT_EMOJI_LIMIT = 18;
+
+/** The list of the last emoji used with this one first, once, and no longer than the limit. */
+export function rememberEmoji(list: readonly string[], value: string): string[] {
+	return [value, ...list.filter((item) => item !== value)].slice(0, RECENT_EMOJI_LIMIT);
 }

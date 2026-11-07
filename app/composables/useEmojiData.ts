@@ -1,7 +1,7 @@
 import type { EmojiEntry } from "~/utils/emoji-picker";
 import {
-	createEmojiSupportCheck,
 	groupEmojis,
+	undrawnHexcodes,
 	type RawEmoji,
 	type UnicodeEmojiCategory,
 } from "~/utils/emoji-picker";
@@ -20,14 +20,13 @@ export function useEmojiData() {
 
 		status.value = "pending";
 		try {
-			const { default: data } = await import("emojibase-data/en/compact.json");
-			const drawn = createEmojiSupportCheck();
-			const grouped = groupEmojis(data as readonly RawEmoji[]);
-			// Only what this browser draws as an emoji: see `createEmojiSupportCheck`.
-			for (const id of Object.keys(grouped) as UnicodeEmojiCategory[]) {
-				grouped[id] = grouped[id].filter((entry) => drawn(entry.emoji));
-			}
-			sections.value = grouped;
+			const [{ default: data }, { default: versions }] = await Promise.all([
+				import("emojibase-data/en/compact.json"),
+				import("emojibase-data/versions/emoji.json"),
+			]);
+			// Twemoji draws every emoji the same way on every system, so none is left
+			// out for the system's font; only the newest, which it has no image for yet.
+			sections.value = groupEmojis(data as readonly RawEmoji[], undrawnHexcodes(versions));
 			status.value = "success";
 		} catch {
 			status.value = "error";

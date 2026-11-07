@@ -376,6 +376,9 @@
 										"people": {
 											"type": "string"
 										},
+										"recent": {
+											"type": "string"
+										},
 										"server": {
 											"type": "string"
 										},
@@ -395,6 +398,9 @@
 									"type": "string"
 								},
 								"dialog_aria": {
+									"type": "string"
+								},
+								"from_server": {
 									"type": "string"
 								},
 								"hint": {

@@ -255,6 +255,24 @@
 			"completed": "",
 			"open": ""
 		},
+		"case_types": {
+			"ban": "",
+			"kick": "",
+			"mute": "",
+			"restricted_attachment": "",
+			"restricted_embed": "",
+			"restricted_emoji": "",
+			"restricted_reaction": "",
+			"restricted_voice": "",
+			"role_add": "",
+			"role_remove": "",
+			"set_nickname": "",
+			"softban": "",
+			"timeout": "",
+			"voice_kick": "",
+			"voice_mute": "",
+			"warning": ""
+		},
 		"changes": {
 			"close": "",
 			"none": "",

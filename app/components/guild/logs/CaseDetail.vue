@@ -168,9 +168,11 @@ function memberName(member: ModerationLogEntry["targetMember"]): string {
 const targetName = computed(() => memberName(entry.targetMember));
 const moderatorName = computed(() => memberName(entry.moderatorMember));
 
-const actionLabel = computed(() =>
-	entry.metadata.undo ? ts("guild_logs.undo_action", { action: entry.typeName }) : entry.typeName,
-);
+const actionLabel = computed(() => {
+	const key = moderationCaseTypeKey(entry.typeName);
+	const name = key ? ts(key) : ts("guild_logs.unknown");
+	return entry.metadata.undo ? ts("guild_logs.undo_action", { action: name }) : name;
+});
 
 const created = computed(() => (entry.createdAt ? new Date(entry.createdAt) : null));
 const expires = computed(() => moderationCaseExpiresAt(entry.createdAt, entry.duration));

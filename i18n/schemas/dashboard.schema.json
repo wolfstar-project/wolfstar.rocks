@@ -769,6 +769,60 @@
 					},
 					"additionalProperties": false
 				},
+				"case_types": {
+					"type": "object",
+					"properties": {
+						"ban": {
+							"type": "string"
+						},
+						"kick": {
+							"type": "string"
+						},
+						"mute": {
+							"type": "string"
+						},
+						"restricted_attachment": {
+							"type": "string"
+						},
+						"restricted_embed": {
+							"type": "string"
+						},
+						"restricted_emoji": {
+							"type": "string"
+						},
+						"restricted_reaction": {
+							"type": "string"
+						},
+						"restricted_voice": {
+							"type": "string"
+						},
+						"role_add": {
+							"type": "string"
+						},
+						"role_remove": {
+							"type": "string"
+						},
+						"set_nickname": {
+							"type": "string"
+						},
+						"softban": {
+							"type": "string"
+						},
+						"timeout": {
+							"type": "string"
+						},
+						"voice_kick": {
+							"type": "string"
+						},
+						"voice_mute": {
+							"type": "string"
+						},
+						"warning": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"changes": {
 					"type": "object",
 					"properties": {

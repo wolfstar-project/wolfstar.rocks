@@ -1,6 +1,12 @@
 <template>
 	<nav class="guild-rail hidden sm:flex" :aria-label="ts('dashboard.server_rail_aria')">
-		<DiscordScrollbar overlay auto-hide themed class="guild-rail-scroll">
+		<DiscordScrollbar
+			overlay
+			auto-hide
+			themed
+			:max-thumb-height="THUMB_MAX_HEIGHT"
+			class="guild-rail-scroll"
+		>
 			<div class="guild-rail-list">
 				<!-- Home: the direct messages, with a pill while open and the unread count. -->
 				<div class="guild-rail-slot">
@@ -118,6 +124,9 @@ const { currentGuildId, guilds } = defineProps<{
 	pending?: boolean;
 }>();
 
+/** The rail's thumb stays a short slim pill however many servers there are, as in Discord's app. */
+const THUMB_MAX_HEIGHT = 120;
+
 const { ts } = useI18n();
 const invites = useInvites();
 const { totalUnread } = useDirectMessages();
@@ -137,6 +146,7 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 
 .guild-rail-scroll {
 	@apply h-full max-h-full min-h-0 flex-1;
+	--discord-scrollbar-thumb-width: 3px;
 }
 
 /* The thumb stops above the account card floating over the rail's foot. */

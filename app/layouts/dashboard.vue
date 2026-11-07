@@ -525,20 +525,19 @@ watch(guildId, (newGuildId, oldGuildId) => {
 
 	/* The server rail and the sidebar read these; the account card floating
 	   over both is as wide as their sum. */
-	--console-rail-width: 3.75rem;
+	/* Discord's rail: 72px, with 40px icons and 16px on either side. */
+	--console-rail-width: 4.5rem;
 	--console-sidebar-width: 12.25rem;
 }
 
 @variant md {
 	.console {
-		--console-rail-width: 4rem;
 		--console-sidebar-width: 13.25rem;
 	}
 }
 
 @variant lg {
 	.console {
-		--console-rail-width: 4.25rem;
 		--console-sidebar-width: 14.75rem;
 	}
 }

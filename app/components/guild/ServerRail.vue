@@ -48,8 +48,8 @@
 							:src="resolveGuildIconSrc(server, { size: 128 })"
 							alt=""
 							class="size-full object-cover"
-							width="48"
-							height="48"
+							width="40"
+							height="40"
 						/>
 						<span v-else aria-hidden="true">{{ server.acronym }}</span>
 					</button>
@@ -67,13 +67,13 @@
 								:src="resolveGuildIconSrc(server, { size: 128 })"
 								alt=""
 								class="size-full object-cover"
-								width="48"
-								height="48"
+								width="40"
+								height="40"
 							/>
 							<span v-else aria-hidden="true">{{ server.acronym }}</span>
 						</span>
 						<span class="guild-rail-invite-badge" aria-hidden="true">
-							<UIcon name="ic:round-add" class="size-3" />
+							<UIcon name="ic:round-add" class="size-2.5" />
 						</span>
 					</a>
 				</template>
@@ -92,7 +92,7 @@
 					:aria-label="ts('dashboard.server_rail_add')"
 					:title="ts('dashboard.server_rail_add')"
 				>
-					<UIcon name="ic:round-add" class="size-5.5" aria-hidden="true" />
+					<UIcon name="ic:round-add" class="size-5" aria-hidden="true" />
 				</a>
 			</div>
 		</DiscordScrollbar>
@@ -131,7 +131,7 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 .guild-rail {
 	@apply min-h-0 shrink-0 flex-col overflow-hidden;
 	/* As wide as the layout says. */
-	width: var(--console-rail-width, 3.75rem);
+	width: var(--console-rail-width, 4.5rem);
 	background-color: var(--console-rail);
 }
 
@@ -149,20 +149,14 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 .guild-rail-home,
 .guild-rail-item,
 .guild-rail-add {
-	@apply flex size-11 shrink-0 cursor-pointer items-center justify-center overflow-hidden border-0 p-0 text-base font-semibold lg:size-12;
-	transition:
-		border-radius 170ms cubic-bezier(0.3, 0, 0.2, 1),
-		background-color 170ms;
+	/* Discord's rounded squares: a 40px tile with a 12px corner. */
+	@apply flex size-10 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-xl border-0 p-0 text-[0.9375rem] font-semibold;
+	transition: background-color 170ms;
 }
 
 /* The mark sits on a fixed dark tile in both themes, like the wordmark does. */
 .guild-rail-home {
-	@apply rounded-full bg-neutral;
-}
-
-.guild-rail-home:hover,
-.guild-rail-home--active {
-	@apply rounded-[15px];
+	@apply bg-neutral;
 }
 
 .guild-rail-slot {
@@ -171,7 +165,8 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 
 /* Discord's pill on the rail's edge: a dot on hover, a bar while open. */
 .guild-rail-pill {
-	@apply absolute top-1/2 -left-2.5 h-0 w-1 -translate-y-1/2 rounded-r-[4px] lg:-left-3;
+	/* On the rail's edge, 16px left of the icon. */
+	@apply absolute top-1/2 -left-4 h-0 w-1 -translate-y-1/2 rounded-r-[4px];
 	background-color: var(--ui-text-highlighted);
 	transition: height 170ms cubic-bezier(0.3, 0, 0.2, 1);
 }
@@ -191,14 +186,8 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 }
 
 .guild-rail-item {
-	@apply rounded-full;
 	background-color: var(--console-solid);
 	color: var(--ui-text-toned);
-}
-
-.guild-rail-item:hover,
-.guild-rail-item--active {
-	@apply rounded-lg;
 }
 
 .guild-rail-item:hover {
@@ -221,33 +210,25 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 	@apply relative flex shrink-0;
 }
 
-.guild-rail-invite:hover .guild-rail-item,
-.guild-rail-invite:focus-visible .guild-rail-item {
-	@apply rounded-lg;
-}
-
 .guild-rail-invite-badge {
-	@apply absolute -right-0.5 -bottom-0.5 flex size-4.5 items-center justify-center rounded-full bg-success text-success-content;
+	/* As small as Discord's mention badge. */
+	@apply absolute -right-1 -bottom-1 flex size-3.5 items-center justify-center rounded-full bg-success text-success-content;
 	box-shadow: 0 0 0 3px var(--console-rail);
 }
 
 .guild-rail-invite:focus-visible {
-	@apply rounded-lg;
+	@apply rounded-xl;
 	outline: 2px solid var(--color-primary);
 	outline-offset: 2px;
 }
 
 .guild-rail-add {
-	@apply rounded-full text-success;
+	@apply text-success;
 	background-color: var(--console-solid);
 }
 
-.guild-rail-add:hover {
-	@apply rounded-lg;
-}
-
 .guild-rail-skeleton {
-	@apply size-11 shrink-0 rounded-full lg:size-12;
+	@apply size-10 shrink-0 rounded-xl;
 }
 
 .guild-rail-divider {

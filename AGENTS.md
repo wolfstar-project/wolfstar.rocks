@@ -109,7 +109,6 @@ pnpm test:a11y                   # Lighthouse accessibility checks in dark and l
 pnpm test:a11y:prebuilt          # Lighthouse accessibility checks against an existing prebuilt app
 pnpm test:perf                   # Lighthouse performance checks
 pnpm test:perf:prebuilt          # Lighthouse performance checks against an existing prebuilt app
-pnpm test:bench                  # Vitest benchmark suite
 pnpm start:playwright:webserver  # Preview a test build on port 5678 for Playwright
 pnpm audit:verify                # Replay and verify the AuditEvent hash chain
 pnpm design:lint                 # Lint .claude/DESIGN.md with designmd

@@ -22,7 +22,6 @@ Link][invite-link] · [Support Server][discord-link] ·
 [![GitHub issues badge][github-issues-shield]][github-issues-link]
 [![GitHub license badge][github-license-shield]][github-license-link]<br>
 [![PRs welcome badge][pr-welcome-shield]][pr-welcome-link]
-[![Codspeed badge][codspeed-shield]][codspeed-link]
 
 ### Share WolfStar Repository
 
@@ -172,7 +171,6 @@ to review moderation, command, and settings history.
 - `pnpm test:unit` - Run unit tests.
 - `pnpm test:nuxt` - Run Nuxt environment tests.
 - `pnpm test:browser` - Run browser tests with Playwright.
-- `pnpm test:bench` - Run performance benchmarks.
 - `pnpm typecheck` - Run TypeScript checks.
 
 Occasional one-off tasks are not wrapped in `package.json`. Run their binary
@@ -182,7 +180,7 @@ directly instead:
 - `pnpm exec pwa-assets-generator` - Generate PWA icons and assets.
 - `pnpm exec taze` - Interactive dependency updates.
 
-### Testing & Benchmarks
+### Testing
 
 #### Running Tests
 
@@ -190,46 +188,6 @@ directly instead:
 - `pnpm test:unit` - Run unit tests only (Node.js environment)
 - `pnpm test:nuxt` - Run Nuxt component tests (Nuxt environment with browser)
 - `pnpm test:browser` - Run full browser E2E tests with Playwright
-- `pnpm test:bench` - Run performance benchmarks
-
-#### Performance Benchmarks
-
-WolfStar.rocks uses [CodSpeed](https://codspeed.io) for continuous performance
-tracking. Benchmarks automatically run in CI on every commit and PR, with
-results visible on the [CodSpeed dashboard][codspeed-link].
-
-**Currently Benchmarked:**
-
-- **`shared/utils/comparators.ts`**
-  - Functions: `differenceArray`, `differenceMap`
-  - Benchmark: `test/unit/shared/utils/comparators.bench.ts`
-- **`server/utils/guildNameToAcronym.ts`**
-  - Function: `guildNameToAcronym`
-  - Benchmark: `test/unit/server/utils/guild-name-to-acronym.bench.ts`
-
-**Adding New Benchmarks:**
-
-1. Create a `.bench.ts` file under `test/unit/` mirroring the path of the code
-   you're benchmarking (e.g., for `shared/utils/myUtil.ts`, create
-   `test/unit/shared/utils/myUtil.bench.ts`)
-2. Import the utility and Vitest's `bench()` function:
-   ```typescript
-   import { bench, describe } from "vitest";
-   import { myUtility } from "../../../../shared/utils/myUtility";
-   ```
-3. Write benchmarks with descriptive names:
-   ```typescript
-   describe("myUtility benchmarks", () => {
-     bench("small dataset (10 items)", () => {
-       myUtility(smallData);
-     });
-     bench("large dataset (1000 items)", () => {
-       myUtility(largeData);
-     });
-   });
-   ```
-4. Run locally: `pnpm test:bench`
-5. CI will automatically track performance when you open a PR
 
 ### Development Guidelines
 
@@ -397,10 +355,6 @@ Copyright © 2024 [WolfStar][profile-link]. <br /> This project is
 [issues-link]:
   https://img.shields.io/github/issues/wolfstar-project/wolfstar.rocks.svg?style=flat
 [official-site]: https://wolfstar.rocks
-[codspeed-link]:
-  https://codspeed.io/wolfstar-project/wolfstar.rocks?utm_source=badge
-[codspeed-shield]:
-  https://img.shields.io/endpoint?url=https://codspeed.io/badge.json
 [pr-welcome-link]: https://github.com/wolfstar-project/wolfstar.rocks/pulls
 [pr-welcome-shield]:
   https://shieldcn.dev/badge/PRs-welcome-ffcb47?variant=branded

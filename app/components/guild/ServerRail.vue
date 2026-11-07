@@ -139,6 +139,11 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 	@apply h-full max-h-full min-h-0 flex-1;
 }
 
+/* The thumb stops above the account card floating over the rail's foot. */
+.guild-rail-scroll :deep(.discord-scrollbar-track) {
+	bottom: 4.75rem;
+}
+
 .guild-rail-list {
 	@apply flex flex-col items-center gap-2 pt-3;
 	/* Open at the foot for the account card floating over it (the drawer's
@@ -150,7 +155,7 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 .guild-rail-item,
 .guild-rail-add {
 	/* Discord's rounded squares: a 40px tile with a 12px corner. */
-	@apply flex size-10 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-xl border-0 p-0 text-[0.9375rem] font-semibold;
+	@apply flex size-10 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-[12px] border-0 p-0 text-[0.9375rem] font-semibold;
 	transition: background-color 170ms;
 }
 
@@ -217,7 +222,7 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 }
 
 .guild-rail-invite:focus-visible {
-	@apply rounded-xl;
+	@apply rounded-[12px];
 	outline: 2px solid var(--color-primary);
 	outline-offset: 2px;
 }
@@ -228,7 +233,7 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 }
 
 .guild-rail-skeleton {
-	@apply size-10 shrink-0 rounded-xl;
+	@apply size-10 shrink-0 rounded-[12px];
 }
 
 .guild-rail-divider {

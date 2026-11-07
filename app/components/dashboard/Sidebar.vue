@@ -284,6 +284,10 @@ const groups = computed(() =>
 	@apply h-full max-h-full min-h-0 flex-1;
 }
 
+.dashboard-sidebar--floating .dashboard-nav-scroll :deep(.discord-scrollbar-track) {
+	bottom: 4.75rem;
+}
+
 /* The list scrolls out above the floating card, never under it. */
 .dashboard-sidebar--floating .dashboard-nav {
 	padding-bottom: 4.75rem;

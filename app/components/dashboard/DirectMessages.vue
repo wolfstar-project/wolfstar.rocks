@@ -176,6 +176,10 @@ function showAppeals() {
 	@apply h-full max-h-full min-h-0 flex-1;
 }
 
+.dm-sidebar--floating .dm-list-scroll :deep(.discord-scrollbar-track) {
+	bottom: 4.75rem;
+}
+
 .dm-list {
 	@apply flex flex-col gap-0.5 px-2 pt-3 pb-2;
 }

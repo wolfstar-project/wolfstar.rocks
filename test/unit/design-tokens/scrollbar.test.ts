@@ -1,8 +1,8 @@
 /**
  * Scrollbar Guardrail
  *
- * The console draws its scrollbar from the `::-webkit-scrollbar` parts: a slim
- * rounded thumb with no arrows. A browser that is given a `scrollbar-color`
+ * The console draws its scrollbar from the `::-webkit-scrollbar` parts: Discord's
+ * thin one, a 5px pill in a 9px track, with no arrows. A browser that is given a `scrollbar-color`
  * ignores those parts and draws its own bar, arrows included, and daisyUI gives
  * the root one in `@layer base`. The reset that undoes it has to sit outside any
  * layer, or the order of the plugin's output decides whether the console's
@@ -40,9 +40,12 @@ function withoutLayers(source: string): string {
 
 describe("main.css scrollbar", () => {
 	it("draws the console's scrollbar from the webkit parts, with no arrows", () => {
-		expect(mainCss).toMatch(/\*::-webkit-scrollbar\s*\{[^}]*width:\s*16px/u);
+		expect(mainCss).toMatch(/\*::-webkit-scrollbar\s*\{[^}]*width:\s*9px/u);
 		expect(mainCss).toMatch(/\*::-webkit-scrollbar-button\s*\{[^}]*display:\s*none/u);
-		expect(mainCss).toMatch(/\*::-webkit-scrollbar-thumb\s*\{[^}]*border-radius:\s*8px/u);
+		expect(mainCss).toMatch(
+			/\*::-webkit-scrollbar-thumb\s*\{[^}]*border:\s*2px solid transparent/u,
+		);
+		expect(mainCss).toMatch(/\*::-webkit-scrollbar-thumb\s*\{[^}]*border-radius:\s*9999px/u);
 	});
 
 	it("resets the root's scrollbar-color outside any layer, where daisyUI's cannot win", () => {

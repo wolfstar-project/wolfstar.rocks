@@ -7,7 +7,7 @@
 			'discord-scrollbar-auto-hide': autoHide,
 			'discord-scrollbar-overlay': overlay,
 			'discord-scrollbar-themed': themed,
-			'discord-scrollbar-scrolling': isScrolling,
+			'discord-scrollbar-scrolling': isScrolling || isDragging,
 			'discord-scrollbar-scrollable': isScrollable || alwaysShowTrack,
 		}"
 	>
@@ -45,10 +45,15 @@
 				<span class="discord-scrollbar-arrow-icon" />
 			</button>
 
-			<div ref="thumbRailRef" class="discord-scrollbar-thumb-rail">
+			<div
+				ref="thumbRailRef"
+				class="discord-scrollbar-thumb-rail"
+				@pointerdown.self="pageTowards"
+			>
 				<div
 					v-show="isScrollable"
 					class="discord-scrollbar-thumb rounded-full"
+					@pointerdown="startDrag"
 					:style="{
 						height: `${thumbHeight}px`,
 						transform: `translateY(${thumbOffset}px)`,
@@ -137,6 +142,7 @@ const isScrollable = ref(false);
 const thumbHeight = ref(0);
 const thumbOffset = ref(0);
 const isScrolling = ref(false);
+const isDragging = ref(false);
 
 let scrollingIdleTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -203,6 +209,50 @@ onBeforeUnmount(() => {
 function scrollByStep(direction: 1 | -1) {
 	y.value += direction * SCROLL_STEP;
 }
+
+// The thumb drags the content as the native bar's does: each pixel of the rail
+// is worth as much scroll as the rail is shorter than the content.
+function startDrag(event: PointerEvent) {
+	const viewport = viewportRef.value;
+	const thumbRail = thumbRailRef.value;
+	if (event.button !== 0 || !viewport || !thumbRail) return;
+	event.preventDefault();
+
+	const thumb = event.currentTarget as HTMLElement;
+	const startY = event.clientY;
+	const startScroll = viewport.scrollTop;
+	const travel = Math.max(thumbRail.clientHeight - thumbHeight.value, 1);
+	const ratio = (viewport.scrollHeight - viewport.clientHeight) / travel;
+
+	// A pointer the browser no longer tracks cannot be captured; the drag then
+	// follows it only while it stays over the thumb.
+	try {
+		thumb.setPointerCapture(event.pointerId);
+	} catch {}
+	isDragging.value = true;
+
+	const move = (moveEvent: PointerEvent) => {
+		viewport.scrollTop = startScroll + (moveEvent.clientY - startY) * ratio;
+	};
+	const stop = () => {
+		isDragging.value = false;
+		thumb.removeEventListener("pointermove", move);
+		thumb.removeEventListener("pointerup", stop);
+		thumb.removeEventListener("pointercancel", stop);
+	};
+	thumb.addEventListener("pointermove", move);
+	thumb.addEventListener("pointerup", stop);
+	thumb.addEventListener("pointercancel", stop);
+}
+
+// A click on the rail moves a page towards it, as the native bar's track does.
+function pageTowards(event: PointerEvent) {
+	const viewport = viewportRef.value;
+	const thumbRail = thumbRailRef.value;
+	if (event.button !== 0 || !viewport || !thumbRail || !isScrollable.value) return;
+	const offset = event.clientY - thumbRail.getBoundingClientRect().top;
+	y.value += (offset < thumbOffset.value ? -1 : 1) * viewport.clientHeight;
+}
 </script>
 
 <style scoped>
@@ -256,6 +306,16 @@ function scrollByStep(direction: 1 | -1) {
 
 .discord-scrollbar-overlay .discord-scrollbar-track {
 	@apply pointer-events-none absolute inset-y-0 right-0 z-1;
+}
+
+/* Over the content only the thumb takes the pointer, so the lane under it
+   stays clickable. */
+.discord-scrollbar-overlay .discord-scrollbar-thumb {
+	@apply pointer-events-auto;
+}
+
+.discord-scrollbar-thumb {
+	touch-action: none;
 }
 
 .discord-scrollbar-body {

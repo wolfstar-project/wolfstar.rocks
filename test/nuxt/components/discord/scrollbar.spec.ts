@@ -1,5 +1,5 @@
 import { mountSuspended } from "@nuxt/test-utils/runtime";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import DiscordScrollbar from "~/components/discord/scrollbar.vue";
 
 describe("DiscordScrollbar", () => {
@@ -128,6 +128,41 @@ describe("DiscordScrollbar", () => {
 		expect(getComputedStyle(root).getPropertyValue("--discord-scrollbar-thumb")).not.toContain(
 			"color-mix",
 		);
+
+		wrapper.unmount();
+	});
+
+	it("scrolls the content when the thumb is dragged, and a page when the rail is clicked (positive)", async () => {
+		// ARRANGE — a 200px viewport over 1000px of content
+		const wrapper = await mountSuspended(DiscordScrollbar, {
+			props: { overlay: true },
+			slots: { default: '<div style="height: 1000px">tall</div>' },
+			attachTo: document.body,
+		});
+		(wrapper.element as HTMLElement).style.height = "200px";
+		const viewport = wrapper.find(".discord-scrollbar-viewport").element as HTMLElement;
+		const thumb = wrapper.find(".discord-scrollbar-thumb").element as HTMLElement;
+		const rail = wrapper.find(".discord-scrollbar-thumb-rail").element as HTMLElement;
+		await vi.waitFor(() => expect(thumb.style.height).not.toBe("0px"));
+
+		// ACT — drag the thumb 40px down
+		const at = (type: string, clientY: number, target: HTMLElement) =>
+			target.dispatchEvent(
+				new PointerEvent(type, { bubbles: true, button: 0, clientY, pointerId: 1 }),
+			);
+		at("pointerdown", 10, thumb);
+		at("pointermove", 50, thumb);
+		at("pointerup", 50, thumb);
+
+		// ASSERT — the content moved by more than the pointer did
+		expect(viewport.scrollTop).toBeGreaterThan(40);
+
+		// ACT — click the rail above the thumb
+		const before = viewport.scrollTop;
+		at("pointerdown", rail.getBoundingClientRect().top + 1, rail);
+
+		// ASSERT
+		await vi.waitFor(() => expect(viewport.scrollTop).toBeLessThan(before));
 
 		wrapper.unmount();
 	});

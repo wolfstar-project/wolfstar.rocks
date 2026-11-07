@@ -67,7 +67,6 @@ const config: KnipConfig = {
 				"deepmerge",
 				"@discordjs/rest",
 				"@sapphire/async-queue",
-				"@codspeed/core",
 				"nuxt-site-config",
 				"workbox-*",
 

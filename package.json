@@ -41,7 +41,6 @@
 		"test": "TEST=1 vp test",
 		"test:a11y": "vp run build:test && LIGHTHOUSE_COLOR_MODE=dark vp run test:a11y:prebuilt && LIGHTHOUSE_COLOR_MODE=light vp run test:a11y:prebuilt",
 		"test:a11y:prebuilt": "./scripts/lighthouse.sh",
-		"test:bench": "TEST=1 vp test bench",
 		"test:browser": "vp run build:test && vp run test:browser:prebuilt",
 		"test:browser:prebuilt": "playwright test",
 		"test:nuxt": "TEST=1 vp test --project nuxt",
@@ -107,7 +106,6 @@
 		"vite-plus": "catalog:vite-plus"
 	},
 	"devDependencies": {
-		"@codspeed/vitest-plugin": "5.7.1",
 		"@commitlint/cli": "21.2.1",
 		"@commitlint/config-conventional": "21.2.0",
 		"@discordjs/collection": "2.1.1",

@@ -43,9 +43,6 @@ coverage/
 playwright-report/
 test-results/
 
-# Benchmarks
-.codspeed
-
 # Lighthouse
 .lighthouseci
 

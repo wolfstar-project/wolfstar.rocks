@@ -1,30 +1,13 @@
-import { createRequire } from "node:module";
-import codspeedPlugin from "@codspeed/vitest-plugin";
 import { defineVitestProject } from "@nuxt/test-utils/config";
-import { isCI } from "std-env";
 import { defineConfig } from "vite-plus";
 import { playwright } from "vite-plus/test/browser-playwright";
 
 const rootDir = import.meta.dirname;
-const require = createRequire(import.meta.url);
 
 const AGENT_TOOLING_DIRS = [".claude/", ".agents/", ".agent/", ".skills/", ".skilld/"];
 
 function isAgentToolingPath(file: string) {
 	return AGENT_TOOLING_DIRS.some((dir) => file.startsWith(dir) || file.includes(`/${dir}`));
-}
-
-function getCodspeedV8Flags() {
-	if (!isCI) {
-		return undefined;
-	}
-
-	try {
-		const { getV8Flags } = require("@codspeed/core") as typeof import("@codspeed/core");
-		return getV8Flags();
-	} catch {
-		return undefined;
-	}
 }
 
 export default defineConfig({
@@ -552,23 +535,6 @@ export default defineConfig({
 	test: {
 		projects: [
 			{
-				plugins: isCI ? [codspeedPlugin()] : [],
-				resolve: {
-					alias: {
-						"~": `${rootDir}/app`,
-						"~~": `${rootDir}`,
-						"#server": `${rootDir}/server`,
-						"#shared": `${rootDir}/shared`,
-					},
-				},
-				test: {
-					name: "benchmark",
-					include: [],
-					benchmark: { include: ["**/*.bench.ts"] },
-					execArgv: getCodspeedV8Flags(),
-				},
-			},
-			{
 				resolve: {
 					alias: {
 						"~": `${rootDir}/app`,
@@ -581,8 +547,6 @@ export default defineConfig({
 					environment: "node",
 					include: ["test/unit/**/*.{test,spec}.ts"],
 					name: "unit",
-					benchmark: { include: [] },
-					execArgv: getCodspeedV8Flags(),
 				},
 			},
 			() =>
@@ -619,7 +583,6 @@ export default defineConfig({
 						include: ["test/nuxt/**/*.{test,spec}.ts"],
 						setupFiles: ["test/nuxt/setup.ts"],
 						name: "nuxt",
-						benchmark: { include: [] },
 					},
 				}),
 		],

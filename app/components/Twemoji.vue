@@ -2,7 +2,7 @@
 	<img
 		v-if="!failed"
 		:src="twemojiUrl(emoji)"
-		:alt="alt ?? emoji"
+		:alt="label"
 		class="twemoji"
 		draggable="false"
 		loading="lazy"
@@ -12,9 +12,9 @@
 	<span
 		v-else
 		class="twemoji twemoji-glyph"
-		:role="alt === '' ? undefined : 'img'"
-		:aria-hidden="alt === '' ? 'true' : undefined"
-		:aria-label="alt || undefined"
+		:role="label === '' ? undefined : 'img'"
+		:aria-hidden="label === '' ? 'true' : undefined"
+		:aria-label="label || undefined"
 	>
 		<span class="twemoji-char">{{ emoji }}</span>
 	</span>
@@ -34,6 +34,9 @@ const { emoji, alt } = defineProps<{
 	/** What a screen reader reads; empty when the emoji sits in a button that has its own name. */
 	alt?: string;
 }>();
+
+// An emoji with no text of its own is read as the character, image or not.
+const label = computed(() => alt ?? emoji);
 
 const failed = ref(false);
 

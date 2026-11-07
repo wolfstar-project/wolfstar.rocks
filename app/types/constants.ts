@@ -23,7 +23,11 @@ export enum BrandingColors {
 export enum Colors {
 	Amber = "#ffc107",
 	Amber300 = "#ffd54f",
+	/** The settings menu's container accent (Discord blurple). */
+	Blurple = "#5865f2",
 	DeepOrange = "#ff5722",
+	/** A moderation action that went through. */
+	Green = "#4caf50",
 	LightBlue = "#03a9f4",
 	Orange = "#ff9800",
 	Red = "#f44336",
@@ -116,36 +120,95 @@ interface ShowcaseCommandBase {
 	options: ShowcaseCommandOption[];
 }
 
+/** A case as `/case view` shows it: the moderator in the author line, then ❯ lines. */
 interface ShowcaseCommandEmbedResponse {
 	responseType: "embed";
 	embedColor: string;
+	embedAuthor: { name: string; icon: string };
 	embedFooter: string;
 	embedLines: ShowcaseCommandEmbedLine[];
 }
 
-/** Plain success reply, e.g. "✅ Created case 3 | @baddie". */
+/** A plain reply in Discord markdown, e.g. "Successfully archived case 3." */
 interface ShowcaseCommandTextResponse {
 	responseType: "text";
 	content: string;
-	mentionUser?: string;
-	/** Desktop-only avatar inside the mention pill. */
-	mentionAvatar?: string;
 }
 
+/**
+ * The green embed a moderation action answers with:
+ * "✅ Created case 3 | `baddie`." then "With the reason of: spam".
+ */
+interface ShowcaseCommandModerationResponse {
+	responseType: "moderation";
+	caseId: number;
+	/** The target's tag, shown as inline code rather than a mention. */
+	target: string;
+	reason: string;
+}
+
+/**
+ * A row of the settings menu: a key, its value, and its edit button. Plain
+ * text values and codes are shown as inline code, after the readable name:
+ * "English (United States) (`en-US`)", "`UTC`".
+ */
+export interface ShowcaseSettingsRow {
+	label: string;
+	value?: string;
+	code?: string;
+}
+
+/** The settings menu `/settings server` opens (Components V2). */
 interface ShowcaseCommandComponentsResponse {
 	responseType: "components";
 	accentColor: string;
-	lines: string[];
+	heading: string;
+	intro: string;
 	selectPlaceholder: string;
 	selectOptions: StringSelectMenuOption[];
-	buttonLabel: string;
+	rows: ShowcaseSettingsRow[];
+	resetTitle: string;
+	resetDescription: string;
+	resetLabel: string;
+	expires: string;
+	/** The relative time inside `expires`, drawn as Discord's timestamp chip. */
+	expiresTime: string;
+}
+
+/**
+ * An embed with a title over a body of Discord markdown, and an optional
+ * footer: `/whois`, the lists of `/autodelete`, `/autopurge` and the others.
+ */
+interface ShowcaseCommandCardResponse {
+	responseType: "card";
+	cardColor: string;
+	cardTitle: string;
+	cardBody: string;
+	cardFooter?: string;
+}
+
+/**
+ * A Components V2 reply other than the settings menu (`/automod show`,
+ * `/commands`, `/roles browse`): a heading over Discord markdown, then a select
+ * menu or a button.
+ */
+interface ShowcaseCommandPanelResponse {
+	responseType: "panel";
+	accentColor: string;
+	panelHeading: string;
+	panelBody: string;
+	panelSelect?: string;
+	panelButton?: string;
 }
 
 export type ShowcaseCommand = ShowcaseCommandBase &
 	(
 		| ShowcaseCommandEmbedResponse
 		| ShowcaseCommandTextResponse
+		| ShowcaseCommandModerationResponse
 		| ShowcaseCommandComponentsResponse
+		| ShowcaseCommandCardResponse
+		| ShowcaseCommandPanelResponse
 	);
 
 export interface OtherApp {

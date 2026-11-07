@@ -1,6 +1,5 @@
 import type { SecondaryStorage } from "better-auth";
-import { Collection } from "@discordjs/collection";
-import { AsyncQueue } from "@sapphire/async-queue";
+import { createKeyedLock } from "#server/utils/keyed-lock";
 
 interface AuthRateLimitCounter {
 	count: number;
@@ -24,24 +23,11 @@ export interface AuthRateLimitStorageDriver {
 export function createAuthSecondaryStorage(storage: AuthRateLimitStorageDriver): SecondaryStorage {
 	// In-process keyed mutex serializing the read-modify-write cycles of
 	// increment() and getAndDelete() per storage key, mirroring
-	// server/utils/wrappedEventHandler.ts. The production driver (Cloudflare KV
-	// over HTTP) exposes no atomic increment or get-and-delete primitive, so
+	// server/utils/wrappedEventHandler.ts. The production driver (Cloudflare KV)
+	// exposes no atomic increment or get-and-delete primitive, so
 	// this only bounds races to a single server instance; cross-instance races
 	// remain possible and are an accepted limitation of the storage backend.
-	const keyLocks = new Collection<string, AsyncQueue>();
-
-	async function withKeyLock<T>(key: string, fn: () => Promise<T>): Promise<T> {
-		const queue = keyLocks.ensure(key, () => new AsyncQueue());
-		await queue.wait();
-		try {
-			return await fn();
-		} finally {
-			queue.shift();
-			if (queue.remaining === 0) {
-				keyLocks.delete(key);
-			}
-		}
-	}
+	const withKeyLock = createKeyedLock();
 
 	return {
 		get: (key) => storage.getItem(key),

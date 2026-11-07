@@ -114,12 +114,12 @@ const currentlyAtPath = computed(() => {
 
 /* Layout mirrors Skyra discord-string-select-menu-option (flex row, 8/12 padding, 10px gap). */
 .discord-string-select-menu-option {
-	--discord-string-select-menu-option-hover: oklch(100% 0 0 / 0.1);
-	--discord-string-select-menu-option-label: oklch(95% 0 0);
-	--discord-string-select-menu-option-description: oklch(72% 0.01 260);
+	--discord-string-select-menu-option-hover: var(--discord-hover);
+	--discord-string-select-menu-option-label: var(--discord-chrome-strong);
+	--discord-string-select-menu-option-description: var(--discord-chrome-muted);
 	--discord-string-select-menu-option-folder: oklch(72% 0.14 245);
 	--discord-string-select-menu-option-path-folder: oklch(78% 0.12 85);
-	--discord-string-select-menu-option-gear: oklch(78% 0.01 260);
+	--discord-string-select-menu-option-gear: var(--discord-chrome-secondary);
 
 	@apply flex max-w-100 cursor-pointer items-center gap-2.5 py-2 pr-2 pl-3 text-sm;
 	color: var(--discord-string-select-menu-option-label);

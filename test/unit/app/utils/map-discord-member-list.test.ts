@@ -1,11 +1,7 @@
+import type { DiscordMemberListApiFixture, DiscordMemberListRoleFixture } from "~/types/constants";
 import { ActivityType, UserFlags } from "discord-api-types/v10";
 import { describe, expect, it } from "vitest";
-import {
-	MEMBER_LIST_USER_FLAGS,
-	mapDiscordMemberListMembers,
-	type DiscordMemberListApiFixture,
-	type DiscordMemberListRoleFixture,
-} from "~/utils/constants";
+import { MEMBER_LIST_USER_FLAGS, mapDiscordMemberListMembers } from "~/utils/constants";
 
 const roles: DiscordMemberListRoleFixture[] = [
 	{

@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 // vi.hoisted() ensures globals are present before the route module is evaluated.
 const {
 	mockReadSettings,
+	mockIsGuildUnconfigured,
 	mockGetGuild,
 	mockGetCurrentMember,
 	mockCanManage,
@@ -12,6 +13,7 @@ const {
 	mockGetValidatedQuery,
 } = vi.hoisted(() => {
 	const mockReadSettings = vi.fn();
+	const mockIsGuildUnconfigured = vi.fn().mockReturnValue(false);
 	const mockGetGuild = vi.fn();
 	const mockGetCurrentMember = vi.fn();
 	const mockCanManage = vi.fn().mockResolvedValue(undefined);
@@ -37,6 +39,7 @@ const {
 
 	return {
 		mockReadSettings,
+		mockIsGuildUnconfigured,
 		mockGetGuild,
 		mockGetCurrentMember,
 		mockCanManage,
@@ -48,6 +51,7 @@ const {
 });
 
 vi.mock("#server/database", () => ({
+	isGuildUnconfigured: mockIsGuildUnconfigured,
 	readSettings: mockReadSettings,
 }));
 
@@ -78,6 +82,7 @@ describe("index.get - cached getGuildChannels and readSettings deduplication", (
 		mockGetGuild.mockResolvedValue(mockGuild);
 		mockGetCurrentMember.mockResolvedValue(mockMember);
 		mockReadSettings.mockResolvedValue(mockSettings);
+		mockIsGuildUnconfigured.mockReturnValue(false);
 		mockGetGuildChannels.mockResolvedValue(mockChannels);
 		mockCanManage.mockResolvedValue(undefined);
 		mockFlattenGuild.mockReturnValue(mockFlatResult);
@@ -161,6 +166,22 @@ describe("index.get - cached getGuildChannels and readSettings deduplication", (
 
 			await expect(callHandler(mockEvent)).rejects.toMatchObject({ status: 403 });
 			expect(mockGetGuildChannels).not.toHaveBeenCalled();
+		});
+	});
+
+	describe("setupPending", () => {
+		it("is left out for a guild that has settings", async () => {
+			await expect(callHandler(mockEvent)).resolves.not.toHaveProperty("setupPending");
+		});
+
+		it("is true for a guild that has none yet, whichever view is asked for", async () => {
+			mockIsGuildUnconfigured.mockReturnValue(true);
+
+			await expect(callHandler(mockEvent)).resolves.toMatchObject({ setupPending: true });
+
+			mockGetValidatedQuery.mockResolvedValue({ shouldSerialize: true });
+			await expect(callHandler(mockEvent)).resolves.toMatchObject({ setupPending: true });
+			expect(mockIsGuildUnconfigured).toHaveBeenCalledWith("guild-123");
 		});
 	});
 });

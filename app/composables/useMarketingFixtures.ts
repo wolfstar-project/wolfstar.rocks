@@ -171,10 +171,6 @@ export function useShowcaseCommands() {
 			description: ts("marketing.wolfstar.fixtures.cmd_ban_description"),
 			tooltip: ts("marketing.wolfstar.fixtures.cmd_ban_tooltip"),
 		},
-		case: {
-			description: ts("marketing.wolfstar.fixtures.cmd_case_description"),
-			tooltip: ts("marketing.wolfstar.fixtures.cmd_case_tooltip"),
-		},
 		case_archive: {
 			description: ts("marketing.wolfstar.fixtures.cmd_case_archive_description"),
 			tooltip: ts("marketing.wolfstar.fixtures.cmd_case_archive_tooltip"),
@@ -195,26 +191,6 @@ export function useShowcaseCommands() {
 			description: ts("marketing.wolfstar.fixtures.cmd_case_view_description"),
 			tooltip: ts("marketing.wolfstar.fixtures.cmd_case_view_tooltip"),
 		},
-		conf_menu: {
-			description: ts("marketing.wolfstar.fixtures.cmd_conf_menu_description"),
-			tooltip: ts("marketing.wolfstar.fixtures.cmd_conf_menu_tooltip"),
-		},
-		conf_remove: {
-			description: ts("marketing.wolfstar.fixtures.cmd_conf_remove_description"),
-			tooltip: ts("marketing.wolfstar.fixtures.cmd_conf_remove_tooltip"),
-		},
-		conf_reset: {
-			description: ts("marketing.wolfstar.fixtures.cmd_conf_reset_description"),
-			tooltip: ts("marketing.wolfstar.fixtures.cmd_conf_reset_tooltip"),
-		},
-		conf_set: {
-			description: ts("marketing.wolfstar.fixtures.cmd_conf_set_description"),
-			tooltip: ts("marketing.wolfstar.fixtures.cmd_conf_set_tooltip"),
-		},
-		conf_show: {
-			description: ts("marketing.wolfstar.fixtures.cmd_conf_show_description"),
-			tooltip: ts("marketing.wolfstar.fixtures.cmd_conf_show_tooltip"),
-		},
 		kick: {
 			description: ts("marketing.wolfstar.fixtures.cmd_kick_description"),
 			tooltip: ts("marketing.wolfstar.fixtures.cmd_kick_tooltip"),
@@ -223,45 +199,42 @@ export function useShowcaseCommands() {
 			description: ts("marketing.wolfstar.fixtures.cmd_mute_description"),
 			tooltip: ts("marketing.wolfstar.fixtures.cmd_mute_tooltip"),
 		},
+		settings_menu: {
+			description: ts("marketing.wolfstar.fixtures.cmd_settings_menu_description"),
+			tooltip: ts("marketing.wolfstar.fixtures.cmd_settings_menu_tooltip"),
+		},
+		slowmode: {
+			description: ts("marketing.wolfstar.fixtures.cmd_slowmode_description"),
+			tooltip: ts("marketing.wolfstar.fixtures.cmd_slowmode_tooltip"),
+		},
+		timeout: {
+			description: ts("marketing.wolfstar.fixtures.cmd_timeout_description"),
+			tooltip: ts("marketing.wolfstar.fixtures.cmd_timeout_tooltip"),
+		},
 		warn: {
 			description: ts("marketing.wolfstar.fixtures.cmd_warn_description"),
 			tooltip: ts("marketing.wolfstar.fixtures.cmd_warn_tooltip"),
 		},
 	}));
 
-	/** Bot replies, keyed by fixture id so `{case}` placeholders stay translatable. */
+	/** Plain bot replies, keyed by fixture id so the numbers stay translatable. */
 	const responses = computed<Record<string, string>>(() => ({
-		ban: ts("marketing.wolfstar.fixtures.reply_case_created", { id: 4 }),
 		case_archive: ts("marketing.wolfstar.fixtures.reply_case_archived", { id: 3 }),
 		case_delete: ts("marketing.wolfstar.fixtures.reply_case_deleted", { id: 3 }),
 		case_edit: ts("marketing.wolfstar.fixtures.reply_case_edited", { id: 3 }),
 		case_list: ts("marketing.wolfstar.fixtures.reply_no_cases"),
-		conf_remove: ts("marketing.wolfstar.fixtures.reply_key_updated", {
-			key: "disabled-commands",
-			value: ts("marketing.wolfstar.fixtures.value_not_set"),
+		slowmode: ts("marketing.wolfstar.fixtures.reply_slowmode_set", {
+			duration: ts("marketing.wolfstar.fixtures.value_ten_seconds"),
 		}),
-		conf_reset: ts("marketing.wolfstar.fixtures.reply_key_reset", {
-			key: "prefix",
-			value: "w!",
-		}),
-		conf_set: ts("marketing.wolfstar.fixtures.reply_key_updated", {
-			key: "language",
-			value: "en-GB",
-		}),
-		conf_show: ts("marketing.wolfstar.fixtures.reply_key_value", {
-			key: "channels.logs.moderation",
-			value: "#mod-logs",
-		}),
-		kick: ts("marketing.wolfstar.fixtures.reply_case_created", { id: 5 }),
-		mute: ts("marketing.wolfstar.fixtures.reply_case_created", { id: 6 }),
-		warn: ts("marketing.wolfstar.fixtures.reply_case_created", { id: 3 }),
 	}));
 
-	const menuLines = computed<Record<string, string>>(() => ({
-		"Currently at: 📁 Root": ts("marketing.wolfstar.fixtures.menu_currently_at", {
-			path: "📁 Root",
-		}),
-		"Use the menu below to navigate:": ts("marketing.wolfstar.fixtures.menu_navigate"),
+	/** The moderation actions' reasons, keyed by fixture id. */
+	const reasons = computed<Record<string, string>>(() => ({
+		ban: ts("marketing.wolfstar.fixtures.reason_repeated_infractions"),
+		kick: ts("marketing.wolfstar.fixtures.reason_ignoring_warnings"),
+		mute: ts("marketing.wolfstar.fixtures.reason_excessive_noise"),
+		timeout: ts("marketing.wolfstar.fixtures.reason_flooding"),
+		warn: contents.value.spam ?? "spam",
 	}));
 
 	/** Text and embed parts share the same shape; translated in one place. */
@@ -273,42 +246,72 @@ export function useShowcaseCommands() {
 		);
 	}
 
-	return computed<ShowcaseCommand[]>(() =>
-		showcaseCommands.map((command) => {
+	const catalogue = useShowcaseCommandCatalogue();
+
+	return computed<ShowcaseCommand[]>(() => [
+		...showcaseCommands.map((command): ShowcaseCommand => {
 			const text = copy.value[command.id];
 			const base = Object.assign({}, command, {
 				description: text?.description ?? command.description,
 				tooltip: text?.tooltip ?? command.tooltip,
 			});
 
-			if (base.responseType === "text") {
-				return Object.assign({}, base, {
-					content: responses.value[base.id] ?? base.content,
-				});
-			}
-
-			if (base.responseType === "embed") {
-				return Object.assign({}, base, {
-					embedFooter: ts("marketing.wolfstar.fixtures.embed_case", { id: 3 }),
-					embedLines: base.embedLines.map((line) => ({
-						label: labels.value[line.label] ?? line.label,
-						parts: translateParts(line.parts),
-					})),
-				});
-			}
-
-			return Object.assign({}, base, {
-				buttonLabel: ts("marketing.wolfstar.fixtures.button_stop"),
-				lines: base.lines.map((line) => menuLines.value[line] ?? line),
-				selectOptions: base.selectOptions.map((option) =>
-					Object.assign({}, option, {
-						description: ts("marketing.wolfstar.fixtures.menu_currently_at", {
-							path: option.label,
+			switch (base.responseType) {
+				case "text": {
+					return Object.assign({}, base, {
+						content: responses.value[base.id] ?? base.content,
+					});
+				}
+				case "moderation": {
+					return Object.assign({}, base, {
+						reason: reasons.value[base.id] ?? base.reason,
+					});
+				}
+				case "embed": {
+					return Object.assign({}, base, {
+						embedFooter: ts("marketing.wolfstar.fixtures.embed_case", { id: 3 }),
+						embedLines: base.embedLines.map((line) => ({
+							label: labels.value[line.label] ?? line.label,
+							parts: translateParts(line.parts),
+						})),
+					});
+				}
+				case "components": {
+					return Object.assign({}, base, {
+						expires: ts("marketing.wolfstar.fixtures.menu_expires", {
+							time: ts("marketing.wolfstar.fixtures.value_in_fifteen_minutes"),
 						}),
-					}),
-				),
-				selectPlaceholder: ts("marketing.wolfstar.fixtures.select_placeholder"),
-			});
+						expiresTime: ts("marketing.wolfstar.fixtures.value_in_fifteen_minutes"),
+						heading: ts("marketing.wolfstar.fixtures.menu_heading"),
+						intro: ts("marketing.wolfstar.fixtures.menu_intro", {
+							guild: "WolfStar HQ",
+						}),
+						resetDescription: ts("marketing.wolfstar.fixtures.menu_reset_description"),
+						resetLabel: ts("marketing.wolfstar.fixtures.button_reset"),
+						resetTitle: ts("marketing.wolfstar.fixtures.menu_reset_title"),
+						rows: [
+							{
+								code: "en-US",
+								label: ts("marketing.wolfstar.fixtures.menu_language"),
+								value: "English (United States)",
+							},
+							{
+								code: "UTC",
+								label: ts("marketing.wolfstar.fixtures.menu_time_zone"),
+							},
+							{
+								label: ts("marketing.wolfstar.fixtures.menu_updates_channel"),
+								value: ts("marketing.wolfstar.fixtures.value_not_set"),
+							},
+						],
+						selectPlaceholder: ts("marketing.wolfstar.fixtures.select_placeholder"),
+					});
+				}
+				default: {
+					return base;
+				}
+			}
 		}),
-	);
+		...catalogue.value,
+	]);
 }

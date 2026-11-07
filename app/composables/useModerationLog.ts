@@ -1,4 +1,5 @@
 import type { ModerationLogEntry } from "#shared/types/moderation-log";
+import type { ModerationCaseStatus } from "#shared/types/moderation-types";
 import type { MaybeRefOrGetter } from "vue";
 
 interface ModerationLogResponse {
@@ -13,7 +14,7 @@ export function useModerationLog({
 	offset,
 	filters,
 }: {
-	guildId: MaybeRefOrGetter<string>;
+	guildId: MaybeRefOrGetter<string | undefined>;
 	immediate?: boolean;
 	limit?: MaybeRefOrGetter<number>;
 	offset?: MaybeRefOrGetter<number>;
@@ -21,6 +22,7 @@ export function useModerationLog({
 		userId?: string;
 		moderatorId?: string;
 		typeCode?: number;
+		status?: ModerationCaseStatus;
 		from?: string;
 		to?: string;
 		q?: string;
@@ -34,10 +36,13 @@ export function useModerationLog({
 		return value ? { ...value } : undefined;
 	});
 
-	const asyncData = useLazyAsyncData(
+	const asyncData = usePersistedAsyncData(
 		() =>
 			`guild:${toValue(guildId)}:logs:moderation:${resolvedLimit.value ?? "default"}:${resolvedOffset.value ?? 0}:${JSON.stringify(resolvedFilters.value || {})}`,
 		() => {
+			// Without a guild there is nothing to ask for, and no URL to ask it at.
+			const id = toValue(guildId);
+			if (!id) return Promise.resolve<ModerationLogResponse>({ entries: [], total: 0 });
 			const query: Record<string, string | number> = {};
 			if (resolvedLimit.value !== undefined) query.limit = resolvedLimit.value;
 			if (resolvedOffset.value !== undefined) query.offset = resolvedOffset.value;
@@ -46,26 +51,16 @@ export function useModerationLog({
 				if (f.userId) query.userId = f.userId;
 				if (f.moderatorId) query.moderatorId = f.moderatorId;
 				if (f.typeCode !== undefined) query.typeCode = f.typeCode;
+				if (f.status) query.status = f.status;
 				if (f.from) query.from = f.from;
 				if (f.to) query.to = f.to;
 				if (f.q) query.q = f.q;
 			}
-			return $fetch<ModerationLogResponse>(
-				`/api/guilds/${toValue(guildId)}/logs/moderation`,
-				{
-					query,
-				},
-			);
+			return $fetch<ModerationLogResponse>(`/api/guilds/${id}/logs/moderation`, { query });
 		},
 		{
 			immediate: immediate !== false,
 			watch: [resolvedLimit, resolvedOffset, resolvedFilters],
-			getCachedData: (key, nuxt, { cause }) => {
-				if (cause === "refresh:manual" || cause === "refresh:hook") return undefined;
-				return (nuxt.isHydrating ? nuxt.payload.data[key] : nuxt.static.data[key]) as
-					| ModerationLogResponse
-					| undefined;
-			},
 		},
 	);
 

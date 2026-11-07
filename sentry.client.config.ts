@@ -16,7 +16,7 @@ if (sentry.dsn) {
 		dsn: sentry.dsn,
 		// Specify a set of allowed URLs to reduce noise from third-party services
 		// https://docs.sentry.io/platforms/javascript/guides/nuxt/configuration/options/#allowurls
-		allowUrls: [/https?:\/\/((cdn|www|beta)\.)?wolfstar\.rocks/],
+		allowUrls: [/https?:\/\/((cdn|www|beta|alpha)\.)?wolfstar\.rocks/],
 
 		// Adds request headers and IP for users, for more info visit:
 		// https://docs.sentry.io/platforms/javascript/guides/nuxt/configuration/options/#sendDefaultPii

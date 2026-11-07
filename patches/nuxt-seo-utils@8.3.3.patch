@@ -1,0 +1,13 @@
+diff --git a/dist/runtime/app/plugins/1.absoluteImageUrls.server.js b/dist/runtime/app/plugins/1.absoluteImageUrls.server.js
+index daa4c3c29aee0b6487ee2c1bdc965746bb695588..5cc7b3ae7658cf88806134093911929705879829 100644
+--- a/dist/runtime/app/plugins/1.absoluteImageUrls.server.js
++++ b/dist/runtime/app/plugins/1.absoluteImageUrls.server.js
+@@ -16,7 +16,7 @@ export default defineNuxtPlugin({
+     head.use({
+       key: "absoluteImageUrls",
+       hooks: {
+-        "tags:resolve": async ({ tags }) => {
++        "tags:resolve": ({ tags }) => {
+           for (const tag of tags) {
+             if (tag.tag !== "meta")
+               continue;

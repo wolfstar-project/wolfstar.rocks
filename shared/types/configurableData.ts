@@ -1,42 +1,49 @@
+import type { GuildData } from "#server/database";
+
+/**
+ * The settings of `GuildData` whose value is exactly `Value`, so an entry list
+ * can only name keys a control of its kind can edit.
+ */
+export type GuildSettingKeyOf<Value> = {
+	[Key in keyof GuildData]-?: [GuildData[Key]] extends [Value]
+		? [Value] extends [GuildData[Key]]
+			? Key
+			: never
+		: never;
+}[keyof GuildData];
+
+/** A setting that holds one channel or role, or nothing. */
+export type SingleSettingKey = Exclude<GuildSettingKeyOf<string | null>, "id">;
+/** A setting that holds a list of channels, roles or command names. */
+export type ListSettingKey = GuildSettingKeyOf<string[]>;
+/** A setting that is switched on or off. */
+export type ToggleSettingKey = GuildSettingKeyOf<boolean>;
+
+/** A setting the dashboard renders a control for, with its English copy. */
+export interface SettingEntry<Key extends keyof GuildData = keyof GuildData> {
+	key: Key;
+	name: string;
+	description: string;
+}
+
 export namespace Roles {
-	export interface Role {
-		key: `roles${
-			| "Admin"
-			| "Initial"
-			| "Moderator"
-			| "Muted"
-			| "RestrictedReaction"
-			| "RestrictedEmbed"
-			| "RestrictedAttachment"
-			| "RestrictedEmoji"
-			| "RestrictedVoice"
-			| "Public"
-			| "RemoveInitial"}`;
-
-		name: string;
-
-		tooltip: string;
+	interface RoleGroup {
+		group: "standard" | "restricted";
 	}
-}
 
-export namespace Moderation {
-	export interface Message {
-		description: string;
-
-		key: `messages${"ModerationDm" | "ModerationReasonDisplay" | "ModerationMessageDisplay" | "ModerationAutoDelete" | "ModeratorNameDisplay"}`;
-
-		name: string;
+	/** A setting that holds several roles. */
+	export interface ManyRole
+		extends SettingEntry<Extract<ListSettingKey, `roles${string}`>>, RoleGroup {
+		many: true;
 	}
-}
 
-export namespace Events {
-	export interface Event {
-		description: string;
-
-		key: `events${"BanAdd" | "BanRemove" | "TwemojiReactions"}`;
-
-		title: string;
+	/** A setting that holds one role, or nothing. */
+	export interface OneRole
+		extends SettingEntry<Extract<SingleSettingKey, `roles${string}`>>, RoleGroup {
+		many: false;
 	}
+
+	export type Role = ManyRole | OneRole;
 }
 
 export namespace DisableCommands {
@@ -49,81 +56,4 @@ export namespace DisableCommands {
 
 		name: string;
 	}
-}
-
-export namespace Channels {
-	export interface Channel {
-		description: string;
-
-		key: `channelsLogs${
-			| "ChannelCreate"
-			| "ChannelDelete"
-			| "ChannelUpdate"
-			| "EmojiCreate"
-			| "EmojiDelete"
-			| "EmojiUpdate"
-			| "Image"
-			| "MemberAdd"
-			| "MemberRemove"
-			| "MemberNicknameUpdate"
-			| "MemberUsernameUpdate"
-			| "MemberRolesUpdate"
-			| "MessageDelete"
-			| "MessageDeleteNsfw"
-			| "MessageUpdate"
-			| "MessageUpdateNsfw"
-			| "Moderation"
-			| "Prune"
-			| "Reaction"
-			| "RoleCreate"
-			| "RoleDelete"
-			| "RoleUpdate"
-			| "ServerUpdate"}`;
-
-		name: string;
-	}
-
-	export interface IgnoreChannel {
-		description: string;
-
-		key:
-			| `channelsIgnore${"All" | "MessageDelete" | "MessageEdit" | "ReactionAdd"}`
-			| "messagesIgnoreChannels";
-
-		name: string;
-	}
-}
-
-export namespace Selfmod {
-	type SelfmodKeyHelper<P1 extends string[]> =
-		`selfmod${Capitalize<P1[0]>}${P1[1] extends string ? Capitalize<P1[1]> : ""}${P1[2] extends string
-			? Capitalize<P1[2]>
-			: ""}`;
-
-	type Split<S extends string> = string extends S
-		? string[]
-		: S extends ""
-			? []
-			: S extends `${infer T}.${infer U}`
-				? [T, ...Split<U>]
-				: [S];
-
-	export type Union =
-		| SelfmodKeyHelper<Split<"capitals.thresholdDuration">>
-		| SelfmodKeyHelper<Split<"capitals.thresholdMaximum">>
-		| SelfmodKeyHelper<Split<"capitals.maximum">>
-		| SelfmodKeyHelper<Split<"capitals.minimum">>
-		| SelfmodKeyHelper<Split<"invites.thresholdMaximum">>
-		| SelfmodKeyHelper<Split<"invites.thresholdDuration">>
-		| SelfmodKeyHelper<Split<"links.thresholdMaximum">>
-		| SelfmodKeyHelper<Split<"links.thresholdDuration">>
-		| SelfmodKeyHelper<Split<"messages.thresholdMaximum">>
-		| SelfmodKeyHelper<Split<"messages.thresholdDuration">>
-		| SelfmodKeyHelper<Split<"newlines.thresholdMaximum">>
-		| SelfmodKeyHelper<Split<"newlines.thresholdDuration">>
-		| SelfmodKeyHelper<Split<"newlines.maximum">>
-		| SelfmodKeyHelper<Split<"reactions.thresholdMaximum">>
-		| SelfmodKeyHelper<Split<"reactions.thresholdDuration">>
-		| SelfmodKeyHelper<Split<"filter.thresholdMaximum">>
-		| SelfmodKeyHelper<Split<"filter.thresholdDuration">>;
 }

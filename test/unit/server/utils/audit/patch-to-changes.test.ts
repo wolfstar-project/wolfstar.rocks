@@ -2,16 +2,21 @@ import { describe, expect, it, vi } from "vitest";
 
 // auditDiff is a vi.fn() so tests can override it with mockReturnValueOnce.
 // The default implementation is a shallow JSON-patch diff sufficient for most tests.
+// Like evlog's, it compares lists by identity: two snapshots parsed from JSON
+// never share one, so every list comes out replaced, changed or not.
 vi.mock("evlog", () => ({
 	auditDiff: vi.fn((before: Record<string, unknown>, after: Record<string, unknown>) => {
 		const patch: Array<{ op: string; path: string; value?: unknown }> = [];
 		for (const key of new Set([...Object.keys(before), ...Object.keys(after)])) {
 			const bVal = before[key];
 			const aVal = after[key];
+			const differs =
+				Array.isArray(bVal) || Array.isArray(aVal)
+					? bVal !== aVal
+					: JSON.stringify(bVal) !== JSON.stringify(aVal);
 			if (!(key in after)) patch.push({ op: "remove", path: `/${key}` });
 			else if (!(key in before)) patch.push({ op: "add", path: `/${key}`, value: aVal });
-			else if (JSON.stringify(bVal) !== JSON.stringify(aVal))
-				patch.push({ op: "replace", path: `/${key}`, value: aVal });
+			else if (differs) patch.push({ op: "replace", path: `/${key}`, value: aVal });
 		}
 		return { patch };
 	}),
@@ -107,6 +112,18 @@ describe("compactSettingsChanges (plan 008 write-time payload)", () => {
 		expect(compact.patch).toEqual([]);
 	});
 
+	it("leaves out a list whose items did not change", () => {
+		const user = "1563165337543770143";
+		const compact = compactSettingsChanges(
+			{ reportsBlockedUsers: [], rolesInitialHumans: ["1563165337543770142"] },
+			{ reportsBlockedUsers: [user], rolesInitialHumans: ["1563165337543770142"] },
+		);
+
+		expect(compact.patch).toEqual([
+			{ op: "replace", path: "/reportsBlockedUsers", value: [user], from: [] },
+		]);
+	});
+
 	it("captures added and removed nullable fields with their old values", () => {
 		const compact = compactSettingsChanges(
 			{ rolesMuted: "role-1" },
@@ -180,6 +197,34 @@ describe("patchToChanges compact (v2) rows", () => {
 			patch: [{ op: "replace", path: "/rolesAdmin", value: [], from: [] }],
 		});
 		expect(result).toEqual({});
+	});
+
+	it("skips the unchanged lists a stored v2 row replaced", () => {
+		const user = "1563165337543770143";
+		const result = patchToChanges({
+			v: 2,
+			patch: [
+				{ op: "replace", path: "/reportsBlockedUsers", value: [user], from: [user] },
+				{ op: "replace", path: "/rolesInitialHumans", value: ["r1"], from: ["r1"] },
+				{ op: "replace", path: "/prefix", value: "?", from: "!" },
+			],
+		});
+
+		expect(result).toEqual({ changed: { prefix: { from: "!", to: "?" } } });
+	});
+
+	it("keeps a change that follows 25 unchanged lists", () => {
+		const patch = Array.from({ length: 25 }, (_, index) => ({
+			op: "replace",
+			path: `/list${index}`,
+			value: ["r1"],
+			from: ["r1"],
+		}));
+		patch.push({ op: "replace", path: "/rolesAdmin", value: ["r2"], from: ["r1"] });
+
+		expect(patchToChanges({ v: 2, patch })).toEqual({
+			changed: { rolesAdmin: { from: ["r1"], to: ["r2"] } },
+		});
 	});
 
 	it("returns empty groups for malformed or unknown-version payloads", () => {

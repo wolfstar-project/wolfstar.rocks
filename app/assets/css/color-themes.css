@@ -1,0 +1,194 @@
+/*
+ * Discord's themes beyond light and dark (see `app/utils/color-themes.ts` and
+ * `useAppliedTheme()`).
+ *
+ * `data-shade="dark"` is Discord's "Dark": darker than the default dark theme,
+ * whose ink scale is Discord's "Ash". The values are Discord's own surfaces.
+ */
+:root[data-shade="dark"][data-theme="dark"] {
+	--ink-900: lab(3.36% 0.24 -0.9);
+	--ink-800: lab(5.52% 0.32 -1.19);
+	--ink-700: lab(9.39% 0.8 -2.79);
+	--ink-600: lab(13.73% 0.3 -2.85);
+	--ink-500: lab(16.27% 0.94 -3.28);
+	--ink-400: lab(18.52% 0.48 -3.39);
+	--ink-300: lab(27.23% 0.99 -5.04);
+	--color-base-100: lab(13.73% 0.3 -2.85);
+	--color-base-200: lab(9.39% 0.8 -2.79);
+	--color-base-300: lab(5.52% 0.32 -1.19);
+	/* The marketing demos' Discord chrome, in Dark's own surfaces. */
+	--discord-chrome: var(--ink-600);
+	--discord-chrome-border: var(--ink-800);
+	--discord-sidebar: var(--ink-700);
+	--discord-server: var(--ink-800);
+	--discord-composer: var(--ink-500);
+}
+
+/*
+ * Discord's "Onyx", the AMOLED theme: the rail is pure black and every other
+ * surface within a few percent of it. The ink scale it paints the dashboard
+ * with is Onyx's own: the rail #000000, the sidebar #070709, the page #0C0C0E,
+ * then the fields, borders and raised surfaces #131416, #19191C and #1E1F22.
+ */
+:root[data-theme="midnight"] {
+	--ink-900: lab(0% 0 0);
+	--ink-800: lab(0% 0 0);
+	--ink-700: lab(1.95% 0.21 -0.76);
+	--ink-600: lab(3.36% 0.24 -0.9);
+	--ink-500: lab(6.28% -0.08 -1.44);
+	--ink-400: lab(8.85% 0.6 -2.11);
+	--ink-300: lab(11.74% 0.11 -2.22);
+}
+
+/*
+ * A colour theme paints its gradient behind the dashboard, and the dashboard's
+ * surfaces turn into veils over it, as in Discord: black on a dark base, white
+ * on a light one. How opaque a veil is follows `--ct-mix` (the theme's
+ * intensity): the page (Discord's "chat") 0.48 + 0.32·mix on a dark base and
+ * 0.95·(0.6 + 0.4·mix) on a light one, the sidebar 0.45 + 0.3·mix and the rail
+ * 0.42 + 0.28·mix on both. The surfaces that stay solid (dialogs, menus, the
+ * account card) and the text are mixed with the theme's tint, `--ct-base` and
+ * `--ct-text`. See `colorThemeVars()` for where they come from.
+ * Only while the dashboard is on the page: the marketing pages keep their look.
+ */
+:root[data-color-theme]:has(.console) {
+	--ct-veil: 0 0 0;
+	--ct-main: calc(0.48 + var(--ct-mix) * 0.32);
+	--ct-surface: calc(0.45 + var(--ct-mix) * 0.3);
+	--ct-rail: calc(0.42 + var(--ct-mix) * 0.28);
+	--ct-line: rgb(255 255 255 / 0.08);
+
+	--ink-900: color-mix(
+		in oklab,
+		oklch(21.4% 0.006 271.1) 100%,
+		var(--ct-base) var(--ct-base-amount)
+	);
+	--ink-800: color-mix(
+		in oklab,
+		oklch(25.1% 0.006 258.4) 100%,
+		var(--ct-base) var(--ct-base-amount)
+	);
+	--ink-700: color-mix(
+		in oklab,
+		oklch(29.7% 0.008 264.4) 100%,
+		var(--ct-base) var(--ct-base-amount)
+	);
+	--ink-600: color-mix(
+		in oklab,
+		oklch(32.1% 0.009 268.4) 100%,
+		var(--ct-base) var(--ct-base-amount)
+	);
+	--ink-500: color-mix(
+		in oklab,
+		oklch(34.9% 0.011 271.1) 100%,
+		var(--ct-base) var(--ct-base-amount)
+	);
+	--ink-400: color-mix(
+		in oklab,
+		oklch(38% 0.012 273.1) 100%,
+		var(--ct-base) var(--ct-base-amount)
+	);
+	--ink-300: color-mix(
+		in oklab,
+		oklch(44.7% 0.014 252.2) 100%,
+		var(--ct-base) var(--ct-base-amount)
+	);
+
+	--ui-text-dimmed: color-mix(
+		in oklab,
+		var(--color-neutral-500) 100%,
+		var(--ct-text) var(--ct-text-amount)
+	);
+	--ui-text-muted: color-mix(
+		in oklab,
+		var(--color-neutral-400) 100%,
+		var(--ct-text) var(--ct-text-amount)
+	);
+	--ui-text-toned: color-mix(
+		in oklab,
+		var(--color-neutral-300) 100%,
+		var(--ct-text) var(--ct-text-amount)
+	);
+	--ui-text: color-mix(
+		in oklab,
+		var(--color-neutral-200) 100%,
+		var(--ct-text) var(--ct-text-amount)
+	);
+	--ui-text-highlighted: color-mix(in oklab, white 100%, var(--ct-text) var(--ct-text-amount));
+}
+
+:root[data-color-theme][data-theme="light"]:has(.console) {
+	--ct-veil: 255 255 255;
+	/* Only the page has a light base: the sidebar and the rail keep the formulas above. */
+	--ct-main: calc(0.95 * (0.6 + var(--ct-mix) * 0.4));
+	--ct-line: rgb(0 0 0 / 0.08);
+
+	--color-base-100: color-mix(
+		in oklab,
+		oklch(100% 0 0) 100%,
+		var(--ct-base) var(--ct-base-amount)
+	);
+	--color-base-200: color-mix(
+		in oklab,
+		oklch(96.4% 0.002 247.8) 100%,
+		var(--ct-base) var(--ct-base-amount)
+	);
+	--color-base-300: color-mix(
+		in oklab,
+		oklch(91.6% 0.004 264.5) 100%,
+		var(--ct-base) var(--ct-base-amount)
+	);
+
+	--ui-text-dimmed: color-mix(
+		in oklab,
+		var(--color-neutral-600) 100%,
+		var(--ct-text) var(--ct-text-amount)
+	);
+	--ui-text-muted: color-mix(
+		in oklab,
+		var(--color-neutral-800) 100%,
+		var(--ct-text) var(--ct-text-amount)
+	);
+	--ui-text-toned: color-mix(
+		in oklab,
+		var(--color-neutral-900) 100%,
+		var(--ct-text) var(--ct-text-amount)
+	);
+	--ui-text: color-mix(in oklab, black 100%, var(--ct-text) var(--ct-text-amount));
+	--ui-text-highlighted: color-mix(in oklab, black 100%, var(--ct-text) var(--ct-text-amount));
+}
+
+/* The extra attribute outranks the light variant the dashboard layout sets on
+   the same variables, which would otherwise keep the surfaces solid. */
+:root[data-color-theme][data-theme]:has(.console) :is(.console, .console-drawer) {
+	--console-main: rgb(var(--ct-veil) / var(--ct-main));
+	--console-surface: rgb(var(--ct-veil) / var(--ct-surface));
+	--console-rail: rgb(var(--ct-veil) / var(--ct-rail));
+	--console-input: rgb(var(--ct-veil) / 0.3);
+	--console-border: var(--ct-line);
+	--console-solid: var(--ink-700);
+
+	background: var(--ct-gradient) fixed 0 0 / cover;
+}
+
+:root[data-color-theme][data-theme="light"]:has(.console) :is(.console, .console-drawer) {
+	--console-solid: color-mix(
+		in oklab,
+		oklch(94.5% 0.003 247.9) 100%,
+		var(--ct-base) var(--ct-base-amount)
+	);
+}
+
+/* The hue slider of the colour picker (`ColorPicker.vue`): every hue, left to right. */
+:root {
+	--picker-hue-track: linear-gradient(
+		to right,
+		hsl(0 100% 50%),
+		hsl(60 100% 50%),
+		hsl(120 100% 50%),
+		hsl(180 100% 50%),
+		hsl(240 100% 50%),
+		hsl(300 100% 50%),
+		hsl(360 100% 50%)
+	);
+}

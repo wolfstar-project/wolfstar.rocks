@@ -2,10 +2,9 @@ import type { AppSession } from "#nuxt-better-auth";
 import type { EventHandler, EventHandlerRequest, H3Error, H3Event } from "h3";
 import type { CacheOptions } from "nitropack/types";
 import { createHash } from "node:crypto";
+import { createKeyedLock } from "#server/utils/keyed-lock";
 import { type PartialRateLimit, type RateLimit, RateLimitSchema } from "#shared/schemas";
 import { CLIENT_OUTDATED_HEADER } from "#shared/utils/skew-protection";
-import { Collection } from "@discordjs/collection";
-import { AsyncQueue } from "@sapphire/async-queue";
 import { cast, isObject } from "@sapphire/utilities";
 import * as Sentry from "@sentry/nuxt";
 import { useLogger, createError } from "evlog";
@@ -104,24 +103,11 @@ async function resolveHandlerSession(
 }
 
 // In-process keyed mutex that serializes read-modify-write cycles per storage
-// key. The production driver (Cloudflare KV over HTTP) exposes no atomic
+// key. The production driver (Cloudflare KV) exposes no atomic
 // compare-and-swap primitive, so this bounds reservation races to the single
 // server instance; cross-instance races remain possible and are an accepted
 // limitation of the storage backend.
-const rateLimitKeyLocks = new Collection<string, AsyncQueue>();
-
-async function withKeyLock<T>(key: string, fn: () => Promise<T>): Promise<T> {
-	const queue = rateLimitKeyLocks.ensure(key, () => new AsyncQueue());
-	await queue.wait();
-	try {
-		return await fn();
-	} finally {
-		queue.shift();
-		if (queue.remaining === 0) {
-			rateLimitKeyLocks.delete(key);
-		}
-	}
-}
+const withKeyLock = createKeyedLock();
 
 interface FixedWindowState {
 	windowStart?: number;
@@ -160,13 +146,23 @@ async function readRateLimitState(
 	}
 }
 
+/**
+ * Keeps the counter for as long as its window lasts. A route's counter is only
+ * read again by the same member's next call to it, so without an expiry every
+ * route a member ever opened would leave a key in storage for good. (Workers KV
+ * keeps a key for at least 60 seconds whatever it is given.)
+ */
 async function persistRateLimitState(
 	storageKey: string,
 	state: Record<string, unknown>,
+	windowMs: number,
 	log: WrappedLogger,
 ): Promise<void> {
+	const ttl = Math.ceil(windowMs / 1000);
 	try {
-		await instrumentCachePut(storageKey, () => rateLimitStorage.setItem(storageKey, state));
+		await instrumentCachePut(storageKey, () =>
+			rateLimitStorage.setItem(storageKey, state, { ttl }),
+		);
 	} catch (error) {
 		log.warn(`Storage write failed for ${storageKey}: ${error}`);
 	}
@@ -196,7 +192,7 @@ async function reserveFixed(
 		}
 
 		count += 1;
-		await persistRateLimitState(storageKey, { count, windowStart }, log);
+		await persistRateLimitState(storageKey, { count, windowStart }, windowMs, log);
 		return {
 			allowed: true,
 			remaining: Math.max(0, limit - count),
@@ -209,6 +205,7 @@ async function reserveFixed(
 async function rollbackFixed(
 	storageKey: string,
 	token: { windowStart: number },
+	windowMs: number,
 	log: WrappedLogger,
 ): Promise<void> {
 	await withKeyLock(storageKey, async () => {
@@ -221,7 +218,12 @@ async function rollbackFixed(
 			typeof state.count === "number" &&
 			state.count > 0
 		) {
-			await persistRateLimitState(storageKey, { ...state, count: state.count - 1 }, log);
+			await persistRateLimitState(
+				storageKey,
+				{ ...state, count: state.count - 1 },
+				windowMs,
+				log,
+			);
 		}
 	});
 }
@@ -251,7 +253,7 @@ async function reserveSliding(
 		}
 
 		timestamps.push(now);
-		await persistRateLimitState(storageKey, { timestamps }, log);
+		await persistRateLimitState(storageKey, { timestamps }, windowMs, log);
 		const oldest = timestamps[0] ?? now;
 		return {
 			allowed: true,
@@ -265,6 +267,7 @@ async function reserveSliding(
 async function rollbackSliding(
 	storageKey: string,
 	token: { timestamp: number },
+	windowMs: number,
 	log: WrappedLogger,
 ): Promise<void> {
 	await withKeyLock(storageKey, async () => {
@@ -280,7 +283,7 @@ async function rollbackSliding(
 		}
 		const timestamps = [...state.timestamps];
 		timestamps.splice(index, 1);
-		await persistRateLimitState(storageKey, { timestamps }, log);
+		await persistRateLimitState(storageKey, { timestamps }, windowMs, log);
 	});
 }
 
@@ -377,13 +380,16 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 		return await invoke();
 	}
 
-	// Build storage key: global (per-user) by default, or method:path:user when scope === 'route'
+	// Build storage key: method:path:user by default (one counter per route), or one per user for all routes when scope === "global"
 	const { req } = event.node;
 	const { method } = req;
+	// The route's pattern (`/api/guilds/:guild/settings`), not the URL: with the
+	// URL each guild or row would get a counter of its own, so the limit would
+	// not be the route's and the storage would grow with every ID a member opens
 	const { pathname } = getRequestURL(event);
 	const normalizedPath =
 		pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
-	const scopeKey = `${method}:${normalizedPath}`;
+	const scopeKey = `${method}:${event.context.matchedRoute?.path ?? normalizedPath}`;
 	const storageKey =
 		scope === "route" ? `rate-limiter-state:${scopeKey}:${id}` : `rate-limiter-state:${id}`;
 
@@ -412,9 +418,9 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 		// On handler error, roll back this request's own reservation so
 		// failures don't consume quota
 		if ("windowStart" in reservation.token) {
-			await rollbackFixed(storageKey, reservation.token, log);
+			await rollbackFixed(storageKey, reservation.token, windowMs, log);
 		} else {
-			await rollbackSliding(storageKey, reservation.token, log);
+			await rollbackSliding(storageKey, reservation.token, windowMs, log);
 		}
 		throw error;
 	}

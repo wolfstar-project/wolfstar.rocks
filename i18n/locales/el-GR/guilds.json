@@ -1,150 +1,969 @@
 {
 	"$schema": "../../schemas/guilds.schema.json",
 	"guild_card": {
-		"invite_aria": "",
-		"invite_bot": "",
-		"invite_bot_aria": "",
-		"manage_aria": "",
-		"manage_server": "",
-		"manage_server_aria": "",
-		"members_online": "",
-		"no_permission": "",
-		"no_permission_aria": "",
-		"total_members": ""
+		"invite_bot_aria": ""
+	},
+	"guild_member_picker": {
+		"add": "",
+		"add_member": "",
+		"add_to": "",
+		"added": "",
+		"dialog_description": "",
+		"dialog_title": "",
+		"not_in_server": "",
+		"search_placeholder": "",
+		"type_to_search": ""
 	},
 	"guild_settings": {
+		"access": {
+			"allow_note": "",
+			"default_permissions": "",
+			"default_roles": "",
+			"default_title": "",
+			"deny_note": "",
+			"form_aria": "",
+			"legacy_allow": "",
+			"legacy_becomes_allow": "",
+			"legacy_becomes_deny": "",
+			"legacy_deny": "",
+			"legacy_download": "",
+			"legacy_drops": "",
+			"legacy_import": "",
+			"legacy_import_all": "",
+			"legacy_import_aria": "",
+			"legacy_member": "",
+			"legacy_not_convertible": "",
+			"legacy_remove": "",
+			"legacy_remove_cancel": "",
+			"legacy_remove_confirm_label": "",
+			"legacy_remove_description": "",
+			"legacy_remove_failed": "",
+			"legacy_remove_submit": "",
+			"legacy_remove_title": "",
+			"legacy_removed": "",
+			"legacy_subtitle": "",
+			"legacy_title": "",
+			"members_allowed": "",
+			"members_denied": "",
+			"members_order": "",
+			"members_title": "",
+			"roles_allowed": "",
+			"roles_denied": "",
+			"roles_order": "",
+			"roles_title": "",
+			"subtitle": "",
+			"title": ""
+		},
+		"appeals": {
+			"appealable_title": "",
+			"case_types": {
+				"ban": "",
+				"mute": "",
+				"timeout": ""
+			},
+			"days": "",
+			"editor": {
+				"access": "",
+				"add_option": "",
+				"add_question": "",
+				"cancel": "",
+				"case_types": "",
+				"case_types_help": "",
+				"content": "",
+				"create": "",
+				"create_title": "",
+				"description": "",
+				"edit_title": "",
+				"enabled": "",
+				"enabled_help": "",
+				"form": "",
+				"form_description": "",
+				"form_description_placeholder": "",
+				"help": "",
+				"help_help": "",
+				"icon": "",
+				"icon_help": "",
+				"images_only": "",
+				"label": "",
+				"lock_reason": "",
+				"lock_reason_help": "",
+				"long": "",
+				"long_help": "",
+				"max_choices": "",
+				"max_files": "",
+				"max_length": "",
+				"max_length_help": "",
+				"min_choices": "",
+				"min_files": "",
+				"min_files_help": "",
+				"move_down_aria": "",
+				"move_up_aria": "",
+				"name": "",
+				"name_placeholder": "",
+				"no_role": "",
+				"option_aria": "",
+				"options": "",
+				"options_help": "",
+				"placeholder": "",
+				"question_title": "",
+				"questions": "",
+				"questions_help": "",
+				"remove_aria": "",
+				"remove_option_aria": "",
+				"required": "",
+				"required_roles": "",
+				"required_roles_help": "",
+				"restricted_roles": "",
+				"restricted_roles_help": "",
+				"save": ""
+			},
+			"emoji": {
+				"categories": {
+					"activities": "",
+					"food": "",
+					"nature": "",
+					"objects": "",
+					"people": "",
+					"recent": "",
+					"server": "",
+					"smileys": "",
+					"symbols": "",
+					"travel": ""
+				},
+				"categories_aria": "",
+				"dialog_aria": "",
+				"from_server": "",
+				"hint": "",
+				"load_failed": "",
+				"loading": "",
+				"none": "",
+				"none_help": "",
+				"remove": "",
+				"results": "",
+				"retry": "",
+				"search_aria": "",
+				"search_clear": "",
+				"search_placeholder": "",
+				"skin_tone": "",
+				"tones": {
+					"dark": "",
+					"default": "",
+					"light": "",
+					"medium": "",
+					"medium_dark": "",
+					"medium_light": ""
+				},
+				"trigger_aria": ""
+			},
+			"form_aria": "",
+			"form_notice": "",
+			"form_notice_title": "",
+			"forms": {
+				"count": "",
+				"delete": "",
+				"delete_aria": "",
+				"delete_description": "",
+				"delete_title": "",
+				"edit": "",
+				"edit_aria": "",
+				"empty_description": "",
+				"empty_title": "",
+				"enable_aria": "",
+				"errors": {
+					"generic": "",
+					"icon": "",
+					"invalid": "",
+					"limit": "",
+					"nameInvalid": "",
+					"nameRequired": "",
+					"nameTaken": "",
+					"noQuestion": "",
+					"options": "",
+					"range": "",
+					"required": "",
+					"roles": "",
+					"tooLong": "",
+					"tooMany": "",
+					"tooManyRoles": "",
+					"unknown": ""
+				},
+				"every_kind": "",
+				"help": "",
+				"load_failed": "",
+				"loading_aria": "",
+				"locked": "",
+				"move_down_aria": "",
+				"move_up_aria": "",
+				"new": "",
+				"questions_count": "",
+				"retry": "",
+				"takes": "",
+				"title": "",
+				"toasts": {
+					"created": "",
+					"deleted": "",
+					"saved": ""
+				}
+			},
+			"kinds": {
+				"attachment": "",
+				"attachment_help": "",
+				"choice": "",
+				"choice_help": "",
+				"display": "",
+				"display_help": "",
+				"text": "",
+				"text_help": ""
+			},
+			"limits_title": "",
+			"off_body": "",
+			"off_summary": "",
+			"off_title": "",
+			"on_summary": "",
+			"per_member": "",
+			"queue": {
+				"accept": "",
+				"accept_aria": "",
+				"case_number": "",
+				"decision": {
+					"at": "",
+					"by": "",
+					"reason": ""
+				},
+				"deny": "",
+				"deny_aria": "",
+				"description": "",
+				"dialog": {
+					"accept_description": "",
+					"accept_title": "",
+					"cancel": "",
+					"deny_description": "",
+					"deny_title": "",
+					"reason_help": "",
+					"reason_label": "",
+					"reason_placeholder": ""
+				},
+				"empty": {
+					"accepted_description": "",
+					"accepted_title": "",
+					"all_description": "",
+					"all_title": "",
+					"denied_description": "",
+					"denied_title": "",
+					"pending_description": "",
+					"pending_title": ""
+				},
+				"errors": {
+					"caseGone": "",
+					"decided": "",
+					"failed": "",
+					"generic": "",
+					"invalid": "",
+					"noAccess": "",
+					"undoFailed": "",
+					"unknown": ""
+				},
+				"filter_aria": "",
+				"filters": {
+					"all": ""
+				},
+				"load_failed": "",
+				"more_failed": "",
+				"no_review": "",
+				"retry": "",
+				"show_more": "",
+				"showing": "",
+				"status": {
+					"accepted": "",
+					"denied": "",
+					"pending": ""
+				},
+				"title": "",
+				"toasts": {
+					"accepted": "",
+					"denied": "",
+					"failed": "",
+					"waiting": ""
+				}
+			},
+			"review_title": "",
+			"settings_title": "",
+			"subtitle": "",
+			"switch_aria": "",
+			"thread": {
+				"none": "",
+				"none_help": "",
+				"private": "",
+				"private_help": "",
+				"public": "",
+				"public_help": ""
+			},
+			"title": ""
+		},
+		"auto": {
+			"allow": {
+				"embeds": "",
+				"embeds_help": "",
+				"images": "",
+				"images_help": "",
+				"invites": "",
+				"invites_help": "",
+				"links": "",
+				"links_help": "",
+				"mentions": "",
+				"mentions_help": "",
+				"text": "",
+				"text_help": ""
+			},
+			"columns": {
+				"actions": "",
+				"channel": ""
+			},
+			"count": "",
+			"editor": {
+				"autodelete_subtitle": "",
+				"automessage_interval_help": "",
+				"automessage_subtitle": "",
+				"autopurge_interval_help": "",
+				"autopurge_subtitle": "",
+				"bots": "",
+				"bots_help": "",
+				"cancel": "",
+				"channel": "",
+				"channel_locked": "",
+				"channel_placeholder": "",
+				"delete_after": "",
+				"delete_after_help": "",
+				"delete_at_once": "",
+				"edit_title": "",
+				"enable": "",
+				"filter": "",
+				"filter_help": "",
+				"keep": "",
+				"keep_help": "",
+				"mentions": "",
+				"mentions_help": "",
+				"message": "",
+				"message_placeholder": "",
+				"new_title": "",
+				"preview": "",
+				"preview_empty": "",
+				"purge_every": "",
+				"save": "",
+				"send_every": "",
+				"value_help": "",
+				"value_text": "",
+				"value_text_placeholder": "",
+				"value_user": "",
+				"value_user_placeholder": ""
+			},
+			"errors": {
+				"channel": "",
+				"channel_taken": "",
+				"content": "",
+				"content_length": "",
+				"delay": "",
+				"message_interval": "",
+				"needs_text": "",
+				"needs_user": "",
+				"purge_interval": "",
+				"value_length": ""
+			},
+			"filters": {
+				"any": "",
+				"bots": "",
+				"contains": "",
+				"embeds": "",
+				"endsWith": "",
+				"humans": "",
+				"images": "",
+				"invites": "",
+				"links": "",
+				"mentions": "",
+				"notContains": "",
+				"startsWith": "",
+				"text": "",
+				"user": ""
+			},
+			"load_failed": "",
+			"module_hint": "",
+			"removed_title": "",
+			"retry": "",
+			"saved_title": "",
+			"server_errors": {
+				"channel": "",
+				"generic": "",
+				"invalid": "",
+				"limit": "",
+				"unknown": ""
+			}
+		},
+		"autodelete": {
+			"add": "",
+			"at_once": "",
+			"bots_deleted": "",
+			"bots_kept": "",
+			"channels_title": "",
+			"columns": {
+				"bots": "",
+				"delay": "",
+				"kept": ""
+			},
+			"edit_aria": "",
+			"empty_body": "",
+			"empty_title": "",
+			"footnote": "",
+			"nothing_kept": "",
+			"remove": "",
+			"remove_aria": "",
+			"remove_description": "",
+			"remove_title": "",
+			"removed_description": "",
+			"restart_body": "",
+			"restart_title": "",
+			"saved_description": "",
+			"subtitle": "",
+			"table_aria": ""
+		},
+		"automessage": {
+			"add": "",
+			"edit_aria": "",
+			"empty_body": "",
+			"empty_title": "",
+			"every": "",
+			"list_aria": "",
+			"mentions_aria": "",
+			"mentions_off": "",
+			"mentions_on": "",
+			"mentions_saved_off": "",
+			"mentions_saved_on": "",
+			"next": "",
+			"remove": "",
+			"remove_aria": "",
+			"remove_description": "",
+			"remove_title": "",
+			"removed_description": "",
+			"saved_description": "",
+			"subtitle": ""
+		},
+		"automod": {
+			"form_aria": "",
+			"hard_actions": {
+				"Ban": "",
+				"Kick": "",
+				"Mute": "",
+				"None": "",
+				"Softban": "",
+				"Timeout": "",
+				"VoiceKick": "",
+				"Warning": ""
+			},
+			"module_hint": "",
+			"module_settings": "",
+			"options": {
+				"allowed": "",
+				"allowedCodes": "",
+				"allowedGuilds": "",
+				"characters": "",
+				"maximum": "",
+				"minimum": "",
+				"perChannel": "",
+				"queueSize": "",
+				"timePeriod": "",
+				"weighted": "",
+				"words": ""
+			},
+			"rules": {
+				"action": "",
+				"count": "",
+				"defaults": {
+					"description": "",
+					"escalation_title": "",
+					"rule_title": "",
+					"save": "",
+					"saved": ""
+				},
+				"delete": "",
+				"delete_aria": "",
+				"delete_description": "",
+				"delete_title": "",
+				"edit": "",
+				"edit_aria": "",
+				"editor": {
+					"action": "",
+					"alert_and_logs": "",
+					"back": "",
+					"cancel": "",
+					"create": "",
+					"create_title": "",
+					"duration": "",
+					"duration_unit_aria": "",
+					"edit_title": "",
+					"enabled": "",
+					"escalation": "",
+					"escalation_add": "",
+					"escalation_duration": "",
+					"escalation_duration_help": "",
+					"escalation_help": "",
+					"escalation_no_action": "",
+					"escalation_remove_aria": "",
+					"escalation_step": "",
+					"exemptions": "",
+					"hard_action": "",
+					"hard_action_help": "",
+					"ignored_channels": "",
+					"ignored_roles": "",
+					"list_placeholder": "",
+					"log_channel": "",
+					"log_channel_default": "",
+					"log_channel_help": "",
+					"name": "",
+					"name_placeholder": "",
+					"options": "",
+					"permanent_hint": "",
+					"response": "",
+					"response_help": "",
+					"response_placeholder": "",
+					"save": "",
+					"soft_actions": "",
+					"soft_actions_help": "",
+					"soft_alert": "",
+					"soft_delete": "",
+					"soft_log": "",
+					"threshold_duration": "",
+					"threshold_maximum": "",
+					"type": "",
+					"type_locked": "",
+					"discard_prompt": "",
+					"keep_editing": "",
+					"discard": ""
+				},
+				"empty_description": "",
+				"empty_title": "",
+				"enabled_count": "",
+				"errors": {
+					"generic": "",
+					"invalid": "",
+					"limit": "",
+					"logChannel": "",
+					"nameInvalid": "",
+					"nameRequired": "",
+					"nameTaken": "",
+					"timeoutNeedsDuration": "",
+					"unknown": ""
+				},
+				"first_infraction": "",
+				"load_failed": "",
+				"loading_aria": "",
+				"new": "",
+				"no_match": "",
+				"nothing": "",
+				"on_hit": "",
+				"retry": "",
+				"search_placeholder": "",
+				"soft_alert_short": "",
+				"soft_delete_short": "",
+				"soft_log_short": "",
+				"subtitle": "",
+				"threshold": "",
+				"title": "",
+				"toasts": {
+					"created": "",
+					"deleted": "",
+					"saved": ""
+				},
+				"toggle_aria": "",
+				"type_picker": {
+					"content_filters": "",
+					"description": "",
+					"rate_limits": "",
+					"title": ""
+				}
+			},
+			"subtitle": "",
+			"title": "",
+			"types": {
+				"Attachments": {
+					"description": "",
+					"name": ""
+				},
+				"Capitals": {
+					"description": "",
+					"name": ""
+				},
+				"Characters": {
+					"description": "",
+					"name": ""
+				},
+				"Duplicates": {
+					"description": "",
+					"name": ""
+				},
+				"Emojis": {
+					"description": "",
+					"name": ""
+				},
+				"ImageSpam": {
+					"description": "",
+					"name": ""
+				},
+				"Invites": {
+					"description": "",
+					"name": ""
+				},
+				"Links": {
+					"description": "",
+					"name": ""
+				},
+				"LinksCooldown": {
+					"description": "",
+					"name": ""
+				},
+				"MaskedLinks": {
+					"description": "",
+					"name": ""
+				},
+				"MassMentions": {
+					"description": "",
+					"name": ""
+				},
+				"MentionsCooldown": {
+					"description": "",
+					"name": ""
+				},
+				"MessageDuplicates": {
+					"description": "",
+					"name": ""
+				},
+				"MessageSpam": {
+					"description": "",
+					"name": ""
+				},
+				"Newlines": {
+					"description": "",
+					"name": ""
+				},
+				"Phishing": {
+					"description": "",
+					"name": ""
+				},
+				"Polls": {
+					"description": "",
+					"name": ""
+				},
+				"Spoilers": {
+					"description": "",
+					"name": ""
+				},
+				"Stickers": {
+					"description": "",
+					"name": ""
+				},
+				"StickersCooldown": {
+					"description": "",
+					"name": ""
+				},
+				"Words": {
+					"description": "",
+					"name": ""
+				},
+				"Zalgo": {
+					"description": "",
+					"name": ""
+				}
+			},
+			"words_editor": {
+				"title": "",
+				"help": "",
+				"add_heading": "",
+				"edit_heading": "",
+				"letters": "",
+				"letters_placeholder": "",
+				"letters_help": "",
+				"add": "",
+				"save_edit": "",
+				"cancel_edit": "",
+				"mode": {
+					"legend": "",
+					"whole": "",
+					"whole_example": "",
+					"continues": "",
+					"continues_example": "",
+					"prefixed": "",
+					"prefixed_example": "",
+					"anywhere": "",
+					"anywhere_example": ""
+				},
+				"tolerance": {
+					"title": "",
+					"help": ""
+				},
+				"alternatives": {
+					"toggle": "",
+					"help": "",
+					"letter": "",
+					"letter_option": "",
+					"characters": "",
+					"characters_placeholder": "",
+					"example": "",
+					"empty": "",
+					"summary": "",
+					"remove": ""
+				},
+				"advanced": {
+					"toggle": "",
+					"help": "",
+					"field": "",
+					"not_simple": ""
+				},
+				"preview": {
+					"title": "",
+					"field": "",
+					"placeholder": "",
+					"limit": "",
+					"caught": "",
+					"caught_none": "",
+					"running": "",
+					"timeout": "",
+					"error": "",
+					"empty": "",
+					"examples": "",
+					"example_caught": "",
+					"example_passes": "",
+					"kinds": {
+						"plain": "",
+						"repeated": "",
+						"separated": "",
+						"continues": "",
+						"prefixed": "",
+						"inside": ""
+					}
+				},
+				"list": {
+					"heading": "",
+					"search": "",
+					"empty": "",
+					"empty_search": "",
+					"edit": "",
+					"remove": "",
+					"removed": "",
+					"added": "",
+					"updated": "",
+					"covered": "",
+					"modes": {
+						"whole": "",
+						"continues": "",
+						"prefixed": "",
+						"anywhere": ""
+					}
+				},
+				"import": {
+					"open": "",
+					"export": "",
+					"field": "",
+					"file": "",
+					"confirm": "",
+					"cancel": "",
+					"result": "",
+					"skipped_line": "",
+					"file_error": ""
+				},
+				"problems": {
+					"empty": "",
+					"tooShort": "",
+					"tooLong": "",
+					"duplicate": "",
+					"brackets": "",
+					"listFull": "",
+					"edgeWildcard": "",
+					"letterBrackets": ""
+				},
+				"notes": {
+					"innerWildcard": "",
+					"normalized": ""
+				}
+			}
+		},
+		"autopurge": {
+			"add": "",
+			"columns": {
+				"every": "",
+				"filter": "",
+				"next": ""
+			},
+			"edit_aria": "",
+			"empty_body": "",
+			"empty_title": "",
+			"footnote": "",
+			"remove": "",
+			"remove_aria": "",
+			"remove_description": "",
+			"remove_title": "",
+			"removed_description": "",
+			"saved_description": "",
+			"schedules_title": "",
+			"subtitle": "",
+			"table_aria": ""
+		},
 		"channels": {
+			"bulk": {
+				"all_help": "",
+				"all_label": "",
+				"cancel_selection": "",
+				"group_help": "",
+				"group_label": "",
+				"mixed": "",
+				"no_logs_selected": "",
+				"remove_channel": "",
+				"select_group": "",
+				"select_log": "",
+				"select_logs": "",
+				"selected_count": "",
+				"selection_help": "",
+				"selection_label": "",
+				"selection_region": ""
+			},
+			"delivery": {
+				"edit_style": {
+					"difference": "",
+					"difference_help": "",
+					"separate": "",
+					"separate_help": ""
+				},
+				"title": ""
+			},
 			"excluded_channels": "",
 			"excluded_channels_help": "",
 			"form_aria": "",
+			"groups": {
+				"channels": "",
+				"emojis": "",
+				"members": "",
+				"messages": "",
+				"reactions": "",
+				"roles": "",
+				"server": ""
+			},
+			"ignore_dialog_title": "",
+			"ignored_count": "",
 			"logging_channels": "",
 			"logging_channels_help": "",
+			"not_logged": "",
+			"nothing_ignored": "",
+			"routed_count": "",
+			"search_text_channels": "",
 			"subtitle": "",
 			"title": ""
+		},
+		"command_rules": {
+			"allowed_channels": "",
+			"allowed_roles": "",
+			"allowed_users": "",
+			"discord": {
+				"authorize": "",
+				"badge": "",
+				"badge_different": "",
+				"badge_matching": "",
+				"count": "",
+				"description": "",
+				"different": "",
+				"error_channel": "",
+				"error_command": "",
+				"error_conflict": "",
+				"error_permissions": "",
+				"error_rate_limited": "",
+				"error_refused": "",
+				"error_role_above": "",
+				"error_scope": "",
+				"error_unknown_channel": "",
+				"error_unknown_command": "",
+				"error_unknown_role": "",
+				"every_note": "",
+				"failed_title": "",
+				"load_failed": "",
+				"missing": "",
+				"not_registered": "",
+				"over": "",
+				"over_toast": "",
+				"refused_title": "",
+				"role_order": "",
+				"scope_needed": "",
+				"scope_toast": "",
+				"title": "",
+				"wolfstar_only": ""
+			},
+			"editor": {
+				"allowed_channels": "",
+				"allowed_channels_hint": "",
+				"allowed_roles": "",
+				"allowed_roles_hint": "",
+				"allowed_users": "",
+				"allowed_users_hint": "",
+				"also_applies": "",
+				"cancel": "",
+				"conflict_description": "",
+				"conflict_title": "",
+				"count": "",
+				"disabled_by": "",
+				"enabled": "",
+				"enabled_hint": "",
+				"enabled_hint_off": "",
+				"every_name": "",
+				"every_subtitle": "",
+				"every_title": "",
+				"form_aria": "",
+				"ignored_channels": "",
+				"ignored_channels_hint": "",
+				"ignored_roles": "",
+				"ignored_roles_hint": "",
+				"ignored_users": "",
+				"ignored_users_hint": "",
+				"load_failed": "",
+				"note_allowed": "",
+				"note_ignored": "",
+				"off_note": "",
+				"only_allowed": "",
+				"only_allowed_hint": "",
+				"open_aria": "",
+				"retry": "",
+				"save": "",
+				"save_failed_description": "",
+				"save_failed_title": "",
+				"saved_description": "",
+				"saved_description_discord": "",
+				"saved_every_description": "",
+				"saved_every_description_discord": "",
+				"saved_title": "",
+				"summary_discord": "",
+				"summary_off": "",
+				"title": ""
+			},
+			"every_command": "",
+			"groups_subtitle": "",
+			"groups_title": "",
+			"ignored_channels": "",
+			"ignored_roles": "",
+			"ignored_users": "",
+			"order": ""
 		},
 		"commands": {
 			"category_reset": "",
 			"category_reset_description": "",
+			"channels_form_aria": "",
 			"disable_all": "",
+			"disabled_channels": "",
 			"enable_all": "",
+			"enabled_count": "",
+			"every": "",
+			"every_aria": "",
+			"every_hint": "",
 			"form_aria": "",
+			"off": "",
+			"on": "",
 			"reset": "",
 			"save_failed": "",
 			"subtitle": "",
 			"title": ""
-		},
-		"events": {
-			"channels_page_link": "",
-			"form_aria": "",
-			"message_events": "",
-			"message_events_help": "",
-			"moderation_events": "",
-			"moderation_events_help": "",
-			"subtitle": "",
-			"title": "",
-			"toggle_aria": ""
-		},
-		"filter": {
-			"capitals": {
-				"filter_label": "",
-				"form_aria": "",
-				"maximum": "",
-				"minimum": "",
-				"save_failed": "",
-				"title": "",
-				"toggle": "",
-				"toggle_help": ""
-			},
-			"common": {
-				"actions": {
-					"ban": "",
-					"kick": "",
-					"mute": "",
-					"none": "",
-					"softban": "",
-					"warning": ""
-				},
-				"alerts": "",
-				"alerts_help": "",
-				"delete_message": "",
-				"delete_message_help": "",
-				"disabled": "",
-				"duration": "",
-				"duration_help": "",
-				"enabled": "",
-				"hard_action": "",
-				"hard_action_description": "",
-				"logging": "",
-				"logging_help": "",
-				"options": "",
-				"punishments": "",
-				"select_action_aria": "",
-				"soft_actions": "",
-				"threshold": "",
-				"threshold_duration": "",
-				"threshold_maximum": ""
-			},
-			"invites": {
-				"filter_label": "",
-				"form_aria": "",
-				"save_failed": "",
-				"title": "",
-				"toggle": "",
-				"toggle_help": ""
-			},
-			"lines": {
-				"filter_label": "",
-				"form_aria": "",
-				"maximum": "",
-				"maximum_help": "",
-				"save_failed": "",
-				"title": "",
-				"toggle": "",
-				"toggle_help": ""
-			},
-			"links": {
-				"add_link": "",
-				"add_link_placeholder": "",
-				"allowed_links": "",
-				"filter_label": "",
-				"form_aria": "",
-				"remove_link": "",
-				"save_failed": "",
-				"title": "",
-				"toggle": "",
-				"toggle_help": ""
-			},
-			"messages": {
-				"filter_label": "",
-				"form_aria": "",
-				"save_failed": "",
-				"title": "",
-				"toggle": "",
-				"toggle_help": ""
-			},
-			"reactions": {
-				"filter_label": "",
-				"form_aria": "",
-				"save_failed": "",
-				"title": "",
-				"toggle": "",
-				"toggle_help": ""
-			},
-			"word": {
-				"add_placeholder": "",
-				"add_word": "",
-				"alerts_toggle": "",
-				"delete_toggle": "",
-				"filtered_words": "",
-				"filter_label": "",
-				"form_aria": "",
-				"logging_toggle": "",
-				"remove_word": "",
-				"save_failed": "",
-				"title": "",
-				"toggle": "",
-				"toggle_help": ""
-			}
 		},
 		"general": {
 			"copy_server_id": "",
@@ -153,13 +972,18 @@
 			"language_aria": "",
 			"language_description": "",
 			"language_placeholder": "",
+			"last_change": "",
+			"mod_actions_aria": "",
+			"mod_actions_partial": "",
+			"mod_actions_title": "",
+			"mod_actions_total": "",
 			"need_help": "",
 			"no_activity": "",
 			"no_activity_description": "",
-			"prefix": "",
-			"prefix_aria": "",
-			"prefix_description": "",
-			"prefix_placeholder": "",
+			"no_activity_yet": "",
+			"no_activity_yet_description": "",
+			"overview_subtitle": "",
+			"overview_title": "",
 			"recent_activity": "",
 			"save_failed_message": "",
 			"server_id_copied_description": "",
@@ -167,222 +991,998 @@
 			"server_info": "",
 			"server_info_description": "",
 			"server_stats_aria": "",
-			"stat_categories": "",
+			"stat_cases": "",
+			"stat_categories_note": "",
+			"stat_channels": "",
+			"stat_commands": "",
+			"stat_last_days": "",
 			"stat_members": "",
+			"stat_online": "",
+			"stat_open_reports": "",
+			"stat_open_reports_note": "",
 			"stat_roles": "",
-			"stat_text_channels": "",
-			"stat_voice_channels": "",
 			"subtitle": "",
-			"title": ""
+			"time_zone": "",
+			"time_zone_description": "",
+			"time_zone_now": "",
+			"title": "",
+			"transfer": {
+				"becomes": "",
+				"cancel": "",
+				"confirm": "",
+				"description": "",
+				"export": "",
+				"export_failed": "",
+				"exported": "",
+				"import": "",
+				"import_failed": "",
+				"imported": "",
+				"issues_aria": "",
+				"nothing": "",
+				"notice_no_equivalent": "",
+				"notice_reaction_filter": "",
+				"notice_rule_adjusted": "",
+				"notice_rule_failed": "",
+				"notice_setting_failed": "",
+				"notice_setting_failed_bot": "",
+				"notices_description": "",
+				"notices_heading": "",
+				"refused_description": "",
+				"refused_title": "",
+				"review_description": "",
+				"review_title": "",
+				"rules_added": "",
+				"rules_created": "",
+				"rules_heading": "",
+				"rules_moved": "",
+				"rules_removed": "",
+				"rules_updated": "",
+				"rules_warning": "",
+				"settings_heading": "",
+				"stale": "",
+				"title": "",
+				"too_big": "",
+				"unsaved": "",
+				"unsupported": ""
+			}
+		},
+		"honeypot": {
+			"action_help": "",
+			"action_title": "",
+			"actions": {
+				"ban": "",
+				"ban_help": "",
+				"kick": "",
+				"kick_help": "",
+				"softban": "",
+				"softban_help": ""
+			},
+			"behaviour_title": "",
+			"catching": "",
+			"channel_help": "",
+			"channels_title": "",
+			"copied_description": "",
+			"copied_title": "",
+			"copy_setup": "",
+			"errors": {
+				"log_permissions": "",
+				"same_channel": "",
+				"trap_permissions": "",
+				"unknown_channel": ""
+			},
+			"form_aria": "",
+			"not_reported": "",
+			"off_body": "",
+			"off_summary": "",
+			"off_title": "",
+			"pick_channel": "",
+			"pick_channel_hint": "",
+			"subtitle": "",
+			"title": "",
+			"warning_help": ""
+		},
+		"joinguard": {
+			"allow": {
+				"form_aria": "",
+				"help": "",
+				"members": "",
+				"nobody": "",
+				"roles": "",
+				"title": ""
+			},
+			"checkpoint": {
+				"captcha": "",
+				"captcha_help": "",
+				"channel": "",
+				"channel_help": "",
+				"checks_title": "",
+				"connections": "",
+				"connections_help": "",
+				"copied_description": "",
+				"copied_title": "",
+				"copy_link": "",
+				"form_aria": "",
+				"hours": "",
+				"minimum_trust": "",
+				"no_channel": "",
+				"no_pending_role": "",
+				"no_verified_role": "",
+				"note": "",
+				"pending_role": "",
+				"pending_role_help": "",
+				"post_button": "",
+				"post_failed_title": "",
+				"post_needs_channel": "",
+				"posted_description": "",
+				"posted_title": "",
+				"shared_bans": "",
+				"shared_bans_help": "",
+				"switch": "",
+				"switch_help": "",
+				"the_channel": "",
+				"timeout": "",
+				"timeout_aria": "",
+				"timeout_help": "",
+				"timeout_never": "",
+				"title": "",
+				"trust_help": {
+					"1": "",
+					"2": "",
+					"3": ""
+				},
+				"trust_scale": "",
+				"verified_role": "",
+				"verified_role_help": ""
+			},
+			"chips": {
+				"account_age": "",
+				"alert": "",
+				"ban": "",
+				"checkpoint": "",
+				"default_avatar": "",
+				"direct_message": "",
+				"generated_name": "",
+				"kick": "",
+				"name_contains": "",
+				"unverified_bot": ""
+			},
+			"editor": {
+				"account_age": "",
+				"account_age_help": "",
+				"actions": "",
+				"alert": "",
+				"alert_aria": "",
+				"alert_help": "",
+				"ban": "",
+				"ban_help": "",
+				"cancel": "",
+				"checkpoint": "",
+				"checkpoint_help": "",
+				"checkpoint_off": "",
+				"conditions": "",
+				"create": "",
+				"days": "",
+				"days_aria": "",
+				"default_avatar": "",
+				"default_avatar_help": "",
+				"delete": "",
+				"description": "",
+				"direct_message": "",
+				"direct_message_help": "",
+				"edit_title": "",
+				"enabled": "",
+				"generated_name": "",
+				"generated_name_help": "",
+				"kick": "",
+				"kick_help": "",
+				"name": "",
+				"name_contains": "",
+				"name_contains_aria": "",
+				"name_contains_help": "",
+				"name_contains_placeholder": "",
+				"name_placeholder": "",
+				"new_title": "",
+				"pick_channel": "",
+				"pick_role": "",
+				"role": "",
+				"role_aria": "",
+				"role_help": "",
+				"save": "",
+				"unverified_bot": "",
+				"unverified_bot_help": ""
+			},
+			"failures": {
+				"Failed": "",
+				"InvalidRequest": "",
+				"MissingPermissions": "",
+				"NoChannel": "",
+				"NotAllowed": "",
+				"NotMember": "",
+				"NotWaiting": "",
+				"Refused": "",
+				"RoleNotManageable": "",
+				"UnknownChannel": "",
+				"UnknownGuild": "",
+				"unknown": ""
+			},
+			"form_aria": "",
+			"members_stopped": "",
+			"notices": {
+				"count": "",
+				"direct_message": "",
+				"direct_message_help": "",
+				"form_aria": "",
+				"log": "",
+				"log_help": "",
+				"message": "",
+				"message_help": "",
+				"message_placeholder": "",
+				"not_logged": "",
+				"title": ""
+			},
+			"off_body": "",
+			"off_summary": "",
+			"off_title": "",
+			"on_summary": "",
+			"problems": {
+				"account_age": "",
+				"actions": "",
+				"checkpoint_off": "",
+				"conditions": "",
+				"hard_action_conflict": "",
+				"name": "",
+				"name_contains": ""
+			},
+			"queue": {
+				"created": "",
+				"decided": {
+					"checkpoint": "",
+					"moderator": "",
+					"rule": "",
+					"timeout": ""
+				},
+				"empty": "",
+				"filter_aria": "",
+				"filters": {
+					"all": "",
+					"banned": "",
+					"kicked": "",
+					"verified": "",
+					"waiting": ""
+				},
+				"help": "",
+				"kick": "",
+				"kick_aria": "",
+				"kick_confirm": "",
+				"kick_description": "",
+				"kick_title": "",
+				"kicked_description": "",
+				"kicked_title": "",
+				"list_aria": "",
+				"load_failed": "",
+				"load_more": "",
+				"load_more_failed": "",
+				"reason": "",
+				"reason_placeholder": "",
+				"refresh": "",
+				"sending": "",
+				"signals": {
+					"default_avatar": "",
+					"generated_name": "",
+					"linked_accounts": ""
+				},
+				"status": {
+					"banned": "",
+					"kicked": "",
+					"left": "",
+					"verified": "",
+					"waiting": ""
+				},
+				"stopped_by": "",
+				"title": "",
+				"verified_description": "",
+				"verified_title": "",
+				"verify": "",
+				"verify_aria": ""
+			},
+			"requests": {
+				"failed": "",
+				"generic": "",
+				"invalid": "",
+				"not_waiting": "",
+				"timeout": "",
+				"title": "",
+				"unknown": "",
+				"unreachable": ""
+			},
+			"rules": {
+				"count": "",
+				"delete": "",
+				"delete_aria": "",
+				"delete_confirm": "",
+				"delete_description": "",
+				"delete_title": "",
+				"edit": "",
+				"edit_aria": "",
+				"empty_description": "",
+				"empty_title": "",
+				"errors": {
+					"generic": "",
+					"invalid": "",
+					"limit": "",
+					"nameTaken": "",
+					"unknown": ""
+				},
+				"help": "",
+				"load_failed": "",
+				"loading_aria": "",
+				"new": "",
+				"retry": "",
+				"then": "",
+				"title": "",
+				"toasts": {
+					"applies": "",
+					"created": "",
+					"deleted": "",
+					"saved": ""
+				},
+				"toggle_aria": "",
+				"unknown_channel": "",
+				"unknown_role": "",
+				"when": ""
+			},
+			"stopped_badge": "",
+			"subtitle": "",
+			"summary": {
+				"account_age": "",
+				"ban": "",
+				"checkpoint": "",
+				"default_avatar": "",
+				"direct_message": "",
+				"generated_name": "",
+				"kick": "",
+				"name_contains": "",
+				"role": "",
+				"sentence": "",
+				"sentence_alert": "",
+				"unverified_bot": ""
+			},
+			"switch_aria": "",
+			"title": "",
+			"trust": {
+				"0": "",
+				"1": "",
+				"2": "",
+				"3": ""
+			},
+			"waiting_badge": ""
 		},
 		"moderation": {
+			"cases_title": "",
 			"form_aria": "",
+			"lockdown_count": "",
+			"lockdown_dialog_title": "",
+			"lockdown_empty": "",
+			"lockdown_help": "",
+			"lockdown_search": "",
+			"lockdown_title": "",
+			"lockdown_too_many": "",
+			"minutes": "",
+			"module_hint": "",
+			"responses_help": "",
+			"responses_title": "",
 			"subtitle": "",
 			"title": ""
 		},
+		"modules": {
+			"active_hint": "",
+			"channel_count": "",
+			"configure": "",
+			"descriptions": {
+				"appeals": "",
+				"autodelete": "",
+				"automessage": "",
+				"automod": "",
+				"autopurge": "",
+				"channels": "",
+				"honeypot": "",
+				"joinguard": "",
+				"moderation": "",
+				"roles": ""
+			},
+			"disable_all": "",
+			"enable_all": "",
+			"enable_first": "",
+			"enabled_count": "",
+			"form_aria": "",
+			"hint": "",
+			"inactive_hint": "",
+			"manage": "",
+			"not_set_up": "",
+			"off": "",
+			"on": "",
+			"set_up": "",
+			"subtitle": "",
+			"summary_aria": "",
+			"title": "",
+			"toggle_aria": ""
+		},
 		"please_try_again": "",
+		"reports": {
+			"queue": {
+				"columns": {
+					"filed": "",
+					"reason": "",
+					"status": "",
+					"target": ""
+				},
+				"empty_description": "",
+				"empty_status_description": "",
+				"empty_status_title": "",
+				"empty_title": "",
+				"filter_aria": "",
+				"refresh": "",
+				"status": {
+					"actioned": "",
+					"all": "",
+					"dismissed": "",
+					"open": ""
+				},
+				"table_aria": "",
+				"title": ""
+			},
+			"subtitle": "",
+			"title": ""
+		},
 		"roles": {
 			"configurable": "",
 			"configurable_help": "",
 			"form_aria": "",
 			"general_options": "",
+			"groups": {
+				"join": "",
+				"moderation": "",
+				"restrictions": "",
+				"staff": ""
+			},
+			"not_set": "",
 			"restricted": "",
 			"restricted_help": "",
 			"subtitle": "",
 			"title": ""
 		},
-		"save_failed": ""
+		"save_failed": "",
+		"setup": {
+			"back": "",
+			"channels": {
+				"automod_help": "",
+				"automod_label": "",
+				"description": "",
+				"events_help": "",
+				"events_label": "",
+				"moderation_help": "",
+				"moderation_label": "",
+				"none": "",
+				"note": "",
+				"title": ""
+			},
+			"close_aria": "",
+			"description": "",
+			"done_description": "",
+			"done_title": "",
+			"finish": "",
+			"language": {
+				"description": "",
+				"help": "",
+				"label": "",
+				"title": ""
+			},
+			"modules": {
+				"description": "",
+				"recommended": "",
+				"title": "",
+				"turn_on": ""
+			},
+			"next": "",
+			"rail_note": "",
+			"rail_title": "",
+			"resume_action": "",
+			"resume_description": "",
+			"resume_title": "",
+			"review": {
+				"description": "",
+				"edit": "",
+				"edit_aria": "",
+				"none": "",
+				"none_on": "",
+				"not_set": "",
+				"rows": {
+					"admin": "",
+					"automod_log": "",
+					"event_log": "",
+					"language": "",
+					"moderation_log": "",
+					"moderator": "",
+					"modules": "",
+					"muted": ""
+				},
+				"title": ""
+			},
+			"roles": {
+				"admin_help": "",
+				"admin_label": "",
+				"description": "",
+				"moderator_help": "",
+				"moderator_label": "",
+				"muted_help": "",
+				"muted_label": "",
+				"none": "",
+				"title": ""
+			},
+			"skip": "",
+			"skipped_description": "",
+			"skipped_title": "",
+			"step_names": {
+				"channels": "",
+				"language": "",
+				"modules": "",
+				"review": "",
+				"roles": ""
+			},
+			"step_of": "",
+			"steps_aria": "",
+			"title": ""
+		},
+		"toggle_aria": ""
 	},
 	"settings": {
 		"entries": {
-			"channelsIgnoreAll": {
+			"appealsAnonymous": {
 				"description": "",
 				"name": ""
 			},
-			"channelsIgnoreMessageDelete": {
+			"appealsBans": {
 				"description": "",
 				"name": ""
 			},
-			"channelsIgnoreMessageEdit": {
+			"appealsBlockOnDenial": {
 				"description": "",
 				"name": ""
 			},
-			"channelsIgnoreReactionAdd": {
+			"appealsChannel": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsChannelCreate": {
+			"appealsCooldownDays": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsChannelDelete": {
+			"appealsEnabled": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsChannelUpdate": {
+			"appealsManagerRoles": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsEmojiCreate": {
+			"appealsMaxActive": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsEmojiDelete": {
+			"appealsMutes": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsEmojiUpdate": {
+			"appealsPingRoles": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsImage": {
+			"appealsThread": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsMemberAdd": {
+			"appealsTimeouts": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsMemberNicknameUpdate": {
+			"automodChannel": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsMemberRemove": {
+			"automodTrackNative": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsMemberRolesUpdate": {
+			"commandsDisabledChannels": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsMemberUsernameUpdate": {
+			"honeypotAction": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsMessageDelete": {
+			"honeypotChannel": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsMessageDeleteNsfw": {
+			"honeypotChaosName": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsMessageUpdate": {
+			"honeypotDirectMessage": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsMessageUpdateNsfw": {
+			"honeypotEnsureDeletion": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsModeration": {
+			"honeypotForwardMessage": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsPrune": {
+			"honeypotKeepActive": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsReaction": {
+			"honeypotLogChannel": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsRoleCreate": {
+			"honeypotRandomName": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsRoleDelete": {
+			"honeypotRecentDelete": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsRoleUpdate": {
+			"honeypotTimeoutFirst": {
 				"description": "",
 				"name": ""
 			},
-			"channelsLogsServerUpdate": {
+			"honeypotWarning": {
 				"description": "",
 				"name": ""
 			},
-			"eventsBanAdd": {
-				"description": "",
-				"title": ""
-			},
-			"eventsBanRemove": {
-				"description": "",
-				"title": ""
-			},
-			"eventsTwemojiReactions": {
-				"description": "",
-				"title": ""
-			},
-			"messagesIgnoreChannels": {
+			"logsBoosts": {
 				"description": "",
 				"name": ""
 			},
-			"messagesModerationAutoDelete": {
+			"logsChannelCreate": {
 				"description": "",
 				"name": ""
 			},
-			"messagesModerationDm": {
+			"logsChannelDelete": {
 				"description": "",
 				"name": ""
 			},
-			"messagesModerationMessageDisplay": {
+			"logsChannelUpdate": {
 				"description": "",
 				"name": ""
 			},
-			"messagesModerationReasonDisplay": {
+			"logsEmojiCreate": {
 				"description": "",
 				"name": ""
 			},
-			"messagesModeratorNameDisplay": {
+			"logsEmojiDelete": {
+				"description": "",
+				"name": ""
+			},
+			"logsEmojiUpdate": {
+				"description": "",
+				"name": ""
+			},
+			"logsEvents": {
+				"description": "",
+				"name": ""
+			},
+			"logsExpressions": {
+				"description": "",
+				"name": ""
+			},
+			"logsIgnoreAll": {
+				"description": "",
+				"name": ""
+			},
+			"logsIgnoreMessages": {
+				"description": "",
+				"name": ""
+			},
+			"logsIgnoreReactions": {
+				"description": "",
+				"name": ""
+			},
+			"logsImage": {
+				"description": "",
+				"name": ""
+			},
+			"logsIntegrations": {
+				"description": "",
+				"name": ""
+			},
+			"logsInvites": {
+				"description": "",
+				"name": ""
+			},
+			"logsMemberAdd": {
+				"description": "",
+				"name": ""
+			},
+			"logsMemberNicknameUpdate": {
+				"description": "",
+				"name": ""
+			},
+			"logsMemberRemove": {
+				"description": "",
+				"name": ""
+			},
+			"logsMemberUsernameUpdate": {
+				"description": "",
+				"name": ""
+			},
+			"logsMessageDelete": {
+				"description": "",
+				"name": ""
+			},
+			"logsMessageDeleteNsfw": {
+				"description": "",
+				"name": ""
+			},
+			"logsMessageUpdate": {
+				"description": "",
+				"name": ""
+			},
+			"logsMessageUpdateNsfw": {
+				"description": "",
+				"name": ""
+			},
+			"logsMessageUpdateStyle": {
+				"description": "",
+				"name": ""
+			},
+			"logsPrune": {
+				"description": "",
+				"name": ""
+			},
+			"logsReactionEmojiAdd": {
+				"description": "",
+				"name": ""
+			},
+			"logsReactionEmojiIncludeTwemoji": {
+				"description": "",
+				"name": ""
+			},
+			"logsReactionEmojiRemove": {
+				"description": "",
+				"name": ""
+			},
+			"logsRoleCreate": {
+				"description": "",
+				"name": ""
+			},
+			"logsRoleDelete": {
+				"description": "",
+				"name": ""
+			},
+			"logsRoleUpdate": {
+				"description": "",
+				"name": ""
+			},
+			"logsServerUpdate": {
+				"description": "",
+				"name": ""
+			},
+			"logsThreads": {
+				"description": "",
+				"name": ""
+			},
+			"logsWebhooks": {
+				"description": "",
+				"name": ""
+			},
+			"messagesResponseBan": {
+				"description": "",
+				"name": ""
+			},
+			"messagesResponseKick": {
+				"description": "",
+				"name": ""
+			},
+			"messagesResponseMute": {
+				"description": "",
+				"name": ""
+			},
+			"messagesResponseSoftban": {
+				"description": "",
+				"name": ""
+			},
+			"messagesResponseUnban": {
+				"description": "",
+				"name": ""
+			},
+			"messagesResponseUnmute": {
+				"description": "",
+				"name": ""
+			},
+			"moderationChannel": {
+				"description": "",
+				"name": ""
+			},
+			"moderationConfirmRecentMinutes": {
+				"description": "",
+				"name": ""
+			},
+			"moderationDefaultWarnThresholds": {
+				"description": "",
+				"name": ""
+			},
+			"moderationDehoist": {
+				"description": "",
+				"name": ""
+			},
+			"moderationLockdownChannels": {
+				"description": "",
+				"name": ""
+			},
+			"moderationTrackBans": {
+				"description": "",
+				"name": ""
+			},
+			"moderationTrackKicks": {
+				"description": "",
+				"name": ""
+			},
+			"moderationTrackRoles": {
+				"description": "",
+				"name": ""
+			},
+			"moderationTrackTimeouts": {
+				"description": "",
+				"name": ""
+			},
+			"reportsAnonymous": {
+				"description": "",
+				"name": ""
+			},
+			"reportsChannel": {
+				"description": "",
+				"name": ""
+			},
+			"reportsNotify": {
+				"description": "",
+				"name": ""
+			},
+			"reportsRole": {
 				"description": "",
 				"name": ""
 			},
 			"rolesAdmin": {
-				"name": "",
-				"tooltip": ""
+				"description": "",
+				"name": ""
 			},
 			"rolesInitial": {
-				"name": "",
-				"tooltip": ""
+				"description": "",
+				"name": ""
+			},
+			"rolesInitialHumans": {
+				"description": "",
+				"name": ""
+			},
+			"rolesInitialRobots": {
+				"description": "",
+				"name": ""
 			},
 			"rolesModerator": {
-				"name": "",
-				"tooltip": ""
+				"description": "",
+				"name": ""
 			},
 			"rolesMuted": {
-				"name": "",
-				"tooltip": ""
+				"description": "",
+				"name": ""
 			},
 			"rolesPublic": {
-				"name": "",
-				"tooltip": ""
+				"description": "",
+				"name": ""
 			},
 			"rolesRemoveInitial": {
-				"name": "",
-				"tooltip": ""
+				"description": "",
+				"name": ""
 			},
 			"rolesRestrictedAttachment": {
-				"name": "",
-				"tooltip": ""
+				"description": "",
+				"name": ""
 			},
 			"rolesRestrictedEmbed": {
-				"name": "",
-				"tooltip": ""
+				"description": "",
+				"name": ""
 			},
 			"rolesRestrictedEmoji": {
-				"name": "",
-				"tooltip": ""
+				"description": "",
+				"name": ""
 			},
 			"rolesRestrictedReaction": {
-				"name": "",
-				"tooltip": ""
+				"description": "",
+				"name": ""
 			},
 			"rolesRestrictedVoice": {
-				"name": "",
-				"tooltip": ""
+				"description": "",
+				"name": ""
 			}
+		}
+	},
+	"verify": {
+		"a_server": "",
+		"captcha_failed": "",
+		"done_body": "",
+		"done_title": "",
+		"gaps": {
+			"account_age": "",
+			"avatar": "",
+			"badges": "",
+			"linked_account": "",
+			"shared_ban": ""
+		},
+		"guest": {
+			"body": "",
+			"sign_in": "",
+			"title": ""
+		},
+		"load_failed_body": "",
+		"load_failed_title": "",
+		"loading": "",
+		"open_discord": "",
+		"reads": "",
+		"result": {
+			"captcha": "",
+			"captcha_unavailable": "",
+			"failed": "",
+			"not_waiting": "",
+			"rate_limited": "",
+			"refused": "",
+			"shared_ban": "",
+			"timeout": "",
+			"trust": "",
+			"unavailable": "",
+			"unreachable": ""
+		},
+		"retry": "",
+		"seo_description": "",
+		"states": {
+			"banned_body": "",
+			"banned_title": "",
+			"kicked_body": "",
+			"kicked_title": "",
+			"left_body": "",
+			"left_title": "",
+			"not_stopped_body": "",
+			"not_stopped_title": "",
+			"unavailable_body": "",
+			"unavailable_title": "",
+			"verified_body": "",
+			"verified_title": ""
+		},
+		"this_server": "",
+		"title": "",
+		"trust": {
+			"minimum": "",
+			"minimum_mark": "",
+			"scale_aria": "",
+			"yours": ""
+		},
+		"unknown_body": "",
+		"unknown_title": "",
+		"waiting": {
+			"below_minimum": "",
+			"check_again": "",
+			"body": "",
+			"captcha_first": "",
+			"connections": "",
+			"link_accounts": "",
+			"sending": "",
+			"title": "",
+			"to_reach": "",
+			"verify": ""
 		}
 	}
 }

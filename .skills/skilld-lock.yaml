@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "transactionId": "1791638671938080200-0",
+  "transactionId": "1792837738562469599-0",
   "skills": {
     "accessibility": {
       "source": {
@@ -65,6 +65,27 @@
         }
       ]
     },
+    "better-accessibility": {
+      "source": {
+        "type": "remote",
+        "source": "github:jakubkrehel/skills/skills/better-accessibility#commit:4c66b1fa86e9ab70187b43d7da9b6fdb29f2ef63",
+        "commit_sha": "4c66b1fa86e9ab70187b43d7da9b6fdb29f2ef63",
+        "skill_path": "skills/better-accessibility"
+      },
+      "sourceStatus": {
+        "type": "verified",
+        "artifact_id": "sha256:272f3e13dd0fcf4f2474342adb99bac539e51248fdc5da808de2b9fcae41f55a",
+        "content_sha256": "272f3e13dd0fcf4f2474342adb99bac539e51248fdc5da808de2b9fcae41f55a",
+        "installed_sha256": "eb68d083b629f6cdc7d0534a1e2eb0f5540c1b2fa8588b20f737789d99b4e5f5",
+        "attestation_key_id": "skilld-production-2026-08"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
     "core-web-vitals": {
       "source": {
         "type": "remote",
@@ -119,6 +140,27 @@
         "artifact_id": "sha256:b5b0f6606c5d1da1b894f361dbb53df7f84cba01f71c91748ef2dbda6e5dca81",
         "content_sha256": "b5b0f6606c5d1da1b894f361dbb53df7f84cba01f71c91748ef2dbda6e5dca81",
         "installed_sha256": "5a99b2977e82cb952e4f4887ceccfa6dd62b8f36908d6667db13e2a756f93028",
+        "attestation_key_id": "skilld-production-2026-08"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "fixing-accessibility": {
+      "source": {
+        "type": "remote",
+        "source": "github:ibelick/ui-skills/skills/fixing-accessibility#commit:55363c305097d4c84487bd5f323d29b3f067bf72",
+        "commit_sha": "55363c305097d4c84487bd5f323d29b3f067bf72",
+        "skill_path": "skills/fixing-accessibility"
+      },
+      "sourceStatus": {
+        "type": "verified",
+        "artifact_id": "sha256:88d80d62ef745077eb53b41a2c7beb23496eb042e989bcd26cab63a7da08becf",
+        "content_sha256": "88d80d62ef745077eb53b41a2c7beb23496eb042e989bcd26cab63a7da08becf",
+        "installed_sha256": "47e553ac1c56afab1390631de5b3362a075136cabcd3494c31e0878ccf327f93",
         "attestation_key_id": "skilld-production-2026-08"
       },
       "targets": [
@@ -401,6 +443,27 @@
         }
       ]
     },
+    "performance-optimization": {
+      "source": {
+        "type": "remote",
+        "source": "github:addyosmani/agent-skills/skills/performance-optimization#commit:aeac41d4d005999432bb7312f7ff06383a91d59d",
+        "commit_sha": "aeac41d4d005999432bb7312f7ff06383a91d59d",
+        "skill_path": "skills/performance-optimization"
+      },
+      "sourceStatus": {
+        "type": "verified",
+        "artifact_id": "sha256:6e4bfb5ea929f782f9f51ec2847d828ae4f24e062350b5a5b8ee12e88440653f",
+        "content_sha256": "6e4bfb5ea929f782f9f51ec2847d828ae4f24e062350b5a5b8ee12e88440653f",
+        "installed_sha256": "53862717e183112f8226c61539f28242772b076a184fe49d5fab41560b7bb57e",
+        "attestation_key_id": "skilld-production-2026-08"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
     "planning-with-files": {
       "source": {
         "type": "remote",
@@ -527,6 +590,27 @@
         }
       ]
     },
+    "unlighthouse": {
+      "source": {
+        "type": "remote",
+        "source": "github:harlan-zw/unlighthouse/packages/unlighthouse/skills/unlighthouse#commit:9a2147d6d98bbc750b7313f531856cc02322b23a",
+        "commit_sha": "9a2147d6d98bbc750b7313f531856cc02322b23a",
+        "skill_path": "packages/unlighthouse/skills/unlighthouse"
+      },
+      "sourceStatus": {
+        "type": "verified",
+        "artifact_id": "sha256:ef4bda3293ae4b92efa26d97e54eb84d136da6af3fca8f5cf0909759ad853e66",
+        "content_sha256": "ef4bda3293ae4b92efa26d97e54eb84d136da6af3fca8f5cf0909759ad853e66",
+        "installed_sha256": "7046b0b8c7fff123c020eacbddeda7e2c2b5504198eda9e024752eed05e264c0",
+        "attestation_key_id": "skilld-production-2026-08"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
     "web-design-guidelines": {
       "source": {
         "type": "remote",
@@ -539,6 +623,27 @@
         "artifact_id": "sha256:4db4e0d105979ec7c778ad4dcbea1ed0f813c8e3193fb3350fce85bffd2cd7ac",
         "content_sha256": "4db4e0d105979ec7c778ad4dcbea1ed0f813c8e3193fb3350fce85bffd2cd7ac",
         "installed_sha256": "43dd4bccf0d365a2817fb47d7c71ff2297a71495d0ec302a33997adcc5201dba",
+        "attestation_key_id": "skilld-production-2026-08"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "web-perf": {
+      "source": {
+        "type": "remote",
+        "source": "github:cloudflare/skills/skills/web-perf#commit:86505e44f87d801aa1864a3c4109e9a8ae5c409f",
+        "commit_sha": "86505e44f87d801aa1864a3c4109e9a8ae5c409f",
+        "skill_path": "skills/web-perf"
+      },
+      "sourceStatus": {
+        "type": "verified",
+        "artifact_id": "sha256:6d50c9708a0927c5d08878f73b55b3e628c4f78b14bcbd4807917b060483b807",
+        "content_sha256": "6d50c9708a0927c5d08878f73b55b3e628c4f78b14bcbd4807917b060483b807",
+        "installed_sha256": "9f7a8467f4ff24a16cef19e3dc6cbf2772969bde72de47268b47ef38095d6a0e",
         "attestation_key_id": "skilld-production-2026-08"
       },
       "targets": [
@@ -659,6 +764,20 @@
           }
         ]
       },
+      "better-accessibility": {
+        "source": {
+          "type": "remote",
+          "source": "github:jakubkrehel/skills/skills/better-accessibility#commit:4c66b1fa86e9ab70187b43d7da9b6fdb29f2ef63",
+          "commit_sha": "4c66b1fa86e9ab70187b43d7da9b6fdb29f2ef63",
+          "skill_path": "skills/better-accessibility"
+        },
+        "targets": [
+          {
+            "agent": "codex",
+            "mode": "copy"
+          }
+        ]
+      },
       "core-web-vitals": {
         "source": {
           "type": "remote",
@@ -693,6 +812,20 @@
           "source": "github:vercel-labs/skills/skills/find-skills#commit:435076e78988e1e6ec40d00b0b1d76bdbbc5419a",
           "commit_sha": "435076e78988e1e6ec40d00b0b1d76bdbbc5419a",
           "skill_path": "skills/find-skills"
+        },
+        "targets": [
+          {
+            "agent": "codex",
+            "mode": "copy"
+          }
+        ]
+      },
+      "fixing-accessibility": {
+        "source": {
+          "type": "remote",
+          "source": "github:ibelick/ui-skills/skills/fixing-accessibility#commit:55363c305097d4c84487bd5f323d29b3f067bf72",
+          "commit_sha": "55363c305097d4c84487bd5f323d29b3f067bf72",
+          "skill_path": "skills/fixing-accessibility"
         },
         "targets": [
           {
@@ -883,6 +1016,20 @@
           }
         ]
       },
+      "performance-optimization": {
+        "source": {
+          "type": "remote",
+          "source": "github:addyosmani/agent-skills/skills/performance-optimization#commit:aeac41d4d005999432bb7312f7ff06383a91d59d",
+          "commit_sha": "aeac41d4d005999432bb7312f7ff06383a91d59d",
+          "skill_path": "skills/performance-optimization"
+        },
+        "targets": [
+          {
+            "agent": "codex",
+            "mode": "copy"
+          }
+        ]
+      },
       "planning-with-files": {
         "source": {
           "type": "remote",
@@ -967,12 +1114,40 @@
           }
         ]
       },
+      "unlighthouse": {
+        "source": {
+          "type": "remote",
+          "source": "github:harlan-zw/unlighthouse/packages/unlighthouse/skills/unlighthouse#commit:9a2147d6d98bbc750b7313f531856cc02322b23a",
+          "commit_sha": "9a2147d6d98bbc750b7313f531856cc02322b23a",
+          "skill_path": "packages/unlighthouse/skills/unlighthouse"
+        },
+        "targets": [
+          {
+            "agent": "codex",
+            "mode": "copy"
+          }
+        ]
+      },
       "web-design-guidelines": {
         "source": {
           "type": "remote",
           "source": "github:vercel-labs/agent-skills/skills/web-design-guidelines#commit:dd089a8c752c966dee8bf0f27cb625ba193ffd9e",
           "commit_sha": "dd089a8c752c966dee8bf0f27cb625ba193ffd9e",
           "skill_path": "skills/web-design-guidelines"
+        },
+        "targets": [
+          {
+            "agent": "codex",
+            "mode": "copy"
+          }
+        ]
+      },
+      "web-perf": {
+        "source": {
+          "type": "remote",
+          "source": "github:cloudflare/skills/skills/web-perf#commit:86505e44f87d801aa1864a3c4109e9a8ae5c409f",
+          "commit_sha": "86505e44f87d801aa1864a3c4109e9a8ae5c409f",
+          "skill_path": "skills/web-perf"
         },
         "targets": [
           {

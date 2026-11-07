@@ -12,7 +12,7 @@
 				<template #headline>
 					<UBreadcrumb
 						:items="[
-							{ label: 'Blog', icon: 'i-lucide-newspaper', to: '/blog' },
+							{ label: ts('nav.blog'), icon: 'i-lucide-newspaper', to: '/blog' },
 							{ label: article.title },
 						]"
 						class="max-w-full"
@@ -21,7 +21,7 @@
 						<span>{{ article.category }}</span>
 						<span class="text-muted"
 							>&middot;&nbsp;&nbsp;<time>{{
-								formatDateByLocale("en", article.date)
+								formatDateByLocale(locale, article.date)
 							}}</time></span
 						>
 					</div>
@@ -44,7 +44,7 @@
 				<ContentRenderer v-if="article.body" :value="article" />
 
 				<div class="not-prose mt-12 flex items-center justify-between">
-					<ULink to="/blog" class="text-primary"> ← Back to blog </ULink>
+					<ULink to="/blog" class="text-primary">← {{ ts("blog.back") }}</ULink>
 					<UFieldGroup class="justify-end">
 						<UButton
 							icon="i-lucide-link"
@@ -52,8 +52,7 @@
 							color="neutral"
 							@click="copyLink"
 						>
-							<span class="sr-only">Copy URL</span>
-							Copy URL
+							{{ ts("blog.copy_url") }}
 						</UButton>
 						<UButton
 							v-for="(link, index) in socialLinks"
@@ -63,7 +62,9 @@
 							color="neutral"
 							target="_blank"
 						>
-							<span class="sr-only">WolfStar on {{ link.label }}</span>
+							<span class="sr-only">{{
+								ts("blog.on_platform", { platform: link.label })
+							}}</span>
 						</UButton>
 					</UFieldGroup>
 				</div>
@@ -77,16 +78,16 @@
 				<UContentToc
 					v-if="article.body?.toc"
 					:links="article.body.toc.links"
-					title="Table of Contents"
-					aria-label="Table of contents"
+					:title="ts('blog.toc')"
+					:aria-label="ts('blog.toc')"
 					highlight
 				>
 					<template #bottom>
 						<div class="hidden space-y-6 lg:block">
 							<UPageLinks
-								title="Links"
+								:title="ts('blog.links')"
 								:links="sidebarLinks"
-								aria-label="Article links"
+								:aria-label="ts('blog.article_links')"
 							/>
 						</div>
 					</template>
@@ -100,6 +101,8 @@
 import type { BlogArticle } from "#shared/types/blog";
 import { kebabCase } from "scule";
 
+const { ts } = useI18n();
+const { locale } = useAppLocale();
 const route = useRoute();
 const site = useSiteConfig();
 const { copy } = useClipboard();
@@ -169,7 +172,7 @@ const socialLinks = computed(() => [
 
 function copyLink() {
 	copy(`${site.url}${post.path}`, {
-		title: "Link copied to clipboard",
+		title: ts("blog.link_copied"),
 		icon: "i-lucide-copy-check",
 	});
 }
@@ -178,13 +181,13 @@ const sidebarLinks = computed(() => {
 	const links = [
 		{
 			icon: "i-lucide-star",
-			label: "Star on GitHub",
+			label: ts("blog.star_github"),
 			to: "https://github.com/wolfstar-project/wolfstar.rocks",
 			target: "_blank",
 		},
 		{
 			icon: "i-lucide-message-circle",
-			label: "Join Support Server",
+			label: ts("blog.join_support"),
 			to: "https://chat.wolfstar.rocks",
 			target: "_blank",
 		},
@@ -193,7 +196,7 @@ const sidebarLinks = computed(() => {
 	if (post.stem) {
 		links.unshift({
 			icon: "i-lucide-pen",
-			label: "Edit this article",
+			label: ts("blog.edit_article"),
 			to: `https://github.com/wolfstar-project/wolfstar.rocks/edit/main/content/${post.stem}.md`,
 			target: "_blank",
 		});

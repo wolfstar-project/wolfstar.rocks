@@ -6,6 +6,7 @@ import {
 	sessionRefresh,
 	userLogin,
 	userLogout,
+	userSettingsUpdate,
 } from "#shared/audit/actions";
 import { describe, expect, it } from "vitest";
 
@@ -19,6 +20,7 @@ describe("audit action registry", () => {
 		{ creator: userLogout, name: "user.logout" },
 		{ creator: sessionRefresh, name: "session.refresh" },
 		{ creator: oauthStateInvalid, name: "oauth.state.invalid" },
+		{ creator: userSettingsUpdate, name: "user.settings.update" },
 	] as const;
 
 	for (const { creator, name } of actions) {
@@ -37,8 +39,9 @@ describe("audit action registry", () => {
 			"user.logout": true,
 			"session.refresh": true,
 			"oauth.state.invalid": true,
+			"user.settings.update": true,
 		};
-		expect(Object.keys(cover)).toHaveLength(6);
+		expect(Object.keys(cover)).toHaveLength(7);
 	});
 
 	it("creator returns AuditInput with actor preserved", () => {

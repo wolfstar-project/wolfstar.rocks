@@ -1,0 +1,5 @@
+[submodule "vendor/wolfstar"]
+	path = vendor/wolfstar
+	url = https://github.com/wolfstar-project/wolfstar.git
+	branch = V7
+	shallow = true

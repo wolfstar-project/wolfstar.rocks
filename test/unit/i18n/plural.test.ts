@@ -34,10 +34,24 @@ describe("plural", () => {
 		expect(select("ru-RU", "{count} ключ | {count} ключа", 5)).toBe("5 ключа");
 	});
 
-	it("still reads the English fallback source under a Russian rule", () => {
-		// A locale that has not translated the key inherits en-US' three forms;
-		// `many` (5) resolves to the last of them.
-		expect(select("ru-RU", EN_FORMS, 5)).toBe("5 missing keys");
+	// A locale that has not translated the key inherits the English source,
+	// whose forms are `zero | one | other`. Its own categories would read one
+	// match as the first form ("No missing keys"), so the source is left to the
+	// built-in rule it was written for.
+	it("leaves an untranslated English source to the built-in rules", () => {
+		for (const locale of ["cs-CZ", "hu-HU", "ru-RU", "uk-UA"]) {
+			for (const count of [0, 1, 5]) {
+				expect(select(locale, EN_FORMS, count)).toBeNull();
+			}
+		}
+	});
+
+	it("picks the Czech form among its four categories", () => {
+		// one | few | many | other
+		const forms = "{count} klíč | {count} klíče | {count} klíče | {count} klíčů";
+		expect(select("cs-CZ", forms, 1)).toBe("1 klíč");
+		expect(select("cs-CZ", forms, 3)).toBe("3 klíče");
+		expect(select("cs-CZ", forms, 5)).toBe("5 klíčů");
 	});
 
 	it("falls back to the built-in rules when the key does not resolve to a string", () => {

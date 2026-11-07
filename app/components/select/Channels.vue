@@ -1,71 +1,88 @@
 <template>
+	<SelectChips
+		v-if="layout === 'chips' || layout === 'add'"
+		:model-value="modelValue"
+		:label
+		:description="tooltipTitle"
+		:options
+		kind="channel"
+		:disabled
+		:empty-label="emptyLabel"
+		:dialog-title="dialogTitle"
+		:search-placeholder="searchPlaceholder"
+		:count-label="countLabel"
+		:one-at-a-time="layout === 'add'"
+		@update:model-value="
+			emit('update:modelValue', $event);
+			emit('change', $event);
+		"
+	/>
 	<SelectMany
-		:label="label"
-		:name="selectedCount"
-		:values="channelValues"
+		v-else
+		:label
+		:options
+		kind="channel"
 		:model-value="modelValue"
 		:tooltip-title="tooltipTitle"
-		:image-in-name="imageInName"
-		:disabled="disabled"
-		@update:model-value="
-			$emit('update:modelValue', $event);
-			$emit('change', $event);
-		"
-		@change="$emit('change', $event)"
-		@reset="$emit('reset')"
+		:disabled
+		:layout
+		:empty-label="emptyLabel"
+		@update:model-value="emit('update:modelValue', $event)"
+		@change="emit('change', $event)"
 	/>
 </template>
 
-<script lang="ts">
-import type { DeepReadonly } from "@sapphire/utilities";
-import type { SelectManyValue } from "./Many.vue";
-import { ChannelType } from "discord-api-types/v10";
-
-interface SelectChannelsProps {
-	/** The label to show on the button */
-	label: string;
-	/** The current selected channel IDs */
-	modelValue: string[];
-	/** The guild data containing channels */
-	guild: DeepReadonly<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>;
-	/** Content to be shown as a tooltip when hovering over the button */
-	tooltipTitle?: string;
-	/** Whether to append an image to the end of the button, next to the value of the key */
-	imageInName?: string;
-	/** Disable the field */
-	disabled?: boolean;
-}
-
-interface Emits {
-	(e: "update:modelValue", value: string[]): void;
-	(e: "change", value: string[]): void;
-	(e: "reset"): void;
-}
-</script>
-
 <script setup lang="ts">
+import type { DeepReadonly } from "@sapphire/utilities";
+import type { ChannelType } from "discord-api-types/v10";
+
 const {
 	label,
 	modelValue,
 	guild,
 	tooltipTitle,
-	imageInName,
 	disabled = false,
-} = defineProps<SelectChannelsProps>();
+	layout = "field",
+	emptyLabel,
+	dialogTitle,
+	searchPlaceholder,
+	countLabel,
+	channelTypes,
+	optionNotes,
+} = defineProps<{
+	/** The label of the field */
+	label: string;
+	modelValue: string[];
+	/** `undefined` while the guild has not loaded: the list is then empty. */
+	guild:
+		| DeepReadonly<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>
+		| undefined;
+	/** Help text: shown under a `field`, read to screen readers in a `row` */
+	tooltipTitle?: string;
+	/** Disable the field */
+	disabled?: boolean;
+	/**
+	 * `field` and `row` are selects; `chips` lists the choice as removable chips
+	 * and picks it in a dialog of checkboxes; `add` lists it the same way and
+	 * picks one at a time, with a select and a button above the chips.
+	 */
+	layout?: "field" | "row" | "chips" | "add";
+	/** For `chips`: the dialog's title, its search placeholder and its count. */
+	dialogTitle?: string;
+	searchPlaceholder?: string;
+	countLabel?: (count: number) => string;
+	/** Text shown while nothing is selected */
+	emptyLabel?: string;
+	/** A short note on an option, by its id: what picking it would also change. */
+	optionNotes?: ReadonlyMap<string, string>;
+	/** The kinds of channel to offer, by default the ones WolfStar can post in. */
+	channelTypes?: readonly ChannelType[];
+}>();
 
-defineEmits<Emits>();
+const emit = defineEmits<{
+	"update:modelValue": [value: string[]];
+	"change": [value: string[]];
+}>();
 
-// Count of selected channels
-const selectedCount = computed(() => modelValue.length);
-
-// Filter and sort channels, then map to SelectManyValue format
-const channelValues = computed<SelectManyValue[]>(() =>
-	guild.channels
-		.filter((c) => c.type === ChannelType.GuildText || c.type === ChannelType.GuildAnnouncement)
-		.toSorted((c1, c2) => c1.rawPosition - c2.rawPosition)
-		.map((c) => ({
-			name: c.name,
-			value: c.id,
-		})),
-);
+const options = computed(() => withOptionNotes(channelOptions(guild, channelTypes), optionNotes));
 </script>

@@ -3,15 +3,16 @@
 		<div class="discord-channel-welcome-icon" aria-hidden="true">
 			<UIcon name="discord:text-channel" class="size-10" />
 		</div>
-		<h2 class="discord-channel-welcome-title">Welcome to #{{ channelName }}!</h2>
+		<h2 class="discord-channel-welcome-title">
+			{{ ts("discord.welcome.title", { name: channelName }) }}
+		</h2>
 		<p class="discord-channel-welcome-description">
-			This is the start of the #{{ channelName }} channel.<template v-if="topic">{{
-				` ${topic}`
-			}}</template>
+			{{ ts("discord.welcome.start", { name: channelName })
+			}}<template v-if="topic">{{ ` ${topic}` }}</template>
 		</p>
 		<div class="discord-channel-welcome-edit" aria-hidden="true">
 			<UIcon name="discord:edit" class="size-4 shrink-0" />
-			<span>Edit Channel</span>
+			<span>{{ ts("discord.welcome.edit") }}</span>
 		</div>
 		<div class="discord-channel-welcome-date">
 			<span aria-hidden="true" />
@@ -32,6 +33,7 @@ interface ChannelWelcomeProps {
 </script>
 
 <script setup lang="ts">
+const { ts } = useI18n();
 defineProps<ChannelWelcomeProps>();
 </script>
 

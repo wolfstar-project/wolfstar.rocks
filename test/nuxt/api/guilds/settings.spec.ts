@@ -91,7 +91,7 @@ describe(`GET ${SETTINGS_URL}`, () => {
 			});
 			expect(data).toMatchObject({
 				language: expect.any(String),
-				prefix: expect.any(String),
+				modulesAutomod: expect.any(Boolean),
 			});
 		});
 
@@ -128,7 +128,7 @@ describe(`PATCH ${SETTINGS_URL}`, () => {
 	describe("happy path – 200", () => {
 		it("returns 200 for an authenticated PATCH with a body", async () => {
 			const res = await $fetch.raw(SETTINGS_URL, {
-				body: { data: [["prefix", "?"]] },
+				body: { data: [["language", "fr-FR"]] },
 				headers: authHeaders(),
 				method: "PATCH",
 			});
@@ -137,13 +137,13 @@ describe(`PATCH ${SETTINGS_URL}`, () => {
 
 		it("returns the serialized settings shape on success", async () => {
 			const data = await $fetch<typeof FIXTURE_SERIALIZED_SETTINGS>(SETTINGS_URL, {
-				body: { data: [["prefix", "!"]] },
+				body: { data: [["language", "en-GB"]] },
 				headers: authHeaders(),
 				method: "PATCH",
 			});
 			expect(data).toMatchObject({
 				language: expect.any(String),
-				prefix: expect.any(String),
+				modulesAutomod: expect.any(Boolean),
 			});
 		});
 	});

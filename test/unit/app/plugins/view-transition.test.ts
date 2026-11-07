@@ -121,6 +121,13 @@ describe("view-transition.client plugin", () => {
 		expect(mockVT.types.has("nav-forward")).toBe(false);
 	});
 
+	// The page stays mounted, so no page:finish would ever end the transition.
+	it("starts no transition for a history back that only changes the query", async () => {
+		capturedPopstateHandler!(new PopStateEvent("popstate"));
+		await capturedBeforeResolve!(makeRoute("/app"), makeRoute("/app"));
+		expect(mockStartVT).not.toHaveBeenCalled();
+	});
+
 	it("skips the transition when effectiveReduceMotion is true", async () => {
 		mockReduceMotion.value = true;
 		await capturedBeforeResolve!(makeRoute("/wolfstar"), makeRoute("/"));

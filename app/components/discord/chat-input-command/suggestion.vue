@@ -49,6 +49,7 @@ interface SlashCommandSuggestionEmits {
 </script>
 
 <script setup lang="ts">
+const { ts } = useI18n();
 const {
 	active = false,
 	app = "wolfstar",
@@ -68,7 +69,9 @@ function select() {
 }
 
 const ariaLabel = computed(() => {
-	const parts = [`${resolvedAppLabel.value} slash command: /${name}`];
+	const parts = [
+		ts("discord.command.suggestion", { app: resolvedAppLabel.value, command: `/${name}` }),
+	];
 	if (description) parts.push(description);
 	return parts.join(". ");
 });
@@ -79,21 +82,13 @@ const ariaLabel = computed(() => {
 
 .discord-slash-command-suggestion {
 	/* Hover/active match Discord charcoal picker rows. */
-	--discord-slash-command-suggestion-hover: oklch(33.68% 0.0092 268.39);
-	--discord-slash-command-suggestion-active: oklch(37.98% 0.0122 273.09);
-	--discord-slash-command-suggestion-name: oklch(100% 0 0);
-	--discord-slash-command-suggestion-description: oklch(78.71% 0.0114 256.71);
-	--discord-slash-command-suggestion-app: oklch(78.71% 0.0114 256.71);
+	--discord-slash-command-suggestion-hover: var(--discord-hover);
+	--discord-slash-command-suggestion-active: var(--discord-active);
+	--discord-slash-command-suggestion-name: var(--discord-chrome-strong);
+	--discord-slash-command-suggestion-description: var(--discord-chrome-secondary);
+	--discord-slash-command-suggestion-app: var(--discord-chrome-secondary);
 
 	@apply grid min-h-12 cursor-pointer grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-md px-2 py-1.5 max-md:items-start max-md:gap-x-2.5 max-md:gap-y-0 max-md:py-2;
-}
-
-:global([data-theme="light"]) .discord-slash-command-suggestion {
-	--discord-slash-command-suggestion-hover: oklch(95.74% 0.004 264);
-	--discord-slash-command-suggestion-active: oklch(92.64% 0.006 264);
-	--discord-slash-command-suggestion-name: oklch(21.15% 0.009 264);
-	--discord-slash-command-suggestion-description: oklch(47.12% 0.012 264);
-	--discord-slash-command-suggestion-app: oklch(47.12% 0.012 264);
 }
 
 .discord-slash-command-suggestion:not(.discord-slash-command-suggestion-disabled):hover,

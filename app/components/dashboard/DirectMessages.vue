@@ -178,6 +178,11 @@ function showAppeals() {
 
 .dm-sidebar--floating .dm-list-scroll :deep(.discord-scrollbar-track) {
 	bottom: 4.75rem;
+
+	/* Clear of the phone's taller account card. */
+	@variant max-sm {
+		bottom: 7rem;
+	}
 }
 
 .dm-list {
@@ -187,6 +192,11 @@ function showAppeals() {
 /* The list scrolls out above the floating card, never under it. */
 .dm-sidebar--floating .dm-list {
 	padding-bottom: 4.75rem;
+
+	/* The phone's account card is taller. */
+	@variant max-sm {
+		padding-bottom: 7rem;
+	}
 }
 
 .dm-list-label {

@@ -42,6 +42,8 @@ export function useDiscordAccount() {
 			"",
 	);
 
+	const username = computed(() => discordUser.value?.username ?? "");
+
 	// Not in discord-api-types yet; Discord sends it on the user object.
 	const nameStyles = computed<DisplayNameStyles | null>(() => {
 		const user = discordUser.value as { display_name_styles?: DisplayNameStyles | null } | null;
@@ -49,5 +51,5 @@ export function useDiscordAccount() {
 		return styles && Array.isArray(styles.colors) ? styles : null;
 	});
 
-	return { animate, avatar, decoration, discordUser, name, nameStyles, nameplate };
+	return { animate, avatar, decoration, discordUser, name, nameStyles, nameplate, username };
 }

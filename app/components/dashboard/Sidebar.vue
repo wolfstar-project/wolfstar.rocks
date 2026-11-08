@@ -286,6 +286,11 @@ const groups = computed(() =>
 
 .dashboard-sidebar--floating .dashboard-nav-scroll :deep(.discord-scrollbar-track) {
 	bottom: 4.75rem;
+
+	/* Clear of the phone's taller account card. */
+	@variant max-sm {
+		bottom: 7rem;
+	}
 }
 
 /* The list scrolls out above the floating card, never under it. */

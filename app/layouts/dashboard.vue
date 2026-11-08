@@ -619,6 +619,13 @@ watch(guildId, (newGuildId, oldGuildId) => {
 	}
 }
 
+/* The list's account card is taller than the page's context card: the notice sits above it. */
+@variant max-sm {
+	.console:not(.console--page) .dashboard-update-prompt {
+		bottom: calc(6.5rem + env(safe-area-inset-bottom));
+	}
+}
+
 .dashboard-update-prompt > :deep(*) {
 	@apply pointer-events-auto;
 }

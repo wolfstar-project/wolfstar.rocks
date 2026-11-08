@@ -132,6 +132,32 @@ const { open: openPreferences } = usePreferencesDialog();
 	color: var(--ui-text-muted);
 }
 
+.account-nameplate {
+	@apply pointer-events-none absolute inset-0;
+}
+
+.account-nameplate-art {
+	@apply h-full w-full object-cover object-right;
+}
+
+.account-card > :not(.account-nameplate) {
+	@apply relative;
+}
+
+.account-user {
+	@apply flex min-h-11 min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded-[6px] border-0 bg-transparent px-1.5 py-1 text-left text-sm font-semibold;
+	color: var(--ui-text-highlighted);
+}
+
+.account-user:hover {
+	background-color: var(--console-hover);
+}
+
+.account-user:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: -2px;
+}
+
 /* The phone's card is taller, as Discord's own: a larger avatar, the name over
    the username, and the two actions as tinted tiles that read over the nameplate. */
 @variant max-sm {
@@ -160,31 +186,5 @@ const { open: openPreferences } = usePreferencesDialog();
 		background-color: color-mix(in oklab, var(--console-solid) 70%, transparent);
 		backdrop-filter: blur(8px);
 	}
-}
-
-.account-nameplate {
-	@apply pointer-events-none absolute inset-0;
-}
-
-.account-nameplate-art {
-	@apply h-full w-full object-cover object-right;
-}
-
-.account-card > :not(.account-nameplate) {
-	@apply relative;
-}
-
-.account-user {
-	@apply flex min-h-11 min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded-[6px] border-0 bg-transparent px-1.5 py-1 text-left text-sm font-semibold;
-	color: var(--ui-text-highlighted);
-}
-
-.account-user:hover {
-	background-color: var(--console-hover);
-}
-
-.account-user:focus-visible {
-	outline: 2px solid var(--color-primary);
-	outline-offset: -2px;
 }
 </style>

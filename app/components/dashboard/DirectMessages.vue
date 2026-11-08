@@ -178,6 +178,11 @@ function showAppeals() {
 
 .dm-sidebar--floating .dm-list-scroll :deep(.discord-scrollbar-track) {
 	bottom: 4.75rem;
+
+	/* Clear of the phone's taller account card. */
+	@variant max-sm {
+		bottom: 7rem;
+	}
 }
 
 .dm-list {

@@ -291,6 +291,11 @@ const groups = computed(() =>
 /* The list scrolls out above the floating card, never under it. */
 .dashboard-sidebar--floating .dashboard-nav {
 	padding-bottom: 4.75rem;
+
+	/* The phone's account card is taller. */
+	@variant max-sm {
+		padding-bottom: 7rem;
+	}
 }
 
 .dashboard-nav-label {

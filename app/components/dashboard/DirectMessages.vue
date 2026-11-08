@@ -187,6 +187,11 @@ function showAppeals() {
 /* The list scrolls out above the floating card, never under it. */
 .dm-sidebar--floating .dm-list {
 	padding-bottom: 4.75rem;
+
+	/* The phone's account card is taller. */
+	@variant max-sm {
+		padding-bottom: 7rem;
+	}
 }
 
 .dm-list-label {

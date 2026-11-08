@@ -22,14 +22,19 @@
 			@click="openPreferences()"
 		>
 			<span ref="nameBlock" class="flex min-w-0 items-center gap-2.5">
-				<AppUserAvatar :src="avatar" :decoration size="md" />
-				<AppDisplayName :name :styles="nameStyles" class="min-w-0" />
+				<AppUserAvatar :src="avatar" :decoration size="md" avatar-class="account-avatar" />
+				<span class="account-text">
+					<AppDisplayName :name :styles="nameStyles" class="min-w-0" />
+					<!-- The phone's card is taller and says whose account it is. -->
+					<span v-if="username" class="account-username">{{ username }}</span>
+				</span>
 			</span>
 		</button>
 		<UButton
 			color="neutral"
 			variant="ghost"
 			size="md"
+			class="account-action"
 			icon="ic:round-settings"
 			:aria-label="ts('dashboard.user_preferences')"
 			:title="ts('dashboard.user_preferences')"
@@ -39,6 +44,7 @@
 			color="neutral"
 			variant="ghost"
 			size="md"
+			class="account-action"
 			icon="ic:round-logout"
 			:aria-label="ts('dashboard.user_sign_out')"
 			:title="ts('dashboard.user_sign_out')"
@@ -64,7 +70,7 @@ const { ts } = useI18n();
 const { signOut } = useUserSession();
 const colorMode = useColorMode();
 // What the account wears on Discord; animated pieces go still when motion is reduced.
-const { animate, avatar, decoration, name, nameStyles, nameplate } = useDiscordAccount();
+const { animate, avatar, decoration, name, nameStyles, nameplate, username } = useDiscordAccount();
 
 // Discord fades the nameplate to 30% under the avatar and the name, measured
 // from the card's edge as they lay out, and tints it with its palette.
@@ -113,6 +119,46 @@ const { open: openPreferences } = usePreferencesDialog();
 @variant max-sm {
 	.account-card--floating {
 		width: calc(100% - 1rem);
+	}
+}
+
+.account-text {
+	@apply flex min-w-0 flex-col;
+}
+
+/* The username only shows on the phone, where the card has the room for a second line. */
+.account-username {
+	@apply hidden truncate text-sm font-normal;
+	color: var(--ui-text-muted);
+}
+
+/* The phone's card is taller, as Discord's own: a larger avatar, the name over
+   the username, and the two actions as tinted tiles that read over the nameplate. */
+@variant max-sm {
+	.account-card--floating {
+		@apply gap-2 rounded-2xl p-2.5;
+	}
+
+	.account-user {
+		@apply min-h-14 px-1 py-0;
+	}
+
+	.account-user :deep(.account-avatar) {
+		@apply size-14;
+	}
+
+	.account-text {
+		@apply gap-0.5;
+	}
+
+	.account-username {
+		@apply block;
+	}
+
+	.account-card :deep(.account-action) {
+		@apply size-11 shrink-0 justify-center rounded-xl;
+		background-color: color-mix(in oklab, var(--console-solid) 70%, transparent);
+		backdrop-filter: blur(8px);
 	}
 }
 

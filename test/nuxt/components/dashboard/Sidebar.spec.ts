@@ -264,6 +264,24 @@ describe("DashboardSidebar", () => {
 		usePreferencesDialog().isOpen.value = false;
 	});
 
+	it("says so when no setting matches the search", async () => {
+		usePreferencesDialog().open();
+		const wrapper = await mountSuspended(AppPreferencesDialog, { attachTo: document.body });
+		mounted.push(wrapper);
+		await vi.waitFor(() =>
+			expect(document.body.querySelector(".settings-search input")).not.toBeNull(),
+		);
+		const input = document.body.querySelector<HTMLInputElement>(".settings-search input")!;
+		input.value = "zzzz";
+		input.dispatchEvent(new Event("input", { bubbles: true }));
+		await vi.waitFor(() => {
+			const empty = document.body.querySelector(".settings-empty");
+			expect(empty?.getAttribute("role")).toBe("status");
+			expect(document.body.querySelector(".settings-nav-item")).toBeNull();
+		});
+		usePreferencesDialog().isOpen.value = false;
+	});
+
 	it("keeps the nameplate palette behind the account while fading the artwork", async () => {
 		const wrapper = await mountSidebar();
 		const palette = wrapper.get(".account-nameplate").element as HTMLElement;

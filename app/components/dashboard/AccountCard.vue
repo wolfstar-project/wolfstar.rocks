@@ -190,8 +190,7 @@ const { open: openPreferences } = usePreferencesDialog();
 	}
 
 	.account-card :deep(.account-action) {
-		@apply size-11 shrink-0 justify-center rounded-xl;
-		border-radius: 0.75rem;
+		@apply size-11 shrink-0 justify-center rounded-[12px];
 		background-color: color-mix(in oklab, var(--console-solid) 70%, transparent);
 		backdrop-filter: blur(8px);
 	}

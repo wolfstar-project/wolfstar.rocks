@@ -49,6 +49,13 @@
 						<span class="md:hidden">{{ ts("profile.sections_aria") }}</span>
 						<span class="hidden md:inline">{{ ts("profile.settings_title") }}</span>
 					</p>
+					<p
+						v-if="searchQuery.trim() && !pageSections.length && !reportSection"
+						class="settings-empty md:hidden"
+						role="status"
+					>
+						{{ ts("profile.search_empty") }}
+					</p>
 					<div v-if="pageSections.length" class="settings-nav-group">
 						<button
 							v-for="item in pageSections"
@@ -507,32 +514,17 @@ async function logOut() {
 	@apply mb-5 px-1;
 }
 
+.settings-empty {
+	@apply px-1 py-4 text-sm text-muted;
+}
+
 .settings-nav-group {
-	@apply flex flex-col overflow-hidden rounded-xl md:contents;
+	@apply flex shrink-0 flex-col overflow-hidden rounded-xl md:contents;
 	background-color: var(--ink-700);
 }
 
 .settings-nav-group--actions {
 	@apply mt-5 md:mt-0;
-}
-
-@variant max-md {
-	.settings-nav {
-		@apply gap-0 px-4 pt-0;
-	}
-
-	.settings-nav-label {
-		@apply px-1 pb-2 text-sm font-medium tracking-normal normal-case;
-	}
-
-	.settings-nav-item {
-		@apply min-h-14 gap-4 rounded-none px-4 text-base;
-		color: var(--ui-text-highlighted);
-	}
-
-	.settings-nav-item + .settings-nav-item {
-		border-top: 1px solid var(--home-border-subtle);
-	}
 }
 
 .settings-page {
@@ -562,6 +554,25 @@ async function logOut() {
 }
 
 /* Only the two-pane layout has a page open next to the list. */
+@variant max-md {
+	.settings-nav {
+		@apply gap-0 px-4 pt-0;
+	}
+
+	.settings-nav-label {
+		@apply px-1 pb-2 text-sm font-medium tracking-normal normal-case;
+	}
+
+	.settings-nav-item {
+		@apply min-h-14 gap-4 rounded-none px-4 text-base;
+		color: var(--ui-text-highlighted);
+	}
+
+	.settings-nav-item + .settings-nav-item {
+		border-top: 1px solid var(--home-border-subtle);
+	}
+}
+
 @variant md {
 	.settings-mobile-header {
 		display: none;

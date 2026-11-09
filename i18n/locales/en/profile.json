@@ -28,6 +28,7 @@
 		"notifications": "Notifications",
 		"reduce_motion": "Reduce Motion",
 		"reduce_motion_description": "Minimize animations and transitions for a calmer experience",
+		"search_empty": "No settings match your search.",
 		"sections_aria": "Settings sections",
 		"select_language": "Select a Language",
 		"select_language_description": "Choose the language you want WolfStar to display. Missing strings fall back to English.",

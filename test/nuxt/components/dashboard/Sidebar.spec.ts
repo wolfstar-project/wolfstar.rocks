@@ -246,6 +246,33 @@ describe("DashboardSidebar", () => {
 		usePreferencesDialog().isOpen.value = false;
 	});
 
+	it("filters settings by name", async () => {
+		usePreferencesDialog().open();
+		const wrapper = await mountSuspended(AppPreferencesDialog, { attachTo: document.body });
+		mounted.push(wrapper);
+		await vi.waitFor(() =>
+			expect(document.body.querySelector(".settings-search input")).not.toBeNull(),
+		);
+		const input = document.body.querySelector<HTMLInputElement>(".settings-search input")!;
+		input.value = "appearance";
+		input.dispatchEvent(new Event("input", { bubbles: true }));
+		await vi.waitFor(() => {
+			const menu = document.body.querySelector(".settings-nav")!;
+			expect(menu.textContent).toContain("Appearance");
+			expect(menu.textContent).not.toContain("Accessibility");
+		});
+		usePreferencesDialog().isOpen.value = false;
+	});
+
+	it("keeps the nameplate palette behind the account while fading the artwork", async () => {
+		const wrapper = await mountSidebar();
+		const palette = wrapper.get(".account-nameplate").element as HTMLElement;
+		const art = wrapper.get(".account-nameplate-art").element as HTMLElement;
+		expect(palette.style.background).not.toBe("");
+		expect(palette.style.maskImage).toBe("");
+		expect(art.style.maskImage).not.toBe("");
+	});
+
 	it("wears the account's nameplate and avatar frame from Discord's CDN", async () => {
 		const wrapper = await mountSidebar();
 

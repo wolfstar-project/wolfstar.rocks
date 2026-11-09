@@ -11,7 +11,30 @@
 		<template #content>
 			<div class="settings" :class="{ 'settings--detail': detailOpen }">
 				<nav class="settings-nav" :aria-label="ts('profile.sections_aria')">
-					<div v-if="account" class="flex items-center gap-2.5 px-2 pt-1.5 pb-3">
+					<div class="settings-mobile-header md:hidden">
+						<button
+							type="button"
+							class="settings-mobile-close"
+							:aria-label="ts('profile.close')"
+							@click="isOpen = false"
+						>
+							<UIcon name="ic:round-close" class="size-5" aria-hidden="true" />
+						</button>
+						<h2 class="text-xl font-bold">{{ ts("profile.settings_title") }}</h2>
+					</div>
+					<div class="settings-search md:hidden">
+						<UInput
+							v-model="searchQuery"
+							icon="ic:round-search"
+							:placeholder="ts('common.search')"
+							:aria-label="ts('common.search')"
+							class="w-full"
+						/>
+					</div>
+					<div
+						v-if="account"
+						class="hidden items-center gap-2.5 px-2 pt-1.5 pb-3 md:flex"
+					>
 						<AppUserAvatar :src="discordAvatar" :decoration size="md" />
 						<div class="min-w-0">
 							<p class="flex min-w-0 text-[0.8125rem] font-bold">
@@ -23,65 +46,73 @@
 						</div>
 					</div>
 					<p class="settings-nav-label" aria-hidden="true">
-						{{ ts("profile.settings_title") }}
+						<span class="md:hidden">{{ ts("profile.sections_aria") }}</span>
+						<span class="hidden md:inline">{{ ts("profile.settings_title") }}</span>
 					</p>
-					<button
-						v-for="item in pageSections"
-						:key="item.id"
-						type="button"
-						class="settings-nav-item"
-						:class="{ 'settings-nav-item--current': item.id === section }"
-						:aria-current="item.id === section ? 'page' : undefined"
-						@click="openSection(item.id)"
-					>
-						<UIcon :name="item.icon" class="size-4.25 shrink-0" aria-hidden="true" />
-						<span class="grow">{{ item.label }}</span>
-						<UIcon
-							name="ic:round-chevron-right"
-							class="size-4.5 text-muted md:hidden"
-							aria-hidden="true"
-						/>
-					</button>
-					<div class="mx-2 my-2.5 h-px bg-(--home-border-subtle)"></div>
-					<!-- Reporting a bug and leaving sit together, apart from the pages. -->
-					<button
-						v-if="reportSection"
-						type="button"
-						class="settings-nav-item"
-						:class="{ 'settings-nav-item--current': section === 'report' }"
-						:aria-current="section === 'report' ? 'page' : undefined"
-						@click="openSection('report')"
-					>
-						<UIcon
-							:name="reportSection.icon"
-							class="size-4.25 shrink-0"
-							aria-hidden="true"
-						/>
-						<span class="grow">{{ reportSection.label }}</span>
-						<UIcon
-							name="ic:round-chevron-right"
-							class="size-4.5 text-muted md:hidden"
-							aria-hidden="true"
-						/>
-					</button>
-					<template v-if="account">
-						<button type="button" class="settings-nav-item text-error!" @click="logOut">
+					<div v-if="pageSections.length" class="settings-nav-group">
+						<button
+							v-for="item in pageSections"
+							:key="item.id"
+							type="button"
+							class="settings-nav-item"
+							:class="{ 'settings-nav-item--current': item.id === section }"
+							:aria-current="item.id === section ? 'page' : undefined"
+							@click="openSection(item.id)"
+						>
 							<UIcon
-								name="ic:round-logout"
+								:name="item.icon"
 								class="size-4.25 shrink-0"
 								aria-hidden="true"
 							/>
-							<span class="grow">{{ ts("user_menu.sign_out") }}</span>
+							<span class="grow">{{ item.label }}</span>
+							<UIcon
+								name="ic:round-chevron-right"
+								class="size-4.5 text-muted md:hidden"
+								aria-hidden="true"
+							/>
 						</button>
-					</template>
-					<UButton
-						color="neutral"
-						variant="ghost"
-						icon="ic:round-close"
-						class="absolute top-3 right-3 md:hidden"
-						:aria-label="ts('profile.close')"
-						@click="isOpen = false"
-					/>
+					</div>
+					<div class="mx-2 my-2.5 hidden h-px bg-(--home-border-subtle) md:block"></div>
+					<!-- Reporting a bug and leaving sit together, apart from the pages. -->
+					<div
+						v-if="reportSection || (account && !searchQuery.trim())"
+						class="settings-nav-group settings-nav-group--actions"
+					>
+						<button
+							v-if="reportSection"
+							type="button"
+							class="settings-nav-item"
+							:class="{ 'settings-nav-item--current': section === 'report' }"
+							:aria-current="section === 'report' ? 'page' : undefined"
+							@click="openSection('report')"
+						>
+							<UIcon
+								:name="reportSection.icon"
+								class="size-4.25 shrink-0"
+								aria-hidden="true"
+							/>
+							<span class="grow">{{ reportSection.label }}</span>
+							<UIcon
+								name="ic:round-chevron-right"
+								class="size-4.5 text-muted md:hidden"
+								aria-hidden="true"
+							/>
+						</button>
+						<template v-if="account && !searchQuery.trim()">
+							<button
+								type="button"
+								class="settings-nav-item text-error!"
+								@click="logOut"
+							>
+								<UIcon
+									name="ic:round-logout"
+									class="size-4.25 shrink-0"
+									aria-hidden="true"
+								/>
+								<span class="grow">{{ ts("user_menu.sign_out") }}</span>
+							</button>
+						</template>
+					</div>
 				</nav>
 
 				<section class="settings-page" :aria-labelledby="headingId">
@@ -386,8 +417,19 @@ const sections = computed(() => {
 });
 
 // The pages, in the list; the bug report has a place of its own under them.
-const pageSections = computed(() => sections.value.filter((item) => item.id !== "report"));
-const reportSection = computed(() => sections.value.find((item) => item.id === "report"));
+const searchQuery = ref("");
+const isDesktop = useMediaQuery("(min-width: 48rem)");
+watch(isDesktop, (wide) => {
+	if (wide) searchQuery.value = "";
+});
+const matchesSearch = (label: string) =>
+	label.toLocaleLowerCase().includes(searchQuery.value.trim().toLocaleLowerCase());
+const pageSections = computed(() =>
+	sections.value.filter((item) => item.id !== "report" && matchesSearch(item.label)),
+);
+const reportSection = computed(() =>
+	sections.value.find((item) => item.id === "report" && matchesSearch(item.label)),
+);
 
 const section = ref<SettingsSection>("appearance");
 // On a phone the dialog is one column: the list first, then the page picked.
@@ -408,6 +450,7 @@ watch(
 	isOpen,
 	(open) => {
 		if (!open) return;
+		searchQuery.value = "";
 		// A page asked for opens straight away, past the list on a phone.
 		const requested = requestedSection.value;
 		requestedSection.value = null;
@@ -442,6 +485,56 @@ async function logOut() {
 	background-color: var(--ink-800);
 }
 
+.settings-mobile-header {
+	@apply sticky top-0 z-10 -mx-4 mb-4 flex items-center gap-3 px-4 py-3;
+	background-color: var(--ink-800);
+}
+
+.settings-mobile-close {
+	@apply flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full border-0 bg-transparent p-0 text-muted;
+}
+
+.settings-mobile-close:hover {
+	color: var(--ui-text-highlighted);
+}
+
+.settings-mobile-close:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: -2px;
+}
+
+.settings-search {
+	@apply mb-5 px-1;
+}
+
+.settings-nav-group {
+	@apply flex flex-col overflow-hidden rounded-xl md:contents;
+	background-color: var(--ink-700);
+}
+
+.settings-nav-group--actions {
+	@apply mt-5 md:mt-0;
+}
+
+@variant max-md {
+	.settings-nav {
+		@apply gap-0 px-4 pt-0;
+	}
+
+	.settings-nav-label {
+		@apply px-1 pb-2 text-sm font-medium tracking-normal normal-case;
+	}
+
+	.settings-nav-item {
+		@apply min-h-14 gap-4 rounded-none px-4 text-base;
+		color: var(--ui-text-highlighted);
+	}
+
+	.settings-nav-item + .settings-nav-item {
+		border-top: 1px solid var(--home-border-subtle);
+	}
+}
+
 .settings-page {
 	@apply hidden min-w-0 flex-1 overflow-auto p-5 md:block md:px-10 md:py-8;
 }
@@ -470,6 +563,10 @@ async function logOut() {
 
 /* Only the two-pane layout has a page open next to the list. */
 @variant md {
+	.settings-mobile-header {
+		display: none;
+	}
+
 	.settings-nav-item--current,
 	.settings-nav-item--current:hover {
 		background-color: oklch(100% 0 0 / 0.08);
@@ -534,8 +631,13 @@ async function logOut() {
 }
 
 @variant theme-light {
-	.settings-nav {
+	.settings-nav,
+	.settings-mobile-header {
 		background-color: var(--color-base-200);
+	}
+
+	.settings-nav-group {
+		background-color: var(--color-base-100);
 	}
 
 	.settings-card {

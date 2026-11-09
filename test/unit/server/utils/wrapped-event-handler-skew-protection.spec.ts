@@ -57,7 +57,7 @@ const {
 	};
 });
 
-vi.mock("nuxt-skew-protection/server", () => ({
+vi.mock("#server/utils/client-version", () => ({
 	isClientOutdated: mockIsClientOutdated,
 }));
 

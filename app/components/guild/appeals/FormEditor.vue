@@ -332,14 +332,12 @@ const title = computed(() =>
 );
 
 const kindItems = computed<DropdownMenuItem[][]>(() => [
-	AppealQuestionKinds.map(
-		(kind): DropdownMenuItem => ({
-			icon: APPEAL_QUESTION_KIND_ICONS[kind],
-			label: ts(APPEAL_QUESTION_KIND_NAME_KEYS[kind]),
-			description: ts(APPEAL_QUESTION_KIND_HELP_KEYS[kind]),
-			onSelect: () => addQuestion(kind),
-		}),
-	),
+	AppealQuestionKinds.map((kind): DropdownMenuItem => ({
+		icon: APPEAL_QUESTION_KIND_ICONS[kind],
+		label: ts(APPEAL_QUESTION_KIND_NAME_KEYS[kind]),
+		description: ts(APPEAL_QUESTION_KIND_HELP_KEYS[kind]),
+		onSelect: () => addQuestion(kind),
+	})),
 ]);
 
 function setType(type: AppealCaseType, picked: boolean) {

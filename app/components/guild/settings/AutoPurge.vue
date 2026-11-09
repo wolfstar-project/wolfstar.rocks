@@ -107,7 +107,7 @@ import { compactSeconds, formatNextRun } from "~/utils/auto-channels";
 const { ts } = useI18n();
 const { locale, timeLocale } = useAppLocale();
 const headingId = useId();
-const clock = useNow({ interval: 60_000 });
+const clock = useNow({ scheduler: (cb) => useIntervalFn(cb, 60_000) });
 
 function fullDate(iso: string): string {
 	return new Intl.DateTimeFormat(timeLocale.value, {

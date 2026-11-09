@@ -23,8 +23,8 @@ Only exported action creators are listed above. `command.executed` is currently 
 ## Instrumentation Pattern
 
 ```ts
-import { withAuditMethods, useLogger } from "evlog";
 import { myAction } from "#shared/audit/actions";
+import { withAuditMethods, useLogger } from "evlog";
 
 const log = withAuditMethods(useLogger(event));
 

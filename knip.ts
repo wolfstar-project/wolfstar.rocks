@@ -54,7 +54,6 @@ const config: KnipConfig = {
 				"@iconify-json/*",
 				"@commitlint/cli",
 				"puppeteer",
-				"vue-tsc",
 				"cz-conventional-changelog",
 				"tailwind-variants",
 

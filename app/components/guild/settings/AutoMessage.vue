@@ -93,7 +93,7 @@ const { locale, timeLocale } = useAppLocale();
 const { activeGuildId } = useActiveGuild();
 // The same rows the section reads: both share the cache of the guild's list.
 const { setRow } = useAutoChannels("automessage", activeGuildId);
-const clock = useNow({ interval: 60_000 });
+const clock = useNow({ scheduler: (cb) => useIntervalFn(cb, 60_000) });
 
 function fullDate(iso: string): string {
 	return new Intl.DateTimeFormat(timeLocale.value, {

@@ -640,8 +640,8 @@ export default defineNuxtConfig({
 			// little memory the prerender swaps, and each render waits on the
 			// garbage collector far longer than it draws.
 			renderTimeout: Number(process.env.OG_IMAGE_RENDER_TIMEOUT) || undefined,
-			strict: !!process.env.NUXT_IMAGE_PROXY_SECRET,
-			secret: process.env.NUXT_IMAGE_PROXY_SECRET,
+			// Signing keys come from Nuxt's `appSecret` (NUXT_APP_SECRET); strict mode needs it set.
+			strict: !!process.env.NUXT_APP_SECRET,
 			// HMAC signing is sufficient; origin pinning blocks localhost e2e runs
 			// and adds no meaningful security on top of signed URLs.
 			restrictRuntimeImagesToOrigin: false,
@@ -823,7 +823,7 @@ export default defineNuxtConfig({
 	vitalizer: {
 		disablePrefetchLinks: true,
 		disablePreloadLinks: true,
-		disableStylesheets: "entry",
+		disableStylesheets: true,
 	},
 
 	i18n: {

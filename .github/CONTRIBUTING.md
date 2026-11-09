@@ -293,11 +293,11 @@ Use `createError` for error responses with proper status codes. Use the `onError
 6. Relative imports (`./`, `../`)
 
 ```typescript
-import type { H3Event } from "h3";
 import type { GuildSettings } from "#shared/types";
+import type { H3Event } from "h3";
 import { createHash } from "node:crypto";
-import { parse } from "valibot";
 import { GuildSettingsSchema } from "#shared/schemas/guild-settings";
+import { parse } from "valibot";
 import { resolveMember } from "./resolve-members";
 ```
 

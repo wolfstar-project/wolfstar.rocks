@@ -85,7 +85,7 @@ vi.mock("#server/utils/sentry-metrics", () => ({
 // The real module pulls in Nitro's storage runtime (`#nitro-internal-virtual/storage`),
 // which is unavailable outside a Nitro build; stub the outdated-client check so the
 // wrapper imports cleanly and stays a no-op for these rate-limit ordering tests.
-vi.mock("nuxt-skew-protection/server", () => ({
+vi.mock("#server/utils/client-version", () => ({
 	isClientOutdated: vi.fn(() => false),
 }));
 

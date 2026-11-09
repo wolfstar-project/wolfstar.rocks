@@ -1,9 +1,9 @@
-import { resolveTrustedOrigins } from "#server/utils/auth-origins";
-import { createAuthSecondaryStorage } from "#server/utils/auth-rate-limit-storage";
-import { invalidateCurrentUserCache } from "#server/utils/discord/cache";
-import { createDiscordProviderOptions } from "#server/utils/discord/provider";
-import { resolveDiscordRedirectURI } from "#server/utils/oauth-callback";
-import { runtimeConfig } from "#server/utils/runtimeConfig";
+import { resolveTrustedOrigins } from "#server/utils/auth-origins.ts";
+import { createAuthSecondaryStorage } from "#server/utils/auth-rate-limit-storage.ts";
+import { invalidateCurrentUserCache } from "#server/utils/discord/cache.ts";
+import { createDiscordProviderOptions } from "#server/utils/discord/provider.ts";
+import { resolveDiscordRedirectURI } from "#server/utils/oauth-callback.ts";
+import { runtimeConfig } from "#server/utils/runtimeConfig.ts";
 import { defineServerAuth } from "@nuxtjs/better-auth/config";
 import { createAuthMiddleware } from "better-auth/api";
 import { isDevelopment } from "std-env";

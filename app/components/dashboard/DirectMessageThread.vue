@@ -123,7 +123,7 @@ const readerName = computed(
 	() =>
 		discordUser.value?.global_name ?? discordUser.value?.username ?? authUser.value?.name ?? "",
 );
-const now = useNow({ interval: 60_000 });
+const now = useNow({ scheduler: (cb) => useIntervalFn(cb, 60_000) });
 const days = computed(() => groupNewsByDay(thread.value?.news ?? []));
 
 function formatDay(day: string): string {

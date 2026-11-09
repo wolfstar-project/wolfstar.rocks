@@ -47,9 +47,12 @@ export default defineNuxtPlugin({
 
 		if (!buildId) return;
 
-		const { name, options } = resolveSkewCookie(runtimeConfig.public.skewProtection?.cookie);
-		const versionCookie = useCookie<string | null>(name, options);
-		if (versionCookie.value !== buildId) versionCookie.value = buildId;
+		const cookieConfig = runtimeConfig.public.skewProtection?.cookie;
+		if (typeof cookieConfig === "object") {
+			const { name, options } = resolveSkewCookie(cookieConfig);
+			const versionCookie = useCookie<string | null>(name, options);
+			if (versionCookie.value !== buildId) versionCookie.value = buildId;
+		}
 
 		const { checkForUpdates } = useSkewProtection({ lazy: true });
 

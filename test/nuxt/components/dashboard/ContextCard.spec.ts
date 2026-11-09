@@ -32,7 +32,7 @@ describe("DashboardContextCard", () => {
 			modulesModeration: true,
 			modulesRoles: false,
 		});
-		const wrapper = await mountSuspended(DashboardContextCard, { route: "/app?screen=page" });
+		const wrapper = await mountSuspended(DashboardContextCard, { route: "/?screen=page" });
 
 		expect(wrapper.text()).toContain("WolfStar HQ");
 		expect(wrapper.text()).toContain("2 of 9 modules on");
@@ -41,7 +41,7 @@ describe("DashboardContextCard", () => {
 	it("offers the switch of a module section, bound to its staged setting", async () => {
 		openServer({ modulesAutomod: true });
 		useActiveGuild().setSection("automod");
-		const wrapper = await mountSuspended(DashboardContextCard, { route: "/app?screen=page" });
+		const wrapper = await mountSuspended(DashboardContextCard, { route: "/?screen=page" });
 
 		const toggle = wrapper.find('[role="switch"]');
 		expect(toggle.attributes("aria-checked")).toBe("true");
@@ -60,7 +60,7 @@ describe("DashboardContextCard", () => {
 	it("holds the switch back until the saved settings are in", async () => {
 		useActiveGuild().selectGuild(GUILD_ID);
 		useActiveGuild().setSection("automod");
-		const wrapper = await mountSuspended(DashboardContextCard, { route: "/app?screen=page" });
+		const wrapper = await mountSuspended(DashboardContextCard, { route: "/?screen=page" });
 
 		expect(wrapper.find('[role="switch"]').exists()).toBe(false);
 		expect(wrapper.text()).not.toMatch(/· O(n|ff)/);
@@ -86,7 +86,7 @@ describe("DashboardContextCard", () => {
 			useActiveGuild().setSection("automod");
 			const wrapper = await mountSuspended(DashboardContextCard, {
 				attachTo: document.body,
-				route: "/app?screen=page",
+				route: "/?screen=page",
 			});
 			const display = () => getComputedStyle(wrapper.element as HTMLElement).display;
 
@@ -101,12 +101,12 @@ describe("DashboardContextCard", () => {
 	it("goes back to the list from a section without a switch", async () => {
 		openServer();
 		useActiveGuild().setSection("commands");
-		const wrapper = await mountSuspended(DashboardContextCard, { route: "/app?screen=page" });
+		const wrapper = await mountSuspended(DashboardContextCard, { route: "/?screen=page" });
 
 		expect(wrapper.find('[role="switch"]').exists()).toBe(false);
 		await wrapper.find('[data-testid="context-card-list"]').trigger("click");
-		await new Promise((resolve) => setTimeout(resolve, 50));
 
-		expect(useRouter().currentRoute.value.query.screen).toBeUndefined();
+		// Going back is a history step, which the browser completes after the click.
+		await expect.poll(() => useRouter().currentRoute.value.query.screen).toBeUndefined();
 	});
 });

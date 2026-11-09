@@ -1820,14 +1820,14 @@ describe("component accessibility audits", () => {
 			// The switch shows once the saved settings are in.
 			useGuildSettings().setGuildSettings(createMockGuildData("123456789012345678"));
 			const withSwitch = await mountSuspended(DashboardContextCard, {
-				route: "/app?screen=page",
+				route: "/?screen=page",
 			});
 			expect(withSwitch.find('[role="switch"]').exists()).toBe(true);
 			expect((await runAxe(withSwitch)).violations).toEqual([]);
 
 			useActiveGuild().setSection("commands");
 			const withList = await mountSuspended(DashboardContextCard, {
-				route: "/app?screen=page",
+				route: "/?screen=page",
 			});
 			expect((await runAxe(withList)).violations).toEqual([]);
 		});

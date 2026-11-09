@@ -54,6 +54,7 @@ const config: KnipConfig = {
 				"@iconify-json/*",
 				"@commitlint/cli",
 				"puppeteer",
+				"vue-tsc",
 				"cz-conventional-changelog",
 				"tailwind-variants",
 
@@ -66,7 +67,6 @@ const config: KnipConfig = {
 				"deepmerge",
 				"@discordjs/rest",
 				"@sapphire/async-queue",
-				"nuxt-site-config",
 				"workbox-*",
 
 				/** Provides the tsgolint binary for oxlint's opt-in type-aware pass (`vp lint --type-aware`), not imported directly */

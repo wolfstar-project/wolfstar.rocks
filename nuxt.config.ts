@@ -17,6 +17,10 @@ applyWorkerEnv();
 
 const runtimeConfig = generateRuntimeConfig();
 const isStorybook = process.env.STORYBOOK === "true" || process.env.VITEST_STORYBOOK === "true";
+// Opt-in: the module uploads the assets of past deploys through `wrangler`, which
+// only a build with Cloudflare credentials can run (see `skewProtection` below).
+const bundleSkewAssets =
+	isCloudflareBuild && isCI && process.env.SKEW_PROTECTION_BUNDLE_ASSETS === "true";
 
 const { resolve } = createResolver(import.meta.url);
 
@@ -649,9 +653,12 @@ export default defineNuxtConfig({
 	},
 
 	skewProtection: {
-		// The Workers build keeps it in a KV namespace of its own, the way the
-		// module's Cloudflare guide sets it up; elsewhere it is the module's fs cache.
-		storage: isCloudflareBuild
+		// A Workers build that keeps past assets stores them in a KV namespace of its
+		// own, the way the module's Cloudflare guide sets it up. The module reads and
+		// writes that namespace through `wrangler` at build time, so every other build
+		// (CI checks, local previews) uses the module's fs cache instead: it has no
+		// `wrangler` on the path and no Cloudflare credentials to give it.
+		storage: bundleSkewAssets
 			? { binding: CLOUDFLARE_BINDINGS.skewProtection, driver: "cloudflare-kv-binding" }
 			: {
 					base: "./.cache/skew-protection",
@@ -675,8 +682,7 @@ export default defineNuxtConfig({
 		// assets of each of the last releases outlasted the 30 minute limit, so it
 		// is opt-in with SKEW_PROTECTION_BUNDLE_ASSETS; without it the build keeps
 		// no past assets.
-		bundleAssets:
-			isCloudflareBuild && isCI && process.env.SKEW_PROTECTION_BUNDLE_ASSETS === "true",
+		bundleAssets: bundleSkewAssets,
 	},
 
 	// PWA configuration

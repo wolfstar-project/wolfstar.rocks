@@ -18,8 +18,11 @@ if (sentry.dsn) {
 		// https://docs.sentry.io/platforms/javascript/guides/nuxt/configuration/options/#allowurls
 		allowUrls: [/https?:\/\/((cdn|www|beta|alpha)\.)?wolfstar\.rocks/],
 
-		// Sentry 11 replaced `sendDefaultPii` with `dataCollection`. User info stays on, as it was.
-		dataCollection: { userInfo: true },
+		// Sentry 11 replaced `sendDefaultPii` with `dataCollection`, whose defaults
+		// collect more. Keep what `sendDefaultPii: true` sent (user info, headers and
+		// cookies, which Sentry still scrubs of secrets) and nothing the SDK did not
+		// send before: no request or response bodies.
+		dataCollection: { userInfo: true, cookies: true, httpBodies: [] },
 
 		// Replay is loaded lazily below to keep its rrweb-based bundle out of the
 		// initial critical path. Browser tracing is skipped on marketing pages to

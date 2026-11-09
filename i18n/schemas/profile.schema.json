@@ -88,6 +88,9 @@
 				"reduce_motion_description": {
 					"type": "string"
 				},
+				"search_empty": {
+					"type": "string"
+				},
 				"sections_aria": {
 					"type": "string"
 				},

@@ -2,6 +2,7 @@ import * as Sentry from "@sentry/nuxt";
 import { isDevelopment } from "std-env";
 import { isCloudflareBuild } from "./config/cloudflare";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
+import { SERVER_DATA_COLLECTION } from "./server/utils/sentry-data-collection";
 import { dropExpectedHttpErrors } from "./server/utils/sentry-expected-errors";
 
 const {
@@ -12,16 +13,7 @@ if (sentry.dsn && !isCloudflareBuild) {
 	Sentry.init({
 		dsn: sentry.dsn,
 		beforeSend: dropExpectedHttpErrors,
-		// The server never set `sendDefaultPii`, so Sentry 10 sent no user info or
-		// cookies from it. Sentry 11's `dataCollection` defaults collect all of that,
-		// plus request bodies and database query data, so turn those back off.
-		dataCollection: {
-			userInfo: false,
-			cookies: false,
-			httpBodies: [],
-			databaseQueryData: false,
-			queues: false,
-		},
+		dataCollection: SERVER_DATA_COLLECTION,
 		// Set tracesSampleRate to 1.0 to capture 100%
 		// Of transactions for tracing.
 		// We recommend adjusting this value in production

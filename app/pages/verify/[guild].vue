@@ -412,7 +412,7 @@ watch(isLoading, async (loading, wasLoading) => {
 
 // Signs in again with Discord and comes back here; asks for `connections`
 // when the server counts the linked accounts.
-const signInDiscord = useSignIn("social");
+const signInDiscord = useDiscordSignIn();
 const signingIn = computed(() => signInDiscord.status.value === "pending");
 async function signIn(connections: boolean) {
 	await signInDiscord.execute(

@@ -653,6 +653,9 @@ export default defineNuxtConfig({
 	},
 
 	skewProtection: {
+		// Storybook's Nuxt build turns `experimental.appManifest` off, which the module
+		// refuses to run without; there is no deploy to skew against there anyway.
+		enabled: !isStorybook,
 		// A Workers build that keeps past assets stores them in a KV namespace of its
 		// own, the way the module's Cloudflare guide sets it up. The module reads and
 		// writes that namespace through `wrangler` at build time, so every other build

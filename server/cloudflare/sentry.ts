@@ -1,3 +1,4 @@
+import { SERVER_DATA_COLLECTION } from "#server/utils/sentry-data-collection";
 import { dropExpectedHttpErrors } from "#server/utils/sentry-expected-errors";
 import { sentryCloudflareNitroPlugin } from "@sentry/nuxt/module/plugins";
 
@@ -11,6 +12,7 @@ export default defineNitroPlugin(
 		const { environment, sentry } = useRuntimeConfig().public;
 		return {
 			beforeSend: dropExpectedHttpErrors,
+			dataCollection: SERVER_DATA_COLLECTION,
 			dsn: sentry.dsn,
 			environment,
 			// Same-origin API calls, as on Node.

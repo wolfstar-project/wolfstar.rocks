@@ -18,7 +18,7 @@ const mockError = ref<{ statusCode: number } | null>(null);
 const mockSignIn = vi.fn();
 const mockRefresh = vi.fn();
 
-mockNuxtImport("useSignIn", () => () => ({
+mockNuxtImport("useDiscordSignIn", () => () => ({
 	error: ref(null),
 	execute: mockSignIn,
 	status: ref("idle"),

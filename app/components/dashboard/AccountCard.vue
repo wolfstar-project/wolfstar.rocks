@@ -8,12 +8,19 @@
 				:src="nameplate.clip"
 				:poster="nameplate.still"
 				class="account-nameplate-art"
+				:style="nameplateArtStyle"
 				autoplay
 				loop
 				muted
 				playsinline
 			></video>
-			<img v-else :src="nameplate.still" alt="" class="account-nameplate-art" />
+			<img
+				v-else
+				:src="nameplate.still"
+				alt=""
+				class="account-nameplate-art"
+				:style="nameplateArtStyle"
+			/>
 		</div>
 		<button
 			type="button"
@@ -81,14 +88,15 @@ const { right: nameRight } = useElementBounding(nameBlock);
 const nameplateStyle = computed(() => {
 	const plate = nameplate.value;
 	if (!plate) return undefined;
-	const mask = nameplateMask(nameRight.value - cardLeft.value);
 	return {
 		background:
 			nameplateBackground(plate.palette, colorMode.value === "light" ? "light" : "dark") ??
 			undefined,
-		maskImage: mask,
-		WebkitMaskImage: mask,
 	};
+});
+const nameplateArtStyle = computed(() => {
+	const mask = nameplateMask(nameRight.value - cardLeft.value);
+	return { maskImage: mask, WebkitMaskImage: mask };
 });
 const { open: openPreferences } = usePreferencesDialog();
 </script>
@@ -166,7 +174,7 @@ const { open: openPreferences } = usePreferencesDialog();
 	}
 
 	.account-user {
-		@apply min-h-14 px-1 py-0;
+		@apply min-h-14 px-1 py-0 text-base;
 	}
 
 	.account-user :deep(.account-avatar) {
@@ -182,7 +190,7 @@ const { open: openPreferences } = usePreferencesDialog();
 	}
 
 	.account-card :deep(.account-action) {
-		@apply size-11 shrink-0 justify-center rounded-xl;
+		@apply size-11 shrink-0 justify-center rounded-[12px];
 		background-color: color-mix(in oklab, var(--console-solid) 70%, transparent);
 		backdrop-filter: blur(8px);
 	}

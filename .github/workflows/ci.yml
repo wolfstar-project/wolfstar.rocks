@@ -134,23 +134,30 @@ jobs:
       - name: 🔼 Generate Prisma Client
         run: vp run prisma:generate
 
-      # Vitest browser-playwright occasionally drops the Chromium session mid-suite
-      # (`Browser connection was closed` / `route.fulfill: Route is already handled!`)
-      # after most or all assertions already passed. Retry the whole project so files
-      # interrupted by the provider flake still run.
+      # One Chromium session does not outlive the whole suite: after some 80 of the
+      # 118 files it drops the connection (`Browser connection was closed while
+      # running tests`) with every assertion so far passing. So the files run in
+      # shards, each in a browser of its own, one after the other, and the blob
+      # reports merge into the one JUnit and coverage report Codecov reads. A shard
+      # the provider still drops (`route.fulfill: Route is already handled!`) runs
+      # once more on its own.
       - name: 🧪 Component tests
         run: |
           set -euo pipefail
+          shards=4
           max_attempts=2
-          attempt=1
-          until vp test --project nuxt --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml; do
-            if [ "${attempt}" -ge "${max_attempts}" ]; then
-              exit 1
-            fi
-            echo "::warning::Component tests failed (attempt ${attempt}/${max_attempts}); retrying after Vitest browser flake"
-            attempt=$((attempt + 1))
-            sleep 5
+          for shard in $(seq 1 "${shards}"); do
+            attempt=1
+            until vp test --project nuxt --coverage --shard="${shard}/${shards}" --reporter=blob; do
+              if [ "${attempt}" -ge "${max_attempts}" ]; then
+                exit 1
+              fi
+              echo "::warning::Component tests shard ${shard}/${shards} failed (attempt ${attempt}/${max_attempts}); retrying after Vitest browser flake"
+              attempt=$((attempt + 1))
+              sleep 5
+            done
           done
+          vp test --project nuxt --mergeReports --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml
         env:
           NODE_OPTIONS: --max-old-space-size=8192
 

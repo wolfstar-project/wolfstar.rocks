@@ -102,8 +102,6 @@
 </template>
 
 <script setup lang="ts">
-import { compactSeconds, formatNextRun } from "~/utils/auto-channels";
-
 const { ts } = useI18n();
 const { locale, timeLocale } = useAppLocale();
 const headingId = useId();

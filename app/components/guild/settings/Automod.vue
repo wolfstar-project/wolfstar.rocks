@@ -62,11 +62,6 @@
 </template>
 
 <script setup lang="ts">
-import {
-	ConfigurableAutomodChannels,
-	ConfigurableAutomodToggles,
-} from "#shared/utils/settingsDataEntries";
-
 const { ts } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
 const { guildData } = useGuildData();

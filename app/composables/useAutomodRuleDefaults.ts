@@ -1,5 +1,4 @@
 import type { MaybeRefOrGetter } from "vue";
-import type { AutomodRuleDefaults } from "~/utils/automod-rule-draft";
 
 const STORAGE_KEY = "wolfstar-automod-defaults";
 

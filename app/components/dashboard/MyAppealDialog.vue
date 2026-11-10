@@ -124,14 +124,6 @@ import type {
 } from "#shared/utils/my-appeals";
 import type { MyAppealErrorCode, useMyAppeals } from "~/composables/useMyAppeals";
 import type { AppealDraftAnswers } from "~/utils/my-appeals";
-import {
-	buildSubmission,
-	formatRelative,
-	formNeedsFiles,
-	formsForCase,
-	missingAnswers,
-} from "~/utils/my-appeals";
-
 type MyAppeals = ReturnType<typeof useMyAppeals>;
 
 const open = defineModel<boolean>("open", { required: true });

@@ -1,5 +1,3 @@
-import { isAppLocaleCode } from "~/utils/is-app-locale";
-
 /**
  * `wolfstar-settings` (localStorage) is the source of truth for the user's
  * locale choice, while Nuxt I18n Micro renders SSR from its own

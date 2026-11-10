@@ -267,7 +267,6 @@
 <script setup lang="ts">
 import type { JoinGuardVerifyState } from "#shared/utils/join-guard";
 import type { JoinGuardPassRefusal } from "~/composables/useJoinGuardVerify";
-
 // A sign-in leaves for Discord and comes back here; the transition would
 // freeze the page mid-flight.
 definePageMeta({ viewTransition: false });
@@ -412,7 +411,7 @@ watch(isLoading, async (loading, wasLoading) => {
 
 // Signs in again with Discord and comes back here; asks for `connections`
 // when the server counts the linked accounts.
-const signInDiscord = useDiscordSignIn();
+const signInDiscord = useSignIn("social");
 const signingIn = computed(() => signInDiscord.status.value === "pending");
 async function signIn(connections: boolean) {
 	await signInDiscord.execute(

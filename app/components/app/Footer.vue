@@ -88,6 +88,15 @@
 							>
 								{{ link.label }}
 							</NuxtLink>
+							<!-- The cookie choice can be changed or withdrawn as easily as it was given. -->
+							<button
+								v-if="column.label === ts('footer.legal')"
+								type="button"
+								class="text-start text-sm text-base-content/70 link-hover"
+								@click="isSettingsOpen = true"
+							>
+								{{ ts("consent.footer_link") }}
+							</button>
 						</div>
 					</nav>
 				</div>
@@ -109,6 +118,7 @@
 const { ts } = useI18n();
 const { buildInfo } = useAppConfig();
 const { columns } = useFooter();
+const { isSettingsOpen } = useCookieConsent();
 
 const socialLinks = computed(() => [
 	{

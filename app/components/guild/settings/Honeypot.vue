@@ -133,11 +133,6 @@
 </template>
 
 <script setup lang="ts">
-import {
-	ConfigurableHoneypotChannels,
-	ConfigurableHoneypotToggles,
-	HoneypotTrapSettings,
-} from "#shared/utils/settingsDataEntries";
 import { ChannelType } from "discord-api-types/v10";
 
 const SETUP_COMMAND = "/honeypot setup";

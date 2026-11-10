@@ -210,8 +210,6 @@ import type {
 	JoinGuardRowRequest,
 	useJoinGuardQueue,
 } from "~/composables/useJoinGuardQueue";
-import { JoinGuardLimits, JoinGuardQueueFilters } from "#shared/utils/join-guard";
-
 /**
  * The members the guard stopped this week, by where they are now, with Verify
  * and Kick for the ones who wait. Neither is done here: each writes a request

@@ -29,7 +29,16 @@
 		<ClientOnly>
 			<DeferredMount>
 				<div class="fixed bottom-4 left-4 z-50 flex flex-col space-y-2">
-					<LazyPwaPrompt />
+					<LazySkewPrompt />
+				</div>
+			</DeferredMount>
+		</ClientOnly>
+
+		<!-- Above the floating buttons: on a phone the notice spans the screen's width. -->
+		<ClientOnly>
+			<DeferredMount>
+				<div class="pointer-events-none fixed inset-x-4 bottom-4 z-[60] flex sm:right-auto">
+					<LazyConsentManager />
 				</div>
 			</DeferredMount>
 		</ClientOnly>

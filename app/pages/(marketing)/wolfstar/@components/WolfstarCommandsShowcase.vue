@@ -472,7 +472,6 @@ import type {
 	DiscordAppLauncherSheetSnap,
 	DiscordChatMessage,
 } from "~/types/discord";
-import { Colors } from "~/types/constants";
 import ShowcaseMarkdown from "./WolfstarShowcaseMarkdown.vue";
 
 const { ts } = useI18n();

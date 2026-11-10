@@ -8,6 +8,7 @@ import {
 	isCloudflareBuild,
 	WORKER,
 } from "./config/cloudflare.ts";
+import { cookieControl } from "./config/cookie-control.ts";
 import { currentLocales, datetimeFormats, numberFormats } from "./config/i18n.ts";
 import { pwa } from "./config/pwa.ts";
 import { LOCALE_BUNDLES_DIR } from "./modules/i18n-locale-bundles.ts";
@@ -44,7 +45,7 @@ export default defineNuxtConfig({
 		"@nuxt/fonts",
 		"@nuxt/a11y",
 		"@nuxtjs/seo",
-		"nuxt-skew-protection",
+		"@dargmuesli/nuxt-cookie-control",
 		"@vueuse/nuxt",
 		"@vite-pwa/nuxt",
 		"@nuxtjs/html-validator",
@@ -652,6 +653,9 @@ export default defineNuxtConfig({
 		},
 	},
 
+	// The visitor's cookie choice; the banner and the dialog are app/components/consent/.
+	cookieControl,
+
 	skewProtection: {
 		// Storybook's Nuxt build turns `experimental.appManifest` off, which the module
 		// refuses to run without; there is no deploy to skew against there anyway.
@@ -671,6 +675,11 @@ export default defineNuxtConfig({
 					driver: "fs-lite",
 				},
 		updateStrategy: "polling",
+		// @nuxtjs/seo hands the module `cookie: false` as its default, which drops the
+		// version cookie and with it the 409 that the wrapped API handlers send to a
+		// browser running an older build. These are the module's own cookie defaults
+		// (`__nkpv`, 7 days); `resolveSkewCookie()` mirrors them on the client.
+		cookie: { path: "/", sameSite: "lax", maxAge: 60 * 60 * 24 * 7 },
 		// Keep the persistent-previous-build-assets feature off: with storage now
 		// always configured, the module's default (true) runs augmentBuildMetadata,
 		// which rewrites _nuxt/builds/meta/<buildId>.json after the build but only

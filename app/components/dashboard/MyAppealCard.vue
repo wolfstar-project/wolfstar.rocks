@@ -90,8 +90,6 @@ import type {
 	MyAppealStatus,
 } from "#shared/utils/my-appeals";
 import type { LogsPillTone } from "~/components/guild/logs/Pill.vue";
-import { guildIconURL } from "#shared/utils/discord";
-import { caseEndsAt, formatRelative, formatSpan, guildInitials } from "~/utils/my-appeals";
 
 const { entry, now } = defineProps<{
 	entry: MyAppealEntry;

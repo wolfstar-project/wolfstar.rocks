@@ -112,10 +112,6 @@
 import type { ModerationLogEntry } from "#shared/types/moderation-log";
 import type { ModerationCaseStatus } from "#shared/types/moderation-types";
 import type { TableColumn } from "@nuxt/ui";
-import {
-	MODERATION_CASE_STATUSES,
-	MODERATION_TYPE_FILTER_VALUES,
-} from "#shared/types/moderation-types";
 
 const { warningsOnly } = defineProps<{
 	warningsOnly?: boolean;

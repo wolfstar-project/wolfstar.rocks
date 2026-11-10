@@ -211,18 +211,13 @@
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
-import type { FormErrorEvent } from "@nuxt/ui";
-import {
-	classifyLegacyNode,
-	createAccessEntry,
-	isAccessEntry,
-	stripLegacyNodes,
-	type LegacyClassification,
-	type LegacyPermissionNode,
-	type PermissionEntry,
+import type {
+	LegacyClassification,
+	LegacyPermissionNode,
+	PermissionEntry,
 } from "#shared/utils/dashboard-access";
+import type { FormErrorEvent } from "@nuxt/ui";
 import { array, looseObject, object, string } from "valibot";
-import { importLegacy, joinAccess, splitAccess } from "~/utils/dashboard-access-draft";
 
 type Column = "permissionsRoles" | "permissionsUsers";
 type FormState = Pick<GuildData, Column>;

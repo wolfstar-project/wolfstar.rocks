@@ -1,5 +1,3 @@
-import type { AutoModerationHardAction, AutoModerationRuleType } from "#shared/utils/automod-rules";
-
 // Static key maps rather than keys built from the value: the i18n report can
 // only follow keys it can read in the source.
 

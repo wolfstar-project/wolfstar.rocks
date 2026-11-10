@@ -209,38 +209,11 @@
 </template>
 
 <script setup lang="ts">
+import type { AppealCaseType, AppealForm, AppealQuestionKind } from "#shared/utils/appeal-forms";
 import type { DropdownMenuItem } from "@nuxt/ui";
 import type { DeepReadonly } from "@sapphire/utilities";
 import type { AppealFormCreate, AppealFormErrorCode } from "~/composables/useAppealForms";
-import {
-	AppealCaseTypeNames,
-	AppealCaseTypes,
-	AppealFormLimits,
-	AppealQuestionKinds,
-	createAppealQuestion,
-	MaximumAppealQuestions,
-	type AppealCaseType,
-	type AppealForm,
-	type AppealQuestionKind,
-} from "#shared/utils/appeal-forms";
-import {
-	appealFormDraftToBody,
-	appealFormToDraft,
-	appealQuestionProblems,
-	createAppealFormDraft,
-	moveAppealQuestion,
-	nextAppealId,
-	validateAppealFormDraft,
-	type AppealFormDraft,
-} from "~/utils/appeal-form-draft";
-import {
-	APPEAL_CASE_TYPE_KEYS,
-	APPEAL_FORM_PROBLEM_KEYS,
-	APPEAL_QUESTION_KIND_HELP_KEYS,
-	APPEAL_QUESTION_KIND_ICONS,
-	APPEAL_QUESTION_KIND_NAME_KEYS,
-} from "~/utils/appeal-form-labels";
-import { usableServerEmojis } from "~/utils/emoji-picker";
+import type { AppealFormDraft } from "~/utils/appeal-form-draft";
 
 const open = defineModel<boolean>("open", { required: true });
 

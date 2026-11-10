@@ -191,15 +191,11 @@
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
-import {
-	ConfigurationFileName,
-	getNoticesDigest,
-	MaximumConfigurationFileSize,
-	SettingsSetWithTheBot,
-	type ConfigurationImportRequest,
-	type ConfigurationImportResponse,
-	type ConfigurationNotice,
-	type ConfigurationPreview,
+import type {
+	ConfigurationImportRequest,
+	ConfigurationImportResponse,
+	ConfigurationNotice,
+	ConfigurationPreview,
 } from "#shared/utils/settings-transfer";
 
 const { ts } = useI18n();

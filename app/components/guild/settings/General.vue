@@ -256,8 +256,6 @@ import {
 	type GeneralSettingsSchemaType as Schema,
 } from "#shared/schemas";
 import { ChannelType } from "discord-api-types/v10";
-import { guildLanguageOptions, mapLanguageKeysToNames } from "~/utils/guild-languages";
-import { DEFAULT_TIME_ZONE, timeInZone, timeZoneOptions } from "~/utils/time-zones";
 
 const { languages } = defineProps<{
 	languages: string[];

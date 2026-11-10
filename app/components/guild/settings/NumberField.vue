@@ -23,12 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-	clampSettingNumber,
-	SETTING_NUMBER_RANGES,
-	type NumberSettingKey,
-} from "#shared/utils/settings-choices";
-
+import type { NumberSettingKey } from "#shared/utils/settings-choices";
 const value = defineModel<number>({ required: true });
 
 const { name, label, description, unit } = defineProps<{

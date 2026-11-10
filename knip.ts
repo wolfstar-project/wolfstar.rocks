@@ -65,6 +65,10 @@ const config: KnipConfig = {
 
 				/** Transitive deps used directly but provided by parent packages */
 				"deepmerge",
+				/** Modules @nuxtjs/seo installs and configures */
+				"nuxt-site-config",
+				"@nuxtjs/robots",
+				"nuxt-skew-protection",
 				"@discordjs/rest",
 				"@sapphire/async-queue",
 				"workbox-*",

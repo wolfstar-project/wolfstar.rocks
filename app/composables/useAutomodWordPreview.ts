@@ -1,11 +1,3 @@
-import {
-	AutomodWordMatchTimeout,
-	compileAutomodWords,
-	findAutomodWordMatches,
-	MaximumAutomodWordPreviewLength,
-	type AutomodWordMatch,
-} from "#shared/utils/automod-word-pattern";
-
 export type AutomodWordPreviewStatus = "idle" | "running" | "done" | "timeout" | "error";
 
 /**

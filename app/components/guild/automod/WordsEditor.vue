@@ -162,18 +162,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-	AutoModerationRuleWordLength,
-	MaximumAutoModerationRuleListLength,
-} from "#shared/utils/automod-rules";
-import {
-	automodWordMode,
-	checkAutomodWord,
-	exportAutomodWords,
-	importAutomodWords,
-	type AutomodWordProblem,
-} from "~/utils/automod-words";
-
+import type { AutomodWordProblem } from "~/utils/automod-words";
 /** The words of the rule, as saved. */
 const words = defineModel<string[]>({ required: true });
 

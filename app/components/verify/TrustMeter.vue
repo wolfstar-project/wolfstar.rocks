@@ -35,8 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { JoinGuardTrustLevels, type JoinGuardTrust } from "#shared/utils/join-guard";
-
+import type { JoinGuardTrust } from "#shared/utils/join-guard";
 /**
  * The four trust levels of the checkpoint, from Not Trusted to Very Trusted,
  * filled up to the member's and with the server's minimum marked.

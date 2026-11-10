@@ -1,6 +1,3 @@
-import { snapshotOf, type Overwrite } from "#shared/utils/command-permissions";
-import { EVERY_COMMAND } from "#shared/utils/command-rules";
-
 interface RegisteredCommandEntry {
 	/** `null` when Discord has no such command here. */
 	id: string | null;

@@ -1,4 +1,3 @@
-import type { DashboardAuditEntry } from "#shared/types/audit-log";
 import type { MaybeRefOrGetter } from "vue";
 
 interface AuditLogResponse {

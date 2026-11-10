@@ -1,5 +1,28 @@
 {
 	"$schema": "../../schemas/components.schema.json",
+	"consent": {
+		"accept_all": "",
+		"accept_necessary": "",
+		"always_on": "",
+		"banner_description": "",
+		"banner_title": "",
+		"choice_description": "",
+		"choice_name": "",
+		"footer_link": "",
+		"manage": "",
+		"necessary_title": "",
+		"optional_title": "",
+		"privacy_link": "",
+		"save": "",
+		"session_replay_description": "",
+		"session_replay_name": "",
+		"settings_description": "",
+		"settings_title": "",
+		"sign_in_description": "",
+		"sign_in_name": "",
+		"version_description": "",
+		"version_name": ""
+	},
 	"discord": {
 		"channel_info": {
 			"back": "Torna al canale",

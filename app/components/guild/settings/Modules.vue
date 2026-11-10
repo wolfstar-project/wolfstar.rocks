@@ -148,8 +148,6 @@
 <script setup lang="ts">
 import type { GuildModuleDefinition, GuildModuleEntry } from "#shared/utils/guild-modules";
 import type { AutoChannelSlug } from "~/composables/useAutoChannels";
-import { GUILD_MODULES, MODULE_SWITCH_KEYS } from "#shared/utils/guild-modules";
-
 const { tc, ts } = useI18n();
 const { goToSection } = useDashboardNavigation();
 const { guildSettings } = useGuildSettings();

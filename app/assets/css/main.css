@@ -5,6 +5,8 @@
 @import "./utilities.css";
 @import "./view-transitions.css";
 @import "./color-themes.css";
+/* newt/ui tokens, for the components in `components/ui`. */
+@import "./newt.css";
 
 /* nuxt-og-image resolves custom properties from :root and @property only,
    and Tailwind registers this one in a layer the renderer does not read, so

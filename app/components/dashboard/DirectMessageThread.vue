@@ -8,10 +8,14 @@
 			:aria-busy="status === 'pending'"
 		>
 			<div class="flex flex-col items-start gap-1.5 pt-2 pb-5">
-				<UAvatar :src="thread.avatar" alt="" size="3xl" class="size-18" />
+				<Avatar size="lg" class="size-18">
+					<AvatarImage :src="thread.avatar" />
+				</Avatar>
 				<div class="mt-1.5 flex items-center gap-2">
 					<h2 class="text-[1.625rem] leading-tight font-bold">{{ thread.name }}</h2>
-					<UBadge :label="ts('dashboard.dm.bot_tag')" size="sm" class="font-bold" />
+					<MessageGroupBotTag :aria-label="ts('dashboard.dm.bot_tag')">
+						{{ ts("dashboard.dm.bot_tag") }}
+					</MessageGroupBotTag>
 				</div>
 				<p class="max-w-130 text-sm leading-normal text-toned">
 					{{ ts("dashboard.dm.intro", { name: thread.name }) }}
@@ -20,11 +24,11 @@
 			</div>
 
 			<div v-if="status === 'pending'" class="flex flex-col gap-5 py-2">
-				<div v-for="row in 3" :key="row" class="flex gap-3.5">
-					<USkeleton class="size-10 shrink-0 rounded-full" />
+				<div v-for="row in 3" :key="row" class="flex gap-4">
+					<Skeleton class="size-10 shrink-0 rounded-full" />
 					<div class="flex grow flex-col gap-2">
-						<USkeleton class="h-4 w-40" />
-						<USkeleton class="h-16 w-full max-w-130" />
+						<Skeleton class="h-4 w-40" />
+						<Skeleton class="h-16 w-full max-w-130" />
 					</div>
 				</div>
 			</div>
@@ -46,119 +50,100 @@
 			/>
 
 			<template v-for="group of days" v-else :key="group.day">
-				<USeparator
-					:label="formatDay(group.day)"
-					class="mt-2.5 mb-3.5"
-					:ui="{ label: 'font-mono text-[0.6875rem] font-semibold text-muted' }"
-				/>
-				<UChatMessage
-					v-for="item of group.news"
-					:id="item.id"
-					:key="item.id"
-					as="article"
-					role="assistant"
-					:parts="[]"
-					variant="naked"
-					side="left"
-					:avatar="{ src: thread.avatar, alt: '' }"
-					:ui="{ root: 'py-1.5', content: 'w-full min-w-0' }"
-				>
-					<template #actions>
-						<UButton
-							:to="item.url"
-							target="_blank"
-							icon="ic:round-open-in-new"
-							color="neutral"
-							variant="ghost"
-							size="sm"
-							:aria-label="ts('dashboard.dm.open_in_discord')"
-						/>
-					</template>
-					<template #content>
-						<p class="flex flex-wrap items-center gap-2">
-							<span class="text-[0.9375rem] font-semibold">{{ thread.name }}</span>
-							<UBadge
-								:label="ts('dashboard.dm.bot_tag')"
-								size="sm"
-								class="font-bold"
-							/>
-							<time :datetime="item.at" class="font-mono text-[0.6875rem] text-muted">
-								{{ formatActivityTime(item.at, now, timeLocale) }}
-							</time>
-						</p>
-						<DashboardDiscordMarkdown
-							v-if="item.content"
-							:source="item.content"
-							class="mt-0.5"
-						/>
-						<UCard
-							v-for="(embed, index) of item.embeds"
-							:key="index"
-							variant="subtle"
-							class="dm-embed"
-							:style="{
-								borderInlineStartColor: embed.color ?? 'var(--ui-border-accented)',
-							}"
-							:ui="{ body: 'p-3 sm:p-3.5' }"
-						>
-							<p v-if="embed.title" class="text-[0.9375rem] font-bold">
-								<ULink
-									v-if="embed.url"
-									:to="embed.url"
-									external
+				<Divider>{{ formatDay(group.day) }}</Divider>
+				<article v-for="item of group.news" :key="item.id" class="group/post">
+					<MessageGroup class="rounded-[4px] px-1">
+						<MessageGroupAvatar>
+							<Avatar>
+								<AvatarImage :src="thread.avatar" />
+							</Avatar>
+						</MessageGroupAvatar>
+						<MessageGroupBody class="min-w-0 grow">
+							<MessageGroupHeader>
+								<MessageGroupAuthor>{{ thread.name }}</MessageGroupAuthor>
+								<MessageGroupBotTag :aria-label="ts('dashboard.dm.bot_tag')">
+									{{ ts("dashboard.dm.bot_tag") }}
+								</MessageGroupBotTag>
+								<MessageGroupTime :datetime="item.at">
+									{{ formatActivityTime(item.at, now, timeLocale) }}
+								</MessageGroupTime>
+								<a
+									:href="item.url"
 									target="_blank"
-									class="text-primary hover:underline"
-									>{{ embed.title }}</ULink
+									rel="noopener noreferrer"
+									:class="buttonVariants({ variant: 'link', size: 'sm' })"
+									class="dm-open ms-auto"
 								>
-								<template v-else>{{ embed.title }}</template>
-							</p>
-							<DashboardDiscordMarkdown
-								v-if="embed.description"
-								:source="embed.description"
-								class="mt-1.5 text-toned"
-							/>
+									{{ ts("dashboard.dm.open_in_discord") }}
+								</a>
+							</MessageGroupHeader>
+							<MessageGroupContent v-if="item.content">
+								<DashboardDiscordMarkdown :source="item.content" />
+							</MessageGroupContent>
+							<Embed
+								v-for="(embed, index) of item.embeds"
+								:key="index"
+								:color="embed.color"
+								class="mt-1.5"
+							>
+								<EmbedTitle v-if="embed.title">
+									<a
+										v-if="embed.url"
+										:href="embed.url"
+										target="_blank"
+										rel="noopener noreferrer"
+										class="hover:underline"
+										>{{ embed.title }}</a
+									>
+									<template v-else>{{ embed.title }}</template>
+								</EmbedTitle>
+								<EmbedDescription v-if="embed.description">
+									<DashboardDiscordMarkdown :source="embed.description" />
+								</EmbedDescription>
+								<img
+									v-if="embed.image"
+									:src="embed.image.url"
+									:width="embed.image.width"
+									:height="embed.image.height"
+									alt=""
+									loading="lazy"
+									class="max-h-75 w-auto max-w-full rounded-[4px]"
+								/>
+							</Embed>
 							<img
-								v-if="embed.image"
-								:src="embed.image.url"
-								:width="embed.image.width"
-								:height="embed.image.height"
+								v-for="image of item.images"
+								:key="image.url"
+								:src="image.url"
+								:width="image.width"
+								:height="image.height"
 								alt=""
 								loading="lazy"
-								class="mt-3 max-h-75 w-auto max-w-full rounded-md"
+								class="mt-1.5 max-h-87.5 w-auto max-w-full rounded-md"
 							/>
-						</UCard>
-						<img
-							v-for="image of item.images"
-							:key="image.url"
-							:src="image.url"
-							:width="image.width"
-							:height="image.height"
-							alt=""
-							loading="lazy"
-							class="mt-1.5 max-h-87.5 w-auto max-w-full rounded-md"
-						/>
-						<ul
-							v-if="item.reactions.length > 0"
-							class="mt-1.5 flex flex-wrap gap-1.5"
-							:aria-label="ts('dashboard.dm.reactions')"
-						>
-							<li v-for="reaction of item.reactions" :key="reaction.name">
-								<UBadge color="neutral" variant="outline" size="lg" class="gap-1.5">
-									<img
-										v-if="reaction.image"
-										:src="reaction.image"
-										:alt="`:${reaction.name}:`"
-										width="16"
-										height="16"
-										class="size-4"
-									/>
-									<span v-else>{{ reaction.name }}</span>
-									<span class="font-semibold">{{ reaction.count }}</span>
-								</UBadge>
-							</li>
-						</ul>
-					</template>
-				</UChatMessage>
+							<MessageGroupReactions
+								v-if="item.reactions.length > 0"
+								role="group"
+								:aria-label="ts('dashboard.dm.reactions')"
+							>
+								<!-- Discord's counts, read-only: the dashboard cannot react as the reader. -->
+								<Reaction
+									v-for="reaction of item.reactions"
+									:key="reaction.name"
+									:emoji="reaction.image ? `:${reaction.name}:` : reaction.name"
+									:count="reaction.count"
+									:aria-label="
+										ts('dashboard.dm.reaction', {
+											emoji: reaction.name,
+											count: reaction.count,
+										})
+									"
+									disabled
+									class="disabled:cursor-default"
+								/>
+							</MessageGroupReactions>
+						</MessageGroupBody>
+					</MessageGroup>
+				</article>
 			</template>
 		</div>
 
@@ -176,9 +161,27 @@
 </template>
 
 <script setup lang="ts">
+import { Avatar, AvatarImage } from "~/components/ui/avatar";
+import { buttonVariants } from "~/components/ui/button";
+import { Divider } from "~/components/ui/divider";
+import { Embed, EmbedDescription, EmbedTitle } from "~/components/ui/embed";
+import {
+	MessageGroup,
+	MessageGroupAuthor,
+	MessageGroupAvatar,
+	MessageGroupBody,
+	MessageGroupBotTag,
+	MessageGroupContent,
+	MessageGroupHeader,
+	MessageGroupReactions,
+	MessageGroupTime,
+} from "~/components/ui/message-group";
+import { Reaction } from "~/components/ui/reaction";
+import { Skeleton } from "~/components/ui/skeleton";
+
 /**
- * The open thread of the Home: a bot's posts, read-only. Opening it marks
- * them read.
+ * The open thread of the Home: a bot's posts, read-only, drawn with newt/ui's
+ * Discord message parts. Opening it marks them read.
  */
 const { ts } = useI18n();
 const { locale, timeLocale } = useAppLocale();
@@ -216,7 +219,8 @@ watch(() => [thread.value?.id, thread.value?.news.length], openNewest, { flush: 
 	@apply min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6;
 }
 
-.dm-embed {
-	@apply mt-1.5 max-w-130 rounded-[4px] border-s-4;
+/* Shown on the post the pointer or focus is on, as Discord shows its actions. */
+.dm-open {
+	@apply opacity-0 group-hover/post:opacity-100 focus-visible:opacity-100;
 }
 </style>

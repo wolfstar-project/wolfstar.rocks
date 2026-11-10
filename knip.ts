@@ -49,7 +49,9 @@ const config: KnipConfig = {
 			},
 			/** The bot's repository (git submodule): only its contract is read, and its
 			 * own test and config files must not be picked up as entries of this app. */
-			ignore: ["vendor/**"],
+			// newt/ui components are copied whole from its registry, including the
+			// parts and variants this app does not use yet.
+			ignore: ["vendor/**", "app/components/ui/**"],
 			ignoreDependencies: [
 				"@iconify-json/*",
 				"@commitlint/cli",

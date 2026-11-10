@@ -46,10 +46,10 @@ describe("dashboard direct messages", () => {
 		const thread = await mountSuspended(DashboardDirectMessageThread);
 
 		await vi.waitFor(() =>
-			expect(thread.find('ul[aria-label="Reactions"]').exists()).toBe(true),
+			expect(thread.find('[role="group"][aria-label="Reactions"]').exists()).toBe(true),
 		);
-		expect(thread.get('ul[aria-label="Reactions"]').text()).toContain("🎉");
-		expect(thread.get('ul[aria-label="Reactions"]').text()).toContain("12");
+		expect(thread.get('[role="group"][aria-label="Reactions"]').text()).toContain("🎉");
+		expect(thread.get('[role="group"][aria-label="Reactions"]').text()).toContain("12");
 		thread.unmount();
 	});
 

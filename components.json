@@ -1,0 +1,22 @@
+{
+	"$schema": "https://newtui.dev/schema.json",
+	"style": "default",
+	"framework": "vue",
+	"bundler": "nuxt",
+	"typescript": true,
+	"tailwind": {
+		"config": "tailwind.config.ts",
+		"css": "app/assets/css/newt.css",
+		"baseColor": "neutral",
+		"cssVariables": true,
+		"prefix": ""
+	},
+	"aliases": {
+		"components": "@/components",
+		"utils": "@/lib/utils",
+		"ui": "@/components/ui",
+		"lib": "@/lib",
+		"composables": "@/composables"
+	},
+	"iconLibrary": "lucide"
+}

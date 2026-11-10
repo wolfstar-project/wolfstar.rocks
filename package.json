@@ -83,6 +83,8 @@
 		"@vueuse/integrations": "^15.0.0",
 		"@vueuse/nuxt": "^15.0.0",
 		"better-auth": "^1.7.18",
+		"class-variance-authority": "0.7.1",
+		"cn": "^0.5.2",
 		"cnfast": "^0.2.0",
 		"confusables": "^1.1.1",
 		"discord-component-embed": "1.1.0",

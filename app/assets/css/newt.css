@@ -1,0 +1,90 @@
+/*
+ * newt/ui design tokens, from the registry theme `npx newtui init` writes.
+ *
+ * Changed from what `init` writes, so the components in `components/ui` fit
+ * this app instead of restyling it:
+ * - Only the `newt-*` names reach `@theme`. The app keeps its own radii,
+ *   fonts and shadows, which `init` would replace for every page.
+ * - No second `@import "tailwindcss"`: `main.css` imports this file.
+ * - Dark values follow the app's `theme-dark` variant, not a bare `.dark`
+ *   class, and the light block is complete. `init` writes the dark values in
+ *   a second `:root` block, which overrides the light one on every page.
+ */
+@theme {
+	--color-newt-bg-base: var(--newt-bg-base);
+	--color-newt-bg-surface: var(--newt-bg-surface);
+	--color-newt-bg-elevated: var(--newt-bg-elevated);
+	--color-newt-bg-floating: var(--newt-bg-floating);
+	--color-newt-bg-input: var(--newt-bg-input);
+	--color-newt-bg-input-elevated: var(--newt-bg-input-elevated);
+	--color-newt-bg-hover: var(--newt-bg-hover);
+	--color-newt-bg-active: var(--newt-bg-active);
+	--color-newt-border: var(--newt-border);
+	--color-newt-text-primary: var(--newt-text-primary);
+	--color-newt-text-secondary: var(--newt-text-secondary);
+	--color-newt-text-muted: var(--newt-text-muted);
+	--color-newt-text-link: var(--newt-text-link);
+	--color-newt-brand: var(--newt-brand);
+	--color-newt-brand-hover: var(--newt-brand-hover);
+	--color-newt-brand-active: var(--newt-brand-active);
+	--color-newt-online: var(--newt-online);
+	--color-newt-idle: var(--newt-idle);
+	--color-newt-dnd: var(--newt-dnd);
+	--color-newt-offline: var(--newt-offline);
+	--color-newt-danger: var(--newt-danger);
+	--color-newt-danger-hover: var(--newt-danger-hover);
+	--color-newt-mention-text: var(--newt-mention-text);
+	--color-newt-mention-role: var(--newt-mention-role);
+	--ease-newt: var(--newt-ease);
+}
+
+:root {
+	--newt-bg-base: #e3e5e8;
+	--newt-bg-surface: #f2f3f5;
+	--newt-bg-elevated: #ffffff;
+	--newt-bg-floating: #ffffff;
+	--newt-bg-input: #ebedef;
+	--newt-bg-input-elevated: #ffffff;
+	--newt-bg-hover: rgba(6, 6, 7, 0.08);
+	--newt-bg-active: rgba(6, 6, 7, 0.12);
+	--newt-border: #d3d5d9;
+	--newt-text-primary: #060607;
+	--newt-text-secondary: #4e5058;
+	--newt-text-muted: #5c5e66;
+	--newt-text-link: #006ce7;
+	--newt-brand: #5865f2;
+	--newt-brand-hover: #4752c4;
+	--newt-brand-active: #3c45a5;
+	--newt-online: #248046;
+	--newt-idle: #b58500;
+	--newt-dnd: #d83a3e;
+	--newt-offline: #80848e;
+	--newt-danger: #d83a3e;
+	--newt-danger-hover: #a12828;
+	--newt-mention-text: #505cdc;
+	--newt-mention-role: #a06a00;
+	--newt-embed-max-width: 520px;
+	--newt-ease: cubic-bezier(0.3, 0.7, 0.4, 1);
+
+	@variant theme-dark {
+		--newt-bg-base: #1e1f22;
+		--newt-bg-surface: #2b2d31;
+		--newt-bg-elevated: #313338;
+		--newt-bg-floating: #1e1f22;
+		--newt-bg-input: #1e1f22;
+		--newt-bg-input-elevated: #383a40;
+		--newt-bg-hover: rgba(78, 80, 88, 0.4);
+		--newt-bg-active: rgba(78, 80, 88, 0.6);
+		--newt-border: #3f4147;
+		--newt-text-primary: #f2f3f5;
+		--newt-text-secondary: #b5bac1;
+		--newt-text-muted: #949ba4;
+		--newt-text-link: #00a8fc;
+		--newt-online: #23a55a;
+		--newt-idle: #f0b232;
+		--newt-dnd: #f23f42;
+		--newt-danger: #da373c;
+		--newt-mention-text: #b3baff;
+		--newt-mention-role: #f3b95f;
+	}
+}

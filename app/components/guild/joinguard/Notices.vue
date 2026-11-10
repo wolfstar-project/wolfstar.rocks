@@ -72,8 +72,6 @@
 </template>
 
 <script setup lang="ts">
-import { JoinGuardLimits } from "#shared/utils/join-guard";
-
 /**
  * Where the join guard logs what it does, and the direct message it sends to
  * whom a rule stops; staged with the save bar.

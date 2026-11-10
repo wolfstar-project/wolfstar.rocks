@@ -98,7 +98,6 @@
 </template>
 
 <script setup lang="ts">
-import type { BlogArticle } from "#shared/types/blog";
 import { kebabCase } from "scule";
 
 const { ts } = useI18n();

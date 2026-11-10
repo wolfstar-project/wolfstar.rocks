@@ -65,8 +65,6 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardAuditEntry } from "#shared/types/audit-log";
-
 /**
  * The button beside an activity row that changed several settings at once,
  * and the sheet it opens with every one of them, from the old value to the new.

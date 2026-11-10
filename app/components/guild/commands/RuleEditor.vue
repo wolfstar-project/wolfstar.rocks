@@ -231,28 +231,7 @@
 
 <script setup lang="ts">
 import type { RuleDiscordState } from "~/components/guild/commands/RuleDiscord.vue";
-import type { DisableableCommand } from "~/utils/command-settings";
-import {
-	MAXIMUM_COMMAND_OVERWRITES,
-	commandDiscordState,
-	commandRuleOverwrites,
-	overwritesEqual,
-	type Overwrite,
-} from "#shared/utils/command-permissions";
-import {
-	COMMAND_RULE_LISTS,
-	EVERY_COMMAND,
-	applyCommandRuleEdit,
-	countCommandRuleEntries,
-	resolveCommandRules,
-	withoutEveryone,
-	type CommandRule,
-	type CommandRuleList,
-	type CommandRuleSaved,
-	type CommandRuleState,
-} from "#shared/utils/command-rules";
 import { ChannelType } from "discord-api-types/v10";
-import { commandTargetLabel } from "~/utils/command-settings";
 
 const open = defineModel<boolean>("open", { required: true });
 

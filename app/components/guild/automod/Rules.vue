@@ -228,20 +228,6 @@
 </template>
 
 <script setup lang="ts">
-import type { AutomodRuleCreate, AutomodRuleErrorCode } from "~/composables/useAutomodRules";
-import type { AutomodRuleDefaults } from "~/utils/automod-rule-draft";
-import {
-	MaximumAutoModerationRules,
-	type AutoModerationRule,
-	type AutoModerationRuleType,
-} from "#shared/utils/automod-rules";
-import { AutoModerationSoftActionBits } from "#shared/utils/automod-rules";
-import {
-	AUTOMOD_HARD_ACTION_KEYS,
-	AUTOMOD_TYPE_ICONS,
-	AUTOMOD_TYPE_NAME_KEYS,
-} from "~/utils/automod-rule-labels";
-
 const { ts } = useI18n();
 const toast = useToast();
 const { guildData } = useGuildData();

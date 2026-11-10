@@ -106,8 +106,6 @@
 </template>
 
 <script setup lang="ts">
-import { resolveGuildIconSrc, selectDashboardRailGuilds } from "~/utils/guild-dashboard";
-
 const emit = defineEmits<{
 	/** The admin picked a server to manage. */
 	select: [guildId: string];

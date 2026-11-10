@@ -126,9 +126,6 @@
 </template>
 
 <script setup lang="ts">
-import type { FlattenedMember } from "#shared/types/discord";
-import { resolveGuildMembers } from "~/composables/useGuildMemberSearch";
-
 const {
 	ids,
 	guildId,

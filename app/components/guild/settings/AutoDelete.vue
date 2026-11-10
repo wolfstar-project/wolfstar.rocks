@@ -128,8 +128,6 @@
 </template>
 
 <script setup lang="ts">
-import { compactSeconds } from "~/utils/auto-channels";
-
 const { ts } = useI18n();
 const { locale } = useAppLocale();
 const headingId = useId();

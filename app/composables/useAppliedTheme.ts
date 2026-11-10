@@ -1,5 +1,3 @@
-import { colorThemeVars, customColorTheme, findColorTheme } from "~/utils/color-themes";
-
 /**
  * Puts the picked theme on `<html>`: `data-shade="dark"` for Discord's darker
  * dark theme, and a colour theme's id and CSS variables. The colour theme only

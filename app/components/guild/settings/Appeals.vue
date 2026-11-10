@@ -185,18 +185,6 @@
 </template>
 
 <script setup lang="ts">
-import type { NumberSettingKey } from "#shared/utils/settings-choices";
-import {
-	AppealThreadSetting,
-	ConfigurableAppealChannels,
-	ConfigurableAppealLimitToggles,
-	ConfigurableAppealNumbers,
-	ConfigurableAppealReviewToggles,
-	ConfigurableAppealRoles,
-	ConfigurableAppealSwitch,
-	ConfigurableAppealToggles,
-} from "#shared/utils/settingsDataEntries";
-
 const { ts } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
 const { guildData } = useGuildData();

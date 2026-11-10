@@ -26,7 +26,6 @@
 </template>
 
 <script lang="ts">
-import type { SlashCommandInvocation } from "#shared/types/chat-input-command";
 import type { VNode } from "vue";
 
 interface SlashCommandProps extends SlashCommandInvocation {}

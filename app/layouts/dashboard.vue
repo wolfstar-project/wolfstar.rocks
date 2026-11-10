@@ -125,12 +125,6 @@ import { objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { objectToTuples } from "@sapphire/utilities/objectToTuples";
 import { parseError } from "evlog";
-import {
-	parseGuildSettings,
-	classifyGuildError,
-	parseGuildSettingsSaveResponse,
-	guildSettingsSaveFailureToast,
-} from "~/utils/guild-dashboard";
 
 function isSafeUrl(url: unknown): url is string {
 	if (typeof url !== "string") return false;

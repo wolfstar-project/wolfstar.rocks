@@ -184,20 +184,7 @@
 </template>
 
 <script setup lang="ts">
-import type {
-	AppealDecision,
-	AppealQueueEntry,
-	AppealQueueFilter,
-	AppealStatus,
-} from "#shared/utils/appeal-queue";
-import type {
-	AppealDecisionErrorCode,
-	AppealDecisionResult,
-	AppealLateResult,
-} from "~/composables/useAppealQueue";
 import type { LogsPillTone } from "../logs/Pill.vue";
-import { AppealQueueFilters } from "#shared/utils/appeal-queue";
-import { avatarURL } from "#shared/utils/discord";
 
 /**
  * The appeals of the open server, newest first, with a filter for each status,

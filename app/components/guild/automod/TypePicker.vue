@@ -41,13 +41,6 @@
 </template>
 
 <script setup lang="ts">
-import {
-	AutoModerationRuleTypes,
-	getDefaultAutoModerationRuleOptions,
-	type AutoModerationRuleType,
-} from "#shared/utils/automod-rules";
-import { AUTOMOD_TYPE_DESCRIPTION_KEYS, AUTOMOD_TYPE_NAME_KEYS } from "~/utils/automod-rule-labels";
-
 const open = defineModel<boolean>("open", { required: true });
 
 const emit = defineEmits<{

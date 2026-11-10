@@ -24,15 +24,6 @@
 </template>
 
 <script setup lang="ts">
-import type { CommandRule, CommandRuleList } from "#shared/utils/command-rules";
-import {
-	COMMAND_RULE_LISTS,
-	isCommandRuleOnlyAllowed,
-	withoutEveryone,
-} from "#shared/utils/command-rules";
-import { resolveGuildMembers } from "~/composables/useGuildMemberSearch";
-import { commandTargetLabel } from "~/utils/command-settings";
-
 /** Rules as they stand, each under its target: what the dashboard does not edit. */
 const { rules } = defineProps<{ rules: readonly CommandRule[] }>();
 

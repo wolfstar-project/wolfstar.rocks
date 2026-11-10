@@ -21,8 +21,6 @@
 </template>
 
 <script setup lang="ts">
-import { twemojiUrl } from "~/utils/twemoji";
-
 /**
  * An emoji drawn as Twemoji, the picture Discord shows, not the one the system's
  * font has. Size it with a class (`size-6`). When the image cannot be loaded it

@@ -1,4 +1,3 @@
-import type { FlattenedMember } from "#shared/types/discord";
 import { MEMBER_SEARCH_LIMIT } from "#shared/schemas/member-search";
 
 /**

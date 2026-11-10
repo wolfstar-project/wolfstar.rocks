@@ -145,9 +145,6 @@
 </template>
 
 <script setup lang="ts">
-import type { ModerationLogEntry } from "#shared/types/moderation-log";
-import { discordMessageUrl, moderationCaseExpiresAt } from "#shared/utils/moderation-case";
-
 const { entry } = defineProps<{
 	entry: ModerationLogEntry;
 }>();

@@ -57,8 +57,6 @@
 </template>
 
 <script lang="ts">
-import type { StringSelectMenuOption } from "~/types/discord";
-
 interface StringSelectMenuOptionProps {
 	option: StringSelectMenuOption;
 	optionId: string;

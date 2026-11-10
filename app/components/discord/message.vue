@@ -53,7 +53,6 @@
 
 <script lang="ts">
 import type { VNode } from "vue";
-import type { MessageReply } from "~/types/discord";
 
 interface MessageProps {
 	name: ProfileName;

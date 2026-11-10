@@ -51,9 +51,6 @@
 </template>
 
 <script setup lang="ts">
-import type { AppealDecision } from "#shared/utils/appeal-queue";
-import { MaximumAppealDecisionReasonLength } from "#shared/utils/appeal-queue";
-
 const open = defineModel<boolean>("open", { required: true });
 
 const { decision, name, caseId } = defineProps<{

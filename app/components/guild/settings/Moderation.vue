@@ -189,21 +189,6 @@
 </template>
 
 <script setup lang="ts">
-import {
-	MODERATION_RESPONSE_PLACEHOLDERS,
-	SETTING_LIST_LIMITS,
-	SETTING_TEXT_LIMITS,
-} from "#shared/utils/settings-choices";
-import {
-	ConfigurableModerationChannels,
-	ConfigurableModerationResponses,
-	ConfigurableModerationNumbers,
-	ConfigurableModerationToggles,
-	ConfigurableReportChannels,
-	ConfigurableReportRoles,
-	ConfigurableReportToggles,
-	ModerationLockdownChannels,
-} from "#shared/utils/settingsDataEntries";
 import { ChannelType } from "discord-api-types/v10";
 
 const { ts } = useI18n();

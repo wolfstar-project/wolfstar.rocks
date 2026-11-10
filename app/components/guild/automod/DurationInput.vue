@@ -19,13 +19,6 @@
 </template>
 
 <script setup lang="ts">
-import {
-	DURATION_UNITS,
-	joinDuration,
-	splitDuration,
-	type DurationUnit,
-} from "~/utils/duration-units";
-
 /** The duration in milliseconds; `0` when the field is empty. */
 const milliseconds = defineModel<number>({ required: true });
 

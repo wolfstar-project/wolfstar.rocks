@@ -48,8 +48,6 @@
 </template>
 
 <script setup lang="ts">
-import type { ServerEmoji } from "~/utils/emoji-picker";
-
 /** What the form stores: an emoji, or `<:name:id>` for one of the server, empty for none. */
 const icon = defineModel<string>({ required: true });
 

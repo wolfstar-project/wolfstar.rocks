@@ -1,5 +1,3 @@
-import type { DisplayNameStyles } from "#shared/utils/discord-profile-styles";
-
 /**
  * The signed-in account as Discord shows it: avatar and the frame around it,
  * the nameplate behind the name, the display name and its style. Animated

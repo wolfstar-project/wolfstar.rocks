@@ -1,12 +1,4 @@
-import type {
-	JoinGuardRequestState,
-	JoinGuardVerifyBody,
-	JoinGuardVerifyGuestPage,
-	JoinGuardVerifyPage,
-	JoinGuardVerifyResponse,
-} from "#shared/utils/join-guard";
 import type { MaybeRefOrGetter } from "vue";
-import type { JoinGuardPolling, JoinGuardRequestOutcome } from "~/utils/join-guard-requests";
 
 /** Why the page refused to pass the member before writing anything for the bot. */
 export type JoinGuardPassRefusal =

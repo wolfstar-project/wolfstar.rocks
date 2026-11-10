@@ -251,15 +251,6 @@
 </template>
 
 <script setup lang="ts">
-import type { AppealFormProblem } from "~/utils/appeal-form-draft";
-import { AppealFormLimits, type AppealQuestion } from "#shared/utils/appeal-forms";
-import { nextAppealId } from "~/utils/appeal-form-draft";
-import {
-	APPEAL_FORM_PROBLEM_KEYS,
-	APPEAL_QUESTION_KIND_ICONS,
-	APPEAL_QUESTION_KIND_NAME_KEYS,
-} from "~/utils/appeal-form-labels";
-
 const question = defineModel<AppealQuestion>({ required: true });
 
 const {

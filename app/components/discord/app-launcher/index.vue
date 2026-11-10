@@ -607,13 +607,6 @@
 </template>
 
 <script lang="ts">
-import type {
-	DiscordAppLauncherEntry,
-	DiscordAppLauncherListView,
-	DiscordAppLauncherPromo,
-	DiscordAppLauncherSheetSnap,
-} from "~/types/discord";
-
 interface AppLauncherProps {
 	recents?: readonly DiscordAppLauncherEntry[];
 	serverApps?: readonly DiscordAppLauncherEntry[];

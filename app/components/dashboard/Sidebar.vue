@@ -161,14 +161,6 @@
 </template>
 
 <script setup lang="ts">
-import { countEnabledModules } from "#shared/utils/guild-modules";
-import {
-	DASHBOARD_NAV,
-	type DashboardNavGroup,
-	type DashboardNavItem,
-} from "~/utils/dashboard-nav";
-import { resolveGuildIconSrc } from "~/utils/guild-dashboard";
-
 const { floating = false } = defineProps<{
 	/**
 	 * Lays the account card over the server rail and the foot of the sidebar,

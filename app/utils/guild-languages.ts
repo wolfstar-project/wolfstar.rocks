@@ -1,5 +1,3 @@
-import { localeFlagSrc } from "~/utils/locale-flags";
-
 /** The names of the languages the bot speaks: the one its speakers use, then English. */
 const GUILD_LANGUAGE_NAMES: Record<string, [string] | [string, string]> = {
 	"ckb-IR": ["Kurdîya Navîn (Iran)", "Kurdish"],

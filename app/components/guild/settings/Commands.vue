@@ -19,14 +19,6 @@
 </template>
 
 <script setup lang="ts">
-import type { FlattenedCommand } from "#shared/types/discord";
-import {
-	EVERY_COMMAND,
-	getCommandRuleSpecificity,
-	isCommandGroupTarget,
-	readCommandRules,
-} from "#shared/utils/command-rules";
-
 const { commands } = defineProps<{ commands: FlattenedCommand[] }>();
 
 const { ts } = useI18n();

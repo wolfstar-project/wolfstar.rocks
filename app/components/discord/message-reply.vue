@@ -24,9 +24,7 @@
 	</div>
 </template>
 
-<script lang="ts">
-import type { MessageReplyComponentProps } from "~/types/discord";
-</script>
+<script lang="ts"></script>
 
 <script setup lang="ts">
 const { ts } = useI18n();

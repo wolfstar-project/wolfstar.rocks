@@ -94,9 +94,6 @@
 </template>
 
 <script setup lang="ts">
-import type { AppealQuestion } from "#shared/utils/appeal-forms";
-import { missingChoices } from "~/utils/my-appeals";
-
 /** The answer, the text typed or the values picked. */
 const answer = defineModel<string | string[]>({ default: "" });
 

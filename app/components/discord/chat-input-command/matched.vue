@@ -20,8 +20,6 @@
 </template>
 
 <script lang="ts">
-import type { SlashCommandInvocation } from "#shared/types/chat-input-command";
-
 interface SlashCommandSuggestionMatchedProps extends SlashCommandInvocation {
 	active?: boolean;
 }

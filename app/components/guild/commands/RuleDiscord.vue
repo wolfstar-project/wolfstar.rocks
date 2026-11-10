@@ -144,8 +144,6 @@ export type RuleDiscordState =
 </script>
 
 <script setup lang="ts">
-import { MAXIMUM_COMMAND_OVERWRITES } from "#shared/utils/command-permissions";
-
 /**
  * The "Also in Discord" part of a command's rule editor: whether the rules are
  * written as Discord's own permissions of the command too, and what stands in

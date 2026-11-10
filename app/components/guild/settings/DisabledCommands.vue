@@ -247,23 +247,10 @@
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
 import type { DisableCommands } from "#shared/types";
-import type { CommandRuleSaved } from "#shared/utils/command-rules";
 import type { FormErrorEvent } from "@nuxt/ui";
 import type * as v from "valibot";
-import type { DisableableCommand } from "~/utils/command-settings";
 // oxlint-disable-next-line typescript/consistent-type-imports
 import { disabledCommandsSchema } from "#shared/schemas";
-import { commandDiscordState } from "#shared/utils/command-permissions";
-import {
-	EVERY_COMMAND,
-	countCommandRuleEntries,
-	findCommandRule,
-	findMatchingCommandRules,
-	matchesCommandRuleTarget,
-	readCommandRules,
-	resolveCommandRules,
-} from "#shared/utils/command-rules";
-import { ConfigurableCommandChannels } from "#shared/utils/settingsDataEntries";
 
 const { commands } = defineProps<{
 	commands: FlattenedCommand[];

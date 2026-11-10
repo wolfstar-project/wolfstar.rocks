@@ -102,7 +102,6 @@
 <script lang="ts">
 import type { ShortcutsConfig } from "@nuxt/ui/composables";
 import type { CSSProperties } from "vue";
-import type { StringSelectMenuOption, StringSelectMenuPlacement } from "~/types/discord";
 
 interface StringSelectMenuProps {
 	options: StringSelectMenuOption[];

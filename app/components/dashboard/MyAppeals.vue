@@ -92,9 +92,6 @@
 </template>
 
 <script setup lang="ts">
-import type { MyAppealEntry, MyAppealFilter } from "#shared/utils/my-appeals";
-import { isInMyAppealFilter, MyAppealFilters } from "#shared/utils/my-appeals";
-
 const { guildId = null } = defineProps<{
 	/** The server the bot's link named, whose open case the dialog opens on. */
 	guildId?: string | null;

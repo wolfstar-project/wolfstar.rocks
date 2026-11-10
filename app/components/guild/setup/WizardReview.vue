@@ -28,11 +28,6 @@
 </template>
 
 <script setup lang="ts">
-import { GUILD_MODULES } from "#shared/utils/guild-modules";
-import { mapLanguageKeysToNames } from "~/utils/guild-languages";
-import { type SetupDraft, setupChannelFields } from "~/utils/guild-setup";
-import { channelOptions, roleOptions } from "~/utils/select-options";
-
 const draft = defineModel<SetupDraft>("draft", { required: true });
 const emit = defineEmits<{
 	/** The admin wants to change a row: the step that holds it. */

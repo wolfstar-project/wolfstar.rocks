@@ -1,14 +1,4 @@
-import type {
-	AppealDecision,
-	AppealFailureCode,
-	AppealQueueEntry,
-	AppealQueueFilter,
-	AppealQueueResponse,
-	AppealRequestOutcome,
-	AppealStatus,
-} from "#shared/utils/appeal-queue";
 import type { MaybeRefOrGetter } from "vue";
-import { AppealQueuePageSize, MaximumAppealQueueLimit } from "#shared/utils/appeal-queue";
 
 /** What the decision routes answer with when they refuse a request, besides what the bot writes when it cannot do one. */
 export type AppealDecisionErrorCode = AppealFailureCode | "unknown" | "invalid" | "generic";

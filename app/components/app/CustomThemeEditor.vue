@@ -160,15 +160,6 @@
 </template>
 
 <script setup lang="ts">
-import type { ColorThemeBase, CustomColorTheme } from "~/utils/color-themes";
-import { normalizeHex } from "~/utils/color-convert";
-import {
-	colorThemeGradient,
-	CUSTOM_THEME_MAX_COLORS,
-	customColorTheme,
-	DEFAULT_CUSTOM_THEME,
-} from "~/utils/color-themes";
-
 /**
  * Builds the custom colour theme, as Discord's "Customize your theme" does: a
  * dark or light base, up to five colours picked on a strip that shows the

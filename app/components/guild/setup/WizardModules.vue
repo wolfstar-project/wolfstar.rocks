@@ -35,9 +35,6 @@
 </template>
 
 <script setup lang="ts">
-import { GUILD_MODULES } from "#shared/utils/guild-modules";
-import { SETUP_RECOMMENDED_MODULES, type SetupDraft } from "~/utils/guild-setup";
-
 const draft = defineModel<SetupDraft>("draft", { required: true });
 
 const { ts } = useI18n();

@@ -1,5 +1,3 @@
-import type { ModerationLogEntry } from "#shared/types/moderation-log";
-import type { ModerationCaseStatus, ModerationTypeName } from "#shared/types/moderation-types";
 import type { LogsPillTone } from "~/components/guild/logs/Pill.vue";
 
 // Punishments that hold until someone lifts them when no duration was given.

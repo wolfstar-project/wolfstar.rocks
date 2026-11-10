@@ -5,9 +5,6 @@
 </template>
 
 <script setup lang="ts">
-import type { AutoModerationRuleType } from "#shared/utils/automod-rules";
-import { AUTOMOD_TYPE_ICONS, AUTOMOD_TYPE_TONES } from "~/utils/automod-rule-labels";
-
 /** The tinted tile that stands for a kind of rule. */
 const { type } = defineProps<{
 	type: AutoModerationRuleType;

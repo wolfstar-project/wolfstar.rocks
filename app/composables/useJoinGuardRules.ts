@@ -1,9 +1,3 @@
-import type {
-	JoinGuardRule,
-	JoinGuardRuleInput,
-	JoinGuardRuleProblem,
-	JoinGuardRulesResponse,
-} from "#shared/utils/join-guard";
 import type { MaybeRefOrGetter } from "vue";
 
 /** What the rule routes answer with when they refuse a request. */

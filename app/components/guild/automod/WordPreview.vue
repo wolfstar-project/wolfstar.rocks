@@ -75,9 +75,6 @@
 </template>
 
 <script setup lang="ts">
-import { MaximumAutomodWordPreviewLength } from "#shared/utils/automod-word-pattern";
-import { automodWordExamples } from "~/utils/automod-words";
-
 const { words, candidate = "" } = defineProps<{
 	/** The words the message is matched with: the list, and the word being written. */
 	words: readonly string[];

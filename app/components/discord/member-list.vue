@@ -91,8 +91,6 @@
 </template>
 
 <script lang="ts">
-import type { DiscordMemberListMember, DiscordMemberPresence } from "~/types/discord";
-
 interface MemberListProps {
 	online: readonly DiscordMemberListMember[];
 	offline: readonly DiscordMemberListMember[];

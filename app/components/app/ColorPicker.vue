@@ -42,8 +42,6 @@
 </template>
 
 <script setup lang="ts">
-import { type Hsv, hexToHsv, hsvToHex } from "~/utils/color-convert";
-
 /**
  * A colour picker, as Discord's theme editor has it: a square for the
  * saturation and the brightness over the hue, and a slider for the hue. The

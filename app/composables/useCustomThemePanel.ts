@@ -1,5 +1,3 @@
-import type { AppSettings } from "~/composables/useSettings";
-
 type ThemeSnapshot = Pick<AppSettings, "colorMode" | "colorTheme" | "customTheme" | "darkShade">;
 
 /**

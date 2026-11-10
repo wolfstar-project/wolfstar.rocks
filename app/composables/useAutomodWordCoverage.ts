@@ -1,5 +1,3 @@
-import { findCoveredAutomodWords } from "~/utils/automod-words";
-
 /** How long the check may run before it is dropped, so a word that backtracks badly cannot freeze the page. */
 const COVERAGE_TIMEOUT = 2000;
 

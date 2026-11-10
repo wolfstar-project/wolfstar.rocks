@@ -175,11 +175,6 @@
 </template>
 
 <script setup lang="ts">
-import {
-	JoinGuardCheckpointTimeoutHours,
-	JoinGuardMinimumTrustLevels,
-} from "#shared/utils/join-guard";
-
 /**
  * The checkpoint of the join guard: where a stopped member waits until they
  * pass the verification page. Its settings are staged with the save bar; the

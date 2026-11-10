@@ -153,9 +153,6 @@
 </template>
 
 <script setup lang="ts">
-import { resolveGuildIconSrc } from "~/utils/guild-dashboard";
-import { SETUP_STEPS } from "~/utils/guild-setup";
-
 /**
  * The first setup of a server, as a dialog: its modules, the channels and
  * roles WolfStar uses, and its language, one step at a time, ending in a review

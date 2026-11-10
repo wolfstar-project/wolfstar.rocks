@@ -53,7 +53,6 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardAuditEntry } from "#shared/types/audit-log";
 import type { TableColumn } from "@nuxt/ui";
 import type { LogsPillTone } from "./Pill.vue";
 

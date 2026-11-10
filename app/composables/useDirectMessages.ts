@@ -1,6 +1,3 @@
-import type { DirectMessageThread, DirectMessageThreadId } from "~/utils/direct-messages";
-import { DIRECT_MESSAGE_THREADS, unreadNews } from "~/utils/direct-messages";
-
 /** The pages of the Home: a bot's thread, or the member's own appeals. */
 export type HomePage = "thread" | "appeals";
 

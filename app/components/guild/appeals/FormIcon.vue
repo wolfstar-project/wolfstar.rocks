@@ -5,8 +5,6 @@
 </template>
 
 <script setup lang="ts">
-import { parseServerEmojiToken } from "~/utils/emoji-picker";
-
 /** The icon of a form: a custom emoji as its image, a Unicode one as Twemoji, or a stand-in. */
 const { icon } = defineProps<{
 	icon: string | null;

@@ -108,8 +108,6 @@
 </template>
 
 <script lang="ts">
-import type { DiscordMemberListMember } from "~/types/discord";
-
 type ChannelInfoTabId = "members" | "media" | "pins" | "threads" | "links" | "files";
 
 interface ChannelInfoTab {

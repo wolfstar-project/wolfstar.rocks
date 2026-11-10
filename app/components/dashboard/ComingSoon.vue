@@ -20,8 +20,6 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardNavItem } from "~/utils/dashboard-nav";
-
 const { item: announced } = defineProps<{
 	/** The announced section to describe; the open one when not given. */
 	item?: DashboardNavItem;

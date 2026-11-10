@@ -1,11 +1,4 @@
-import type {
-	AppealPage,
-	AppealSubmissionAnswers,
-	AppealSubmitError,
-	MyAppealsResponse,
-} from "#shared/utils/my-appeals";
 import type { MaybeRefOrGetter } from "vue";
-import { AppealSubmitErrors, BuiltInAppealFormPath } from "#shared/utils/my-appeals";
 
 /** Why a page or an appeal could not be had: the bot's refusals, `unavailable` when the bridge to it is off. */
 export type MyAppealErrorCode = AppealSubmitError | "unavailable";

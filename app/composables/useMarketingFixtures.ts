@@ -1,5 +1,3 @@
-import type { LoggingEventDetail, ShowcaseCommand, ShowcaseCommandPart } from "~/types/constants";
-
 /**
  * Translated views over the marketing mock fixtures in `~/utils/constants`.
  *

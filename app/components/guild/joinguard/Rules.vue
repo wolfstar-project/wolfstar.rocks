@@ -114,13 +114,6 @@
 </template>
 
 <script setup lang="ts">
-import type { JoinGuardRuleErrorCode } from "~/composables/useJoinGuardRules";
-import {
-	MaximumJoinGuardRules,
-	type JoinGuardRule,
-	type JoinGuardRuleInput,
-} from "#shared/utils/join-guard";
-
 /**
  * The guard rules of the open server. A rule is a row of its own, written at
  * once like an auto-moderation rule, not staged with the settings.

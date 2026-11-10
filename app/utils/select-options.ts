@@ -66,3 +66,48 @@ export function roleOptions(
 		.toSorted((a, b) => b.rawPosition - a.rawPosition)
 		.map((role) => ({ color: roleColor(role.color), label: role.name, value: role.id }));
 }
+
+/** A role offered next to the members, with what its row shows. */
+export interface MentionableRole {
+	id: string;
+	name: string;
+	/** CSS colour, or nothing for Discord's default. */
+	color?: string;
+	/** Given by an integration, such as a bot's own role. */
+	managed: boolean;
+	/** The guild's `@everyone`. */
+	everyone: boolean;
+}
+
+/** The roles a member and role select offers, highest first, as Discord lists them. */
+export function mentionableRoles(
+	guild: SelectGuild,
+	{ everyone = true }: { everyone?: boolean } = {},
+): MentionableRole[] {
+	return [...(guild?.roles ?? [])]
+		.filter((role) => everyone || role.id !== guild?.id)
+		.toSorted((a, b) => b.rawPosition - a.rawPosition)
+		.map((role) => ({
+			color: roleColor(role.color),
+			everyone: role.id === guild?.id,
+			id: role.id,
+			managed: role.managed,
+			name: role.name,
+		}));
+}
+
+/**
+ * The colour Discord draws a member's name in: the one of their highest role
+ * that has a colour, or nothing.
+ */
+export function memberColor(member: {
+	readonly roles: readonly { color: number; rawPosition: number }[];
+}): string | undefined {
+	const top = member.roles
+		.filter((role) => role.color !== 0)
+		.reduce<{ color: number; rawPosition: number } | undefined>(
+			(best, role) => (best && best.rawPosition >= role.rawPosition ? best : role),
+			undefined,
+		);
+	return top ? roleColor(top.color) : undefined;
+}

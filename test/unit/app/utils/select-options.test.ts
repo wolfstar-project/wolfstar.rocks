@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { channelOptions, roleOptions, withOptionNotes } from "~/utils/select-options";
+import {
+	channelOptions,
+	memberColor,
+	mentionableRoles,
+	roleOptions,
+	withOptionNotes,
+} from "~/utils/select-options";
 
 type Guild = NonNullable<Parameters<typeof channelOptions>[0]>;
 
@@ -120,5 +126,54 @@ describe("roleOptions", () => {
 			"#00ff00",
 			undefined,
 		]);
+	});
+});
+
+describe("mentionableRoles", () => {
+	const roles = [
+		{ color: 0, id: "100", managed: false, name: "@everyone", rawPosition: 0 },
+		{ color: 0x3BA55C, id: "2", managed: false, name: "Moderator", rawPosition: 2 },
+		{ color: 0, id: "3", managed: true, name: "WolfStar", rawPosition: 1 },
+	];
+
+	it("lists the roles highest first, @everyone included", () => {
+		expect(mentionableRoles(guild({ roles })).map((role) => role.name)).toStrictEqual([
+			"Moderator",
+			"WolfStar",
+			"@everyone",
+		]);
+	});
+
+	it("marks @everyone and the managed roles", () => {
+		const [moderator, bot, everyone] = mentionableRoles(guild({ roles }));
+		expect(moderator).toMatchObject({ color: "#3ba55c", everyone: false, managed: false });
+		expect(bot).toMatchObject({ color: undefined, managed: true });
+		expect(everyone).toMatchObject({ everyone: true });
+	});
+
+	it("leaves @everyone out when asked", () => {
+		expect(
+			mentionableRoles(guild({ roles }), { everyone: false }).map((role) => role.id),
+		).toStrictEqual(["2", "3"]);
+	});
+
+	it("is empty while the guild has not loaded", () => {
+		expect(mentionableRoles(undefined)).toStrictEqual([]);
+	});
+});
+
+describe("memberColor", () => {
+	it("takes the colour of the highest role that has one", () => {
+		const roles = [
+			{ color: 0xED4245, rawPosition: 3 },
+			{ color: 0, rawPosition: 9 },
+			{ color: 0x1ABC9C, rawPosition: 5 },
+		];
+		expect(memberColor({ roles })).toBe("#1abc9c");
+	});
+
+	it("has none when no role has a colour", () => {
+		expect(memberColor({ roles: [{ color: 0, rawPosition: 1 }] })).toBeUndefined();
+		expect(memberColor({ roles: [] })).toBeUndefined();
 	});
 });

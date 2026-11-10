@@ -14,6 +14,28 @@
 		"search_placeholder": "",
 		"type_to_search": ""
 	},
+	"guild_member_select": {
+		"app": "",
+		"every_member": "",
+		"group_by_id": "",
+		"group_members": "",
+		"group_roles": "",
+		"hint_members": "",
+		"hint_mentionables": "",
+		"label_member": "",
+		"label_mentionable": "",
+		"managed": "",
+		"pick_member": "",
+		"pick_members": "",
+		"pick_mentionable": "",
+		"pick_mentionables": "",
+		"role": "",
+		"search_mentionables": "",
+		"show": "",
+		"tab_all": "",
+		"tab_members": "",
+		"tab_roles": ""
+	},
 	"guild_settings": {
 		"access": {
 			"allow_note": "",

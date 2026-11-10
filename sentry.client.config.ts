@@ -1,6 +1,6 @@
 import * as Sentry from "@sentry/nuxt";
 import { isDevelopment } from "std-env";
-import { CONSENT_COOKIE_IDS, readConsentedIds } from "~/utils/consent";
+import { CONSENT_COOKIE_IDS, readConsentedIds, readDocumentCookie } from "~/utils/consent";
 import { isMarketingPath } from "~/utils/marketing-routes";
 import { startSessionReplay } from "~/utils/session-replay";
 
@@ -78,16 +78,20 @@ if (sentry.dsn) {
 	// Session Replay records the screen, so it waits for the visitor's consent
 	// (components/consent/). A choice made later in the visit starts it from there.
 	const { cookies, cookieNameIsConsentGiven, cookieNameCookiesEnabledIds } = cookieControl;
-	const consentedIds = readConsentedIds({
-		consentGiven: useCookie<string | null>(cookieNameIsConsentGiven).value,
-		enabledIds: useCookie<string | null>(cookieNameCookiesEnabledIds).value,
-		allIds: [...cookies.necessary, ...cookies.optional].map((cookie) => cookie.id),
-	});
+	const allowsReplay = () =>
+		readConsentedIds({
+			consentGiven: readDocumentCookie(cookieNameIsConsentGiven),
+			enabledIds: readDocumentCookie(cookieNameCookiesEnabledIds),
+			allIds: [...cookies.necessary, ...cookies.optional].map((cookie) => cookie.id),
+		}).includes(CONSENT_COOKIE_IDS.sessionReplay);
 
-	if (!marketingPage && consentedIds.includes(CONSENT_COOKIE_IDS.sessionReplay)) {
+	if (!marketingPage && allowsReplay()) {
 		// Defer it until the browser is idle so its sizable bundle never competes
-		// with first paint or hydration.
-		const loadReplay = () => startSessionReplay(location.pathname);
+		// with first paint or hydration. The choice is read again then: the visitor
+		// may have withdrawn it in the meantime.
+		const loadReplay = () => {
+			if (allowsReplay()) startSessionReplay(location.pathname);
+		};
 
 		if (typeof window.requestIdleCallback === "function") {
 			window.requestIdleCallback(loadReplay);

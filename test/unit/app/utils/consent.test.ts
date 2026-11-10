@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CONSENT_COOKIE_IDS, readConsentedIds } from "~/utils/consent";
+import { CONSENT_COOKIE_IDS, readConsentedIds, readDocumentCookie } from "~/utils/consent";
 
 const allIds = Object.values(CONSENT_COOKIE_IDS);
 
@@ -22,5 +22,22 @@ describe("readConsentedIds", () => {
 
 	it("ignores a declined choice", () => {
 		expect(readConsentedIds({ consentGiven: "0", enabledIds: undefined, allIds })).toEqual([]);
+	});
+});
+
+describe("readDocumentCookie", () => {
+	const cookies = "a=1; ncc_c=svcr; ncc_e=s~v~c~r; quoted=%22svcr%22";
+
+	it("reads a plain value", () => {
+		expect(readDocumentCookie("ncc_c", cookies)).toBe("svcr");
+		expect(readDocumentCookie("ncc_e", cookies)).toBe("s~v~c~r");
+	});
+
+	it("unwraps a JSON-quoted string", () => {
+		expect(readDocumentCookie("quoted", cookies)).toBe("svcr");
+	});
+
+	it("is undefined for a cookie that is not set", () => {
+		expect(readDocumentCookie("missing", cookies)).toBeUndefined();
 	});
 });

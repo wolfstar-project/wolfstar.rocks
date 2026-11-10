@@ -3,6 +3,8 @@ import { isMarketingPath } from "~/utils/marketing-routes";
 
 /** Whether the visitor currently allows session replay; a pending load checks it again. */
 let allowed = false;
+/** Whether a withdrawal stopped the replay, as opposed to a session the sample left out. */
+let stopped = false;
 let pending: Promise<void> | undefined;
 
 /**
@@ -13,7 +15,8 @@ let pending: Promise<void> | undefined;
  *
  * A replay stopped earlier in the visit, by a withdrawal, starts again. Its
  * `start()` skips the session sample rate, so a visitor who turns replay back
- * on is recorded for the rest of that visit.
+ * on is recorded for the rest of that visit. A session the sample left out
+ * stays out: the function runs on every route change.
  */
 export function startSessionReplay(pathname: string): void {
 	allowed = true;
@@ -21,7 +24,10 @@ export function startSessionReplay(pathname: string): void {
 
 	const replay = Sentry.getReplay();
 	if (replay) {
-		if (!replay.getReplayId()) replay.start();
+		if (stopped) {
+			stopped = false;
+			replay.start();
+		}
 		return;
 	}
 
@@ -44,5 +50,8 @@ export function startSessionReplay(pathname: string): void {
  */
 export function stopSessionReplay(): void {
 	allowed = false;
-	void Sentry.getReplay()?.stop();
+	const replay = Sentry.getReplay();
+	if (!replay || stopped) return;
+	stopped = true;
+	void replay.stop();
 }

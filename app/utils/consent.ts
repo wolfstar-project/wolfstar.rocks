@@ -42,3 +42,24 @@ export function readConsentedIds({
 	if (!consentGiven || consentGiven !== allIds.join("")) return [];
 	return enabledIds ? enabledIds.split(ENABLED_IDS_SEPARATOR) : [];
 }
+
+/**
+ * A cookie's value as the browser holds it now, outside any Nuxt context.
+ * `useCookie()` may have written a string JSON-quoted, which is unwrapped.
+ */
+export function readDocumentCookie(
+	name: string,
+	cookies = globalThis.document?.cookie ?? "",
+): string | undefined {
+	const prefix = `${name}=`;
+	const entry = cookies.split("; ").find((part) => part.startsWith(prefix));
+	if (entry === undefined) return undefined;
+	const value = decodeURIComponent(entry.slice(prefix.length));
+	if (!value.startsWith('"')) return value;
+	try {
+		const parsed: unknown = JSON.parse(value);
+		return typeof parsed === "string" ? parsed : value;
+	} catch {
+		return value;
+	}
+}

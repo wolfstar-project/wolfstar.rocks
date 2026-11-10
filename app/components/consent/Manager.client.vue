@@ -55,14 +55,16 @@ const titleId = useId();
 const route = useRoute();
 const { hasChosen, isSettingsOpen, isEnabled, acceptAll, acceptNecessary } = useCookieConsent();
 
-// A choice made during the visit takes effect at once; the one stored before the
-// page loaded is applied by sentry.client.config.ts.
+// A choice made during the visit takes effect at once, and a visitor who allowed
+// replay on a marketing page gets it once a client-side navigation reaches the
+// dashboard; sentry.client.config.ts applies the stored choice on a full load.
 watch(
-	() => hasChosen.value && isEnabled(CONSENT_COOKIE_IDS.sessionReplay),
-	(allowed) => {
-		if (allowed) startSessionReplay(route.path);
+	[() => hasChosen.value && isEnabled(CONSENT_COOKIE_IDS.sessionReplay), () => route.path],
+	([allowed, path]) => {
+		if (allowed) startSessionReplay(path);
 		else stopSessionReplay();
 	},
+	{ immediate: true },
 );
 </script>
 

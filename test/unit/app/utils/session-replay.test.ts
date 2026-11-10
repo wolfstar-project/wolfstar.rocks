@@ -45,6 +45,15 @@ describe("session replay", () => {
 		expect(replay.start).toHaveBeenCalledOnce();
 	});
 
+	it("leaves a session the sample left out unrecorded on later routes", () => {
+		const replay = createReplay(false);
+		sentry.getReplay.mockReturnValue(replay);
+
+		startSessionReplay(DASHBOARD);
+		startSessionReplay(`${DASHBOARD}/other`);
+		expect(replay.start).not.toHaveBeenCalled();
+	});
+
 	it("leaves a replay that is already recording alone", () => {
 		const replay = createReplay(true);
 		sentry.getReplay.mockReturnValue(replay);

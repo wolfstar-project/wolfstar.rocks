@@ -196,21 +196,7 @@ import type {
 	AutoChannelSlug,
 	AutoChannelTables,
 } from "~/composables/useAutoChannels";
-import {
-	AUTO_DELETE_ALLOW_KINDS,
-	AUTO_PURGE_FILTERS,
-	MAXIMUM_AUTO_MESSAGE_LENGTH,
-	MAXIMUM_AUTO_PURGE_VALUE_LENGTH,
-} from "#shared/utils/auto-channels";
-import {
-	autoChannelBody,
-	autoChannelDraftProblem,
-	autoPurgeValueKind,
-	emptyAutoChannelDraft,
-	spellSeconds,
-	type AutoChannelDraft,
-} from "~/utils/auto-channels";
-
+import type { AutoChannelDraft } from "~/utils/auto-channels";
 const open = defineModel<boolean>("open", { required: true });
 
 const {

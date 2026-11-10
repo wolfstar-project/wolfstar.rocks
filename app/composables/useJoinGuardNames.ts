@@ -1,5 +1,3 @@
-import type { JoinGuardNames } from "~/utils/join-guard";
-
 /**
  * The names of the open guild's roles and channels, for the words of the
  * Join Guard section: a rule's tags and sentence name them, not their ids.

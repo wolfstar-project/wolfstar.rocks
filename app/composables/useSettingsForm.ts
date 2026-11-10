@@ -2,14 +2,6 @@ import type { GuildData } from "#server/database";
 import type { ListSettingKey, SingleSettingKey, ToggleSettingKey } from "#shared/types";
 import type { FormErrorEvent } from "@nuxt/ui";
 import { buildSettingsFormSchema } from "#shared/schemas";
-import { setGuildDataChange } from "#shared/utils/guild-settings-map";
-import {
-	SETTING_CHOICES,
-	SETTING_NUMBER_RANGES,
-	type ChoiceSettingKey,
-	type NumberSettingKey,
-	type TextSettingKey,
-} from "#shared/utils/settings-choices";
 
 interface SettingsFormKeys<
 	One extends SingleSettingKey,

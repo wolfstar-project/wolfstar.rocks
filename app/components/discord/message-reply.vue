@@ -24,11 +24,10 @@
 	</div>
 </template>
 
-<script lang="ts">
-import type { MessageReplyComponentProps } from "~/types/discord";
-</script>
+<script lang="ts"></script>
 
 <script setup lang="ts">
+import type { MessageReplyComponentProps } from "~/types/discord";
 const { ts } = useI18n();
 const { kind, user, commandName, subcommand, subcommandGroup, content } =
 	defineProps<MessageReplyComponentProps>();

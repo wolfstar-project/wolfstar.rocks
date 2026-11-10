@@ -8,6 +8,7 @@ import {
 	isCloudflareBuild,
 	WORKER,
 } from "./config/cloudflare.ts";
+import { cookieControl } from "./config/cookie-control.ts";
 import { currentLocales, datetimeFormats, numberFormats } from "./config/i18n.ts";
 import { pwa } from "./config/pwa.ts";
 import { LOCALE_BUNDLES_DIR } from "./modules/i18n-locale-bundles.ts";
@@ -17,6 +18,10 @@ applyWorkerEnv();
 
 const runtimeConfig = generateRuntimeConfig();
 const isStorybook = process.env.STORYBOOK === "true" || process.env.VITEST_STORYBOOK === "true";
+// Opt-in: the module uploads the assets of past deploys through `wrangler`, which
+// only a build with Cloudflare credentials can run (see `skewProtection` below).
+const bundleSkewAssets =
+	isCloudflareBuild && isCI && process.env.SKEW_PROTECTION_BUNDLE_ASSETS === "true";
 
 const { resolve } = createResolver(import.meta.url);
 
@@ -40,7 +45,7 @@ export default defineNuxtConfig({
 		"@nuxt/fonts",
 		"@nuxt/a11y",
 		"@nuxtjs/seo",
-		"nuxt-skew-protection",
+		"@dargmuesli/nuxt-cookie-control",
 		"@vueuse/nuxt",
 		"@vite-pwa/nuxt",
 		"@nuxtjs/html-validator",
@@ -640,18 +645,27 @@ export default defineNuxtConfig({
 			// little memory the prerender swaps, and each render waits on the
 			// garbage collector far longer than it draws.
 			renderTimeout: Number(process.env.OG_IMAGE_RENDER_TIMEOUT) || undefined,
-			strict: !!process.env.NUXT_IMAGE_PROXY_SECRET,
-			secret: process.env.NUXT_IMAGE_PROXY_SECRET,
+			// Signing keys come from Nuxt's `appSecret` (NUXT_APP_SECRET); strict mode needs it set.
+			strict: !!process.env.NUXT_APP_SECRET,
 			// HMAC signing is sufficient; origin pinning blocks localhost e2e runs
 			// and adds no meaningful security on top of signed URLs.
 			restrictRuntimeImagesToOrigin: false,
 		},
 	},
 
+	// The visitor's cookie choice; the banner and the dialog are app/components/consent/.
+	cookieControl,
+
 	skewProtection: {
-		// The Workers build keeps it in a KV namespace of its own, the way the
-		// module's Cloudflare guide sets it up; elsewhere it is the module's fs cache.
-		storage: isCloudflareBuild
+		// Storybook's Nuxt build turns `experimental.appManifest` off, which the module
+		// refuses to run without; there is no deploy to skew against there anyway.
+		enabled: !isStorybook,
+		// A Workers build that keeps past assets stores them in a KV namespace of its
+		// own, the way the module's Cloudflare guide sets it up. The module reads and
+		// writes that namespace through `wrangler` at build time, so every other build
+		// (CI checks, local previews) uses the module's fs cache instead: it has no
+		// `wrangler` on the path and no Cloudflare credentials to give it.
+		storage: bundleSkewAssets
 			? { binding: CLOUDFLARE_BINDINGS.skewProtection, driver: "cloudflare-kv-binding" }
 			: {
 					base: "./.cache/skew-protection",
@@ -661,6 +675,11 @@ export default defineNuxtConfig({
 					driver: "fs-lite",
 				},
 		updateStrategy: "polling",
+		// @nuxtjs/seo hands the module `cookie: false` as its default, which drops the
+		// version cookie and with it the 409 that the wrapped API handlers send to a
+		// browser running an older build. These are the module's own cookie defaults
+		// (`__nkpv`, 7 days); `resolveSkewCookie()` mirrors them on the client.
+		cookie: { path: "/", sameSite: "lax", maxAge: 60 * 60 * 24 * 7 },
 		// Keep the persistent-previous-build-assets feature off: with storage now
 		// always configured, the module's default (true) runs augmentBuildMetadata,
 		// which rewrites _nuxt/builds/meta/<buildId>.json after the build but only
@@ -675,8 +694,7 @@ export default defineNuxtConfig({
 		// assets of each of the last releases outlasted the 30 minute limit, so it
 		// is opt-in with SKEW_PROTECTION_BUNDLE_ASSETS; without it the build keeps
 		// no past assets.
-		bundleAssets:
-			isCloudflareBuild && isCI && process.env.SKEW_PROTECTION_BUNDLE_ASSETS === "true",
+		bundleAssets: bundleSkewAssets,
 	},
 
 	// PWA configuration
@@ -823,7 +841,7 @@ export default defineNuxtConfig({
 	vitalizer: {
 		disablePrefetchLinks: true,
 		disablePreloadLinks: true,
-		disableStylesheets: "entry",
+		disableStylesheets: true,
 	},
 
 	i18n: {

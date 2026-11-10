@@ -152,7 +152,7 @@ export const pwa: ModuleOptions = {
 	// nuxt-skew-protection. Keep the PWA in "prompt" mode so a new service
 	// worker installs but waits instead of auto-reloading the page: "autoUpdate"
 	// would refresh users before they can act on the skew-protection prompt. The
-	// prompt's reload action activates the waiting worker (see Prompt.client.vue).
+	// prompt's reload action activates the waiting worker (see skew/Prompt.client.vue).
 	registerType: "prompt",
 	scope: "/",
 	srcDir: "../service-worker",

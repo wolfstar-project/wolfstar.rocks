@@ -1,6 +1,3 @@
-import type { ShowcaseCommand } from "~/types/constants";
-import { Colors } from "~/types/constants";
-
 /**
  * The rest of WolfStar V7's slash commands for the commands demo, after the
  * ones `showcaseCommands` scripts in `app/utils/constants.ts`: every leaf the

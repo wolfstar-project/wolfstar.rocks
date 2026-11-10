@@ -1,12 +1,4 @@
-import type {
-	JoinGuardModeratorRequestBody,
-	JoinGuardQueueEntry,
-	JoinGuardQueueFilter,
-	JoinGuardQueuePage,
-	JoinGuardRequestState,
-} from "#shared/utils/join-guard";
 import type { MaybeRefOrGetter } from "vue";
-import type { JoinGuardPolling, JoinGuardRequestOutcome } from "~/utils/join-guard-requests";
 
 /** Why the website could not even write a request, before the bot saw it. */
 export type JoinGuardRequestRefusal = "notWaiting" | "unknown" | "invalid" | "generic";

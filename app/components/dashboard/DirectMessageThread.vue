@@ -105,9 +105,6 @@
 
 <script setup lang="ts">
 import type { DirectMessageAction } from "~/utils/direct-messages";
-import { formatActivityTime } from "~/utils/audit-log";
-import { groupNewsByDay } from "~/utils/direct-messages";
-
 /**
  * The open thread of the Home: a bot's messages, read-only. Opening it marks
  * its messages read.
@@ -123,7 +120,7 @@ const readerName = computed(
 	() =>
 		discordUser.value?.global_name ?? discordUser.value?.username ?? authUser.value?.name ?? "",
 );
-const now = useNow({ interval: 60_000 });
+const now = useNow({ scheduler: (cb) => useIntervalFn(cb, 60_000) });
 const days = computed(() => groupNewsByDay(thread.value?.news ?? []));
 
 function formatDay(day: string): string {

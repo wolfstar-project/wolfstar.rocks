@@ -1,4 +1,4 @@
-import { isSnowflake } from "#shared/utils/snowflake";
+import { isSnowflake } from "#shared/utils/snowflake.ts";
 
 /**
  * Where and by whom a server lets one of the bot's commands run, or a group of

@@ -1,6 +1,5 @@
 import type { MaybeRefOrGetter } from "vue";
 import { toComponentEmbedJson } from "discord-component-embed";
-import { buildDiscordLinkCard, type DiscordLinkCardOptions } from "~/utils/discord-component-embed";
 
 /**
  * Registers the `discord:component-embed` script Discord's crawler reads to

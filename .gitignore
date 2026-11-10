@@ -38,6 +38,7 @@ test-results
 
 # Test coverage
 coverage/
+.vitest-reports/
 
 # Playwright
 playwright-report/

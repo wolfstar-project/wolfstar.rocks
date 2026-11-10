@@ -210,20 +210,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-	AutoModerationRuleWordLength,
-	MaximumAutoModerationRuleListLength,
-} from "#shared/utils/automod-rules";
-import {
-	AUTOMOD_WORD_MODES,
-	checkAutomodWord,
-	checkAutomodWordLetters,
-	composeAutomodWord,
-	parseAutomodWord,
-	type AutomodWordMode,
-	type AutomodWordProblem,
-} from "~/utils/automod-words";
-
+import type { AutomodWordMode, AutomodWordProblem } from "~/utils/automod-words";
 const { others, editing = null } = defineProps<{
 	/** The other words of the list, as saved. */
 	others: readonly string[];

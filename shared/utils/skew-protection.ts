@@ -30,7 +30,7 @@ export interface SkewCookieRuntimeConfig {
 	name?: string;
 	path?: string;
 	maxAge?: number;
-	sameSite?: string;
+	sameSite?: string | boolean;
 	domain?: string;
 	secure?: boolean;
 }
@@ -46,7 +46,9 @@ export interface ResolvedSkewCookie {
 	};
 }
 
-function toSameSite(value: string | undefined): SkewCookieSameSite {
+function toSameSite(value: string | boolean | undefined): SkewCookieSameSite {
+	// A bare `true` is cookie-es' spelling of `Strict`
+	if (value === true) return "strict";
 	return SAME_SITE_VALUES.find((candidate) => candidate === value) ?? "lax";
 }
 

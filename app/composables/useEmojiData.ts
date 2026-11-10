@@ -1,11 +1,3 @@
-import type { EmojiEntry } from "~/utils/emoji-picker";
-import {
-	groupEmojis,
-	undrawnHexcodes,
-	type RawEmoji,
-	type UnicodeEmojiCategory,
-} from "~/utils/emoji-picker";
-
 /**
  * The Unicode emoji of the picker, grouped. The data is a chunk of its own, a
  * few hundred kilobytes that only the picker reads, so it is fetched when the

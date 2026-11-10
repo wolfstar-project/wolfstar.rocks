@@ -91,8 +91,6 @@
 </template>
 
 <script lang="ts">
-import type { DiscordMemberListMember, DiscordMemberPresence } from "~/types/discord";
-
 interface MemberListProps {
 	online: readonly DiscordMemberListMember[];
 	offline: readonly DiscordMemberListMember[];
@@ -116,6 +114,7 @@ interface PinnedRoleGroup {
 </script>
 
 <script setup lang="ts">
+import type { DiscordMemberListMember, DiscordMemberPresence } from "~/types/discord";
 const { ts } = useI18n();
 const { online, offline, label, showRoles = false } = defineProps<MemberListProps>();
 

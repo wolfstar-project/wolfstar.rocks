@@ -1,12 +1,3 @@
-import {
-	ACTIVE_GUILD_STORAGE_KEY,
-	DEFAULT_DASHBOARD_SECTION,
-	isValidGuildId,
-	useActiveGuild,
-} from "~/composables/useActiveGuild";
-import { findDashboardNavItem } from "~/utils/dashboard-nav";
-import { resolveLegacyDashboardSection } from "~/utils/guild-dashboard";
-
 /**
  * Mirrors the active guild and section to localStorage so `/app` reopens where
  * the admin left off. `/app` renders client-only, so restoring synchronously

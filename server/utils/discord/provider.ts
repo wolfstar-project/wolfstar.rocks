@@ -1,5 +1,5 @@
 import type { DiscordOptions, DiscordProfile } from "better-auth/social-providers";
-import { COMMAND_PERMISSIONS_SCOPE } from "#shared/utils/command-permissions";
+import { COMMAND_PERMISSIONS_SCOPE } from "#shared/utils/command-permissions.ts";
 
 /** Discord OAuth credentials as they arrive from `runtimeConfig.discord`. */
 export interface DiscordProviderCredentials {

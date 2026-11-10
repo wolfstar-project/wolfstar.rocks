@@ -62,7 +62,6 @@
 
 <script setup lang="ts">
 import type { Roles } from "#shared/types";
-import { ConfigurableRoles, ConfigurableRoleToggles } from "#shared/utils/settingsDataEntries";
 
 const { ts } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();

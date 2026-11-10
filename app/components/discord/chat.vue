@@ -38,7 +38,6 @@
 
 <script lang="ts">
 import type { VNode } from "vue";
-import type { DiscordChatMessage } from "~/types/discord";
 
 interface ChatProps {
 	channelName: string;
@@ -55,6 +54,7 @@ interface ChatSlots {
 </script>
 
 <script setup lang="ts">
+import type { DiscordChatMessage } from "~/types/discord";
 const { ts } = useI18n();
 defineProps<ChatProps>();
 defineSlots<ChatSlots>();

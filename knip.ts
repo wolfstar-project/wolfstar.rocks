@@ -65,9 +65,12 @@ const config: KnipConfig = {
 
 				/** Transitive deps used directly but provided by parent packages */
 				"deepmerge",
+				/** Modules @nuxtjs/seo installs and configures */
+				"nuxt-site-config",
+				"@nuxtjs/robots",
+				"nuxt-skew-protection",
 				"@discordjs/rest",
 				"@sapphire/async-queue",
-				"nuxt-site-config",
 				"workbox-*",
 
 				/** Provides the tsgolint binary for oxlint's opt-in type-aware pass (`vp lint --type-aware`), not imported directly */

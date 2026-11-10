@@ -19,9 +19,12 @@ if (imageSource?.set) {
 			return getSource?.call(this) as string;
 		},
 		set(this: HTMLImageElement, value: string) {
-			if (!String(value).startsWith(TWEMOJI_ORIGIN)) return setSource.call(this, value);
+			if (!String(value).startsWith(TWEMOJI_ORIGIN)) {
+				setSource.call(this, value);
+				return;
+			}
 			this.dataset.src = value;
-			return setSource.call(this, PIXEL);
+			setSource.call(this, PIXEL);
 		},
 	});
 }

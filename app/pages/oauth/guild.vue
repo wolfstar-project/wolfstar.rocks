@@ -54,7 +54,6 @@
 
 <script setup lang="ts">
 import { promiseTimeout } from "@vueuse/core";
-import { normalizeGuildIdQuery } from "~/utils/normalize-guild-id-query";
 
 definePageMeta({
 	viewTransition: false,

@@ -127,8 +127,8 @@
 
 <script setup lang="ts">
 import type { FlattenedMember } from "#shared/types/discord";
+// Named, not auto-imported: knip only follows auto-imports of the `use*` composables.
 import { resolveGuildMembers } from "~/composables/useGuildMemberSearch";
-
 const {
 	ids,
 	guildId,

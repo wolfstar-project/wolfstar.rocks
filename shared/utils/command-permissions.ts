@@ -1,4 +1,4 @@
-import type { CommandRule } from "#shared/utils/command-rules";
+import type { CommandRule } from "#shared/utils/command-rules.ts";
 import {
 	APIApplicationCommandPermissionsConstant,
 	ApplicationCommandPermissionType,

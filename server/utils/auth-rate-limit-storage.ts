@@ -1,5 +1,5 @@
 import type { SecondaryStorage } from "better-auth";
-import { createKeyedLock } from "#server/utils/keyed-lock";
+import { createKeyedLock } from "#server/utils/keyed-lock.ts";
 
 interface AuthRateLimitCounter {
 	count: number;

@@ -1,6 +1,3 @@
-import type { AppealCaseTypeName, AppealQuestionKind } from "#shared/utils/appeal-forms";
-import type { AppealFormProblem } from "~/utils/appeal-form-draft";
-
 // Static key maps rather than keys built from the value: the i18n report can
 // only follow keys it can read in the source.
 

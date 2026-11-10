@@ -44,8 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { type SetupDraft, setupChannelFields } from "~/utils/guild-setup";
-
+import type { SetupDraft } from "~/utils/guild-setup";
 const draft = defineModel<SetupDraft>("draft", { required: true });
 
 const { ts } = useI18n();

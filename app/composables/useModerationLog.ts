@@ -1,5 +1,3 @@
-import type { ModerationLogEntry } from "#shared/types/moderation-log";
-import type { ModerationCaseStatus } from "#shared/types/moderation-types";
 import type { MaybeRefOrGetter } from "vue";
 
 interface ModerationLogResponse {

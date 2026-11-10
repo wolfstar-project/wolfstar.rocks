@@ -29,9 +29,6 @@
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
-import { countEnabledModules, MODULE_SWITCH_KEYS } from "#shared/utils/guild-modules";
-import { setGuildDataChange } from "#shared/utils/guild-settings-map";
-import { findDashboardNavItem } from "~/utils/dashboard-nav";
 
 const { ts } = useI18n();
 const { section } = useDashboardNavigation();

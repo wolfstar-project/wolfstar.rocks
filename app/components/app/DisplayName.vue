@@ -20,15 +20,6 @@
 
 <script setup lang="ts">
 import type { DisplayNameStyles } from "#shared/utils/discord-profile-styles";
-import {
-	DISPLAY_NAME_BACKGROUNDS,
-	DISPLAY_NAME_FONTS,
-	DisplayNameEffect,
-	displayNameStyleVars,
-	ensureContrast,
-	intToHex,
-} from "#shared/utils/discord-profile-styles";
-
 /**
  * A display name drawn with the font, effect and colours its owner picked on
  * Discord (`display_name_styles`), or as plain text when there are none.

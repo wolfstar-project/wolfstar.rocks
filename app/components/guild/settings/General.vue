@@ -256,8 +256,6 @@ import {
 	type GeneralSettingsSchemaType as Schema,
 } from "#shared/schemas";
 import { ChannelType } from "discord-api-types/v10";
-import { guildLanguageOptions, mapLanguageKeysToNames } from "~/utils/guild-languages";
-import { DEFAULT_TIME_ZONE, timeInZone, timeZoneOptions } from "~/utils/time-zones";
 
 const { languages } = defineProps<{
 	languages: string[];
@@ -460,7 +458,7 @@ const timeZoneValue = computed<string | string[] | null>({
 });
 
 // The clock of the chosen zone, so a wrong pick shows at a glance.
-const clock = useNow({ interval: 30_000 });
+const clock = useNow({ scheduler: (cb) => useIntervalFn(cb, 30_000) });
 const zoneTime = computed(() =>
 	timeInZone(state.timezone ?? DEFAULT_TIME_ZONE, clock.value, timeLocale.value),
 );

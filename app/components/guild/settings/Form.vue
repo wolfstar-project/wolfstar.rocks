@@ -15,7 +15,6 @@
 import type { GuildData } from "#server/database";
 import type { FormError, FormErrorEvent, FormSubmitEvent } from "@nuxt/ui";
 import type { GenericSchema } from "valibot";
-import { setGuildDataChange } from "#shared/utils/guild-settings-map";
 import { objectKeys } from "@sapphire/utilities/objectKeys";
 
 interface Props {

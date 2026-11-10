@@ -267,7 +267,6 @@
 <script setup lang="ts">
 import type { JoinGuardVerifyState } from "#shared/utils/join-guard";
 import type { JoinGuardPassRefusal } from "~/composables/useJoinGuardVerify";
-
 // A sign-in leaves for Discord and comes back here; the transition would
 // freeze the page mid-flight.
 definePageMeta({ viewTransition: false });

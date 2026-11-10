@@ -108,8 +108,6 @@
 </template>
 
 <script lang="ts">
-import type { DiscordMemberListMember } from "~/types/discord";
-
 type ChannelInfoTabId = "members" | "media" | "pins" | "threads" | "links" | "files";
 
 interface ChannelInfoTab {
@@ -140,6 +138,7 @@ interface ChannelInfoEmits {
 </script>
 
 <script setup lang="ts">
+import type { DiscordMemberListMember } from "~/types/discord";
 const { ts } = useI18n();
 const { name, online, offline, initialTab = "members" } = defineProps<ChannelInfoProps>();
 

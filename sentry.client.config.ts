@@ -1,9 +1,11 @@
 import * as Sentry from "@sentry/nuxt";
 import { isDevelopment } from "std-env";
+import { CONSENT_COOKIE_IDS, readConsentedIds, readDocumentCookie } from "~/utils/consent";
 import { isMarketingPath } from "~/utils/marketing-routes";
+import { startSessionReplay } from "~/utils/session-replay";
 
 const {
-	public: { sentry, environment },
+	public: { sentry, environment, cookieControl },
 } = useRuntimeConfig();
 
 const marketingPage = isMarketingPath(location.pathname);
@@ -18,9 +20,11 @@ if (sentry.dsn) {
 		// https://docs.sentry.io/platforms/javascript/guides/nuxt/configuration/options/#allowurls
 		allowUrls: [/https?:\/\/((cdn|www|beta|alpha)\.)?wolfstar\.rocks/],
 
-		// Adds request headers and IP for users, for more info visit:
-		// https://docs.sentry.io/platforms/javascript/guides/nuxt/configuration/options/#sendDefaultPii
-		sendDefaultPii: true,
+		// Sentry 11 replaced `sendDefaultPii` with `dataCollection`, whose defaults
+		// collect more. Keep what `sendDefaultPii: true` sent (user info, headers and
+		// cookies, which Sentry still scrubs of secrets) and nothing the SDK did not
+		// send before: no request or response bodies.
+		dataCollection: { userInfo: true, cookies: true, httpBodies: [] },
 
 		// Replay is loaded lazily below to keep its rrweb-based bundle out of the
 		// initial critical path. Browser tracing is skipped on marketing pages to
@@ -71,14 +75,22 @@ if (sentry.dsn) {
 		environment,
 	});
 
-	if (!marketingPage) {
-		// Defer Session Replay until the browser is idle so its sizable bundle never
-		// competes with first paint or hydration. Loaded from the Sentry CDN (allowed
-		// by CSP), which also keeps it out of the initial app bundle.
+	// Session Replay records the screen, so it waits for the visitor's consent
+	// (components/consent/). A choice made later in the visit starts it from there.
+	const { cookies, cookieNameIsConsentGiven, cookieNameCookiesEnabledIds } = cookieControl;
+	const allowsReplay = () =>
+		readConsentedIds({
+			consentGiven: readDocumentCookie(cookieNameIsConsentGiven),
+			enabledIds: readDocumentCookie(cookieNameCookiesEnabledIds),
+			allIds: [...cookies.necessary, ...cookies.optional].map((cookie) => cookie.id),
+		}).includes(CONSENT_COOKIE_IDS.sessionReplay);
+
+	if (!marketingPage && allowsReplay()) {
+		// Defer it until the browser is idle so its sizable bundle never competes
+		// with first paint or hydration. The choice is read again then: the visitor
+		// may have withdrawn it in the meantime.
 		const loadReplay = () => {
-			void Sentry.lazyLoadIntegration("replayIntegration").then((replayIntegration) => {
-				Sentry.addIntegration(replayIntegration());
-			});
+			if (allowsReplay()) startSessionReplay(location.pathname);
 		};
 
 		if (typeof window.requestIdleCallback === "function") {

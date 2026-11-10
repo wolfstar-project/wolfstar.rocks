@@ -55,7 +55,6 @@
 <script setup lang="ts">
 import type { JoinGuardQueueFilter } from "#shared/utils/join-guard";
 import type { JoinGuardActionResult } from "~/composables/useJoinGuardQueue";
-
 /**
  * The Join Guard section: the module's switch, its rules (written at once),
  * its checkpoint, allow list and notices (staged with the save bar), and the

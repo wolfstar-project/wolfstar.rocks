@@ -183,14 +183,6 @@
 import type { SingleSettingKey } from "#shared/types";
 // Explicit import: unimport misses identifiers referenced only inside nested
 // functions and the template, leaving them unbound in the compiled module.
-import {
-	ConfigurableIgnoreChannels,
-	ConfigurableLogChoices,
-	ConfigurableLogDeliveryToggles,
-	ConfigurableLoggingChannels,
-	ConfigurableLogToggles,
-} from "#shared/utils/settingsDataEntries";
-import { logChannelChanges, logSelectionState, toggleLogSelection } from "~/utils/log-channels";
 
 const { tc, ts } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();

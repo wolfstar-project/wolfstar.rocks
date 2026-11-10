@@ -45,12 +45,6 @@
 </template>
 
 <script setup lang="ts">
-import {
-	countEnabledModules,
-	GUILD_MODULES,
-	MODULE_SWITCH_KEYS,
-} from "#shared/utils/guild-modules";
-
 const { tc, ts } = useI18n();
 const { guildSettings } = useGuildSettings();
 const { goToSection } = useDashboardNavigation();

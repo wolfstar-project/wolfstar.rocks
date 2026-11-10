@@ -1,6 +1,3 @@
-import type { SetupDraft } from "~/utils/guild-setup";
-import { clampSetupStep, createSetupDraft, setupChanges } from "~/utils/guild-setup";
-
 export const GUILD_SETUP_STORAGE_KEY = "wolfstar-guild-setup";
 
 /** How an admin left the setup of a server, kept in this browser. */

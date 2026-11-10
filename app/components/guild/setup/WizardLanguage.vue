@@ -26,8 +26,6 @@
 
 <script setup lang="ts">
 import type { SetupDraft } from "~/utils/guild-setup";
-import { guildLanguageOptions } from "~/utils/guild-languages";
-
 const draft = defineModel<SetupDraft>("draft", { required: true });
 
 const { ts } = useI18n();

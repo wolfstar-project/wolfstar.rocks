@@ -13,7 +13,6 @@
 
 <script setup lang="ts">
 import type { SingleSettingKey } from "#shared/types";
-import { sharedLogChannel } from "~/utils/log-channels";
 
 /**
  * One channel picker for several logs at once. It shows their channel when

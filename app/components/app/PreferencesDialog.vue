@@ -82,7 +82,7 @@
 					<div class="mx-2 my-2.5 hidden h-px bg-(--home-border-subtle) md:block"></div>
 					<!-- Reporting a bug and leaving sit together, apart from the pages. -->
 					<div
-						v-if="reportSection || (account && !searchQuery.trim())"
+						v-if="reportSection || !searchQuery.trim()"
 						class="settings-nav-group settings-nav-group--actions"
 					>
 						<button
@@ -104,6 +104,20 @@
 								class="size-4.5 text-muted md:hidden"
 								aria-hidden="true"
 							/>
+						</button>
+						<!-- The dashboard has no footer: the cookie choice is changed or withdrawn from here. -->
+						<button
+							v-if="!searchQuery.trim()"
+							type="button"
+							class="settings-nav-item"
+							@click="openCookieSettings"
+						>
+							<UIcon
+								name="ic:round-cookie"
+								class="size-4.25 shrink-0"
+								aria-hidden="true"
+							/>
+							<span class="grow">{{ ts("consent.footer_link") }}</span>
 						</button>
 						<template v-if="account && !searchQuery.trim()">
 							<button
@@ -328,6 +342,13 @@ import type { PreferencesSection as SettingsSection } from "~/composables/usePre
 
 const { ts } = useI18n();
 const { isOpen: dialogOpen, requestedSection, variant } = usePreferencesDialog();
+const { isSettingsOpen: cookieSettingsOpen } = useCookieConsent();
+
+/** Hands over to the cookie dialog, which `ConsentManager` mounts next to this one. */
+function openCookieSettings() {
+	isOpen.value = false;
+	cookieSettingsOpen.value = true;
+}
 // The compact dialog of the other pages shares the open state; this one only
 // shows for its own variant.
 const isOpen = computed({

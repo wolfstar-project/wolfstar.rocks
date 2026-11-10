@@ -97,9 +97,9 @@ vi.mock("#server/utils/sentry-metrics", () => ({
 	withApiMetrics: vi.fn((_event: unknown, fn: () => unknown) => fn()),
 }));
 
-// The real module pulls in Nitro's storage runtime (`#nitro-internal-virtual/storage`),
-// which is unavailable outside a Nitro build; stub the outdated-client check so the
-// wrapper imports cleanly and stays a no-op for these cache/auth ordering tests.
+// `nuxt-skew-protection/server` reads the version cookie through `nuxt/server`, which only
+// resolves inside a Nuxt build; stub the outdated-client check so the wrapper imports
+// cleanly and stays a no-op for these cache/auth ordering tests.
 vi.mock("nuxt-skew-protection/server", () => ({
 	isClientOutdated: vi.fn(() => false),
 }));

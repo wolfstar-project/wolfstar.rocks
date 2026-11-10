@@ -122,8 +122,6 @@ import type {
 	AutoChannelTables,
 } from "~/composables/useAutoChannels";
 import type { autoChannelBody } from "~/utils/auto-channels";
-import { AUTO_CHANNEL_MAXIMUMS } from "~/utils/auto-channels";
-
 type Row = AutoChannelTables[Slug]["row"];
 
 const { slug } = defineProps<{

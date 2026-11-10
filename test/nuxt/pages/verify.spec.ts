@@ -1,6 +1,6 @@
 import type { JoinGuardVerifyPage } from "#shared/utils/join-guard";
 import type { JoinGuardPassState } from "~/composables/useJoinGuardVerify";
-import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
+import { mockNuxtImport, mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 import VerifyPage from "~/pages/verify/[guild].vue";
@@ -18,11 +18,16 @@ const mockError = ref<{ statusCode: number } | null>(null);
 const mockSignIn = vi.fn();
 const mockRefresh = vi.fn();
 
-mockNuxtImport("useSignIn", () => () => ({
-	error: ref(null),
-	execute: mockSignIn,
-	status: ref("idle"),
-}));
+// The page signs in with the module's own `useSignIn("social")`. Its client calls
+// the page's origin (`app/auth.config.ts`), and the endpoint answers without a
+// redirect so the test page stays put.
+registerEndpoint(`${window.location.origin}/api/auth/sign-in/social`, {
+	method: "POST",
+	handler: async (event) => {
+		mockSignIn(await event.web?.request?.json());
+		return { redirect: false };
+	},
+});
 
 mockNuxtImport("useJoinGuardVerify", () => () => ({
 	error: mockError,
@@ -96,13 +101,15 @@ describe("verification page", () => {
 		const signIn = wrapper.findAll("button").find((b) => b.text() === "Sign in with Discord");
 		await signIn!.trigger("click");
 
-		expect(mockSignIn).toHaveBeenCalledWith(
-			expect.objectContaining({
-				callbackURL: `/oauth/callback?next=${encodeURIComponent(`/verify/${GUILD_ID}`)}`,
-				provider: "discord",
-				// The server counts the linked accounts, so the first sign-in asks for them.
-				scopes: ["connections"],
-			}),
+		await vi.waitFor(() =>
+			expect(mockSignIn).toHaveBeenCalledWith(
+				expect.objectContaining({
+					callbackURL: `/oauth/callback?next=${encodeURIComponent(`/verify/${GUILD_ID}`)}`,
+					provider: "discord",
+					// The server counts the linked accounts, so the first sign-in asks for them.
+					scopes: ["connections"],
+				}),
+			),
 		);
 	});
 
@@ -132,8 +139,10 @@ describe("verification page", () => {
 
 		const link = wrapper.findAll("button").find((b) => b.text() === "Link your accounts");
 		await link!.trigger("click");
-		expect(mockSignIn).toHaveBeenCalledWith(
-			expect.objectContaining({ scopes: ["connections"] }),
+		await vi.waitFor(() =>
+			expect(mockSignIn).toHaveBeenCalledWith(
+				expect.objectContaining({ scopes: ["connections"] }),
+			),
 		);
 	});
 

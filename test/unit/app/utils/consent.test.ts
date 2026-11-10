@@ -37,6 +37,10 @@ describe("readDocumentCookie", () => {
 		expect(readDocumentCookie("quoted", cookies)).toBe("svcr");
 	});
 
+	it("is undefined for a value that does not decode", () => {
+		expect(readDocumentCookie("ncc_c", "ncc_c=%E0%A4%A")).toBeUndefined();
+	});
+
 	it("is undefined for a cookie that is not set", () => {
 		expect(readDocumentCookie("missing", cookies)).toBeUndefined();
 	});

@@ -45,7 +45,9 @@ export function readConsentedIds({
 
 /**
  * A cookie's value as the browser holds it now, outside any Nuxt context.
- * `useCookie()` may have written a string JSON-quoted, which is unwrapped.
+ * `useCookie()` may have written a string JSON-quoted, which is unwrapped. A
+ * value that does not decode counts as no cookie: it is read while Sentry
+ * starts, which a malformed cookie must not stop.
  */
 export function readDocumentCookie(
 	name: string,
@@ -54,7 +56,12 @@ export function readDocumentCookie(
 	const prefix = `${name}=`;
 	const entry = cookies.split("; ").find((part) => part.startsWith(prefix));
 	if (entry === undefined) return undefined;
-	const value = decodeURIComponent(entry.slice(prefix.length));
+	let value: string;
+	try {
+		value = decodeURIComponent(entry.slice(prefix.length));
+	} catch {
+		return undefined;
+	}
 	if (!value.startsWith('"')) return value;
 	try {
 		const parsed: unknown = JSON.parse(value);

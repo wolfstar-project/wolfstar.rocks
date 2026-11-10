@@ -16,11 +16,13 @@ jobs:
   sync-translations:
     permissions:
       contents: read # checkout repository; the sync branch is pushed with WOLFSTAR_TOKEN
-    uses: wolfstar-project/.github/.github/workflows/reusable-tolgee-sync.yml@0a65e26dd292ea41e046e8d75ae681918a0ec046 # main
+    uses: wolfstar-project/.github/.github/workflows/reusable-tolgee-sync.yml@1e10c89d2e921b7850d6a050312b54a3dfc9cf5e # main
     with:
       operating-system: ubuntu-24.04-arm
       # root only, no scripts
       install-command: pnpm install --frozen-lockfile --ignore-scripts --filter .
+      # keeps the Socket Firewall guard the old setup-vp install had (`sfw: true`)
+      socket-firewall: true
       # `tolgee:pull` runs the CLI (config: .tolgeerc.cjs) and then
       # scripts/tolgee-pull-remap.ts, which remaps Tolgee language tags
       # (cs, zh-Hans, …) onto the Nuxt locale directories under i18n/locales.

@@ -73,10 +73,16 @@ jobs:
           wrangler() { npx --yes wrangler@4.156.0 "$@"; }
           config=.output/server/wrangler.json
 
-          if ! status=$(wrangler deployments status -c "$config" --json 2>/dev/null); then
-            wrangler deploy -c "$config" --autoconfig=false
-            echo "rollout=full" >> "$GITHUB_OUTPUT"
-            exit 0
+          # Only a Worker that has never been deployed takes the plain deploy; any other
+          # failure (a token, the API) stops here rather than skip the approval.
+          if ! status=$(wrangler deployments status -c "$config" --json 2>"$RUNNER_TEMP/status.err"); then
+            if grep -qE 'has no deployments|\[code: 10007\]' "$RUNNER_TEMP/status.err"; then
+              wrangler deploy -c "$config" --autoconfig=false
+              echo "rollout=full" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            cat "$RUNNER_TEMP/status.err" >&2
+            exit 1
           fi
           previous=$(jq -r '.versions | max_by(.percentage) | .version_id' <<<"$status")
 

@@ -106,11 +106,30 @@
 							<li class="flex items-start gap-3 leading-relaxed">
 								<span class="shrink-0 text-base-content/50">&mdash;</span>
 								<span>
-									<span class="font-semibold">h3 (Session Cookie):</span> This is
-									our secure session cookie. It stores the OAuth access token when
-									you connect your Discord account. It is essential for
-									maintaining your authenticated session. This cookie is HTTP-only
-									and encrypted for your security.
+									<span class="font-semibold"
+										>Sign-in cookies (<code>wolfstar-session.*</code>):</span
+									>
+									Set only when you sign in with Discord.
+									<code>session_token</code> and <code>session_data</code> keep
+									you signed in for up to 7 days; <code>account_data</code> holds
+									your linked Discord account and the access token the dashboard
+									uses to act on your behalf; <code>oauth_state</code> lasts 10
+									minutes and ties the sign-in to the browser that started it.
+									They are HTTP-only and encrypted, and on HTTPS their names start
+									with <code>__Secure-</code>.
+								</span>
+							</li>
+							<li class="flex items-start gap-3 leading-relaxed">
+								<span class="shrink-0 text-base-content/50">&mdash;</span>
+								<span>
+									<span class="font-semibold"
+										>Version cookie (<code>__nkpv</code>):</span
+									>
+									Stores the identifier of the version of the site your browser is
+									running, for up to 7 days. When the site is updated while a tab
+									is open, it lets the server tell that the tab is older and ask
+									you to reload, instead of sending data the page cannot read. It
+									holds a build identifier only, with nothing about you.
 								</span>
 							</li>
 							<li class="flex items-start gap-3 leading-relaxed">
@@ -144,15 +163,43 @@
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Local storage
 						</h2>
-						<p class="leading-relaxed text-base-content">
-							In addition to session cookies, we use your browser's Local Storage to
-							save your display preferences. This allows us to remember the theme
-							(light/dark) and other settings you have selected, so you don't have to
-							reconfigure them on each visit. This information is purely functional,
-							stored only on your device, and contains no personal data nor is it used
-							to track you. We use it exclusively to improve your experience on our
-							website.
+						<p class="mb-4 leading-relaxed text-base-content">
+							In addition to cookies, the Site uses your browser's Local Storage. What
+							it keeps there stays on your device, is never sent to us as a cookie,
+							and is not used to track you:
 						</p>
+						<ul class="list-none space-y-3 pl-0 text-base-content">
+							<li class="flex items-start gap-3 leading-relaxed">
+								<span class="shrink-0 text-base-content/50">&mdash;</span>
+								<span>
+									<span class="font-semibold">Preferences:</span> your theme,
+									colors, language and motion settings, and the sections you
+									pinned or folded away in the dashboard sidebar.
+								</span>
+							</li>
+							<li class="flex items-start gap-3 leading-relaxed">
+								<span class="shrink-0 text-base-content/50">&mdash;</span>
+								<span>
+									<span class="font-semibold">Dashboard state:</span> the server
+									and section you had open, a server setup you have not finished,
+									the default values you chose for new auto-moderation rules, the
+									emoji you used last, and which direct messages you have read or
+									reacted to.
+								</span>
+							</li>
+							<li class="flex items-start gap-3 leading-relaxed">
+								<span class="shrink-0 text-base-content/50">&mdash;</span>
+								<span>
+									<span class="font-semibold">Dashboard cache:</span> the last
+									answers the dashboard received for the servers you manage, which
+									can include server, channel, role and member names and log
+									entries, so a reload shows them at once while they are asked for
+									again. An answer older than 24 hours is not shown, and the cache
+									is emptied when you sign out or another account signs in on this
+									browser.
+								</span>
+							</li>
+						</ul>
 					</section>
 
 					<!-- Managing Cookies -->
@@ -593,17 +640,25 @@
 							<li class="flex items-start gap-3 leading-relaxed">
 								<span class="shrink-0 text-base-content/50">&mdash;</span>
 								<span>
-									<span class="font-semibold">Session Cookies:</span>
-									Automatically deleted when you close your browser or after a
-									period of inactivity (typically 7 days).
+									<span class="font-semibold">Sign-in Cookies:</span> Expire 7
+									days after you sign in, or as soon as you sign out. The
+									<code>oauth_state</code> cookie expires after 10 minutes.
 								</span>
 							</li>
 							<li class="flex items-start gap-3 leading-relaxed">
 								<span class="shrink-0 text-base-content/50">&mdash;</span>
 								<span>
-									<span class="font-semibold">Local Storage Preferences:</span>
-									Remain on your device until you clear your browser data or
-									manually reset preferences.
+									<span class="font-semibold">Version Cookie:</span> Expires 7
+									days after it was last set.
+								</span>
+							</li>
+							<li class="flex items-start gap-3 leading-relaxed">
+								<span class="shrink-0 text-base-content/50">&mdash;</span>
+								<span>
+									<span class="font-semibold">Local Storage:</span> Remains on
+									your device until you clear your browser data. Cached dashboard
+									answers are no longer shown after 24 hours and are removed when
+									you sign out or another account signs in.
 								</span>
 							</li>
 							<li class="flex items-start gap-3 leading-relaxed">

@@ -2,13 +2,13 @@ import type { AppSession } from "#nuxt-better-auth";
 import type { EventHandler, EventHandlerRequest, H3Error, H3Event } from "h3";
 import type { CacheOptions } from "nitropack/types";
 import { createHash } from "node:crypto";
-import { isClientOutdated } from "#server/utils/client-version";
 import { createKeyedLock } from "#server/utils/keyed-lock";
 import { type PartialRateLimit, type RateLimit, RateLimitSchema } from "#shared/schemas";
 import { CLIENT_OUTDATED_HEADER } from "#shared/utils/skew-protection";
 import { cast, isObject } from "@sapphire/utilities";
 import * as Sentry from "@sentry/nuxt";
 import { useLogger, createError } from "evlog";
+import { type SkewProtectionEvent, isClientOutdated } from "nuxt-skew-protection/server";
 import { isDevelopment } from "std-env";
 import { ValiError, parse } from "valibot";
 import { instrumentCacheGet, instrumentCachePut, withApiMetrics } from "./sentry-metrics";
@@ -343,8 +343,11 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 	const log = useLogger(event, "wrappedHandler");
 
 	// Reject outdated browser sessions before auth, rate limiting, or cached
-	// resolution so stale clients never consume quota or receive new-server data
-	if (!isDevelopment && isClientOutdated(event)) {
+	// resolution so stale clients never consume quota or receive new-server data.
+	// The module types its event as `nuxt/server`'s portable one, but on this
+	// nitropack 2 build `nuxt/server` is backed by h3 v1's own helpers, which read
+	// the cookie straight off this event.
+	if (!isDevelopment && isClientOutdated(cast<SkewProtectionEvent>(event))) {
 		throwClientOutdated(event, log);
 	}
 

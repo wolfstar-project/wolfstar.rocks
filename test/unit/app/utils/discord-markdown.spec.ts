@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { parseDiscordInline, parseDiscordMarkdown } from "~/utils/discord-markdown";
+import {
+	discordPlainText,
+	parseDiscordInline,
+	parseDiscordMarkdown,
+} from "~/utils/discord-markdown";
 
 describe("parseDiscordInline", () => {
 	it("splits bold, code and mentions out of the text", () => {
@@ -36,5 +40,83 @@ describe("parseDiscordMarkdown", () => {
 			{ type: "code", content: "spam" },
 			{ type: "text", content: ": Spamming" },
 		]);
+	});
+});
+
+describe("parseDiscordInline in announcements", () => {
+	it("reads links, written or bare", () => {
+		expect(
+			parseDiscordInline(
+				"Read [the notes](https://wolfstar.rocks/changelog) or https://wolfstar.rocks.",
+			),
+		).toEqual([
+			{ type: "text", content: "Read " },
+			{ type: "link", content: "the notes", url: "https://wolfstar.rocks/changelog" },
+			{ type: "text", content: " or " },
+			{ type: "link", content: "https://wolfstar.rocks", url: "https://wolfstar.rocks" },
+			{ type: "text", content: "." },
+		]);
+	});
+
+	it("leaves a link to anything but the web as text", () => {
+		expect(parseDiscordInline("[click](javascript:alert(1))")).toEqual([
+			{ type: "text", content: "[click](javascript:alert(1))" },
+		]);
+	});
+
+	it("reads italic, underline and strike", () => {
+		expect(parseDiscordInline("*new* __now__ ~~old~~")).toEqual([
+			{ type: "italic", content: "new" },
+			{ type: "text", content: " " },
+			{ type: "underline", content: "now" },
+			{ type: "text", content: " " },
+			{ type: "strike", content: "old" },
+		]);
+	});
+
+	it("draws a server emoji from Discord's CDN", () => {
+		expect(
+			parseDiscordInline("<:wolf:123456789012345678> <a:spin:123456789012345679>"),
+		).toEqual([
+			{
+				type: "emoji",
+				name: "wolf",
+				url: "https://cdn.discordapp.com/emojis/123456789012345678.webp?size=48",
+			},
+			{ type: "text", content: " " },
+			{
+				type: "emoji",
+				name: "spin",
+				url: "https://cdn.discordapp.com/emojis/123456789012345679.gif?size=48",
+			},
+		]);
+	});
+
+	it("reads a timestamp, in Discord's default style when it names none", () => {
+		expect(parseDiscordInline("<t:1700000000:R> <t:1700000000>")).toEqual([
+			{ type: "time", at: "2023-11-14T22:13:20.000Z", style: "R" },
+			{ type: "text", content: " " },
+			{ type: "time", at: "2023-11-14T22:13:20.000Z", style: "f" },
+		]);
+	});
+});
+
+describe("parseDiscordMarkdown in announcements", () => {
+	it("reads every heading level and quotes", () => {
+		expect(
+			parseDiscordMarkdown("# Big\n## Middle\n### Small\n> Quoted").map(
+				(block) => block.type,
+			),
+		).toEqual(["title", "heading", "subheading", "quote"]);
+	});
+});
+
+describe("discordPlainText", () => {
+	it("reads the first line without its formatting", () => {
+		expect(
+			discordPlainText(
+				"\n## **v7** for <@Moderator> in <#rules> <:wolf:123456789012345678>\nmore",
+			),
+		).toBe("v7 for @Moderator in #rules :wolf:");
 	});
 });

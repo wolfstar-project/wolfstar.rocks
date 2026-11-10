@@ -16,7 +16,7 @@
 					:kind="part.kind === 'channel' ? 'channel' : 'mention'"
 					>{{ part.name }}</DiscordMention
 				>
-				<template v-else>
+				<template v-else-if="'content' in part">
 					<template
 						v-for="(piece, pieceIndex) in splitEmoji(part.content)"
 						:key="pieceIndex"
@@ -43,7 +43,10 @@ const BLOCK_TAGS: Record<DiscordBlockType, string> = {
 	bullet: "p",
 	heading: "h3",
 	line: "p",
+	quote: "p",
+	subheading: "h4",
 	subtext: "small",
+	title: "h3",
 };
 
 /** The emojis the replies use, drawn as Twemoji like Discord does. */

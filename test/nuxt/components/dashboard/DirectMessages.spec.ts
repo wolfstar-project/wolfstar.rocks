@@ -1,41 +1,74 @@
 import { DashboardDirectMessages, DashboardDirectMessageThread } from "#components";
 import { mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { DIRECT_MESSAGE_THREADS } from "~/utils/direct-messages";
+import { MOCK_ANNOUNCEMENTS } from "~~/test/mocks/announcements";
 
 registerEndpoint("/api/users/appeals", {
 	method: "GET",
 	handler: () => ({ entries: [], openCount: 2 }),
 });
 
-const wolfstarNews = DIRECT_MESSAGE_THREADS.find((thread) => thread.id === "wolfstar")?.news ?? [];
+let failing = false;
+registerEndpoint("/api/announcements/wolfstar", {
+	method: "GET",
+	handler: () => {
+		if (failing) throw new Error("Discord is down");
+		return MOCK_ANNOUNCEMENTS;
+	},
+});
 
 describe("dashboard direct messages", () => {
 	beforeEach(() => {
+		failing = false;
 		localStorage.removeItem("wolfstar-dm-read");
-		localStorage.removeItem("wolfstar-dm-reactions");
-		useDirectMessages().openThread("wolfstar");
+		clearNuxtState(["dm:posts", "dm:status"]);
+		// Set directly: `useDirectMessages()` would start reading the posts here,
+		// before a test decides how the endpoint answers.
+		useState("dm:thread").value = "wolfstar";
+		useState("home:page").value = "thread";
 	});
 
-	it("marks WolfStar's news read once its thread is open", async () => {
-		expect(useDirectMessages().totalUnread.value).toBe(wolfstarNews.length);
-
+	it("shows the announcement channel's posts and marks them read once open", async () => {
 		const thread = await mountSuspended(DashboardDirectMessageThread);
 
-		expect(thread.findAll("article")).toHaveLength(wolfstarNews.length);
-		expect(useDirectMessages().totalUnread.value).toBe(0);
+		await vi.waitFor(() => expect(thread.findAll("article")).toHaveLength(2));
+		expect(thread.text()).toContain("Dashboard v3");
+		expect(thread.text()).toContain("@Moderator");
+		expect(thread.text()).toContain("WolfStar v7");
+		expect(thread.get('a[href="https://wolfstar.rocks/changelog"]').attributes("target")).toBe(
+			"_blank",
+		);
+		await vi.waitFor(() => expect(useDirectMessages().totalUnread.value).toBe(0));
 		thread.unmount();
 	});
 
-	it("keeps the reader's own reaction", async () => {
+	it("shows Discord's count of each reaction", async () => {
 		const thread = await mountSuspended(DashboardDirectMessageThread);
-		const reaction = thread.get("button[aria-pressed]");
 
-		expect(reaction.attributes("aria-pressed")).toBe("false");
-		await reaction.trigger("click");
+		await vi.waitFor(() =>
+			expect(thread.find('ul[aria-label="Reactions"]').exists()).toBe(true),
+		);
+		expect(thread.get('ul[aria-label="Reactions"]').text()).toContain("🎉");
+		expect(thread.get('ul[aria-label="Reactions"]').text()).toContain("12");
+		thread.unmount();
+	});
 
-		expect(reaction.attributes("aria-pressed")).toBe("true");
-		expect(reaction.text()).toContain("1");
+	it("counts every post unread before the first visit", async () => {
+		const list = await mountSuspended(DashboardDirectMessages);
+
+		await vi.waitFor(() => expect(useDirectMessages().totalUnread.value).toBe(2));
+		expect(list.text()).toContain("WolfStar v7");
+		list.unmount();
+	});
+
+	it("offers to load the posts again when Discord fails", async () => {
+		failing = true;
+		const thread = await mountSuspended(DashboardDirectMessageThread);
+
+		await vi.waitFor(() => expect(thread.text()).toContain("couldn't be loaded"));
+		failing = false;
+		await thread.get("button").trigger("click");
+		await vi.waitFor(() => expect(thread.findAll("article")).toHaveLength(2));
 		thread.unmount();
 	});
 

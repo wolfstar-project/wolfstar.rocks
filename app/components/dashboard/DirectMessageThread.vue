@@ -5,18 +5,13 @@
 			role="log"
 			class="dm-log"
 			:aria-label="ts('dashboard.dm.log_aria', { name: thread.name })"
+			:aria-busy="status === 'pending'"
 		>
-			<div class="dm-intro">
-				<img
-					:src="thread.avatar"
-					alt=""
-					width="72"
-					height="72"
-					class="size-18 rounded-full"
-				/>
+			<div class="flex flex-col items-start gap-1.5 pt-2 pb-5">
+				<UAvatar :src="thread.avatar" alt="" size="3xl" class="size-18" />
 				<div class="mt-1.5 flex items-center gap-2">
 					<h2 class="text-[1.625rem] leading-tight font-bold">{{ thread.name }}</h2>
-					<DashboardBotTag />
+					<UBadge :label="ts('dashboard.dm.bot_tag')" size="sm" class="font-bold" />
 				</div>
 				<p class="max-w-130 text-sm leading-normal text-toned">
 					{{ ts("dashboard.dm.intro", { name: thread.name }) }}
@@ -24,103 +19,172 @@
 				</p>
 			</div>
 
-			<template v-for="group of days" :key="group.day">
-				<div role="separator" class="dm-day">
-					<span class="dm-day-line"></span>
-					<span class="dm-day-label">{{ formatDay(group.day) }}</span>
-					<span class="dm-day-line"></span>
+			<div v-if="status === 'pending'" class="flex flex-col gap-5 py-2">
+				<div v-for="row in 3" :key="row" class="flex gap-3.5">
+					<USkeleton class="size-10 shrink-0 rounded-full" />
+					<div class="flex grow flex-col gap-2">
+						<USkeleton class="h-4 w-40" />
+						<USkeleton class="h-16 w-full max-w-130" />
+					</div>
 				</div>
-				<article v-for="item of group.news" :key="item.id" class="dm-message">
-					<img
-						:src="thread.avatar"
-						alt=""
-						width="40"
-						height="40"
-						class="size-10 shrink-0 rounded-full"
-					/>
-					<div class="min-w-0 grow">
+			</div>
+
+			<UAlert
+				v-else-if="status === 'error'"
+				color="error"
+				variant="subtle"
+				icon="ic:round-error-outline"
+				:title="ts('dashboard.dm.load_failed')"
+				:actions="[
+					{
+						label: ts('common.retry'),
+						color: 'error',
+						variant: 'outline',
+						onClick: () => reload(thread!.id),
+					},
+				]"
+			/>
+
+			<template v-for="group of days" v-else :key="group.day">
+				<USeparator
+					:label="formatDay(group.day)"
+					class="mt-2.5 mb-3.5"
+					:ui="{ label: 'font-mono text-[0.6875rem] font-semibold text-muted' }"
+				/>
+				<UChatMessage
+					v-for="item of group.news"
+					:id="item.id"
+					:key="item.id"
+					as="article"
+					role="assistant"
+					:parts="[]"
+					variant="naked"
+					side="left"
+					:avatar="{ src: thread.avatar, alt: '' }"
+					:ui="{ root: 'group/post py-1.5', content: 'w-full min-w-0' }"
+				>
+					<template #content>
 						<p class="flex flex-wrap items-center gap-2">
 							<span class="text-[0.9375rem] font-semibold">{{ thread.name }}</span>
-							<DashboardBotTag />
+							<UBadge
+								:label="ts('dashboard.dm.bot_tag')"
+								size="sm"
+								class="font-bold"
+							/>
 							<time :datetime="item.at" class="font-mono text-[0.6875rem] text-muted">
 								{{ formatActivityTime(item.at, now, timeLocale) }}
 							</time>
-						</p>
-						<p v-if="item.textKey" class="mt-0.5 text-sm leading-normal">
-							{{ ts(item.textKey, { name: readerName }) }}
-						</p>
-						<div
-							v-if="item.embed"
-							class="dm-embed"
-							:class="`dm-embed--${item.embed.tone}`"
-						>
-							<p class="text-[0.9375rem] font-bold">{{ ts(item.embed.titleKey) }}</p>
-							<p class="mt-1.5 text-sm leading-normal text-toned">
-								{{ ts(item.embed.bodyKey) }}
-							</p>
 							<UButton
-								v-if="item.embed.action"
-								class="mt-3"
-								size="sm"
-								color="primary"
-								@click="run(item.embed.action.run)"
-							>
-								{{ ts(item.embed.action.labelKey) }}
-							</UButton>
-						</div>
-						<div v-if="item.reactions.length > 0" class="mt-1.5 flex flex-wrap gap-1.5">
-							<button
-								v-for="emoji of item.reactions"
-								:key="emoji"
-								type="button"
-								class="dm-reaction"
-								:class="{ 'dm-reaction--on': hasReacted(thread, item.id, emoji) }"
-								:aria-pressed="hasReacted(thread, item.id, emoji)"
-								:aria-label="ts('dashboard.dm.react', { emoji })"
-								@click="toggleReaction(thread, item.id, emoji)"
-							>
-								<span aria-hidden="true">{{ emoji }}</span>
-								<span
-									v-if="hasReacted(thread, item.id, emoji)"
-									class="font-semibold"
-									aria-hidden="true"
-									>1</span
+								:to="item.url"
+								target="_blank"
+								icon="ic:round-open-in-new"
+								color="neutral"
+								variant="ghost"
+								size="xs"
+								class="dm-open"
+								:aria-label="ts('dashboard.dm.open_in_discord')"
+							/>
+						</p>
+						<DashboardDiscordMarkdown
+							v-if="item.content"
+							:source="item.content"
+							class="mt-0.5"
+						/>
+						<UCard
+							v-for="(embed, index) of item.embeds"
+							:key="index"
+							variant="subtle"
+							class="dm-embed"
+							:style="{
+								borderInlineStartColor: embed.color ?? 'var(--ui-border-accented)',
+							}"
+							:ui="{ body: 'p-3 sm:p-3.5' }"
+						>
+							<p v-if="embed.title" class="text-[0.9375rem] font-bold">
+								<ULink
+									v-if="embed.url"
+									:to="embed.url"
+									external
+									target="_blank"
+									class="text-primary hover:underline"
+									>{{ embed.title }}</ULink
 								>
-							</button>
-						</div>
-					</div>
-				</article>
+								<template v-else>{{ embed.title }}</template>
+							</p>
+							<DashboardDiscordMarkdown
+								v-if="embed.description"
+								:source="embed.description"
+								class="mt-1.5 text-toned"
+							/>
+							<img
+								v-if="embed.image"
+								:src="embed.image.url"
+								:width="embed.image.width"
+								:height="embed.image.height"
+								alt=""
+								loading="lazy"
+								class="mt-3 max-h-75 w-auto max-w-full rounded-md"
+							/>
+						</UCard>
+						<img
+							v-for="image of item.images"
+							:key="image.url"
+							:src="image.url"
+							:width="image.width"
+							:height="image.height"
+							alt=""
+							loading="lazy"
+							class="mt-1.5 max-h-87.5 w-auto max-w-full rounded-md"
+						/>
+						<ul
+							v-if="item.reactions.length > 0"
+							class="mt-1.5 flex flex-wrap gap-1.5"
+							:aria-label="ts('dashboard.dm.reactions')"
+						>
+							<li v-for="reaction of item.reactions" :key="reaction.name">
+								<UBadge color="neutral" variant="outline" size="lg" class="gap-1.5">
+									<img
+										v-if="reaction.image"
+										:src="reaction.image"
+										:alt="`:${reaction.name}:`"
+										width="16"
+										height="16"
+										class="size-4"
+									/>
+									<span v-else>{{ reaction.name }}</span>
+									<span class="font-semibold">{{ reaction.count }}</span>
+								</UBadge>
+							</li>
+						</ul>
+					</template>
+				</UChatMessage>
 			</template>
 		</div>
 
-		<div class="dm-footer">
+		<div class="flex shrink-0 flex-col gap-2 px-4 pb-4">
 			<slot name="notice"></slot>
-			<p class="dm-no-reply">
-				<UIcon name="ic:round-warning" class="size-4 shrink-0" aria-hidden="true" />
-				<span>{{ ts("dashboard.dm.no_reply", { name: thread.name }) }}</span>
-			</p>
+			<UAlert
+				color="neutral"
+				variant="soft"
+				icon="ic:round-warning"
+				:description="ts('dashboard.dm.no_reply', { name: thread.name })"
+				:ui="{ description: 'text-sm text-muted' }"
+			/>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import type { DirectMessageAction } from "~/utils/direct-messages";
 /**
- * The open thread of the Home: a bot's messages, read-only. Opening it marks
- * its messages read.
+ * The open thread of the Home: a bot's posts, read-only. Opening it marks
+ * them read.
  */
 const { ts } = useI18n();
 const { locale, timeLocale } = useAppLocale();
-const { thread, markRead, hasReacted, toggleReaction } = useDirectMessages();
-const { user: authUser } = useUserSession();
-const { user: discordUser } = useUser(authUser);
-const { open: openPreferences } = usePreferencesDialog();
+const { thread, markRead, statusOf, reload } = useDirectMessages();
 
-const readerName = computed(
-	() =>
-		discordUser.value?.global_name ?? discordUser.value?.username ?? authUser.value?.name ?? "",
-);
 const now = useNow({ scheduler: (cb) => useIntervalFn(cb, 60_000) });
+const status = computed(() => (thread.value ? statusOf(thread.value) : "ready"));
 const days = computed(() => groupNewsByDay(thread.value?.news ?? []));
 
 function formatDay(day: string): string {
@@ -129,7 +193,7 @@ function formatDay(day: string): string {
 
 const log = useTemplateRef<HTMLElement>("log");
 
-// A thread opens on its newest message, as a conversation does, and is read.
+// A thread opens on its newest post, as a conversation does, and is read.
 function openNewest() {
 	if (!thread.value) return;
 	markRead(thread.value);
@@ -137,11 +201,7 @@ function openNewest() {
 }
 
 onMounted(openNewest);
-watch(thread, openNewest, { flush: "post" });
-
-function run(action: DirectMessageAction) {
-	if (action === "language-settings") openPreferences("language");
-}
+watch(() => [thread.value?.id, thread.value?.news.length], openNewest, { flush: "post" });
 </script>
 
 <style scoped>
@@ -155,75 +215,12 @@ function run(action: DirectMessageAction) {
 	@apply min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6;
 }
 
-.dm-intro {
-	@apply flex flex-col gap-1.5 pt-2 pb-5;
-}
-
-.dm-day {
-	@apply mt-2.5 mb-3.5 flex items-center gap-3;
-}
-
-.dm-day-line {
-	@apply h-px grow;
-	background-color: var(--home-border-subtle);
-}
-
-.dm-day-label {
-	@apply font-mono text-[0.6875rem] font-semibold;
-	color: var(--ui-text-muted);
-}
-
-.dm-message {
-	@apply flex gap-3.5 pt-1.5 pb-2.5;
+/* Shown on the post the pointer or focus is on, as Discord shows its actions. */
+.dm-open {
+	@apply opacity-0 transition-opacity group-hover/post:opacity-100 focus-visible:opacity-100;
 }
 
 .dm-embed {
-	@apply mt-1.5 max-w-130 rounded-[4px] border border-l-4 px-3.5 py-3;
-	background-color: var(--console-surface);
-	border-color: var(--home-border-subtle);
-}
-
-.dm-embed--primary {
-	border-left-color: var(--color-primary);
-}
-
-.dm-embed--success {
-	border-left-color: var(--color-success);
-}
-
-.dm-embed--info {
-	border-left-color: var(--color-info);
-}
-
-.dm-reaction {
-	@apply inline-flex h-6 cursor-pointer items-center gap-1.5 rounded-[6px] border px-2 text-[0.8125rem];
-	background-color: var(--console-surface);
-	border-color: var(--home-border-subtle);
-	color: var(--ui-text-highlighted);
-}
-
-.dm-reaction:hover {
-	border-color: var(--console-border);
-}
-
-.dm-reaction--on,
-.dm-reaction--on:hover {
-	border-color: var(--color-primary);
-	background-color: color-mix(in oklab, var(--color-primary) 16%, transparent);
-}
-
-.dm-reaction:focus-visible {
-	outline: 2px solid var(--color-primary);
-	outline-offset: 2px;
-}
-
-.dm-footer {
-	@apply flex shrink-0 flex-col gap-2 px-4 pb-4;
-}
-
-.dm-no-reply {
-	@apply flex min-h-11 cursor-not-allowed items-center gap-2.5 rounded-[8px] px-3.5 text-sm;
-	background-color: var(--console-input);
-	color: var(--ui-text-muted);
+	@apply mt-1.5 max-w-130 rounded-[4px] border-s-4;
 }
 </style>

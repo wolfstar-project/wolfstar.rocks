@@ -94,27 +94,22 @@ const { ts } = useI18n();
 const { threads, threadId, openThread, unreadCount, page, openAppeals, appealGuildId } =
 	useDirectMessages();
 const { openCount } = useMyAppeals({ guild: appealGuildId });
-const { user: authUser } = useUserSession();
-const { user: discordUser } = useUser(authUser);
-const readerName = computed(
-	() =>
-		discordUser.value?.global_name ?? discordUser.value?.username ?? authUser.value?.name ?? "",
-);
 
 const query = ref("");
 
-// Each thread previews its newest message, as Discord lists DMs.
+// Each thread previews its newest post, as Discord lists DMs.
 const rows = computed(() => {
 	const search = query.value.trim().toLocaleLowerCase();
-	return threads
+	return threads.value
 		.filter((thread) => thread.name.toLocaleLowerCase().includes(search))
 		.map((thread) => {
 			const newest = thread.news.at(-1);
-			const preview = newest?.textKey
-				? ts(newest.textKey, { name: readerName.value })
-				: newest?.embed
-					? ts(newest.embed.titleKey)
-					: ts("dashboard.dm.no_messages");
+			const preview =
+				(newest &&
+					(discordPlainText(newest.content) ||
+						newest.embeds[0]?.title ||
+						discordPlainText(newest.embeds[0]?.description ?? ""))) ||
+				ts("dashboard.dm.no_messages");
 			return {
 				avatar: thread.avatar,
 				current: page.value === "thread" && thread.id === threadId.value,

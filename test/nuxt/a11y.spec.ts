@@ -114,6 +114,7 @@ import { createError } from "h3";
 import { describe, expect, it, vi } from "vitest";
 import VerifyPage from "~/pages/verify/[guild].vue";
 import { moderationActivityChart } from "~/utils/moderation-activity";
+import { MOCK_ANNOUNCEMENTS } from "~~/test/mocks/announcements";
 import { MOCK_AUDIT_ENTRY, MOCK_MODERATION_ENTRY } from "~~/test/mocks/auditLogs";
 import { createMockOauthFlattenedGuild, createMockRole } from "~~/test/mocks/discord";
 import { createMockGuildData } from "~~/test/mocks/guildData";
@@ -768,8 +769,15 @@ describe("component accessibility audits", () => {
 	});
 
 	describe("DashboardDirectMessageThread", () => {
-		it("should have no accessibility violations", async () => {
+		it("should have no accessibility violations with posts", async () => {
+			registerEndpoint("/api/announcements/wolfstar", {
+				method: "GET",
+				handler: () => MOCK_ANNOUNCEMENTS,
+			});
+			clearNuxtState(["dm:posts", "dm:status"]);
+			useDirectMessages().openThread("wolfstar");
 			const component = await mountSuspended(DashboardDirectMessageThread);
+			await vi.waitFor(() => expect(component.findAll("article")).toHaveLength(2));
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
 		});

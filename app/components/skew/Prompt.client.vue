@@ -1,5 +1,5 @@
 <template>
-	<div v-if="visible" style="view-transition-name: pwa-update-prompt">
+	<div v-if="visible" style="view-transition-name: skew-update-prompt">
 		<div class="update-notice" role="status">
 			<UIcon
 				name="ic:round-auto-awesome"

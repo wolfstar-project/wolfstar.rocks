@@ -108,7 +108,7 @@
 		<ClientOnly>
 			<DeferredMount>
 				<div v-show="!isReadyToSubmit" class="dashboard-update-prompt">
-					<LazyPwaPrompt />
+					<LazySkewPrompt />
 				</div>
 			</DeferredMount>
 		</ClientOnly>

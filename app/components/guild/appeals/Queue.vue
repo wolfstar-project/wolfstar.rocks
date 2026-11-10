@@ -184,6 +184,17 @@
 </template>
 
 <script setup lang="ts">
+import type {
+	AppealDecision,
+	AppealQueueEntry,
+	AppealQueueFilter,
+	AppealStatus,
+} from "#shared/utils/appeal-queue";
+import type {
+	AppealDecisionErrorCode,
+	AppealDecisionResult,
+	AppealLateResult,
+} from "~/composables/useAppealQueue";
 import type { LogsPillTone } from "../logs/Pill.vue";
 
 /**

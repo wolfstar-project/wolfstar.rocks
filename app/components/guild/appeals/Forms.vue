@@ -222,6 +222,8 @@
 </template>
 
 <script setup lang="ts">
+import type { AppealForm } from "#shared/utils/appeal-forms";
+import type { AppealFormCreate, AppealFormErrorCode } from "~/composables/useAppealForms";
 const { ts, tc } = useI18n();
 const toast = useToast();
 const { guildData } = useGuildData();

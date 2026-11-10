@@ -71,6 +71,7 @@ interface StringSelectMenuOptionEmits {
 </script>
 
 <script setup lang="ts">
+import type { StringSelectMenuOption } from "~/types/discord";
 const CURRENTLY_AT_PREFIX = "Currently at:";
 
 const { option, active = false, selected = false } = defineProps<StringSelectMenuOptionProps>();

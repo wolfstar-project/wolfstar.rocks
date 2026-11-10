@@ -230,7 +230,15 @@
 </template>
 
 <script setup lang="ts">
+import type { Overwrite } from "#shared/utils/command-permissions";
+import type {
+	CommandRule,
+	CommandRuleList,
+	CommandRuleSaved,
+	CommandRuleState,
+} from "#shared/utils/command-rules";
 import type { RuleDiscordState } from "~/components/guild/commands/RuleDiscord.vue";
+import type { DisableableCommand } from "~/utils/command-settings";
 import { ChannelType } from "discord-api-types/v10";
 
 const open = defineModel<boolean>("open", { required: true });

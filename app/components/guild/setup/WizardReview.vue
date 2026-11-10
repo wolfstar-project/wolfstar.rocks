@@ -28,6 +28,7 @@
 </template>
 
 <script setup lang="ts">
+import type { SetupDraft } from "~/utils/guild-setup";
 const draft = defineModel<SetupDraft>("draft", { required: true });
 const emit = defineEmits<{
 	/** The admin wants to change a row: the step that holds it. */

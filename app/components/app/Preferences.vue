@@ -286,6 +286,7 @@
 
 <script setup lang="ts">
 import type { SelectOption } from "~/components/select/Base.vue";
+import type { BaseThemeChoice, LogDensity, TimeFormat } from "~/composables/useSettings";
 
 type PreferenceGroup = "appearance" | "accessibility" | "language";
 

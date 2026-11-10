@@ -23,6 +23,7 @@
 
 <script setup lang="ts" generic="Key extends ChoiceSettingKey">
 import type { GuildData } from "#server/database";
+import type { ChoiceSettingKey } from "#shared/utils/settings-choices";
 
 const value = defineModel<GuildData[Key]>({ required: true });
 

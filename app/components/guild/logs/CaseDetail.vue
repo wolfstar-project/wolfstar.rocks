@@ -145,6 +145,7 @@
 </template>
 
 <script setup lang="ts">
+import type { ModerationLogEntry } from "#shared/types/moderation-log";
 const { entry } = defineProps<{
 	entry: ModerationLogEntry;
 }>();

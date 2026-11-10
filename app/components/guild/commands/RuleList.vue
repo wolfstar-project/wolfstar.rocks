@@ -24,6 +24,7 @@
 </template>
 
 <script setup lang="ts">
+import type { CommandRule, CommandRuleList } from "#shared/utils/command-rules";
 // Named, not auto-imported: knip only follows auto-imports of the `use*` composables.
 import { resolveGuildMembers } from "~/composables/useGuildMemberSearch";
 /** Rules as they stand, each under its target: what the dashboard does not edit. */

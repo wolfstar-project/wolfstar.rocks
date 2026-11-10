@@ -204,6 +204,12 @@
 </template>
 
 <script setup lang="ts">
+import type { JoinGuardQueueEntry, JoinGuardQueueFilter } from "#shared/utils/join-guard";
+import type {
+	JoinGuardActionResult,
+	JoinGuardRowRequest,
+	useJoinGuardQueue,
+} from "~/composables/useJoinGuardQueue";
 /**
  * The members the guard stopped this week, by where they are now, with Verify
  * and Kick for the ones who wait. Neither is done here: each writes a request

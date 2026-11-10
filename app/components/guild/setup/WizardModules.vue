@@ -35,6 +35,7 @@
 </template>
 
 <script setup lang="ts">
+import type { SetupDraft } from "~/utils/guild-setup";
 const draft = defineModel<SetupDraft>("draft", { required: true });
 
 const { ts } = useI18n();

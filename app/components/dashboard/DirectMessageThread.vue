@@ -104,6 +104,7 @@
 </template>
 
 <script setup lang="ts">
+import type { DirectMessageAction } from "~/utils/direct-messages";
 /**
  * The open thread of the Home: a bot's messages, read-only. Opening it marks
  * its messages read.

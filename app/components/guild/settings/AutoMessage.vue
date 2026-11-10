@@ -84,6 +84,7 @@
 </template>
 
 <script setup lang="ts">
+import type { AutoMessage } from "#shared/utils/auto-channels";
 const { ts } = useI18n();
 const toast = useToast();
 const { locale, timeLocale } = useAppLocale();

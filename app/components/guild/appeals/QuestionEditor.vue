@@ -251,6 +251,8 @@
 </template>
 
 <script setup lang="ts">
+import type { AppealQuestion } from "#shared/utils/appeal-forms";
+import type { AppealFormProblem } from "~/utils/appeal-form-draft";
 const question = defineModel<AppealQuestion>({ required: true });
 
 const {

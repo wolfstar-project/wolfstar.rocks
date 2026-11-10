@@ -109,6 +109,8 @@
 </template>
 
 <script setup lang="ts">
+import type { ModerationLogEntry } from "#shared/types/moderation-log";
+import type { ModerationCaseStatus } from "#shared/types/moderation-types";
 import type { TableColumn } from "@nuxt/ui";
 
 const { warningsOnly } = defineProps<{

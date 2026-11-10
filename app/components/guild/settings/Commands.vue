@@ -19,6 +19,7 @@
 </template>
 
 <script setup lang="ts">
+import type { FlattenedCommand } from "#shared/types/discord";
 const { commands } = defineProps<{ commands: FlattenedCommand[] }>();
 
 const { ts } = useI18n();

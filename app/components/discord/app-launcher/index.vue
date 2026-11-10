@@ -656,6 +656,12 @@ interface SheetDragSession {
 </script>
 
 <script setup lang="ts">
+import type {
+	DiscordAppLauncherEntry,
+	DiscordAppLauncherListView,
+	DiscordAppLauncherPromo,
+	DiscordAppLauncherSheetSnap,
+} from "~/types/discord";
 const { ts } = useI18n();
 const {
 	recents = discordAppLauncherRecents,

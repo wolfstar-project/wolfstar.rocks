@@ -161,6 +161,7 @@
 </template>
 
 <script setup lang="ts">
+import type { DashboardNavGroup, DashboardNavItem } from "~/utils/dashboard-nav";
 const { floating = false } = defineProps<{
 	/**
 	 * Lays the account card over the server rail and the foot of the sidebar,

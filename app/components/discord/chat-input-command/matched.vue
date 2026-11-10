@@ -30,6 +30,7 @@ interface SlashCommandSuggestionMatchedEmits {
 </script>
 
 <script setup lang="ts">
+import type { SlashCommandInvocation } from "#shared/types/chat-input-command";
 const { ts } = useI18n();
 const {
 	active = false,

@@ -116,6 +116,7 @@ interface StringSelectMenuEmits {
 </script>
 
 <script setup lang="ts">
+import type { StringSelectMenuOption, StringSelectMenuPlacement } from "~/types/discord";
 const { ts } = useI18n();
 const { options, placeholder, disabled = false, ariaLabel } = defineProps<StringSelectMenuProps>();
 

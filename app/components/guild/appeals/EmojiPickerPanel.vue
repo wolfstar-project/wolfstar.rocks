@@ -217,6 +217,13 @@
 </template>
 
 <script setup lang="ts">
+import type {
+	EmojiCategory,
+	EmojiEntry,
+	EmojiSkinTone,
+	ServerEmoji,
+	UnicodeEmojiCategory,
+} from "~/utils/emoji-picker";
 const {
 	servers = [],
 	current = null,

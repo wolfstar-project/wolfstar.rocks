@@ -68,6 +68,7 @@ interface MessageSlots {
 </script>
 
 <script setup lang="ts">
+import type { MessageReply } from "~/types/discord";
 const { ts } = useI18n();
 defineSlots<MessageSlots>();
 

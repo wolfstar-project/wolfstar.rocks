@@ -209,8 +209,11 @@
 </template>
 
 <script setup lang="ts">
+import type { AppealCaseType, AppealForm, AppealQuestionKind } from "#shared/utils/appeal-forms";
 import type { DropdownMenuItem } from "@nuxt/ui";
 import type { DeepReadonly } from "@sapphire/utilities";
+import type { AppealFormCreate, AppealFormErrorCode } from "~/composables/useAppealForms";
+import type { AppealFormDraft } from "~/utils/appeal-form-draft";
 
 const open = defineModel<boolean>("open", { required: true });
 

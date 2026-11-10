@@ -36,6 +36,7 @@ interface SlashCommandSlots {
 </script>
 
 <script setup lang="ts">
+import type { SlashCommandInvocation } from "#shared/types/chat-input-command";
 const { ts } = useI18n();
 defineSlots<SlashCommandSlots>();
 

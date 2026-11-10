@@ -58,6 +58,7 @@
 </template>
 
 <script setup lang="ts">
+import type { JoinGuardRule } from "#shared/utils/join-guard";
 /**
  * A guard rule as the section lists it: its name and switch, what the account
  * must have, what WolfStar does, toned by how hard it is, and its buttons.

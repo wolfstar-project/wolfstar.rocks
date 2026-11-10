@@ -111,6 +111,7 @@
 </template>
 
 <script setup lang="ts">
+import type { ReportStatus } from "#shared/types/report";
 import type { LogsPillTone } from "./logs/Pill.vue";
 import { REPORT_STATUSES } from "#shared/schemas";
 

@@ -78,6 +78,7 @@
 </template>
 
 <script setup lang="ts">
+import type { DirectMessageThreadId } from "~/utils/direct-messages";
 /** The Home's sidebar: the bots' threads, searchable, above the account card. */
 const { floating = false } = defineProps<{
 	/** Lays the account card over the server rail, as the server sidebar does. */

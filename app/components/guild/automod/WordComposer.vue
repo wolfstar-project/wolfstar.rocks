@@ -210,6 +210,7 @@
 </template>
 
 <script setup lang="ts">
+import type { AutomodWordMode, AutomodWordProblem } from "~/utils/automod-words";
 const { others, editing = null } = defineProps<{
 	/** The other words of the list, as saved. */
 	others: readonly string[];

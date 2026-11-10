@@ -248,7 +248,9 @@
 </template>
 
 <script setup lang="ts">
+import type { JoinGuardRule, JoinGuardRuleInput } from "#shared/utils/join-guard";
 import type { DeepReadonly } from "@sapphire/utilities";
+import type { JoinGuardRuleErrorCode } from "~/composables/useJoinGuardRules";
 
 const open = defineModel<boolean>("open", { required: true });
 

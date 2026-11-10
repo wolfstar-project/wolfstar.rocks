@@ -466,6 +466,12 @@
 </template>
 
 <script setup lang="ts">
+import type { ShowcaseCommand } from "~/types/constants";
+import type {
+	DiscordAppLauncherEntry,
+	DiscordAppLauncherSheetSnap,
+	DiscordChatMessage,
+} from "~/types/discord";
 import ShowcaseMarkdown from "./WolfstarShowcaseMarkdown.vue";
 
 const { ts } = useI18n();

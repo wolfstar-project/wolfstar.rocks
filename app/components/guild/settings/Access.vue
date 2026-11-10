@@ -211,6 +211,11 @@
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
+import type {
+	LegacyClassification,
+	LegacyPermissionNode,
+	PermissionEntry,
+} from "#shared/utils/dashboard-access";
 import type { FormErrorEvent } from "@nuxt/ui";
 import { array, looseObject, object, string } from "valibot";
 

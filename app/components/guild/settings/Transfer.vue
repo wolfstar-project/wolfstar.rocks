@@ -191,6 +191,12 @@
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
+import type {
+	ConfigurationImportRequest,
+	ConfigurationImportResponse,
+	ConfigurationNotice,
+	ConfigurationPreview,
+} from "#shared/utils/settings-transfer";
 
 const { ts } = useI18n();
 const toast = useToast();

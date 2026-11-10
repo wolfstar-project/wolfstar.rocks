@@ -54,6 +54,7 @@ interface ChatSlots {
 </script>
 
 <script setup lang="ts">
+import type { DiscordChatMessage } from "~/types/discord";
 const { ts } = useI18n();
 defineProps<ChatProps>();
 defineSlots<ChatSlots>();

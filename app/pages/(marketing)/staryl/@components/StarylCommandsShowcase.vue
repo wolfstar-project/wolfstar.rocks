@@ -173,6 +173,8 @@
 </template>
 
 <script setup lang="ts">
+import type { SlashCommandOption } from "#shared/types/chat-input-command";
+import type { DiscordChatMessage } from "~/types/discord";
 interface StarylShowcaseCommand {
 	name: string;
 	subcommandGroup?: string;

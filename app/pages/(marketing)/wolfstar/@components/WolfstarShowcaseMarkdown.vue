@@ -57,6 +57,7 @@ const EMOJI_PATTERN = /(✅|📎|🏷️)/;
 </script>
 
 <script setup lang="ts">
+import type { DiscordBlockType } from "~/utils/discord-markdown";
 const { source } = defineProps<ShowcaseMarkdownProps>();
 
 const blocks = computed(() => parseDiscordMarkdown(source));

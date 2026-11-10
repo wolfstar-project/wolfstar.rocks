@@ -162,6 +162,7 @@
 </template>
 
 <script setup lang="ts">
+import type { AutomodWordProblem } from "~/utils/automod-words";
 /** The words of the rule, as saved. */
 const words = defineModel<string[]>({ required: true });
 

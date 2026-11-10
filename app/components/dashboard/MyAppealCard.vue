@@ -83,6 +83,12 @@
 </template>
 
 <script setup lang="ts">
+import type {
+	MyAppealCaseType,
+	MyAppealClosedReason,
+	MyAppealEntry,
+	MyAppealStatus,
+} from "#shared/utils/my-appeals";
 import type { LogsPillTone } from "~/components/guild/logs/Pill.vue";
 
 const { entry, now } = defineProps<{

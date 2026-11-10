@@ -385,7 +385,10 @@
 </template>
 
 <script setup lang="ts">
+import type { AutoModerationRule, AutoModerationRuleType } from "#shared/utils/automod-rules";
 import type { DeepReadonly } from "@sapphire/utilities";
+import type { AutomodRuleCreate, AutomodRuleErrorCode } from "~/composables/useAutomodRules";
+import type { AutomodRuleDefaults, AutomodRuleDraft } from "~/utils/automod-rule-draft";
 
 const open = defineModel<boolean>("open", { required: true });
 

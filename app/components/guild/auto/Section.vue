@@ -116,6 +116,12 @@
 </template>
 
 <script setup lang="ts" generic="Slug extends AutoChannelSlug">
+import type {
+	AutoChannelErrorCode,
+	AutoChannelSlug,
+	AutoChannelTables,
+} from "~/composables/useAutoChannels";
+import type { autoChannelBody } from "~/utils/auto-channels";
 type Row = AutoChannelTables[Slug]["row"];
 
 const { slug } = defineProps<{

@@ -191,6 +191,12 @@
 </template>
 
 <script setup lang="ts">
+import type {
+	AutoChannelErrorCode,
+	AutoChannelSlug,
+	AutoChannelTables,
+} from "~/composables/useAutoChannels";
+import type { AutoChannelDraft } from "~/utils/auto-channels";
 const open = defineModel<boolean>("open", { required: true });
 
 const {

@@ -25,6 +25,7 @@
 
 <script setup lang="ts">
 import type { DropdownMenuItem } from "@nuxt/ui";
+import type { ColorModePreference } from "~/composables/useSettings";
 
 const {
 	showLabel = true,

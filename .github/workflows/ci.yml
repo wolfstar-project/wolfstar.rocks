@@ -146,18 +146,23 @@ jobs:
           set -euo pipefail
           shards=4
           max_attempts=2
+          failed=0
           for shard in $(seq 1 "${shards}"); do
             attempt=1
             until vp test --project nuxt --coverage --shard="${shard}/${shards}" --reporter=blob; do
               if [ "${attempt}" -ge "${max_attempts}" ]; then
-                exit 1
+                echo "::error::Component tests shard ${shard}/${shards} failed ${max_attempts} times"
+                failed=1
+                break
               fi
               echo "::warning::Component tests shard ${shard}/${shards} failed (attempt ${attempt}/${max_attempts}); retrying after Vitest browser flake"
               attempt=$((attempt + 1))
               sleep 5
             done
           done
-          vp test --project nuxt --mergeReports --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml
+          # Merged even after a failure, so Codecov still gets the results of the run.
+          vp test --project nuxt --mergeReports --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml || failed=1
+          exit "${failed}"
         env:
           NODE_OPTIONS: --max-old-space-size=8192
 

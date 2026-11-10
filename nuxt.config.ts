@@ -44,7 +44,6 @@ export default defineNuxtConfig({
 		"@nuxt/fonts",
 		"@nuxt/a11y",
 		"@nuxtjs/seo",
-		"nuxt-skew-protection",
 		"@vueuse/nuxt",
 		"@vite-pwa/nuxt",
 		"@nuxtjs/html-validator",

@@ -98,9 +98,12 @@
 							What cookies do we use?
 						</h2>
 						<p class="mb-4 leading-relaxed text-base-content">
-							We only use essential technical cookies for purposes strictly necessary
-							for the site's functionality. We do not use third-party advertising
-							cookies.
+							The Site sets the necessary cookies below to work, and asks before
+							turning on anything else. The only optional item today is Sentry session
+							replay. The Site does not use advertising cookies. You can change your
+							choice at any time from
+							<span class="font-semibold">Cookie settings</span>
+							in the footer.
 						</p>
 						<ul class="list-none space-y-3 pl-0 text-base-content">
 							<li class="flex items-start gap-3 leading-relaxed">
@@ -135,12 +138,24 @@
 							<li class="flex items-start gap-3 leading-relaxed">
 								<span class="shrink-0 text-base-content/50">&mdash;</span>
 								<span>
-									<span class="font-semibold">Sentry (error monitoring):</span>
-									Sentry may set first‑party cookies or use local storage to
-									persist session identifiers for error correlation and session
-									replay. These identifiers are used only for debugging and are
-									not used for advertising; personal data is masked where
-									possible.
+									<span class="font-semibold"
+										>Cookie choices (<code>ncc_c</code>,
+										<code>ncc_e</code>):</span
+									>
+									Remember whether you made a choice and which optional items you
+									turned on, for 6 months. They are read only by the Site.
+								</span>
+							</li>
+							<li class="flex items-start gap-3 leading-relaxed">
+								<span class="shrink-0 text-base-content/50">&mdash;</span>
+								<span>
+									<span class="font-semibold"
+										>Sentry session replay (optional):</span
+									>
+									Only with your consent. Sentry keeps a session identifier in
+									your browser's session storage to tie a replay together. It is
+									used only for debugging, never for advertising, and text and
+									inputs in the replay are masked.
 								</span>
 							</li>
 							<li class="flex items-start gap-3 leading-relaxed">
@@ -208,9 +223,11 @@
 							Managing cookies
 						</h2>
 						<p class="mb-4 leading-relaxed text-base-content">
-							You can configure your browser to accept, reject, or delete cookies
-							according to your preferences. However, please note that rejecting
-							essential cookies may prevent full access to the application.
+							Use <span class="font-semibold">Cookie settings</span> in the footer to
+							turn optional items on or off; the change applies at once. You can also
+							configure your browser to accept, reject, or delete cookies. Rejecting
+							the necessary cookies there prevents signing in and may break other
+							parts of the Site.
 						</p>
 						<p class="mb-3 leading-relaxed text-base-content">
 							Below are links with instructions for cookie management in the most
@@ -317,15 +334,14 @@
 						</ul>
 						<p class="mt-4 leading-relaxed text-base-content">
 							Session replays capture user interactions (clicks, scrolls, navigation)
-							to help us understand how errors occur. Personal information entered in
-							forms is automatically masked. Sentry may set first‑party cookies or use
-							local storage to correlate sessions for error reporting and session
-							replay; these mechanisms are used solely for debugging and are not used
-							for advertising. To opt out of session replay, contact us at
+							to help us understand how errors occur, and are recorded only on the
+							dashboard and only if you turned session replay on in Cookie settings.
+							Text and form inputs are masked. Turning it off in Cookie settings stops
+							the replay at once. Error reports themselves do not depend on that
+							choice. Questions about this processing go to
 							<NuxtLink to="mailto:contact@wolfstar.rocks"
 								>contact@wolfstar.rocks</NuxtLink
-							>. All data is processed in accordance with GDPR requirements and stored
-							securely.
+							>.
 						</p>
 					</section>
 
@@ -650,6 +666,13 @@
 								<span>
 									<span class="font-semibold">Version Cookie:</span> Expires 7
 									days after it was last set.
+								</span>
+							</li>
+							<li class="flex items-start gap-3 leading-relaxed">
+								<span class="shrink-0 text-base-content/50">&mdash;</span>
+								<span>
+									<span class="font-semibold">Cookie Choices:</span> Expire 6
+									months after you made your choice; you are then asked again.
 								</span>
 							</li>
 							<li class="flex items-start gap-3 leading-relaxed">

@@ -9,6 +9,8 @@ import {
 	AppHeaderAuthSkeleton,
 	AppLogoMark,
 	AppPreferences,
+	ConsentManager,
+	ConsentSettingsDialog,
 
 	// #region Wolfstar components
 	WolfstarCommandsSection,
@@ -135,6 +137,34 @@ function mountAppHeader() {
 }
 
 describe("component accessibility audits", () => {
+	describe("Cookie consent", () => {
+		it("should have no accessibility violations for the consent notice", async () => {
+			const { isConsentGiven } = useCookieControl();
+			isConsentGiven.value = undefined;
+			const component = await mountSuspended(ConsentManager);
+			await vi.waitFor(() => expect(component.find("section").exists()).toBe(true));
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+			component.unmount();
+		});
+
+		it("should have no accessibility violations for the cookie settings dialog", async () => {
+			const { isModalActive } = useCookieControl();
+			isModalActive.value = true;
+			const component = await mountSuspended(ConsentSettingsDialog, {
+				attachTo: document.body,
+			});
+			await vi.waitFor(() =>
+				expect(document.querySelector('[role="dialog"] [role="switch"]')).not.toBeNull(),
+			);
+			const panel = document.querySelector('[role="dialog"]');
+			const results = await runAxe(component, { include: panel ? [panel] : [] });
+			expect(results.violations).toEqual([]);
+			isModalActive.value = false;
+			component.unmount();
+		});
+	});
+
 	describe("UChart of the overview", () => {
 		it("is one named image, with the counts of every day in its label", async () => {
 			const days = ["Mon", "Tue", "Wed"].map((label, index) => ({

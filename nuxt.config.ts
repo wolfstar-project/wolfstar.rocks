@@ -8,6 +8,7 @@ import {
 	isCloudflareBuild,
 	WORKER,
 } from "./config/cloudflare.ts";
+import { cookieControl } from "./config/cookie-control.ts";
 import { currentLocales, datetimeFormats, numberFormats } from "./config/i18n.ts";
 import { pwa } from "./config/pwa.ts";
 import { LOCALE_BUNDLES_DIR } from "./modules/i18n-locale-bundles.ts";
@@ -44,6 +45,7 @@ export default defineNuxtConfig({
 		"@nuxt/fonts",
 		"@nuxt/a11y",
 		"@nuxtjs/seo",
+		"@dargmuesli/nuxt-cookie-control",
 		"@vueuse/nuxt",
 		"@vite-pwa/nuxt",
 		"@nuxtjs/html-validator",
@@ -650,6 +652,9 @@ export default defineNuxtConfig({
 			restrictRuntimeImagesToOrigin: false,
 		},
 	},
+
+	// The visitor's cookie choice; the banner and the dialog are app/components/consent/.
+	cookieControl,
 
 	skewProtection: {
 		// Storybook's Nuxt build turns `experimental.appManifest` off, which the module

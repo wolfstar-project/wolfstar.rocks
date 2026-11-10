@@ -1,9 +1,11 @@
 import * as Sentry from "@sentry/nuxt";
 import { isDevelopment } from "std-env";
+import { CONSENT_COOKIE_IDS, readConsentedIds } from "~/utils/consent";
 import { isMarketingPath } from "~/utils/marketing-routes";
+import { startSessionReplay } from "~/utils/session-replay";
 
 const {
-	public: { sentry, environment },
+	public: { sentry, environment, cookieControl },
 } = useRuntimeConfig();
 
 const marketingPage = isMarketingPath(location.pathname);
@@ -73,15 +75,19 @@ if (sentry.dsn) {
 		environment,
 	});
 
-	if (!marketingPage) {
-		// Defer Session Replay until the browser is idle so its sizable bundle never
-		// competes with first paint or hydration. Loaded from the Sentry CDN (allowed
-		// by CSP), which also keeps it out of the initial app bundle.
-		const loadReplay = () => {
-			void Sentry.lazyLoadIntegration("replayIntegration").then((replayIntegration) => {
-				Sentry.addIntegration(replayIntegration());
-			});
-		};
+	// Session Replay records the screen, so it waits for the visitor's consent
+	// (components/consent/). A choice made later in the visit starts it from there.
+	const { cookies, cookieNameIsConsentGiven, cookieNameCookiesEnabledIds } = cookieControl;
+	const consentedIds = readConsentedIds({
+		consentGiven: useCookie<string | null>(cookieNameIsConsentGiven).value,
+		enabledIds: useCookie<string | null>(cookieNameCookiesEnabledIds).value,
+		allIds: [...cookies.necessary, ...cookies.optional].map((cookie) => cookie.id),
+	});
+
+	if (!marketingPage && consentedIds.includes(CONSENT_COOKIE_IDS.sessionReplay)) {
+		// Defer it until the browser is idle so its sizable bundle never competes
+		// with first paint or hydration.
+		const loadReplay = () => startSessionReplay(location.pathname);
 
 		if (typeof window.requestIdleCallback === "function") {
 			window.requestIdleCallback(loadReplay);

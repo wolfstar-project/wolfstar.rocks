@@ -126,6 +126,8 @@
 </template>
 
 <script setup lang="ts">
+// Named, not auto-imported: knip only follows auto-imports of the `use*` composables.
+import { resolveGuildMembers } from "~/composables/useGuildMemberSearch";
 const {
 	ids,
 	guildId,

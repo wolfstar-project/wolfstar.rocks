@@ -4,6 +4,75 @@
 	"description": "Schema for components.json. Generated from en/components.json — do not edit manually.",
 	"type": "object",
 	"properties": {
+		"consent": {
+			"type": "object",
+			"properties": {
+				"accept_all": {
+					"type": "string"
+				},
+				"accept_necessary": {
+					"type": "string"
+				},
+				"always_on": {
+					"type": "string"
+				},
+				"banner_description": {
+					"type": "string"
+				},
+				"banner_title": {
+					"type": "string"
+				},
+				"choice_description": {
+					"type": "string"
+				},
+				"choice_name": {
+					"type": "string"
+				},
+				"footer_link": {
+					"type": "string"
+				},
+				"manage": {
+					"type": "string"
+				},
+				"necessary_title": {
+					"type": "string"
+				},
+				"optional_title": {
+					"type": "string"
+				},
+				"privacy_link": {
+					"type": "string"
+				},
+				"save": {
+					"type": "string"
+				},
+				"session_replay_description": {
+					"type": "string"
+				},
+				"session_replay_name": {
+					"type": "string"
+				},
+				"settings_description": {
+					"type": "string"
+				},
+				"settings_title": {
+					"type": "string"
+				},
+				"sign_in_description": {
+					"type": "string"
+				},
+				"sign_in_name": {
+					"type": "string"
+				},
+				"version_description": {
+					"type": "string"
+				},
+				"version_name": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
 		"discord": {
 			"type": "object",
 			"properties": {

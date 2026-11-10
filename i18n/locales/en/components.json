@@ -1,5 +1,28 @@
 {
 	"$schema": "../../schemas/components.schema.json",
+	"consent": {
+		"accept_all": "Accept all cookies",
+		"accept_necessary": "Use necessary cookies only",
+		"always_on": "Always on",
+		"banner_description": "Necessary cookies keep you signed in and the site up to date. Session replay is optional: it lets Sentry record a masked replay of some dashboard sessions so bugs can be found and fixed.",
+		"banner_title": "Cookies on WolfStar.rocks",
+		"choice_description": "Remembers what you choose here for 6 months.",
+		"choice_name": "Cookie choices",
+		"footer_link": "Cookie settings",
+		"manage": "Choose cookies",
+		"necessary_title": "Necessary",
+		"optional_title": "Optional",
+		"privacy_link": "Read the privacy policy",
+		"save": "Save cookie choices",
+		"session_replay_description": "Sentry records a replay of 10% of dashboard sessions, and of any session that hits an error, with text and inputs masked, so bugs can be found and fixed.",
+		"session_replay_name": "Session replay",
+		"settings_description": "Necessary cookies are always on. Optional ones stay off unless you turn them on.",
+		"settings_title": "Cookie settings",
+		"sign_in_description": "Keep you signed in with Discord for up to 7 days and hold the token the dashboard uses on your behalf.",
+		"sign_in_name": "Sign-in",
+		"version_description": "Stores which version of the site this tab runs, so an older tab is asked to reload. Kept for 7 days.",
+		"version_name": "Site version"
+	},
 	"discord": {
 		"channel_info": {
 			"back": "Back to channel",

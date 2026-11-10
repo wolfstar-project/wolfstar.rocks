@@ -104,10 +104,12 @@
 			</template>
 		</UModal>
 
-		<!-- A newer build is out. Held back while edits are unsaved: the reload would drop them. -->
+		<!-- A newer build is out, or the cookie choice is still open. Held back while edits
+		     are unsaved: the save bar takes that corner, and a reload would drop them. -->
 		<ClientOnly>
 			<DeferredMount>
 				<div v-show="!isReadyToSubmit" class="dashboard-update-prompt">
+					<LazyConsentManager />
 					<LazySkewPrompt />
 				</div>
 			</DeferredMount>
@@ -602,10 +604,10 @@ watch(guildId, (newGuildId, oldGuildId) => {
 /* Clear of the cards at the foot of a phone's screens; from `sm` up, the page's
    bottom-right corner, which only the save bar uses, and the prompt waits for it. */
 .dashboard-update-prompt {
-	@apply pointer-events-none fixed right-4 bottom-4 z-40 flex;
+	@apply pointer-events-none fixed right-4 bottom-4 z-40 flex flex-col items-end gap-2;
 
 	@variant max-sm {
-		@apply inset-x-0 justify-center px-3;
+		@apply inset-x-0 items-center px-3;
 		/* Clear of the context card on the page (its tile, padding, border and
 		   offset come to about 4.5rem) and of the account card on the list, which
 		   is lower. Change it with either card. */

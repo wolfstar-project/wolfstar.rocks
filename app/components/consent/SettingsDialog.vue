@@ -6,6 +6,24 @@
 	>
 		<template #body>
 			<div class="flex flex-col gap-6">
+				<!-- The one group with a choice comes first, in view without scrolling on a phone. -->
+				<section :aria-labelledby="optionalId">
+					<h3 :id="optionalId" class="consent-group-title">
+						{{ ts("consent.optional_title") }}
+					</h3>
+					<ul class="consent-list">
+						<li v-for="cookie in optionalCookies" :key="cookie.id" class="consent-item">
+							<USwitch
+								:model-value="draft.includes(cookie.id)"
+								:label="cookieText(cookie.id).name"
+								:description="cookieText(cookie.id).description"
+								class="grow"
+								@update:model-value="toggle(cookie.id, $event)"
+							/>
+						</li>
+					</ul>
+				</section>
+
 				<section :aria-labelledby="necessaryId">
 					<h3 :id="necessaryId" class="consent-group-title">
 						{{ ts("consent.necessary_title") }}
@@ -28,23 +46,6 @@
 								color="neutral"
 								variant="subtle"
 								:label="ts('consent.always_on')"
-							/>
-						</li>
-					</ul>
-				</section>
-
-				<section :aria-labelledby="optionalId">
-					<h3 :id="optionalId" class="consent-group-title">
-						{{ ts("consent.optional_title") }}
-					</h3>
-					<ul class="consent-list">
-						<li v-for="cookie in optionalCookies" :key="cookie.id" class="consent-item">
-							<USwitch
-								:model-value="draft.includes(cookie.id)"
-								:label="cookieText(cookie.id).name"
-								:description="cookieText(cookie.id).description"
-								class="grow"
-								@update:model-value="toggle(cookie.id, $event)"
 							/>
 						</li>
 					</ul>

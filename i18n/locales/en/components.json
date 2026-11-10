@@ -18,7 +18,7 @@
 		"session_replay_name": "Session replay",
 		"settings_description": "Necessary cookies are always on. Optional ones stay off unless you turn them on.",
 		"settings_title": "Cookie settings",
-		"sign_in_description": "Keep you signed in with Discord for up to 7 days and hold the token the dashboard uses on your behalf.",
+		"sign_in_description": "Keeps you signed in with Discord for up to 7 days and holds the token the dashboard uses on your behalf.",
 		"sign_in_name": "Sign-in",
 		"version_description": "Stores which version of the site this tab runs, so an older tab is asked to reload. Kept for 7 days.",
 		"version_name": "Site version"

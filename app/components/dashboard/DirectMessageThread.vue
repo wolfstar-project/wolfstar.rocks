@@ -61,8 +61,19 @@
 					variant="naked"
 					side="left"
 					:avatar="{ src: thread.avatar, alt: '' }"
-					:ui="{ root: 'group/post py-1.5', content: 'w-full min-w-0' }"
+					:ui="{ root: 'py-1.5', content: 'w-full min-w-0' }"
 				>
+					<template #actions>
+						<UButton
+							:to="item.url"
+							target="_blank"
+							icon="ic:round-open-in-new"
+							color="neutral"
+							variant="ghost"
+							size="sm"
+							:aria-label="ts('dashboard.dm.open_in_discord')"
+						/>
+					</template>
 					<template #content>
 						<p class="flex flex-wrap items-center gap-2">
 							<span class="text-[0.9375rem] font-semibold">{{ thread.name }}</span>
@@ -74,16 +85,6 @@
 							<time :datetime="item.at" class="font-mono text-[0.6875rem] text-muted">
 								{{ formatActivityTime(item.at, now, timeLocale) }}
 							</time>
-							<UButton
-								:to="item.url"
-								target="_blank"
-								icon="ic:round-open-in-new"
-								color="neutral"
-								variant="ghost"
-								size="xs"
-								class="dm-open"
-								:aria-label="ts('dashboard.dm.open_in_discord')"
-							/>
 						</p>
 						<DashboardDiscordMarkdown
 							v-if="item.content"
@@ -213,11 +214,6 @@ watch(() => [thread.value?.id, thread.value?.news.length], openNewest, { flush: 
 
 .dm-log {
 	@apply min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6;
-}
-
-/* Shown on the post the pointer or focus is on, as Discord shows its actions. */
-.dm-open {
-	@apply opacity-0 transition-opacity group-hover/post:opacity-100 focus-visible:opacity-100;
 }
 
 .dm-embed {

@@ -63,9 +63,21 @@ export function useWarnThresholds(guildId: MaybeRefOrGetter<string | null | unde
 		requestGuildId: string | null,
 		change: (current: WarnThreshold[]) => WarnThreshold[],
 	) {
-		if (id.value === requestGuildId) {
-			asyncData.data.value = change(thresholds.value).toSorted(byCount);
-			void asyncData.refresh();
+		if (id.value !== requestGuildId) return;
+		const patched = change(thresholds.value).toSorted(byCount);
+		asyncData.data.value = patched;
+		void rereadAfterWrite(requestGuildId, patched);
+	}
+
+	/**
+	 * A failed read empties the list (Nuxt sets it back to its default), which
+	 * would hide a write that went through: the patched rows are put back.
+	 */
+	async function rereadAfterWrite(requestGuildId: string | null, patched: WarnThreshold[]) {
+		await asyncData.refresh();
+		if (asyncData.error.value && id.value === requestGuildId) {
+			asyncData.data.value = patched;
+			asyncData.error.value = undefined;
 		}
 	}
 

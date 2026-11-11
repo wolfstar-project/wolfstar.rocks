@@ -195,38 +195,40 @@
 				</div>
 			</template>
 		</template>
-	</section>
 
-	<UModal
-		:open="removing !== null"
-		:title="ts('guild_settings.warn_thresholds.remove_title', { count: removing?.count ?? 0 })"
-		:description="
-			ts(
-				thresholds.length === 1 &&
-					originalGuildSettings?.moderationDefaultWarnThresholds === true
-					? 'guild_settings.warn_thresholds.remove_last_description'
-					: 'guild_settings.warn_thresholds.remove_description',
-			)
-		"
-		:dismissible="removingCount === null"
-		@update:open="!$event && closeRemove()"
-	>
-		<template #footer>
-			<div class="flex w-full justify-end gap-2">
-				<UButton
-					color="neutral"
-					variant="outline"
-					:disabled="removingCount !== null"
-					@click="closeRemove()"
-				>
-					{{ ts("guild_settings.auto.editor.cancel") }}
-				</UButton>
-				<UButton color="error" :loading="removingCount !== null" @click="confirmRemove">
-					{{ ts("guild_settings.warn_thresholds.remove") }}
-				</UButton>
-			</div>
-		</template>
-	</UModal>
+		<UModal
+			:open="removeOpen"
+			:title="
+				ts('guild_settings.warn_thresholds.remove_title', { count: removing?.count ?? 0 })
+			"
+			:description="
+				ts(
+					removingLast
+						? 'guild_settings.warn_thresholds.remove_last_description'
+						: 'guild_settings.warn_thresholds.remove_description',
+				)
+			"
+			:dismissible="removingCount === null"
+			@update:open="!$event && closeRemove()"
+			@after:leave="removing = null"
+		>
+			<template #footer>
+				<div class="flex w-full justify-end gap-2">
+					<UButton
+						color="neutral"
+						variant="outline"
+						:disabled="removingCount !== null"
+						@click="closeRemove()"
+					>
+						{{ ts("guild_settings.auto.editor.cancel") }}
+					</UButton>
+					<UButton color="error" :loading="removingCount !== null" @click="confirmRemove">
+						{{ ts("guild_settings.warn_thresholds.remove") }}
+					</UButton>
+				</div>
+			</template>
+		</UModal>
+	</section>
 </template>
 
 <script setup lang="ts">
@@ -380,15 +382,23 @@ async function submit() {
 	});
 }
 
+// The threshold stays until the dialog has closed, so its title and text do
+// not change while it leaves; whether it is the last one is read on opening.
 const removing = shallowRef<WarnThreshold | null>(null);
+const removingLast = ref(false);
+const removeOpen = ref(false);
 const removingCount = ref<number | null>(null);
 
 function askRemove(threshold: WarnThreshold) {
 	removing.value = threshold;
+	removingLast.value =
+		thresholds.value.length === 1 &&
+		originalGuildSettings.value?.moderationDefaultWarnThresholds === true;
+	removeOpen.value = true;
 }
 
 function closeRemove() {
-	removing.value = null;
+	removeOpen.value = false;
 }
 
 async function confirmRemove() {
@@ -397,7 +407,7 @@ async function confirmRemove() {
 	removingCount.value = threshold.count;
 	const result = await removeThreshold(threshold.count);
 	removingCount.value = null;
-	removing.value = null;
+	removeOpen.value = false;
 
 	toast.add(
 		result.ok

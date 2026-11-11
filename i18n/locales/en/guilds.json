@@ -1555,7 +1555,54 @@
 			"steps_aria": "Setup steps",
 			"title": "Set up WolfStar on {name}"
 		},
-		"toggle_aria": "Toggle {title}"
+		"toggle_aria": "Toggle {title}",
+		"warn_thresholds": {
+			"add": "Add threshold",
+			"any_time": "Any time",
+			"columns": {
+				"action": "Action",
+				"count": "Warnings",
+				"duration": "Duration",
+				"period": "Counted within"
+			},
+			"count": "{count} of {maximum}",
+			"defaults_note": "This server has no thresholds of its own, so WolfStar uses the defaults below. Adding one replaces them all. Turn off Default Warning Thresholds above to use none.",
+			"edit_aria": "Edit the threshold at {count} warnings",
+			"empty": "No thresholds yet. Warnings add up without WolfStar acting on them.",
+			"errors": {
+				"count": "Pick a number of warnings from {minimum} to {maximum}.",
+				"duration": "A duration can be a year at most.",
+				"invalid": "WolfStar could not read this threshold. Check the fields and try again.",
+				"period": "The warnings can be counted over a year at most.",
+				"timeout_duration": "A timeout needs a duration.",
+				"timeout_long": "Discord times a member out for 28 days at most."
+			},
+			"fields": {
+				"action": "Action",
+				"count": "Warnings",
+				"duration": "For",
+				"period": "Counted within"
+			},
+			"form_aria": "Add a warning threshold",
+			"help": "What WolfStar does to a member who reaches a number of active warnings, given with /warn. A number set again replaces what it had.",
+			"limit": "A server has {maximum} thresholds at most. Remove one to add another.",
+			"load_failed": "Could not load the warning thresholds.",
+			"no_muted_role": "This server has no muted role, so a mute can't be applied. Set one under Roles, or pick a timeout.",
+			"period_hint": "0 counts every active warning",
+			"permanent": "Permanent",
+			"permanent_hint": "0 is permanent",
+			"remove": "Remove threshold",
+			"remove_aria": "Remove the threshold at {count} warnings",
+			"remove_description": "WolfStar stops acting on members who reach this number of warnings. Warnings already given stay.",
+			"remove_last_description": "This is the server's last threshold of its own, so WolfStar goes back to the defaults. Warnings already given stay.",
+			"remove_title": "Remove the threshold at {count} warnings?",
+			"removed_description": "The threshold at {count} warnings is gone.",
+			"replace": "Replace threshold",
+			"saved_description": "The threshold at {count} warnings is saved.",
+			"table_aria": "Thresholds by number of warnings",
+			"timeout_hint": "Up to 28 days",
+			"title": "Warning thresholds"
+		}
 	},
 	"settings": {
 		"entries": {
@@ -1836,7 +1883,7 @@
 				"name": "Confirm a Second Action"
 			},
 			"moderationDefaultWarnThresholds": {
-				"description": "While the server has no warning thresholds of its own, 3 warnings mute for 30 minutes (a timeout when there is no muted role), 5 kick and 7 ban. The ones added with /warn-thresholds add replace them.",
+				"description": "While the server has no warning thresholds of its own, 3 warnings mute for 30 minutes (a timeout when there is no muted role), 5 kick and 7 ban. The ones added under Warning thresholds below, or with /warn-thresholds add, replace them.",
 				"name": "Default Warning Thresholds"
 			},
 			"moderationDehoist": {

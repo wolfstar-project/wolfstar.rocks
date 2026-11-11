@@ -184,6 +184,9 @@
 		</div>
 	</GuildSettingsForm>
 
+	<!-- Rows of their own, written at once rather than with the form's save. -->
+	<GuildModerationWarnThresholds class="mt-5" />
+
 	<!-- Not a setting: the reports those settings route, to review. -->
 	<GuildReviewQueue />
 </template>

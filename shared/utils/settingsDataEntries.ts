@@ -161,7 +161,7 @@ export const ConfigurableModerationToggles: SettingEntry<ToggleSettingKey>[] = [
 		key: "moderationDefaultWarnThresholds",
 		name: "Default Warning Thresholds",
 		description:
-			"While the server has no warning thresholds of its own, 3 warnings mute for 30 minutes (a timeout when there is no muted role), 5 kick and 7 ban. The ones added with /warn-thresholds add replace them.",
+			"While the server has no warning thresholds of its own, 3 warnings mute for 30 minutes (a timeout when there is no muted role), 5 kick and 7 ban. The ones added under Warning thresholds below, or with /warn-thresholds add, replace them.",
 	},
 ];
 

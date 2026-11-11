@@ -1555,7 +1555,54 @@
 			"steps_aria": "",
 			"title": ""
 		},
-		"toggle_aria": ""
+		"toggle_aria": "",
+		"warn_thresholds": {
+			"add": "",
+			"any_time": "",
+			"columns": {
+				"action": "",
+				"count": "",
+				"duration": "",
+				"period": ""
+			},
+			"count": "",
+			"defaults_note": "",
+			"edit_aria": "",
+			"empty": "",
+			"errors": {
+				"count": "",
+				"duration": "",
+				"invalid": "",
+				"period": "",
+				"timeout_duration": "",
+				"timeout_long": ""
+			},
+			"fields": {
+				"action": "",
+				"count": "",
+				"duration": "",
+				"period": ""
+			},
+			"form_aria": "",
+			"help": "",
+			"limit": "",
+			"load_failed": "",
+			"no_muted_role": "",
+			"period_hint": "",
+			"permanent": "",
+			"permanent_hint": "",
+			"remove": "",
+			"remove_aria": "",
+			"remove_description": "",
+			"remove_last_description": "",
+			"remove_title": "",
+			"removed_description": "",
+			"replace": "",
+			"saved_description": "",
+			"table_aria": "",
+			"timeout_hint": "",
+			"title": ""
+		}
 	},
 	"settings": {
 		"entries": {

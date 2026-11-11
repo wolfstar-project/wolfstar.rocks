@@ -132,7 +132,13 @@ describe("roleOptions", () => {
 describe("mentionableRoles", () => {
 	const roles = [
 		{ color: 0, id: "100", managed: false, name: "@everyone", rawPosition: 0 },
-		{ color: 0x3BA55C, id: "2", managed: false, name: "Moderator", rawPosition: 2 },
+		{
+			color: Number.parseInt("3ba55c", 16),
+			id: "2",
+			managed: false,
+			name: "Moderator",
+			rawPosition: 2,
+		},
 		{ color: 0, id: "3", managed: true, name: "WolfStar", rawPosition: 1 },
 	];
 
@@ -165,9 +171,9 @@ describe("mentionableRoles", () => {
 describe("memberColor", () => {
 	it("takes the colour of the highest role that has one", () => {
 		const roles = [
-			{ color: 0xED4245, rawPosition: 3 },
+			{ color: Number.parseInt("ed4245", 16), rawPosition: 3 },
 			{ color: 0, rawPosition: 9 },
-			{ color: 0x1ABC9C, rawPosition: 5 },
+			{ color: Number.parseInt("1abc9c", 16), rawPosition: 5 },
 		];
 		expect(memberColor({ roles })).toBe("#1abc9c");
 	});

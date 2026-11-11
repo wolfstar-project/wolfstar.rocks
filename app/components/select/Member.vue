@@ -119,7 +119,10 @@
 						@click="tab = entry.key"
 					>
 						{{ entry.label }}
-						<span class="font-mono text-[0.6875rem] font-medium text-muted">
+						<span
+							v-if="entry.count !== undefined"
+							class="font-mono text-[0.6875rem] font-medium text-muted"
+						>
 							{{ entry.count }}
 						</span>
 					</button>
@@ -297,7 +300,7 @@ const searchQuery = computed(() => query.value.trim().replace(/^@/, ""));
 const showsMembers = computed(() => !roles || tab.value !== "roles");
 const showsRoles = computed(() => roles && tab.value !== "members");
 
-const { results, pending } = useGuildMemberSearch(
+const { results, pending, settled } = useGuildMemberSearch(
 	() => (showsMembers.value ? guildId : null),
 	searchQuery,
 );
@@ -305,17 +308,26 @@ const { results, pending } = useGuildMemberSearch(
 // The picked members whose names were resolved, kept as results add more.
 const known = reactive(new Map<string, FlattenedMember>());
 const resolving = ref(false);
+// The ids already asked for, by guild: a member who left is asked for once, not
+// again on every pick.
+const asked = new Set<string>();
 
 watch(
-	() => [guildId, memberIds.value.filter((id) => !known.has(id))] as const,
+	() =>
+		[
+			guildId,
+			memberIds.value.filter((id) => !known.has(id) && !asked.has(`${guildId}:${id}`)),
+		] as const,
 	async ([id, missing]) => {
 		if (missing.length === 0) return;
+		for (const memberId of missing) asked.add(`${id}:${memberId}`);
 		resolving.value = true;
 		try {
 			for (const member of await resolveGuildMembers(id, missing))
 				known.set(member.id, member);
 		} catch {
-			// Shown by id, as members who left are.
+			// Shown by id, as members who left are; a later change asks again.
+			for (const memberId of missing) asked.delete(`${id}:${memberId}`);
 		} finally {
 			resolving.value = false;
 		}
@@ -428,8 +440,8 @@ function isPicked(value: string): boolean {
 	return chosen.value.some((entry) => entry.value === value);
 }
 
-const foundRoles = computed(() => {
-	if (!showsRoles.value) return [];
+// Matched whatever the tab, so the Roles count stays right on the Members tab.
+const matchingRoles = computed(() => {
 	const needle = searchQuery.value.toLowerCase();
 	return roleList.value.filter(
 		(role) =>
@@ -439,6 +451,15 @@ const foundRoles = computed(() => {
 			role.id.startsWith(needle),
 	);
 });
+const foundRoles = computed(() => (showsRoles.value ? matchingRoles.value : []));
+
+// Without a query the list shows picked roles that were deleted, so they can be unticked.
+const deletedRoleIds = computed(() =>
+	searchQuery.value ? [] : roleIds.value.filter((id) => !roleById.value.has(id)),
+);
+const missingRoles = computed<Entry[]>(() =>
+	showsRoles.value ? deletedRoleIds.value.map(unknownRoleEntry) : [],
+);
 
 // Without a query the list shows the picked members, so they can be unticked.
 const foundMembers = computed<Entry[]>(() => {
@@ -452,7 +473,7 @@ const foundMembers = computed<Entry[]>(() => {
 // A pasted id the search did not find still counts, as on Discord.
 const byId = computed<Entry | undefined>(() => {
 	const id = searchQuery.value;
-	if (!showsMembers.value || !isSnowflake(id) || pending.value) return undefined;
+	if (!showsMembers.value || !isSnowflake(id) || !settled.value) return undefined;
 	if (results.value.some((member) => member.id === id)) return undefined;
 	if (foundRoles.value.some((role) => role.id === id)) return undefined;
 	return known.get(id) ? memberEntry(known.get(id)!) : unknownMemberEntry(id);
@@ -464,10 +485,11 @@ function heading(label: string): Heading {
 
 const items = computed<(Entry | Heading)[][]>(() => {
 	const groups: (Entry | Heading)[][] = [];
-	if (foundRoles.value.length > 0) {
+	const roleRows = [...missingRoles.value, ...foundRoles.value.map(roleEntry)];
+	if (roleRows.length > 0) {
 		groups.push([
-			heading(ts("guild_member_select.group_roles", { count: foundRoles.value.length })),
-			...foundRoles.value.map(roleEntry),
+			heading(ts("guild_member_select.group_roles", { count: roleRows.length })),
+			...roleRows,
 		]);
 	}
 	if (foundMembers.value.length > 0) {
@@ -482,14 +504,24 @@ const items = computed<(Entry | Heading)[][]>(() => {
 	return groups;
 });
 
+// Each count is the rows its tab lists. The Roles tab does not search members,
+// so while it is open with a query their count is unknown and left out.
 const tabs = computed(() => {
-	const memberCount = searchQuery.value ? results.value.length : memberIds.value.length;
-	const roleCount = roleList.value.length;
+	const memberCount = !searchQuery.value
+		? memberIds.value.length
+		: showsMembers.value && settled.value
+			? foundMembers.value.length
+			: undefined;
+	const roleCount = matchingRoles.value.length + deletedRoleIds.value.length;
 	return [
-		{ count: memberCount + roleCount, key: "all", label: ts("guild_member_select.tab_all") },
+		{
+			count: memberCount === undefined ? undefined : memberCount + roleCount,
+			key: "all",
+			label: ts("guild_member_select.tab_all"),
+		},
 		{ count: memberCount, key: "members", label: ts("guild_member_select.tab_members") },
 		{ count: roleCount, key: "roles", label: ts("guild_member_select.tab_roles") },
-	] satisfies { count: number; key: Tab; label: string }[];
+	] satisfies { count: number | undefined; key: Tab; label: string }[];
 });
 
 const defaultPlaceholder = computed(() => {

@@ -27,7 +27,8 @@ const { schema, state, mapToGuildData } = defineProps<Props>();
 const emit = defineEmits<{
 	error: [event: FormErrorEvent];
 }>();
-const { setGuildSettingsChanges, removeChange, resetCounter } = useGuildSettingsChanges();
+const { guildSettingsChanges, setGuildSettingsChanges, removeChange, resetCounter } =
+	useGuildSettingsChanges();
 const { originalGuildSettings } = useGuildSettings();
 const formRef = useTemplateRef("form-settings");
 
@@ -115,9 +116,35 @@ watch(
 	{ deep: true },
 );
 
+/**
+ * What the form compares its state with, and what Reset goes back to: the
+ * saved settings. The state a section opens with already holds what was staged
+ * on an earlier visit, so for those keys the baseline is the saved value, not
+ * the state: otherwise the staged edit would pass for saved, a later edit
+ * would count it as reverted and drop it from the draft, and Reset would keep
+ * it on screen. A state not shaped like the settings has no key to read back.
+ */
+function savedBaseline(): T {
+	const baseline: Record<string, unknown> = structuredClone(toRaw(state));
+	const saved = originalGuildSettings.value;
+	const staged = guildSettingsChanges.value;
+	if (!saved || !staged) return baseline as T;
+
+	for (const key of objectKeys(staged)) {
+		if (!(key in baseline)) continue;
+		const value = saved[key];
+		// A text the server holds as nothing is an empty text in the form.
+		baseline[key] =
+			typeof baseline[key] === "string" && (value === null || value === undefined)
+				? ""
+				: structuredClone(toRaw(value));
+	}
+	return baseline as T;
+}
+
 watchEffect(() => {
 	if (!isOriginalStateInitialized.value && originalGuildSettings.value !== undefined) {
-		originalState.value = structuredClone(toRaw(state));
+		originalState.value = savedBaseline();
 		isOriginalStateInitialized.value = true;
 	}
 });

@@ -365,6 +365,38 @@ describe("Form - Reset Behavior", () => {
 		const inputValue = (wrapper: Awaited<ReturnType<typeof mountEdited>>, id: string) =>
 			(wrapper.find(id).element as HTMLInputElement).value;
 
+		// A section left with an edit staged opens again showing it: the saved
+		// value is still what the form compares with and resets to.
+		it("keeps an edit staged on an earlier visit, and resets it to what is stored", async () => {
+			mockGuildSettingsChanges.value = { rolesMuted: "??" } as GuildData;
+			const Reopened = defineComponent({
+				components: { Form },
+				setup() {
+					const state = reactive({ language: "en-US", rolesMuted: "??" });
+					return { state, testSchema };
+				},
+				template: `
+					<Form :schema="testSchema" :state="state">
+						<input id="muted-input" v-model="state.rolesMuted" />
+						<input id="language-input" v-model="state.language" />
+					</Form>
+				`,
+			});
+			const wrapper = await mountSuspended(Reopened);
+			await nextTick();
+			await nextTick();
+
+			await wrapper.find("#language-input").setValue("de");
+			await nextTick();
+			expect(mockRemoveChange).not.toHaveBeenCalledWith("rolesMuted");
+			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith(
+				expect.objectContaining({ language: "de", rolesMuted: "??" }),
+			);
+
+			await reset();
+			expect((wrapper.find("#muted-input").element as HTMLInputElement).value).toBe("!");
+		});
+
 		it("resets an edit to what is stored after a save of keys it does not hold", async () => {
 			const wrapper = await mountEdited();
 

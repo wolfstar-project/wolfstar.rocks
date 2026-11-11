@@ -16,10 +16,27 @@ export function useAutomodWordPreview(
 	let worker: Worker | null = null;
 	let timer: ReturnType<typeof setTimeout> | undefined;
 	let lastId = 0;
+	// Whether the worker has loaded, and whether it still owes an answer.
+	let ready = false;
+	let busy = false;
 
 	function stopWorker() {
 		worker?.terminate();
 		worker = null;
+		ready = false;
+		busy = false;
+	}
+
+	// The bot's timeout is for the match alone: it is counted from when the
+	// worker can run it, not from the load of the worker's code.
+	function startTimeout(id: number) {
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			if (id !== lastId) return;
+			// The bot gives up on the message too: it is not filtered.
+			stopWorker();
+			status.value = "timeout";
+		}, AutomodWordMatchTimeout);
 	}
 
 	function startWorker(): Worker | null {
@@ -34,8 +51,14 @@ export function useAutomodWordPreview(
 		}
 		worker.addEventListener(
 			"message",
-			(event: MessageEvent<{ id: number; matches: AutomodWordMatch[] }>) => {
-				if (event.data.id !== lastId) return;
+			(event: MessageEvent<{ id?: number; matches?: AutomodWordMatch[]; ready?: true }>) => {
+				if (event.data.ready) {
+					ready = true;
+					if (busy) startTimeout(lastId);
+					return;
+				}
+				busy = false;
+				if (event.data.id !== lastId || !event.data.matches) return;
 				clearTimeout(timer);
 				matches.value = event.data.matches;
 				status.value = "done";
@@ -51,7 +74,7 @@ export function useAutomodWordPreview(
 
 	function runOnPage(list: string[], message: string) {
 		const expression = compileAutomodWords(list);
-		matches.value = expression === null ? [] : findAutomodWordMatches(expression, message);
+		matches.value = expression === null ? [] : findAutomodMessageMatches(expression, message);
 		status.value = "done";
 	}
 
@@ -66,20 +89,17 @@ export function useAutomodWordPreview(
 		}
 
 		const id = ++lastId;
-		// A slow check still running would hold the new one behind it, and its timeout would end the wrong job.
-		stopWorker();
+		// A slow check still running would hold the new one behind it. An idle
+		// worker is kept: starting one for each run would load its code again.
+		if (busy) stopWorker();
 		const active = startWorker();
 		if (active === null) {
 			runOnPage(list, message);
 			return;
 		}
 		status.value = "running";
-		timer = setTimeout(() => {
-			if (id !== lastId) return;
-			// The bot gives up on the message too: it is not filtered.
-			stopWorker();
-			status.value = "timeout";
-		}, AutomodWordMatchTimeout);
+		busy = true;
+		if (ready) startTimeout(id);
 		active.postMessage({ id, kind: "matches", words: list, text: message });
 	}, 150);
 

@@ -1,14 +1,13 @@
 /*
- * newt/ui design tokens, from the registry theme `npx newtui init` writes.
+ * newt/ui design tokens, as `npx newtui init` writes them since newtui 2.5:
+ * one complete light `:root`, only `newt` names in `@theme` (the app keeps its
+ * own radii, fonts and shadows), and no second `@import "tailwindcss"`
+ * (`main.css` imports this file).
  *
- * Changed from what `init` writes, so the components in `components/ui` fit
- * this app instead of restyling it:
- * - Only the `newt-*` names reach `@theme`. The app keeps its own radii,
- *   fonts and shadows, which `init` would replace for every page.
- * - No second `@import "tailwindcss"`: `main.css` imports this file.
- * - Dark values follow the app's `theme-dark` variant, not a bare `.dark`
- *   class, and the light block is complete. `init` writes the dark values in
- *   a second `:root` block, which overrides the light one on every page.
+ * Kept by hand: the dark values follow the app's `theme-dark` variant, and
+ * the `midnight` block below gives Onyx its own surfaces. Update the
+ * components with `npx newtui add <name> --overwrite`; `add` writes no
+ * tokens, so a token a new version uses is added here.
  */
 @theme {
 	--color-newt-bg-base: var(--newt-bg-base);
@@ -35,6 +34,9 @@
 	--color-newt-danger-hover: var(--newt-danger-hover);
 	--color-newt-mention-text: var(--newt-mention-text);
 	--color-newt-mention-role: var(--newt-mention-role);
+	--color-newt-on-accent: var(--newt-on-accent);
+	--color-newt-overlay: var(--newt-overlay);
+	--color-newt-bg-message-hover: var(--newt-bg-message-hover);
 	--ease-newt: var(--newt-ease);
 }
 
@@ -63,6 +65,9 @@
 	--newt-danger-hover: #a12828;
 	--newt-mention-text: #505cdc;
 	--newt-mention-role: #a06a00;
+	--newt-on-accent: #ffffff;
+	--newt-overlay: rgba(0, 0, 0, 0.6);
+	--newt-bg-message-hover: rgba(6, 6, 7, 0.03);
 	--newt-embed-max-width: 520px;
 	--newt-ease: cubic-bezier(0.3, 0.7, 0.4, 1);
 
@@ -86,6 +91,7 @@
 		--newt-danger: #da373c;
 		--newt-mention-text: #b3baff;
 		--newt-mention-role: #f3b95f;
+		--newt-bg-message-hover: rgba(2, 2, 2, 0.06);
 	}
 }
 
@@ -111,4 +117,5 @@
 	--newt-danger: #da373c;
 	--newt-mention-text: #b3baff;
 	--newt-mention-role: #f3b95f;
+	--newt-bg-message-hover: rgba(2, 2, 2, 0.06);
 }

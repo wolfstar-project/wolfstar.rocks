@@ -1,3 +1,4 @@
+import { parseMarkdown, type MarkdownBlock } from "~/components/ui/markdown/markdown-syntax";
 /**
  * The part of Discord's message markdown the dashboard shows: lines, `# `,
  * `## ` and `### ` headings, `- ` list items, `> ` quotes and `-# ` subtext,
@@ -144,4 +145,22 @@ export function discordInlineText(parts: readonly DiscordInline[]): string {
 			return part.content;
 		})
 		.join("");
+}
+
+/** The heading levels a post written in Discord markdown uses, quotes included. */
+function headingLevels(blocks: readonly MarkdownBlock[]): number[] {
+	return blocks.flatMap((block) => {
+		if (block.type === "heading") return [block.level];
+		return block.type === "quote" ? headingLevels(block.children) : [];
+	});
+}
+
+/**
+ * What newt/ui's `Markdown` adds to a post's heading levels so that its top
+ * heading is a `<h3>`, under the thread's `<h2>`, whatever size it is written
+ * in: a post of `##` alone must not skip a level.
+ */
+export function postHeadingOffset(content: string): number {
+	const levels = headingLevels(parseMarkdown(content));
+	return levels.length === 0 ? 2 : 3 - Math.min(...levels);
 }

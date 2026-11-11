@@ -51,112 +51,116 @@
 
 			<template v-for="group of days" v-else :key="group.day">
 				<Divider>{{ formatDay(group.day) }}</Divider>
-				<article v-for="item of group.news" :key="item.id" class="group/post">
-					<MessageGroup class="rounded-[4px] px-1">
-						<MessageGroupAvatar>
-							<Avatar>
-								<AvatarImage :src="thread.avatar" />
-							</Avatar>
-						</MessageGroupAvatar>
-						<MessageGroupBody class="min-w-0 grow">
-							<MessageGroupHeader>
-								<MessageGroupAuthor>{{ thread.name }}</MessageGroupAuthor>
-								<MessageGroupBotTag :aria-label="ts('dashboard.dm.bot_tag')">
-									{{ ts("dashboard.dm.bot_tag") }}
-								</MessageGroupBotTag>
-								<MessageGroupTime :datetime="item.at">
-									{{ formatActivityTime(item.at, now, timeLocale) }}
-								</MessageGroupTime>
+				<MessageGroup
+					v-for="item of group.news"
+					:key="item.id"
+					as="article"
+					class="group/post rounded-[4px] px-1"
+				>
+					<MessageGroupAvatar>
+						<Avatar>
+							<AvatarImage :src="thread.avatar" />
+						</Avatar>
+					</MessageGroupAvatar>
+					<MessageGroupBody class="min-w-0 grow">
+						<MessageGroupHeader>
+							<MessageGroupAuthor>{{ thread.name }}</MessageGroupAuthor>
+							<MessageGroupBotTag :aria-label="ts('dashboard.dm.bot_tag')">
+								{{ ts("dashboard.dm.bot_tag") }}
+							</MessageGroupBotTag>
+							<MessageGroupTime :datetime="item.at">
+								{{ formatActivityTime(item.at, now, timeLocale) }}
+							</MessageGroupTime>
+							<Button
+								:href="item.url"
+								target="_blank"
+								rel="noopener noreferrer"
+								variant="link"
+								size="sm"
+								class="dm-open ms-auto"
+							>
+								{{ ts("dashboard.dm.open_in_discord") }}
+							</Button>
+						</MessageGroupHeader>
+						<MessageGroupContent v-if="item.content">
+							<Markdown
+								:content="item.content.trim()"
+								:heading-offset="postHeadingOffset(item.content)"
+								:resolve-emoji="emojiURL"
+								:locale="timeLocale"
+								:labels="markdownLabels"
+							/>
+						</MessageGroupContent>
+						<Embed
+							v-for="(embed, index) of item.embeds"
+							:key="index"
+							:color="embed.color"
+							class="mt-1.5"
+						>
+							<EmbedTitle v-if="embed.title">
 								<a
-									:href="item.url"
+									v-if="embed.url"
+									:href="embed.url"
 									target="_blank"
 									rel="noopener noreferrer"
-									:class="buttonVariants({ variant: 'link', size: 'sm' })"
-									class="dm-open ms-auto"
+									class="hover:underline"
+									>{{ embed.title }}</a
 								>
-									{{ ts("dashboard.dm.open_in_discord") }}
-								</a>
-							</MessageGroupHeader>
-							<MessageGroupContent v-if="item.content">
-								<DashboardDiscordMarkdown :source="item.content" />
-							</MessageGroupContent>
-							<Embed
-								v-for="(embed, index) of item.embeds"
-								:key="index"
-								:color="embed.color"
-								class="mt-1.5"
-							>
-								<EmbedTitle v-if="embed.title">
-									<a
-										v-if="embed.url"
-										:href="embed.url"
-										target="_blank"
-										rel="noopener noreferrer"
-										class="hover:underline"
-										>{{ embed.title }}</a
-									>
-									<template v-else>{{ embed.title }}</template>
-								</EmbedTitle>
-								<EmbedDescription v-if="embed.description">
-									<DashboardDiscordMarkdown :source="embed.description" />
-								</EmbedDescription>
-								<img
-									v-if="embed.image"
-									:src="embed.image.url"
-									:width="embed.image.width"
-									:height="embed.image.height"
-									alt=""
-									loading="lazy"
-									class="max-h-75 w-auto max-w-full rounded-[4px]"
+								<template v-else>{{ embed.title }}</template>
+							</EmbedTitle>
+							<EmbedDescription v-if="embed.description">
+								<Markdown
+									:content="embed.description.trim()"
+									:heading-offset="postHeadingOffset(embed.description)"
+									:resolve-emoji="emojiURL"
+									:locale="timeLocale"
+									:labels="markdownLabels"
 								/>
-							</Embed>
+							</EmbedDescription>
 							<img
-								v-for="image of item.images"
-								:key="image.url"
-								:src="image.url"
-								:width="image.width"
-								:height="image.height"
+								v-if="embed.image"
+								:src="embed.image.url"
+								:width="embed.image.width"
+								:height="embed.image.height"
 								alt=""
 								loading="lazy"
-								class="mt-1.5 max-h-87.5 w-auto max-w-full rounded-md"
+								class="max-h-75 w-auto max-w-full rounded-[4px]"
 							/>
-							<MessageGroupReactions
-								v-if="item.reactions.length > 0"
-								role="group"
-								:aria-label="ts('dashboard.dm.reactions')"
-							>
-								<!-- Discord's counts, read-only: the dashboard cannot react as the reader. -->
-								<span
-									v-for="reaction of item.reactions"
-									:key="reaction.name"
-									role="img"
-									:aria-label="
-										tc('dashboard.dm.reaction', {
-											count: reaction.count,
-											emoji: reaction.name,
-										})
-									"
-									:class="reactionVariants()"
-									class="cursor-default hover:bg-newt-bg-surface"
-								>
-									<img
-										v-if="reaction.image"
-										:src="reaction.image"
-										alt=""
-										width="16"
-										height="16"
-										loading="lazy"
-										class="size-4"
-									/>
-									<span v-else aria-hidden="true">{{ reaction.name }}</span>
-									<span aria-hidden="true" class="text-xs font-semibold">{{
-										reaction.count
-									}}</span>
-								</span>
-							</MessageGroupReactions>
-						</MessageGroupBody>
-					</MessageGroup>
-				</article>
+						</Embed>
+						<img
+							v-for="image of item.images"
+							:key="image.url"
+							:src="image.url"
+							:width="image.width"
+							:height="image.height"
+							alt=""
+							loading="lazy"
+							class="mt-1.5 max-h-87.5 w-auto max-w-full rounded-md"
+						/>
+						<MessageGroupReactions
+							v-if="item.reactions.length > 0"
+							role="group"
+							:aria-label="ts('dashboard.dm.reactions')"
+						>
+							<!-- Discord's counts, read-only: the dashboard cannot react as the reader. -->
+							<Reaction
+								v-for="reaction of item.reactions"
+								:key="reaction.image ?? reaction.name"
+								readonly
+								:emoji="reaction.image ? undefined : reaction.name"
+								:emoji-src="reaction.image"
+								:emoji-alt="reaction.name"
+								:count="reaction.count"
+								:aria-label="
+									tc('dashboard.dm.reaction', {
+										count: reaction.count,
+										emoji: reaction.name,
+									})
+								"
+							/>
+						</MessageGroupReactions>
+					</MessageGroupBody>
+				</MessageGroup>
 			</template>
 		</div>
 
@@ -175,9 +179,10 @@
 
 <script setup lang="ts">
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
-import { buttonVariants } from "~/components/ui/button";
+import { Button } from "~/components/ui/button";
 import { Divider } from "~/components/ui/divider";
 import { Embed, EmbedDescription, EmbedTitle } from "~/components/ui/embed";
+import { Markdown, type MarkdownLabels } from "~/components/ui/markdown";
 import {
 	MessageGroup,
 	MessageGroupAuthor,
@@ -189,7 +194,7 @@ import {
 	MessageGroupReactions,
 	MessageGroupTime,
 } from "~/components/ui/message-group";
-import { reactionVariants } from "~/components/ui/reaction";
+import { Reaction } from "~/components/ui/reaction";
 import { Skeleton } from "~/components/ui/skeleton";
 
 /**
@@ -198,6 +203,22 @@ import { Skeleton } from "~/components/ui/skeleton";
  */
 const { ts, tc } = useI18n();
 const { locale, timeLocale } = useAppLocale();
+
+// The words newt/ui's markdown writes itself, translated.
+const markdownLabels = computed<Partial<MarkdownLabels>>(() => ({
+	linkWarningBody: ts("dashboard.dm.markdown.link_warning_body"),
+	linkWarningCancel: ts("dashboard.dm.markdown.link_warning_cancel"),
+	linkWarningConfirm: ts("dashboard.dm.markdown.link_warning_confirm"),
+	linkWarningTitle: ts("dashboard.dm.markdown.link_warning_title"),
+	unknownChannel: ts("dashboard.dm.markdown.unknown_channel"),
+	unknownRole: ts("dashboard.dm.markdown.unknown_role"),
+	unknownUser: ts("dashboard.dm.markdown.unknown_user"),
+}));
+
+/** A server emoji's image on Discord's CDN: newt/ui fetches none itself. */
+function emojiURL(emoji: { id: string; animated: boolean }): string {
+	return `https://cdn.discordapp.com/emojis/${emoji.id}.${emoji.animated ? "gif" : "webp"}?size=48`;
+}
 const { thread, markRead, statusOf, reload } = useDirectMessages();
 
 const now = useNow({ scheduler: (cb) => useIntervalFn(cb, 60_000) });

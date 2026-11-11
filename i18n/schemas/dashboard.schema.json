@@ -64,6 +64,33 @@
 						"log_aria": {
 							"type": "string"
 						},
+						"markdown": {
+							"type": "object",
+							"properties": {
+								"link_warning_body": {
+									"type": "string"
+								},
+								"link_warning_cancel": {
+									"type": "string"
+								},
+								"link_warning_confirm": {
+									"type": "string"
+								},
+								"link_warning_title": {
+									"type": "string"
+								},
+								"unknown_channel": {
+									"type": "string"
+								},
+								"unknown_role": {
+									"type": "string"
+								},
+								"unknown_user": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
 						"no_messages": {
 							"type": "string"
 						},

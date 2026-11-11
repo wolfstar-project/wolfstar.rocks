@@ -3,6 +3,7 @@ import {
 	discordPlainText,
 	parseDiscordInline,
 	parseDiscordMarkdown,
+	postHeadingOffset,
 } from "~/utils/discord-markdown";
 
 describe("parseDiscordInline", () => {
@@ -144,5 +145,20 @@ describe("discordPlainText", () => {
 				"\n## **v7** for <@Moderator> in <#rules> <:wolf:123456789012345678>\nmore",
 			),
 		).toBe("v7 for @Moderator in #rules :wolf:");
+	});
+});
+
+describe("postHeadingOffset", () => {
+	// The thread's name is the page's <h2>: a post's top heading is an <h3>,
+	// whatever size it is written in, so a post never skips a level.
+	it("makes a post's top heading an h3, whatever its size", () => {
+		expect(postHeadingOffset("# Big\n## Smaller")).toBe(2);
+		expect(postHeadingOffset("## Dashboard v3\nText")).toBe(1);
+		expect(postHeadingOffset("### Small")).toBe(0);
+	});
+
+	it("reads the headings in a quote, and keeps newt/ui's default without any", () => {
+		expect(postHeadingOffset("> ## Quoted")).toBe(1);
+		expect(postHeadingOffset("Just text")).toBe(2);
 	});
 });

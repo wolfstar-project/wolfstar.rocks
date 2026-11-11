@@ -20,6 +20,15 @@
 			"intro": "This is the beginning of your direct message history with {name}.",
 			"load_failed": "The posts couldn't be loaded from Discord.",
 			"log_aria": "Messages from {name}",
+			"markdown": {
+				"link_warning_body": "This link's text does not show where it goes. It opens:",
+				"link_warning_cancel": "Go back",
+				"link_warning_confirm": "Open link",
+				"link_warning_title": "Leave the dashboard?",
+				"unknown_channel": "unknown-channel",
+				"unknown_role": "unknown-role",
+				"unknown_user": "unknown-user"
+			},
 			"no_messages": "No messages yet",
 			"no_reply": "You can't reply to {name}. It only sends news here.",
 			"open_in_discord": "Open in Discord",

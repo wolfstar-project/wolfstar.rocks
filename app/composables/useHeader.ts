@@ -45,8 +45,8 @@ export function useHeader() {
 
 	const applicationLinks = computed(() => [
 		{
-			// `avatar` feeds the desktop panel, `icon` the vertical mobile menu,
-			// which renders no avatar of its own.
+			// `avatar` feeds the desktop panel and, before the `icon`, the rows of
+			// the vertical mobile menu, which sets its size.
 			avatar: { alt: apps.WolfStar.name, src: apps.WolfStar.avatar },
 			description: ts("nav.wolfstar_description"),
 			icon: "ph:shield-duotone",

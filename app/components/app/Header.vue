@@ -125,6 +125,7 @@
 						link: 'rounded-lg px-3 py-3 text-base font-medium',
 						childLink: 'rounded-lg px-3 py-2.5 text-sm',
 						childLinkIcon: 'size-5 shrink-0 text-primary group-hover:text-primary',
+						linkLeadingAvatarSize: 'xs',
 						childList: 'ms-2 border-s border-default ps-2',
 					}"
 				/>

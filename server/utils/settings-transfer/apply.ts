@@ -118,17 +118,19 @@ export async function applyConfigurationImport(
 			tx,
 		);
 
+		// The settings are read back once the commit has applied them, below.
 		return {
 			plan,
-			settings: toSettings(transaction.settings),
+			settings: null,
 			rules: rulesAfter(plan, rules, created),
 			audit: buildAudit(plan, created),
 		};
 	});
 	// The rules' transaction holds the settings too: only now that it has
-	// committed do they reach the cache.
+	// committed do they reach the cache, and the settings the admin is answered
+	// with are those, not the ones read before the write.
 	transaction.committed();
-	return applied;
+	return { ...applied, settings: applied.settings ?? toSettings(transaction.settings) };
 }
 
 function toSettings(settings: Parameters<typeof serializeSettings>[0]) {

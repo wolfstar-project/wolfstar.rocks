@@ -13,6 +13,7 @@ vi.mock("#server/database/settings/context/functions", () => ({
 }));
 
 import {
+	isGuildUnconfigured,
 	readFreshSettings,
 	readSettings,
 	writeSettingsTransaction,
@@ -54,5 +55,24 @@ describe("readFreshSettings", () => {
 		}
 
 		expect((await readSettings(guild)).language).toBe("de");
+	});
+
+	// The read found no rows, then the guild's first write landed: the guild is
+	// configured, whatever that read saw.
+	it("does not call a guild unconfigured from a read its first write overtook", async () => {
+		const guild = "323456789012345678";
+		mockFetchGuildData.mockResolvedValueOnce(null);
+		{
+			using trx = await writeSettingsTransaction(guild);
+			let answer: (value: unknown) => void = () => undefined;
+			mockFetchGuildData.mockReturnValueOnce(new Promise((resolve) => (answer = resolve)));
+			const overlapping = readFreshSettings(guild);
+
+			await trx.write({ language: "de" }).submit();
+			answer(null);
+			await overlapping;
+		}
+
+		expect(isGuildUnconfigured(guild)).toBe(false);
 	});
 });

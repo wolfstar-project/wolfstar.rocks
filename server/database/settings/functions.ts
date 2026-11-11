@@ -221,12 +221,17 @@ async function fetch(id: string): Promise<GuildData> {
 	const writesBefore = writeCounts.get(id) ?? 0;
 	// A guild without rows reads as the defaults; its rows are created by the first write:
 	const stored = await fetchGuildData(db.orm, id);
-	if (stored === null) unconfigured.add(id);
-	else unconfigured.delete(id);
-
 	const data =
 		stored ??
 		(Object.assign(Object.create(null), getDefaultGuildSettings(), { id }) as GuildData);
-	if ((writeCounts.get(id) ?? 0) === writesBefore) cache.set(id, data);
+
+	// A read that a write overtook holds what the guild was before it: neither
+	// its settings nor whether it had any are remembered, or a guild whose
+	// first write just landed would be offered the setup again.
+	if ((writeCounts.get(id) ?? 0) === writesBefore) {
+		if (stored === null) unconfigured.add(id);
+		else unconfigured.delete(id);
+		cache.set(id, data);
+	}
 	return data;
 }

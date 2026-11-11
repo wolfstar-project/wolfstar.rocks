@@ -103,20 +103,22 @@ describe("moderation guild settings", () => {
 	});
 
 	// Reports are set up next to the cases they can close into, not on a page
-	// of their own, and the queue of filed reports follows them.
-	it("groups the settings into cards, then the review queue", async () => {
+	// of their own; the warning thresholds, written at once, and the queue of
+	// filed reports follow them.
+	it("groups the settings into cards, then the thresholds and the review queue", async () => {
 		const wrapper = await mountSuspended(Moderation);
 
 		await nextTick();
 
 		const headings = wrapper.findAll("section h2").map((heading) => heading.text());
-		expect(headings).toHaveLength(5);
+		expect(headings).toHaveLength(6);
 		expect(headings).toEqual(
 			expect.arrayContaining([
 				"Cases",
 				"Lockdown",
 				"Command responses",
 				"Reports",
+				"Warning thresholds",
 				"Review queue",
 			]),
 		);

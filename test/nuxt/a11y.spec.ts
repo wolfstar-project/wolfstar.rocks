@@ -89,6 +89,7 @@ import {
 	GuildSettingsLogsBulkChannel,
 	GuildSettingsLogsSelectionBar,
 	GuildSettingsModeration,
+	GuildModerationWarnThresholds,
 	GuildSettingsSection,
 	GuildSetupWizard,
 	GuildSettingsToggleRow,
@@ -1144,8 +1145,28 @@ describe("component accessibility audits", () => {
 				createMockGuildData(GUILD_ID, { messagesResponseBan: "{user} was banned." }),
 			);
 			const component = await mountSuspended(GuildSettingsModeration, {
-				global: { stubs: { GuildReviewQueue: true } },
+				global: { stubs: { GuildModerationWarnThresholds: true, GuildReviewQueue: true } },
 			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("GuildModerationWarnThresholds", () => {
+		it("should have no accessibility violations with thresholds set", async () => {
+			const GUILD_ID = "123456789012345678";
+			registerEndpoint(`/api/guilds/${GUILD_ID}/warn-thresholds`, {
+				method: "GET",
+				handler: () => [
+					{ action: "Timeout", count: 3, duration: 1800, period: 0 },
+					{ action: "Ban", count: 5, duration: null, period: 604_800 },
+				],
+			});
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+			useGuildSettings().setGuildSettings(createMockGuildData(GUILD_ID));
+			const component = await mountSuspended(GuildModerationWarnThresholds);
+			await vi.waitFor(() => expect(component.findAll("tbody tr")).toHaveLength(2));
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
 		});

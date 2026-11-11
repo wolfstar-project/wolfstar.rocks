@@ -4671,6 +4671,135 @@
 				},
 				"toggle_aria": {
 					"type": "string"
+				},
+				"warn_thresholds": {
+					"type": "object",
+					"properties": {
+						"add": {
+							"type": "string"
+						},
+						"any_time": {
+							"type": "string"
+						},
+						"columns": {
+							"type": "object",
+							"properties": {
+								"action": {
+									"type": "string"
+								},
+								"count": {
+									"type": "string"
+								},
+								"duration": {
+									"type": "string"
+								},
+								"period": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"count": {
+							"type": "string"
+						},
+						"defaults_note": {
+							"type": "string"
+						},
+						"edit_aria": {
+							"type": "string"
+						},
+						"empty": {
+							"type": "string"
+						},
+						"errors": {
+							"type": "object",
+							"properties": {
+								"count": {
+									"type": "string"
+								},
+								"duration": {
+									"type": "string"
+								},
+								"invalid": {
+									"type": "string"
+								},
+								"period": {
+									"type": "string"
+								},
+								"timeout_duration": {
+									"type": "string"
+								},
+								"timeout_long": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"fields": {
+							"type": "object",
+							"properties": {
+								"action": {
+									"type": "string"
+								},
+								"count": {
+									"type": "string"
+								},
+								"duration": {
+									"type": "string"
+								},
+								"period": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"form_aria": {
+							"type": "string"
+						},
+						"help": {
+							"type": "string"
+						},
+						"limit": {
+							"type": "string"
+						},
+						"load_failed": {
+							"type": "string"
+						},
+						"no_muted_role": {
+							"type": "string"
+						},
+						"period_hint": {
+							"type": "string"
+						},
+						"permanent": {
+							"type": "string"
+						},
+						"permanent_hint": {
+							"type": "string"
+						},
+						"remove_aria": {
+							"type": "string"
+						},
+						"removed_description": {
+							"type": "string"
+						},
+						"replace": {
+							"type": "string"
+						},
+						"saved_description": {
+							"type": "string"
+						},
+						"table_aria": {
+							"type": "string"
+						},
+						"timeout_hint": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
 				}
 			},
 			"additionalProperties": false

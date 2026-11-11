@@ -69,7 +69,12 @@ export async function applyConfigurationImport(
 
 	// Awaited here: the lock of the settings is released when this function
 	// returns, which a promise that is only returned would do before it settles.
-	return await writeAutoModerationRules(guildId, async (rules) => {
+	return await writeAutoModerationRules(guildId, async (rules, orm, tx) => {
+		// The settings were read before the lock of the rules was taken, and
+		// another import may have written since: read under it, the plan is made
+		// from what the database has now.
+		await transaction.reload(orm);
+
 		// The rules of a file are held to the limit when it is read; the ones added to the rules of the guild are held
 		// to it now, since the guild may have gained rules meanwhile:
 		if ((getImportedRules(rules, parsed)?.length ?? 0) > MaximumAutoModerationRules) {
@@ -96,17 +101,21 @@ export async function applyConfigurationImport(
 			await assertHoneypotIsUsable(guild, transaction.settings, settings);
 			transaction.write(settings);
 		}
+		// In the transaction that holds the lock, not one of its own: a second
+		// connection for each import would starve the pool under overlapping ones.
 		await transaction.submit(
 			rulesChanged
-				? async (tx) => {
+				? async (inner) => {
 						created = await writeAutoModerationRulePlan(
-							tx.orm,
+							inner.orm,
 							guildId,
 							rulePlan,
 							transaction.settings.language,
 						);
 					}
 				: undefined,
+			undefined,
+			tx,
 		);
 
 		return {

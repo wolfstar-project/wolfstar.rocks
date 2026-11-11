@@ -96,6 +96,17 @@ class Transaction {
 		return this.#locking;
 	}
 
+	/**
+	 * Reads the settings again through a transaction that holds a lock the
+	 * write depends on, so what is planned from them is what the database has
+	 * under that lock: the queue of this process orders nothing against the
+	 * other instances of the dashboard, nor on Workers.
+	 */
+	public async reload(orm: Parameters<typeof fetchGuildData>[0]) {
+		const stored = await fetchGuildData(orm, this.settings.id);
+		if (stored !== null) Object.assign(this.settings, stored);
+	}
+
 	public write(data: Partial<ReadonlyGuildData>) {
 		Object.assign(this.#changes, data);
 		this.#hasChanges = true;
@@ -108,10 +119,12 @@ class Transaction {
 	 * @param extra Other writes that belong with them, made in the same database transaction, so they are all written
 	 * or none is: the rules of an import. They run even when no setting changes.
 	 * @param check What the changes depend on, checked first in that transaction, see {@linkcode writeGuildData}.
+	 * @param within A transaction already open to write in, see {@linkcode writeGuildData}.
 	 */
 	public async submit(
 		extra?: Parameters<typeof writeGuildData>[3],
 		check?: Parameters<typeof writeGuildData>[4],
+		within?: Parameters<typeof writeGuildData>[5],
 	) {
 		if (!this.#hasChanges && !extra) {
 			return;
@@ -131,6 +144,7 @@ class Transaction {
 					await notifyGuildSettingsUpdate(tx, this.settings.id, keys);
 				},
 				check,
+				within,
 			);
 
 			unconfigured.delete(this.settings.id);

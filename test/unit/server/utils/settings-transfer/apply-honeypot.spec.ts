@@ -5,6 +5,7 @@ const mocks = vi.hoisted(() => {
 	const transaction = {
 		settings: { id: "100000000000000000", language: "en-US", honeypotAction: "Ban" },
 		write: vi.fn(),
+		reload: vi.fn(),
 		submit: vi.fn(),
 		[Symbol.dispose]: vi.fn(),
 	};
@@ -23,7 +24,10 @@ vi.mock("#server/database/settings/automod/storage", () => ({
 	writeAutoModerationRulePlan: vi.fn(),
 }));
 vi.mock("#server/utils/automod/rules", () => ({
-	writeAutoModerationRules: (_guildId: string, run: (rules: unknown[]) => unknown) => run([]),
+	writeAutoModerationRules: (
+		_guildId: string,
+		run: (rules: unknown[], orm: object, tx: object) => unknown,
+	) => run([], {}, { orm: {} }),
 }));
 vi.mock("#server/utils/settings-transfer/plan", () => ({
 	findOversizedRuleLists: () => [],

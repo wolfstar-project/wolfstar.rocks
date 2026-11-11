@@ -123,6 +123,8 @@ export async function fetchGuildData(orm: Orm, id: Snowflake): Promise<GuildData
  * @param extra Other writes that belong with the changes: they run in the same transaction, after them.
  * @param check What the changes depend on: it runs first in the same transaction, where it can lock what it
  * reads, and throwing leaves everything unwritten.
+ * @param within A transaction already open, to write in instead of opening another: an import holds the lock of the
+ * rules in one, and a second connection for the settings would take two of the pool for each import.
  */
 export async function writeGuildData(
 	db: Database,
@@ -130,6 +132,7 @@ export async function writeGuildData(
 	changes: Partial<ReadonlyGuildData>,
 	extra?: (tx: DatabaseTransaction) => Promise<void>,
 	check?: (tx: DatabaseTransaction) => Promise<void>,
+	within?: DatabaseTransaction,
 ): Promise<void> {
 	const id = BigInt(settings.id);
 	const changedKeys = Object.keys(changes) as GuildDataKey[];
@@ -149,7 +152,7 @@ export async function writeGuildData(
 		if (touched.size > 1) touched.add("Modules");
 	}
 
-	await db.transaction(async (tx) => {
+	const write = async (tx: DatabaseTransaction) => {
 		await check?.(tx);
 
 		for (const name of Tables) {
@@ -188,5 +191,7 @@ export async function writeGuildData(
 		}
 
 		await extra?.(tx);
-	});
+	};
+
+	await (within ? write(within) : db.transaction(write));
 }

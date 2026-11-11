@@ -56,6 +56,8 @@ function validateName(
 }
 
 type Orm = Database["orm"];
+/** The transaction the rules are written in, under their lock. */
+type RulesTransaction = Parameters<Parameters<Database["transaction"]>[0]>[0];
 
 const withGuildLock = createKeyedLock<Snowflake>();
 
@@ -77,7 +79,7 @@ const RULES_LOCK_KEY_RANGE = 2_147_483_647n;
  */
 export async function writeAutoModerationRules<T>(
 	guildId: Snowflake,
-	callback: (rules: readonly AutoModerationRule[], orm: Orm) => Promise<T>,
+	callback: (rules: readonly AutoModerationRule[], orm: Orm, tx: RulesTransaction) => Promise<T>,
 ): Promise<T> {
 	return withGuildLock(guildId, () => {
 		// Two guilds that share a key only wait for each other; nothing breaks.
@@ -88,7 +90,11 @@ export async function writeAutoModerationRules<T>(
 					.affectedCount()
 					.build(),
 			);
-			const result = await callback(await fetchAutoModerationRules(tx.orm, guildId), tx.orm);
+			const result = await callback(
+				await fetchAutoModerationRules(tx.orm, guildId),
+				tx.orm,
+				tx,
+			);
 			// The bot caches the rules: it reloads them on this, once committed.
 			await notifyGuildSettingsUpdate(tx, guildId, ["autoModerationRules"]);
 			return result;

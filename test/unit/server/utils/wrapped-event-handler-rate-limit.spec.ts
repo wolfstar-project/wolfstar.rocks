@@ -188,6 +188,30 @@ describe("rate-limit reservations under concurrency", () => {
 		});
 	});
 
+	// A route that answers its checks with errors would otherwise leave every
+	// refused try free, as the verification of a join does.
+	it("keeps a failing request's reservation when the route counts failures", async () => {
+		vi.useFakeTimers();
+		vi.setSystemTime(1_000);
+
+		const innerHandler = vi.fn().mockRejectedValue(new Error("refused"));
+		const handler = defineWrappedResponseHandler(innerHandler, {
+			auth: true,
+			rateLimit: {
+				countFailures: true,
+				enabled: true,
+				limit: 2,
+				type: "sliding",
+				window: 60_000,
+			},
+		});
+
+		await expect(handler(makeEvent())).rejects.toThrow("refused");
+		await expect(handler(makeEvent())).rejects.toThrow("refused");
+		await expect(handler(makeEvent())).rejects.toThrow("Too Many Requests");
+		expect(innerHandler).toHaveBeenCalledTimes(2);
+	});
+
 	it("does not rate limit when disabled", async () => {
 		const innerHandler = vi.fn().mockResolvedValue("ok");
 		const handler = defineWrappedResponseHandler(innerHandler, {

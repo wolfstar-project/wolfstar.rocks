@@ -218,6 +218,13 @@ function convertRule(
 	}
 	warnChangedOptions(name, given, options, warnings);
 
+	const timeWindow = clamp(thresholdDuration, AutoModerationRuleLimits.thresholdDuration);
+	if (timeWindow !== thresholdDuration) {
+		warnings.push(
+			`The time window of the rule "${name}" was changed from ${thresholdDuration} to ${timeWindow} milliseconds.`,
+		);
+	}
+
 	const threshold = clamp(thresholdMaximum, AutoModerationRuleLimits.thresholdMaximum);
 	if (threshold !== thresholdMaximum) {
 		warnings.push(
@@ -233,7 +240,7 @@ function convertRule(
 		hardAction: HardActions[hardAction] ?? "None",
 		hardActionDuration: duration === 0 ? null : Math.min(duration, maximum),
 		thresholdMaximum: threshold,
-		thresholdDuration: clamp(thresholdDuration, AutoModerationRuleLimits.thresholdDuration),
+		thresholdDuration: timeWindow,
 		options,
 	};
 }

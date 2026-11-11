@@ -1,6 +1,7 @@
 import type { ReadonlyGuildData } from "#server/database/settings/types";
 import type { Snowflake } from "discord-api-types/v10";
 import { SettingsContext } from "#server/database/settings/context/SettingsContext";
+import { PermissionNodeManager } from "#server/database/settings/structures/PermissionNodeManager";
 import { Collection } from "@discordjs/collection";
 
 const cache = new Collection<Snowflake, SettingsContext>();
@@ -20,4 +21,12 @@ export function updateSettingsContext(
 		const context = new SettingsContext(settings);
 		cache.set(settings.id, context);
 	}
+}
+
+/**
+ * The permission nodes of settings not saved yet, read on their own: the
+ * guild's cached manager holds the saved ones, and must never hold a change.
+ */
+export function readProposedPermissionNodes(settings: ReadonlyGuildData): PermissionNodeManager {
+	return new PermissionNodeManager(settings);
 }

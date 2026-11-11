@@ -130,6 +130,9 @@ class Transaction {
 
 			unconfigured.delete(this.settings.id);
 			Object.assign(this.settings, this.#changes);
+			// The written copy is the cached one, whatever a read that overlapped the
+			// write put in the cache meanwhile.
+			cache.set(this.settings.id, this.settings as GuildData);
 			this.#hasChanges = false;
 			updateSettingsContext(this.settings, this.#changes);
 		} finally {

@@ -295,6 +295,54 @@ describe("parseConfigurationFile", () => {
 		]);
 	});
 
+	// The switches of the Auto-* modules are written by the dashboard, so a
+	// backup carries them and an import sets them.
+	it("reads the switches of the automatic channel modules", () => {
+		const parsed = read({
+			version: 2,
+			settings: {
+				"modules.autodelete": true,
+				"modules.automessage": false,
+				"modules.autopurge": true,
+			},
+		});
+
+		expect(parsed.unsupported).toStrictEqual([]);
+		expect(parsed.settings).toMatchObject([
+			{ name: "modules.autodelete", value: true },
+			{ name: "modules.automessage", value: false },
+			{ name: "modules.autopurge", value: true },
+		]);
+	});
+
+	// The bot removed the type and rewrote its rules: a backup made before reads
+	// as that migration wrote them, as the bot's own import reads it.
+	it("reads a NoMentionSpam rule of an older backup as the MentionsCooldown rule it became", () => {
+		const parsed = read({
+			version: 2,
+			automod: {
+				rules: [
+					{
+						name: "Pings",
+						type: "NoMentionSpam",
+						softAction: 1,
+						options: { mentionsAllowed: 12, timePeriod: 5 },
+					},
+				],
+			},
+		});
+
+		expect(parsed.rules?.[0]).toMatchObject({
+			name: "Pings",
+			type: "MentionsCooldown",
+			options: { maximum: 12, timePeriod: 5, weighted: true },
+			softAction: 1 | 4,
+			hardAction: "Ban",
+			hardActionDuration: null,
+			thresholdMaximum: 0,
+		});
+	});
+
 	it("gives a rule the default of what the file leaves out", () => {
 		const parsed = read({
 			version: 2,
@@ -574,6 +622,22 @@ describe("a file of the bot before V7", () => {
 			removed: [],
 			unchanged: 1,
 		});
+	});
+
+	it("says when the time window of a filter is longer than V7 keeps", () => {
+		const month = 30 * 24 * 60 * 60 * 1000;
+		const parsed = read(
+			legacy({ "selfmod.links.enabled": true, "selfmod.links.threshold-duration": month }),
+		);
+
+		expect(parsed.addedRules[0]?.thresholdDuration).toBeLessThan(month);
+		expect(parsed.notices).toMatchObject([
+			{
+				kind: "ruleAdjusted",
+				rule: "Links",
+				detail: expect.stringContaining("The time window of the rule"),
+			},
+		]);
 	});
 
 	it("edits the rule of a filter the server already has instead of making it twice", () => {

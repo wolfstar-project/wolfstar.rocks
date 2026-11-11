@@ -162,6 +162,20 @@ describe("assertCanEditDashboardAccess and the role order", () => {
 		expect(attempt(admin, current, changes)).toBeNull();
 	});
 
+	// The column is jsonb, which gives an entry back with its keys in another
+	// order: a rule above the writer's role, saved again unchanged, is no change.
+	it("leaves alone a rule read back with its keys in another order", () => {
+		const stored = { id: HEAD_ROLE, deny: [], allow: [], dashboard: "allow" } as const;
+		const current = settings({ permissionsRoles: [stored] as never });
+		const changes = {
+			permissionsRoles: [
+				createAccessEntry(HEAD_ROLE, "allow"),
+				createAccessEntry(LOW_ROLE, "allow"),
+			],
+		};
+		expect(attempt(admin, current, changes)).toBeNull();
+	});
+
 	it("refuses a rule on the owner", () => {
 		const error = attempt(admin, settings(), {
 			permissionsUsers: [createAccessEntry(OWNER, "deny")],

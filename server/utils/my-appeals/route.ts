@@ -122,7 +122,10 @@ function readBotError(error: unknown): { status: number; body: unknown } | null 
  */
 export function throwBotRefusal(error: unknown): never {
 	const refusal = readBotError(error);
-	if (refusal === null || refusal.status >= 500) {
+	// A 401 refuses the session the dashboard minted for the member: the bridge
+	// is misconfigured (a wrong secret or cookie name), which is the dashboard's
+	// fault and must reach Sentry, not pass for the member's own 401.
+	if (refusal === null || refusal.status >= 500 || refusal.status === 401) {
 		throw appealError(502, "The bot could not be reached", "generic");
 	}
 

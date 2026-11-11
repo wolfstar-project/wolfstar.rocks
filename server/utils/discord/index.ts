@@ -15,7 +15,11 @@ import type {
 	RESTAPIPartialCurrentUserGuild,
 } from "discord-api-types/v10";
 import type { H3Event } from "h3";
-import { readSettings, readSettingsPermissionNodes } from "#server/database";
+import {
+	readProposedPermissionNodes,
+	readSettings,
+	readSettingsPermissionNodes,
+} from "#server/database";
 import { accessSubject } from "#server/utils/dashboard-access";
 import { hasAdminPermissions } from "#server/utils/discord/admin";
 import {
@@ -60,7 +64,17 @@ async function getUserIdFromEvent(event: H3Event): Promise<string> {
 
 export { hasAdminPermissions };
 
-async function manage(guild: APIGuild, member: APIGuildMember, settings?: ReadonlyGuildData) {
+/**
+ * @param proposedNodes Whether `settings` is a change not saved yet: its legacy
+ * nodes are then read from it, not from the guild's cached manager, which
+ * holds the saved ones.
+ */
+async function manage(
+	guild: APIGuild,
+	member: APIGuildMember,
+	settings?: ReadonlyGuildData,
+	proposedNodes = false,
+) {
 	if (!member.user || !member.user.id) {
 		return false;
 	}
@@ -81,7 +95,9 @@ async function manage(guild: APIGuild, member: APIGuildMember, settings?: Readon
 		return access === "allow";
 	}
 
-	const nodes = readSettingsPermissionNodes(resolvedSettings);
+	const nodes = proposedNodes
+		? readProposedPermissionNodes(resolvedSettings)
+		: readSettingsPermissionNodes(resolvedSettings);
 	return (
 		hasAdminPermissions(guild, member, resolvedSettings.rolesAdmin) &&
 		((await nodes.run(member, "settings")) ?? true)
@@ -268,8 +284,9 @@ export const canManage = async (
 	guild: APIGuild,
 	member: APIGuildMember,
 	settings?: ReadonlyGuildData,
+	proposedNodes = false,
 ) => {
-	const shouldManage = await manage(guild, member, settings);
+	const shouldManage = await manage(guild, member, settings, proposedNodes);
 	if (!shouldManage) {
 		throw createError({
 			message: "Insufficient permissions",

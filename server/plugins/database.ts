@@ -1,6 +1,9 @@
 import type { H3Event } from "h3";
 import { createDatabase } from "#server/database/prisma";
-import { rememberRequestDatabase } from "#server/utils/audit/request-database";
+import {
+	forgetRequestDatabase,
+	rememberRequestDatabase,
+} from "#server/utils/audit/request-database";
 import { runtime } from "std-env";
 import { CLOUDFLARE_BINDINGS } from "~~/config/cloudflare";
 
@@ -67,6 +70,18 @@ export default defineNitroPlugin((nitroApp) => {
 		// The audit drain finds the client by the ID evlog gives the request
 		// (see `request-database.ts`), so the key is that ID, whichever of the
 		// two request hooks ran first.
-		rememberRequestDatabase(evlogRequestId(event), database);
+		const requestId = evlogRequestId(event);
+		event.context.databaseRequestId = requestId;
+		rememberRequestDatabase(requestId, database);
+	});
+
+	// A request is done with its client once it has answered, unless it logged
+	// an audit event: the drain still writes that one with it, and lets it go
+	// itself (`evlog-drain.ts`). Anything else would keep it past its request.
+	nitroApp.hooks.hook("afterResponse", (event) => {
+		const requestId = event.context.databaseRequestId;
+		if (typeof requestId !== "string") return;
+		const logger = event.context.log as { getContext?: () => { audit?: unknown } } | undefined;
+		if (logger?.getContext?.().audit === undefined) forgetRequestDatabase(requestId);
 	});
 });

@@ -28,6 +28,7 @@ const { findRequestDatabase, forgetRequestDatabase } =
 	await import("#server/utils/audit/request-database");
 
 const onRequest = () => mocks.hooks.request![0]!;
+const afterResponse = () => mocks.hooks.afterResponse![0]!;
 
 describe("the database plugin on Cloudflare Workers", () => {
 	beforeEach(() => {
@@ -96,6 +97,29 @@ describe("the database plugin on Cloudflare Workers", () => {
 		expect(typeof id).toBe("string");
 		expect(findRequestDatabase(id)).toBe(event.context.database);
 		forgetRequestDatabase(id);
+	});
+
+	// The client must not outlive its request: it is let go once the request
+	// has answered, unless the drain still has an audit event to write with it.
+	it("lets the client go when the request ends, unless an audit event waits", () => {
+		const request = (audit?: object) => ({
+			context: {
+				cloudflare: { env: { HYPERDRIVE: { connectionString: "postgres://hyperdrive" } } },
+				log: { getContext: () => ({ requestId: audit ? "audited" : "plain", audit }) },
+			} as Record<string, unknown>,
+			headers: new Headers(),
+		});
+		const plain = request();
+		const audited = request({ action: "guild.settings.access_denied" });
+
+		onRequest()(plain);
+		onRequest()(audited);
+		afterResponse()(plain);
+		afterResponse()(audited);
+
+		expect(findRequestDatabase("plain")).toBeUndefined();
+		expect(findRequestDatabase("audited")).toBe(audited.context.database);
+		forgetRequestDatabase("audited");
 	});
 
 	// Nitro's `$fetch` and `localFetch` calls inside a request (the translations,

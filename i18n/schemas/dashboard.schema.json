@@ -67,6 +67,21 @@
 						"log_aria": {
 							"type": "string"
 						},
+						"markdown": {
+							"type": "object",
+							"properties": {
+								"unknown_channel": {
+									"type": "string"
+								},
+								"unknown_role": {
+									"type": "string"
+								},
+								"unknown_user": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
 						"no_messages": {
 							"type": "string"
 						},

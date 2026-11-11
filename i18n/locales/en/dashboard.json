@@ -21,6 +21,11 @@
 			"intro": "This is the beginning of your direct message history with {name}.",
 			"load_failed": "The posts couldn't be loaded from Discord.",
 			"log_aria": "Messages from {name}",
+			"markdown": {
+				"unknown_channel": "unknown-channel",
+				"unknown_role": "unknown-role",
+				"unknown_user": "unknown-user"
+			},
 			"no_messages": "No messages yet",
 			"no_reply": "You can't reply to {name}. It only sends news here.",
 			"open_in_discord": "Open in Discord",

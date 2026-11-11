@@ -5,7 +5,7 @@ export const MOCK_ANNOUNCEMENTS: Announcement[] = [
 	{
 		at: "2026-10-11T09:12:00.000Z",
 		content:
-			"## Dashboard v3\nThanks <@Moderator>, read more in <#rules>.\n- Pins\n- Recent modules",
+			"## Dashboard v3\nThanks <@Moderator> and <@Jane Doe>, read more in <#rules>.\n- Pins\n- Recent modules",
 		embeds: [],
 		id: "1290000000000000001",
 		images: [],

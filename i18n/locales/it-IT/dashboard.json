@@ -21,6 +21,11 @@
 			"intro": "Questo è l'inizio della cronologia dei tuoi messaggi diretti con {name}.",
 			"load_failed": "",
 			"log_aria": "Messaggi da {name}",
+			"markdown": {
+				"unknown_channel": "",
+				"unknown_role": "",
+				"unknown_user": ""
+			},
 			"no_messages": "Ancora nessun messaggio",
 			"no_reply": "Non puoi rispondere a {name}. Qui invia solo novità.",
 			"open_in_discord": "",

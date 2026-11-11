@@ -21,6 +21,11 @@
 			"intro": "",
 			"load_failed": "",
 			"log_aria": "",
+			"markdown": {
+				"unknown_channel": "",
+				"unknown_role": "",
+				"unknown_user": ""
+			},
 			"no_messages": "",
 			"no_reply": "",
 			"open_in_discord": "",

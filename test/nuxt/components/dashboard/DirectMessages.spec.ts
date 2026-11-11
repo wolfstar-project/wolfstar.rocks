@@ -43,6 +43,9 @@ describe("dashboard direct messages", () => {
 		await vi.waitFor(() => expect(thread.findAll("article")).toHaveLength(2));
 		expect(thread.text()).toContain("Dashboard v3");
 		expect(thread.text()).toContain("@Moderator");
+		// A name with a space is still a mention, not the raw `<@…>`.
+		expect(thread.text()).toContain("@Jane Doe");
+		expect(thread.text()).not.toContain("<@");
 		expect(thread.text()).toContain("WolfStar v7");
 		expect(thread.get('a[href="https://wolfstar.rocks/changelog"]').attributes("target")).toBe(
 			"_blank",

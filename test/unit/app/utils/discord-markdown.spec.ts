@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
 	discordPlainText,
 	parseDiscordInline,
+	keyMentions,
 	parseDiscordMarkdown,
+	postHeadingOffset,
 } from "~/utils/discord-markdown";
 
 describe("parseDiscordInline", () => {
@@ -144,5 +146,52 @@ describe("discordPlainText", () => {
 				"\n## **v7** for <@Moderator> in <#rules> <:wolf:123456789012345678>\nmore",
 			),
 		).toBe("v7 for @Moderator in #rules :wolf:");
+	});
+});
+
+describe("postHeadingOffset", () => {
+	// The thread's name is the page's <h2>: a post's top heading is an <h3>,
+	// whatever size it is written in, so a post never skips a level.
+	it("makes a post's top heading an h3, whatever its size", () => {
+		expect(postHeadingOffset("# Big\n## Smaller")).toBe(2);
+		expect(postHeadingOffset("## Dashboard v3\nText")).toBe(1);
+		expect(postHeadingOffset("### Small")).toBe(0);
+	});
+
+	it("reads a heading after the blank lines a post starts with", () => {
+		expect(postHeadingOffset("\n  ## Dashboard v3")).toBe(1);
+	});
+
+	it("reads the headings in a quote, and keeps newt/ui's default without any", () => {
+		expect(postHeadingOffset("> ## Quoted")).toBe(1);
+		expect(postHeadingOffset("Just text")).toBe(2);
+	});
+});
+
+describe("keyMentions", () => {
+	// newt/ui reads a mention only without spaces, and takes digits for an ID.
+	it("swaps each name for a key the renderer reads, and keeps the names", () => {
+		const { content, names } = keyMentions("Thanks <@Jane Doe> and <@12345>, see <#rules>.");
+
+		expect(content).toBe("Thanks <@m0> and <@m1>, see <#m2>.");
+		expect([...names]).toStrictEqual([
+			["m0", "Jane Doe"],
+			["m1", "12345"],
+			["m2", "rules"],
+		]);
+	});
+
+	it("leaves a mention inside code as written, where it is not read", () => {
+		const source = "Use `<@Jane Doe>` here:\n```\n<#rules>\n```\nThanks <@Jane Doe>.";
+		const { content, names } = keyMentions(source);
+
+		expect(content).toBe("Use `<@Jane Doe>` here:\n```\n<#rules>\n```\nThanks <@m0>.");
+		expect([...names]).toStrictEqual([["m0", "Jane Doe"]]);
+	});
+
+	it("leaves a timestamp and a server emoji alone", () => {
+		expect(keyMentions("<t:1700000000:R> <:wolf:700000000000000001>").content).toBe(
+			"<t:1700000000:R> <:wolf:700000000000000001>",
+		);
 	});
 });

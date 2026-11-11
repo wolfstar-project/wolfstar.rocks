@@ -1,3 +1,4 @@
+import { parseMarkdown, type MarkdownBlock } from "~/components/ui/markdown/markdown-syntax";
 /**
  * The part of Discord's message markdown the dashboard shows: lines, `# `,
  * `## ` and `### ` headings, `- ` list items, `> ` quotes and `-# ` subtext,
@@ -144,4 +145,54 @@ export function discordInlineText(parts: readonly DiscordInline[]): string {
 			return part.content;
 		})
 		.join("");
+}
+
+/** The heading levels a post written in Discord markdown uses, quotes included. */
+function headingLevels(blocks: readonly MarkdownBlock[]): number[] {
+	return blocks.flatMap((block) => {
+		if (block.type === "heading") return [block.level];
+		return block.type === "quote" ? headingLevels(block.children) : [];
+	});
+}
+
+/**
+ * What newt/ui's `Markdown` adds to a post's heading levels so that its top
+ * heading is a `<h3>`, under the thread's `<h2>`, whatever size it is written
+ * in: a post of `##` alone must not skip a level.
+ */
+export function postHeadingOffset(content: string): number {
+	// Trimmed as the thread hands it to `Markdown`: a heading is read at the start of a line only.
+	const levels = headingLevels(parseMarkdown(content.trim()));
+	return levels.length === 0 ? 2 : 3 - Math.min(...levels);
+}
+
+/** A post's mentions, readied for newt/ui's `Markdown`. */
+export interface KeyedMentions {
+	/** The post, each mention written with a key in place of its name. */
+	content: string;
+	/** The name of each key. */
+	names: ReadonlyMap<string, string>;
+}
+
+/**
+ * Readies the mentions of a post for newt/ui's `Markdown`. The server writes
+ * each mention with the name Discord shows (`<@Jane Doe>`, `<#rules>`), but
+ * `Markdown` reads a mention only without spaces, and takes a name made of
+ * digits for an ID it does not know. Each name is swapped for a key the
+ * renderer accepts, and `names` gives it back through `resolveMention`.
+ */
+export function keyMentions(content: string): KeyedMentions {
+	const names = new Map<string, string>();
+	// Code is shown as written, where newt/ui reads no mention: a code block
+	// or an inline code span is matched first and kept as it is.
+	const keyed = content.replaceAll(
+		/(```[\s\S]*?```|`[^`\n]*`)|<([@#])([^<>\n]+)>/g,
+		(match, code: string | undefined, kind: string, name: string) => {
+			if (code !== undefined) return match;
+			const key = `m${names.size}`;
+			names.set(key, name);
+			return `<${kind}${key}>`;
+		},
+	);
+	return { content: keyed, names };
 }

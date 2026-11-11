@@ -29,19 +29,6 @@ function hyperdriveConnectionString(cloudflare: unknown): string | undefined {
 }
 
 /**
- * On Cloudflare Workers, gives each request its own database client, made from
- * the Hyperdrive binding. The client connects lazily, on the request's first
- * query. Idle connections are never timed out (`0`), since that timer would
- * fire during another request; the runtime closes the request's sockets when
- * the request, and what it hands to `waitUntil`, is done.
- *
- * A request made inside another one with the global `$fetch`, as the
- * translations and the icons are during server rendering, carries no bindings
- * and gets no client. The hook must not throw for it: Nitro would skip the
- * `request` hooks after this one, evlog's among them, and the request would
- * fail for want of a logger.
- */
-/**
  * The ID evlog gives a request, which the drain reads back as
  * `ctx.request.requestId`. Once evlog's request hook has run, its logger holds
  * it. Before, it is the one evlog will pick: Cloudflare's ray on Workers, else
@@ -58,6 +45,19 @@ function evlogRequestId(event: H3Event): string {
 	return event.context.requestId;
 }
 
+/**
+ * On Cloudflare Workers, gives each request its own database client, made from
+ * the Hyperdrive binding. The client connects lazily, on the request's first
+ * query. Idle connections are never timed out (`0`), since that timer would
+ * fire during another request; the runtime closes the request's sockets when
+ * the request, and what it hands to `waitUntil`, is done.
+ *
+ * A request made inside another one with the global `$fetch`, as the
+ * translations and the icons are during server rendering, carries no bindings
+ * and gets no client. The hook must not throw for it: Nitro would skip the
+ * `request` hooks after this one, evlog's among them, and the request would
+ * fail for want of a logger.
+ */
 export default defineNitroPlugin((nitroApp) => {
 	if (runtime !== "workerd") return;
 

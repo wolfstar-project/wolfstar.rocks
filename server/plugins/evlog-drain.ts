@@ -1,6 +1,7 @@
 import { promises as fsp } from "node:fs";
 import { join } from "node:path";
 import { createPostgresAuditDrain } from "#server/utils/audit/postgres-drain";
+import { findRequestDatabase, forgetRequestDatabase } from "#server/utils/audit/request-database";
 import { type DrainContext, auditOnly, signed } from "evlog";
 import { createFsDrain } from "evlog/fs";
 import { createDrainPipeline } from "evlog/pipeline";
@@ -14,7 +15,10 @@ const isWorkers = globalThis.navigator?.userAgent === "Cloudflare-Workers";
 export default defineNitroPlugin((nitroApp) => {
 	const config = useRuntimeConfig();
 	const sentry = config.public.sentry.dsn ? createSentryDrain() : undefined;
-	const postgresAudit = createPostgresAuditDrain();
+	// On Workers, with the client of the event's own request: see `request-database.ts`.
+	const postgresAudit = createPostgresAuditDrain((ctx) =>
+		findRequestDatabase(ctx.request?.requestId),
+	);
 
 	async function drainBatch(batch: DrainContext[]) {
 		const tasks: Array<{ promise: Promise<unknown>; tag: string; ctx?: DrainContext }> = [];
@@ -59,7 +63,13 @@ export default defineNitroPlugin((nitroApp) => {
 		// hook instead of in a batch that a later timer would flush outside any
 		// request. A Worker has no file system for the secondary journal either;
 		// the Postgres hash chain is the record there.
-		nitroApp.hooks.hook("evlog:drain", (ctx) => drainBatch([ctx]));
+		nitroApp.hooks.hook("evlog:drain", async (ctx) => {
+			try {
+				await drainBatch([ctx]);
+			} finally {
+				forgetRequestDatabase(ctx.request?.requestId);
+			}
+		});
 		return;
 	}
 

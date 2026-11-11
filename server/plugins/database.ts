@@ -1,4 +1,5 @@
 import { createDatabase } from "#server/database/prisma";
+import { rememberRequestDatabase } from "#server/utils/audit/request-database";
 import { runtime } from "std-env";
 import { CLOUDFLARE_BINDINGS } from "~~/config/cloudflare";
 
@@ -42,6 +43,13 @@ export default defineNitroPlugin((nitroApp) => {
 	nitroApp.hooks.hook("request", (event) => {
 		const url = hyperdriveConnectionString(event.context.cloudflare);
 		if (url === undefined) return;
-		event.context.database = createDatabase(url, 0);
+		const database = createDatabase(url, 0);
+		event.context.database = database;
+
+		// The ID evlog gives the request: Cloudflare's ray, or the one set here.
+		// The audit drain finds the client by it, see `request-database.ts`.
+		const requestId = event.headers?.get("cf-ray") ?? crypto.randomUUID();
+		event.context.requestId ??= requestId;
+		rememberRequestDatabase(requestId, database);
 	});
 });

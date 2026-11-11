@@ -24,6 +24,8 @@ vi.mock("std-env", async (importOriginal) => ({
 vi.mock("#server/database/prisma", () => ({ createDatabase: mocks.createDatabase }));
 
 await import("~~/server/plugins/database");
+const { findRequestDatabase, forgetRequestDatabase } =
+	await import("#server/utils/audit/request-database");
 
 const onRequest = () => mocks.hooks.request![0]!;
 
@@ -43,6 +45,25 @@ describe("the database plugin on Cloudflare Workers", () => {
 
 		expect(mocks.createDatabase).toHaveBeenCalledWith("postgres://hyperdrive", 0);
 		expect(event.context.database).toStrictEqual({ url: "postgres://hyperdrive" });
+	});
+
+	// h3 reports a thrown error outside the request's async context, where the
+	// audit drain cannot read `db`: it finds the client by the request's ID.
+	it("remembers the client by the ID evlog gives the request", () => {
+		const event = {
+			context: {
+				cloudflare: { env: { HYPERDRIVE: { connectionString: "postgres://hyperdrive" } } },
+			} as Record<string, unknown>,
+			headers: new Headers({ "cf-ray": "8f1c2d3e4f5a6b7c-MXP" }),
+		};
+
+		onRequest()(event);
+
+		expect(findRequestDatabase("8f1c2d3e4f5a6b7c-MXP")).toBe(event.context.database);
+		expect(event.context.requestId).toBe("8f1c2d3e4f5a6b7c-MXP");
+
+		forgetRequestDatabase("8f1c2d3e4f5a6b7c-MXP");
+		expect(findRequestDatabase("8f1c2d3e4f5a6b7c-MXP")).toBeUndefined();
 	});
 
 	// Nitro's `$fetch` and `localFetch` calls inside a request (the translations,

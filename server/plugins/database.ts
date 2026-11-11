@@ -1,3 +1,4 @@
+import type { H3Event } from "h3";
 import { createDatabase } from "#server/database/prisma";
 import { rememberRequestDatabase } from "#server/utils/audit/request-database";
 import { runtime } from "std-env";
@@ -37,6 +38,23 @@ function hyperdriveConnectionString(cloudflare: unknown): string | undefined {
  * `request` hooks after this one, evlog's among them, and the request would
  * fail for want of a logger.
  */
+/**
+ * The ID evlog gives a request, which the drain reads back as
+ * `ctx.request.requestId`. Once evlog's request hook has run, its logger holds
+ * it. Before, it is the one evlog will pick: Cloudflare's ray on Workers, else
+ * `event.context.requestId`, which is set here so evlog takes the same.
+ */
+function evlogRequestId(event: H3Event): string {
+	const logger = event.context.log as { getContext?: () => { requestId?: unknown } } | undefined;
+	const fromLogger = logger?.getContext?.().requestId;
+	if (typeof fromLogger === "string") return fromLogger;
+
+	const ray = event.headers?.get("cf-ray");
+	if (ray) return ray;
+	event.context.requestId ??= crypto.randomUUID();
+	return event.context.requestId;
+}
+
 export default defineNitroPlugin((nitroApp) => {
 	if (runtime !== "workerd") return;
 
@@ -46,10 +64,9 @@ export default defineNitroPlugin((nitroApp) => {
 		const database = createDatabase(url, 0);
 		event.context.database = database;
 
-		// The ID evlog gives the request: Cloudflare's ray, or the one set here.
-		// The audit drain finds the client by it, see `request-database.ts`.
-		const requestId = event.headers?.get("cf-ray") ?? crypto.randomUUID();
-		event.context.requestId ??= requestId;
-		rememberRequestDatabase(requestId, database);
+		// The audit drain finds the client by the ID evlog gives the request
+		// (see `request-database.ts`), so the key is that ID, whichever of the
+		// two request hooks ran first.
+		rememberRequestDatabase(evlogRequestId(event), database);
 	});
 });

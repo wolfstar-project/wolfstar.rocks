@@ -82,6 +82,23 @@ describe("GuildReviewQueue", () => {
 		await vi.waitFor(() => expect(requestedOffsets).toContain(25));
 	});
 
+	// Reports closed in Discord meanwhile: the page shown no longer exists.
+	it("goes back to the last page when a refresh leaves fewer pages", async () => {
+		serverTotal = 60;
+		const wrapper = await mountSuspended(GuildReviewQueue);
+		const next = () => wrapper.find('nav button[data-slot="next"]');
+		await vi.waitFor(() => expect(next().exists()).toBe(true));
+		await next().trigger("click");
+		await vi.waitFor(() => expect(requestedOffsets).toContain(25));
+
+		serverTotal = 10;
+		requestedOffsets.length = 0;
+		const refreshButton = () => wrapper.get('button[aria-label="Refresh reports"]');
+		await vi.waitFor(() => expect(refreshButton().attributes("disabled")).toBeUndefined());
+		await refreshButton().trigger("click");
+		await vi.waitFor(() => expect(requestedOffsets.at(-1)).toBe(0));
+	});
+
 	it("opens on the open reports, newest first", async () => {
 		const wrapper = await mountSuspended(GuildReviewQueue);
 

@@ -18,6 +18,7 @@ const mocks = vi.hoisted(() => ({
 	}),
 	writeAutoModerationRulePlan: vi.fn(),
 	reload: vi.fn(),
+	committed: vi.fn(),
 	/** The transaction that holds the lock of the rules. */
 	lockTransaction: { orm: { locked: true } },
 }));
@@ -29,6 +30,7 @@ vi.mock("#server/database", () => ({
 		write: vi.fn(),
 		reload: mocks.reload,
 		submit: mocks.submit,
+		committed: mocks.committed,
 		[Symbol.dispose]: vi.fn(),
 	}),
 }));
@@ -90,6 +92,11 @@ describe("applyConfigurationImport and the rules a file of the bot before V7 add
 			mocks.submit.mock.invocationCallOrder[0]!,
 		);
 		expect(mocks.submit.mock.calls[0]?.[2]).toBe(mocks.lockTransaction);
+		// The cache learns of the settings once that transaction has committed.
+		expect(mocks.committed).toHaveBeenCalledOnce();
+		expect(mocks.committed.mock.invocationCallOrder[0]).toBeGreaterThan(
+			mocks.submit.mock.invocationCallOrder[0]!,
+		);
 	});
 
 	it("adds them to the rules the server has when it is written, keeping a rule added after the preview", async () => {

@@ -75,4 +75,30 @@ describe("readFreshSettings", () => {
 
 		expect(isGuildUnconfigured(guild)).toBe(false);
 	});
+
+	// A write made in another's transaction is not saved until that one
+	// commits: the cache must not serve it before, nor after a rollback.
+	it("caches a write made in another's transaction only once it has committed", async () => {
+		const guild = "423456789012345678";
+		mockFetchGuildData.mockResolvedValueOnce({ id: guild, language: "en-US" });
+		const outer = { execute: vi.fn(), orm: {} };
+		{
+			using trx = await writeSettingsTransaction(guild);
+			await trx.write({ language: "de" }).submit(undefined, undefined, outer as never);
+			expect((await readSettings(guild)).language).toBe("en-US");
+			trx.committed();
+		}
+		expect((await readSettings(guild)).language).toBe("de");
+	});
+
+	it("drops a write made in another's transaction that never committed", async () => {
+		const guild = "523456789012345678";
+		mockFetchGuildData.mockResolvedValueOnce({ id: guild, language: "en-US" });
+		const outer = { execute: vi.fn(), orm: {} };
+		{
+			using trx = await writeSettingsTransaction(guild);
+			await trx.write({ language: "de" }).submit(undefined, undefined, outer as never);
+		}
+		expect((await readSettings(guild)).language).toBe("en-US");
+	});
 });

@@ -7,6 +7,7 @@ const mocks = vi.hoisted(() => {
 		write: vi.fn(),
 		reload: vi.fn(),
 		submit: vi.fn(),
+		committed: vi.fn(),
 		[Symbol.dispose]: vi.fn(),
 	};
 	return {

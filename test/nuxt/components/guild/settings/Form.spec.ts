@@ -397,6 +397,32 @@ describe("Form - Reset Behavior", () => {
 			expect((wrapper.find("#muted-input").element as HTMLInputElement).value).toBe("!");
 		});
 
+		// General keeps the language as a picker item, not as the saved string.
+		it("puts the saved value back into a picker item when it resets", async () => {
+			mockGuildSettingsChanges.value = { language: "de" } as GuildData;
+			const Picker = defineComponent({
+				components: { Form },
+				setup() {
+					const state = reactive({ language: { label: "Deutsch", value: "de" } });
+					const map = (form: typeof state): Partial<GuildData> => ({
+						language: form.language.value,
+					});
+					return { map, state, testSchema: v.any() };
+				},
+				template: `
+					<Form :schema="testSchema" :state="state" :map-to-guild-data="map">
+						<span id="language-value">{{ state.language.value }}</span>
+					</Form>
+				`,
+			});
+			const wrapper = await mountSuspended(Picker);
+			await nextTick();
+			await nextTick();
+
+			await reset();
+			expect(wrapper.find("#language-value").text()).toBe("en-US");
+		});
+
 		it("resets an edit to what is stored after a save of keys it does not hold", async () => {
 			const wrapper = await mountEdited();
 

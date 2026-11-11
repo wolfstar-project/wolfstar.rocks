@@ -69,7 +69,7 @@ export async function applyConfigurationImport(
 
 	// Awaited here: the lock of the settings is released when this function
 	// returns, which a promise that is only returned would do before it settles.
-	return await writeAutoModerationRules(guildId, async (rules, orm, tx) => {
+	const applied = await writeAutoModerationRules(guildId, async (rules, orm, tx) => {
 		// The settings were read before the lock of the rules was taken, and
 		// another import may have written since: read under it, the plan is made
 		// from what the database has now.
@@ -125,6 +125,10 @@ export async function applyConfigurationImport(
 			audit: buildAudit(plan, created),
 		};
 	});
+	// The rules' transaction holds the settings too: only now that it has
+	// committed do they reach the cache.
+	transaction.committed();
+	return applied;
 }
 
 function toSettings(settings: Parameters<typeof serializeSettings>[0]) {

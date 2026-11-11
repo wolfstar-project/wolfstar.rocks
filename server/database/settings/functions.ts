@@ -82,6 +82,8 @@ class Transaction {
 	#changes = Object.create(null) as Partial<ReadonlyGuildData>;
 	#hasChanges = false;
 	#locking = true;
+	/** What a write made in another's transaction keeps for its commit. */
+	#afterCommit: (() => void) | null = null;
 
 	public constructor(
 		public readonly settings: ReadonlyGuildData,
@@ -147,22 +149,45 @@ class Transaction {
 				within,
 			);
 
-			unconfigured.delete(this.settings.id);
-			Object.assign(this.settings, this.#changes);
-			// The written copy is the cached one, whatever a read that overlapped the
-			// write put in the cache meanwhile; a read still running is not cached.
-			writeCounts.set(this.settings.id, (writeCounts.get(this.settings.id) ?? 0) + 1);
-			cache.set(this.settings.id, this.settings as GuildData);
+			const changes = this.#changes;
+			const remember = () => {
+				unconfigured.delete(this.settings.id);
+				Object.assign(this.settings, changes);
+				// The written copy is the cached one, whatever a read that overlapped the
+				// write put in the cache meanwhile; a read still running is not cached.
+				writeCounts.set(this.settings.id, (writeCounts.get(this.settings.id) ?? 0) + 1);
+				cache.set(this.settings.id, this.settings as GuildData);
+				updateSettingsContext(this.settings, changes);
+			};
 			this.#hasChanges = false;
-			updateSettingsContext(this.settings, this.#changes);
+			// Written in a transaction this one does not own: nothing is saved until
+			// it commits, so the cache learns of it and the lock is let go then, in
+			// `committed()`, or the lock alone is let go when the write is dropped.
+			if (within) {
+				this.#afterCommit = remember;
+				return;
+			}
+			remember();
 		} finally {
 			this.#changes = Object.create(null);
 
-			if (this.#locking) {
+			if (this.#locking && !this.#afterCommit) {
 				this.queue?.shift();
 				this.#locking = false;
 			}
 		}
+	}
+
+	/**
+	 * Tells the transaction that the one it wrote in, through `within`, has
+	 * committed: the cache and the permission nodes take the changes, and the
+	 * next write of the guild may start.
+	 */
+	public committed() {
+		const remember = this.#afterCommit;
+		this.#afterCommit = null;
+		remember?.();
+		this.dispose();
 	}
 
 	public abort() {

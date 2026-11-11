@@ -132,14 +132,33 @@ function savedBaseline(): T {
 
 	for (const key of objectKeys(staged)) {
 		if (!(key in baseline)) continue;
-		const value = saved[key];
-		// A text the server holds as nothing is an empty text in the form.
-		baseline[key] =
-			typeof baseline[key] === "string" && (value === null || value === undefined)
-				? ""
-				: structuredClone(toRaw(value));
+		baseline[key] = asFormValue(baseline[key], structuredClone(toRaw(saved[key])));
 	}
 	return baseline as T;
+}
+
+/**
+ * The saved value of a key, in the shape the form holds it in. A form can keep
+ * a setting in another shape than the settings, as General keeps the language
+ * as a picker item (`{ label, value }`): the saved value goes into that item.
+ * A shape it cannot be put back into keeps what the form opened with.
+ */
+function asFormValue(current: unknown, saved: unknown): unknown {
+	// A text the server holds as nothing is an empty text in the form.
+	if (typeof current === "string" && (saved === null || saved === undefined)) return "";
+	if (
+		typeof current === "object" &&
+		current !== null &&
+		!Array.isArray(current) &&
+		"value" in current
+	) {
+		return { ...current, value: saved };
+	}
+	const sameShape =
+		current === null ||
+		saved === null ||
+		(Array.isArray(current) ? Array.isArray(saved) : typeof current === typeof saved);
+	return sameShape ? saved : current;
 }
 
 watchEffect(() => {

@@ -14,13 +14,27 @@ export function useAutomodWordExamples(word: MaybeRefOrGetter<string>) {
 	let worker: Worker | null = null;
 	let timer: ReturnType<typeof setTimeout> | undefined;
 	let lastId = 0;
+	// Whether the worker has loaded, and whether it still owes an answer.
+	let ready = false;
 	let busy = false;
 
 	function stopWorker() {
 		clearTimeout(timer);
 		worker?.terminate();
 		worker = null;
+		ready = false;
 		busy = false;
+	}
+
+	// Counted from when the worker can run the request, not from the load of
+	// its code, as the preview counts its own.
+	function startTimeout(id: number) {
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			if (id !== lastId) return;
+			stopWorker();
+			examples.value = [];
+		}, EXAMPLES_TIMEOUT);
 	}
 
 	function start(): Worker | null {
@@ -35,7 +49,14 @@ export function useAutomodWordExamples(word: MaybeRefOrGetter<string>) {
 		}
 		worker.addEventListener(
 			"message",
-			(event: MessageEvent<{ id?: number; examples?: AutomodWordExample[] }>) => {
+			(
+				event: MessageEvent<{ id?: number; examples?: AutomodWordExample[]; ready?: true }>,
+			) => {
+				if (event.data.ready) {
+					ready = true;
+					if (busy) startTimeout(lastId);
+					return;
+				}
 				if (event.data.id === undefined) return;
 				busy = false;
 				if (event.data.id !== lastId || !event.data.examples) return;
@@ -52,6 +73,8 @@ export function useAutomodWordExamples(word: MaybeRefOrGetter<string>) {
 		const id = ++lastId;
 		clearTimeout(timer);
 		if (candidate.length === 0) {
+			// A word still being checked would run on with nothing to stop it.
+			if (busy) stopWorker();
 			examples.value = [];
 			return;
 		}
@@ -62,11 +85,7 @@ export function useAutomodWordExamples(word: MaybeRefOrGetter<string>) {
 			return;
 		}
 		busy = true;
-		timer = setTimeout(() => {
-			if (id !== lastId) return;
-			stopWorker();
-			examples.value = [];
-		}, EXAMPLES_TIMEOUT);
+		if (ready) startTimeout(id);
 		active.postMessage({ id, kind: "examples", word: candidate });
 	}, 150);
 

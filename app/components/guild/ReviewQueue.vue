@@ -178,6 +178,17 @@ const { entries, total, status, refresh } = useReports({
 	status: () => (selected.value === "all" ? undefined : selected.value),
 });
 
+// Reports closed in Discord meanwhile can leave fewer pages than the one
+// shown, whose pager is then gone: the last page there is is shown instead.
+watch(
+	() => [total.value, status.value] as const,
+	([count, current]) => {
+		if (current !== "success") return;
+		const last = Math.max(1, Math.ceil(count / QUEUE_LIMIT));
+		if (page.value > last) page.value = last;
+	},
+);
+
 const filters = computed(() => [
 	{ label: ts("guild_settings.reports.queue.status.all"), value: "all" as const },
 	...REPORT_STATUSES.map((value) => ({ label: ts(STATUS_LABEL_KEYS[value]), value })),

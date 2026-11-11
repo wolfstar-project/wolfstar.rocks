@@ -165,3 +165,28 @@ export function postHeadingOffset(content: string): number {
 	const levels = headingLevels(parseMarkdown(content.trim()));
 	return levels.length === 0 ? 2 : 3 - Math.min(...levels);
 }
+
+/** A post's mentions, readied for newt/ui's `Markdown`. */
+export interface KeyedMentions {
+	/** The post, each mention written with a key in place of its name. */
+	content: string;
+	/** The name of each key. */
+	names: ReadonlyMap<string, string>;
+}
+
+/**
+ * Readies the mentions of a post for newt/ui's `Markdown`. The server writes
+ * each mention with the name Discord shows (`<@Jane Doe>`, `<#rules>`), but
+ * `Markdown` reads a mention only without spaces, and takes a name made of
+ * digits for an ID it does not know. Each name is swapped for a key the
+ * renderer accepts, and `names` gives it back through `resolveMention`.
+ */
+export function keyMentions(content: string): KeyedMentions {
+	const names = new Map<string, string>();
+	const keyed = content.replaceAll(/<([@#])([^<>\n]+)>/g, (_, kind: string, name: string) => {
+		const key = `m${names.size}`;
+		names.set(key, name);
+		return `<${kind}${key}>`;
+	});
+	return { content: keyed, names };
+}

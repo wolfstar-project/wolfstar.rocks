@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
 	discordPlainText,
 	parseDiscordInline,
+	keyMentions,
 	parseDiscordMarkdown,
 	postHeadingOffset,
 } from "~/utils/discord-markdown";
@@ -164,5 +165,25 @@ describe("postHeadingOffset", () => {
 	it("reads the headings in a quote, and keeps newt/ui's default without any", () => {
 		expect(postHeadingOffset("> ## Quoted")).toBe(1);
 		expect(postHeadingOffset("Just text")).toBe(2);
+	});
+});
+
+describe("keyMentions", () => {
+	// newt/ui reads a mention only without spaces, and takes digits for an ID.
+	it("swaps each name for a key the renderer reads, and keeps the names", () => {
+		const { content, names } = keyMentions("Thanks <@Jane Doe> and <@12345>, see <#rules>.");
+
+		expect(content).toBe("Thanks <@m0> and <@m1>, see <#m2>.");
+		expect([...names]).toStrictEqual([
+			["m0", "Jane Doe"],
+			["m1", "12345"],
+			["m2", "rules"],
+		]);
+	});
+
+	it("leaves a timestamp and a server emoji alone", () => {
+		expect(keyMentions("<t:1700000000:R> <:wolf:700000000000000001>").content).toBe(
+			"<t:1700000000:R> <:wolf:700000000000000001>",
+		);
 	});
 });

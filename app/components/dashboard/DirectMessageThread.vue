@@ -83,14 +83,7 @@
 							</Button>
 						</MessageGroupHeader>
 						<MessageGroupContent v-if="item.content">
-							<Markdown
-								:content="item.content.trim()"
-								:heading-offset="postHeadingOffset(item.content)"
-								:resolve-emoji="emojiURL"
-								:locale="timeLocale"
-								:labels="markdownLabels"
-								:link-warning="false"
-							/>
+							<DashboardPostMarkdown :source="item.content" />
 						</MessageGroupContent>
 						<Embed
 							v-for="(embed, index) of item.embeds"
@@ -110,14 +103,7 @@
 								<template v-else>{{ embed.title }}</template>
 							</EmbedTitle>
 							<EmbedDescription v-if="embed.description">
-								<Markdown
-									:content="embed.description.trim()"
-									:heading-offset="postHeadingOffset(embed.description)"
-									:resolve-emoji="emojiURL"
-									:locale="timeLocale"
-									:labels="markdownLabels"
-									:link-warning="false"
-								/>
+								<DashboardPostMarkdown :source="embed.description" />
 							</EmbedDescription>
 							<img
 								v-if="embed.image"
@@ -184,7 +170,6 @@ import { Avatar, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Divider } from "~/components/ui/divider";
 import { Embed, EmbedDescription, EmbedTitle } from "~/components/ui/embed";
-import { Markdown, type MarkdownLabels } from "~/components/ui/markdown";
 import {
 	MessageGroup,
 	MessageGroupAuthor,
@@ -205,21 +190,6 @@ import { Skeleton } from "~/components/ui/skeleton";
  */
 const { ts, tc } = useI18n();
 const { locale, timeLocale } = useAppLocale();
-
-// The words newt/ui's markdown writes itself, translated. Its warning before a
-// masked link stays off: the dialog it opens takes no focus and traps none, so
-// a keyboard or screen reader user would be left behind it. A masked link
-// opens in a new tab, with its address as its title, as it did before.
-const markdownLabels = computed<Partial<MarkdownLabels>>(() => ({
-	unknownChannel: ts("dashboard.dm.markdown.unknown_channel"),
-	unknownRole: ts("dashboard.dm.markdown.unknown_role"),
-	unknownUser: ts("dashboard.dm.markdown.unknown_user"),
-}));
-
-/** A server emoji's image on Discord's CDN: newt/ui fetches none itself. */
-function emojiURL(emoji: { id: string; animated: boolean }): string {
-	return `https://cdn.discordapp.com/emojis/${emoji.id}.${emoji.animated ? "gif" : "webp"}?size=48`;
-}
 const { thread, markRead, statusOf, reload } = useDirectMessages();
 const { isPhone, screen } = usePhoneScreen();
 

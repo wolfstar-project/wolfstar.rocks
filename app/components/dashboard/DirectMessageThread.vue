@@ -126,20 +126,33 @@
 								:aria-label="ts('dashboard.dm.reactions')"
 							>
 								<!-- Discord's counts, read-only: the dashboard cannot react as the reader. -->
-								<Reaction
+								<span
 									v-for="reaction of item.reactions"
 									:key="reaction.name"
-									:emoji="reaction.image ? `:${reaction.name}:` : reaction.name"
-									:count="reaction.count"
+									role="img"
 									:aria-label="
-										ts('dashboard.dm.reaction', {
-											emoji: reaction.name,
+										tc('dashboard.dm.reaction', {
 											count: reaction.count,
+											emoji: reaction.name,
 										})
 									"
-									disabled
-									class="disabled:cursor-default"
-								/>
+									:class="reactionVariants()"
+									class="cursor-default hover:bg-newt-bg-surface"
+								>
+									<img
+										v-if="reaction.image"
+										:src="reaction.image"
+										alt=""
+										width="16"
+										height="16"
+										loading="lazy"
+										class="size-4"
+									/>
+									<span v-else aria-hidden="true">{{ reaction.name }}</span>
+									<span aria-hidden="true" class="text-xs font-semibold">{{
+										reaction.count
+									}}</span>
+								</span>
 							</MessageGroupReactions>
 						</MessageGroupBody>
 					</MessageGroup>
@@ -176,14 +189,14 @@ import {
 	MessageGroupReactions,
 	MessageGroupTime,
 } from "~/components/ui/message-group";
-import { Reaction } from "~/components/ui/reaction";
+import { reactionVariants } from "~/components/ui/reaction";
 import { Skeleton } from "~/components/ui/skeleton";
 
 /**
  * The open thread of the Home: a bot's posts, read-only, drawn with newt/ui's
  * Discord message parts. Opening it marks them read.
  */
-const { ts } = useI18n();
+const { ts, tc } = useI18n();
 const { locale, timeLocale } = useAppLocale();
 const { thread, markRead, statusOf, reload } = useDirectMessages();
 

@@ -1,9 +1,8 @@
 <template>
 	<template v-for="(part, index) in parts" :key="index">
-		<strong v-if="part.type === 'bold'">{{ part.content }}</strong>
-		<em v-else-if="part.type === 'italic'">{{ part.content }}</em>
-		<u v-else-if="part.type === 'underline'">{{ part.content }}</u>
-		<s v-else-if="part.type === 'strike'">{{ part.content }}</s>
+		<component :is="FORMAT_TAGS[part.type]" v-if="'children' in part">
+			<DashboardDiscordInline :parts="part.children" />
+		</component>
 		<InlineCode v-else-if="part.type === 'code'">{{ part.content }}</InlineCode>
 		<a
 			v-else-if="part.type === 'link'"
@@ -42,7 +41,14 @@
 
 <script lang="ts">
 import type { TimestampStyle } from "~/components/ui/timestamp";
-import type { DiscordInline, DiscordTimeStyle } from "~/utils/discord-markdown";
+import type { DiscordFormat, DiscordInline, DiscordTimeStyle } from "~/utils/discord-markdown";
+
+const FORMAT_TAGS: Record<DiscordFormat, string> = {
+	bold: "strong",
+	italic: "em",
+	strike: "s",
+	underline: "u",
+};
 
 /** Discord's `<t:…>` style letters, as newt/ui's timestamp names them. */
 const TIME_STYLES: Record<DiscordTimeStyle, TimestampStyle> = {

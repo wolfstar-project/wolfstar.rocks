@@ -10,15 +10,15 @@
  */
 export type DiscordInline =
 	| { type: "text"; content: string }
-	| { type: "bold"; content: string }
-	| { type: "italic"; content: string }
-	| { type: "underline"; content: string }
-	| { type: "strike"; content: string }
+	| { type: DiscordFormat; children: DiscordInline[] }
 	| { type: "code"; content: string }
 	| { type: "link"; content: string; url: string }
 	| { type: "emoji"; name: string; url: string }
 	| { type: "time"; at: string; style: DiscordTimeStyle }
 	| { type: "mention"; kind: "user" | "channel"; name: string };
+
+/** A span of formatting, which can hold links, mentions and other spans. */
+export type DiscordFormat = "bold" | "italic" | "underline" | "strike";
 
 /** How a `<t:…>` timestamp reads: Discord's `t`, `T`, `d`, `D`, `f`, `F` or `R`. */
 export type DiscordTimeStyle = "t" | "T" | "d" | "D" | "f" | "F" | "R";
@@ -69,10 +69,12 @@ type Match = RegExpMatchArray & { index: number };
 function inlineOf(match: Match): DiscordInline {
 	const [, bold, underline, italic, strike, code, linkText, linkUrl, bareUrl] = match;
 	const [animated, emojiName, emojiId, unix, timeStyle, user, channel] = match.slice(9);
-	if (bold !== undefined) return { type: "bold", content: bold };
-	if (underline !== undefined) return { type: "underline", content: underline };
-	if (italic !== undefined) return { type: "italic", content: italic };
-	if (strike !== undefined) return { type: "strike", content: strike };
+	if (bold !== undefined) return { type: "bold", children: parseDiscordInline(bold) };
+	if (underline !== undefined) {
+		return { type: "underline", children: parseDiscordInline(underline) };
+	}
+	if (italic !== undefined) return { type: "italic", children: parseDiscordInline(italic) };
+	if (strike !== undefined) return { type: "strike", children: parseDiscordInline(strike) };
 	if (code !== undefined) return { type: "code", content: code };
 	if (linkText !== undefined && linkUrl !== undefined) {
 		return { type: "link", content: linkText, url: linkUrl };
@@ -87,9 +89,12 @@ function inlineOf(match: Match): DiscordInline {
 		};
 	}
 	if (unix !== undefined) {
+		const at = new Date(Number(unix) * 1000);
+		// Past the range of a JavaScript date, Discord leaves the tag as text too.
+		if (Number.isNaN(at.getTime())) return { type: "text", content: match[0] };
 		return {
 			type: "time",
-			at: new Date(Number(unix) * 1000).toISOString(),
+			at: at.toISOString(),
 			style: (timeStyle as DiscordTimeStyle | undefined) ?? "f",
 		};
 	}
@@ -125,13 +130,18 @@ export function discordPlainText(source: string): string {
 	const firstLine = source.split("\n").find((line) => line.trim().length > 0) ?? "";
 	const prefix = BLOCK_PREFIXES.find(([marker]) => firstLine.startsWith(marker));
 	const line = prefix ? firstLine.slice(prefix[0].length) : firstLine;
-	return parseDiscordInline(line)
+	return discordInlineText(parseDiscordInline(line)).trim();
+}
+
+/** What formatted parts read as, without their formatting. */
+export function discordInlineText(parts: readonly DiscordInline[]): string {
+	return parts
 		.map((part) => {
 			if (part.type === "mention") return (part.kind === "channel" ? "#" : "@") + part.name;
 			if (part.type === "emoji") return `:${part.name}:`;
 			if (part.type === "time") return new Date(part.at).toLocaleDateString();
+			if ("children" in part) return discordInlineText(part.children);
 			return part.content;
 		})
-		.join("")
-		.trim();
+		.join("");
 }

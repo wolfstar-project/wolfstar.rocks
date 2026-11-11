@@ -81,7 +81,7 @@ export function toAnnouncement(
 		at: message.timestamp,
 		content: resolveMentions(message.content, withUsers),
 		embeds: message.embeds
-			.filter((embed) => embed.title || embed.description || embed.image)
+			.filter((embed) => embed.title || embed.description || embed.image || embed.thumbnail)
 			.map((embed) => toEmbed(embed, withUsers)),
 		id: message.id,
 		images: message.attachments

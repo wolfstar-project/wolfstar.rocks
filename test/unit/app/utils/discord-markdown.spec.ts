@@ -13,7 +13,7 @@ describe("parseDiscordInline", () => {
 			{ type: "text", content: "Added " },
 			{ type: "code", content: "free nitro" },
 			{ type: "text", content: " to " },
-			{ type: "bold", content: "Bad Words" },
+			{ type: "bold", children: [{ type: "text", content: "Bad Words" }] },
 			{ type: "text", content: " in " },
 			{ type: "mention", kind: "channel", name: "general" },
 			{ type: "text", content: " for " },
@@ -66,11 +66,30 @@ describe("parseDiscordInline in announcements", () => {
 
 	it("reads italic, underline and strike", () => {
 		expect(parseDiscordInline("*new* __now__ ~~old~~")).toEqual([
-			{ type: "italic", content: "new" },
+			{ type: "italic", children: [{ type: "text", content: "new" }] },
 			{ type: "text", content: " " },
-			{ type: "underline", content: "now" },
+			{ type: "underline", children: [{ type: "text", content: "now" }] },
 			{ type: "text", content: " " },
-			{ type: "strike", content: "old" },
+			{ type: "strike", children: [{ type: "text", content: "old" }] },
+		]);
+	});
+
+	it("keeps a link or a mention inside formatting", () => {
+		expect(
+			parseDiscordInline("**[Release notes](https://wolfstar.rocks/changelog)** __<@Wolf>__"),
+		).toEqual([
+			{
+				type: "bold",
+				children: [
+					{
+						type: "link",
+						content: "Release notes",
+						url: "https://wolfstar.rocks/changelog",
+					},
+				],
+			},
+			{ type: "text", content: " " },
+			{ type: "underline", children: [{ type: "mention", kind: "user", name: "Wolf" }] },
 		]);
 	});
 
@@ -98,6 +117,13 @@ describe("parseDiscordInline in announcements", () => {
 			{ type: "text", content: " " },
 			{ type: "time", at: "2023-11-14T22:13:20.000Z", style: "f" },
 		]);
+	});
+
+	it("leaves a timestamp past the range of a date as text", () => {
+		expect(parseDiscordInline("<t:9999999999999:R>")).toEqual([
+			{ type: "text", content: "<t:9999999999999:R>" },
+		]);
+		expect(discordPlainText("Out at <t:9999999999999>")).toBe("Out at <t:9999999999999>");
 	});
 });
 

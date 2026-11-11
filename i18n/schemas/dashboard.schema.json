@@ -58,41 +58,11 @@
 						"intro": {
 							"type": "string"
 						},
-						"log_aria": {
+						"load_failed": {
 							"type": "string"
 						},
-						"news": {
-							"type": "object",
-							"properties": {
-								"automod_body": {
-									"type": "string"
-								},
-								"automod_title": {
-									"type": "string"
-								},
-								"console_body": {
-									"type": "string"
-								},
-								"console_text": {
-									"type": "string"
-								},
-								"console_title": {
-									"type": "string"
-								},
-								"language_action": {
-									"type": "string"
-								},
-								"language_body": {
-									"type": "string"
-								},
-								"language_title": {
-									"type": "string"
-								},
-								"rail_text": {
-									"type": "string"
-								}
-							},
-							"additionalProperties": false
+						"log_aria": {
+							"type": "string"
 						},
 						"no_messages": {
 							"type": "string"
@@ -100,7 +70,13 @@
 						"no_reply": {
 							"type": "string"
 						},
-						"react": {
+						"open_in_discord": {
+							"type": "string"
+						},
+						"reaction": {
+							"type": "string"
+						},
+						"reactions": {
 							"type": "string"
 						},
 						"search": {

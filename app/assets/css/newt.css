@@ -88,3 +88,27 @@
 		--newt-mention-role: #f3b95f;
 	}
 }
+
+/* Onyx, the app's `midnight` theme: the dark text on Onyx's own black surfaces. */
+[data-theme="midnight"],
+.midnight {
+	--newt-bg-base: var(--ink-800);
+	--newt-bg-surface: var(--ink-700);
+	--newt-bg-elevated: var(--ink-600);
+	--newt-bg-floating: var(--ink-800);
+	--newt-bg-input: var(--ink-500);
+	--newt-bg-input-elevated: var(--ink-400);
+	--newt-bg-hover: rgba(78, 80, 88, 0.4);
+	--newt-bg-active: rgba(78, 80, 88, 0.6);
+	--newt-border: var(--ink-300);
+	--newt-text-primary: #f2f3f5;
+	--newt-text-secondary: #b5bac1;
+	--newt-text-muted: #949ba4;
+	--newt-text-link: #00a8fc;
+	--newt-online: #23a55a;
+	--newt-idle: #f0b232;
+	--newt-dnd: #f23f42;
+	--newt-danger: #da373c;
+	--newt-mention-text: #b3baff;
+	--newt-mention-role: #f3b95f;
+}

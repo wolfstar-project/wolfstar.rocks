@@ -7,7 +7,7 @@
 			:class="`showcase-markdown-${block.type}`"
 		>
 			<template v-for="(part, partIndex) in block.inline" :key="partIndex">
-				<strong v-if="part.type === 'bold'">{{ part.content }}</strong>
+				<strong v-if="part.type === 'bold'">{{ discordInlineText(part.children) }}</strong>
 				<code v-else-if="part.type === 'code'" class="showcase-markdown-code">{{
 					part.content
 				}}</code>

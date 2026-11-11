@@ -23,7 +23,7 @@
 			"no_messages": "No messages yet",
 			"no_reply": "You can't reply to {name}. It only sends news here.",
 			"open_in_discord": "Open in Discord",
-			"reaction": "{emoji}, {count} reactions",
+			"reaction": "{emoji}, no reactions | {emoji}, 1 reaction | {emoji}, {count} reactions",
 			"reactions": "Reactions",
 			"search": "Find a conversation",
 			"staryl_intro": "Staryl has not sent anything here yet.",

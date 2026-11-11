@@ -9,7 +9,14 @@ export const MOCK_ANNOUNCEMENTS: Announcement[] = [
 		embeds: [],
 		id: "1290000000000000001",
 		images: [],
-		reactions: [{ count: 12, name: "🎉" }],
+		reactions: [
+			{ count: 12, name: "🎉" },
+			{
+				count: 1,
+				image: "https://cdn.discordapp.com/emojis/700000000000000001.webp?size=48",
+				name: "wolf",
+			},
+		],
 		url: "https://discord.com/channels/254360814063058944/890648971712802906/1290000000000000001",
 	},
 	{

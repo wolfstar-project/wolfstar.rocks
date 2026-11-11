@@ -163,6 +163,29 @@ describe("toAnnouncements", () => {
 		]);
 	});
 
+	it("keeps an embed whose only content is its thumbnail", () => {
+		const [post] = toAnnouncements(
+			[
+				message("900000000000000002", {
+					embeds: [
+						{
+							thumbnail: {
+								url: "https://cdn.example/thumb.png",
+								width: 80,
+								height: 80,
+							},
+						},
+					],
+				}),
+			],
+			GUILD_ID,
+			names,
+		);
+
+		expect(post?.embeds).toHaveLength(1);
+		expect(post?.embeds[0]?.image?.url).toBe("https://cdn.example/thumb.png");
+	});
+
 	it("leaves out the posts with nothing to show", () => {
 		expect(
 			toAnnouncements([message("900000000000000001", { type: 6 })], GUILD_ID, names),

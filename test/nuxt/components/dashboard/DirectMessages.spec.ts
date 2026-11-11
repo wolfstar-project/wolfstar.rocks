@@ -50,6 +50,9 @@ describe("dashboard direct messages", () => {
 		);
 		expect(thread.get('[role="group"][aria-label="Reactions"]').text()).toContain("🎉");
 		expect(thread.get('[role="group"][aria-label="Reactions"]').text()).toContain("12");
+		expect(
+			thread.get('[role="img"][aria-label="wolf, 1 reaction"] img').attributes("src"),
+		).toBe("https://cdn.discordapp.com/emojis/700000000000000001.webp?size=48");
 		thread.unmount();
 	});
 

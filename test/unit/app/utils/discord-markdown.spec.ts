@@ -181,6 +181,14 @@ describe("keyMentions", () => {
 		]);
 	});
 
+	it("leaves a mention inside code as written, where it is not read", () => {
+		const source = "Use `<@Jane Doe>` here:\n```\n<#rules>\n```\nThanks <@Jane Doe>.";
+		const { content, names } = keyMentions(source);
+
+		expect(content).toBe("Use `<@Jane Doe>` here:\n```\n<#rules>\n```\nThanks <@m0>.");
+		expect([...names]).toStrictEqual([["m0", "Jane Doe"]]);
+	});
+
 	it("leaves a timestamp and a server emoji alone", () => {
 		expect(keyMentions("<t:1700000000:R> <:wolf:700000000000000001>").content).toBe(
 			"<t:1700000000:R> <:wolf:700000000000000001>",

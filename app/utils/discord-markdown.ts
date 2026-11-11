@@ -183,10 +183,16 @@ export interface KeyedMentions {
  */
 export function keyMentions(content: string): KeyedMentions {
 	const names = new Map<string, string>();
-	const keyed = content.replaceAll(/<([@#])([^<>\n]+)>/g, (_, kind: string, name: string) => {
-		const key = `m${names.size}`;
-		names.set(key, name);
-		return `<${kind}${key}>`;
-	});
+	// Code is shown as written, where newt/ui reads no mention: a code block
+	// or an inline code span is matched first and kept as it is.
+	const keyed = content.replaceAll(
+		/(```[\s\S]*?```|`[^`\n]*`)|<([@#])([^<>\n]+)>/g,
+		(match, code: string | undefined, kind: string, name: string) => {
+			if (code !== undefined) return match;
+			const key = `m${names.size}`;
+			names.set(key, name);
+			return `<${kind}${key}>`;
+		},
+	);
 	return { content: keyed, names };
 }

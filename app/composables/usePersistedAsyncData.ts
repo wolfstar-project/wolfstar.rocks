@@ -1,5 +1,5 @@
 import type { AsyncDataHandlerContext, NuxtApp } from "#app";
-import type { WatchSource } from "vue";
+import type { Ref, WatchSource } from "vue";
 
 type Handler<T> = (nuxtApp: NuxtApp, context: AsyncDataHandlerContext) => Promise<T>;
 
@@ -103,4 +103,34 @@ export function usePersistedAsyncData<T, DefaultT = undefined>(
 	});
 
 	return asyncData;
+}
+
+/** What {@linkcode rereadAfterWrite} needs of an async data. */
+interface RereadableAsyncData<T> {
+	data: Ref<T>;
+	error: Ref<unknown>;
+	refresh: () => Promise<void>;
+}
+
+/**
+ * Shows what a write stored, then reads it again: a read that started before
+ * the write, such as the one behind a kept answer, would otherwise land after
+ * it with the older rows. The new read cancels the one in flight. A failed
+ * read empties the data (Nuxt sets it back to its default), which would hide
+ * a write that went through, so the written value is put back.
+ *
+ * @param stillShown Whether the value still belongs on screen once the read is
+ * back, as the admin may have opened another server meanwhile.
+ */
+export async function rereadAfterWrite<T>(
+	asyncData: RereadableAsyncData<T>,
+	written: T,
+	stillShown: () => boolean = () => true,
+): Promise<void> {
+	asyncData.data.value = written;
+	await asyncData.refresh();
+	if (asyncData.error.value && stillShown()) {
+		asyncData.data.value = written;
+		asyncData.error.value = undefined;
+	}
 }

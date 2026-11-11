@@ -110,7 +110,7 @@
 													)
 												}}
 											</DiscordEmbed>
-											<span
+											<div
 												v-else-if="
 													activeDisplayCommand.responseType === 'text'
 												"
@@ -119,7 +119,7 @@
 												<ShowcaseMarkdown
 													:source="activeDisplayCommand.content"
 												/>
-											</span>
+											</div>
 											<!-- An embed with a title: /whois, the lists of the Auto-* commands. -->
 											<DiscordEmbed
 												v-else-if="

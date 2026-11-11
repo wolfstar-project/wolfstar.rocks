@@ -1,9 +1,5 @@
 import type { ReadonlyGuildData } from "#server/database";
-import {
-	readSettingsPermissionNodes,
-	serializeSettings,
-	writeSettingsTransaction,
-} from "#server/database";
+import { serializeSettings, writeSettingsTransaction } from "#server/database";
 import { parseSettingsChanges } from "#server/database/settings/validation";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
 import {
@@ -118,15 +114,14 @@ export default defineWrappedResponseHandler(
 				permissionsUsers !== undefined ||
 				rolesAdmin !== undefined
 			) {
-				// The settings context is cached per guild: made from what the database
-				// holds now first, the decision runs the current legacy nodes and the
-				// proposed rules, and the cache never holds an unsaved change.
-				readSettingsPermissionNodes(trx.settings);
+				// The decision runs the proposed rules and the proposed legacy nodes,
+				// with a manager of its own: the guild's cached one holds the saved
+				// nodes, and never an unsaved change.
 				await assertKeepsDashboardAccess(
 					guild,
 					member,
 					{ ...trx.settings, ...settingsData } as ReadonlyGuildData,
-					canManage,
+					(target, who, proposed) => canManage(target, who, proposed, true),
 				);
 			}
 		} catch (accessErr) {

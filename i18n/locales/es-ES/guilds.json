@@ -564,6 +564,7 @@
 				"empty_title": "",
 				"enabled_count": "",
 				"errors": {
+					"escalationDuration": "",
 					"generic": "",
 					"invalid": "",
 					"limit": "",
@@ -571,6 +572,7 @@
 					"nameInvalid": "",
 					"nameRequired": "",
 					"nameTaken": "",
+					"pendingWord": "",
 					"timeoutNeedsDuration": "",
 					"unknown": ""
 				},
@@ -1443,7 +1445,9 @@
 				"empty_status_title": "",
 				"empty_title": "",
 				"filter_aria": "",
+				"load_failed": "",
 				"refresh": "",
+				"retry": "",
 				"status": {
 					"actioned": "",
 					"all": "",

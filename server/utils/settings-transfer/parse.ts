@@ -26,6 +26,7 @@ import {
 	normalizeAutoModerationRuleOptions,
 	type AutoModerationRule,
 	type AutoModerationRuleType,
+	AutoModerationSoftActionBits,
 } from "#shared/utils/automod-rules";
 import {
 	ReadableConfigurationFileVersions,
@@ -337,6 +338,38 @@ function parseRules(
 	return rules;
 }
 
+/**
+ * A rule of a type the bot no longer has, read as the migration that removed
+ * the type rewrote the ones of the database: the bot's `upgradeRemovedRuleType`.
+ * A `NoMentionSpam` rule banned by itself: it is a `MentionsCooldown` rule that
+ * weighs the mentions, bans at the first infraction and tells it in the
+ * channel. What it has of the wrong type is left as it is, for the checks.
+ */
+function upgradeRemovedRuleType(entry: Record<string, unknown>): Record<string, unknown> {
+	if (entry.type !== "NoMentionSpam") return entry;
+
+	const { options = {}, softAction = 0 } = entry;
+	return {
+		...entry,
+		type: "MentionsCooldown",
+		options: isObject(options)
+			? {
+					maximum: (options as Record<string, unknown>).mentionsAllowed ?? 20,
+					timePeriod: (options as Record<string, unknown>).timePeriod ?? 8,
+					weighted: true,
+				}
+			: options,
+		softAction:
+			typeof softAction === "number"
+				? softAction | AutoModerationSoftActionBits.Alert
+				: softAction,
+		hardAction: "Ban",
+		hardActionDuration: null,
+		thresholdMaximum: 0,
+		escalation: [],
+	};
+}
+
 function parseRule(
 	entry: unknown,
 	path: string,
@@ -348,7 +381,7 @@ function parseRule(
 		return null;
 	}
 
-	const record = entry as Record<string, unknown>;
+	const record = upgradeRemovedRuleType(entry as Record<string, unknown>);
 	const before = issues.length;
 	const known = new Set<string>(ConfigurationRuleFields);
 	for (const field of Object.keys(record)) {

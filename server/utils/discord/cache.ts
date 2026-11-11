@@ -48,6 +48,11 @@ export function rememberGuildProbe(
 	guildId: string,
 	run: () => Promise<GuildProbe>,
 ): Promise<GuildProbe> {
+	// On Workers a request cannot wait on a promise another request started: the
+	// check of `canWaitOnOtherRequests()`, which this file cannot import, as
+	// `auth.config.ts` loads it outside Nitro's aliases.
+	if (globalThis.navigator?.userAgent === "Cloudflare-Workers") return run();
+
 	const now = Date.now();
 	const recent = recentGuildProbes.get(guildId);
 	if (recent && recent.expires > now) {

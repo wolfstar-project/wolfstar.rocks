@@ -298,6 +298,8 @@ async function confirmImport() {
 		const result = await importRequest(current.guildId, current.text, true, digest);
 		if (!result.ok) {
 			review.value = { ...current, result };
+			// The review shows the refusal: the dialog has to close and cancel again.
+			isImporting.value = false;
 			return;
 		}
 		if (result.applied) {

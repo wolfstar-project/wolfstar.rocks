@@ -35,7 +35,15 @@ export default defineWrappedResponseHandler(
 			log.error(error);
 		},
 		// A member passes once; a few tries cover a captcha that expired. The
-		// route's own window, so the page's polling does not spend it.
-		rateLimit: { enabled: true, limit: 5, window: minutes(1), scope: "route" },
+		// route's own window, so the page's polling does not spend it. A refused
+		// try counts too: every refusal is an error, and trust is measured from
+		// Discord on each one.
+		rateLimit: {
+			countFailures: true,
+			enabled: true,
+			limit: 5,
+			scope: "route",
+			window: minutes(1),
+		},
 	},
 );

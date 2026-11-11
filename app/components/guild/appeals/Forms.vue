@@ -15,7 +15,12 @@
 			<UButton
 				color="primary"
 				class="justify-center"
-				:disabled="isLoading || hasFailed || forms.length >= MaximumAppealForms"
+				:disabled="
+					isLoading ||
+					hasFailed ||
+					forms.length >= MaximumAppealForms ||
+					busyFormId !== null
+				"
 				:title="
 					ts('guild_settings.appeals.forms.count', {
 						count: forms.length,
@@ -158,6 +163,7 @@
 						variant="outline"
 						size="sm"
 						class="form-action"
+						:disabled="busyFormId !== null"
 						:aria-label="
 							ts('guild_settings.appeals.forms.edit_aria', { name: form.name })
 						"
@@ -170,6 +176,7 @@
 						variant="outline"
 						size="sm"
 						class="form-action form-action--danger"
+						:disabled="busyFormId !== null"
 						:aria-label="
 							ts('guild_settings.appeals.forms.delete_aria', { name: form.name })
 						"

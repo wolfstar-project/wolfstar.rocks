@@ -13,5 +13,11 @@ const REJECTED_ON_RATE_LIMIT = ["/applications"];
  * its own: the write sends the user's token as its own `Authorization` header.
  */
 export function commandPermissionsRest(): REST {
-	return new REST({ rejectOnRateLimit: REJECTED_ON_RATE_LIMIT });
+	// One client a write: its sweep timers would outlive it, as `useRest()`'s
+	// per-request clients turn them off for.
+	return new REST({
+		handlerSweepInterval: 0,
+		hashSweepInterval: 0,
+		rejectOnRateLimit: REJECTED_ON_RATE_LIMIT,
+	});
 }

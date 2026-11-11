@@ -119,6 +119,9 @@ function commandType(type: string): { label: string; tone: LogsPillTone } {
 			return { label: ts("guild_logs.command_types.user"), tone: "success" };
 		case "MESSAGE":
 			return { label: ts("guild_logs.command_types.message"), tone: "warning" };
+		// What the bot stores for a user or a message menu alike:
+		case "CONTEXT_MENU":
+			return { label: ts("guild_logs.command_types.context_menu"), tone: "neutral" };
 		default:
 			return { label: ts("guild_logs.command_types.slash"), tone: "primary" };
 	}

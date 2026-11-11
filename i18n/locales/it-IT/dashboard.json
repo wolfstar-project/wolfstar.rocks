@@ -17,6 +17,7 @@
 			"bot_tag": "BOT",
 			"direct_message": "Messaggio diretto",
 			"home_aria": "Home, messaggi diretti",
+			"image_preview": "",
 			"intro": "Questo è l'inizio della cronologia dei tuoi messaggi diretti con {name}.",
 			"load_failed": "",
 			"log_aria": "Messaggi da {name}",
@@ -289,6 +290,7 @@
 			"user": "Utente"
 		},
 		"command_types": {
+			"context_menu": "",
 			"message": "Menu messaggio",
 			"slash": "Slash",
 			"user": "Menu utente"

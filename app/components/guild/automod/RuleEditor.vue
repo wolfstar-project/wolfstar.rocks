@@ -62,6 +62,9 @@
 							:model-value="listOption('words')"
 							@update:model-value="draft.options.words = $event"
 						/>
+						<p v-if="pendingWordError" class="text-sm text-error" role="alert">
+							{{ pendingWordError }}
+						</p>
 					</fieldset>
 
 					<fieldset v-if="optionFields.length > 0" class="space-y-4">
@@ -260,6 +263,7 @@
 						v-if="draft.escalation.length > 0"
 						:label="ts('guild_settings.automod.rules.editor.escalation_duration')"
 						:help="ts('guild_settings.automod.rules.editor.escalation_duration_help')"
+						:error="escalationDurationError"
 					>
 						<GuildAutomodDurationInput
 							v-model="draft.escalationDuration"
@@ -477,7 +481,9 @@ const draft = reactive<AutomodRuleDraft>(createAutomodRuleDraft(type));
 const submitted = ref(false);
 const snapshot = ref("");
 const confirmingDiscard = ref(false);
-const wordsEditor = useTemplateRef("wordsEditor");
+// Typed by hand: inferred from the template, it would depend on the errors
+// the template shows, which read it.
+const wordsEditor = useTemplateRef<{ hasPending: boolean }>("wordsEditor");
 
 // The form is filled when the modal opens rather than when the prop changes,
 // so reopening it after a cancel never shows the abandoned edit.
@@ -585,6 +591,25 @@ const escalationError = computed(() =>
 		: undefined,
 );
 
+// The server takes a reset window of a minute at least: one shorter would be
+// saved as defaults, then refused with every rule made from them.
+const escalationDurationError = computed(() => {
+	const { minimum, maximum } = AutoModerationRuleLimits.escalationDuration;
+	const duration = draft.escalationDuration;
+	return submitted.value &&
+		draft.escalation.length > 0 &&
+		(duration < minimum || duration > maximum)
+		? ts("guild_settings.automod.rules.errors.escalationDuration")
+		: undefined;
+});
+
+// A word still being typed is not in the list yet: saving would leave it out.
+const pendingWordError = computed<string | undefined>(() =>
+	submitted.value && wordsEditor.value?.hasPending === true
+		? ts("guild_settings.automod.rules.errors.pendingWord")
+		: undefined,
+);
+
 const actionError = computed(() =>
 	submitted.value && draft.hardAction === "Timeout" && draft.hardActionDuration <= 0
 		? ts("guild_settings.automod.rules.errors.timeoutNeedsDuration")
@@ -620,13 +645,15 @@ function submit() {
 		return;
 	}
 	if (mode === "escalation") {
-		if (escalationError.value) return;
+		if (escalationError.value || escalationDurationError.value) return;
 		emit("saveDefaults", { escalation: pickAutomodEscalationDefaults(draft) });
 		return;
 	}
 	if (
 		validateAutomodRuleName(draft.name) !== null ||
 		escalationError.value ||
+		escalationDurationError.value ||
+		pendingWordError.value ||
 		actionError.value
 	) {
 		return;

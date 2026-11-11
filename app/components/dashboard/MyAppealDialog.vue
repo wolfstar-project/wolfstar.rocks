@@ -255,11 +255,13 @@ function lockLine(form: AppealPageForm): string {
 }
 
 async function load(current: MyAppealEntry) {
+	const loadedFor = opening;
 	page.value = null;
 	state.value = "loading";
 	const result = await loadPage(current.guild.id);
-	// The dialog may have moved to another case while the page loaded.
-	if (entry !== current) return;
+	// The dialog may have moved to another case while the page loaded, or been
+	// closed and opened again on the same one, whose own read is the one to show.
+	if (entry !== current || loadedFor !== opening) return;
 	if (!result.ok) {
 		loadError.value = result.code;
 		state.value = "failed";

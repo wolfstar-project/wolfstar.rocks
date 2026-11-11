@@ -157,6 +157,10 @@ describe("postHeadingOffset", () => {
 		expect(postHeadingOffset("### Small")).toBe(0);
 	});
 
+	it("reads a heading after the blank lines a post starts with", () => {
+		expect(postHeadingOffset("\n  ## Dashboard v3")).toBe(1);
+	});
+
 	it("reads the headings in a quote, and keeps newt/ui's default without any", () => {
 		expect(postHeadingOffset("> ## Quoted")).toBe(1);
 		expect(postHeadingOffset("Just text")).toBe(2);

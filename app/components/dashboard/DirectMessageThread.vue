@@ -89,6 +89,7 @@
 								:resolve-emoji="emojiURL"
 								:locale="timeLocale"
 								:labels="markdownLabels"
+								:link-warning="false"
 							/>
 						</MessageGroupContent>
 						<Embed
@@ -115,6 +116,7 @@
 									:resolve-emoji="emojiURL"
 									:locale="timeLocale"
 									:labels="markdownLabels"
+									:link-warning="false"
 								/>
 							</EmbedDescription>
 							<img
@@ -204,12 +206,11 @@ import { Skeleton } from "~/components/ui/skeleton";
 const { ts, tc } = useI18n();
 const { locale, timeLocale } = useAppLocale();
 
-// The words newt/ui's markdown writes itself, translated.
+// The words newt/ui's markdown writes itself, translated. Its warning before a
+// masked link stays off: the dialog it opens takes no focus and traps none, so
+// a keyboard or screen reader user would be left behind it. A masked link
+// opens in a new tab, with its address as its title, as it did before.
 const markdownLabels = computed<Partial<MarkdownLabels>>(() => ({
-	linkWarningBody: ts("dashboard.dm.markdown.link_warning_body"),
-	linkWarningCancel: ts("dashboard.dm.markdown.link_warning_cancel"),
-	linkWarningConfirm: ts("dashboard.dm.markdown.link_warning_confirm"),
-	linkWarningTitle: ts("dashboard.dm.markdown.link_warning_title"),
 	unknownChannel: ts("dashboard.dm.markdown.unknown_channel"),
 	unknownRole: ts("dashboard.dm.markdown.unknown_role"),
 	unknownUser: ts("dashboard.dm.markdown.unknown_user"),

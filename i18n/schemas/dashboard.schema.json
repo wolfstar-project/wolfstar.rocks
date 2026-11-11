@@ -70,18 +70,6 @@
 						"markdown": {
 							"type": "object",
 							"properties": {
-								"link_warning_body": {
-									"type": "string"
-								},
-								"link_warning_cancel": {
-									"type": "string"
-								},
-								"link_warning_confirm": {
-									"type": "string"
-								},
-								"link_warning_title": {
-									"type": "string"
-								},
 								"unknown_channel": {
 									"type": "string"
 								},

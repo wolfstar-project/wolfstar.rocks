@@ -22,10 +22,6 @@
 			"load_failed": "",
 			"log_aria": "",
 			"markdown": {
-				"link_warning_body": "",
-				"link_warning_cancel": "",
-				"link_warning_confirm": "",
-				"link_warning_title": "",
 				"unknown_channel": "",
 				"unknown_role": "",
 				"unknown_user": ""

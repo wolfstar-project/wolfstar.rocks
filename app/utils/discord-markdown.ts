@@ -161,6 +161,7 @@ function headingLevels(blocks: readonly MarkdownBlock[]): number[] {
  * in: a post of `##` alone must not skip a level.
  */
 export function postHeadingOffset(content: string): number {
-	const levels = headingLevels(parseMarkdown(content));
+	// Trimmed as the thread hands it to `Markdown`: a heading is read at the start of a line only.
+	const levels = headingLevels(parseMarkdown(content.trim()));
 	return levels.length === 0 ? 2 : 3 - Math.min(...levels);
 }

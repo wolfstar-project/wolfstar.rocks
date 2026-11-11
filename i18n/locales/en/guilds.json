@@ -14,6 +14,28 @@
 		"search_placeholder": "Search members by name or ID",
 		"type_to_search": "Type a name or paste a user ID to search."
 	},
+	"guild_member_select": {
+		"app": "App",
+		"every_member": "Every member",
+		"group_by_id": "By ID",
+		"group_members": "Members — {count}",
+		"group_roles": "Roles — {count}",
+		"hint_members": "Type a name, an @username or paste a user ID.",
+		"hint_mentionables": "Type a name, a role, an @username or paste an ID.",
+		"label_member": "Member",
+		"label_mentionable": "Members and roles",
+		"managed": "Managed by an app",
+		"pick_member": "Select a member",
+		"pick_members": "Select members",
+		"pick_mentionable": "Select a member or role",
+		"pick_mentionables": "Select members or roles",
+		"role": "Role",
+		"search_mentionables": "Search members and roles",
+		"show": "Show",
+		"tab_all": "All",
+		"tab_members": "Members",
+		"tab_roles": "Roles"
+	},
 	"guild_settings": {
 		"access": {
 			"allow_note": "Opens the dashboard without Manage Server. Choose only people you trust with every setting.",

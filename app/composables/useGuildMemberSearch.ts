@@ -3,7 +3,8 @@ import { MEMBER_SEARCH_LIMIT } from "#shared/schemas/member-search";
 /**
  * The members of a guild whose name matches `query`, searched as the admin
  * types. Nothing is asked for an empty query; a slower answer to an older query
- * never replaces a newer one.
+ * never replaces a newer one. `settled` is true once `results` answer the
+ * current query.
  */
 export function useGuildMemberSearch(
 	guildId: MaybeRefOrGetter<string | null>,
@@ -37,7 +38,10 @@ export function useGuildMemberSearch(
 		{ immediate: true },
 	);
 
-	return { results: computed(() => results.value), pending: readonly(pending) };
+	// The results answer the query as typed now, not one the debounce still holds back.
+	const settled = computed(() => !pending.value && debounced.value === toValue(query).trim());
+
+	return { results: computed(() => results.value), pending: readonly(pending), settled };
 }
 
 /** The picked members of a guild still in it, by id; the others are left out. */

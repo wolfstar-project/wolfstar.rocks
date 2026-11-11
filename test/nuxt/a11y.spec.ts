@@ -95,6 +95,7 @@ import {
 	IconsApp,
 	IconsWolfstar,
 	SectionHeader,
+	SelectMember,
 	Separator,
 	VerifyTrustMeter,
 
@@ -832,6 +833,33 @@ describe("component accessibility audits", () => {
 			});
 			const component = await mountSuspended(GuildMemberPicker, {
 				props: { ids: ["200000000000000099"], guildId: GUILD_ID, label: "Members" },
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("SelectMember", () => {
+		const GUILD_ID = "123456789012345678";
+
+		it("should have no accessibility violations with a role and a member who left", async () => {
+			registerEndpoint(`/api/guilds/${GUILD_ID}/members/search`, {
+				method: "GET",
+				handler: () => [],
+			});
+			const component = await mountSuspended(SelectMember, {
+				props: {
+					guild: createMockOauthFlattenedGuild({
+						id: GUILD_ID,
+						roles: [createMockRole({ id: "300000000000000001", name: "Moderator" })],
+					}),
+					guildId: GUILD_ID,
+					label: "Allowed",
+					memberIds: ["200000000000000099"],
+					multiple: true,
+					roleIds: ["300000000000000001"],
+					roles: true,
+				},
 			});
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);

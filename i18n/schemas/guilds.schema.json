@@ -46,6 +46,72 @@
 			},
 			"additionalProperties": false
 		},
+		"guild_member_select": {
+			"type": "object",
+			"properties": {
+				"app": {
+					"type": "string"
+				},
+				"every_member": {
+					"type": "string"
+				},
+				"group_by_id": {
+					"type": "string"
+				},
+				"group_members": {
+					"type": "string"
+				},
+				"group_roles": {
+					"type": "string"
+				},
+				"hint_members": {
+					"type": "string"
+				},
+				"hint_mentionables": {
+					"type": "string"
+				},
+				"label_member": {
+					"type": "string"
+				},
+				"label_mentionable": {
+					"type": "string"
+				},
+				"managed": {
+					"type": "string"
+				},
+				"pick_member": {
+					"type": "string"
+				},
+				"pick_members": {
+					"type": "string"
+				},
+				"pick_mentionable": {
+					"type": "string"
+				},
+				"pick_mentionables": {
+					"type": "string"
+				},
+				"role": {
+					"type": "string"
+				},
+				"search_mentionables": {
+					"type": "string"
+				},
+				"show": {
+					"type": "string"
+				},
+				"tab_all": {
+					"type": "string"
+				},
+				"tab_members": {
+					"type": "string"
+				},
+				"tab_roles": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
 		"guild_settings": {
 			"type": "object",
 			"properties": {

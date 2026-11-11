@@ -564,6 +564,7 @@
 				"empty_title": "No rules yet",
 				"enabled_count": "{enabled} of {total} enabled",
 				"errors": {
+					"escalationDuration": "Reset the steps after a minute at least.",
 					"generic": "Something went wrong. Please try again.",
 					"invalid": "The server refused one of the values. Check the fields and try again.",
 					"limit": "This server already has the maximum number of rules.",
@@ -571,6 +572,7 @@
 					"nameInvalid": "Use a name of 1 to 50 characters that isn't just a number.",
 					"nameRequired": "Give the rule a name.",
 					"nameTaken": "There is already a rule with that name.",
+					"pendingWord": "Add or discard the word you are typing before you save.",
 					"timeoutNeedsDuration": "A timeout step needs a duration.",
 					"unknown": "This rule no longer exists. Reload the page."
 				},
@@ -1443,7 +1445,9 @@
 				"empty_status_title": "Nothing in this bucket",
 				"empty_title": "No reports yet",
 				"filter_aria": "Show reports by status",
+				"load_failed": "Could not load the reports.",
 				"refresh": "Refresh reports",
+				"retry": "Try again",
 				"status": {
 					"actioned": "Actioned",
 					"all": "All",

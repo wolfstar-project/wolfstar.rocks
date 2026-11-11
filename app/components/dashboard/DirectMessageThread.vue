@@ -128,7 +128,7 @@
 								<!-- Discord's counts, read-only: the dashboard cannot react as the reader. -->
 								<span
 									v-for="reaction of item.reactions"
-									:key="reaction.name"
+									:key="reaction.image ?? reaction.name"
 									role="img"
 									:aria-label="
 										tc('dashboard.dm.reaction', {
@@ -199,6 +199,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 const { ts, tc } = useI18n();
 const { locale, timeLocale } = useAppLocale();
 const { thread, markRead, statusOf, reload } = useDirectMessages();
+const { isPhone, screen } = usePhoneScreen();
 
 const now = useNow({ scheduler: (cb) => useIntervalFn(cb, 60_000) });
 const status = computed(() => (thread.value ? statusOf(thread.value) : "ready"));
@@ -210,15 +211,18 @@ function formatDay(day: string): string {
 
 const log = useTemplateRef<HTMLElement>("log");
 
-// A thread opens on its newest post, as a conversation does, and is read.
+// A thread opens on its newest post, as a conversation does, and is read. A
+// phone's list keeps the thread mounted but hidden: it is read once shown.
 function openNewest() {
-	if (!thread.value) return;
+	if (!thread.value || (isPhone.value && screen.value !== "page")) return;
 	markRead(thread.value);
 	if (log.value) log.value.scrollTop = log.value.scrollHeight;
 }
 
 onMounted(openNewest);
-watch(() => [thread.value?.id, thread.value?.news.length], openNewest, { flush: "post" });
+watch(() => [thread.value?.id, thread.value?.news.length, screen.value], openNewest, {
+	flush: "post",
+});
 </script>
 
 <style scoped>

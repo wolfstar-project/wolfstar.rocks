@@ -104,12 +104,14 @@ const rows = computed(() => {
 		.filter((thread) => thread.name.toLocaleLowerCase().includes(search))
 		.map((thread) => {
 			const newest = thread.news.at(-1);
+			const text =
+				newest &&
+				(discordPlainText(newest.content) ||
+					newest.embeds[0]?.title ||
+					discordPlainText(newest.embeds[0]?.description ?? ""));
+			// A post of images alone is still a post.
 			const preview =
-				(newest &&
-					(discordPlainText(newest.content) ||
-						newest.embeds[0]?.title ||
-						discordPlainText(newest.embeds[0]?.description ?? ""))) ||
-				ts("dashboard.dm.no_messages");
+				text || ts(newest ? "dashboard.dm.image_preview" : "dashboard.dm.no_messages");
 			return {
 				avatar: thread.avatar,
 				current: page.value === "thread" && thread.id === threadId.value,

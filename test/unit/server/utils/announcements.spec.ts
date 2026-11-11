@@ -115,7 +115,11 @@ describe("toAnnouncements", () => {
 						},
 					],
 					embeds: [
-						{ color: 0x5865F2, description: "For <@&400000000000000001>", title: "v7" },
+						{
+							color: Number.parseInt("5865f2", 16),
+							description: "For <@&400000000000000001>",
+							title: "v7",
+						},
 					],
 					reactions: [
 						{

@@ -32,3 +32,35 @@ export function assertJoinGuardRolesDiffer(
 		fix: "Pick two different roles, or leave one of them empty",
 	});
 }
+
+/** What of a role decides whether the bot can give it. */
+interface ManageableRoleCandidate {
+	id: string;
+	position: number;
+	managed?: boolean;
+}
+
+/**
+ * The first of `roleIds` the bot could not give or take: one the server does
+ * not have, `@everyone`, one an integration manages, or one at or above the
+ * bot's own highest role. `null` when it can manage them all.
+ */
+export function findUnmanageableJoinGuardRole(
+	guildId: string,
+	roles: readonly ManageableRoleCandidate[],
+	botRoleIds: readonly string[],
+	roleIds: readonly string[],
+): string | null {
+	const held = new Set(botRoleIds);
+	const highest = roles.reduce(
+		(top, role) => (held.has(role.id) ? Math.max(top, role.position) : top),
+		0,
+	);
+	for (const id of roleIds) {
+		const role = roles.find((candidate) => candidate.id === id);
+		if (!role || id === guildId || role.managed === true || role.position >= highest) {
+			return id;
+		}
+	}
+	return null;
+}

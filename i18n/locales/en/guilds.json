@@ -1215,6 +1215,10 @@
 				"unverified_bot": "Unverified app account",
 				"unverified_bot_help": "A bot that Discord has not verified."
 			},
+			"errors": {
+				"same_roles": "The pending and the verified roles can't be the same role.",
+				"unmanageable_role": "WolfStar can't give one of these roles. Pick a role below WolfStar's highest role that no integration manages."
+			},
 			"failures": {
 				"Failed": "something went wrong on WolfStar's side.",
 				"InvalidRequest": "the request was not valid.",

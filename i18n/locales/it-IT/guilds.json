@@ -1215,6 +1215,10 @@
 				"unverified_bot": "",
 				"unverified_bot_help": ""
 			},
+			"errors": {
+				"same_roles": "",
+				"unmanageable_role": ""
+			},
 			"failures": {
 				"Failed": "",
 				"InvalidRequest": "",

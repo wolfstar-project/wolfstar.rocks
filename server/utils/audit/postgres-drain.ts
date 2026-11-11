@@ -1,7 +1,7 @@
 import type { Models } from "#server/database/prisma";
 import type { DrainContext, DrainFn } from "evlog";
 import { randomUUID } from "node:crypto";
-import { db } from "#server/database/prisma";
+import { db, type Database } from "#server/database/prisma";
 import { asTimestampString } from "#server/utils/timestamp-string";
 import { type AuditEnvelope, hashEnvelope } from "#shared/audit/envelope";
 
@@ -34,10 +34,18 @@ function toOptionalSnowflakeColumn(field: string, value: string | undefined): bi
 	return value === undefined ? null : toSnowflakeColumn(field, value);
 }
 
-export function createPostgresAuditDrain(): DrainFn {
+/**
+ * @param resolveDatabase The client to write an event with, when it is not
+ * `db`: on Workers the drain can run outside the request `db` reads its
+ * client from, and is handed the request's own.
+ */
+export function createPostgresAuditDrain(
+	resolveDatabase: (ctx: DrainContext) => Database | undefined = () => undefined,
+): DrainFn {
 	return async (ctx: DrainContext): Promise<void> => {
 		const audit = ctx.event.audit;
 		if (!audit) return;
+		const database = resolveDatabase(ctx) ?? db;
 
 		// Allow-listed projection — never read email, ip, cookie, raw headers
 		const action = audit.action;
@@ -69,9 +77,9 @@ export function createPostgresAuditDrain(): DrainFn {
 		const tenantIdColumn = toOptionalSnowflakeColumn("tenant id", tenantId);
 		const timestamp = asTimestampString(new Date(ctx.event.timestamp).toISOString());
 
-		await db.transaction(async (tx) => {
+		await database.transaction(async (tx) => {
 			await tx.execute(
-				db.raw.sql`SELECT pg_advisory_xact_lock(${AUDIT_CHAIN_LOCK_KEY})`
+				database.raw.sql`SELECT pg_advisory_xact_lock(${AUDIT_CHAIN_LOCK_KEY})`
 					.affectedCount()
 					.build(),
 			);

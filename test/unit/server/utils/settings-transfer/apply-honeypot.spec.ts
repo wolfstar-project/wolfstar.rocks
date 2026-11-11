@@ -5,7 +5,9 @@ const mocks = vi.hoisted(() => {
 	const transaction = {
 		settings: { id: "100000000000000000", language: "en-US", honeypotAction: "Ban" },
 		write: vi.fn(),
+		reload: vi.fn(),
 		submit: vi.fn(),
+		committed: vi.fn(),
 		[Symbol.dispose]: vi.fn(),
 	};
 	return {
@@ -23,7 +25,10 @@ vi.mock("#server/database/settings/automod/storage", () => ({
 	writeAutoModerationRulePlan: vi.fn(),
 }));
 vi.mock("#server/utils/automod/rules", () => ({
-	writeAutoModerationRules: (_guildId: string, run: (rules: unknown[]) => unknown) => run([]),
+	writeAutoModerationRules: (
+		_guildId: string,
+		run: (rules: unknown[], orm: object, tx: object) => unknown,
+	) => run([], {}, { orm: {} }),
 }));
 vi.mock("#server/utils/settings-transfer/plan", () => ({
 	findOversizedRuleLists: () => [],
@@ -58,6 +63,24 @@ describe("applyConfigurationImport and the honeypot", () => {
 			mocks.transaction.settings,
 			mocks.plannedSettings,
 		);
+	});
+
+	// The written settings are applied only when the rules' transaction has
+	// committed: the answer is read after that, not before.
+	it("answers with the settings as the import left them", async () => {
+		const pending: Record<string, unknown> = {};
+		const before = { ...mocks.transaction.settings };
+		mocks.transaction.write.mockImplementationOnce((data: Record<string, unknown>) =>
+			Object.assign(pending, data),
+		);
+		mocks.transaction.committed.mockImplementationOnce(() =>
+			Object.assign(mocks.transaction.settings, pending),
+		);
+
+		const applied = await applyConfigurationImport(guild, {} as never);
+
+		expect(applied.settings).toMatchObject({ honeypotAction: "Kick" });
+		Object.assign(mocks.transaction.settings, before);
 	});
 
 	it("writes nothing when the bot could not carry the honeypot out", async () => {

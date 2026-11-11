@@ -1,4 +1,4 @@
-import { create } from "#shared/utils/automod-word-pattern";
+import { compileAutomodWords, create } from "#shared/utils/automod-word-pattern";
 import { describe, expect, it } from "vitest";
 import {
 	automodWordExamples,
@@ -10,6 +10,7 @@ import {
 	importAutomodWords,
 	parseAutomodWord,
 	type AutomodWordDraft,
+	findAutomodMessageMatches,
 } from "~/utils/automod-words";
 
 const draft = (overrides: Partial<AutomodWordDraft>): AutomodWordDraft => ({
@@ -164,5 +165,29 @@ describe("import and export", () => {
 	it("writes a list the import reads back", () => {
 		const words = ["bad", "*evil*"];
 		expect(importAutomodWords(exportAutomodWords(words), []).added).toStrictEqual(words);
+	});
+});
+
+describe("findAutomodMessageMatches", () => {
+	const expression = compileAutomodWords(["bad"])!;
+
+	it("finds a plain word where it is written", () => {
+		expect(findAutomodMessageMatches(expression, "so bad!")).toStrictEqual([
+			{ start: 3, end: 6 },
+		]);
+	});
+
+	// The bot replaces look-alike characters before it matches.
+	it("catches look-alike characters, at the offsets of the message as written", () => {
+		const fullwidth = "so b\u{FF41}d!";
+		expect(findAutomodMessageMatches(expression, fullwidth)).toStrictEqual([
+			{ start: 3, end: 6 },
+		]);
+	});
+
+	it("spans a character the bot drops inside the word", () => {
+		const hidden = "so b​ad!";
+		const [match] = findAutomodMessageMatches(expression, hidden);
+		expect(hidden.slice(match!.start, match!.end)).toBe("b​ad");
 	});
 });

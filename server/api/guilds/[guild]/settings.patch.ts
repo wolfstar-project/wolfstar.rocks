@@ -7,6 +7,7 @@ import {
 	assertKeepsDashboardAccess,
 } from "#server/utils/dashboard-access";
 import { assertHoneypotIsUsable } from "#server/utils/honeypot/permissions";
+import { assertJoinGuardRolesManageable } from "#server/utils/join-guard/roles";
 import { assertJoinGuardRolesDiffer } from "#server/utils/join-guard/settings";
 import { guildSettingsAccessDenied, guildSettingsUpdate } from "#shared/audit/actions";
 import { SettingsUpdateSchema } from "#shared/schemas";
@@ -146,6 +147,8 @@ export default defineWrappedResponseHandler(
 		await assertHoneypotIsUsable(guild, trx.settings, settingsData);
 		// The bot's `manageableRole` serializer refuses one role for both, as this does:
 		assertJoinGuardRolesDiffer(trx.settings, settingsData);
+		// And a role it could not give: the pickers list every role of the server.
+		await assertJoinGuardRolesManageable(guild, settingsData);
 
 		const beforeSettings = JSON.parse(serializeSettings(trx.settings)) as Record<
 			string,

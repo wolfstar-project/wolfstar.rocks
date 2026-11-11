@@ -24,13 +24,13 @@
 				</h2>
 			</div>
 
-			<div class="flex flex-col gap-4">
-				<SurfaceCard
+			<!-- Ruled rows, not cards: on the homepage only the product proof
+			     steps are cards (.claude/DESIGN.md, Design Decisions). -->
+			<div class="other-apps-rows">
+				<article
 					v-for="app of apps"
 					:key="app.name"
-					tag="article"
-					padding="lg"
-					class="flex flex-col gap-7 sm:flex-row"
+					class="other-apps-row flex flex-col gap-7 sm:flex-row"
 				>
 					<NuxtImg
 						:src="app.avatar"
@@ -73,7 +73,7 @@
 							</UButton>
 						</div>
 					</div>
-				</SurfaceCard>
+				</article>
 			</div>
 		</div>
 	</Section>
@@ -86,3 +86,17 @@ const { apps } = defineProps<{
 
 const { ts } = useI18n();
 </script>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+.other-apps-rows {
+	@apply flex flex-col;
+	border-top: 1px solid var(--home-border-subtle);
+}
+
+.other-apps-row {
+	@apply py-8;
+	border-bottom: 1px solid var(--home-border-subtle);
+}
+</style>

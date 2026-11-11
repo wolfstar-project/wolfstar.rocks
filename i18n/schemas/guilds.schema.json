@@ -3649,6 +3649,18 @@
 							},
 							"additionalProperties": false
 						},
+						"errors": {
+							"type": "object",
+							"properties": {
+								"same_roles": {
+									"type": "string"
+								},
+								"unmanageable_role": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
 						"failures": {
 							"type": "object",
 							"properties": {

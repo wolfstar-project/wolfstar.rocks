@@ -131,7 +131,8 @@ const statusClass = computed(() => {
 	return "text-muted";
 });
 
-const examples = computed(() => (candidate.length === 0 ? [] : automodWordExamples(candidate)));
+// In a worker with a timeout, not on the page: see `useAutomodWordExamples()`.
+const examples = useAutomodWordExamples(() => candidate);
 </script>
 
 <style scoped>

@@ -79,6 +79,10 @@ function settingsRefusalMessage(t: (key: string) => string, error: unknown): str
 			return t("guild_settings.honeypot.errors.trap_permissions");
 		case "honeypot-log-permissions":
 			return t("guild_settings.honeypot.errors.log_permissions");
+		case "join-guard-same-roles":
+			return t("guild_settings.joinguard.errors.same_roles");
+		case "join-guard-unmanageable-role":
+			return t("guild_settings.joinguard.errors.unmanageable_role");
 		default:
 			return null;
 	}

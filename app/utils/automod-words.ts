@@ -5,6 +5,7 @@ import {
 import {
 	compileAutomodWords,
 	findAutomodWordMatches,
+	type AutomodWordMatch,
 	kPatternGroupReplacer,
 	kWordBoundaryWildcard,
 	processWordBoundaries,
@@ -178,6 +179,45 @@ export function automodWordSample(word: string) {
 	return automodWordCore(word).replaceAll(GROUP, (group) => group.charAt(1));
 }
 
+/**
+ * The parts of a message an expression takes, read as the bot reads it: with
+ * the look-alike characters replaced first (`removeConfusables()` in its
+ * worker), so `bａd` and `b\u200Bad` are caught as `bad` is. The offsets are
+ * those of the message as it was written.
+ */
+export function findAutomodMessageMatches(expression: RegExp, text: string): AutomodWordMatch[] {
+	// Each character is replaced on its own, so every unit of the clean text
+	// knows the character it came from.
+	let clean = "";
+	const starts: number[] = [];
+	const ends: number[] = [];
+	let offset = 0;
+	for (const character of text) {
+		const replaced = removeConfusables(character);
+		for (let unit = 0; unit < replaced.length; unit++) {
+			starts.push(offset);
+			ends.push(offset + character.length);
+		}
+		clean += replaced;
+		offset += character.length;
+	}
+
+	// A sequence the library reads as a whole has no character to point back
+	// to: the message is matched as the bot sees it, within its own length.
+	const whole = removeConfusables(text);
+	if (whole !== clean) {
+		return findAutomodWordMatches(expression, whole).map(({ start, end }) => ({
+			start: Math.min(start, text.length),
+			end: Math.min(end, text.length),
+		}));
+	}
+
+	return findAutomodWordMatches(expression, clean).map(({ start, end }) => ({
+		start: starts[start] ?? text.length,
+		end: ends[end - 1] ?? text.length,
+	}));
+}
+
 export interface AutomodWordExample {
 	text: string;
 	kind: "plain" | "repeated" | "separated" | "continues" | "prefixed" | "inside";
@@ -208,7 +248,7 @@ export function automodWordExamples(word: string): AutomodWordExample[] {
 		.map(({ text, kind }) => ({
 			text,
 			kind,
-			matches: findAutomodWordMatches(expression, text).length > 0,
+			matches: findAutomodMessageMatches(expression, text).length > 0,
 		}));
 }
 

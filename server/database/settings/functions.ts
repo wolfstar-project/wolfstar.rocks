@@ -82,6 +82,8 @@ class Transaction {
 	#changes = Object.create(null) as Partial<ReadonlyGuildData>;
 	#hasChanges = false;
 	#locking = true;
+	/** What a write made in another's transaction keeps for its commit. */
+	#afterCommit: (() => void) | null = null;
 
 	public constructor(
 		public readonly settings: ReadonlyGuildData,
@@ -96,6 +98,17 @@ class Transaction {
 		return this.#locking;
 	}
 
+	/**
+	 * Reads the settings again through a transaction that holds a lock the
+	 * write depends on, so what is planned from them is what the database has
+	 * under that lock: the queue of this process orders nothing against the
+	 * other instances of the dashboard, nor on Workers.
+	 */
+	public async reload(orm: Parameters<typeof fetchGuildData>[0]) {
+		const stored = await fetchGuildData(orm, this.settings.id);
+		if (stored !== null) Object.assign(this.settings, stored);
+	}
+
 	public write(data: Partial<ReadonlyGuildData>) {
 		Object.assign(this.#changes, data);
 		this.#hasChanges = true;
@@ -108,10 +121,12 @@ class Transaction {
 	 * @param extra Other writes that belong with them, made in the same database transaction, so they are all written
 	 * or none is: the rules of an import. They run even when no setting changes.
 	 * @param check What the changes depend on, checked first in that transaction, see {@linkcode writeGuildData}.
+	 * @param within A transaction already open to write in, see {@linkcode writeGuildData}.
 	 */
 	public async submit(
 		extra?: Parameters<typeof writeGuildData>[3],
 		check?: Parameters<typeof writeGuildData>[4],
+		within?: Parameters<typeof writeGuildData>[5],
 	) {
 		if (!this.#hasChanges && !extra) {
 			return;
@@ -131,24 +146,48 @@ class Transaction {
 					await notifyGuildSettingsUpdate(tx, this.settings.id, keys);
 				},
 				check,
+				within,
 			);
 
-			unconfigured.delete(this.settings.id);
-			Object.assign(this.settings, this.#changes);
-			// The written copy is the cached one, whatever a read that overlapped the
-			// write put in the cache meanwhile; a read still running is not cached.
-			writeCounts.set(this.settings.id, (writeCounts.get(this.settings.id) ?? 0) + 1);
-			cache.set(this.settings.id, this.settings as GuildData);
+			const changes = this.#changes;
+			const remember = () => {
+				unconfigured.delete(this.settings.id);
+				Object.assign(this.settings, changes);
+				// The written copy is the cached one, whatever a read that overlapped the
+				// write put in the cache meanwhile; a read still running is not cached.
+				writeCounts.set(this.settings.id, (writeCounts.get(this.settings.id) ?? 0) + 1);
+				cache.set(this.settings.id, this.settings as GuildData);
+				updateSettingsContext(this.settings, changes);
+			};
 			this.#hasChanges = false;
-			updateSettingsContext(this.settings, this.#changes);
+			// Written in a transaction this one does not own: nothing is saved until
+			// it commits, so the cache learns of it and the lock is let go then, in
+			// `committed()`, or the lock alone is let go when the write is dropped.
+			if (within) {
+				this.#afterCommit = remember;
+				return;
+			}
+			remember();
 		} finally {
 			this.#changes = Object.create(null);
 
-			if (this.#locking) {
+			if (this.#locking && !this.#afterCommit) {
 				this.queue?.shift();
 				this.#locking = false;
 			}
 		}
+	}
+
+	/**
+	 * Tells the transaction that the one it wrote in, through `within`, has
+	 * committed: the cache and the permission nodes take the changes, and the
+	 * next write of the guild may start.
+	 */
+	public committed() {
+		const remember = this.#afterCommit;
+		this.#afterCommit = null;
+		remember?.();
+		this.dispose();
 	}
 
 	public abort() {
@@ -207,12 +246,17 @@ async function fetch(id: string): Promise<GuildData> {
 	const writesBefore = writeCounts.get(id) ?? 0;
 	// A guild without rows reads as the defaults; its rows are created by the first write:
 	const stored = await fetchGuildData(db.orm, id);
-	if (stored === null) unconfigured.add(id);
-	else unconfigured.delete(id);
-
 	const data =
 		stored ??
 		(Object.assign(Object.create(null), getDefaultGuildSettings(), { id }) as GuildData);
-	if ((writeCounts.get(id) ?? 0) === writesBefore) cache.set(id, data);
+
+	// A read that a write overtook holds what the guild was before it: neither
+	// its settings nor whether it had any are remembered, or a guild whose
+	// first write just landed would be offered the setup again.
+	if ((writeCounts.get(id) ?? 0) === writesBefore) {
+		if (stored === null) unconfigured.add(id);
+		else unconfigured.delete(id);
+		cache.set(id, data);
+	}
 	return data;
 }

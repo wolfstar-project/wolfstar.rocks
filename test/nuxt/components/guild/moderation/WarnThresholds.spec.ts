@@ -175,14 +175,25 @@ describe("GuildModerationWarnThresholds", () => {
 		expect(wrapper.text()).toContain("A server has 10 thresholds at most");
 	});
 
-	it("removes a threshold", async () => {
-		settings();
+	it("removes a threshold once it is confirmed", async () => {
+		settings({ moderationDefaultWarnThresholds: true });
 		mockThresholds.value = [{ action: "Kick", count: 5, duration: null, period: 0 }];
 		const wrapper = await mountSection();
 
 		await wrapper
 			.find('button[aria-label="Remove the threshold at 5 warnings"]')
 			.trigger("click");
+		await flushPromises();
+		expect(mockRemoveThreshold).not.toHaveBeenCalled();
+
+		const dialog = document.body.querySelector<HTMLElement>('[role="dialog"]');
+		expect(dialog?.textContent).toContain("Remove the threshold at 5 warnings?");
+		// The last one of its own: the defaults come back.
+		expect(dialog?.textContent).toContain("goes back to the defaults");
+		const confirm = [...(dialog?.querySelectorAll("button") ?? [])].find(
+			(button) => button.textContent?.trim() === "Remove threshold",
+		);
+		confirm?.click();
 		await flushPromises();
 
 		expect(mockRemoveThreshold).toHaveBeenCalledWith(5);

@@ -53,13 +53,19 @@ export function useWarnThresholds(guildId: MaybeRefOrGetter<string | null | unde
 		}
 	}
 
-	/** Patches the list, unless the admin opened another guild meanwhile. */
+	/**
+	 * Patches the list, unless the admin opened another guild meanwhile, then
+	 * reads it again: a read that started before the write, such as the one
+	 * that refreshes cached rows, would otherwise land after it with the old
+	 * rows. A new read cancels the one in flight.
+	 */
 	function patch(
 		requestGuildId: string | null,
 		change: (current: WarnThreshold[]) => WarnThreshold[],
 	) {
 		if (id.value === requestGuildId) {
 			asyncData.data.value = change(thresholds.value).toSorted(byCount);
+			void asyncData.refresh();
 		}
 	}
 
@@ -92,7 +98,7 @@ export function useWarnThresholds(guildId: MaybeRefOrGetter<string | null | unde
 				current.filter((threshold) => threshold.count !== count),
 			);
 		}
-		return result.ok ? { ok: true, value: undefined } : result;
+		return result.ok || result.code === "unknown" ? { ok: true, value: undefined } : result;
 	}
 
 	return {

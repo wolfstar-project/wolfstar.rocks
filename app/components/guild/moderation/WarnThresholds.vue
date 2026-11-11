@@ -180,13 +180,12 @@
 											variant="ghost"
 											size="sm"
 											icon="ic:round-close"
-											:loading="removingCount === threshold.count"
 											:aria-label="
 												ts('guild_settings.warn_thresholds.remove_aria', {
 													count: threshold.count,
 												})
 											"
-											@click="remove(threshold)"
+											@click="askRemove(threshold)"
 										/>
 									</span>
 								</td>
@@ -197,6 +196,37 @@
 			</template>
 		</template>
 	</section>
+
+	<UModal
+		:open="removing !== null"
+		:title="ts('guild_settings.warn_thresholds.remove_title', { count: removing?.count ?? 0 })"
+		:description="
+			ts(
+				thresholds.length === 1 &&
+					originalGuildSettings?.moderationDefaultWarnThresholds === true
+					? 'guild_settings.warn_thresholds.remove_last_description'
+					: 'guild_settings.warn_thresholds.remove_description',
+			)
+		"
+		:dismissible="removingCount === null"
+		@update:open="!$event && closeRemove()"
+	>
+		<template #footer>
+			<div class="flex w-full justify-end gap-2">
+				<UButton
+					color="neutral"
+					variant="outline"
+					:disabled="removingCount !== null"
+					@click="closeRemove()"
+				>
+					{{ ts("guild_settings.auto.editor.cancel") }}
+				</UButton>
+				<UButton color="error" :loading="removingCount !== null" @click="confirmRemove">
+					{{ ts("guild_settings.warn_thresholds.remove") }}
+				</UButton>
+			</div>
+		</template>
+	</UModal>
 </template>
 
 <script setup lang="ts">
@@ -350,12 +380,24 @@ async function submit() {
 	});
 }
 
+const removing = shallowRef<WarnThreshold | null>(null);
 const removingCount = ref<number | null>(null);
 
-async function remove(threshold: WarnThreshold) {
+function askRemove(threshold: WarnThreshold) {
+	removing.value = threshold;
+}
+
+function closeRemove() {
+	removing.value = null;
+}
+
+async function confirmRemove() {
+	const threshold = removing.value;
+	if (!threshold) return;
 	removingCount.value = threshold.count;
 	const result = await removeThreshold(threshold.count);
 	removingCount.value = null;
+	removing.value = null;
 
 	toast.add(
 		result.ok

@@ -4777,7 +4777,19 @@
 						"permanent_hint": {
 							"type": "string"
 						},
+						"remove": {
+							"type": "string"
+						},
 						"remove_aria": {
+							"type": "string"
+						},
+						"remove_description": {
+							"type": "string"
+						},
+						"remove_last_description": {
+							"type": "string"
+						},
+						"remove_title": {
 							"type": "string"
 						},
 						"removed_description": {

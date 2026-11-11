@@ -45,8 +45,9 @@ export interface WarnThresholdChange {
 	after: WarnThreshold | null;
 }
 
-// Arbitrary, only different from the namespaces of the other tables' locks.
-const LOCK_NAMESPACE = 1_635_086_449;
+// Arbitrary, only different from the keys other code locks on (1_635_086_445
+// to 1_635_086_450 are taken).
+const LOCK_NAMESPACE = 1_635_086_451;
 const LOCK_KEY_RANGE = 2_147_483_647n;
 const withKeyLock = createKeyedLock();
 

@@ -564,6 +564,7 @@
 				"empty_title": "Ancora nessuna regola",
 				"enabled_count": "{enabled} di {total} attive",
 				"errors": {
+					"escalationDuration": "",
 					"generic": "Qualcosa è andato storto. Riprova.",
 					"invalid": "Il server ha rifiutato uno dei valori. Controlla i campi e riprova.",
 					"limit": "Questo server ha già il numero massimo di regole.",
@@ -571,6 +572,7 @@
 					"nameInvalid": "Usa un nome da 1 a 50 caratteri che non sia solo un numero.",
 					"nameRequired": "Dai un nome alla regola.",
 					"nameTaken": "Esiste già una regola con questo nome.",
+					"pendingWord": "",
 					"timeoutNeedsDuration": "Un passaggio di timeout richiede una durata.",
 					"unknown": "Questa regola non esiste più. Ricarica la pagina."
 				},
@@ -1443,7 +1445,9 @@
 				"empty_status_title": "Niente in questa categoria",
 				"empty_title": "Ancora nessuna segnalazione",
 				"filter_aria": "Mostra le segnalazioni per stato",
+				"load_failed": "",
 				"refresh": "Aggiorna le segnalazioni",
+				"retry": "",
 				"status": {
 					"actioned": "Gestita",
 					"all": "Tutte",

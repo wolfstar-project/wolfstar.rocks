@@ -17,6 +17,7 @@
 			"bot_tag": "",
 			"direct_message": "",
 			"home_aria": "",
+			"image_preview": "",
 			"intro": "",
 			"load_failed": "",
 			"log_aria": "",
@@ -298,6 +299,7 @@
 			"user": ""
 		},
 		"command_types": {
+			"context_menu": "",
 			"message": "",
 			"slash": "",
 			"user": ""

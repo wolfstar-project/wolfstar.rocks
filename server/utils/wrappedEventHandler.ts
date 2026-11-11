@@ -371,6 +371,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 		type: windowType,
 		scope,
 		whitelist,
+		countFailures,
 	} = normalizeRateLimitOptions(options.rateLimit, log);
 
 	// If rate limiting is disabled, run the handler without touching storage
@@ -419,7 +420,8 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 		return await invoke();
 	} catch (error) {
 		// On handler error, roll back this request's own reservation so
-		// failures don't consume quota
+		// failures don't consume quota, unless the route counts them
+		if (countFailures) throw error;
 		if ("windowStart" in reservation.token) {
 			await rollbackFixed(storageKey, reservation.token, windowMs, log);
 		} else {

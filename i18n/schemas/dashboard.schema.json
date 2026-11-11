@@ -55,6 +55,9 @@
 						"home_aria": {
 							"type": "string"
 						},
+						"image_preview": {
+							"type": "string"
+						},
 						"intro": {
 							"type": "string"
 						},
@@ -898,6 +901,9 @@
 				"command_types": {
 					"type": "object",
 					"properties": {
+						"context_menu": {
+							"type": "string"
+						},
 						"message": {
 							"type": "string"
 						},

@@ -17,6 +17,7 @@
 			"bot_tag": "BOT",
 			"direct_message": "Direct message",
 			"home_aria": "Home, direct messages",
+			"image_preview": "Sent an image",
 			"intro": "This is the beginning of your direct message history with {name}.",
 			"load_failed": "The posts couldn't be loaded from Discord.",
 			"log_aria": "Messages from {name}",
@@ -298,6 +299,7 @@
 			"user": "User"
 		},
 		"command_types": {
+			"context_menu": "Context menu",
 			"message": "Message menu",
 			"slash": "Slash",
 			"user": "User menu"

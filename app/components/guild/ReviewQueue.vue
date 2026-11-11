@@ -34,6 +34,18 @@
 
 			<DashboardSkeleton v-if="isLoading" kind="table" bare />
 
+			<!-- A failed read is said, not drawn as a queue with no report. -->
+			<UAlert
+				v-else-if="status === 'error' && entries.length === 0"
+				color="error"
+				variant="subtle"
+				icon="ic:round-error-outline"
+				:title="ts('guild_settings.reports.queue.load_failed')"
+				:actions="[
+					{ label: ts('guild_settings.reports.queue.retry'), onClick: () => refresh() },
+				]"
+			/>
+
 			<div v-else-if="entries.length === 0" class="review-empty" role="status">
 				<span class="review-empty-icon" aria-hidden="true">
 					<UIcon name="ic:round-flag" class="size-6 text-muted" />

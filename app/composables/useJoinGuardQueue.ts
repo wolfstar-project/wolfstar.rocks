@@ -83,7 +83,11 @@ export function useJoinGuardQueue(
 	const laterEntries = shallowRef<JoinGuardQueueEntry[]>([]);
 	const laterCursor = ref<string | null | undefined>(undefined);
 	const loadingMore = ref(false);
+	// A new first page starts the list again: a page asked for before it no
+	// longer follows it, so it is dropped when it comes back.
+	let generation = 0;
 	watch([scope, () => asyncData.data.value], () => {
+		generation += 1;
 		laterEntries.value = [];
 		laterCursor.value = undefined;
 	});
@@ -104,13 +108,14 @@ export function useJoinGuardQueue(
 		const guild = id.value;
 		if (!cursor || !guild || loadingMore.value) return;
 		const requested = scope.value;
+		const started = generation;
 		loadingMore.value = true;
 		try {
 			const page = await $fetch<JoinGuardQueuePage>(
 				`/api/guilds/${guild}/joinguard/checkpoints`,
 				{ query: { cursor, status: currentFilter.value } },
 			);
-			if (scope.value !== requested) return;
+			if (scope.value !== requested || generation !== started) return;
 			laterEntries.value = [...laterEntries.value, ...page.entries];
 			laterCursor.value = page.nextCursor;
 		} finally {

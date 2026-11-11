@@ -1696,6 +1696,9 @@
 								"errors": {
 									"type": "object",
 									"properties": {
+										"escalationDuration": {
+											"type": "string"
+										},
 										"generic": {
 											"type": "string"
 										},
@@ -1715,6 +1718,9 @@
 											"type": "string"
 										},
 										"nameTaken": {
+											"type": "string"
+										},
+										"pendingWord": {
 											"type": "string"
 										},
 										"timeoutNeedsDuration": {
@@ -4333,7 +4339,13 @@
 								"filter_aria": {
 									"type": "string"
 								},
+								"load_failed": {
+									"type": "string"
+								},
 								"refresh": {
+									"type": "string"
+								},
+								"retry": {
 									"type": "string"
 								},
 								"status": {

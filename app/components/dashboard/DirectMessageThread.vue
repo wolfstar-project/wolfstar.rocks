@@ -220,6 +220,7 @@ function emojiURL(emoji: { id: string; animated: boolean }): string {
 	return `https://cdn.discordapp.com/emojis/${emoji.id}.${emoji.animated ? "gif" : "webp"}?size=48`;
 }
 const { thread, markRead, statusOf, reload } = useDirectMessages();
+const { isPhone, screen } = usePhoneScreen();
 
 const now = useNow({ scheduler: (cb) => useIntervalFn(cb, 60_000) });
 const status = computed(() => (thread.value ? statusOf(thread.value) : "ready"));
@@ -231,15 +232,23 @@ function formatDay(day: string): string {
 
 const log = useTemplateRef<HTMLElement>("log");
 
-// A thread opens on its newest post, as a conversation does, and is read.
+// A thread opens on its newest post, as a conversation does, and is read. A
+// phone's list keeps the thread mounted but hidden: it is read once shown.
 function openNewest() {
-	if (!thread.value) return;
+	if (!thread.value || (isPhone.value && screen.value !== "page")) return;
 	markRead(thread.value);
 	if (log.value) log.value.scrollTop = log.value.scrollHeight;
 }
 
 onMounted(openNewest);
-watch(() => [thread.value?.id, thread.value?.news.length], openNewest, { flush: "post" });
+// The screen and the width both decide whether the thread is shown.
+watch(
+	() => [thread.value?.id, thread.value?.news.length, screen.value, isPhone.value],
+	openNewest,
+	{
+		flush: "post",
+	},
+);
 </script>
 
 <style scoped>

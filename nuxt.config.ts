@@ -363,7 +363,10 @@ export default defineNuxtConfig({
 	},
 
 	sourcemap: {
-		client: "hidden",
+		// Only a build that uploads the maps to Sentry makes them: without a token
+		// the Sentry plugin is off, and with it the deletion of the maps after the
+		// upload, so they would be served with the site.
+		client: runtimeConfig.sentry.authToken ? "hidden" : false,
 		// Rollup collapsing the server maps is the other half of the bundling time
 		// on Workers Builds, and nothing uploads them for the Worker.
 		server: !isCloudflareBuild,

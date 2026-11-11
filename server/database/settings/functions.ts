@@ -13,6 +13,11 @@ import { Collection } from "@discordjs/collection";
 import { AsyncQueue } from "@sapphire/async-queue";
 
 const cache = new Collection<string, GuildData>();
+/**
+ * How many writes each guild had in this process: a read that started before
+ * one and finished after it holds older settings, and must not be cached.
+ */
+const writeCounts = new Map<string, number>();
 // The guilds whose last read found no rows at all: the bot writes a guild's rows
 // on its first setting, so these were never set up.
 const unconfigured = new Set<string>();
@@ -130,6 +135,10 @@ class Transaction {
 
 			unconfigured.delete(this.settings.id);
 			Object.assign(this.settings, this.#changes);
+			// The written copy is the cached one, whatever a read that overlapped the
+			// write put in the cache meanwhile; a read still running is not cached.
+			writeCounts.set(this.settings.id, (writeCounts.get(this.settings.id) ?? 0) + 1);
+			cache.set(this.settings.id, this.settings as GuildData);
 			this.#hasChanges = false;
 			updateSettingsContext(this.settings, this.#changes);
 		} finally {
@@ -195,6 +204,7 @@ async function processFetch(id: string, fresh = false): Promise<ReadonlyGuildDat
 }
 
 async function fetch(id: string): Promise<GuildData> {
+	const writesBefore = writeCounts.get(id) ?? 0;
 	// A guild without rows reads as the defaults; its rows are created by the first write:
 	const stored = await fetchGuildData(db.orm, id);
 	if (stored === null) unconfigured.add(id);
@@ -203,6 +213,6 @@ async function fetch(id: string): Promise<GuildData> {
 	const data =
 		stored ??
 		(Object.assign(Object.create(null), getDefaultGuildSettings(), { id }) as GuildData);
-	cache.set(id, data);
+	if ((writeCounts.get(id) ?? 0) === writesBefore) cache.set(id, data);
 	return data;
 }

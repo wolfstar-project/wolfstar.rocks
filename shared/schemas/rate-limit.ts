@@ -25,6 +25,10 @@ export const RateLimitSchema = object({
 		),
 		true,
 	),
+	// Whether a request the handler refuses still counts: by default a failure
+	// gives its reservation back, which on a route that answers its checks with
+	// errors leaves every refused try free.
+	countFailures: optional(boolean(), false),
 	ipHeader: optional(string()),
 	limit: optional(
 		pipe(

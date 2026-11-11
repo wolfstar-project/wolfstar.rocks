@@ -1,7 +1,7 @@
 import type { ReportEntry } from "#shared/types/report";
 import { GuildReviewQueue } from "#components";
 import { mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
-import { getQuery } from "h3";
+import { createError, getQuery } from "h3";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 
@@ -26,12 +26,14 @@ const REPORTS = [
 ];
 
 const requestedStatuses: (string | undefined)[] = [];
+let failReads = false;
 
 registerEndpoint(`/api/guilds/${GUILD_ID}/reports`, {
 	method: "GET",
 	handler: (event) => {
 		const status = getQuery(event)["status"] as string | undefined;
 		requestedStatuses.push(status);
+		if (failReads) throw createError({ statusCode: 500, statusMessage: "Down" });
 		const entries = REPORTS.filter((entry) => !status || entry.status === status);
 		return { entries, total: entries.length };
 	},
@@ -41,10 +43,25 @@ registerEndpoint(`/api/guilds/${GUILD_ID}/reports`, {
 describe("GuildReviewQueue", () => {
 	beforeEach(() => {
 		requestedStatuses.length = 0;
+		failReads = false;
 		clearNuxtState();
 		clearNuxtData();
 		useActiveGuild().selectGuild(GUILD_ID);
 		useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: GUILD_ID }));
+	});
+
+	// A failure that read as a queue with no report would hide the reports.
+	it("says the reports could not be loaded, and loads them again", async () => {
+		failReads = true;
+		const wrapper = await mountSuspended(GuildReviewQueue);
+
+		await vi.waitFor(() => expect(wrapper.text()).toContain("Could not load the reports."));
+		expect(wrapper.find(".review-empty").exists()).toBe(false);
+
+		failReads = false;
+		const retry = wrapper.findAll("button").find((button) => button.text() === "Try again");
+		await retry!.trigger("click");
+		await vi.waitFor(() => expect(wrapper.findAll("tbody tr")).toHaveLength(2));
 	});
 
 	it("opens on the open reports, newest first", async () => {

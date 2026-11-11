@@ -1,6 +1,7 @@
 import { DashboardDirectMessages, DashboardDirectMessageThread } from "#components";
 import { mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { page } from "vitest/browser";
 import { MOCK_ANNOUNCEMENTS } from "~~/test/mocks/announcements";
 
 registerEndpoint("/api/users/appeals", {
@@ -9,17 +10,25 @@ registerEndpoint("/api/users/appeals", {
 });
 
 let failing = false;
+let posts = MOCK_ANNOUNCEMENTS;
 registerEndpoint("/api/announcements/wolfstar", {
 	method: "GET",
 	handler: () => {
 		if (failing) throw new Error("Discord is down");
-		return MOCK_ANNOUNCEMENTS;
+		return posts;
 	},
 });
 
 describe("dashboard direct messages", () => {
+	// A desktop's Home, where the thread is on screen: a phone's list keeps the
+	// thread mounted but hidden, and marks nothing read (its own test, below).
+	beforeAll(async () => {
+		await page.viewport(1280, 900);
+	});
+
 	beforeEach(() => {
 		failing = false;
+		posts = MOCK_ANNOUNCEMENTS;
 		localStorage.removeItem("wolfstar-dm-read");
 		clearNuxtState(["dm:posts", "dm:status"]);
 		// Set directly: `useDirectMessages()` would start reading the posts here,
@@ -73,6 +82,39 @@ describe("dashboard direct messages", () => {
 		await thread.get("button").trigger("click");
 		await vi.waitFor(() => expect(thread.findAll("article")).toHaveLength(2));
 		thread.unmount();
+	});
+
+	it("previews a newest post of images alone as one, not as no messages", async () => {
+		posts = [
+			...MOCK_ANNOUNCEMENTS,
+			{
+				...MOCK_ANNOUNCEMENTS[1]!,
+				content: "",
+				embeds: [],
+				id: "1290000000000000003",
+				images: [{ height: 600, url: "https://cdn.discordapp.com/a.png", width: 800 }],
+			},
+		];
+		const list = await mountSuspended(DashboardDirectMessages);
+
+		const wolfstar = () =>
+			list
+				.findAll(".dm-row:not(.dm-row--page)")
+				.find((row) => row.text().includes("WolfStar"));
+		await vi.waitFor(() => expect(wolfstar()?.text()).toContain("Sent an image"));
+		expect(wolfstar()?.text()).not.toContain("No messages yet");
+		list.unmount();
+	});
+
+	it("marks nothing read on a phone's list, where the thread is hidden", async () => {
+		await page.viewport(390, 844);
+		const thread = await mountSuspended(DashboardDirectMessageThread);
+
+		await vi.waitFor(() => expect(thread.findAll("article")).toHaveLength(2));
+		await new Promise((resolve) => setTimeout(resolve, 100));
+		expect(useDirectMessages().totalUnread.value).toBe(2);
+		thread.unmount();
+		await page.viewport(1280, 900);
 	});
 
 	it("filters the threads by name and opens one", async () => {

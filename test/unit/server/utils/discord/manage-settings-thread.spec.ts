@@ -1,39 +1,45 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // vi.hoisted() ensures globals are present before discord.ts is evaluated.
-const { mockReadSettings, mockReadSettingsPermissionNodes } = vi.hoisted(() => {
-	const mockReadSettings = vi.fn();
-	const mockReadSettingsPermissionNodes = vi.fn();
+const { mockReadProposedPermissionNodes, mockReadSettings, mockReadSettingsPermissionNodes } =
+	vi.hoisted(() => {
+		const mockReadSettings = vi.fn();
+		const mockReadSettingsPermissionNodes = vi.fn();
+		const mockReadProposedPermissionNodes = vi.fn();
 
-	(globalThis as Record<string, unknown>).defineCachedFunction = (fn: unknown) => fn;
-	(globalThis as Record<string, unknown>).hours = (n: number) => n * 3600;
-	(globalThis as Record<string, unknown>).useApi = () => ({
-		guilds: { get: vi.fn(), getChannels: vi.fn(), getMember: vi.fn() },
-		users: { getCurrent: vi.fn(), getGuilds: vi.fn(), getGuildMember: vi.fn() },
-	});
-	(globalThis as Record<string, unknown>).instrumentDiscordApiCall = (
-		_name: string,
-		fn: () => unknown,
-	) => fn();
-	(globalThis as Record<string, unknown>).instrumentBotApiCall = (
-		_name: string,
-		fn: () => unknown,
-	) => fn();
-	(globalThis as Record<string, unknown>).getUserSession = vi.fn();
-	(globalThis as Record<string, unknown>).$fetch = vi.fn();
-	(globalThis as Record<string, unknown>).useRuntimeConfig = () => ({
-		public: { apiBaseUrl: "" },
-	});
-	(globalThis as Record<string, unknown>).errors = {
-		unauthorized: () => Object.assign(new Error("Unauthorized"), { status: 401 }),
-	};
-	(globalThis as Record<string, unknown>).flattenGuild = (guild: Record<string, unknown>) =>
-		guild;
-	(globalThis as Record<string, unknown>).guildNameToAcronym = (name: string) =>
-		name.slice(0, 2).toUpperCase();
+		(globalThis as Record<string, unknown>).defineCachedFunction = (fn: unknown) => fn;
+		(globalThis as Record<string, unknown>).hours = (n: number) => n * 3600;
+		(globalThis as Record<string, unknown>).useApi = () => ({
+			guilds: { get: vi.fn(), getChannels: vi.fn(), getMember: vi.fn() },
+			users: { getCurrent: vi.fn(), getGuilds: vi.fn(), getGuildMember: vi.fn() },
+		});
+		(globalThis as Record<string, unknown>).instrumentDiscordApiCall = (
+			_name: string,
+			fn: () => unknown,
+		) => fn();
+		(globalThis as Record<string, unknown>).instrumentBotApiCall = (
+			_name: string,
+			fn: () => unknown,
+		) => fn();
+		(globalThis as Record<string, unknown>).getUserSession = vi.fn();
+		(globalThis as Record<string, unknown>).$fetch = vi.fn();
+		(globalThis as Record<string, unknown>).useRuntimeConfig = () => ({
+			public: { apiBaseUrl: "" },
+		});
+		(globalThis as Record<string, unknown>).errors = {
+			unauthorized: () => Object.assign(new Error("Unauthorized"), { status: 401 }),
+		};
+		(globalThis as Record<string, unknown>).flattenGuild = (guild: Record<string, unknown>) =>
+			guild;
+		(globalThis as Record<string, unknown>).guildNameToAcronym = (name: string) =>
+			name.slice(0, 2).toUpperCase();
 
-	return { mockReadSettings, mockReadSettingsPermissionNodes };
-});
+		return {
+			mockReadProposedPermissionNodes,
+			mockReadSettings,
+			mockReadSettingsPermissionNodes,
+		};
+	});
 
 vi.mock("@sentry/nuxt", () => ({
 	metrics: { count: vi.fn() },
@@ -41,6 +47,7 @@ vi.mock("@sentry/nuxt", () => ({
 }));
 
 vi.mock("#server/database", () => ({
+	readProposedPermissionNodes: mockReadProposedPermissionNodes,
 	readSettings: mockReadSettings,
 	readSettingsPermissionNodes: mockReadSettingsPermissionNodes,
 }));
@@ -73,6 +80,20 @@ describe("canManage - settings threading through manage()", () => {
 		mockReadSettingsPermissionNodes.mockReturnValue({
 			run: vi.fn().mockResolvedValue(null),
 		});
+	});
+
+	// The guild's cached manager holds the saved nodes: a change that denies the
+	// writer the settings would pass a check that read them, and lock them out.
+	it("runs the legacy nodes of a change, not the saved ones, when asked to", async () => {
+		mockReadProposedPermissionNodes.mockReturnValue({
+			run: vi.fn().mockResolvedValue(false),
+		});
+
+		await expect(canManage(guild, adminMember, mockSettings, true)).rejects.toMatchObject({
+			status: 403,
+		});
+		expect(mockReadProposedPermissionNodes).toHaveBeenCalledWith(mockSettings);
+		expect(mockReadSettingsPermissionNodes).not.toHaveBeenCalled();
 	});
 
 	it("does not call readSettings when pre-loaded settings are provided", async () => {

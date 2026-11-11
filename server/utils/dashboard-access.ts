@@ -2,6 +2,7 @@ import type { GuildData, ReadonlyGuildData } from "#server/database/settings/typ
 import type { APIGuild, APIGuildMember } from "discord-api-types/v10";
 import { hasAdminPermissions } from "#server/utils/discord/admin";
 import {
+	isAccessEntry,
 	resolveAccess,
 	type AccessSubject,
 	type PermissionEntry,
@@ -78,15 +79,28 @@ export function assertCanEditDashboardAccess(
 	}
 }
 
+/**
+ * What an entry holds, in a fixed order: `jsonb` gives an entry back with its
+ * keys reordered, so a plain `JSON.stringify` would call every rule changed.
+ */
+function entryKey(entry: PermissionEntry): string {
+	return JSON.stringify([
+		entry.id,
+		entry.allow,
+		entry.deny,
+		isAccessEntry(entry) ? entry.dashboard : null,
+	]);
+}
+
 function changedEntries(
 	next: readonly PermissionEntry[] | undefined,
 	current: readonly PermissionEntry[],
 ): PermissionEntry[] {
 	if (next === undefined) return [];
-	const before = new Map(current.map((entry) => [entry.id, JSON.stringify(entry)]));
+	const before = new Map(current.map((entry) => [entry.id, entryKey(entry)]));
 	const after = new Set(next.map((entry) => entry.id));
 	return [
-		...next.filter((entry) => before.get(entry.id) !== JSON.stringify(entry)),
+		...next.filter((entry) => before.get(entry.id) !== entryKey(entry)),
 		// A removed rule is a change of its id too.
 		...current.filter((entry) => !after.has(entry.id)),
 	];

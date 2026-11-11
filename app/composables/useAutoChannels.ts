@@ -75,7 +75,7 @@ export function useAutoChannels<Slug extends AutoChannelSlug>(
 	/** Patches the list, unless the admin opened another guild meanwhile. */
 	function patchRows(requestGuildId: string | null, patch: (current: Row[]) => Row[]) {
 		if (id.value === requestGuildId) {
-			asyncData.data.value = patch(rows.value);
+			void rereadAfterWrite(asyncData, patch(rows.value), () => id.value === requestGuildId);
 		}
 	}
 

@@ -196,7 +196,7 @@ Commit messages must follow Conventional Commits: `<type>(<scope>): <subject>`
 
 - **Build issues:** Clear `.nuxt`, `.output`, and `node_modules/.cache`, then rebuild
 - **`#server/database/generated/prisma/contract` not found, or contract types stale:** Run `pnpm prisma:generate` (it also initializes the `vendor/wolfstar` submodule when it is empty); run it again after every submodule bump
-- **OAuth redirect fails:** Ensure the Discord Developer Portal lists `<NUXT_PUBLIC_SITE_URL>/oauth/callback` verbatim, and that `NUXT_PUBLIC_SITE_URL` is set on the deployed environment — the redirect URI is derived from it
+- **OAuth redirect fails:** Ensure the Discord Developer Portal lists `<NUXT_PUBLIC_SITE_URL>/oauth/callback` and `<NUXT_PUBLIC_SITE_URL>/oauth/guild` verbatim, and that `NUXT_PUBLIC_SITE_URL` is set on the deployed environment — the redirect URI is derived from it
 - **Hot reload broken:** Check file watcher limits on Linux, restart dev server
 - **Type errors after updates:** Run `pnpm nuxt prepare && pnpm prisma:generate`
 - **Duplicate/incompatible `vue`, `discord-api-types`, or `@unhead/vue`/`unhead` types after a dependency update:** Check the `overrides` in `pnpm-workspace.yaml` still pin a single version of each — two copies make structurally identical (nominally-branded) types incompatible during typecheck

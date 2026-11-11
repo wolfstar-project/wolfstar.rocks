@@ -21,6 +21,9 @@ export type TurnstileVerification =
 	/** Cloudflare could not be asked. */
 	| { ok: false; reason: "unreachable"; errorCodes: readonly string[] };
 
+/** How long `siteverify` has to answer, in milliseconds. */
+const SITEVERIFY_TIMEOUT = 5000;
+
 /**
  * Checks a Turnstile token with Cloudflare's `siteverify`, with the site's
  * secret. The member's IP is not sent: the checkpoint reads no IP.
@@ -31,7 +34,9 @@ export type TurnstileVerification =
 export async function verifyTurnstileToken(
 	secret: string,
 	token: string | undefined,
-	fetcher: SiteverifyFetcher = (url, options) => ofetch<SiteverifyResponse>(url, options),
+	// A stalled connection fails into `unreachable` rather than holding the check open.
+	fetcher: SiteverifyFetcher = (url, options) =>
+		ofetch<SiteverifyResponse>(url, { ...options, timeout: SITEVERIFY_TIMEOUT }),
 ): Promise<TurnstileVerification> {
 	if (token === undefined || token.length === 0) {
 		return { ok: false, reason: "missing", errorCodes: [] };

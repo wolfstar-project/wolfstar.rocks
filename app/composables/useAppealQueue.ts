@@ -234,6 +234,9 @@ export function useAppealQueue(
 		const count = moreEntries.value.length;
 		generation += 1;
 		await asyncData.refresh();
+		// A page asked for while the first one was read again took the old
+		// list's offset: dropped too, once the new first page is in.
+		generation += 1;
 		if (!guild || count === 0 || scope.value !== requested) return;
 		try {
 			const rows = await rereadMore(guild, count);

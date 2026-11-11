@@ -220,9 +220,14 @@ function openNewest() {
 }
 
 onMounted(openNewest);
-watch(() => [thread.value?.id, thread.value?.news.length, screen.value], openNewest, {
-	flush: "post",
-});
+// The screen and the width both decide whether the thread is shown.
+watch(
+	() => [thread.value?.id, thread.value?.news.length, screen.value, isPhone.value],
+	openNewest,
+	{
+		flush: "post",
+	},
+);
 </script>
 
 <style scoped>

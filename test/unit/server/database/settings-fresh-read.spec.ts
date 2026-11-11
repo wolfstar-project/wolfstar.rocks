@@ -5,14 +5,18 @@ const { mockFetchGuildData } = vi.hoisted(() => ({ mockFetchGuildData: vi.fn() }
 vi.mock("#server/database/prisma", () => ({ db: { orm: {} } }));
 vi.mock("#server/database/settings/storage", () => ({
 	fetchGuildData: mockFetchGuildData,
-	writeGuildData: vi.fn(),
+	writeGuildData: vi.fn(async () => undefined),
 }));
 vi.mock("#server/database/settings/context/functions", () => ({
 	getSettingsContext: vi.fn(),
 	updateSettingsContext: vi.fn(),
 }));
 
-import { readFreshSettings, readSettings } from "#server/database/settings/functions";
+import {
+	readFreshSettings,
+	readSettings,
+	writeSettingsTransaction,
+} from "#server/database/settings/functions";
 
 const GUILD_ID = "123456789012345678";
 
@@ -31,5 +35,24 @@ describe("readFreshSettings", () => {
 		expect((await readSettings(GUILD_ID)).language).toBe("en-US");
 		expect((await readFreshSettings(GUILD_ID)).language).toBe("de");
 		expect((await readSettings(GUILD_ID)).language).toBe("de");
+	});
+
+	// A read that started before a write holds the settings as they were: once
+	// the write is saved, the cache keeps the written copy, not that read's.
+	it("does not cache a read that a write overtook", async () => {
+		const guild = "223456789012345678";
+		mockFetchGuildData.mockResolvedValueOnce({ id: guild, language: "en-US" });
+		{
+			using trx = await writeSettingsTransaction(guild);
+			let answer: (value: unknown) => void = () => undefined;
+			mockFetchGuildData.mockReturnValueOnce(new Promise((resolve) => (answer = resolve)));
+			const overlapping = readFreshSettings(guild);
+
+			await trx.write({ language: "de" }).submit();
+			answer({ id: guild, language: "en-US" });
+			expect((await overlapping).language).toBe("en-US");
+		}
+
+		expect((await readSettings(guild)).language).toBe("de");
 	});
 });

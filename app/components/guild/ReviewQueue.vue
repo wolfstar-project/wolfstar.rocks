@@ -115,9 +115,23 @@
 				</table>
 			</div>
 
-			<p v-if="total > entries.length" class="mt-3 text-[0.8125rem] text-muted">
-				{{ ts("guild_logs.showing_entries", { shown: entries.length, total }) }}
-			</p>
+			<!-- The older reports, a page at a time: without it a server with more
+			     than a page of them could never reach the rest. -->
+			<div v-if="total > QUEUE_LIMIT" class="mt-3 flex flex-wrap items-center gap-3">
+				<p class="text-[0.8125rem] text-muted">
+					{{ ts("guild_logs.showing_entries", { shown: entries.length, total }) }}
+				</p>
+				<span class="grow"></span>
+				<UPagination
+					v-model:page="page"
+					:total="total"
+					:items-per-page="QUEUE_LIMIT"
+					:sibling-count="0"
+					color="neutral"
+					variant="outline"
+					size="sm"
+				/>
+			</div>
 		</div>
 	</section>
 </template>
@@ -151,10 +165,16 @@ const STATUS_LABEL_KEYS: Record<ReportStatus, string> = {
 
 const headingId = useId();
 const selected = ref<ReportStatus | "all">("Open");
+// Each status has its own pages: a change of status starts at the first.
+const page = ref(1);
+watch(selected, () => {
+	page.value = 1;
+});
 
 const { entries, total, status, refresh } = useReports({
 	guildId: () => guildData.value?.id,
 	limit: QUEUE_LIMIT,
+	offset: () => (page.value - 1) * QUEUE_LIMIT,
 	status: () => (selected.value === "all" ? undefined : selected.value),
 });
 

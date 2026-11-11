@@ -1,4 +1,7 @@
-import { assertJoinGuardRolesDiffer } from "#server/utils/join-guard/settings";
+import {
+	assertJoinGuardRolesDiffer,
+	findUnmanageableJoinGuardRole,
+} from "#server/utils/join-guard/settings";
 import { describe, expect, it } from "vitest";
 
 const PENDING = "234567890123456789";
@@ -50,5 +53,30 @@ describe("assertJoinGuardRolesDiffer", () => {
 				),
 			),
 		).toBeNull();
+	});
+});
+
+describe("findUnmanageableJoinGuardRole", () => {
+	const GUILD = "100000000000000000";
+	const BOT_ROLE = "300000000000000001";
+	const roles = [
+		{ id: GUILD, position: 0 },
+		{ id: "300000000000000002", position: 2 },
+		{ id: BOT_ROLE, position: 5, managed: true },
+		{ id: "300000000000000003", position: 3, managed: true },
+		{ id: "300000000000000004", position: 8 },
+	];
+	const find = (...ids: string[]) => findUnmanageableJoinGuardRole(GUILD, roles, [BOT_ROLE], ids);
+
+	it("takes a role below the bot's highest that no integration manages", () => {
+		expect(find("300000000000000002")).toBeNull();
+	});
+
+	it("refuses a role at or above the bot's highest, a managed one, @everyone and an unknown one", () => {
+		expect(find("300000000000000004")).toBe("300000000000000004");
+		expect(find(BOT_ROLE)).toBe(BOT_ROLE);
+		expect(find("300000000000000003")).toBe("300000000000000003");
+		expect(find(GUILD)).toBe(GUILD);
+		expect(find("999999999999999999")).toBe("999999999999999999");
 	});
 });

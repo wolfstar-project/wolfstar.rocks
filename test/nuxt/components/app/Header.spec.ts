@@ -96,6 +96,30 @@ describe("AppHeader", () => {
 
 			wrapper.unmount();
 		});
+
+		// Without a size the app logos are drawn as large as their files.
+		it("keeps the app logos of its Applications rows at the size of an icon", async () => {
+			const wrapper = await mountSuspended(AppHeader, { attachTo: document.body });
+			await wrapper.find("button[data-slot='toggle']").trigger("click");
+			await new Promise((resolve) => setTimeout(resolve, 100));
+
+			const dialog = document.querySelector<HTMLElement>("[role='dialog']");
+			const group = [...(dialog?.querySelectorAll("button") ?? [])].find((button) =>
+				button.textContent?.includes("Applications"),
+			);
+			if (group?.getAttribute("aria-expanded") !== "true") group?.click();
+			await new Promise((resolve) => setTimeout(resolve, 300));
+
+			const logos = [
+				...(dialog?.querySelectorAll<HTMLElement>("[data-slot='linkLeadingAvatar']") ?? []),
+			];
+			expect(logos).toHaveLength(2);
+			for (const logo of logos) {
+				expect(logo.getBoundingClientRect().width).toBe(24);
+			}
+
+			wrapper.unmount();
+		});
 	});
 
 	describe("hydration safety", () => {

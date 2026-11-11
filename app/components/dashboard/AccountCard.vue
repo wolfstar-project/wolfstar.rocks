@@ -166,19 +166,37 @@ const { open: openPreferences } = usePreferencesDialog();
 	outline-offset: -2px;
 }
 
-/* The phone's card is taller, as Discord's own: a larger avatar, the name over
-   the username, and the two actions as tinted tiles that read over the nameplate. */
+/* The phone's card is taller, as Discord's own: an avatar larger than the card,
+   which it stands out of at the top and the left, the name over the username,
+   and the two actions as tinted tiles that read over the nameplate. */
 @variant max-sm {
 	.account-card--floating {
-		@apply gap-2 rounded-2xl p-2.5;
+		@apply gap-2 overflow-visible rounded-2xl p-1.5;
+	}
+
+	/* The card no longer clips, for the avatar: the nameplate clips itself. */
+	.account-nameplate {
+		@apply overflow-hidden;
+		border-radius: inherit;
 	}
 
 	.account-user {
-		@apply min-h-14 px-1 py-0 text-base;
+		@apply min-h-11 px-1 py-0 text-base;
+	}
+
+	/* The name sits in the card; only the avatar leaves it, so the row's hover
+	   tint would draw a box around the overhang. */
+	.account-user:hover {
+		background-color: transparent;
 	}
 
 	.account-user :deep(.account-avatar) {
-		@apply size-14;
+		@apply size-[4.5rem];
+	}
+
+	/* On the avatar's wrapper, so the decoration stays around the avatar. */
+	.account-user :deep(.user-avatar) {
+		@apply -my-4 -ms-4;
 	}
 
 	.account-text {

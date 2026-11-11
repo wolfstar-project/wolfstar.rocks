@@ -166,7 +166,7 @@ const TINTS = [
 ];
 
 const iconUrl = computed(() =>
-	guildIconURL({ ...entry.guild, acronym: guildInitials(entry.guild.name) }, { size: 80 }),
+	guildIconURL({ ...entry.guild, acronym: guildInitials(entry.guild.name) }, { size: 128 }),
 );
 const initials = computed(() => guildInitials(entry.guild.name));
 const tint = computed(() => `var(${TINTS[Number(BigInt(entry.guild.id) % BigInt(TINTS.length))]})`);

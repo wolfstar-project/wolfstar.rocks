@@ -1,4 +1,7 @@
 <template>
+	<!-- The select renders a hidden native `<select>` after its trigger, so the
+	     group does not see the trigger as its last field and squares its outer
+	     corners too: they are rounded back here. -->
 	<UFieldGroup class="w-full">
 		<UInputNumber
 			v-model="amount"
@@ -13,7 +16,7 @@
 			:items="unitItems"
 			:disabled="disabled"
 			:aria-label="ts('guild_settings.automod.rules.editor.duration_unit_aria', { label })"
-			class="w-32"
+			class="w-32 rounded-e-[6px]!"
 		/>
 	</UFieldGroup>
 </template>

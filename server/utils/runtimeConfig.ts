@@ -43,6 +43,9 @@ export function generateRuntimeConfig() {
 		botApiOauthSecret: process.env.NUXT_BOT_API_OAUTH_SECRET ?? "",
 		botApiOauthCookie: process.env.NUXT_BOT_API_OAUTH_COOKIE || "WOLFSTAR_AUTH",
 		discord: {
+			// The channel of WolfStar's server whose posts the Home's WolfStar thread shows.
+			announcementsChannelId:
+				process.env.NUXT_DISCORD_ANNOUNCEMENTS_CHANNEL_ID || "890648971712802906",
 			botToken: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN,
 			clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,
 			clientSecret: process.env.NUXT_OAUTH_DISCORD_CLIENT_SECRET,

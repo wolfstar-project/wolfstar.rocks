@@ -275,6 +275,8 @@ export default defineConfig({
 		ignorePatterns: [
 			/** The bot's repository (git submodule), linted by its own tooling */
 			"vendor/**",
+			/** newt/ui components, copied from its registry: kept as written so `newtui diff` stays clean */
+			"app/components/ui/**",
 			".output/**",
 			".data/**",
 			".nuxt/**",
@@ -493,6 +495,8 @@ export default defineConfig({
 		],
 		ignorePatterns: [
 			"vendor/",
+			"app/components/ui/",
+			"app/lib/utils.ts",
 			".nuxt/",
 			"dist/",
 			"node_modules/",

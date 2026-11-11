@@ -1,108 +1,61 @@
+import type { Announcement } from "#shared/types/announcement";
+
 /**
  * The direct messages the dashboard's Home shows. They are not Discord DMs:
- * WolfStar's thread is the dashboard's release notes, written here and dated
- * by the change they announce, and nobody can reply to it.
+ * WolfStar's thread shows the posts of its announcement channel, and nobody
+ * can reply to it.
  */
 
 /** A bot with a thread on the Home. */
 export type DirectMessageThreadId = "wolfstar" | "staryl";
 
-/** What a news embed's button opens. */
-export type DirectMessageAction = "language-settings";
-
-export interface DirectMessageNews {
-	/** Stable and increasing, so the last one read marks what is unread. */
-	id: number;
-	/** When it was posted, as an ISO timestamp. */
-	at: string;
-	/** A plain line above the embed; it is handed the reader's name as `{name}`. */
-	textKey?: string;
-	embed?: {
-		titleKey: string;
-		bodyKey: string;
-		/** The accent of the embed's left edge. */
-		tone: "primary" | "success" | "info";
-		action?: { labelKey: string; run: DirectMessageAction };
-	};
-	/** The reactions offered under the message. */
-	reactions: readonly string[];
-}
-
-export interface DirectMessageThread {
+export interface DirectMessageThreadInfo {
 	id: DirectMessageThreadId;
 	name: string;
 	avatar: string;
 	/** What the thread is for, shown at its top. */
 	introKey: string;
-	news: readonly DirectMessageNews[];
+	/** The route its posts are read from; a thread without one has none yet. */
+	source?: string;
 }
 
-const WOLFSTAR_NEWS: readonly DirectMessageNews[] = [
-	{
-		at: "2026-10-11T09:12:00Z",
-		embed: {
-			bodyKey: "dashboard.dm.news.console_body",
-			titleKey: "dashboard.dm.news.console_title",
-			tone: "primary",
-		},
-		id: 1,
-		reactions: ["👍", "🎉"],
-		textKey: "dashboard.dm.news.console_text",
-	},
-	{
-		at: "2026-10-13T17:40:00Z",
-		embed: {
-			bodyKey: "dashboard.dm.news.automod_body",
-			titleKey: "dashboard.dm.news.automod_title",
-			tone: "success",
-		},
-		id: 2,
-		reactions: ["👀"],
-	},
-	{
-		at: "2026-10-15T11:05:00Z",
-		embed: {
-			action: { labelKey: "dashboard.dm.news.language_action", run: "language-settings" },
-			bodyKey: "dashboard.dm.news.language_body",
-			titleKey: "dashboard.dm.news.language_title",
-			tone: "info",
-		},
-		id: 3,
-		reactions: ["👍"],
-	},
-	{
-		at: "2026-10-15T18:30:00Z",
-		id: 4,
-		reactions: ["🎉", "🐺"],
-		textKey: "dashboard.dm.news.rail_text",
-	},
-];
+export interface DirectMessageThread extends DirectMessageThreadInfo {
+	news: readonly Announcement[];
+}
 
-export const DIRECT_MESSAGE_THREADS: readonly DirectMessageThread[] = [
+export const DIRECT_MESSAGE_THREADS: readonly DirectMessageThreadInfo[] = [
 	{
 		avatar: "/avatars/wolfstar.png",
 		id: "wolfstar",
 		introKey: "dashboard.dm.wolfstar_intro",
 		name: "WolfStar",
-		news: WOLFSTAR_NEWS,
+		source: "/api/announcements/wolfstar",
 	},
 	{
 		avatar: "/avatars/staryl.png",
 		id: "staryl",
 		introKey: "dashboard.dm.staryl_intro",
 		name: "Staryl",
-		news: [],
 	},
 ];
 
+/**
+ * The snowflake a read marker holds. A marker from before the thread read
+ * Discord is a small number, older than every post, so it reads as nothing read.
+ */
+function markerOf(lastRead: unknown): bigint {
+	return typeof lastRead === "string" && /^\d{1,20}$/.test(lastRead) ? BigInt(lastRead) : 0n;
+}
+
 /** The news posted after the last one read: all of them before the first visit. */
-export function unreadNews(news: readonly DirectMessageNews[], lastRead: number) {
-	return news.filter((item) => item.id > lastRead);
+export function unreadNews(news: readonly Announcement[], lastRead: unknown): Announcement[] {
+	const marker = markerOf(lastRead);
+	return news.filter((item) => BigInt(item.id) > marker);
 }
 
 /** Messages split by the day they were posted, in the reader's time zone. */
-export function groupNewsByDay(news: readonly DirectMessageNews[]) {
-	const days: { day: string; news: DirectMessageNews[] }[] = [];
+export function groupNewsByDay<T extends { at: string }>(news: readonly T[]) {
+	const days: { day: string; news: T[] }[] = [];
 	for (const item of news) {
 		const posted = new Date(item.at);
 		const day = new Date(

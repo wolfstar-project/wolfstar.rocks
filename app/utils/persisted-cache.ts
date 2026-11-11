@@ -59,10 +59,21 @@ export function writePersistedCache(key: string, data: unknown, now = Date.now()
 }
 
 export function clearPersistedCache(): void {
+	clearPersistedCacheExcept(null);
+}
+
+/**
+ * Empties the store of every account's answers but `accountId`'s, whose keys
+ * start with its ID (`usePersistedAsyncData()`), or of every answer for `null`.
+ */
+export function clearPersistedCacheExcept(accountId: string | null): void {
 	const store = storage();
 	if (!store) return;
+	const kept = accountId === null ? null : `${PREFIX}${accountId}:`;
 	for (let index = store.length - 1; index >= 0; index -= 1) {
 		const key = store.key(index);
-		if (key?.startsWith(PREFIX)) store.removeItem(key);
+		if (key?.startsWith(PREFIX) && (kept === null || !key.startsWith(kept))) {
+			store.removeItem(key);
+		}
 	}
 }

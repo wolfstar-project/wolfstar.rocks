@@ -181,6 +181,9 @@ export function useAppealQueue(
 			!(more.value.scope === scope.value && more.value.exhausted),
 	);
 
+	/** Counts the refreshes, so a page asked for before one is dropped. */
+	let generation = 0;
+
 	/** Reads the next page, from where the rows end, and adds it below them. */
 	async function loadMore(): Promise<void> {
 		const guild = id.value;
@@ -188,6 +191,7 @@ export function useAppealQueue(
 		if (!guild || isLoadingMore.value || response.value === null) return;
 
 		const kept = moreEntries.value;
+		const started = generation;
 		isLoadingMore.value = true;
 		loadMoreFailed.value = false;
 		try {
@@ -196,7 +200,8 @@ export function useAppealQueue(
 				firstEntries.value.length + kept.length,
 				AppealQueuePageSize,
 			);
-			if (scope.value !== requested) return;
+			// A refresh read the list again meanwhile: this page's offset no longer follows it.
+			if (scope.value !== requested || generation !== started) return;
 			more.value = {
 				scope: requested,
 				entries: [...kept, ...page.entries],
@@ -227,6 +232,7 @@ export function useAppealQueue(
 		const guild = id.value;
 		const requested = scope.value;
 		const count = moreEntries.value.length;
+		generation += 1;
 		await asyncData.refresh();
 		if (!guild || count === 0 || scope.value !== requested) return;
 		try {

@@ -42,7 +42,12 @@ export function useUserSettings() {
 		try {
 			const saved = await save;
 			if (saved) confirmed = saved;
-			if (saved && change === latestChange) asyncData.data.value = saved;
+			// A read that started before the save, as reopening the preferences
+			// starts one, is read again rather than allowed to land after it.
+			if (saved && change === latestChange) {
+				if (asyncData.status.value === "pending") void rereadAfterWrite(asyncData, saved);
+				else asyncData.data.value = saved;
+			}
 			return true;
 		} catch {
 			if (change === latestChange) asyncData.data.value = confirmed;

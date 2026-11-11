@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
 	clearPersistedCache,
+	clearPersistedCacheExcept,
 	readPersistedCache,
 	writePersistedCache,
 } from "~/utils/persisted-cache";
@@ -62,6 +63,20 @@ describe("persisted cache", () => {
 		clearPersistedCache();
 
 		expect(store.length).toBe(1);
+		expect(store.getItem("wolfstar-settings")).toBe("{}");
+	});
+
+	// A sign-in lands on a new page load, where no change of account is seen:
+	// what another account left behind goes then.
+	it("keeps only the answers of one account when asked to", () => {
+		writePersistedCache("111:guild:1:logs", 1);
+		writePersistedCache("222:guild:1:logs", 2);
+		store.setItem("wolfstar-settings", "{}");
+
+		clearPersistedCacheExcept("222");
+
+		expect(readPersistedCache("111:guild:1:logs")).toBeUndefined();
+		expect(readPersistedCache("222:guild:1:logs")).toBe(2);
 		expect(store.getItem("wolfstar-settings")).toBe("{}");
 	});
 

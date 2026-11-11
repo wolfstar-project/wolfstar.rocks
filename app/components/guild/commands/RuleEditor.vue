@@ -177,19 +177,6 @@
 						/>
 					</div>
 
-					<GuildCommandsRuleDiscord
-						v-model:on="discordOn"
-						:name="discordName"
-						:every="isEvery"
-						:state="discord"
-						:count="discordRows.length"
-						:role-order-gap="roleOrderGap"
-						:disabled="saving"
-						:authorize-url="authorizeUrl"
-						:failure="discordFailure"
-						@retry="discordPermissions.refresh()"
-					/>
-
 					<section v-if="alsoApplying.length > 0" :aria-labelledby="alsoApplyingId">
 						<p :id="alsoApplyingId" class="console-label">
 							{{ ts("guild_settings.command_rules.editor.also_applies") }}
@@ -203,6 +190,21 @@
 				<p v-else class="text-[0.8125rem] leading-relaxed text-muted">
 					{{ ts("guild_settings.command_rules.editor.off_note") }}
 				</p>
+
+				<!-- Out of the block above: a save writes Discord's permissions with the
+				     command off too, and its refusals and failures show here. -->
+				<GuildCommandsRuleDiscord
+					v-model:on="discordOn"
+					:name="discordName"
+					:every="isEvery"
+					:state="discord"
+					:count="discordRows.length"
+					:role-order-gap="roleOrderGap"
+					:disabled="saving"
+					:authorize-url="authorizeUrl"
+					:failure="discordFailure"
+					@retry="discordPermissions.refresh()"
+				/>
 			</form>
 		</template>
 
@@ -493,6 +495,8 @@ function changedInWolfStar(state: CommandRuleState): boolean {
 	);
 }
 
+let loads = 0;
+
 /**
  * Reads the command's rule and revision as stored now. `isEnabled` is the
  * status to show, `undefined` for the stored one.
@@ -502,6 +506,8 @@ async function load(isEnabled?: boolean) {
 	const ruled = target.value;
 	if (!guild || !ruled) return;
 
+	// Only the newest read fills the draft: the same command, reopened, starts another.
+	const read = ++loads;
 	loading.value = true;
 	loadFailed.value = false;
 	try {
@@ -509,13 +515,13 @@ async function load(isEnabled?: boolean) {
 			`/api/guilds/${guild}/command-rules/${encodeURIComponent(ruled)}`,
 		);
 		// The editor may have been closed, or opened on another command, meanwhile.
-		if (!open.value || target.value !== ruled) return;
+		if (read !== loads || !open.value || target.value !== ruled) return;
 		stored.value = state;
 		fill(state, isEvery.value ? true : (isEnabled ?? state.enabled));
 	} catch {
-		loadFailed.value = true;
+		if (read === loads) loadFailed.value = true;
 	} finally {
-		loading.value = false;
+		if (read === loads) loading.value = false;
 	}
 }
 

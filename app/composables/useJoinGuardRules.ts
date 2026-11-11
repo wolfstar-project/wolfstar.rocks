@@ -78,7 +78,7 @@ export function useJoinGuardRules(guildId: MaybeRefOrGetter<string | null | unde
 		patch: (current: JoinGuardRule[]) => JoinGuardRule[],
 	) {
 		if (id.value === requestGuildId) {
-			asyncData.data.value = patch(rules.value);
+			void rereadAfterWrite(asyncData, patch(rules.value), () => id.value === requestGuildId);
 		}
 	}
 

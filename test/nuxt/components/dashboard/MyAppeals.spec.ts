@@ -175,6 +175,18 @@ describe("DashboardMyAppeals", () => {
 		expect(wrapper.text()).toContain("1 case can be appealed");
 	});
 
+	// Discord's CDN takes powers of two only: another size throws as the card is drawn.
+	it("shows the icon of a server that has one", async () => {
+		mockEntries.value = [
+			makeEntry({ key: "icon", guild: { id: PIXEL, name: "Pixel Parlor", icon: "abc123" } }),
+		];
+		const wrapper = await mount();
+
+		expect(wrapper.get("article img").attributes("src")).toBe(
+			`https://cdn.discordapp.com/icons/${PIXEL}/abc123.webp?size=128`,
+		);
+	});
+
 	it("says when a recent denial keeps a case closed, and until when", async () => {
 		mockEntries.value = [COOLDOWN];
 		const wrapper = await mount();

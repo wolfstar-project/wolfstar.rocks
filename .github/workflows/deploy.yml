@@ -40,6 +40,11 @@ jobs:
       - name: 🌐 Build Lunaria
         run: vp run build:lunaria
 
+      # Skew protection writes the build's assets to its KV namespace by running
+      # `wrangler` from the PATH during the build: it is no dependency of the project.
+      - name: 🧰 Install Wrangler
+        run: npm install --global wrangler@4.156.0
+
       - name: 🏗️ Build the Worker
         run: vp run build
         env:

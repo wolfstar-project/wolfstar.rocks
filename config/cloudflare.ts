@@ -2,11 +2,15 @@ import type { WranglerConfig } from "nitropack/presets/cloudflare/types";
 import { provider } from "std-env";
 
 /**
- * The build for Cloudflare Workers, which serves wolfstar.rocks,
- * beta.wolfstar.rocks and alpha.wolfstar.rocks, each from a Worker of its own.
+ * The build for Cloudflare Workers. One Worker, `wolfstar-rocks`, serves
+ * wolfstar.rocks, and its `beta` environment serves beta.wolfstar.rocks: Wrangler
+ * deploys an environment as a Worker of its own, `wolfstar-rocks-beta`, with the
+ * bindings, variables and domain the environment lists. alpha.wolfstar.rocks is
+ * the Worker `wolfstar-alpha`.
  *
- * `NITRO_PRESET=cloudflare_module` selects it, and Nitro then writes the chosen
- * Worker to `.output/server/wrangler.json` for `npx wrangler deploy`. Without
+ * `NITRO_PRESET=cloudflare_module` selects the build, and Nitro then writes the
+ * chosen configuration to `.output/server/wrangler.json` for `npx wrangler
+ * deploy` (with `--env beta` for beta, see {@link WORKER_DEPLOY_ENV}). Without
  * the preset, as in local builds and the test builds of CI, the site builds for
  * Node.
  */
@@ -15,8 +19,8 @@ export const isCloudflareBuild =
 	provider === "cloudflare_workers";
 
 /**
- * `CLOUDFLARE_WORKER` picks the Worker: `production`, `beta`, or alpha, the
- * default.
+ * `CLOUDFLARE_WORKER` picks what the build deploys to: `production`, the
+ * `beta` environment of the same Worker, or alpha, the default.
  */
 const workerName = process.env.CLOUDFLARE_WORKER;
 const isProductionWorker = workerName === "production";
@@ -95,6 +99,9 @@ function requireEnv(name: string): string {
 	return value;
 }
 
+/** The Worker of wolfstar.rocks, whose `beta` environment serves beta.wolfstar.rocks. */
+const PRODUCTION_WORKER_NAME = "wolfstar-rocks";
+
 /**
  * The production Worker. Its database goes through a Hyperdrive with query
  * caching off, so a setting read back after a save is the saved one. The ids
@@ -104,10 +111,10 @@ function requireEnv(name: string): string {
  * dashboard holds, so an empty client id would deploy and break sign-in.
  *
  * It serves wolfstar.rocks, and alpha.wolfstar.rocks until the first release
- * from it: that domain is then dropped. beta.wolfstar.rocks has its own Worker,
- * {@link BETA_WORKER}.
+ * from it: that domain is then dropped. beta.wolfstar.rocks is its `beta`
+ * environment, {@link BETA_ENVIRONMENT}.
  *
- * The secrets are set as on {@link ALPHA_WORKER}, with `--name wolfstar-site`.
+ * The secrets are set as on {@link ALPHA_WORKER}, with `--name wolfstar-rocks`.
  * The Turnstile site key is a public repository variable of the deploy workflow.
  */
 function createProductionWorker() {
@@ -131,7 +138,7 @@ function createProductionWorker() {
 			{ binding: CLOUDFLARE_BINDINGS.rateLimit, id: "6e08faf1027944438a30c813f9bde840" },
 			{ binding: CLOUDFLARE_BINDINGS.skewProtection, id: "416c6dd69b3a4bf7a1cfca13ba1a5955" },
 		],
-		name: "wolfstar-site",
+		name: PRODUCTION_WORKER_NAME,
 		routes: [
 			{ custom_domain: true, pattern: "wolfstar.rocks" },
 			{ custom_domain: true, pattern: "alpha.wolfstar.rocks" },
@@ -192,19 +199,24 @@ const ALPHA_WORKER = {
 } satisfies WranglerConfig;
 
 /**
- * The beta Worker. It shares the database of the WolfStar Beta bot, the beta
- * environment on Railway, through a Hyperdrive with query caching off. The ids
- * are of resources in the WolfStar Cloudflare account, not secrets.
+ * The `beta` environment of the production Worker, deployed as
+ * `wolfstar-rocks-beta`. It shares the database of the WolfStar Beta bot, the
+ * beta environment on Railway, through a Hyperdrive with query caching off. The
+ * ids are of resources in the WolfStar Cloudflare account, not secrets.
+ *
+ * Wrangler gives an environment the top level's `main`, `assets`, compatibility
+ * flags and observability, but none of its bindings, `vars` or
+ * `version_metadata`: the environment lists its own.
  *
  * Production's sign-in cookies cover the whole `wolfstar.rocks` domain, so
  * beta reaches them too. Beta's own session cookie and the cookie it mints for
  * the bot's API have names of their own, or the two sites would read each
  * other's.
  *
- * The secrets are set as on {@link ALPHA_WORKER}, with `--name wolfstar-beta`.
+ * The secrets are set as on {@link ALPHA_WORKER}, with `--name wolfstar-rocks-beta`.
  */
-const BETA_WORKER = {
-	...WORKER_DEFAULTS,
+const BETA_ENVIRONMENT = {
+	version_metadata: WORKER_DEFAULTS.version_metadata,
 	d1_databases: [
 		{
 			binding: CLOUDFLARE_BINDINGS.contentDatabase,
@@ -218,7 +230,6 @@ const BETA_WORKER = {
 		{ binding: CLOUDFLARE_BINDINGS.rateLimit, id: "a84f036cb71b4b97a5516726acb5c258" },
 		{ binding: CLOUDFLARE_BINDINGS.skewProtection, id: "68a50da1ca7b4f2985b874440ed258a9" },
 	],
-	name: "wolfstar-beta",
 	routes: [{ custom_domain: true, pattern: "beta.wolfstar.rocks" }],
 	vars: {
 		// The WolfStar Beta application on Discord.
@@ -236,12 +247,40 @@ const BETA_WORKER = {
 	},
 } satisfies WranglerConfig;
 
-/** The Worker this build deploys to. */
-export const WORKER = isProductionWorker
-	? createProductionWorker()
-	: isBetaWorker
-		? BETA_WORKER
-		: ALPHA_WORKER;
+/**
+ * The beta build: the production Worker's name and defaults, with only the
+ * `beta` environment, which `wrangler deploy --env beta` deploys. Production's
+ * bindings are left out, so a deploy that forgets `--env beta` fails for the
+ * missing bindings rather than putting beta's build on wolfstar.rocks.
+ *
+ * Nitro's copy of Wrangler's types has no `env`, which Nitro writes to
+ * `wrangler.json` as given, so it is added apart from the literal that
+ * `satisfies` checks.
+ */
+const BETA_BUILD = {
+	...({ ...WORKER_DEFAULTS, name: PRODUCTION_WORKER_NAME } satisfies WranglerConfig),
+	env: { beta: BETA_ENVIRONMENT },
+};
+
+const PRODUCTION_WORKER = isProductionWorker ? createProductionWorker() : undefined;
+
+/** The configuration this build writes for Wrangler. */
+export const WORKER = PRODUCTION_WORKER ?? (isBetaWorker ? BETA_BUILD : ALPHA_WORKER);
+
+/** The Wrangler environment the build is deployed with (`--env`), if any. */
+export const WORKER_DEPLOY_ENV = isBetaWorker ? "beta" : undefined;
+
+/**
+ * What the deployed Worker runs with: the top level of the configuration, or
+ * the environment it is deployed as.
+ */
+export const DEPLOYED_WORKER =
+	PRODUCTION_WORKER ?? (isBetaWorker ? BETA_ENVIRONMENT : ALPHA_WORKER);
+
+/** The id of the KV namespace that keeps past builds' assets for skew protection. */
+export const SKEW_PROTECTION_NAMESPACE_ID = DEPLOYED_WORKER.kv_namespaces.find(
+	(namespace) => namespace.binding === CLOUDFLARE_BINDINGS.skewProtection,
+)?.id;
 
 /**
  * Fills the env with the Worker's own `vars` on the Workers build, leaving any
@@ -252,7 +291,7 @@ export const WORKER = isProductionWorker
  */
 export function applyWorkerEnv() {
 	if (!isCloudflareBuild) return;
-	for (const [name, value] of Object.entries(WORKER.vars)) {
+	for (const [name, value] of Object.entries(DEPLOYED_WORKER.vars)) {
 		process.env[name] ??= value;
 	}
 }

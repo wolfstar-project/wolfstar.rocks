@@ -5,6 +5,7 @@ import {
 	applyWorkerEnv,
 	CLOUDFLARE_BINDINGS,
 	isPrereleaseWorker,
+	SKEW_PROTECTION_NAMESPACE_ID,
 	isCloudflareBuild,
 	WORKER,
 } from "./config/cloudflare.ts";
@@ -669,7 +670,13 @@ export default defineNuxtConfig({
 		// (CI checks, local previews) uses the module's fs cache instead: it has no
 		// `wrangler` on the path and no Cloudflare credentials to give it.
 		storage: bundleSkewAssets
-			? { binding: CLOUDFLARE_BINDINGS.skewProtection, driver: "cloudflare-kv-binding" }
+			? {
+					binding: CLOUDFLARE_BINDINGS.skewProtection,
+					driver: "cloudflare-kv-binding",
+					// The module looks for the binding at the top level of the Wrangler
+					// configuration, where the beta build has none: it is in `env.beta`.
+					namespaceId: SKEW_PROTECTION_NAMESPACE_ID,
+				}
 			: {
 					base: "./.cache/skew-protection",
 					// nuxt-skew-protection imports `unstorage/drivers/${driver}` verbatim,

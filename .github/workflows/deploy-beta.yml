@@ -1,8 +1,9 @@
 name: deploy-beta
 
-# beta.wolfstar.rocks: the Worker `wolfstar-beta`, on the WolfStar Beta bot's
-# database. Every push to `main` deploys it at once, with no gradual rollout:
-# production deploys from `release` (`deploy.yml`).
+# beta.wolfstar.rocks: the `beta` environment of the Worker `wolfstar-rocks`,
+# deployed as `wolfstar-rocks-beta`, on the WolfStar Beta bot's database. Every
+# push to `main` deploys it at once, with no gradual rollout: production deploys
+# from `release` (`deploy.yml`).
 on:
   push:
     branches:
@@ -62,10 +63,11 @@ jobs:
       - name: 🧹 Drop the client source maps
         run: find .output/public -name '*.map' -delete
 
-      # A plain deploy: it also creates the custom domain on the first run, and
-      # applies a change of `routes`, which `versions upload` never does.
+      # A plain deploy of the `beta` environment: it also creates the custom domain
+      # on the first run, and applies a change of `routes`, which `versions upload`
+      # never does.
       - name: 🚀 Deploy
-        run: npx --yes wrangler@4.156.0 deploy -c .output/server/wrangler.json --autoconfig=false
+        run: npx --yes wrangler@4.156.0 deploy -c .output/server/wrangler.json --env beta --autoconfig=false
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

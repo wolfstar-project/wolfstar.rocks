@@ -23,7 +23,7 @@ describe("the Worker a build deploys to", () => {
 	it("takes production's Hyperdrive and Discord application from the env", async () => {
 		const worker = await loadWorker();
 
-		expect(worker.name).toBe("wolfstar-site");
+		expect(worker.name).toBe("wolfstar-rocks");
 		expect(worker.hyperdrive[0]?.id).toBe("hyperdrive-id");
 		expect(worker.vars.NUXT_OAUTH_DISCORD_CLIENT_ID).toBe("client-id");
 	});
@@ -35,23 +35,44 @@ describe("the Worker a build deploys to", () => {
 		]);
 	});
 
-	it("serves beta.wolfstar.rocks from the beta Worker, with the WolfStar Beta application", async () => {
+	it("builds beta as the beta environment of the production Worker", async () => {
 		vi.stubEnv("CLOUDFLARE_WORKER", "beta");
-		const worker = await loadWorker();
+		const config = await import("../../../config/cloudflare");
 
-		expect(worker.name).toBe("wolfstar-beta");
-		expect(worker.routes).toEqual([{ custom_domain: true, pattern: "beta.wolfstar.rocks" }]);
-		expect(worker.vars).toMatchObject({
+		expect(config.WORKER.name).toBe("wolfstar-rocks");
+		expect(config.WORKER_DEPLOY_ENV).toBe("beta");
+		expect(config.DEPLOYED_WORKER.routes).toEqual([
+			{ custom_domain: true, pattern: "beta.wolfstar.rocks" },
+		]);
+		expect(config.DEPLOYED_WORKER.vars).toMatchObject({
 			NUXT_OAUTH_DISCORD_CLIENT_ID: "1288560050184650802",
 			NUXT_PUBLIC_SITE_URL: "https://beta.wolfstar.rocks",
 		});
+	});
+
+	// A deploy that forgets `--env beta` must not put beta's build on wolfstar.rocks.
+	it("leaves production's bindings and domains out of the beta build", async () => {
+		vi.stubEnv("CLOUDFLARE_WORKER", "beta");
+		const worker = await loadWorker();
+
+		expect(worker).not.toHaveProperty("routes");
+		expect(worker).not.toHaveProperty("hyperdrive");
+		expect(worker).not.toHaveProperty("kv_namespaces");
+	});
+
+	it("finds the skew protection namespace of the environment it deploys", async () => {
+		vi.stubEnv("CLOUDFLARE_WORKER", "beta");
+		const config = await import("../../../config/cloudflare");
+
+		expect(config.SKEW_PROTECTION_NAMESPACE_ID).toBe("68a50da1ca7b4f2985b874440ed258a9");
 	});
 
 	// Production's cookies cover the whole domain, so beta reaches them too.
 	it("names beta's cookies apart from production's", async () => {
 		vi.stubEnv("CLOUDFLARE_WORKER", "beta");
 
-		expect((await loadWorker()).vars).toMatchObject({
+		const { DEPLOYED_WORKER } = await import("../../../config/cloudflare");
+		expect(DEPLOYED_WORKER.vars).toMatchObject({
 			NUXT_BOT_API_OAUTH_COOKIE: "WOLFSTAR_BETA_AUTH",
 			NUXT_SESSION_COOKIE_NAME: "wolfstar-session-beta",
 		});
@@ -62,7 +83,8 @@ describe("the Worker a build deploys to", () => {
 		vi.stubEnv("CLOUDFLARE_HYPERDRIVE_ID", "");
 		vi.stubEnv("NUXT_OAUTH_DISCORD_CLIENT_ID", "");
 
-		expect((await loadWorker()).hyperdrive[0]?.id).toBe("e8347aa5f2f2420d81eebe933ec98cb7");
+		const { DEPLOYED_WORKER } = await import("../../../config/cloudflare");
+		expect(DEPLOYED_WORKER.hyperdrive[0]?.id).toBe("e8347aa5f2f2420d81eebe933ec98cb7");
 	});
 
 	it.each(["production", "beta", undefined])(
@@ -71,7 +93,8 @@ describe("the Worker a build deploys to", () => {
 			vi.stubEnv("CLOUDFLARE_WORKER", worker);
 			vi.stubEnv("NUXT_PUBLIC_TURNSTILE_SITE_KEY", "site-key");
 
-			expect((await loadWorker()).vars).toMatchObject({
+			const { DEPLOYED_WORKER } = await import("../../../config/cloudflare");
+			expect(DEPLOYED_WORKER.vars).toMatchObject({
 				NUXT_PUBLIC_TURNSTILE_SITE_KEY: "site-key",
 			});
 		},

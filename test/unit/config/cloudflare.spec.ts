@@ -23,9 +23,17 @@ describe("the Worker a build deploys to", () => {
 	it("takes production's Hyperdrive and Discord application from the env", async () => {
 		const worker = await loadWorker();
 
-		expect(worker.name).toBe("wolfstar-rocks");
+		expect(worker.name).toBe("wolfstar-site");
 		expect(worker.hyperdrive[0]?.id).toBe("hyperdrive-id");
 		expect(worker.vars.NUXT_OAUTH_DISCORD_CLIENT_ID).toBe("client-id");
+	});
+
+	it("serves the production Worker on wolfstar.rocks, beta and alpha", async () => {
+		expect((await loadWorker()).routes).toEqual([
+			{ custom_domain: true, pattern: "wolfstar.rocks" },
+			{ custom_domain: true, pattern: "beta.wolfstar.rocks" },
+			{ custom_domain: true, pattern: "alpha.wolfstar.rocks" },
+		]);
 	});
 
 	it.each(["production", undefined])(

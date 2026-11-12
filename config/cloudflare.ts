@@ -2,8 +2,8 @@ import type { WranglerConfig } from "nitropack/presets/cloudflare/types";
 import { provider } from "std-env";
 
 /**
- * The build for Cloudflare Workers, which serves wolfstar.rocks and
- * alpha.wolfstar.rocks.
+ * The build for Cloudflare Workers, which serves wolfstar.rocks,
+ * beta.wolfstar.rocks and alpha.wolfstar.rocks.
  *
  * `NITRO_PRESET=cloudflare_module` selects it, and Nitro then writes the chosen
  * Worker to `.output/server/wrangler.json` for `npx wrangler deploy`. Without
@@ -95,7 +95,10 @@ function requireEnv(name: string): string {
  * deploy workflow, and the build stops without them: `vars` replaces what the
  * dashboard holds, so an empty client id would deploy and break sign-in.
  *
- * The secrets are set as on {@link ALPHA_WORKER}, with `--name wolfstar-rocks`.
+ * It serves wolfstar.rocks and beta.wolfstar.rocks, and alpha.wolfstar.rocks
+ * until the first release from it: that domain is then dropped.
+ *
+ * The secrets are set as on {@link ALPHA_WORKER}, with `--name wolfstar-site`.
  * The Turnstile site key is a public repository variable of the deploy workflow.
  */
 function createProductionWorker() {
@@ -119,8 +122,12 @@ function createProductionWorker() {
 			{ binding: CLOUDFLARE_BINDINGS.rateLimit, id: "6e08faf1027944438a30c813f9bde840" },
 			{ binding: CLOUDFLARE_BINDINGS.skewProtection, id: "416c6dd69b3a4bf7a1cfca13ba1a5955" },
 		],
-		name: "wolfstar-rocks",
-		routes: [{ custom_domain: true, pattern: "wolfstar.rocks" }],
+		name: "wolfstar-site",
+		routes: [
+			{ custom_domain: true, pattern: "wolfstar.rocks" },
+			{ custom_domain: true, pattern: "beta.wolfstar.rocks" },
+			{ custom_domain: true, pattern: "alpha.wolfstar.rocks" },
+		],
 		vars: {
 			NUXT_OAUTH_DISCORD_CLIENT_ID: requireEnv("NUXT_OAUTH_DISCORD_CLIENT_ID"),
 			NUXT_PUBLIC_API_BASE_URL: "https://api.wolfstar.rocks",

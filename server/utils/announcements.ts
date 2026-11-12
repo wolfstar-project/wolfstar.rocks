@@ -27,6 +27,13 @@ const APP_INVITE_PATTERN =
 /** Sentence punctuation and markdown that can follow a bare link. */
 const TRAILING_MARKS = /[.,;:!?*_~|]+$/;
 
+/**
+ * Code, which shows its pipes as text and never unfurls a link, and an
+ * escaped pipe, which is a literal `|`. Both are left out before spoilers
+ * are found, so their pipes cannot pair with a spoiler's.
+ */
+const LITERAL_PATTERN = /(`+)[\s\S]*?\1|\\\|/g;
+
 /** Text the author hid behind `||…||` until the reader reveals it. */
 const SPOILER_PATTERN = /\|\|[\s\S]*?\|\|/g;
 
@@ -37,7 +44,7 @@ const SPOILER_PATTERN = /\|\|[\s\S]*?\|\|/g;
  */
 export function appInvites(content: string): { id: string; url: string }[] {
 	const found = new Map<string, string>();
-	const visible = content.replaceAll(SPOILER_PATTERN, " ");
+	const visible = content.replaceAll(LITERAL_PATTERN, " ").replaceAll(SPOILER_PATTERN, " ");
 	for (const [match, id] of visible.matchAll(APP_INVITE_PATTERN)) {
 		// A link at the end of a sentence or inside `**` or `~~` runs into
 		// the marks after it, which are not part of its address.

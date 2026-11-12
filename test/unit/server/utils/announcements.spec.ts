@@ -242,6 +242,13 @@ describe("appInvites", () => {
 		expect(appInvites(`||hidden|| then ${url}`)).toEqual([{ id: "1557826376331960380", url }]);
 	});
 
+	it("does not pair the pipes in code or after a backslash with a spoiler", () => {
+		const url = "https://discord.com/oauth2/authorize?client_id=1557826376331960380";
+		expect(appInvites(`Use \`||\` for spoilers. ||${url}||`)).toEqual([]);
+		expect(appInvites(`Type \\|\\| for pipes. ||${url}||`)).toEqual([]);
+		expect(appInvites(`\`||\` ${url} \`||\``)).toEqual([{ id: "1557826376331960380", url }]);
+	});
+
 	it("ignores other Discord links", () => {
 		expect(
 			appInvites(

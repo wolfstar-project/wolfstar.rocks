@@ -56,6 +56,9 @@ jobs:
           CLOUDFLARE_WORKER: beta
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          # og-image signs its URLs with Nuxt's appSecret, and its strict mode is on only
+          # when the build has one: the Worker's secret of the same name must match.
+          NUXT_APP_SECRET: ${{ secrets.NUXT_APP_SECRET_BETA }}
           NODE_OPTIONS: --max-old-space-size=8192
           NUXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.NUXT_PUBLIC_TURNSTILE_SITE_KEY }}
           SKEW_PROTECTION_BUNDLE_ASSETS: true

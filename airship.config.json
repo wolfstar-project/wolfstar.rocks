@@ -1,0 +1,7 @@
+{
+	"agent": "claude",
+	"mode": "canvas",
+	"target": 3000,
+	"safe": true,
+	"claudeModel": "opus"
+}

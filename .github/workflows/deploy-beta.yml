@@ -1,0 +1,73 @@
+name: deploy-beta
+
+# beta.wolfstar.rocks: the `beta` environment of the Worker `wolfstar-rocks`,
+# deployed as `wolfstar-rocks-beta`, on the WolfStar Beta bot's database. Every
+# push to `main` deploys it at once, with no gradual rollout: production deploys
+# from `release` (`deploy.yml`).
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  beta:
+    name: 🧪 Deploy beta to Cloudflare Workers
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    if: github.repository == 'wolfstar-project/wolfstar.rocks'
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The version shown on the site and Lunaria's status read the history and the tags.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: voidzero-dev/setup-vp@143f5f385f39b1b753ffed1a01ad443811855c8b # v1.16.1
+        with:
+          node-version: lts/*
+          cache: true
+          sfw: true
+
+      - name: 🔼 Generate Prisma Client
+        run: vp run prisma:generate
+
+      - name: 🌐 Build Lunaria
+        run: vp run build:lunaria
+
+      # Prerendering starts the server, and Better Auth refuses to start without
+      # a secret. The Worker's own secret replaces this one at run time.
+      - name: 🔑 Make a build-only auth secret
+        run: echo "NUXT_BETTER_AUTH_SECRET=$(openssl rand -hex 32)" >> "$GITHUB_ENV"
+
+      - name: 🏗️ Build the Worker
+        run: vp run build
+        env:
+          NITRO_PRESET: cloudflare_module
+          CLOUDFLARE_WORKER: beta
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          NODE_OPTIONS: --max-old-space-size=8192
+          NUXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.NUXT_PUBLIC_TURNSTILE_SITE_KEY }}
+          SKEW_PROTECTION_BUNDLE_ASSETS: true
+
+      - name: 🧹 Drop the client source maps
+        run: find .output/public -name '*.map' -delete
+
+      # A plain deploy of the `beta` environment: it also creates the custom domain
+      # on the first run, and applies a change of `routes`, which `versions upload`
+      # never does.
+      - name: 🚀 Deploy
+        run: ./node_modules/.bin/wrangler deploy -c .output/server/wrangler.json --env beta --autoconfig=false
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

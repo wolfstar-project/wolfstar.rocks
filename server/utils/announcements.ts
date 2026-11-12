@@ -1,5 +1,6 @@
 import type {
 	Announcement,
+	AnnouncementApp,
 	AnnouncementEmbed,
 	AnnouncementImage,
 	AnnouncementReaction,
@@ -14,6 +15,63 @@ export interface MentionNames {
 	users: ReadonlyMap<string, string>;
 	roles: ReadonlyMap<string, string>;
 	channels: ReadonlyMap<string, string>;
+}
+
+/**
+ * The links Discord unfurls into an app's card: its OAuth2 invite, and its
+ * page in the App Directory. The app's id is the first group.
+ */
+const APP_INVITE_PATTERN =
+	/https?:\/\/(?:(?:www|canary|ptb)\.)?discord(?:app)?\.com\/(?:(?:api\/)?oauth2\/authorize\?(?:[^\s<>]*?&)?client_id=|(?:application-directory|discovery\/applications)\/)(\d{17,20})(?:[^\s<>)\d][^\s<>)]*)?/g;
+
+/** The apps a post invites to, each once, in the order it links them. */
+export function appInvites(content: string): { id: string; url: string }[] {
+	const found = new Map<string, string>();
+	for (const [url, id] of content.matchAll(APP_INVITE_PATTERN)) {
+		if (id && !found.has(id)) found.set(id, url);
+	}
+	return Array.from(found, ([id, url]) => ({ id, url }));
+}
+
+/** The part of an app's public profile, `GET /applications/{id}/rpc`, its card shows. */
+export interface ApplicationProfile {
+	id: string;
+	name: string;
+	description?: string;
+	icon?: string | null;
+	cover_image?: string | null;
+	/**
+	 * The banner of the app's bot user, which Discord shows when the app has
+	 * no cover image. Not part of the profile: read from the bot user.
+	 */
+	bot_banner?: string | null;
+}
+
+/** Whether Discord answered with a profile the card can be drawn from. */
+export function isApplicationProfile(value: unknown): value is ApplicationProfile {
+	if (typeof value !== "object" || value === null) return false;
+	const { id, name } = value as Record<string, unknown>;
+	return typeof id === "string" && typeof name === "string";
+}
+
+/** An app's card, from its public profile, for the invite link a post wrote. */
+export function toAppCard(profile: ApplicationProfile, url: string): AnnouncementApp {
+	const image = (hash: string | null | undefined, size: number) =>
+		hash
+			? `https://cdn.discordapp.com/app-icons/${profile.id}/${hash}.webp?size=${size}`
+			: undefined;
+	return {
+		cover:
+			image(profile.cover_image, 1024) ??
+			(profile.bot_banner
+				? `https://cdn.discordapp.com/banners/${profile.id}/${profile.bot_banner}.webp?size=1024`
+				: undefined),
+		description: profile.description?.trim() || undefined,
+		icon: image(profile.icon, 160),
+		id: profile.id,
+		name: profile.name,
+		url,
+	};
 }
 
 const MENTION_PATTERN = /<(@!?|@&|#)(\d{17,20})>/g;
@@ -72,12 +130,17 @@ export function toAnnouncement(
 	message: APIMessage,
 	guildId: string,
 	names: MentionNames,
+	apps: ReadonlyMap<string, ApplicationProfile> = new Map(),
 ): Announcement {
 	const withUsers: MentionNames = {
 		...names,
 		users: new Map([...names.users, ...mentionedUsers(message)]),
 	};
 	return {
+		apps: appInvites(message.content).flatMap(({ id, url }) => {
+			const profile = apps.get(id);
+			return profile ? [toAppCard(profile, url)] : [];
+		}),
 		at: message.timestamp,
 		content: resolveMentions(message.content, withUsers),
 		embeds: message.embeds
@@ -104,9 +167,10 @@ export function toAnnouncements(
 	messages: readonly APIMessage[],
 	guildId: string,
 	names: MentionNames,
+	apps: ReadonlyMap<string, ApplicationProfile> = new Map(),
 ): Announcement[] {
 	return messages
-		.map((message) => toAnnouncement(message, guildId, names))
+		.map((message) => toAnnouncement(message, guildId, names, apps))
 		.filter(
 			(entry) =>
 				entry.content.trim().length > 0 ||

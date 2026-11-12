@@ -1,8 +1,9 @@
-import type { Announcement } from "#shared/types/announcement";
+import type { Announcement, AnnouncementApp } from "#shared/types/announcement";
 
 /** Two posts of WolfStar's announcement channel, as `/api/announcements/wolfstar` returns them. */
 export const MOCK_ANNOUNCEMENTS: Announcement[] = [
 	{
+		apps: [],
 		at: "2026-10-11T09:12:00.000Z",
 		content:
 			"## Dashboard v3\nThanks <@Moderator> and <@Jane Doe>, read more in <#rules>.\n- Pins\n- Recent modules",
@@ -20,6 +21,7 @@ export const MOCK_ANNOUNCEMENTS: Announcement[] = [
 		url: "https://discord.com/channels/254360814063058944/890648971712802906/1290000000000000001",
 	},
 	{
+		apps: [],
 		at: "2026-10-15T11:05:00.000Z",
 		content: "",
 		embeds: [
@@ -36,3 +38,13 @@ export const MOCK_ANNOUNCEMENTS: Announcement[] = [
 		url: "https://discord.com/channels/254360814063058944/890648971712802906/1290000000000000002",
 	},
 ];
+
+/** The card of an app a post invites to, as `/api/announcements/wolfstar` returns it. */
+export const MOCK_APP_INVITE: AnnouncementApp = {
+	cover: "https://cdn.discordapp.com/app-icons/1557826376331960380/cover.webp?size=1024",
+	description: "Moderation, in alpha.",
+	icon: "https://cdn.discordapp.com/app-icons/1557826376331960380/icon.webp?size=160",
+	id: "1557826376331960380",
+	name: "WolfStar Alpha",
+	url: "https://discord.com/oauth2/authorize?client_id=1557826376331960380",
+};

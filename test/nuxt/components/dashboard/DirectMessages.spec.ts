@@ -2,7 +2,7 @@ import { DashboardDirectMessages, DashboardDirectMessageThread } from "#componen
 import { mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
-import { MOCK_ANNOUNCEMENTS } from "~~/test/mocks/announcements";
+import { MOCK_ANNOUNCEMENTS, MOCK_APP_INVITE } from "~~/test/mocks/announcements";
 
 registerEndpoint("/api/users/appeals", {
 	method: "GET",
@@ -117,6 +117,28 @@ describe("dashboard direct messages", () => {
 		const nested = thread.get("ul > li > ul > li");
 		expect(nested.text()).toBe("If your server still has old nodes");
 		expect(thread.get("ul > li").text()).toContain("Removed");
+		thread.unmount();
+	});
+
+	// Discord unfurls an app's invite link into its card, under the post.
+	it("draws an invited app's card with a link to invite it", async () => {
+		const { url } = MOCK_APP_INVITE;
+		posts = [
+			{
+				...MOCK_ANNOUNCEMENTS[1]!,
+				apps: [MOCK_APP_INVITE],
+				content: `Re-invite her with ${url}`,
+			},
+		];
+		const thread = await mountSuspended(DashboardDirectMessageThread);
+
+		await vi.waitFor(() => expect(thread.findAll("article article")).toHaveLength(1));
+		const card = thread.get("article article");
+		expect(card.text()).toContain("WolfStar Alpha");
+		expect(card.text()).toContain("Moderation, in alpha.");
+		const invite = card.get(`a[href="${url}"]`);
+		expect(invite.text()).toBe("Invite WolfStar Alpha");
+		expect(invite.attributes("target")).toBe("_blank");
 		thread.unmount();
 	});
 

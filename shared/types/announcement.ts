@@ -13,6 +13,8 @@ export interface Announcement {
 	embeds: AnnouncementEmbed[];
 	/** Images attached to the message. */
 	images: AnnouncementImage[];
+	/** The apps its invite links point to, drawn as Discord unfurls them. */
+	apps: AnnouncementApp[];
 	/** The reactions under it, as Discord counts them. */
 	reactions: AnnouncementReaction[];
 	/** The message on Discord. */
@@ -28,6 +30,23 @@ export interface AnnouncementEmbed {
 	/** The accent of the embed's left edge, as CSS. */
 	color?: string;
 	image?: AnnouncementImage;
+}
+
+/**
+ * The card an app's invite link unfurls into: its banner, icon, name and
+ * description, as the app's public profile on Discord gives them.
+ */
+export interface AnnouncementApp {
+	/** The app's snowflake. */
+	id: string;
+	name: string;
+	description?: string;
+	/** The app's icon on Discord's CDN. */
+	icon?: string;
+	/** The app's cover image on Discord's CDN. */
+	cover?: string;
+	/** The invite link as the post wrote it. */
+	url: string;
 }
 
 export interface AnnouncementImage {

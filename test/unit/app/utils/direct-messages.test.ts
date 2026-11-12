@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { DIRECT_MESSAGE_THREADS, groupNewsByDay, unreadNews } from "~/utils/direct-messages";
 
 const post = (id: string, at: string): Announcement => ({
+	apps: [],
 	at,
 	content: "",
 	embeds: [],

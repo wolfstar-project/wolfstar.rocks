@@ -46,6 +46,9 @@
 				"dm": {
 					"type": "object",
 					"properties": {
+						"app_invite": {
+							"type": "string"
+						},
 						"bot_tag": {
 							"type": "string"
 						},

@@ -117,6 +117,29 @@
 								class="max-h-75 w-auto max-w-full rounded-[4px]"
 							/>
 						</Embed>
+						<AppInvite v-for="app of item.apps" :key="app.id" class="mt-1.5">
+							<AppInviteBanner v-if="app.cover" :src="app.cover" />
+							<AppInviteBody>
+								<AppInviteHeader>
+									<AppInviteIcon v-if="app.icon" :src="app.icon" />
+									<AppInviteInfo>
+										<AppInviteName>{{ app.name }}</AppInviteName>
+										<AppInviteDescription v-if="app.description">
+											{{ app.description }}
+										</AppInviteDescription>
+									</AppInviteInfo>
+								</AppInviteHeader>
+								<Button
+									:href="app.url"
+									target="_blank"
+									rel="noopener noreferrer"
+									variant="secondary"
+									class="w-full justify-center"
+								>
+									{{ ts("dashboard.dm.app_invite", { name: app.name }) }}
+								</Button>
+							</AppInviteBody>
+						</AppInvite>
 						<img
 							v-for="image of item.images"
 							:key="image.url"
@@ -168,6 +191,16 @@
 </template>
 
 <script setup lang="ts">
+import {
+	AppInvite,
+	AppInviteBanner,
+	AppInviteBody,
+	AppInviteDescription,
+	AppInviteHeader,
+	AppInviteIcon,
+	AppInviteInfo,
+	AppInviteName,
+} from "~/components/ui/app-invite";
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Divider } from "~/components/ui/divider";

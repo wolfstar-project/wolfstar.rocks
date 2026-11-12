@@ -56,19 +56,21 @@
 					:key="item.id"
 					as="article"
 					class="group/post rounded-[4px] px-1"
+					:class="compact && 'gap-2 py-0.5'"
 				>
-					<MessageGroupAvatar>
+					<!-- Compact, as Discord's: no avatar, the time ahead of the name. -->
+					<MessageGroupAvatar v-if="!compact">
 						<Avatar>
 							<AvatarImage :src="thread.avatar" />
 						</Avatar>
 					</MessageGroupAvatar>
 					<MessageGroupBody class="min-w-0 grow">
-						<MessageGroupHeader>
+						<MessageGroupHeader :class="compact && 'mb-0'">
 							<MessageGroupAuthor>{{ thread.name }}</MessageGroupAuthor>
 							<MessageGroupBotTag :aria-label="ts('dashboard.dm.bot_tag')">
 								{{ ts("dashboard.dm.bot_tag") }}
 							</MessageGroupBotTag>
-							<MessageGroupTime :datetime="item.at">
+							<MessageGroupTime :datetime="item.at" :class="compact && 'order-first'">
 								{{ formatActivityTime(item.at, now, timeLocale) }}
 							</MessageGroupTime>
 							<Button
@@ -192,6 +194,9 @@ const { ts, tc } = useI18n();
 const { locale, timeLocale } = useAppLocale();
 const { thread, markRead, statusOf, reload } = useDirectMessages();
 const { isPhone, screen } = usePhoneScreen();
+// The message display the reader picked in the preferences, as Discord's.
+const messageDisplay = useLogDensity();
+const compact = computed(() => messageDisplay.value === "compact");
 
 const now = useNow({ scheduler: (cb) => useIntervalFn(cb, 60_000) });
 const status = computed(() => (thread.value ? statusOf(thread.value) : "ready"));

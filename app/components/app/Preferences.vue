@@ -129,40 +129,53 @@
 			<template v-if="!quick">
 				<div class="my-7 h-px bg-(--home-border-subtle)"></div>
 
-				<h3 :id="densityLabelId" class="prefs-label">
-					{{ ts("profile.message_display") }}
-				</h3>
-				<ClientOnly>
-					<div
-						role="radiogroup"
-						:aria-labelledby="densityLabelId"
-						class="flex max-w-130 flex-col gap-2.5"
-					>
-						<label
-							v-for="option in densityOptions"
-							:key="option.id"
-							class="prefs-option"
-							:class="{ 'prefs-option--on': logDensity === option.id }"
+				<!-- As Discord's: a heading, its description, plain radios, and the
+				     messages as they will look. -->
+				<section>
+					<h3 :id="densityLabelId" class="prefs-heading">
+						{{ ts("profile.message_display") }}
+					</h3>
+					<p class="prefs-description">
+						{{ ts("profile.message_display_description") }}
+					</p>
+					<ClientOnly>
+						<div
+							role="radiogroup"
+							:aria-labelledby="densityLabelId"
+							class="flex flex-col gap-0.5"
 						>
-							<input
-								v-model="logDensity"
-								type="radio"
-								:name="densityLabelId"
-								:value="option.id"
-								class="sr-only"
-							/>
-							<span class="prefs-dot" aria-hidden="true"></span>
-							<span class="grow">
-								<span class="block text-sm font-semibold text-highlighted">{{
-									option.label
-								}}</span>
-								<span class="mt-0.5 block text-xs text-muted">{{
-									option.hint
-								}}</span>
-							</span>
-						</label>
-					</div>
-				</ClientOnly>
+							<label
+								v-for="option in densityOptions"
+								:key="option.id"
+								class="time-format"
+								:class="{ 'time-format--on': logDensity === option.id }"
+							>
+								<input
+									v-model="logDensity"
+									type="radio"
+									:name="densityLabelId"
+									:value="option.id"
+									class="sr-only"
+								/>
+								<span class="time-format-radio" aria-hidden="true"></span>
+								<span>{{ option.label }}</span>
+							</label>
+						</div>
+						<DashboardMessageDisplayPreview
+							class="max-w-130"
+							:compact="logDensity === 'compact'"
+						/>
+						<template #fallback>
+							<div class="flex flex-col gap-0.5">
+								<USkeleton
+									v-for="option in densityOptions"
+									:key="option.id"
+									class="my-2 h-7 w-40"
+								/>
+							</div>
+						</template>
+					</ClientOnly>
+				</section>
 			</template>
 		</div>
 
@@ -375,13 +388,10 @@ const colorThemes = computed(() =>
 	})),
 );
 
-const densityOptions = computed<{ id: LogDensity; label: string; hint: string }[]>(() => [
-	{ hint: ts("profile.density_cozy_hint"), id: "cozy", label: ts("profile.density_cozy") },
-	{
-		hint: ts("profile.density_compact_hint"),
-		id: "compact",
-		label: ts("profile.density_compact"),
-	},
+// Discord's two names: the roomy display is its "Default".
+const densityOptions = computed<{ id: LogDensity; label: string }[]>(() => [
+	{ id: "cozy", label: ts("profile.density_default") },
+	{ id: "compact", label: ts("profile.density_compact") },
 ]);
 
 // Each language by its own name, with its name in the language on screen at
@@ -477,21 +487,6 @@ function handleSetReduceMotion(value: boolean) {
 	content: "";
 }
 
-/* The radio of a card or an option, drawn: a ring, filled in when picked. */
-.prefs-dot {
-	@apply flex size-4 shrink-0 items-center justify-center rounded-full border-2;
-	border-color: var(--field-border);
-}
-
-.prefs-option--on .prefs-dot {
-	border-color: var(--color-primary);
-}
-
-.prefs-option--on .prefs-dot::after {
-	@apply size-1.75 rounded-full bg-primary;
-	content: "";
-}
-
 /* Discord's theme swatches: 48px tiles, the picked one ringed in blurple with
    a check on its corner. */
 .prefs-sublabel {
@@ -514,8 +509,7 @@ function handleSetReduceMotion(value: boolean) {
 }
 
 .theme-swatch:focus-visible,
-.theme-swatch:has(input:focus-visible),
-.prefs-option:has(input:focus-visible) {
+.theme-swatch:has(input:focus-visible) {
 	outline: 2px solid var(--color-primary);
 	outline-offset: 2px;
 }
@@ -553,16 +547,6 @@ function handleSetReduceMotion(value: boolean) {
 	--swatch-icon: #949ba4;
 	background-image: linear-gradient(135deg, var(--swatch-light) 50%, var(--swatch-dark) 50%);
 	color: var(--swatch-icon);
-}
-
-.prefs-option {
-	@apply flex cursor-pointer items-center gap-3 rounded-[8px] border px-3.5 py-3;
-	border-color: var(--field-border);
-}
-
-.prefs-option--on {
-	border-color: var(--color-primary);
-	background-color: color-mix(in srgb, var(--color-primary) 12%, transparent);
 }
 
 /* Switch rows on one card, as the design's notification settings. */

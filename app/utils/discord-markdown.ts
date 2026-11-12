@@ -196,3 +196,17 @@ export function keyMentions(content: string): KeyedMentions {
 	);
 	return { content: keyed, names };
 }
+
+/**
+ * A line of nothing but formatting around spaces, as `_ _` or `** **`, which
+ * Discord shows as an empty line: posts use it to space their parts. newt/ui
+ * would show the marks themselves, so the line is kept, empty. Code, a block
+ * or a span over several lines, is matched first and kept as written. So is
+ * an escape, so that `\`` opens no code while `\\`` still does.
+ */
+export function blankEmptyFormatting(content: string): string {
+	return content.replaceAll(
+		/(\\[\s\S]|```[\s\S]*?```|``(?:[^`]|`[^`])+``|`[^`]+`)|^[^\S\n]*(?:(\*\*|__|~~|\*|_)[^\S\n]+\2[^\S\n]*)+$/gm,
+		(match, code: string | undefined) => (code === undefined ? "\u200B" : match),
+	);
+}

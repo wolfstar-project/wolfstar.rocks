@@ -1,5 +1,6 @@
 <template>
 	<Markdown
+		class="post-markdown text-newt-text-message"
 		:content="keyed.content"
 		:heading-offset="postHeadingOffset(keyed.content)"
 		:resolve-mention="mentionName"
@@ -25,7 +26,7 @@ const { source } = defineProps<{
 const { ts } = useI18n();
 const { timeLocale } = useAppLocale();
 
-const keyed = computed(() => keyMentions(source.trim()));
+const keyed = computed(() => keyMentions(blankEmptyFormatting(source.trim())));
 
 function mentionName(_kind: string, id: string) {
 	const name = keyed.value.names.get(id);
@@ -47,3 +48,24 @@ function emojiURL(emoji: { id: string; animated: boolean }): string {
 	return `https://cdn.discordapp.com/emojis/${emoji.id}.${emoji.animated ? "gif" : "webp"}?size=48`;
 }
 </script>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+/* Mentions and commands sit in the line as Discord draws them: the text's own
+   size and height, a little padding and 3px corners, where the registry's chip
+   is a taller box of its own. */
+.post-markdown
+	:deep(
+		:is(
+			[data-variant="user"],
+			[data-variant="channel"],
+			[data-variant="role"],
+			[data-variant="app"]
+		)
+	) {
+	@apply inline min-h-0 rounded-[3px] px-0.5 py-0 align-baseline;
+	font-size: inherit;
+	line-height: inherit;
+}
+</style>

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
 	discordPlainText,
 	parseDiscordInline,
+	blankEmptyFormatting,
 	keyMentions,
 	parseDiscordMarkdown,
 	postHeadingOffset,
@@ -193,5 +194,36 @@ describe("keyMentions", () => {
 		expect(keyMentions("<t:1700000000:R> <:wolf:700000000000000001>").content).toBe(
 			"<t:1700000000:R> <:wolf:700000000000000001>",
 		);
+	});
+});
+
+describe("blankEmptyFormatting", () => {
+	// Discord shows `_ _` as an empty line, which posts use to space their parts.
+	it("empties a line of formatting around spaces, and keeps the line", () => {
+		expect(blankEmptyFormatting("June Time!\n_ _\n- Update\n** **")).toBe(
+			"June Time!\n\u200B\n- Update\n\u200B",
+		);
+	});
+
+	it("leaves formatting around words alone", () => {
+		expect(blankEmptyFormatting("_so_ and **this**\n_ a _")).toBe("_so_ and **this**\n_ a _");
+	});
+
+	it("keeps the lines of a code block as written", () => {
+		expect(blankEmptyFormatting("```\n_ _\n```\n_ _")).toBe("```\n_ _\n```\n\u200B");
+	});
+
+	it("keeps the lines of a code span as written", () => {
+		expect(blankEmptyFormatting("`a\n_ _\nb` and ``c\n** **\nd``\n_ _")).toBe(
+			"`a\n_ _\nb` and ``c\n** **\nd``\n\u200B",
+		);
+	});
+
+	it("opens no code at an escaped backtick", () => {
+		expect(blankEmptyFormatting("\\`literal\n_ _\n`code`")).toBe("\\`literal\n\u200B\n`code`");
+	});
+
+	it("opens code after an escaped backslash", () => {
+		expect(blankEmptyFormatting("\\\\`a\n_ _\nb`")).toBe("\\\\`a\n_ _\nb`");
 	});
 });

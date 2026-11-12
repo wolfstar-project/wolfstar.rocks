@@ -31,13 +31,7 @@
 				"density_compact": {
 					"type": "string"
 				},
-				"density_compact_hint": {
-					"type": "string"
-				},
-				"density_cozy": {
-					"type": "string"
-				},
-				"density_cozy_hint": {
+				"density_default": {
 					"type": "string"
 				},
 				"discord_id": {
@@ -57,6 +51,21 @@
 				},
 				"message_display": {
 					"type": "string"
+				},
+				"message_display_description": {
+					"type": "string"
+				},
+				"message_display_preview": {
+					"type": "object",
+					"properties": {
+						"first": {
+							"type": "string"
+						},
+						"second": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
 				},
 				"moderation_dms": {
 					"type": "string"

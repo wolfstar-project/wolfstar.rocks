@@ -79,8 +79,8 @@ describe("AppHeaderAuth", () => {
 				expect(dialog?.textContent).toContain("Settings");
 				expect(dialog?.textContent).toContain("Theme");
 				expect(dialog?.textContent).toContain("Reduce Motion");
-				// The dashboard's log density has no place on the pages around it.
-				expect(dialog?.textContent).not.toContain("Cozy");
+				// The dashboard's message display has no place on the pages around it.
+				expect(dialog?.textContent).not.toContain("Message display");
 			});
 
 			usePreferencesDialog().isOpen.value = false;

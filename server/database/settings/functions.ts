@@ -14,6 +14,21 @@ import { AsyncQueue } from "@sapphire/async-queue";
 
 const cache = new Collection<string, GuildData>();
 /**
+ * How long a cached copy of a guild's settings is served, in milliseconds.
+ * The bot and the other instances of the dashboard write them too, and this
+ * process only learns of its own writes: among them are the dashboard access
+ * lists, so an allow removed elsewhere stops opening the dashboard here within
+ * this time.
+ */
+export const SETTINGS_CACHE_MAX_AGE = 15_000;
+/** When each guild's cached copy was read or written, as `Date.now()`. */
+const cachedAt = new Map<string, number>();
+
+function cacheSettings(id: string, data: GuildData) {
+	cache.set(id, data);
+	cachedAt.set(id, Date.now());
+}
+/**
  * How many writes each guild had in this process: a read that started before
  * one and finished after it holds older settings, and must not be cached.
  */
@@ -33,7 +48,9 @@ export function serializeSettings(data: ReadonlyGuildData, space?: string | numb
 }
 
 export function readSettings(guildId: string): Awaitable<ReadonlyGuildData> {
-	return cache.get(guildId) ?? processFetch(guildId);
+	const cached = cache.get(guildId);
+	const age = Date.now() - (cachedAt.get(guildId) ?? 0);
+	return cached && age < SETTINGS_CACHE_MAX_AGE ? cached : processFetch(guildId);
 }
 
 /**
@@ -156,7 +173,7 @@ class Transaction {
 				// The written copy is the cached one, whatever a read that overlapped the
 				// write put in the cache meanwhile; a read still running is not cached.
 				writeCounts.set(this.settings.id, (writeCounts.get(this.settings.id) ?? 0) + 1);
-				cache.set(this.settings.id, this.settings as GuildData);
+				cacheSettings(this.settings.id, this.settings as GuildData);
 				updateSettingsContext(this.settings, changes);
 			};
 			this.#hasChanges = false;
@@ -256,7 +273,7 @@ async function fetch(id: string): Promise<GuildData> {
 	if ((writeCounts.get(id) ?? 0) === writesBefore) {
 		if (stored === null) unconfigured.add(id);
 		else unconfigured.delete(id);
-		cache.set(id, data);
+		cacheSettings(id, data);
 	}
 	return data;
 }

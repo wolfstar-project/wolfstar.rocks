@@ -250,8 +250,10 @@ const BETA_ENVIRONMENT = {
 /**
  * The beta build: the production Worker's name and defaults, with only the
  * `beta` environment, which `wrangler deploy --env beta` deploys. Production's
- * bindings are left out, so a deploy that forgets `--env beta` fails for the
- * missing bindings rather than putting beta's build on wolfstar.rocks.
+ * bindings and domains are left out. A deploy without `--env beta` does not
+ * fail: Wrangler only warns, and uploads beta's build to `wolfstar-rocks`
+ * without bindings, which breaks wolfstar.rocks. Deploy beta only through
+ * `deploy-beta.yml`, which passes the flag.
  *
  * Nitro's copy of Wrangler's types has no `env`, which Nitro writes to
  * `wrangler.json` as given, so it is added apart from the literal that

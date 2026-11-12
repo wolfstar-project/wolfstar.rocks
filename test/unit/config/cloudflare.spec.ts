@@ -50,7 +50,7 @@ describe("the Worker a build deploys to", () => {
 		});
 	});
 
-	// A deploy that forgets `--env beta` must not put beta's build on wolfstar.rocks.
+	// Production's bindings and domains belong to production builds only.
 	it("leaves production's bindings and domains out of the beta build", async () => {
 		vi.stubEnv("CLOUDFLARE_WORKER", "beta");
 		const worker = await loadWorker();

@@ -38,6 +38,13 @@
 	--color-newt-overlay: var(--newt-overlay);
 	--color-newt-bg-message-hover: var(--newt-bg-message-hover);
 	--color-newt-text-message: var(--newt-text-message);
+	--color-newt-spoiler: var(--newt-spoiler);
+	--color-newt-spoiler-hover: var(--newt-spoiler-hover);
+	--color-newt-code-bg: var(--newt-code-bg);
+	--color-newt-code-keyword: var(--newt-code-keyword);
+	--color-newt-code-string: var(--newt-code-string);
+	--color-newt-code-comment: var(--newt-code-comment);
+	--color-newt-code-function: var(--newt-code-function);
 	--ease-newt: var(--newt-ease);
 }
 
@@ -72,6 +79,13 @@
 	/* The text of a message, Discord's "text-normal": brighter than the
 	   secondary text the registry's message content uses. App-only. */
 	--newt-text-message: #313338;
+	--newt-spoiler: #d4d7dc;
+	--newt-spoiler-hover: #c4c9ce;
+	--newt-code-bg: #f8f9fa;
+	--newt-code-keyword: #0000ff;
+	--newt-code-string: #a31515;
+	--newt-code-comment: #008000;
+	--newt-code-function: #795e26;
 	--newt-embed-max-width: 520px;
 	--newt-ease: cubic-bezier(0.3, 0.7, 0.4, 1);
 
@@ -97,6 +111,13 @@
 		--newt-mention-role: #f3b95f;
 		--newt-bg-message-hover: rgba(2, 2, 2, 0.06);
 		--newt-text-message: #dbdee1;
+		--newt-spoiler: #1a1a1e;
+		--newt-spoiler-hover: #232328;
+		--newt-code-bg: #111214;
+		--newt-code-keyword: #569cd6;
+		--newt-code-string: #ce9178;
+		--newt-code-comment: #6a9955;
+		--newt-code-function: #dcdcaa;
 	}
 }
 
@@ -124,4 +145,11 @@
 	--newt-mention-role: #f3b95f;
 	--newt-bg-message-hover: rgba(2, 2, 2, 0.06);
 	--newt-text-message: #dbdee1;
+	--newt-spoiler: #1a1a1e;
+	--newt-spoiler-hover: #232328;
+	--newt-code-bg: #111214;
+	--newt-code-keyword: #569cd6;
+	--newt-code-string: #ce9178;
+	--newt-code-comment: #6a9955;
+	--newt-code-function: #dcdcaa;
 }

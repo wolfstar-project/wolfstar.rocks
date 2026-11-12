@@ -22,6 +22,7 @@
 			"load_failed": "",
 			"log_aria": "Messaggi da {name}",
 			"markdown": {
+				"spoiler": "",
 				"unknown_channel": "",
 				"unknown_role": "",
 				"unknown_user": ""

@@ -102,6 +102,24 @@ describe("dashboard direct messages", () => {
 		thread.unmount();
 	});
 
+	// The announcements write their details as indented items, which Discord
+	// draws as a list of their own under the item above.
+	it("nests an indented list item under the one above it", async () => {
+		posts = [
+			{
+				...MOCK_ANNOUNCEMENTS[1]!,
+				content: "- Removed `/permission-nodes`.\n  - If your server still has old nodes",
+			},
+		];
+		const thread = await mountSuspended(DashboardDirectMessageThread);
+
+		await vi.waitFor(() => expect(thread.findAll("article")).toHaveLength(1));
+		const nested = thread.get("ul > li > ul > li");
+		expect(nested.text()).toBe("If your server still has old nodes");
+		expect(thread.get("ul > li").text()).toContain("Removed");
+		thread.unmount();
+	});
+
 	it("previews a newest post of images alone as one, not as no messages", async () => {
 		posts = [
 			...MOCK_ANNOUNCEMENTS,

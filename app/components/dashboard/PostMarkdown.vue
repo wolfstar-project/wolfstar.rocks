@@ -34,10 +34,10 @@ function mentionName(_kind: string, id: string) {
 }
 
 // The words newt/ui's markdown writes itself, translated. Its warning before a
-// masked link stays off: the dialog it opens takes no focus and traps none, so
-// a keyboard or screen reader user would be left behind it. A masked link
-// opens in a new tab, with its address as its title, as it did before.
+// masked link stays off: a masked link opens in a new tab, with its address as
+// its title, as it did before.
 const labels = computed<Partial<MarkdownLabels>>(() => ({
+	spoiler: ts("dashboard.dm.markdown.spoiler"),
 	unknownChannel: ts("dashboard.dm.markdown.unknown_channel"),
 	unknownRole: ts("dashboard.dm.markdown.unknown_role"),
 	unknownUser: ts("dashboard.dm.markdown.unknown_user"),

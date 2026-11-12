@@ -31,9 +31,10 @@ const TRAILING_MARKS = /[.,;:!?*_~|]+$/;
  * An escaped character, which is literal text, and code, which shows its
  * pipes as text and never unfurls a link. Both are left out before spoilers
  * are found, so their pipes cannot pair with a spoiler's. An escape is read
- * first, so an escaped backtick does not open code.
+ * first, so an escaped backtick does not open code. Like the page's reader,
+ * a backslash escapes only a mark, never a letter, digit or space.
  */
-const LITERAL_PATTERN = /\\[\s\S]|(`+)[\s\S]*?\1/g;
+const LITERAL_PATTERN = /\\[^\p{L}\p{N}\s]|(`+)[\s\S]*?\1/gu;
 
 /** Text the author hid behind `||…||` until the reader reveals it. */
 const SPOILER_PATTERN = /\|\|[\s\S]*?\|\|/g;

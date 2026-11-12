@@ -1,6 +1,7 @@
 import {
 	isTrustedOrigin,
 	matchesHostPattern,
+	resolveAuthCookieDomain,
 	resolveTrustedOrigins,
 	STATIC_TRUSTED_ORIGINS,
 } from "#server/utils/auth-origins";
@@ -77,4 +78,17 @@ describe("resolveTrustedOrigins", () => {
 
 		expect(origins.filter((origin) => origin === "https://wolfstar.rocks")).toHaveLength(1);
 	});
+});
+
+describe("resolveAuthCookieDomain", () => {
+	it("shares production's cookies with its subdomains", () => {
+		expect(resolveAuthCookieDomain("https://wolfstar.rocks")).toBe("wolfstar.rocks");
+	});
+
+	it.each(["https://alpha.wolfstar.rocks", "http://localhost:3000", "", undefined, "not a url"])(
+		"keeps the cookies of %s on their own host",
+		(siteUrl) => {
+			expect(resolveAuthCookieDomain(siteUrl)).toBeUndefined();
+		},
+	);
 });

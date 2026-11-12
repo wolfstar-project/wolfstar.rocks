@@ -22,6 +22,7 @@
 			"load_failed": "The posts couldn't be loaded from Discord.",
 			"log_aria": "Messages from {name}",
 			"markdown": {
+				"spoiler": "Spoiler, select to reveal",
 				"unknown_channel": "unknown-channel",
 				"unknown_role": "unknown-role",
 				"unknown_user": "unknown-user"

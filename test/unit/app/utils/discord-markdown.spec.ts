@@ -212,4 +212,10 @@ describe("blankEmptyFormatting", () => {
 	it("keeps the lines of a code block as written", () => {
 		expect(blankEmptyFormatting("```\n_ _\n```\n_ _")).toBe("```\n_ _\n```\n\u200B");
 	});
+
+	it("keeps the lines of a code span as written", () => {
+		expect(blankEmptyFormatting("`a\n_ _\nb` and ``c\n** **\nd``\n_ _")).toBe(
+			"`a\n_ _\nb` and ``c\n** **\nd``\n\u200B",
+		);
+	});
 });

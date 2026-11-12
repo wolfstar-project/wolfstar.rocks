@@ -61,7 +61,7 @@ describe("AppPreferences", () => {
 		expect(
 			swatches(groups[0]?.element).map((input) => input.getAttribute("aria-label")),
 		).toStrictEqual(["Light", "Ash", "Dark", "Onyx", "Sync with system"]);
-		expect(wrapper.text()).not.toContain("Cozy");
+		expect(wrapper.text()).not.toContain("Message display");
 	});
 
 	it("leaves the clock to the dashboard in the compact set", async () => {
@@ -74,14 +74,21 @@ describe("AppPreferences", () => {
 		expect(quick.find('[role="radiogroup"]').exists()).toBe(false);
 	});
 
-	it("switches the log tables to compact rows", async () => {
+	// Discord's two displays, by its names, with the messages as they will look.
+	it("switches the message display to compact, and shows it in the preview", async () => {
 		const wrapper = await mountSuspended(AppPreferences, { props: { only: "appearance" } });
 
-		const density = wrapper.findAll('[role="radiogroup"]')[2]!;
-		expect(density.text()).toContain("Cozy");
-		await density.findAll('input[type="radio"]')[1]!.setValue(true);
+		const display = wrapper.findAll('[role="radiogroup"]')[2]!;
+		expect(display.findAll("label").map((label) => label.text())).toStrictEqual([
+			"Default",
+			"Compact",
+		]);
+		expect(wrapper.findAll(".message-preview [data-slot='message-avatar']")).toHaveLength(2);
+
+		await display.findAll('input[type="radio"]')[1]!.setValue(true);
 
 		expect(useLogDensity().value).toBe("compact");
+		expect(wrapper.find(".message-preview [data-slot='message-avatar']").exists()).toBe(false);
 	});
 
 	it("keeps reduced motion on a page of its own", async () => {

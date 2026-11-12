@@ -54,6 +54,21 @@ describe("dashboard direct messages", () => {
 		thread.unmount();
 	});
 
+	// The message display of the preferences, as Discord's compact mode: no
+	// avatar, and the time ahead of the name.
+	it("draws the posts compact when the message display is", async () => {
+		useLogDensity().value = "compact";
+		const thread = await mountSuspended(DashboardDirectMessageThread);
+
+		await vi.waitFor(() => expect(thread.findAll("article")).toHaveLength(2));
+		const post = thread.get("article");
+		expect(post.find("[data-slot='message-avatar']").exists()).toBe(false);
+		expect(post.get("time").classes()).toContain("order-first");
+
+		useLogDensity().value = "cozy";
+		thread.unmount();
+	});
+
 	it("shows Discord's count of each reaction", async () => {
 		const thread = await mountSuspended(DashboardDirectMessageThread);
 

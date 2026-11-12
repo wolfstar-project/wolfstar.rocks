@@ -1,5 +1,6 @@
 import type { AutomodRuleCreate } from "~/composables/useAutomodRules";
 import {
+	AutoModerationRuleLimits,
 	AutoModerationSoftActionBits,
 	getDefaultAutoModerationRule,
 	getDefaultAutoModerationRuleOptions,
@@ -178,12 +179,22 @@ export function pickAutomodRuleDefaults(draft: AutomodRuleDraft): AutomodRuleDef
 	};
 }
 
+/**
+ * A reset window within what the server accepts. The server checks it whatever
+ * the steps, while its field shows only with steps: a default saved without
+ * steps, or stored before it was checked, must not fail every new rule.
+ */
+function escalationWindow(duration: number): number {
+	const { minimum, maximum } = AutoModerationRuleLimits.escalationDuration;
+	return Math.min(maximum, Math.max(minimum, duration));
+}
+
 export function pickAutomodEscalationDefaults(
 	draft: AutomodRuleDraft,
 ): AutomodEscalationDefaultFields {
 	return {
 		escalation: draft.escalation.map((step) => ({ ...step })),
-		escalationDuration: draft.escalationDuration,
+		escalationDuration: escalationWindow(draft.escalationDuration),
 	};
 }
 
@@ -201,7 +212,7 @@ export function applyAutomodRuleDefaults(
 		}),
 		...(defaults?.escalation && {
 			escalation: defaults.escalation.escalation.map((step) => ({ ...step })),
-			escalationDuration: defaults.escalation.escalationDuration,
+			escalationDuration: escalationWindow(defaults.escalation.escalationDuration),
 		}),
 	};
 }

@@ -16,6 +16,7 @@ import {
 	isGuildUnconfigured,
 	readFreshSettings,
 	readSettings,
+	SETTINGS_CACHE_MAX_AGE,
 	writeSettingsTransaction,
 } from "#server/database/settings/functions";
 
@@ -100,5 +101,33 @@ describe("readFreshSettings", () => {
 			await trx.write({ language: "de" }).submit(undefined, undefined, outer as never);
 		}
 		expect((await readSettings(guild)).language).toBe("en-US");
+	});
+});
+
+describe("readSettings", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+		vi.useRealTimers();
+	});
+
+	// The dashboard access lists live in the settings: an allow the owner
+	// removed elsewhere must stop opening the dashboard here too, not only once
+	// this process happens to write the guild.
+	it("reads the database again once its copy is older than the cache's age", async () => {
+		vi.useFakeTimers();
+		const guild = "623456789012345678";
+		mockFetchGuildData.mockResolvedValueOnce({
+			id: guild,
+			permissionsUsers: [{ id: "1", allow: true }],
+		});
+		expect((await readSettings(guild)).permissionsUsers).toHaveLength(1);
+
+		mockFetchGuildData.mockResolvedValueOnce({ id: guild, permissionsUsers: [] });
+		vi.advanceTimersByTime(SETTINGS_CACHE_MAX_AGE - 1);
+		expect((await readSettings(guild)).permissionsUsers).toHaveLength(1);
+
+		vi.advanceTimersByTime(1);
+		expect((await readSettings(guild)).permissionsUsers).toHaveLength(0);
+		vi.useRealTimers();
 	});
 });

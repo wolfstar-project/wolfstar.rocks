@@ -1,6 +1,7 @@
 import {
 	isTrustedOrigin,
 	matchesHostPattern,
+	hostOnlyAuthCookies,
 	resolveAuthCookieDomain,
 	resolveTrustedOrigins,
 	STATIC_TRUSTED_ORIGINS,
@@ -91,4 +92,37 @@ describe("resolveAuthCookieDomain", () => {
 			expect(resolveAuthCookieDomain(siteUrl)).toBeUndefined();
 		},
 	);
+});
+
+describe("hostOnlyAuthCookies", () => {
+	const names = [
+		"__Secure-wolfstar-session.session_token",
+		"__Secure-wolfstar-session.session_data",
+	];
+
+	// A browser signed in before the cookies covered the whole domain holds a
+	// host-only copy of each: they are named like the shared ones.
+	it("lists the auth cookies the request carries, with the chunks of a split one", () => {
+		expect(
+			hostOnlyAuthCookies(
+				"theme=dark; __Secure-wolfstar-session.session_token=a; __Secure-wolfstar-session.session_data.0=b; __Secure-wolfstar-session.session_data.1=c",
+				names,
+			),
+		).toEqual([
+			"__Secure-wolfstar-session.session_token",
+			"__Secure-wolfstar-session.session_data.0",
+			"__Secure-wolfstar-session.session_data.1",
+		]);
+	});
+
+	it("lists nothing for a request without auth cookies", () => {
+		expect(hostOnlyAuthCookies("theme=dark", names)).toEqual([]);
+		expect(hostOnlyAuthCookies(null, names)).toEqual([]);
+	});
+
+	it("does not take a cookie whose name only starts like an auth cookie", () => {
+		expect(hostOnlyAuthCookies("__Secure-wolfstar-session.session_tokenx=a", names)).toEqual(
+			[],
+		);
+	});
 });

@@ -2,9 +2,11 @@ import type { AutoModerationRule } from "#shared/utils/automod-rules";
 import { describe, expect, it } from "vitest";
 import { ref } from "vue";
 import {
+	applyAutomodRuleDefaults,
 	automodRuleDraftToBody,
 	automodRuleToDraft,
 	createAutomodRuleDraft,
+	pickAutomodEscalationDefaults,
 	validateAutomodRuleName,
 } from "~/utils/automod-rule-draft";
 import { joinDuration, splitDuration } from "~/utils/duration-units";
@@ -133,5 +135,27 @@ describe("duration units", () => {
 	it("keeps a duration that is not a whole number of seconds", () => {
 		expect(splitDuration(1500)).toStrictEqual({ value: 1.5, unit: "seconds" });
 		expect(joinDuration(splitDuration(2_147_483_647))).toBe(2_147_483_647);
+	});
+});
+
+// The reset window is checked by the server whatever the steps, but its field
+// shows only with steps: defaults saved with a short one, or stored before it
+// was checked, would make every new rule fail on a field no one can see.
+describe("escalation defaults", () => {
+	it("keeps a saved reset window within the server's limits", () => {
+		const draft = { ...createAutomodRuleDraft("Capitals"), escalationDuration: 30_000 };
+
+		expect(pickAutomodEscalationDefaults(draft).escalationDuration).toBe(60_000);
+		expect(
+			applyAutomodRuleDefaults(createAutomodRuleDraft("Capitals"), {
+				escalation: { escalation: [], escalationDuration: 30_000 },
+			}).escalationDuration,
+		).toBe(60_000);
+	});
+
+	it("keeps a reset window already within the limits", () => {
+		const draft = { ...createAutomodRuleDraft("Capitals"), escalationDuration: 3_600_000 };
+
+		expect(pickAutomodEscalationDefaults(draft).escalationDuration).toBe(3_600_000);
 	});
 });

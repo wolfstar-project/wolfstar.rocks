@@ -476,7 +476,6 @@
 				"Mute": "",
 				"None": "",
 				"Softban": "",
-				"Timeout": "",
 				"VoiceKick": "",
 				"Warning": ""
 			},
@@ -573,7 +572,6 @@
 					"nameRequired": "",
 					"nameTaken": "",
 					"pendingWord": "",
-					"timeoutNeedsDuration": "",
 					"unknown": ""
 				},
 				"first_infraction": "",
@@ -1435,6 +1433,10 @@
 			"title": "",
 			"toggle_aria": ""
 		},
+		"mute": {
+			"as_role": "",
+			"as_timeout": ""
+		},
 		"please_try_again": "Por favor, inténtalo de nuevo.",
 		"reports": {
 			"queue": {
@@ -1581,9 +1583,7 @@
 				"count": "",
 				"duration": "",
 				"invalid": "",
-				"period": "",
-				"timeout_duration": "",
-				"timeout_long": ""
+				"period": ""
 			},
 			"fields": {
 				"action": "",
@@ -1608,7 +1608,6 @@
 			"replace": "",
 			"saved_description": "",
 			"table_aria": "",
-			"timeout_hint": "",
 			"title": ""
 		}
 	},
@@ -1899,6 +1898,10 @@
 				"name": ""
 			},
 			"moderationLockdownChannels": {
+				"description": "",
+				"name": ""
+			},
+			"moderationMuteTimeout": {
 				"description": "",
 				"name": ""
 			},

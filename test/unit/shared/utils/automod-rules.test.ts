@@ -95,16 +95,22 @@ describe("auto-moderation rule model", () => {
 		it("drops what is not a step and makes a bad duration permanent", () => {
 			expect(
 				normalizeAutoModerationRuleEscalation([
-					{ action: "Timeout", duration: 60_000 },
+					{ action: "Mute", duration: 60_000 },
 					{ action: "Nuke", duration: 1 },
 					"nope",
 					{ action: "Ban", duration: -5 },
 				]),
 			).toStrictEqual([
-				{ action: "Timeout", duration: 60_000 },
+				{ action: "Mute", duration: 60_000 },
 				{ action: "Ban", duration: null },
 			]);
 			expect(normalizeAutoModerationRuleEscalation("nope")).toStrictEqual([]);
+		});
+
+		it("reads a step saved as a Timeout as a Mute", () => {
+			expect(
+				normalizeAutoModerationRuleEscalation([{ action: "Timeout", duration: 60_000 }]),
+			).toStrictEqual([{ action: "Mute", duration: 60_000 }]);
 		});
 
 		it("cuts the steps past the maximum", () => {
@@ -126,7 +132,7 @@ describe("auto-moderation rule model", () => {
 			hardAction: "Warning",
 			hardActionDuration: null,
 			escalation: [
-				{ action: "Timeout", duration: 60_000 },
+				{ action: "Mute", duration: 60_000 },
 				{ action: "Ban", duration: null },
 			],
 		} as const;
@@ -145,7 +151,7 @@ describe("auto-moderation rule model", () => {
 
 		it("walks the escalation and repeats its last step", () => {
 			const mutable = { ...rule, escalation: [...rule.escalation] };
-			expect(resolveAutoModerationRulePunishment(mutable, 1).action).toBe("Timeout");
+			expect(resolveAutoModerationRulePunishment(mutable, 1).action).toBe("Mute");
 			expect(resolveAutoModerationRulePunishment(mutable, 2).action).toBe("Ban");
 			expect(resolveAutoModerationRulePunishment(mutable, 9).action).toBe("Ban");
 		});

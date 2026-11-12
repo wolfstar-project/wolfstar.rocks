@@ -63,6 +63,7 @@ export const TransferableSettings = [
 	["moderation.track-roles", "moderationTrackRoles"],
 	["moderation.track-kicks", "moderationTrackKicks"],
 	["moderation.confirm-recent", "moderationConfirmRecentMinutes"],
+	["moderation.mute-timeout", "moderationMuteTimeout"],
 	["moderation.dehoist", "moderationDehoist"],
 	["moderation.default-warn-thresholds", "moderationDefaultWarnThresholds"],
 	["moderation.direct-message", "messagesModerationDm"],

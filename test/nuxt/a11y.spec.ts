@@ -1162,7 +1162,7 @@ describe("component accessibility audits", () => {
 			registerEndpoint(`/api/guilds/${GUILD_ID}/warn-thresholds`, {
 				method: "GET",
 				handler: () => [
-					{ action: "Timeout", count: 3, duration: 1800, period: 0 },
+					{ action: "Mute", count: 3, duration: 1800, period: 0 },
 					{ action: "Ban", count: 5, duration: null, period: 604_800 },
 				],
 			});

@@ -428,6 +428,16 @@ function parseRule(
 
 	const fields: Record<string, unknown> = { ...record };
 	delete fields.type;
+	// A file is saved data: a `Timeout` written before it was merged into
+	// `Mute` is read as a `Mute`, as the storage reads a saved rule.
+	if (fields.hardAction === "Timeout") fields.hardAction = "Mute";
+	if (Array.isArray(fields.escalation)) {
+		fields.escalation = fields.escalation.map((step: unknown) =>
+			isObject(step) && (step as { action?: unknown }).action === "Timeout"
+				? { ...step, action: "Mute" }
+				: step,
+		);
+	}
 
 	const lower = trimmed.toLowerCase();
 	const existing = current.find(

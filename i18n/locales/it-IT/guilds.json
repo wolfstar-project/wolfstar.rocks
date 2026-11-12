@@ -476,7 +476,6 @@
 				"Mute": "Silenziamento",
 				"None": "",
 				"Softban": "Softban",
-				"Timeout": "Timeout",
 				"VoiceKick": "Espulsione dal vocale",
 				"Warning": "Avvertimento"
 			},
@@ -573,7 +572,6 @@
 					"nameRequired": "Dai un nome alla regola.",
 					"nameTaken": "Esiste già una regola con questo nome.",
 					"pendingWord": "",
-					"timeoutNeedsDuration": "Un passaggio di timeout richiede una durata.",
 					"unknown": "Questa regola non esiste più. Ricarica la pagina."
 				},
 				"first_infraction": "Prima infrazione",
@@ -1435,6 +1433,10 @@
 			"title": "Moduli",
 			"toggle_aria": "Attiva o disattiva {title}"
 		},
+		"mute": {
+			"as_role": "",
+			"as_timeout": ""
+		},
 		"please_try_again": "Riprova.",
 		"reports": {
 			"queue": {
@@ -1581,9 +1583,7 @@
 				"count": "",
 				"duration": "",
 				"invalid": "",
-				"period": "",
-				"timeout_duration": "",
-				"timeout_long": ""
+				"period": ""
 			},
 			"fields": {
 				"action": "",
@@ -1608,7 +1608,6 @@
 			"replace": "",
 			"saved_description": "",
 			"table_aria": "",
-			"timeout_hint": "",
 			"title": ""
 		}
 	},
@@ -1899,6 +1898,10 @@
 				"name": ""
 			},
 			"moderationLockdownChannels": {
+				"description": "",
+				"name": ""
+			},
+			"moderationMuteTimeout": {
 				"description": "",
 				"name": ""
 			},

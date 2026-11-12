@@ -85,7 +85,6 @@ export const AUTOMOD_HARD_ACTION_KEYS: Record<AutoModerationHardAction, string> 
 	Mute: "guild_settings.automod.hard_actions.Mute",
 	None: "guild_settings.automod.hard_actions.None",
 	Softban: "guild_settings.automod.hard_actions.Softban",
-	Timeout: "guild_settings.automod.hard_actions.Timeout",
 	VoiceKick: "guild_settings.automod.hard_actions.VoiceKick",
 	Warning: "guild_settings.automod.hard_actions.Warning",
 };

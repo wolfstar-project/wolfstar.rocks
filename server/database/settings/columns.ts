@@ -201,6 +201,7 @@ export const Columns = {
 		moderationTrackRoles: ["trackRoles", "value"],
 		moderationTrackKicks: ["trackKicks", "value"],
 		moderationConfirmRecentMinutes: ["confirmRecentMinutes", "value"],
+		moderationMuteTimeout: ["muteTimeout", "value"],
 		moderationDehoist: ["dehoist", "value"],
 		moderationLockdownChannels: ["lockdownChannels", "snowflakes"],
 		moderationDefaultWarnThresholds: ["defaultWarnThresholds", "value"],

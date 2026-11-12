@@ -1432,9 +1432,6 @@
 								"Softban": {
 									"type": "string"
 								},
-								"Timeout": {
-									"type": "string"
-								},
 								"VoiceKick": {
 									"type": "string"
 								},
@@ -1721,9 +1718,6 @@
 											"type": "string"
 										},
 										"pendingWord": {
-											"type": "string"
-										},
-										"timeoutNeedsDuration": {
 											"type": "string"
 										},
 										"unknown": {
@@ -4309,6 +4303,18 @@
 					},
 					"additionalProperties": false
 				},
+				"mute": {
+					"type": "object",
+					"properties": {
+						"as_role": {
+							"type": "string"
+						},
+						"as_timeout": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"please_try_again": {
 					"type": "string"
 				},
@@ -4749,12 +4755,6 @@
 								},
 								"period": {
 									"type": "string"
-								},
-								"timeout_duration": {
-									"type": "string"
-								},
-								"timeout_long": {
-									"type": "string"
 								}
 							},
 							"additionalProperties": false
@@ -4826,9 +4826,6 @@
 							"type": "string"
 						},
 						"table_aria": {
-							"type": "string"
-						},
-						"timeout_hint": {
 							"type": "string"
 						},
 						"title": {
@@ -5699,6 +5696,18 @@
 							"additionalProperties": false
 						},
 						"moderationLockdownChannels": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"moderationMuteTimeout": {
 							"type": "object",
 							"properties": {
 								"description": {

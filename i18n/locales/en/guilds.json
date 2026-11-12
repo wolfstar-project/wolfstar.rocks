@@ -476,7 +476,6 @@
 				"Mute": "Mute",
 				"None": "No action",
 				"Softban": "Softban",
-				"Timeout": "Timeout",
 				"VoiceKick": "Voice kick",
 				"Warning": "Warning"
 			},
@@ -573,7 +572,6 @@
 					"nameRequired": "Give the rule a name.",
 					"nameTaken": "There is already a rule with that name.",
 					"pendingWord": "Add or discard the word you are typing before you save.",
-					"timeoutNeedsDuration": "A timeout step needs a duration.",
 					"unknown": "This rule no longer exists. Reload the page."
 				},
 				"first_infraction": "First infraction",
@@ -1435,6 +1433,10 @@
 			"title": "Modules",
 			"toggle_aria": "Toggle {title}"
 		},
+		"mute": {
+			"as_role": "With this duration, the mute gives the muted role.",
+			"as_timeout": "With this duration, the mute is a Discord timeout."
+		},
 		"please_try_again": "Please try again.",
 		"reports": {
 			"queue": {
@@ -1581,9 +1583,7 @@
 				"count": "Pick a number of warnings from {minimum} to {maximum}.",
 				"duration": "A duration can be a year at most.",
 				"invalid": "WolfStar could not read this threshold. Check the fields and try again.",
-				"period": "The warnings can be counted over a year at most.",
-				"timeout_duration": "A timeout needs a duration.",
-				"timeout_long": "Discord times a member out for 28 days at most."
+				"period": "The warnings can be counted over a year at most."
 			},
 			"fields": {
 				"action": "Action",
@@ -1595,7 +1595,7 @@
 			"help": "What WolfStar does to a member who reaches a number of active warnings, given with /warn. A number set again replaces what it had.",
 			"limit": "A server has {maximum} thresholds at most. Remove one to add another.",
 			"load_failed": "Could not load the warning thresholds.",
-			"no_muted_role": "This server has no muted role, so a mute can't be applied. Set one under Roles, or pick a timeout.",
+			"no_muted_role": "This server has no muted role, so this mute can't be applied. Set one under Roles, or pick a duration that a timeout allows.",
 			"period_hint": "0 counts every active warning",
 			"permanent": "Permanent",
 			"permanent_hint": "0 is permanent",
@@ -1608,7 +1608,6 @@
 			"replace": "Replace threshold",
 			"saved_description": "The threshold at {count} warnings is saved.",
 			"table_aria": "Thresholds by number of warnings",
-			"timeout_hint": "Up to 28 days",
 			"title": "Warning thresholds"
 		}
 	},
@@ -1891,7 +1890,7 @@
 				"name": "Confirm a Second Action"
 			},
 			"moderationDefaultWarnThresholds": {
-				"description": "While the server has no warning thresholds of its own, 3 warnings mute for 30 minutes (a timeout when there is no muted role), 5 kick and 7 ban. The ones added under Warning thresholds below, or with /warn-thresholds add, replace them.",
+				"description": "While the server has no warning thresholds of its own, 3 warnings mute for 30 minutes, 5 kick and 7 ban. The ones added under Warning thresholds below, or with /warn-thresholds add, replace them.",
 				"name": "Default Warning Thresholds"
 			},
 			"moderationDehoist": {
@@ -1901,6 +1900,10 @@
 			"moderationLockdownChannels": {
 				"description": "The channels /lockdown channels:configured locks and unlocks together, up to 25: the ones a raid writes in, not the ones the staff and the bots work in. A deleted channel leaves the list.",
 				"name": "Lockdown Channels"
+			},
+			"moderationMuteTimeout": {
+				"description": "A mute times the member out when its duration is 28 days at most. A permanent or longer mute gives the muted role. Turned off, a mute always gives the muted role.",
+				"name": "Use a Discord Timeout When the Duration Allows It"
 			},
 			"moderationTrackBans": {
 				"description": "Opens a moderation case when a member is banned or unbanned by hand.",

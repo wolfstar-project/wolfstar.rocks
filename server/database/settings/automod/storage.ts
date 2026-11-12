@@ -2,6 +2,7 @@ import type { Database, Models } from "#server/database/prisma";
 import type { Snowflake } from "discord-api-types/v10";
 import { isRowId } from "#server/database/settings/ids";
 import {
+	normalizeAutoModerationHardAction,
 	normalizeAutoModerationRuleEscalation,
 	normalizeAutoModerationRuleOptions,
 	type AutoModerationRule,
@@ -19,7 +20,7 @@ function toRule(row: Pick<Row, keyof AutoModerationRuleData | "id" | "guildId">)
 		type: row.type,
 		enabled: row.enabled,
 		softAction: row.softAction,
-		hardAction: row.hardAction,
+		hardAction: normalizeAutoModerationHardAction(row.hardAction),
 		hardActionDuration: row.hardActionDuration,
 		thresholdMaximum: row.thresholdMaximum,
 		thresholdDuration: row.thresholdDuration,

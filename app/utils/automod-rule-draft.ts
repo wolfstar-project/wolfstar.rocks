@@ -2,6 +2,7 @@ import type { AutomodRuleCreate } from "~/composables/useAutomodRules";
 import {
 	AutoModerationRuleLimits,
 	AutoModerationSoftActionBits,
+	normalizeAutoModerationHardAction,
 	getDefaultAutoModerationRule,
 	getDefaultAutoModerationRuleOptions,
 	MaximumAutoModerationRuleNameLength,
@@ -189,6 +190,13 @@ function escalationWindow(duration: number): number {
 	return Math.min(maximum, Math.max(minimum, duration));
 }
 
+function normalizeEscalationAction(
+	action: AutoModerationEscalationAction,
+): AutoModerationEscalationAction {
+	// `None` is no step, so a normalized step action is never one.
+	return normalizeAutoModerationHardAction(action) as AutoModerationEscalationAction;
+}
+
 export function pickAutomodEscalationDefaults(
 	draft: AutomodRuleDraft,
 ): AutomodEscalationDefaultFields {
@@ -198,7 +206,10 @@ export function pickAutomodEscalationDefaults(
 	};
 }
 
-/** A draft with the saved defaults laid over its type's own. */
+/**
+ * A draft with the saved defaults laid over its type's own. Defaults saved
+ * before `Timeout` was merged into `Mute` may still hold one: it is a `Mute`.
+ */
 export function applyAutomodRuleDefaults(
 	draft: AutomodRuleDraft,
 	defaults: AutomodRuleDefaults | undefined,
@@ -207,11 +218,15 @@ export function applyAutomodRuleDefaults(
 		...draft,
 		...(defaults?.rule && {
 			...defaults.rule,
+			hardAction: normalizeAutoModerationHardAction(defaults.rule.hardAction),
 			ignoredChannels: [...defaults.rule.ignoredChannels],
 			ignoredRoles: [...defaults.rule.ignoredRoles],
 		}),
 		...(defaults?.escalation && {
-			escalation: defaults.escalation.escalation.map((step) => ({ ...step })),
+			escalation: defaults.escalation.escalation.map((step) => ({
+				...step,
+				action: normalizeEscalationAction(step.action),
+			})),
 			escalationDuration: escalationWindow(defaults.escalation.escalationDuration),
 		}),
 	};

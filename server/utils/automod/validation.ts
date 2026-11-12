@@ -2,7 +2,6 @@ import {
 	AutoModerationEscalationActions,
 	AutoModerationHardActions,
 	AutoModerationRuleLimits,
-	getDefaultAutoModerationRule,
 	MaximumAutoModerationRuleEscalationSteps,
 	MaximumAutoModerationRuleListLength,
 	MaximumAutoModerationRuleNameLength,
@@ -47,19 +46,18 @@ export type AutoModerationRulePatch = Partial<Omit<AutoModerationRuleData, "type
  *
  * @remarks Only the fields that are given are read, so the result is a patch. The options are read with
  * `normalizeAutoModerationRuleOptions`, on top of the current ones, so a request can give only the ones that change.
+ * A `Timeout` is refused as a new value: it was merged into `Mute`, which is a timeout when the guild has
+ * `moderationMuteTimeout` and its duration fits one. A rule saved with one is read as a `Mute` by the storage.
  *
  * @param type - The type of the rule, which its options depend on.
  * @param input - The data to read.
- * @param current - What the patch applies to: the options the rule has, when it exists, and its hard action and
- * duration, which a patch that changes either is checked with. A new rule has the hard action of the defaults.
+ * @param current - What the patch applies to: the options the rule has, when it exists.
  * @returns The patch, or what is wrong with the data, one message per field.
  */
 export function parseAutoModerationRulePatch(
 	type: AutoModerationRuleType,
 	input: unknown,
-	current: Partial<
-		Pick<AutoModerationRuleData, "hardAction" | "hardActionDuration" | "options">
-	> = {},
+	current: Partial<Pick<AutoModerationRuleData, "options">> = {},
 ): { data: AutoModerationRulePatch; errors?: undefined } | { data?: undefined; errors: string[] } {
 	if (!isObject(input)) return { errors: ["Invalid body."] };
 	const currentOptions: object = current.options ?? {};
@@ -113,20 +111,6 @@ export function parseAutoModerationRulePatch(
 			);
 	}
 
-	// Checked when the request changes the action or its duration, so a rule
-	// saved as a Timeout without one before can still be renamed or switched off.
-	const touchesHardAction =
-		body.hardAction !== undefined || body.hardActionDuration !== undefined;
-	const hardActionRead =
-		(body.hardAction === undefined || data.hardAction !== undefined) &&
-		(body.hardActionDuration === undefined || data.hardActionDuration !== undefined);
-	if (touchesHardAction && hardActionRead && isPermanentTimeout(type, data, current)) {
-		const { maximum } = AutoModerationRuleLimits.hardActionDuration;
-		errors.push(
-			`hardActionDuration: Expected an integer between 1 and ${maximum}, which a Timeout requires.`,
-		);
-	}
-
 	for (const key of ["thresholdMaximum", "thresholdDuration"] as const) {
 		const value = body[key];
 		if (value === undefined) continue;
@@ -163,7 +147,7 @@ export function parseAutoModerationRulePatch(
 		} else {
 			const { maximum } = AutoModerationRuleLimits.hardActionDuration;
 			errors.push(
-				`escalation: Expected an array of at most ${MaximumAutoModerationRuleEscalationSteps} steps, each an action (${AutoModerationEscalationActions.join(", ")}) and a duration: null, or an integer between 1 and ${maximum}, which a Timeout requires.`,
+				`escalation: Expected an array of at most ${MaximumAutoModerationRuleEscalationSteps} steps, each an action (${AutoModerationEscalationActions.join(", ")}) and a duration: null, or an integer between 1 and ${maximum}.`,
 			);
 		}
 	}
@@ -235,26 +219,8 @@ export function parseAutoModerationRulePatch(
 }
 
 /**
- * Whether a rule would be a Timeout without a duration once the patch applies. The bot does nothing, and counts
- * nothing, for one: Discord takes no timeout without an end.
- */
-function isPermanentTimeout(
-	type: AutoModerationRuleType,
-	patch: AutoModerationRulePatch,
-	current: Partial<Pick<AutoModerationRuleData, "hardAction" | "hardActionDuration">>,
-): boolean {
-	const defaults = getDefaultAutoModerationRule(type);
-	const action = patch.hardAction ?? current.hardAction ?? defaults.hardAction;
-	const duration =
-		patch.hardActionDuration === undefined
-			? (current.hardActionDuration ?? defaults.hardActionDuration)
-			: patch.hardActionDuration;
-	return action === "Timeout" && !duration;
-}
-
-/**
  * Whether a value is a step of an escalation as a request must write it: a hard action, and a duration that is `null`
- * (or left out) for a permanent one or a positive integer within the limits. A timeout cannot be permanent.
+ * (or left out) for a permanent one or a positive integer within the limits.
  */
 function isEscalationStep(value: unknown): boolean {
 	if (!isObject(value)) return false;
@@ -262,7 +228,7 @@ function isEscalationStep(value: unknown): boolean {
 	const { action, duration } = value as { action?: unknown; duration?: unknown };
 	if (!AutoModerationEscalationActions.includes(action as AutoModerationEscalationAction))
 		return false;
-	if (duration === null || duration === undefined) return action !== "Timeout";
+	if (duration === null || duration === undefined) return true;
 	return isInteger(duration, 1, AutoModerationRuleLimits.hardActionDuration.maximum);
 }
 

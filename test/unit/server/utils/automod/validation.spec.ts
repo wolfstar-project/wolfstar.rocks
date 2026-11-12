@@ -95,69 +95,48 @@ describe("parseAutoModerationRulePatch", () => {
 		).toHaveLength(1);
 	});
 
-	// The bot does nothing, and counts nothing, for a Timeout without a
-	// duration: Discord takes none without an end.
-	it.each([
-		["a new Timeout rule without a duration", { hardAction: "Timeout" }, undefined],
-		[
-			"turning a rule into a Timeout without a duration",
-			{ hardAction: "Timeout" },
-			{ hardAction: "Warning", hardActionDuration: null },
-		],
-		[
-			"clearing the duration of a Timeout",
-			{ hardActionDuration: null },
-			{ hardAction: "Timeout", hardActionDuration: 60_000 },
-		],
-	] as const)("refuses %s", (_case, body, current) => {
-		const { errors } = parseAutoModerationRulePatch("Words", body, current);
+	// `Timeout` was merged into `Mute`: a mute is a timeout when the server
+	// asks for it and the duration fits, so the action is no longer written.
+	it("refuses a Timeout as a new hard action", () => {
+		const { errors } = parseAutoModerationRulePatch("Words", {
+			hardAction: "Timeout",
+			hardActionDuration: 60_000,
+		});
 		expect(errors).toHaveLength(1);
-		expect(errors?.[0]).toMatch(/^hardActionDuration: /);
+		expect(errors?.[0]).toMatch(/^hardAction: /);
 	});
 
-	it("takes a Timeout with a duration, given or kept from the rule", () => {
+	it("takes a Mute with a duration and a permanent one", () => {
 		expect(
 			parseAutoModerationRulePatch("Words", {
-				hardAction: "Timeout",
+				hardAction: "Mute",
 				hardActionDuration: 60_000,
 			}).data,
-		).toStrictEqual({ hardAction: "Timeout", hardActionDuration: 60_000 });
-		expect(
-			parseAutoModerationRulePatch(
-				"Words",
-				{ hardAction: "Timeout" },
-				{ hardAction: "Ban", hardActionDuration: 60_000 },
-			).data,
-		).toStrictEqual({ hardAction: "Timeout" });
-	});
-
-	// A rule saved before the check can still be switched off or renamed.
-	it("leaves alone the action of a rule the patch does not change", () => {
-		expect(
-			parseAutoModerationRulePatch(
-				"Words",
-				{ enabled: false },
-				{ hardAction: "Timeout", hardActionDuration: null },
-			).data,
-		).toStrictEqual({ enabled: false });
-	});
-
-	it("refuses a permanent timeout in the escalation", () => {
+		).toStrictEqual({ hardAction: "Mute", hardActionDuration: 60_000 });
 		expect(
 			parseAutoModerationRulePatch("Words", {
-				escalation: [{ action: "Timeout", duration: null }],
+				hardAction: "Mute",
+				hardActionDuration: null,
+			}).data,
+		).toStrictEqual({ hardAction: "Mute", hardActionDuration: null });
+	});
+
+	it("refuses a Timeout step in the escalation and takes a permanent Mute", () => {
+		expect(
+			parseAutoModerationRulePatch("Words", {
+				escalation: [{ action: "Timeout", duration: 60_000 }],
 			}).errors,
 		).toHaveLength(1);
 		expect(
 			parseAutoModerationRulePatch("Words", {
 				escalation: [
-					{ action: "Timeout", duration: 60_000 },
+					{ action: "Mute", duration: null },
 					{ action: "Ban", duration: null },
 				],
 			}).data,
 		).toStrictEqual({
 			escalation: [
-				{ action: "Timeout", duration: 60_000 },
+				{ action: "Mute", duration: null },
 				{ action: "Ban", duration: null },
 			],
 		});

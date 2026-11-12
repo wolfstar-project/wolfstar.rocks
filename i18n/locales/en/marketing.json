@@ -948,7 +948,7 @@
 				"warn_thresholds_add": {
 					"tooltip": "Warn Thresholds Add",
 					"description": "Set the action taken when a member reaches a number of warnings.",
-					"reply": "Done: 3 warnings within 7 days → Timeout for 1 hour."
+					"reply": "Done: 3 warnings within 7 days → Mute for 1 hour."
 				},
 				"warn_thresholds_list": {
 					"tooltip": "Warn Thresholds List",

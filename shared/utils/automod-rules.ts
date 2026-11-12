@@ -40,12 +40,12 @@ export const AutoModerationRuleTypes = [
 export type AutoModerationRuleType = (typeof AutoModerationRuleTypes)[number];
 
 /**
- * The hard actions a rule can take, as the `GuildAutoModerationHardAction` enum stores them.
+ * The hard actions a rule can take. `Timeout` is no longer one: it is a `Mute`, which times the member out when the
+ * guild has `moderationMuteTimeout` and the duration fits (see `shared/utils/mute.ts`).
  */
 export const AutoModerationHardActions = [
 	"None",
 	"Warning",
-	"Timeout",
 	"Mute",
 	"Kick",
 	"Softban",
@@ -53,6 +53,19 @@ export const AutoModerationHardActions = [
 	"VoiceKick",
 ] as const;
 export type AutoModerationHardAction = (typeof AutoModerationHardActions)[number];
+
+/**
+ * A hard action as the `GuildAutoModerationHardAction` enum stores it. The enum still has `Timeout`, which a native
+ * enum cannot drop.
+ */
+export type StoredAutoModerationHardAction = AutoModerationHardAction | "Timeout";
+
+/** Reads a hard action as it is stored: a `Timeout` saved before it was merged into `Mute` is a `Mute`. */
+export function normalizeAutoModerationHardAction(
+	action: StoredAutoModerationHardAction,
+): AutoModerationHardAction {
+	return action === "Timeout" ? "Mute" : action;
+}
 
 /**
  * The hard actions the escalation of a rule can step up to: every one, but taking none.
@@ -316,7 +329,9 @@ export function normalizeAutoModerationRuleEscalation(
 	for (const entry of value) {
 		if (typeof entry !== "object" || entry === null) continue;
 
-		const { action, duration } = entry as { action?: unknown; duration?: unknown };
+		const { action: stored, duration } = entry as { action?: unknown; duration?: unknown };
+		// A step saved as a `Timeout`, before it was merged into `Mute`, is a `Mute`.
+		const action = stored === "Timeout" ? "Mute" : stored;
 		if (!AutoModerationEscalationActions.includes(action as AutoModerationEscalationAction))
 			continue;
 

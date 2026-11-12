@@ -72,7 +72,7 @@ describe("GuildModerationWarnThresholds", () => {
 		expect(wrapper.text()).toContain("WolfStar uses the defaults below");
 		const rows = wrapper.findAll("tbody tr").map((row) => row.text());
 		expect(rows).toHaveLength(3);
-		expect(rows[0]).toContain("Timeout");
+		expect(rows[0]).toContain("Mute");
 		expect(rows[0]).toContain("30m");
 		expect(rows[2]).toContain("Ban");
 		expect(wrapper.find('tbody button[aria-label^="Remove"]').exists()).toBe(false);
@@ -137,26 +137,59 @@ describe("GuildModerationWarnThresholds", () => {
 		expect(wrapper.find('button[type="submit"]').text()).toBe("Replace threshold");
 	});
 
-	it("refuses a timeout without a duration before it is sent", async () => {
+	it("starts a new threshold as a Mute", async () => {
 		settings();
 		const wrapper = await mountSection();
-		Object.assign(draftOf(wrapper), { action: "Timeout", duration: 0 });
-		await nextTick();
 
-		await wrapper.find("form").trigger("submit");
-		await flushPromises();
-
-		expect(mockSetThreshold).not.toHaveBeenCalled();
-		expect(wrapper.find('[role="alert"]').text()).toBe("A timeout needs a duration.");
+		expect(draftOf(wrapper).action).toBe("Mute");
 	});
 
-	it("warns that a mute needs a muted role the server does not have", async () => {
+	it("says a mute of an hour is a timeout while the setting is on", async () => {
+		settings({ moderationMuteTimeout: true, rolesMuted: "999" });
+		const wrapper = await mountSection();
+		Object.assign(draftOf(wrapper), { action: "Mute", duration: 3_600_000 });
+		await nextTick();
+
+		expect(wrapper.text()).toContain("With this duration, the mute is a Discord timeout.");
+	});
+
+	it.each([
+		["a permanent mute", 0],
+		["a mute of 30 days", 30 * 24 * 60 * 60 * 1000],
+	])("says %s gives the muted role while the setting is on", async (_case, duration) => {
+		settings({ moderationMuteTimeout: true, rolesMuted: "999" });
+		const wrapper = await mountSection();
+		Object.assign(draftOf(wrapper), { action: "Mute", duration });
+		await nextTick();
+
+		expect(wrapper.text()).toContain("With this duration, the mute gives the muted role.");
+	});
+
+	it("says nothing about the method while the setting is off", async () => {
+		settings({ moderationMuteTimeout: false, rolesMuted: "999" });
+		const wrapper = await mountSection();
+		Object.assign(draftOf(wrapper), { action: "Mute", duration: 3_600_000 });
+		await nextTick();
+
+		expect(wrapper.text()).not.toContain("With this duration");
+	});
+
+	it("warns that a permanent mute needs a muted role the server does not have", async () => {
 		settings({ rolesMuted: null });
 		const wrapper = await mountSection();
-		draftOf(wrapper).action = "Mute";
+		Object.assign(draftOf(wrapper), { action: "Mute", duration: 0 });
 		await nextTick();
 
 		expect(wrapper.text()).toContain("This server has no muted role");
+	});
+
+	it("does not warn when the mute is a timeout, which needs no role", async () => {
+		settings({ rolesMuted: null });
+		const wrapper = await mountSection();
+		Object.assign(draftOf(wrapper), { action: "Mute", duration: 3_600_000 });
+		await nextTick();
+
+		expect(wrapper.text()).not.toContain("This server has no muted role");
 	});
 
 	it("stops offering a new number once the server has ten", async () => {

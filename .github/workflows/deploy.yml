@@ -70,7 +70,7 @@ jobs:
         id: deploy
         run: |
           set -euo pipefail
-          wrangler() { npx --yes wrangler@4.156.0 "$@"; }
+          wrangler() { ./node_modules/.bin/wrangler "$@"; }
           config=.output/server/wrangler.json
 
           # Only a Worker that has never been deployed takes the plain deploy; any other

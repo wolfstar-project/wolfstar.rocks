@@ -20,8 +20,6 @@
 </template>
 
 <script lang="ts">
-import type { SlashCommandInvocation } from "#shared/types/chat-input-command";
-
 interface SlashCommandSuggestionMatchedProps extends SlashCommandInvocation {
 	active?: boolean;
 }
@@ -32,6 +30,8 @@ interface SlashCommandSuggestionMatchedEmits {
 </script>
 
 <script setup lang="ts">
+import type { SlashCommandInvocation } from "#shared/types/chat-input-command";
+const { ts } = useI18n();
 const {
 	active = false,
 	name,
@@ -54,7 +54,9 @@ const ariaLabel = computed(() => {
 			return `${option.name}: ${valueText}`;
 		})
 		.join(" ");
-	return `Slash command: /${path}${optionText ? ` ${optionText}` : ""}`;
+	return ts("discord.command.matched", {
+		command: `/${path}${optionText ? ` ${optionText}` : ""}`,
+	});
 });
 </script>
 
@@ -62,15 +64,10 @@ const ariaLabel = computed(() => {
 @reference "@/assets/css/main.css";
 
 .discord-slash-command-suggestion-matched {
-	--discord-slash-command-suggestion-matched-hover: oklch(32.11% 0.0094 268.56);
-	--discord-slash-command-suggestion-matched-active: oklch(35.52% 0.0099 264.44);
+	--discord-slash-command-suggestion-matched-hover: var(--discord-hover);
+	--discord-slash-command-suggestion-matched-active: var(--discord-active);
 
 	@apply min-h-11 cursor-pointer rounded-md px-3 py-2;
-}
-
-:global([data-theme="light"]) .discord-slash-command-suggestion-matched {
-	--discord-slash-command-suggestion-matched-hover: oklch(95.74% 0.004 264);
-	--discord-slash-command-suggestion-matched-active: oklch(92.64% 0.006 264);
 }
 
 .discord-slash-command-suggestion-matched:hover,

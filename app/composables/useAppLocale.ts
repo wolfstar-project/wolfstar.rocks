@@ -1,4 +1,5 @@
 import type { Locale } from "nuxt-i18n-micro";
+import type { TimeFormat } from "~/composables/useSettings";
 import { isAppLocaleCode } from "~/utils/is-app-locale";
 
 export interface LocaleSelectorDeps {
@@ -86,6 +87,12 @@ export function createLocaleSelector({
 	};
 }
 
+/** Adds the hour cycle a time format asks for to a locale tag; `auto` leaves it as is. */
+export function withHourCycle(locale: string, format: TimeFormat): string {
+	if (format === "auto") return locale;
+	return `${locale}-u-hc-${format === "12h" ? "h12" : "h23"}`;
+}
+
 /**
  * Reactive view of the active locale on top of Nuxt I18n Micro, whose runtime
  * API exposes plain getters (`$getLocale()`, `$getLocales()`) rather than refs.
@@ -99,8 +106,15 @@ export function useAppLocale() {
 	const { getLocale, getLocales, switchLocale } = useI18n();
 	const { setPreferredLocale } = usePreferredLocale();
 
+	const timeFormat = useTimeFormat();
+
 	const locale = computed<string>(() => getLocale());
 	const locales = computed<Locale[]>(() => getLocales());
+	/**
+	 * The locale dates and times are formatted in: the active one, with the
+	 * hour cycle the visitor picked (`-u-hc-h12` / `-u-hc-h23`) when they did.
+	 */
+	const timeLocale = computed<string>(() => withHourCycle(locale.value, timeFormat.value));
 
 	const selectLocale = createLocaleSelector({
 		getLocale: () => locale.value,
@@ -112,5 +126,5 @@ export function useAppLocale() {
 		return entry.displayName ?? entry.code;
 	}
 
-	return { locale, locales, localeLabel, selectLocale };
+	return { locale, locales, localeLabel, selectLocale, timeLocale };
 }

@@ -54,16 +54,21 @@
 								<PwaInstallPrompt class="xl:hidden" />
 							</ClientOnly>
 							<UButton
-								:label="ts('footer.powered_by_netlify')"
-								to="https://www.netlify.com"
+								:label="ts('footer.powered_by_cloudflare')"
+								to="https://www.cloudflare.com"
 								target="_blank"
 								rel="noopener noreferrer"
-								icon="simple-icons:netlify"
 								color="neutral"
 								variant="soft"
-								:ui="{ leadingIcon: 'bg-success' }"
-								:aria-label="ts('footer.powered_by_netlify_aria')"
-							/>
+								:aria-label="ts('footer.powered_by_cloudflare_aria')"
+							>
+								<template #leading>
+									<span
+										class="size-2 rounded-full bg-success"
+										aria-hidden="true"
+									/>
+								</template>
+							</UButton>
 						</div>
 					</div>
 					<nav
@@ -83,6 +88,15 @@
 							>
 								{{ link.label }}
 							</NuxtLink>
+							<!-- The cookie choice can be changed or withdrawn as easily as it was given. -->
+							<button
+								v-if="column.label === ts('footer.legal')"
+								type="button"
+								class="text-start text-sm text-base-content/70 link-hover"
+								@click="isSettingsOpen = true"
+							>
+								{{ ts("consent.footer_link") }}
+							</button>
 						</div>
 					</nav>
 				</div>
@@ -104,6 +118,7 @@
 const { ts } = useI18n();
 const { buildInfo } = useAppConfig();
 const { columns } = useFooter();
+const { isSettingsOpen } = useCookieConsent();
 
 const socialLinks = computed(() => [
 	{

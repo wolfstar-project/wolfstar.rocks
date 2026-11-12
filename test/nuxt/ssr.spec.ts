@@ -2,6 +2,9 @@ import {
 	WolfstarCommandsSection,
 	WolfstarCommandsShowcase,
 	StarylCommandsShowcase,
+	StarylHeroSection,
+	StarylNotificationShowcase,
+	StarylSetupSection,
 	DiscordChannelHeader,
 	DiscordChannelWelcome,
 	DiscordChat,
@@ -990,7 +993,7 @@ describe("component SSR rendering", () => {
 				props: { title: "Settings", description: "Configure your guild" },
 				slots: { default: "<p>Form</p>" },
 			});
-			const desc = wrapper.find("p.text-sm");
+			const desc = wrapper.find("p.text-muted");
 			expect(desc.exists()).toBe(true);
 			expect(desc.text()).toBe("Configure your guild");
 		});
@@ -1002,6 +1005,35 @@ describe("component SSR rendering", () => {
 
 			expect(wrapper.text()).toContain("The demo below behaves like Discord.");
 			expect(wrapper.find("#home-commands-heading").exists()).toBe(true);
+		});
+	});
+
+	describe("Staryl's release line", () => {
+		const inviteUrl = "https://discord.com/oauth2/authorize?client_id=test";
+
+		it("names Staryl's own version and date beside its source", async () => {
+			const hero = await mountSuspended(StarylHeroSection, {
+				props: {
+					inviteUrl,
+					release: { version: "1.0.0", time: Date.parse("2026-10-28T09:25:24Z") },
+				},
+			});
+
+			expect(hero.text().replace(/\s+/g, " ")).toContain(
+				"Release v1.0.0 · Oct 28, 2026 · View source",
+			);
+		});
+
+		// GitHub could not be reached at build time.
+		it("keeps only the source link when the release is unknown", async () => {
+			const hero = await mountSuspended(StarylHeroSection, {
+				props: { inviteUrl, release: null },
+			});
+
+			expect(hero.text()).not.toContain("Release");
+			expect(hero.find("a[href='https://github.com/wolfstar-project/staryl']").exists()).toBe(
+				true,
+			);
 		});
 	});
 
@@ -1086,7 +1118,9 @@ describe("component SSR rendering", () => {
 			expect(membersToggle?.attributes("aria-label")).toBe("Hide member list");
 		});
 
-		it("renders a plain-text moderation success reply on desktop", async () => {
+		// WolfStar V7 answers a moderation action with a green embed, the target
+		// as inline code rather than a mention.
+		it("renders the moderation success embed on desktop", async () => {
 			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 
 			// Ensure slash mode is closed so the channel response is visible.
@@ -1100,11 +1134,14 @@ describe("component SSR rendering", () => {
 
 			const desktopResponse = wrapper.find(".showcase-desktop-command-response");
 			expect(desktopResponse.exists()).toBe(true);
-			expect(desktopResponse.find(".discord-embed").exists()).toBe(false);
-			expect(desktopResponse.find(".showcase-desktop-text-response").exists()).toBe(true);
-			expect(desktopResponse.text()).toMatch(/Created case 3\s*\|\s*@?baddie/);
+			const embed = desktopResponse.find(".discord-embed");
+			expect(embed.exists()).toBe(true);
+			expect(embed.text()).toMatch(/Created case 3\s*\|\s*baddie\./);
+			expect(embed.text()).toContain("With the reason of: spam");
+			expect(embed.find(".showcase-inline-code").text()).toBe("baddie");
+			expect(desktopResponse.find(".discord-mention").exists()).toBe(false);
 			expect(desktopResponse.text()).toContain("Stella");
-			expect(desktopResponse.text()).toContain("warn");
+			expect(desktopResponse.text()).toContain("warn add");
 			expect(desktopResponse.text()).not.toContain("❯ Type:");
 			expect(desktopResponse.text()).not.toContain("❯ Reason:");
 		});
@@ -1241,7 +1278,7 @@ describe("component SSR rendering", () => {
 			expect(wrapper.text()).toContain("/ban");
 			expect(wrapper.text()).toContain("/kick");
 			expect(wrapper.text()).toContain("/mute");
-			expect(wrapper.text()).toContain("/conf");
+			expect(wrapper.text()).toContain("/settings server");
 			expect(wrapper.text()).toContain("/subscriptions twitch show");
 			expect(wrapper.text()).toContain("/subscriptions twitch add");
 			expect(wrapper.text()).toContain("/addfriend");
@@ -1265,9 +1302,9 @@ describe("component SSR rendering", () => {
 			expect(wrapper.find(".discord-message-reply").attributes("aria-label")).toMatch(
 				/used the kick slash command/i,
 			);
-			expect(wrapper.find(".showcase-desktop-text-response").text()).toMatch(
-				/Created case 5\s*\|\s*@?baddie/,
-			);
+			expect(
+				wrapper.find(".showcase-desktop-command-response .discord-embed").text(),
+			).toMatch(/Created case 5\s*\|\s*baddie\./);
 
 			// Re-open the picker — Discord keeps channel history behind autocomplete.
 			await openSlashCommandPicker(wrapper);
@@ -1277,9 +1314,9 @@ describe("component SSR rendering", () => {
 			expect(wrapper.find(".discord-message-reply").attributes("aria-label")).toMatch(
 				/used the kick slash command/i,
 			);
-			expect(wrapper.find(".showcase-desktop-text-response").text()).toMatch(
-				/Created case 5\s*\|\s*@?baddie/,
-			);
+			expect(
+				wrapper.find(".showcase-desktop-command-response .discord-embed").text(),
+			).toMatch(/Created case 5\s*\|\s*baddie\./);
 			expect(wrapper.text()).toContain(
 				"This is the start of the #mod-commands channel. WolfStar moderation commands — try a slash command below.",
 			);
@@ -1293,18 +1330,30 @@ describe("component SSR rendering", () => {
 			await wrapper.vm.$nextTick();
 
 			const suggestions = wrapper.findAll(".discord-slash-command-suggestion");
-			expect(suggestions).toHaveLength(15);
+			// Every leaf V7 registers, once: the scripted commands, then the rest of
+			// the bot's catalogue. A command added to or dropped from the bot moves this.
+			const paths = suggestions.map((suggestion) =>
+				suggestion.find(".discord-slash-command-suggestion-name-path").text(),
+			);
+			expect(paths).toHaveLength(112);
+			expect(new Set(paths).size).toBe(paths.length);
+			expect(paths).not.toContain("settings server menu");
+			expect(paths).not.toContain("settings server export");
+			expect(paths).not.toContain("conf");
 			for (const command of [
+				"/warn add",
+				"/ban add",
+				"/mute add",
+				"/timeout add",
 				"/case view",
 				"/case list",
 				"/case edit",
 				"/case archive",
 				"/case delete",
-				"/conf menu",
-				"/conf show",
-				"/conf set",
-				"/conf remove",
-				"/conf reset",
+				"/slowmode",
+				"/settings server",
+				"/settings user",
+				"/archive create",
 			]) {
 				expect(wrapper.text()).toContain(command);
 			}
@@ -1351,20 +1400,20 @@ describe("component SSR rendering", () => {
 			expect(wrapper.find(".discord-message-reply").attributes("aria-label")).toMatch(
 				/used the kick slash command/i,
 			);
-			expect(wrapper.find(".showcase-desktop-text-response").text()).toMatch(
-				/Created case 5\s*\|\s*@?baddie/,
-			);
+			expect(
+				wrapper.find(".showcase-desktop-command-response .discord-embed").text(),
+			).toMatch(/Created case 5\s*\|\s*baddie\./);
 		});
 
 		it("executes a subcommand and shows its component response", async () => {
 			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
-			const confSuggestion = wrapper
+			const settingsSuggestion = wrapper
 				.findAll(".discord-slash-command-suggestion")
-				.find((suggestion) => suggestion.text().includes("/conf"));
-			expect(confSuggestion).toBeDefined();
-			await confSuggestion!.trigger("click");
+				.find((suggestion) => suggestion.text().includes("/settings server"));
+			expect(settingsSuggestion).toBeDefined();
+			await settingsSuggestion!.trigger("click");
 			await wrapper.vm.$nextTick();
 
 			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(false);
@@ -1374,10 +1423,12 @@ describe("component SSR rendering", () => {
 			expect(
 				wrapper.find(".showcase-desktop-command-response .discord-v2-container").exists(),
 			).toBe(true);
-			// Twemoji strips the folder glyph from plain text(); assert the path label remains.
-			expect(wrapper.text()).toContain("Currently at:");
-			expect(wrapper.text()).toContain("Root");
-			expect(wrapper.text()).toContain("Use the menu below to navigate:");
+			// V7's settings menu: the module select, the root keys, the reset section.
+			expect(wrapper.text()).toContain("Core Configurations");
+			expect(wrapper.text()).toContain("Select a module");
+			expect(wrapper.text()).toContain("Time Zone");
+			expect(wrapper.text()).toContain("Reset Configurations");
+			expect(wrapper.text()).toContain("This menu closes in 15 minutes if it is not used.");
 		});
 
 		it("toggles the App Launcher from the apps control", async () => {
@@ -1469,7 +1520,7 @@ describe("component SSR rendering", () => {
 			expect(wrapper.find(".showcase-desktop-command-response").exists()).toBe(true);
 			expect(wrapper.find(".showcase-typed-command-message").exists()).toBe(false);
 			expect(wrapper.find(".discord-message-reply").attributes("aria-label")).toMatch(
-				/used the warn slash command/i,
+				/used the warn add slash command/i,
 			);
 			expect(wrapper.text()).toContain("Created case 3");
 			expect(
@@ -1534,9 +1585,9 @@ describe("component SSR rendering", () => {
 			await wrapper.find("[aria-label='Open apps and commands']").trigger("click");
 			await wrapper.vm.$nextTick();
 
-			expect(wrapper.find(".showcase-desktop-text-response").text()).toMatch(
-				/Created case 3\s*\|\s*@?baddie/,
-			);
+			expect(
+				wrapper.find(".showcase-desktop-command-response .discord-embed").text(),
+			).toMatch(/Created case 3\s*\|\s*baddie\./);
 		});
 
 		it("shows matched-command chrome while typing and executes on Enter", async () => {
@@ -1564,30 +1615,30 @@ describe("component SSR rendering", () => {
 			expect(wrapper.find(".discord-message-reply").attributes("aria-label")).toMatch(
 				/used the kick slash command/i,
 			);
-			expect(wrapper.find(".showcase-desktop-text-response").text()).toMatch(
-				/Created case 5\s*\|\s*@?baddie/,
-			);
+			expect(
+				wrapper.find(".showcase-desktop-command-response .discord-embed").text(),
+			).toMatch(/Created case 5\s*\|\s*baddie\./);
 		});
 
-		it("executes conf menu from the picker and reveals the channel response", async () => {
+		it("executes the settings menu from the picker and reveals the channel response", async () => {
 			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
-			const confSuggestion = wrapper
+			const settingsSuggestion = wrapper
 				.findAll(".discord-slash-command-suggestion")
-				.find((suggestion) => suggestion.text().includes("/conf"));
-			expect(confSuggestion).toBeDefined();
-			await confSuggestion!.trigger("click");
+				.find((suggestion) => suggestion.text().includes("/settings server"));
+			expect(settingsSuggestion).toBeDefined();
+			await settingsSuggestion!.trigger("click");
 			await wrapper.vm.$nextTick();
 
 			expect(
 				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
 			).toBe("");
 			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(false);
-			// No duplicate plain `/conf menu` user bubble — only “used” reply + bot embed.
+			// No duplicate plain `/settings server` bubble — only “used” reply + bot menu.
 			expect(wrapper.find(".showcase-typed-command-message").exists()).toBe(false);
 			expect(wrapper.find(".discord-message-reply").attributes("aria-label")).toMatch(
-				/used the conf menu slash command/i,
+				/used the settings server slash command/i,
 			);
 			expect(
 				wrapper.find(".showcase-desktop-command-response .discord-v2-container").exists(),
@@ -1596,25 +1647,53 @@ describe("component SSR rendering", () => {
 	});
 
 	describe("StarylCommandsShowcase", () => {
-		it("uses the shipped Twitch commands and renders their response formats", async () => {
+		it("uses the commands Staryl registers and the replies it sends", async () => {
 			const wrapper = await mountSuspended(StarylCommandsShowcase);
+
+			// `/setup` comes first: its menu is Components V2.
+			expect(wrapper.find(".staryl-setup-menu .discord-v2-container").text()).toContain(
+				"Staryl setup",
+			);
+			expect(wrapper.find(".staryl-setup-menu").text()).toContain("Current notifications: 2");
 
 			// Desktop-only mount arming (`/`) is skipped on narrow test viewports; open the
 			// picker the same way the Wolfstar showcase specs do.
 			await wrapper.find(".discord-message-composer-input").setValue("/");
 			await wrapper.vm.$nextTick();
 
-			expect(wrapper.text()).toContain("/subscriptions twitch add");
-			expect(wrapper.text()).toContain("/subscriptions twitch remove");
-			expect(wrapper.text()).toContain("/subscriptions twitch reset");
-			expect(wrapper.text()).toContain("/subscriptions twitch show");
-			expect(wrapper.text()).toContain("/subscriptions twitch test");
+			for (const command of [
+				"/setup",
+				"/subscriptions twitch add",
+				"/subscriptions twitch remove",
+				"/subscriptions twitch reset",
+				"/subscriptions twitch show",
+				"/subscriptions twitch test",
+			]) {
+				expect(wrapper.text()).toContain(command);
+			}
 			expect(wrapper.text()).not.toContain("Placeholder");
+
+			const suggestions = wrapper.findAll(".discord-slash-command-suggestion");
+			// Every row is Staryl's, with its avatar: none falls back to WolfStar's.
+			for (const suggestion of suggestions) {
+				expect(suggestion.find("img").attributes("src")).toContain("staryl");
+				expect(suggestion.find(".discord-slash-command-suggestion-app").text()).toBe(
+					"Staryl",
+				);
+			}
+
+			const addSuggestion = suggestions.find((suggestion) =>
+				suggestion.text().includes("/subscriptions twitch add"),
+			);
+			await addSuggestion!.trigger("click");
+			await wrapper.vm.$nextTick();
 			expect(wrapper.find(".discord-message-ephemeral").exists()).toBe(true);
 			expect(wrapper.find(".staryl-command-response").text()).toContain(
-				"Whenever shroud goes live",
+				"Whenever stella goes live",
 			);
 
+			await wrapper.find(".discord-message-composer-input").setValue("/");
+			await wrapper.vm.$nextTick();
 			const showSuggestion = wrapper
 				.findAll(".discord-slash-command-suggestion")
 				.find((suggestion) => suggestion.text().includes("/subscriptions twitch show"));
@@ -1624,8 +1703,63 @@ describe("component SSR rendering", () => {
 
 			expect(wrapper.find(".discord-embed").text()).toContain("Twitch Subscriptions");
 			expect(wrapper.find(".discord-embed").text()).toContain(
-				"shroud — #staryl-notifications → Live",
+				"stella — #staryl-notifications → Live",
 			);
+		});
+	});
+
+	describe("StarylNotificationShowcase", () => {
+		it("shows each kind of notification Staryl sends", async () => {
+			const wrapper = await mountSuspended(StarylNotificationShowcase);
+			const pick = async (id: string) => {
+				await wrapper.find(`#staryl-notification-${id}`).setValue(true);
+				await wrapper.vm.$nextTick();
+			};
+
+			// Live: the components the bot builds, with a live Watch Stream button.
+			const container = wrapper.find(".discord-v2-container");
+			expect(container.text()).toContain("Stella is now live on Twitch!");
+			expect(container.find("a").attributes("href")).toBe("https://twitch.tv/stella");
+			expect(container.text()).toContain("Game");
+			expect(container.find(".discord-v2-media-gallery img").attributes("alt")).toBeTruthy();
+			expect(container.text()).toContain("Staryl Twitch Notifications • October 26, 2026");
+			expect(wrapper.find(".discord-action-row .discord-button").classes()).not.toContain(
+				"discord-button-disabled",
+			);
+
+			await pick("ping");
+			expect(wrapper.find(".discord-mention").text()).toContain("Stream Pings");
+
+			// Offline: plain text, as `buildOfflineMessage()` writes it.
+			await pick("offline");
+			expect(wrapper.find(".discord-v2-container").exists()).toBe(false);
+			expect(wrapper.find(".staryl-showcase-feed").text()).toContain(
+				"Stella's stream is over, thanks for watching! | October 26, 2026",
+			);
+			expect(wrapper.text()).toContain("/subscriptions twitch add type:Stream Offline");
+
+			// A test on a streamer who is not live: the notice, the placeholder title, no preview.
+			await pick("test");
+			expect(wrapper.find(".staryl-showcase-feed").text()).toContain("Test notification");
+			expect(wrapper.find(".discord-v2-container a").text()).toBe("Test notification");
+			expect(wrapper.find(".discord-v2-media-gallery").exists()).toBe(false);
+		});
+	});
+
+	describe("StarylSetupSection", () => {
+		it("lists the pages of the /setup menu", async () => {
+			const wrapper = await mountSuspended(StarylSetupSection, {
+				props: { inviteUrl: "https://discord.com/oauth2/authorize?client_id=1" },
+			});
+
+			const titles = wrapper.findAll(".staryl-setup-row h3").map((title) => title.text());
+			expect(titles).toStrictEqual([
+				"Overview",
+				"Add a notification",
+				"Manage notifications",
+				"Test notifications",
+			]);
+			expect(wrapper.find("code").text()).toBe("/setup");
 		});
 	});
 

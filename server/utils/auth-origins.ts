@@ -3,8 +3,8 @@
  *
  * Better Auth validates `Origin`/`Referer` on every cookie-bound request and
  * rejects anything not in `trustedOrigins`. The production hostnames are known
- * up front, but Netlify deploy previews get a generated hostname per branch and
- * per PR, so a hardcoded array locks sign-in out of every preview deploy.
+ * up front, but the checks run per request against host patterns, so a
+ * subdomain of the site signs in without being listed one by one.
  *
  * `@nuxtjs/better-auth` caches the Better Auth instance (keyed on `__explicit__`
  * once `runtimeConfig.public.siteUrl` is set), so a request-derived origin
@@ -16,14 +16,13 @@
 /**
  * Host patterns allowed to run the auth flow. `*` matches a single label, so
  * `*.wolfstar.rocks` covers `beta.` and `main.` but not a nested attacker
- * subdomain, and `*.netlify.app` covers deploy previews.
+ * subdomain.
  */
 export const TRUSTED_HOST_PATTERNS = [
 	"localhost",
 	"127.0.0.1",
 	"wolfstar.rocks",
 	"*.wolfstar.rocks",
-	"*.netlify.app",
 ] as const;
 
 /**
@@ -102,4 +101,49 @@ export function resolveTrustedOrigins(request?: Request): string[] {
 	}
 
 	return [...origins];
+}
+
+/** The production site, whose subdomains share its sign-in. */
+const SHARED_COOKIE_DOMAIN = "wolfstar.rocks";
+
+/**
+ * The domain the auth cookies are set on, or none to keep them on the host
+ * that set them. Production serves wolfstar.rocks and its beta and alpha
+ * subdomains from one Worker, while Discord sends every sign-in back to the
+ * site URL. A host-only state cookie set on beta would be missing there, so on
+ * production the cookies cover the whole domain. Other sites, such as the alpha
+ * Worker or localhost, keep host-only cookies: their sessions must not reach
+ * production's hosts.
+ */
+export function resolveAuthCookieDomain(siteUrl: string | undefined | null): string | undefined {
+	if (!siteUrl) return undefined;
+	try {
+		return new URL(siteUrl).hostname === SHARED_COOKIE_DOMAIN
+			? SHARED_COOKIE_DOMAIN
+			: undefined;
+	} catch {
+		return undefined;
+	}
+}
+
+/**
+ * The auth cookies a request carries, by name: each of `names`, and the chunks
+ * (`name.0`, `name.1`, …) Better Auth splits a long cookie into. On production
+ * these may include host-only copies set before the cookies covered the whole
+ * domain. The header cannot tell the two kinds apart, so the caller expires a
+ * host-only cookie under each name; the shared one, set with a `Domain`, is a
+ * different cookie and stays.
+ */
+export function hostOnlyAuthCookies(
+	cookieHeader: string | null,
+	names: readonly string[],
+): string[] {
+	if (!cookieHeader) return [];
+	const found: string[] = [];
+	for (const pair of cookieHeader.split(";")) {
+		const name = pair.split("=", 1)[0]?.trim() ?? "";
+		const base = name.replace(/\.\d+$/, "");
+		if (names.includes(base) && !found.includes(name)) found.push(name);
+	}
+	return found;
 }

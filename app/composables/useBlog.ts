@@ -1,5 +1,3 @@
-import type { BlogArticle } from "#shared/types/blog";
-
 export const useBlog = () => {
 	const {
 		data: articles,

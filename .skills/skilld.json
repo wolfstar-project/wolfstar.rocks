@@ -15,6 +15,9 @@
 		"best-practices": {
 			"source": "github:addyosmani/web-quality-skills/skills/best-practices#commit:95d6e255afe1596b557d7a8498517884438f5b3a"
 		},
+		"better-accessibility": {
+			"source": "github:jakubkrehel/skills/skills/better-accessibility#commit:4c66b1fa86e9ab70187b43d7da9b6fdb29f2ef63"
+		},
 		"core-web-vitals": {
 			"source": "github:addyosmani/web-quality-skills/skills/core-web-vitals#commit:95d6e255afe1596b557d7a8498517884438f5b3a"
 		},
@@ -23,6 +26,9 @@
 		},
 		"find-skills": {
 			"source": "github:vercel-labs/skills/skills/find-skills#commit:435076e78988e1e6ec40d00b0b1d76bdbbc5419a"
+		},
+		"fixing-accessibility": {
+			"source": "github:ibelick/ui-skills/skills/fixing-accessibility#commit:55363c305097d4c84487bd5f323d29b3f067bf72"
 		},
 		"fixing-motion-performance": {
 			"source": "github:ibelick/ui-skills/skills/fixing-motion-performance#commit:b5be117f9cc3371caef7d3869f5c650f2033f14c"
@@ -63,6 +69,9 @@
 		"performance": {
 			"source": "github:addyosmani/web-quality-skills/skills/performance#commit:95d6e255afe1596b557d7a8498517884438f5b3a"
 		},
+		"performance-optimization": {
+			"source": "github:addyosmani/agent-skills/skills/performance-optimization#commit:aeac41d4d005999432bb7312f7ff06383a91d59d"
+		},
 		"planning-with-files": {
 			"source": "github:othmanadi/planning-with-files/skills/planning-with-files#commit:9e94390e5912b1ff296556505cd999ff84838160"
 		},
@@ -81,8 +90,14 @@
 		"test-driven-development": {
 			"source": "github:obra/superpowers/skills/test-driven-development#commit:b36e0829c6d0140e93cfef2ca599b1b07d4a7797"
 		},
+		"unlighthouse": {
+			"source": "github:harlan-zw/unlighthouse/packages/unlighthouse/skills/unlighthouse#commit:9a2147d6d98bbc750b7313f531856cc02322b23a"
+		},
 		"web-design-guidelines": {
 			"source": "github:vercel-labs/agent-skills/skills/web-design-guidelines#commit:dd089a8c752c966dee8bf0f27cb625ba193ffd9e"
+		},
+		"web-perf": {
+			"source": "github:cloudflare/skills/skills/web-perf#commit:86505e44f87d801aa1864a3c4109e9a8ae5c409f"
 		},
 		"web-quality-audit": {
 			"source": "github:addyosmani/web-quality-skills/skills/web-quality-audit#commit:95d6e255afe1596b557d7a8498517884438f5b3a"

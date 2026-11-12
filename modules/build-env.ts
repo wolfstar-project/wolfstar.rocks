@@ -47,7 +47,7 @@ export default defineNuxtModule({
 			} satisfies BuildInfo;
 		} else {
 			const [
-				{ env: useEnv, version, commit, shortCommit, branch, prNumber },
+				{ env: useEnv, version, commit, shortCommit, branch },
 				privacyPolicyDate,
 				termsDate,
 			] = await Promise.all([
@@ -66,14 +66,14 @@ export default defineNuxtModule({
 				env,
 				privacyPolicyDate,
 				termsDate,
-				prNumber,
+				prNumber: null,
 			} satisfies BuildInfo as BuildInfo;
 		}
 
 		nuxt.options.nitro.publicAssets = nuxt.options.nitro.publicAssets || [];
 		if (env === "dev")
 			nuxt.options.nitro.publicAssets.unshift({ dir: resolve("../public-dev") });
-		else if (env === "canary" || env === "preview" || !isCI)
+		else if (env === "canary" || !isCI)
 			nuxt.options.nitro.publicAssets.unshift({ dir: resolve("../public-staging") });
 	},
 });

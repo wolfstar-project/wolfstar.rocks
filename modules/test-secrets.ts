@@ -34,7 +34,7 @@ export default defineNuxtModule({
 		}
 
 		const betterAuthSecret = resolveSecret("NUXT_BETTER_AUTH_SECRET");
-		const imageProxySecret = resolveSecret("NUXT_IMAGE_PROXY_SECRET");
+		const appSecret = resolveSecret("NUXT_APP_SECRET");
 
 		// @nuxtjs/better-auth reads nuxt.options.runtimeConfig.betterAuthSecret
 		// first, falling back to process.env.NUXT_BETTER_AUTH_SECRET. Baking it here
@@ -44,17 +44,19 @@ export default defineNuxtModule({
 			rc.betterAuthSecret = betterAuthSecret;
 		}
 
-		// nuxt.config.ts evaluated process.env.NUXT_IMAGE_PROXY_SECRET at config-eval
-		// time, so nuxt.options.ogImage.security.strict is false when the env var was
-		// absent. Patch it here before nuxt-og-image processes its configuration.
+		// nuxt.config.ts evaluated process.env.NUXT_APP_SECRET at config-eval time, so
+		// nuxt.options.ogImage.security.strict is false when the env var was absent.
+		// Bake the secret in and turn strict mode on before nuxt-og-image reads it.
+		if (!rc.appSecret) {
+			rc.appSecret = appSecret;
+		}
 		const options = nuxt.options as unknown as {
-			ogImage?: { security?: { strict?: boolean; secret?: string } };
+			ogImage?: { security?: { strict?: boolean } };
 		};
 		if (!options.ogImage?.security?.strict) {
 			options.ogImage ??= {};
 			options.ogImage.security ??= {};
 			options.ogImage.security.strict = true;
-			options.ogImage.security.secret = imageProxySecret;
 		}
 	},
 });

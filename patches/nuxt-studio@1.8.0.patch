@@ -1,0 +1,7 @@
+diff --git a/dist/module/runtime/plugins/studio.client.d.ts b/dist/module/runtime/plugins/studio.client.d.ts
+index e69de29bb2d1d6434b8b29ae775ad8c2e48c5391..377b31ca89cf86fa0277fdf6a9788cf4ebf3fb48 100644
+--- a/dist/module/runtime/plugins/studio.client.d.ts
++++ b/dist/module/runtime/plugins/studio.client.d.ts
+@@ -0,0 +1,2 @@
++declare const _default: import("nuxt/app").Plugin<Record<string, unknown>> & import("nuxt/app").ObjectPlugin<Record<string, unknown>>;
++export default _default;

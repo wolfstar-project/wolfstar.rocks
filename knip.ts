@@ -6,6 +6,9 @@ const config: KnipConfig = {
 		".": {
 			entry: [
 				"service-worker/sw.ts",
+				/** Loaded by path on a Worker: Nitro's `plugins` and `modules/cache.ts` */
+				"server/cloudflare/sentry.ts",
+				"shared/utils/storage/cloudflare-kv-fallback.ts",
 				"taze.config.ts",
 				"modules/**/*.ts",
 				".lighthouserc.cjs",
@@ -27,8 +30,6 @@ const config: KnipConfig = {
 				"server/auth.config.ts",
 				/** Ambient H3EventContext augmentation, never imported directly */
 				"shared/types/auth.d.ts",
-				/** Aliased in vite.config.ts for #server/database/generated/client in tests, not imported directly */
-				"test/__stubs__/prisma-generated-client.ts",
 			],
 			project: [
 				/** css/mdx/prisma are handled by registered compilers, so include them here */
@@ -40,10 +41,17 @@ const config: KnipConfig = {
 				"!.skills/**",
 				"!.agent/**",
 				"!.claude/**",
+				/** Emitted by `prisma contract emit`; its exports are the framework's */
+				"!server/database/generated/**",
 			],
 			msw: {
 				entry: [".storybook/.public/mockServiceWorker.js"],
 			},
+			/** The bot's repository (git submodule): only its contract is read, and its
+			 * own test and config files must not be picked up as entries of this app. */
+			// newt/ui components are copied whole from its registry, including the
+			// parts and variants this app does not use yet.
+			ignore: ["vendor/**", "app/components/ui/**"],
 			ignoreDependencies: [
 				"@iconify-json/*",
 				"@commitlint/cli",
@@ -59,10 +67,12 @@ const config: KnipConfig = {
 
 				/** Transitive deps used directly but provided by parent packages */
 				"deepmerge",
+				/** Modules @nuxtjs/seo installs and configures */
+				"nuxt-site-config",
+				"@nuxtjs/robots",
+				"nuxt-skew-protection",
 				"@discordjs/rest",
 				"@sapphire/async-queue",
-				"@codspeed/core",
-				"nuxt-site-config",
 				"workbox-*",
 
 				/** Provides the tsgolint binary for oxlint's opt-in type-aware pass (`vp lint --type-aware`), not imported directly */
@@ -71,9 +81,6 @@ const config: KnipConfig = {
 				/** Used in the app but not imported directly */
 				"@nuxt/icon",
 				"nuxt-security",
-
-				/** Used in the app in guild/logs components */
-				"@tanstack/table-core",
 
 				/** Used in the test */
 				"axe-core",

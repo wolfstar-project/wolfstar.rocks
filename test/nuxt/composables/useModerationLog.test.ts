@@ -1,12 +1,15 @@
 import { registerEndpoint } from "@nuxt/test-utils/runtime";
+import { getQuery } from "h3";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 let fetchCount = 0;
+let lastQuery: Record<string, unknown> = {};
 
 registerEndpoint("/api/guilds/123/logs/moderation", {
 	method: "GET",
-	handler: () => {
+	handler: (event) => {
 		fetchCount += 1;
+		lastQuery = getQuery(event);
 		return { entries: [], total: 0 };
 	},
 });
@@ -55,5 +58,18 @@ describe("useModerationLog", () => {
 		await vi.waitUntil(() => fetchCount > callsBefore, { timeout: 2_000 });
 
 		expect(fetchCount).toBeGreaterThan(callsBefore);
+	});
+
+	it("sends the case state and the member filters, and leaves out the ones unset", async () => {
+		const filters = ref<{ status?: "archived"; userId?: string; moderatorId?: string }>({
+			status: "archived",
+			userId: "111111111111111111",
+		});
+
+		const { execute } = useModerationLog({ guildId: "123", immediate: false, filters });
+		await execute();
+
+		expect(lastQuery).toMatchObject({ status: "archived", userId: "111111111111111111" });
+		expect(lastQuery).not.toHaveProperty("moderatorId");
 	});
 });

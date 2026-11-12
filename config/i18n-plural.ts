@@ -13,9 +13,11 @@ import type { PluralFunc } from "nuxt-i18n-micro";
  * references to module-scope bindings.
  */
 export const plural: PluralFunc = (key, count, params, locale, getter) => {
-	// Intl.PluralRules category → index into the pipe-separated forms.
+	// Intl.PluralRules category → index into the pipe-separated forms. Czech,
+	// Russian and Ukrainian carry `one | few | many | other`, Hungarian
+	// `one | other`.
 	const PLURAL_FORM_INDEX = {
-		"cs-CZ": { zero: 2, one: 0, two: 1, few: 1, many: 2, other: 2 },
+		"cs-CZ": { zero: 3, one: 0, two: 1, few: 1, many: 2, other: 3 },
 		"hu-HU": { zero: 0, one: 0, two: 1, few: 1, many: 1, other: 1 },
 		"ru-RU": { zero: 2, one: 0, two: 1, few: 1, many: 2, other: 3 },
 		"uk-UA": { zero: 2, one: 0, two: 1, few: 1, many: 2, other: 3 },
@@ -29,6 +31,14 @@ export const plural: PluralFunc = (key, count, params, locale, getter) => {
 
 	const mapping = PLURAL_FORM_INDEX[locale as keyof typeof PLURAL_FORM_INDEX];
 	if (!mapping) return null;
+
+	// A key the locale has not translated resolves to the English source, whose
+	// forms are `zero | one | other`. Read by this locale's categories it would
+	// answer one match with the `zero` form. None of these locales uses three
+	// forms, so that count identifies the fallback and leaves it to the
+	// built-in rule the source was written for.
+	const ENGLISH_FORM_COUNT = 3;
+	if (forms.length === ENGLISH_FORM_COUNT) return null;
 
 	const category = new Intl.PluralRules(locale).select(count);
 	const index = Math.min(mapping[category] ?? 0, forms.length - 1);

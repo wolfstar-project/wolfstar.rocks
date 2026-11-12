@@ -54,15 +54,16 @@
 
 <script setup lang="ts">
 import { promiseTimeout } from "@vueuse/core";
-import { normalizeGuildIdQuery } from "~/utils/normalize-guild-id-query";
 
 definePageMeta({
 	viewTransition: false,
 });
 
 const { ts } = useI18n();
+const { selectGuild } = useActiveGuild();
 
-const guildId = useRouteQuery("guild_id", undefined, { transform: normalizeGuildIdQuery });
+const route = useRoute();
+const guildId = computed(() => normalizeGuildIdQuery(route.query.guild_id));
 const error = ref<string | null>(null);
 
 if (import.meta.client && guildId.value && !error.value) {
@@ -81,7 +82,8 @@ async function navigateToGuild() {
 
 	await promiseTimeout(1500);
 
-	await navigateTo(`/guilds/${guildId.value}/manage?refresh=true`);
+	selectGuild(guildId.value);
+	await navigateTo("/app?refresh=true");
 }
 
 useRobotsRule(robotBlockingPageProps);

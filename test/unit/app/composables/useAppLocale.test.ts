@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { createLocaleSelector } from "../../../../app/composables/useAppLocale";
+import { createLocaleSelector, withHourCycle } from "../../../../app/composables/useAppLocale";
 
 function deferred<T = void>() {
 	let resolve!: (value: T) => void;
@@ -203,5 +203,21 @@ describe("createLocaleSelector", () => {
 		await expect(selectLocale("fr-FR")).rejects.toThrow("failed to sync locale preference");
 
 		expect(setPreferredLocale).toHaveBeenCalledExactlyOnceWith("fr-FR");
+	});
+});
+
+describe("withHourCycle", () => {
+	it("leaves the locale alone on auto", () => {
+		expect(withHourCycle("it-IT", "auto")).toBe("it-IT");
+	});
+
+	it("forces the clock the visitor picked", () => {
+		const at = new Date(2026, 0, 1, 14, 5);
+		const options = { hour: "numeric", minute: "2-digit" } as const;
+
+		expect(at.toLocaleTimeString(withHourCycle("en-US", "24h"), options)).toBe("14:05");
+		expect(at.toLocaleTimeString(withHourCycle("en-GB", "12h"), options)).toMatch(
+			/^2:05\s?pm$/i,
+		);
 	});
 });

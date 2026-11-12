@@ -23,8 +23,8 @@ half.
 
 - **WolfStar** moderates a server: configurable filters, escalation rules, moderation cases, event logging,
   and command access.
-- **Staryl** brings social updates into a server. Twitch live and offline alerts are what it does today. It
-  has no public invite yet, and every page that mentions it says so.
+- **Staryl** brings social updates into a server. Twitch live and offline alerts are what it does today, and
+  any server can invite it.
 
 **What the site is.** The dashboard is not a second product beside the bots. It is their control room. A
 feature belongs here only if it configures or reviews what WolfStar or Staryl does in a server.

@@ -15,6 +15,7 @@
 			aria-hidden="true"
 			decoding="async"
 		/><span v-if="kind === 'mention'" aria-hidden="true">@</span
+		><span v-else-if="kind === 'channel'" aria-hidden="true">#</span
 		><LazyIconsApp
 			v-else-if="kind === 'app' && !avatar"
 			class="icon"
@@ -27,7 +28,7 @@
 import type { VNode } from "vue";
 
 interface MentionProps {
-	kind?: "mention" | "app";
+	kind?: "mention" | "channel" | "app";
 	/** User avatar URL. Shown on desktop (≥48rem) and hidden on mobile. */
 	avatar?: string;
 }
@@ -47,31 +48,26 @@ const { kind = "mention", avatar } = defineProps<MentionProps>();
 @reference "@/assets/css/main.css";
 .tag {
 	/*
-	 * Mentions are inline-flex chips. Do not add margin-inline-start here:
-	 * callers already space with text / {{ " " }}, and DiscordEmbed restores
-	 * gaps after bold labels via strong::after. A leading margin double-spaces
-	 * showcase copy like "Dear @Baddie" and "❯ User: @baddie".
-	 *
-	 * The compact shape and solid hover state mirror Discord's user pills.
+	 * Mentions sit in the line like Discord's: an inline box as tall as the
+	 * line it is in, on the text's baseline, with 2px of padding at the sides
+	 * only. A taller chip (the old 22px inline-flex one) opened a gap above and
+	 * below every embed row holding a mention and lifted its text off the
+	 * baseline. Do not add margin-inline-start: callers already space with
+	 * text / {{ " " }}, and DiscordEmbed restores gaps after bold labels via
+	 * strong::after.
 	 */
-	@apply inline-flex items-center gap-0 font-whitney font-medium;
-	/*
-	 * `middle`, not `baseline`: this is an inline-flex box, so a `baseline`
-	 * alignment is resolved from the first flex item. With an avatar that item
-	 * is the <img>, whose synthesized baseline is its bottom edge, so the pill
-	 * gets pushed ~5px above the text baseline and inflates the line box —
-	 * embed rows with an avatar mention ended up taller than rows without one.
-	 * `middle` aligns against the parent's x-height instead of the pill's own
-	 * contents, so both variants occupy exactly the same line box.
-	 */
-	vertical-align: middle;
+	@apply font-whitney font-medium;
+	display: inline-block;
+	vertical-align: baseline;
 	margin: 0;
-	min-height: 1.375rem;
-	padding: 0 0.1875rem;
+	padding: 0 0.125rem;
 	border: 0;
 	border-radius: 3px;
 	outline: none;
 	box-shadow: none;
+	font-size: inherit;
+	line-height: inherit;
+	white-space: nowrap;
 	--discord-mention-bg: oklch(57.7% 0.209 273.88 / 0.3);
 	--discord-mention-text: oklch(83% 0.08 275);
 	--discord-mention-hover-bg: oklch(57.74% 0.2091 273.85);
@@ -80,13 +76,14 @@ const { kind = "mention", avatar } = defineProps<MentionProps>();
 
 	background-color: var(--discord-mention-bg);
 	color: var(--discord-mention-text);
-	line-height: 1.25rem;
 }
 
-:global([data-theme="light"] .discord-mention) {
-	--discord-mention-bg: oklch(57.7% 0.209 273.88 / 0.25);
-	--discord-mention-text: oklch(45.08% 0.281 265.53);
-	--discord-mention-focus: oklch(45.08% 0.281 265.53);
+@variant theme-light {
+	.discord-mention {
+		--discord-mention-bg: oklch(57.7% 0.209 273.88 / 0.25);
+		--discord-mention-text: oklch(45.08% 0.281 265.53);
+		--discord-mention-focus: oklch(45.08% 0.281 265.53);
+	}
 }
 
 .tag:focus {
@@ -112,27 +109,21 @@ const { kind = "mention", avatar } = defineProps<MentionProps>();
 	outline-offset: 2px;
 }
 
-.tag--with-avatar {
-	@apply items-center;
-}
-
+/* The member's avatar, as Discord draws it in a mention: a small round
+   picture set on the text, not a taller pill around it. */
 .tag > .avatar {
 	display: none;
-	flex-shrink: 0;
-	width: 1.25rem;
-	height: 1.25rem;
+	width: 1em;
+	height: 1em;
 	border-radius: 9999px;
 	object-fit: cover;
 }
 
 @media (width >= 48rem) {
 	.tag > .avatar {
-		display: block;
-		margin-inline-end: 0.1875rem;
-	}
-
-	.tag--with-avatar {
-		padding: 0.0625rem 0.1875rem 0.0625rem 0.0625rem;
+		display: inline-block;
+		margin-inline-end: 0.25em;
+		vertical-align: -0.15em;
 	}
 }
 

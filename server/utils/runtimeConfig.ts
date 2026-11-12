@@ -37,12 +37,15 @@ export function parseTracesSampleRate(raw: string | undefined): number {
 
 export function generateRuntimeConfig() {
 	return {
-		cloudflare: {
-			accountId: process.env.NUXT_CLOUDFLARE_ACCOUNT_ID,
-			apiToken: process.env.NUXT_CLOUDFLARE_API_TOKEN,
-			namespaceId: process.env.NUXT_CLOUDFLARE_NAMESPACE_ID,
-		},
+		// The bridge to the bot's own API, which the member's appeals go through:
+		// the dashboard mints the session cookie the API reads, so the secret is
+		// the bot's `OAUTH_SECRET` and the name its `OAUTH_COOKIE`. Server-only.
+		botApiOauthSecret: process.env.NUXT_BOT_API_OAUTH_SECRET ?? "",
+		botApiOauthCookie: process.env.NUXT_BOT_API_OAUTH_COOKIE || "WOLFSTAR_AUTH",
 		discord: {
+			// The channel of WolfStar's server whose posts the Home's WolfStar thread shows.
+			announcementsChannelId:
+				process.env.NUXT_DISCORD_ANNOUNCEMENTS_CHANNEL_ID || "890648971712802906",
 			botToken: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN,
 			clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,
 			clientSecret: process.env.NUXT_OAUTH_DISCORD_CLIENT_SECRET,
@@ -58,6 +61,9 @@ export function generateRuntimeConfig() {
 			// the base URL is inferred per request and Discord callbacks drift between
 			// the apex domain, deploy previews, and platform-generated hostnames.
 			siteUrl: process.env.NUXT_PUBLIC_SITE_URL || "",
+			// The public key of the Turnstile widget of the verification page
+			// (`/verify/<guild>`); empty when the site has no Turnstile set up.
+			turnstileSiteKey: process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || "",
 			sentry: {
 				dsn: process.env.SENTRY_DSN,
 				tracesSampleRate: parseTracesSampleRate(
@@ -70,6 +76,9 @@ export function generateRuntimeConfig() {
 			org: process.env.SENTRY_ORG,
 			project: process.env.SENTRY_PROJECT,
 		},
+		// The secret the verification page checks a Turnstile token with
+		// (`siteverify`). Server only: it never reaches the client, nor a log.
+		turnstileSecretKey: process.env.NUXT_TURNSTILE_SECRET_KEY || "",
 		// Consumed by `server/auth.config.ts`. Cookie attributes are deliberately
 		// absent: Better Auth owns them, and forcing `sameSite: "strict"` would drop
 		// the OAuth state cookie on the cross-site redirect back from Discord.

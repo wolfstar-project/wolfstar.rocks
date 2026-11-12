@@ -1,39 +1,45 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // vi.hoisted() ensures globals are present before discord.ts is evaluated.
-const { mockReadSettings, mockReadSettingsPermissionNodes } = vi.hoisted(() => {
-	const mockReadSettings = vi.fn();
-	const mockReadSettingsPermissionNodes = vi.fn();
+const { mockReadProposedPermissionNodes, mockReadSettings, mockReadSettingsPermissionNodes } =
+	vi.hoisted(() => {
+		const mockReadSettings = vi.fn();
+		const mockReadSettingsPermissionNodes = vi.fn();
+		const mockReadProposedPermissionNodes = vi.fn();
 
-	(globalThis as Record<string, unknown>).defineCachedFunction = (fn: unknown) => fn;
-	(globalThis as Record<string, unknown>).hours = (n: number) => n * 3600;
-	(globalThis as Record<string, unknown>).useApi = () => ({
-		guilds: { get: vi.fn(), getChannels: vi.fn(), getMember: vi.fn() },
-		users: { getCurrent: vi.fn(), getGuilds: vi.fn(), getGuildMember: vi.fn() },
-	});
-	(globalThis as Record<string, unknown>).instrumentDiscordApiCall = (
-		_name: string,
-		fn: () => unknown,
-	) => fn();
-	(globalThis as Record<string, unknown>).instrumentBotApiCall = (
-		_name: string,
-		fn: () => unknown,
-	) => fn();
-	(globalThis as Record<string, unknown>).getUserSession = vi.fn();
-	(globalThis as Record<string, unknown>).$fetch = vi.fn();
-	(globalThis as Record<string, unknown>).useRuntimeConfig = () => ({
-		public: { apiBaseUrl: "" },
-	});
-	(globalThis as Record<string, unknown>).errors = {
-		unauthorized: () => Object.assign(new Error("Unauthorized"), { status: 401 }),
-	};
-	(globalThis as Record<string, unknown>).flattenGuild = (guild: Record<string, unknown>) =>
-		guild;
-	(globalThis as Record<string, unknown>).guildNameToAcronym = (name: string) =>
-		name.slice(0, 2).toUpperCase();
+		(globalThis as Record<string, unknown>).defineCachedFunction = (fn: unknown) => fn;
+		(globalThis as Record<string, unknown>).hours = (n: number) => n * 3600;
+		(globalThis as Record<string, unknown>).useApi = () => ({
+			guilds: { get: vi.fn(), getChannels: vi.fn(), getMember: vi.fn() },
+			users: { getCurrent: vi.fn(), getGuilds: vi.fn(), getGuildMember: vi.fn() },
+		});
+		(globalThis as Record<string, unknown>).instrumentDiscordApiCall = (
+			_name: string,
+			fn: () => unknown,
+		) => fn();
+		(globalThis as Record<string, unknown>).instrumentBotApiCall = (
+			_name: string,
+			fn: () => unknown,
+		) => fn();
+		(globalThis as Record<string, unknown>).getUserSession = vi.fn();
+		(globalThis as Record<string, unknown>).$fetch = vi.fn();
+		(globalThis as Record<string, unknown>).useRuntimeConfig = () => ({
+			public: { apiBaseUrl: "" },
+		});
+		(globalThis as Record<string, unknown>).errors = {
+			unauthorized: () => Object.assign(new Error("Unauthorized"), { status: 401 }),
+		};
+		(globalThis as Record<string, unknown>).flattenGuild = (guild: Record<string, unknown>) =>
+			guild;
+		(globalThis as Record<string, unknown>).guildNameToAcronym = (name: string) =>
+			name.slice(0, 2).toUpperCase();
 
-	return { mockReadSettings, mockReadSettingsPermissionNodes };
-});
+		return {
+			mockReadProposedPermissionNodes,
+			mockReadSettings,
+			mockReadSettingsPermissionNodes,
+		};
+	});
 
 vi.mock("@sentry/nuxt", () => ({
 	metrics: { count: vi.fn() },
@@ -41,6 +47,7 @@ vi.mock("@sentry/nuxt", () => ({
 }));
 
 vi.mock("#server/database", () => ({
+	readProposedPermissionNodes: mockReadProposedPermissionNodes,
 	readSettings: mockReadSettings,
 	readSettingsPermissionNodes: mockReadSettingsPermissionNodes,
 }));
@@ -48,6 +55,7 @@ vi.mock("#server/database", () => ({
 import type { ReadonlyGuildData } from "#server/database";
 import type { APIGuild, APIGuildMember } from "discord-api-types/v10";
 import { canManage } from "#server/utils/discord";
+import { createAccessEntry } from "#shared/utils/dashboard-access";
 
 // Member with Administrator permission bit (8n), not the guild owner.
 // With rolesAdmin: [], isAdmin falls back to the permission-bits path.
@@ -72,6 +80,20 @@ describe("canManage - settings threading through manage()", () => {
 		mockReadSettingsPermissionNodes.mockReturnValue({
 			run: vi.fn().mockResolvedValue(null),
 		});
+	});
+
+	// The guild's cached manager holds the saved nodes: a change that denies the
+	// writer the settings would pass a check that read them, and lock them out.
+	it("runs the legacy nodes of a change, not the saved ones, when asked to", async () => {
+		mockReadProposedPermissionNodes.mockReturnValue({
+			run: vi.fn().mockResolvedValue(false),
+		});
+
+		await expect(canManage(guild, adminMember, mockSettings, true)).rejects.toMatchObject({
+			status: 403,
+		});
+		expect(mockReadProposedPermissionNodes).toHaveBeenCalledWith(mockSettings);
+		expect(mockReadSettingsPermissionNodes).not.toHaveBeenCalled();
 	});
 
 	it("does not call readSettings when pre-loaded settings are provided", async () => {
@@ -100,6 +122,21 @@ describe("canManage - settings threading through manage()", () => {
 		expect(mockReadSettings).not.toHaveBeenCalled();
 	});
 
+	it("applies a deny on @everyone, which member.roles never lists", async () => {
+		const withEveryone = {
+			...guild,
+			roles: [{ id: "guild-123", position: 0 }],
+		} as unknown as APIGuild;
+		const denied = {
+			...mockSettings,
+			permissionsRoles: [createAccessEntry("guild-123", "deny")],
+		} as unknown as ReadonlyGuildData;
+
+		await expect(canManage(withEveryone, adminMember, denied)).rejects.toMatchObject({
+			status: 403,
+		});
+	});
+
 	it("throws 403 when member lacks manage permissions and readSettings is called", async () => {
 		const nonAdminMember = {
 			user: { id: "no-perms-user" },
@@ -124,5 +161,72 @@ describe("canManage - settings threading through manage()", () => {
 			status: 403,
 		});
 		expect(mockReadSettings).not.toHaveBeenCalled();
+	});
+});
+
+describe("canManage - dashboard access entries", () => {
+	const ROLE = "300000000000000001";
+	const guildWithRole = {
+		id: "guild-123",
+		owner_id: "owner-456",
+		roles: [{ id: ROLE, name: "Helpers", permissions: "0", position: 3 }],
+	} as unknown as APIGuild;
+	const run = vi.fn();
+
+	function settingsWith(users: unknown[], roles: unknown[]): ReadonlyGuildData {
+		return {
+			...mockSettings,
+			permissionsUsers: users,
+			permissionsRoles: roles,
+		} as unknown as ReadonlyGuildData;
+	}
+
+	beforeEach(() => {
+		vi.clearAllMocks();
+		run.mockResolvedValue(null);
+		mockReadSettingsPermissionNodes.mockReturnValue({ run });
+	});
+
+	it("lets a member without Manage Server in by their own allow entry", async () => {
+		const member = {
+			user: { id: "helper-1" },
+			roles: [],
+			permissions: "0",
+		} as unknown as APIGuildMember;
+		const settings = settingsWith(
+			[{ id: "helper-1", allow: [], deny: [], dashboard: "allow" }],
+			[],
+		);
+
+		await expect(canManage(guildWithRole, member, settings)).resolves.toBeUndefined();
+	});
+
+	it("keeps an Administrator out with a deny entry on their role", async () => {
+		const member = {
+			user: { id: "admin-1" },
+			roles: [ROLE],
+			permissions: "8",
+		} as unknown as APIGuildMember;
+		const settings = settingsWith([], [{ id: ROLE, allow: [], deny: [], dashboard: "deny" }]);
+
+		await expect(canManage(guildWithRole, member, settings)).rejects.toMatchObject({
+			status: 403,
+		});
+	});
+
+	it("never keeps the owner out", async () => {
+		const owner = { user: { id: "owner-456" }, roles: [] } as unknown as APIGuildMember;
+		const settings = settingsWith(
+			[{ id: "owner-456", allow: [], deny: [], dashboard: "deny" }],
+			[],
+		);
+
+		await expect(canManage(guildWithRole, owner, settings)).resolves.toBeUndefined();
+	});
+
+	it("runs the legacy nodes on settings when no entry names the member", async () => {
+		await canManage(guildWithRole, adminMember, mockSettings);
+
+		expect(run).toHaveBeenCalledWith(adminMember, "settings");
 	});
 });

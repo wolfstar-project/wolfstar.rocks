@@ -20,10 +20,10 @@ test.describe("Unknown routes", () => {
 	});
 
 	test("link back to the home page", async ({ page, goto }) => {
-		// The preview server resizes `/.netlify/images` requests on the fly (Netlify's
-		// CDN does in production), which can starve the home page chunk that
-		// `<Suspense>` waits on before swapping out the error page.
-		await page.route("**/.netlify/images**", (route) => route.fulfill({ status: 404 }));
+		// The preview server resizes `/_ipx` requests on the fly (Cloudflare does in
+		// production), which can starve the home page chunk that `<Suspense>` waits
+		// on before swapping out the error page.
+		await page.route("**/_ipx/**", (route) => route.fulfill({ status: 404 }));
 		await goto("/this-page-does-not-exist", { waitUntil: "networkidle" });
 
 		await page.getByRole("button", { name: "Back to home" }).click();

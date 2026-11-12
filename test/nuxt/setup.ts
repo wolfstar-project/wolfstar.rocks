@@ -4,6 +4,32 @@ import { currentLocales } from "../../config/i18n";
 import { type LocaleMessages, mergeLocaleMessages } from "../../config/i18n-empty-placeholders";
 
 /**
+ * Twemoji images come from jsDelivr, and a picker lists thousands of them: left
+ * to the network, every picker test waits on a CDN. The tests keep the address on
+ * `data-src` and load a pixel instead.
+ */
+const TWEMOJI_ORIGIN = "https://cdn.jsdelivr.net/gh/jdecked/twemoji";
+const PIXEL = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+const imageSource = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, "src");
+if (imageSource?.set) {
+	const { get: getSource, set: setSource } = imageSource;
+	Object.defineProperty(HTMLImageElement.prototype, "src", {
+		...imageSource,
+		get(this: HTMLImageElement) {
+			return getSource?.call(this) as string;
+		},
+		set(this: HTMLImageElement, value: string) {
+			if (!String(value).startsWith(TWEMOJI_ORIGIN)) {
+				setSource.call(this, value);
+				return;
+			}
+			this.dataset.src = value;
+			setSource.call(this, PIXEL);
+		},
+	});
+}
+
+/**
  * Nuxt I18n Micro does not bundle messages: the client fetches them from
  * `/{apiBaseUrl}/{page}/{locale}/data.json`, a route Nitro owns. Component tests
  * run against `@nuxt/test-utils`' in-browser h3 stub, which answers every

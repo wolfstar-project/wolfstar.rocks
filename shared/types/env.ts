@@ -12,6 +12,13 @@ export interface BuildInfo {
 	prNumber: string | null;
 }
 
+/** Staryl's version and the time of its latest change, for the release line of its page. */
+export interface StarylRelease {
+	version: string;
+	/** Milliseconds since the epoch. */
+	time: number;
+}
+
 // `nuxt/schema` only re-exports `@nuxt/schema`, so the augmentation must
 // target the declaring package for `CustomAppConfig` to merge
 declare module "@nuxt/schema" {
@@ -23,5 +30,8 @@ declare module "@nuxt/schema" {
 		// time; app.config.ts does not (and should not) provide them
 		env?: EnvType;
 		buildInfo?: BuildInfo;
+		// Injected by `modules/staryl-release.ts`; `null` when GitHub could not
+		// be reached at build time
+		starylRelease?: StarylRelease | null;
 	}
 }

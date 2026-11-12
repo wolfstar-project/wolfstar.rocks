@@ -1,4 +1,5 @@
-import { avatarURL, guildIconURL } from "#shared/utils/discord";
+import type { NameplatePalette } from "discord-api-types/v10";
+import { avatarDecorationURL, avatarURL, guildIconURL, nameplateURL } from "#shared/utils/discord";
 import { DefaultRestOptions } from "@discordjs/rest";
 import { describe, expect, it } from "vitest";
 
@@ -90,5 +91,36 @@ describe("guildIconURL", () => {
 		const guild = { id: "111", name: "Test", icon: "a_iconhash123", acronym: "T" };
 		const url = guildIconURL(guild, { forceStatic: true });
 		expect(url).not.toContain(".gif");
+	});
+});
+
+describe("avatarDecorationURL", () => {
+	const decoration = { asset: "a_abc123", sku_id: "1" };
+
+	it("points at the preset, animated unless asked otherwise", () => {
+		expect(avatarDecorationURL(decoration)).toBe(
+			`${DefaultRestOptions.cdn}/avatar-decoration-presets/a_abc123.png`,
+		);
+		expect(avatarDecorationURL(decoration, { animated: false })).toBe(
+			`${DefaultRestOptions.cdn}/avatar-decoration-presets/a_abc123.png?passthrough=false`,
+		);
+	});
+});
+
+describe("nameplateURL", () => {
+	const nameplate = {
+		asset: "nameplates/nameplates/twilight/",
+		label: "",
+		palette: "violet" as NameplatePalette,
+		sku_id: "1",
+	};
+
+	it("gives the still frame by default and the clip when animated", () => {
+		expect(nameplateURL(nameplate)).toBe(
+			`${DefaultRestOptions.cdn}/assets/collectibles/nameplates/nameplates/twilight/static.png`,
+		);
+		expect(nameplateURL(nameplate, { animated: true })).toBe(
+			`${DefaultRestOptions.cdn}/assets/collectibles/nameplates/nameplates/twilight/asset.webm`,
+		);
 	});
 });

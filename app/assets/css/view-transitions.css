@@ -70,10 +70,10 @@ html:active-view-transition-type(route-dashboard) {
 }
 
 /* PWA/skew-protection update prompt */
-::view-transition-old(pwa-update-prompt) {
+::view-transition-old(skew-update-prompt) {
 	animation: vt-slide-out-down 200ms ease-in;
 }
 
-::view-transition-new(pwa-update-prompt) {
+::view-transition-new(skew-update-prompt) {
 	animation: vt-slide-in-up 300ms ease-out;
 }

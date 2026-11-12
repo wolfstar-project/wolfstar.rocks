@@ -9,14 +9,20 @@
 				<template #headline>
 					<UBreadcrumb
 						:items="[
-							{ label: 'Changelog', icon: 'i-lucide-history', to: '/changelog' },
+							{
+								label: ts('changelog.title'),
+								icon: 'i-lucide-history',
+								to: '/changelog',
+							},
 							{ label: version.title },
 						]"
 						class="max-w-full"
 					/>
 					<div class="flex items-center gap-2">
 						<UBadge v-if="version.badge" v-bind="version.badge" variant="subtle" />
-						<time class="text-muted">{{ formatDateByLocale("en", version.date) }}</time>
+						<time class="text-muted">{{
+							formatDateByLocale(locale, version.date)
+						}}</time>
 					</div>
 				</template>
 
@@ -34,10 +40,9 @@
 				<ContentRenderer v-if="version.body" :value="version" />
 
 				<div class="not-prose mt-12 flex items-center justify-between">
-					<ULink to="/changelog" class="text-primary"> ← Back to changelog </ULink>
+					<ULink to="/changelog" class="text-primary">← {{ ts("changelog.back") }}</ULink>
 					<UButton icon="i-lucide-link" variant="ghost" color="neutral" @click="copyLink">
-						<span class="sr-only">Copy URL</span>
-						Copy URL
+						{{ ts("blog.copy_url") }}
 					</UButton>
 				</div>
 
@@ -52,6 +57,8 @@
 <script setup lang="ts">
 import { kebabCase } from "scule";
 
+const { ts } = useI18n();
+const { locale } = useAppLocale();
 const route = useRoute();
 const site = useSiteConfig();
 const { copy } = useClipboard();
@@ -90,7 +97,7 @@ if (!post.image) {
 
 function copyLink() {
 	copy(`${site.url}${post.path}`, {
-		title: "Link copied to clipboard",
+		title: ts("blog.link_copied"),
 		icon: "i-lucide-copy-check",
 	});
 }

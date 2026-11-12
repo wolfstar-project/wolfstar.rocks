@@ -1,30 +1,13 @@
-import { createRequire } from "node:module";
-import codspeedPlugin from "@codspeed/vitest-plugin";
 import { defineVitestProject } from "@nuxt/test-utils/config";
-import { isCI } from "std-env";
 import { defineConfig } from "vite-plus";
 import { playwright } from "vite-plus/test/browser-playwright";
 
 const rootDir = import.meta.dirname;
-const require = createRequire(import.meta.url);
 
 const AGENT_TOOLING_DIRS = [".claude/", ".agents/", ".agent/", ".skills/", ".skilld/"];
 
 function isAgentToolingPath(file: string) {
 	return AGENT_TOOLING_DIRS.some((dir) => file.startsWith(dir) || file.includes(`/${dir}`));
-}
-
-function getCodspeedV8Flags() {
-	if (!isCI) {
-		return undefined;
-	}
-
-	try {
-		const { getV8Flags } = require("@codspeed/core") as typeof import("@codspeed/core");
-		return getV8Flags();
-	} catch {
-		return undefined;
-	}
 }
 
 export default defineConfig({
@@ -290,6 +273,10 @@ export default defineConfig({
 			"@typescript-eslint/unbound-method": "off",
 		},
 		ignorePatterns: [
+			/** The bot's repository (git submodule), linted by its own tooling */
+			"vendor/**",
+			/** newt/ui components, copied from its registry: kept as written so `newtui diff` stays clean */
+			"app/components/ui/**",
 			".output/**",
 			".data/**",
 			".nuxt/**",
@@ -507,6 +494,9 @@ export default defineConfig({
 			},
 		],
 		ignorePatterns: [
+			"vendor/",
+			"app/components/ui/",
+			"app/lib/utils.ts",
 			".nuxt/",
 			"dist/",
 			"node_modules/",
@@ -549,33 +539,10 @@ export default defineConfig({
 	test: {
 		projects: [
 			{
-				plugins: isCI ? [codspeedPlugin()] : [],
 				resolve: {
 					alias: {
 						"~": `${rootDir}/app`,
 						"~~": `${rootDir}`,
-						"#server": `${rootDir}/server`,
-						"#shared": `${rootDir}/shared`,
-					},
-				},
-				test: {
-					name: "benchmark",
-					include: [],
-					benchmark: { include: ["**/*.bench.ts"] },
-					execArgv: getCodspeedV8Flags(),
-				},
-			},
-			{
-				resolve: {
-					alias: {
-						"~": `${rootDir}/app`,
-						"~~": `${rootDir}`,
-						// Stub for the Prisma-generated client (not checked in; generated at build time).
-						// vi.mock() in each test overrides the actual values — this stub only satisfies
-						// Vite's module resolution so the test file can be loaded.
-						// NOTE: Must come before the "#server" prefix alias so the more-specific path
-						// wins on first-match alias resolution (Rollup alias plugin processes in order).
-						"#server/database/generated/client": `${rootDir}/test/__stubs__/prisma-generated-client`,
 						"#server": `${rootDir}/server`,
 						"#shared": `${rootDir}/shared`,
 					},
@@ -584,8 +551,6 @@ export default defineConfig({
 					environment: "node",
 					include: ["test/unit/**/*.{test,spec}.ts"],
 					name: "unit",
-					benchmark: { include: [] },
-					execArgv: getCodspeedV8Flags(),
 				},
 			},
 			() =>
@@ -604,10 +569,6 @@ export default defineConfig({
 										public: {
 											clientId: "test-discord-client-id",
 										},
-										session: {
-											password:
-												"ci-dummy-session-key-for-prerender-only-not-for-production",
-										},
 									},
 									vue: { runtimeCompiler: true },
 									// Off for Vitest browser: VTU emit capture breaks with viteEnvironmentApi.
@@ -615,7 +576,6 @@ export default defineConfig({
 										payloadExtraction: false,
 										viteEnvironmentApi: false,
 									},
-									// @ts-expect-error -- pwa config is not in the base NuxtConfig type
 									pwa: { pwaAssets: { disabled: true } },
 									sentry: { enabled: false },
 									sitemap: { enabled: false },
@@ -627,7 +587,6 @@ export default defineConfig({
 						include: ["test/nuxt/**/*.{test,spec}.ts"],
 						setupFiles: ["test/nuxt/setup.ts"],
 						name: "nuxt",
-						benchmark: { include: [] },
 					},
 				}),
 		],

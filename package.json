@@ -156,7 +156,8 @@
 		"vite-doctor": "0.1.2",
 		"vitest": "catalog:vite-plus",
 		"vue-i18n-extract": "2.0.7",
-		"vue-tsc": "3.3.9"
+		"vue-tsc": "3.3.9",
+		"wrangler": "4.156.0"
 	},
 	"config": {
 		"commitizen": {

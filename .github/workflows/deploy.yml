@@ -40,11 +40,6 @@ jobs:
       - name: 🌐 Build Lunaria
         run: vp run build:lunaria
 
-      # Skew protection writes the build's assets to its KV namespace by running
-      # `wrangler` from the PATH during the build: it is no dependency of the project.
-      - name: 🧰 Install Wrangler
-        run: npm install --global wrangler@4.156.0
-
       - name: 🏗️ Build the Worker
         run: vp run build
         env:
@@ -75,7 +70,7 @@ jobs:
         id: deploy
         run: |
           set -euo pipefail
-          wrangler() { npx --yes wrangler@4.156.0 "$@"; }
+          wrangler() { ./node_modules/.bin/wrangler "$@"; }
           config=.output/server/wrangler.json
 
           # Only a Worker that has never been deployed takes the plain deploy; any other

@@ -196,3 +196,12 @@ export function keyMentions(content: string): KeyedMentions {
 	);
 	return { content: keyed, names };
 }
+
+/**
+ * A line of nothing but formatting around spaces, as `_ _` or `** **`, which
+ * Discord shows as an empty line: posts use it to space their parts. newt/ui
+ * would show the marks themselves, so the line is kept, empty.
+ */
+export function blankEmptyFormatting(content: string): string {
+	return content.replaceAll(/^[^\S\n]*(?:(\*\*|__|~~|\*|_)[^\S\n]+\1[^\S\n]*)+$/gm, "\u200B");
+}

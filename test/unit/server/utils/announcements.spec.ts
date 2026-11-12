@@ -249,6 +249,13 @@ describe("appInvites", () => {
 		expect(appInvites(`\`||\` ${url} \`||\``)).toEqual([{ id: "1557826376331960380", url }]);
 	});
 
+	it("does not open code at an escaped backtick", () => {
+		const url = "https://discord.com/oauth2/authorize?client_id=1557826376331960380";
+		expect(appInvites(`A \\\` mark, ${url} and \`code\``)).toEqual([
+			{ id: "1557826376331960380", url },
+		]);
+	});
+
 	it("ignores other Discord links", () => {
 		expect(
 			appInvites(

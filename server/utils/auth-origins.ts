@@ -125,3 +125,25 @@ export function resolveAuthCookieDomain(siteUrl: string | undefined | null): str
 		return undefined;
 	}
 }
+
+/**
+ * The auth cookies a request carries, by name: each of `names`, and the chunks
+ * (`name.0`, `name.1`, …) Better Auth splits a long cookie into. On production
+ * these may include host-only copies set before the cookies covered the whole
+ * domain. The header cannot tell the two kinds apart, so the caller expires a
+ * host-only cookie under each name; the shared one, set with a `Domain`, is a
+ * different cookie and stays.
+ */
+export function hostOnlyAuthCookies(
+	cookieHeader: string | null,
+	names: readonly string[],
+): string[] {
+	if (!cookieHeader) return [];
+	const found: string[] = [];
+	for (const pair of cookieHeader.split(";")) {
+		const name = pair.split("=", 1)[0]?.trim() ?? "";
+		const base = name.replace(/\.\d+$/, "");
+		if (names.includes(base) && !found.includes(name)) found.push(name);
+	}
+	return found;
+}

@@ -1,4 +1,8 @@
-import { resolveAuthCookieDomain, resolveTrustedOrigins } from "#server/utils/auth-origins.ts";
+import {
+	hostOnlyAuthCookies,
+	resolveAuthCookieDomain,
+	resolveTrustedOrigins,
+} from "#server/utils/auth-origins.ts";
 import { createAuthSecondaryStorage } from "#server/utils/auth-rate-limit-storage.ts";
 import { invalidateCurrentUserCache } from "#server/utils/discord/cache.ts";
 import { createDiscordProviderOptions } from "#server/utils/discord/provider.ts";
@@ -80,6 +84,28 @@ export default defineServerAuth((ctx) => {
 		},
 		hooks: {
 			after: createAuthMiddleware(async (ctx) => {
+				// A browser signed in before the cookies covered the whole domain keeps
+				// its host-only copies, which a sign-out with a `Domain` cannot remove:
+				// they would keep it signed in. Sign-in and sign-out expire them.
+				if (
+					cookieDomain &&
+					(ctx.path === "/sign-out" || ctx.path === "/callback/discord")
+				) {
+					const { sessionToken, sessionData, accountData } = ctx.context.authCookies;
+					const names = [sessionToken.name, sessionData.name, accountData.name];
+					for (const name of hostOnlyAuthCookies(
+						ctx.headers?.get("cookie") ?? null,
+						names,
+					)) {
+						ctx.setCookie(name, "", {
+							httpOnly: true,
+							maxAge: 0,
+							path: "/",
+							sameSite: "lax",
+							secure: true,
+						});
+					}
+				}
 				if (ctx.path !== "/callback/discord") {
 					return;
 				}

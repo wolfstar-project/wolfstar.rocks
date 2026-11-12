@@ -27,12 +27,20 @@ const APP_INVITE_PATTERN =
 /** Sentence punctuation and markdown that can follow a bare link. */
 const TRAILING_MARKS = /[.,;:!?*_~|]+$/;
 
-/** The apps a post invites to, each once, in the order it links them. */
+/** Text the author hid behind `||…||` until the reader reveals it. */
+const SPOILER_PATTERN = /\|\|[\s\S]*?\|\|/g;
+
+/**
+ * The apps a post invites to, each once, in the order it links them. A link
+ * inside a spoiler gets no card: the card would show the app before the
+ * reader chose to reveal it.
+ */
 export function appInvites(content: string): { id: string; url: string }[] {
 	const found = new Map<string, string>();
-	for (const [match, id] of content.matchAll(APP_INVITE_PATTERN)) {
-		// A link at the end of a sentence or inside `**`, `||` or `~~` runs
-		// into the marks after it, which are not part of its address.
+	const visible = content.replaceAll(SPOILER_PATTERN, " ");
+	for (const [match, id] of visible.matchAll(APP_INVITE_PATTERN)) {
+		// A link at the end of a sentence or inside `**` or `~~` runs into
+		// the marks after it, which are not part of its address.
 		const url = match.replace(TRAILING_MARKS, "");
 		if (id && !found.has(id)) found.set(id, url);
 	}

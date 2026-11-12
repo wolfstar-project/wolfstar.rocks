@@ -49,6 +49,9 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_HYPERDRIVE_ID: ${{ vars.CLOUDFLARE_HYPERDRIVE_ID }}
           NODE_OPTIONS: --max-old-space-size=8192
+          # og-image signs its URLs with Nuxt's appSecret, and its strict mode is on only
+          # when the build has one: the Worker's secret of the same name must match.
+          NUXT_APP_SECRET: ${{ secrets.NUXT_APP_SECRET }}
           NUXT_BETTER_AUTH_SECRET: ${{ secrets.NUXT_BETTER_AUTH_SECRET }}
           NUXT_OAUTH_DISCORD_CLIENT_ID: ${{ vars.NUXT_OAUTH_DISCORD_CLIENT_ID }}
           NUXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.NUXT_PUBLIC_TURNSTILE_SITE_KEY }}

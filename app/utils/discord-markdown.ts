@@ -200,8 +200,12 @@ export function keyMentions(content: string): KeyedMentions {
 /**
  * A line of nothing but formatting around spaces, as `_ _` or `** **`, which
  * Discord shows as an empty line: posts use it to space their parts. newt/ui
- * would show the marks themselves, so the line is kept, empty.
+ * would show the marks themselves, so the line is kept, empty. A code block
+ * is matched first and kept as written.
  */
 export function blankEmptyFormatting(content: string): string {
-	return content.replaceAll(/^[^\S\n]*(?:(\*\*|__|~~|\*|_)[^\S\n]+\1[^\S\n]*)+$/gm, "\u200B");
+	return content.replaceAll(
+		/(```[\s\S]*?```)|^[^\S\n]*(?:(\*\*|__|~~|\*|_)[^\S\n]+\2[^\S\n]*)+$/gm,
+		(match, code: string | undefined) => (code === undefined ? "\u200B" : match),
+	);
 }

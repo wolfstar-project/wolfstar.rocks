@@ -208,4 +208,8 @@ describe("blankEmptyFormatting", () => {
 	it("leaves formatting around words alone", () => {
 		expect(blankEmptyFormatting("_so_ and **this**\n_ a _")).toBe("_so_ and **this**\n_ a _");
 	});
+
+	it("keeps the lines of a code block as written", () => {
+		expect(blankEmptyFormatting("```\n_ _\n```\n_ _")).toBe("```\n_ _\n```\n\u200B");
+	});
 });

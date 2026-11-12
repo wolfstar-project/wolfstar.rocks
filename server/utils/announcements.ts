@@ -24,10 +24,16 @@ export interface MentionNames {
 const APP_INVITE_PATTERN =
 	/https?:\/\/(?:(?:www|canary|ptb)\.)?discord(?:app)?\.com\/(?:(?:api\/)?oauth2\/authorize\?(?:[^\s<>]*?&)?client_id=|(?:application-directory|discovery\/applications)\/)(\d{17,20})(?:[^\s<>)\d][^\s<>)]*)?/g;
 
+/** Sentence punctuation and markdown that can follow a bare link. */
+const TRAILING_MARKS = /[.,;:!?*_~|]+$/;
+
 /** The apps a post invites to, each once, in the order it links them. */
 export function appInvites(content: string): { id: string; url: string }[] {
 	const found = new Map<string, string>();
-	for (const [url, id] of content.matchAll(APP_INVITE_PATTERN)) {
+	for (const [match, id] of content.matchAll(APP_INVITE_PATTERN)) {
+		// A link at the end of a sentence or inside `**`, `||` or `~~` runs
+		// into the marks after it, which are not part of its address.
+		const url = match.replace(TRAILING_MARKS, "");
 		if (id && !found.has(id)) found.set(id, url);
 	}
 	return Array.from(found, ([id, url]) => ({ id, url }));

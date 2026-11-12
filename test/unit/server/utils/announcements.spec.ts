@@ -223,6 +223,18 @@ describe("appInvites", () => {
 		]);
 	});
 
+	it("leaves the punctuation and markdown after a link out of its address", () => {
+		const url = "https://discord.com/oauth2/authorize?client_id=1557826376331960380";
+		for (const content of [
+			`Invite her: ${url}.`,
+			`${url}, or not`,
+			`**${url}**`,
+			`||${url}||!`,
+		]) {
+			expect(appInvites(content)).toEqual([{ id: "1557826376331960380", url }]);
+		}
+	});
+
 	it("ignores other Discord links", () => {
 		expect(
 			appInvites(

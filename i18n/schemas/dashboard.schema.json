@@ -70,6 +70,9 @@
 						"markdown": {
 							"type": "object",
 							"properties": {
+								"spoiler": {
+									"type": "string"
+								},
 								"unknown_channel": {
 									"type": "string"
 								},

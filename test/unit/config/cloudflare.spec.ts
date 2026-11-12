@@ -28,15 +28,44 @@ describe("the Worker a build deploys to", () => {
 		expect(worker.vars.NUXT_OAUTH_DISCORD_CLIENT_ID).toBe("client-id");
 	});
 
-	it("serves the production Worker on wolfstar.rocks, beta and alpha", async () => {
+	it("serves the production Worker on wolfstar.rocks and alpha, not beta", async () => {
 		expect((await loadWorker()).routes).toEqual([
 			{ custom_domain: true, pattern: "wolfstar.rocks" },
-			{ custom_domain: true, pattern: "beta.wolfstar.rocks" },
 			{ custom_domain: true, pattern: "alpha.wolfstar.rocks" },
 		]);
 	});
 
-	it.each(["production", undefined])(
+	it("serves beta.wolfstar.rocks from the beta Worker, with the WolfStar Beta application", async () => {
+		vi.stubEnv("CLOUDFLARE_WORKER", "beta");
+		const worker = await loadWorker();
+
+		expect(worker.name).toBe("wolfstar-beta");
+		expect(worker.routes).toEqual([{ custom_domain: true, pattern: "beta.wolfstar.rocks" }]);
+		expect(worker.vars).toMatchObject({
+			NUXT_OAUTH_DISCORD_CLIENT_ID: "1288560050184650802",
+			NUXT_PUBLIC_SITE_URL: "https://beta.wolfstar.rocks",
+		});
+	});
+
+	// Production's cookies cover the whole domain, so beta reaches them too.
+	it("names beta's cookies apart from production's", async () => {
+		vi.stubEnv("CLOUDFLARE_WORKER", "beta");
+
+		expect((await loadWorker()).vars).toMatchObject({
+			NUXT_BOT_API_OAUTH_COOKIE: "WOLFSTAR_BETA_AUTH",
+			NUXT_SESSION_COOKIE_NAME: "wolfstar-session-beta",
+		});
+	});
+
+	it("needs no production variable to build the beta Worker", async () => {
+		vi.stubEnv("CLOUDFLARE_WORKER", "beta");
+		vi.stubEnv("CLOUDFLARE_HYPERDRIVE_ID", "");
+		vi.stubEnv("NUXT_OAUTH_DISCORD_CLIENT_ID", "");
+
+		expect((await loadWorker()).hyperdrive[0]?.id).toBe("e8347aa5f2f2420d81eebe933ec98cb7");
+	});
+
+	it.each(["production", "beta", undefined])(
 		"keeps the Turnstile site key in the vars of the %s Worker, so a deploy does not drop it",
 		async (worker) => {
 			vi.stubEnv("CLOUDFLARE_WORKER", worker);

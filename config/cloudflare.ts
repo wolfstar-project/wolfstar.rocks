@@ -3,7 +3,7 @@ import { provider } from "std-env";
 
 /**
  * The build for Cloudflare Workers, which serves wolfstar.rocks,
- * beta.wolfstar.rocks and alpha.wolfstar.rocks.
+ * beta.wolfstar.rocks and alpha.wolfstar.rocks, each from a Worker of its own.
  *
  * `NITRO_PRESET=cloudflare_module` selects it, and Nitro then writes the chosen
  * Worker to `.output/server/wrangler.json` for `npx wrangler deploy`. Without
@@ -14,11 +14,19 @@ export const isCloudflareBuild =
 	process.env.NITRO_PRESET?.startsWith("cloudflare") === true ||
 	provider === "cloudflare_workers";
 
-/** `CLOUDFLARE_WORKER=production` picks the production Worker; alpha is the default. */
-const isProductionWorker = process.env.CLOUDFLARE_WORKER === "production";
+/**
+ * `CLOUDFLARE_WORKER` picks the Worker: `production`, `beta`, or alpha, the
+ * default.
+ */
+const workerName = process.env.CLOUDFLARE_WORKER;
+const isProductionWorker = workerName === "production";
+const isBetaWorker = workerName === "beta";
 
-/** Whether this build is for the alpha Worker. */
-export const isAlphaWorker = isCloudflareBuild && !isProductionWorker;
+/**
+ * Whether this build is for a Worker that runs a bot image still in testing,
+ * alpha or beta: their commands change with each image.
+ */
+export const isPrereleaseWorker = isCloudflareBuild && !isProductionWorker;
 
 /** Names of the Worker's bindings, as the server code reads them. */
 export const CLOUDFLARE_BINDINGS = {
@@ -95,8 +103,9 @@ function requireEnv(name: string): string {
  * deploy workflow, and the build stops without them: `vars` replaces what the
  * dashboard holds, so an empty client id would deploy and break sign-in.
  *
- * It serves wolfstar.rocks and beta.wolfstar.rocks, and alpha.wolfstar.rocks
- * until the first release from it: that domain is then dropped.
+ * It serves wolfstar.rocks, and alpha.wolfstar.rocks until the first release
+ * from it: that domain is then dropped. beta.wolfstar.rocks has its own Worker,
+ * {@link BETA_WORKER}.
  *
  * The secrets are set as on {@link ALPHA_WORKER}, with `--name wolfstar-site`.
  * The Turnstile site key is a public repository variable of the deploy workflow.
@@ -125,7 +134,6 @@ function createProductionWorker() {
 		name: "wolfstar-site",
 		routes: [
 			{ custom_domain: true, pattern: "wolfstar.rocks" },
-			{ custom_domain: true, pattern: "beta.wolfstar.rocks" },
 			{ custom_domain: true, pattern: "alpha.wolfstar.rocks" },
 		],
 		vars: {
@@ -183,8 +191,57 @@ const ALPHA_WORKER = {
 	},
 } satisfies WranglerConfig;
 
+/**
+ * The beta Worker. It shares the database of the WolfStar Beta bot, the beta
+ * environment on Railway, through a Hyperdrive with query caching off. The ids
+ * are of resources in the WolfStar Cloudflare account, not secrets.
+ *
+ * Production's sign-in cookies cover the whole `wolfstar.rocks` domain, so
+ * beta reaches them too. Beta's own session cookie and the cookie it mints for
+ * the bot's API have names of their own, or the two sites would read each
+ * other's.
+ *
+ * The secrets are set as on {@link ALPHA_WORKER}, with `--name wolfstar-beta`.
+ */
+const BETA_WORKER = {
+	...WORKER_DEFAULTS,
+	d1_databases: [
+		{
+			binding: CLOUDFLARE_BINDINGS.contentDatabase,
+			database_id: "4f8fadf6-d9fd-4c51-b2c6-e07d66110f76",
+			database_name: "wolfstar-beta-content",
+		},
+	],
+	hyperdrive: [{ binding: CLOUDFLARE_BINDINGS.database, id: "e8347aa5f2f2420d81eebe933ec98cb7" }],
+	kv_namespaces: [
+		{ binding: CLOUDFLARE_BINDINGS.cache, id: "e29f5a33574647e18afaa041f50223db" },
+		{ binding: CLOUDFLARE_BINDINGS.rateLimit, id: "a84f036cb71b4b97a5516726acb5c258" },
+		{ binding: CLOUDFLARE_BINDINGS.skewProtection, id: "68a50da1ca7b4f2985b874440ed258a9" },
+	],
+	name: "wolfstar-beta",
+	routes: [{ custom_domain: true, pattern: "beta.wolfstar.rocks" }],
+	vars: {
+		// The WolfStar Beta application on Discord.
+		NUXT_OAUTH_DISCORD_CLIENT_ID: "1288560050184650802",
+		// The cookie the beta bot's API reads, apart from production's.
+		NUXT_BOT_API_OAUTH_COOKIE: "WOLFSTAR_BETA_AUTH",
+		// The beta bot's API, which answers this origin only.
+		NUXT_PUBLIC_API_BASE_URL: "https://api.wolfstar.beta.integrations.wolfstar.rocks",
+		// Keeps the beta site's events apart from production's in Sentry.
+		NUXT_PUBLIC_ENVIRONMENT: "beta",
+		NUXT_PUBLIC_SITE_URL: "https://beta.wolfstar.rocks",
+		NUXT_SESSION_COOKIE_NAME: "wolfstar-session-beta",
+		...optionalVar("NUXT_PUBLIC_TURNSTILE_SITE_KEY"),
+		SENTRY_DSN,
+	},
+} satisfies WranglerConfig;
+
 /** The Worker this build deploys to. */
-export const WORKER = isProductionWorker ? createProductionWorker() : ALPHA_WORKER;
+export const WORKER = isProductionWorker
+	? createProductionWorker()
+	: isBetaWorker
+		? BETA_WORKER
+		: ALPHA_WORKER;
 
 /**
  * Fills the env with the Worker's own `vars` on the Workers build, leaving any

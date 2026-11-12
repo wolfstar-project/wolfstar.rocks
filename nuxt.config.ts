@@ -4,7 +4,7 @@ import { isCI, isTest, provider } from "std-env";
 import {
 	applyWorkerEnv,
 	CLOUDFLARE_BINDINGS,
-	isAlphaWorker,
+	isPrereleaseWorker,
 	isCloudflareBuild,
 	WORKER,
 } from "./config/cloudflare.ts";
@@ -336,10 +336,10 @@ export default defineNuxtConfig({
 		"/wolfstar-v7": { redirect: { statusCode: 301, to: "/blog/wolfstar-v7" } },
 
 		// Static pages
-		// The alpha bot's commands change with each image it runs, so the alpha
-		// Worker renders the page and keeps it an hour instead of freezing it at
-		// build time.
-		"/commands": isAlphaWorker
+		// The alpha and beta bots' commands change with each image they run, so
+		// their Workers render the page and keep it an hour instead of freezing
+		// it at build time.
+		"/commands": isPrereleaseWorker
 			? { appLayout: "default", robots: true, swr: 60 * 60 }
 			: { appLayout: "default", prerender: true, robots: true },
 		"/staryl": { appLayout: "default", prerender: true, robots: true },

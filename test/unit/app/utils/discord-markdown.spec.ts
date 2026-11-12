@@ -218,4 +218,8 @@ describe("blankEmptyFormatting", () => {
 			"`a\n_ _\nb` and ``c\n** **\nd``\n\u200B",
 		);
 	});
+
+	it("opens no code at an escaped backtick", () => {
+		expect(blankEmptyFormatting("\\`literal\n_ _\n`code`")).toBe("\\`literal\n\u200B\n`code`");
+	});
 });

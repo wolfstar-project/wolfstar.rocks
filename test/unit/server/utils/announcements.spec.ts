@@ -229,10 +229,36 @@ describe("appInvites", () => {
 			`Invite her: ${url}.`,
 			`${url}, or not`,
 			`**${url}**`,
-			`||${url}||!`,
+			`~~${url}~~!`,
 		]) {
 			expect(appInvites(content)).toEqual([{ id: "1557826376331960380", url }]);
 		}
+	});
+
+	it("gives no card to a link the author hid in a spoiler", () => {
+		const url = "https://discord.com/oauth2/authorize?client_id=1557826376331960380";
+		expect(appInvites(`Guess who: ||${url}||!`)).toEqual([]);
+		expect(appInvites(`||the new app\n${url}||`)).toEqual([]);
+		expect(appInvites(`||hidden|| then ${url}`)).toEqual([{ id: "1557826376331960380", url }]);
+	});
+
+	it("does not pair the pipes in code or after a backslash with a spoiler", () => {
+		const url = "https://discord.com/oauth2/authorize?client_id=1557826376331960380";
+		expect(appInvites(`Use \`||\` for spoilers. ||${url}||`)).toEqual([]);
+		expect(appInvites(`Type \\|\\| for pipes. ||${url}||`)).toEqual([]);
+		expect(appInvites(`\`||\` ${url} \`||\``)).toEqual([{ id: "1557826376331960380", url }]);
+	});
+
+	it("keeps a link after a backslash, which escapes no letter", () => {
+		const url = "https://discord.com/oauth2/authorize?client_id=1557826376331960380";
+		expect(appInvites(`\\${url}`)).toEqual([{ id: "1557826376331960380", url }]);
+	});
+
+	it("does not open code at an escaped backtick", () => {
+		const url = "https://discord.com/oauth2/authorize?client_id=1557826376331960380";
+		expect(appInvites(`A \\\` mark, ${url} and \`code\``)).toEqual([
+			{ id: "1557826376331960380", url },
+		]);
 	});
 
 	it("ignores other Discord links", () => {

@@ -174,8 +174,7 @@
 						</UFormField>
 						<UFormField
 							:label="ts('guild_settings.automod.rules.editor.duration')"
-							:help="ts('guild_settings.automod.rules.editor.permanent_hint')"
-							:error="actionError"
+							:help="actionHelp"
 						>
 							<GuildAutomodDurationInput
 								v-model="draft.hardActionDuration"
@@ -220,7 +219,10 @@
 									class="w-full"
 								/>
 							</UFormField>
-							<UFormField :label="ts('guild_settings.automod.rules.editor.duration')">
+							<UFormField
+								:label="ts('guild_settings.automod.rules.editor.duration')"
+								:help="muteMethod(step.action, step.duration)"
+							>
 								<GuildAutomodDurationInput
 									v-model="step.duration"
 									:label="ts('guild_settings.automod.rules.editor.duration')"
@@ -243,17 +245,13 @@
 						</li>
 					</ol>
 
-					<p v-if="escalationError" class="text-sm text-error" role="alert">
-						{{ escalationError }}
-					</p>
-
 					<button
 						type="button"
 						class="editor-add-step"
 						:disabled="
 							draft.escalation.length >= MaximumAutoModerationRuleEscalationSteps
 						"
-						@click="draft.escalation.push({ action: 'Timeout', duration: 600_000 })"
+						@click="draft.escalation.push({ action: 'Mute', duration: 600_000 })"
 					>
 						<UIcon name="ic:round-add" class="size-4" aria-hidden="true" />
 						{{ ts("guild_settings.automod.rules.editor.escalation_add") }}
@@ -389,7 +387,11 @@
 </template>
 
 <script setup lang="ts">
-import type { AutoModerationRule, AutoModerationRuleType } from "#shared/utils/automod-rules";
+import type {
+	AutoModerationHardAction,
+	AutoModerationRule,
+	AutoModerationRuleType,
+} from "#shared/utils/automod-rules";
 import type { DeepReadonly } from "@sapphire/utilities";
 import type { AutomodRuleCreate, AutomodRuleErrorCode } from "~/composables/useAutomodRules";
 import type { AutomodRuleDefaults, AutomodRuleDraft } from "~/utils/automod-rule-draft";
@@ -582,14 +584,26 @@ const nameError = computed(() => {
 	return problem ? ts(NAME_PROBLEM_KEYS[problem]) : undefined;
 });
 
-// A timeout cannot be permanent: Discord takes none without an end, whether it
-// is the rule's own action or a step of the escalation.
-const escalationError = computed(() =>
-	submitted.value &&
-	draft.escalation.some((step) => step.action === "Timeout" && step.duration <= 0)
-		? ts("guild_settings.automod.rules.errors.timeoutNeedsDuration")
-		: undefined,
-);
+// What decides whether a mute is a timeout, as the bot reads it. The setting
+// is on until the settings say otherwise, which is its default.
+const { originalGuildSettings } = useGuildSettings();
+const muteSettings = computed(() => ({
+	moderationMuteTimeout: originalGuildSettings.value?.moderationMuteTimeout ?? true,
+	rolesMuted: originalGuildSettings.value?.rolesMuted ?? null,
+}));
+
+/**
+ * Whether a mute of this duration is a timeout or the muted role. Said only
+ * while the server asks for timeouts: turned off, a mute is the role.
+ */
+function muteMethod(action: AutoModerationHardAction, duration: number): string | undefined {
+	if (action !== "Mute" || !muteSettings.value.moderationMuteTimeout) return undefined;
+	return ts(
+		isMuteTimeout(muteSettings.value, duration)
+			? "guild_settings.mute.as_timeout"
+			: "guild_settings.mute.as_role",
+	);
+}
 
 // The server takes a reset window of a minute at least: one shorter would be
 // saved as defaults, then refused with every rule made from them.
@@ -610,11 +624,11 @@ const pendingWordError = computed<string | undefined>(() =>
 		: undefined,
 );
 
-const actionError = computed(() =>
-	submitted.value && draft.hardAction === "Timeout" && draft.hardActionDuration <= 0
-		? ts("guild_settings.automod.rules.errors.timeoutNeedsDuration")
-		: undefined,
-);
+const actionHelp = computed(() => {
+	const permanent = ts("guild_settings.automod.rules.editor.permanent_hint");
+	const method = muteMethod(draft.hardAction, draft.hardActionDuration);
+	return method ? `${permanent} ${method}` : permanent;
+});
 
 const title = computed(() => {
 	if (mode === "defaults") return ts("guild_settings.automod.rules.defaults.rule_title");
@@ -640,21 +654,18 @@ const saveLabel = computed(() => {
 function submit() {
 	submitted.value = true;
 	if (mode === "defaults") {
-		if (actionError.value) return;
 		emit("saveDefaults", { rule: pickAutomodRuleDefaults(draft) });
 		return;
 	}
 	if (mode === "escalation") {
-		if (escalationError.value || escalationDurationError.value) return;
+		if (escalationDurationError.value) return;
 		emit("saveDefaults", { escalation: pickAutomodEscalationDefaults(draft) });
 		return;
 	}
 	if (
 		validateAutomodRuleName(draft.name) !== null ||
-		escalationError.value ||
 		escalationDurationError.value ||
-		pendingWordError.value ||
-		actionError.value
+		pendingWordError.value
 	) {
 		return;
 	}

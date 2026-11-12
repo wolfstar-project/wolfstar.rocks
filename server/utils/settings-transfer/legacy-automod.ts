@@ -59,8 +59,11 @@ function readTexts(row: LegacyRow, column: string): string[] {
 		: [];
 }
 
-/** The hard actions of the bot before V7, by the number its `selfmod.*.hard-action` settings hold. */
-const HardActions = ["None", "Warning", "Kick", "Mute", "Softban", "Ban", "Timeout"];
+/**
+ * The hard actions of the bot before V7, by the number its `selfmod.*.hard-action` settings hold. A legacy `Timeout`
+ * is a `Mute`.
+ */
+const HardActions = ["None", "Warning", "Kick", "Mute", "Softban", "Ban", "Mute"];
 
 const DefaultThreshold = { maximum: 10, duration: 60_000 };
 

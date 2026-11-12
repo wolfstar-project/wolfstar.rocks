@@ -152,6 +152,12 @@ export const ConfigurableModerationToggles: SettingEntry<ToggleSettingKey>[] = [
 			"Mutes or restricts a member, as the commands do, when someone gives them the muted role or a restriction role by hand.",
 	},
 	{
+		key: "moderationMuteTimeout",
+		name: "Use a Discord Timeout When the Duration Allows It",
+		description:
+			"A mute times the member out when its duration is 28 days at most. A permanent or longer mute gives the muted role. Turned off, a mute always gives the muted role.",
+	},
+	{
 		key: "moderationDehoist",
 		name: "Dehoist Names",
 		description:
@@ -161,7 +167,7 @@ export const ConfigurableModerationToggles: SettingEntry<ToggleSettingKey>[] = [
 		key: "moderationDefaultWarnThresholds",
 		name: "Default Warning Thresholds",
 		description:
-			"While the server has no warning thresholds of its own, 3 warnings mute for 30 minutes (a timeout when there is no muted role), 5 kick and 7 ban. The ones added under Warning thresholds below, or with /warn-thresholds add, replace them.",
+			"While the server has no warning thresholds of its own, 3 warnings mute for 30 minutes, 5 kick and 7 ban. The ones added under Warning thresholds below, or with /warn-thresholds add, replace them.",
 	},
 ];
 

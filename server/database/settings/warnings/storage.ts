@@ -1,7 +1,7 @@
 import type { Database } from "#server/database/prisma";
 import type { Snowflake } from "discord-api-types/v10";
 import {
-	isWarnThresholdAction,
+	readStoredWarnThresholdAction,
 	type WarnThreshold,
 	type WarnThresholdData,
 } from "#shared/utils/warn-thresholds";
@@ -20,13 +20,12 @@ export async function fetchWarnThresholds(orm: Orm, guildId: Snowflake): Promise
 	return (
 		rows
 			// An action this version does not know is skipped, as the bot skips it.
-			.filter((row) => isWarnThresholdAction(row.action))
-			.map((row) => ({
-				action: row.action as WarnThreshold["action"],
-				count: row.count,
-				duration: row.duration,
-				period: row.period,
-			}))
+			.flatMap((row): WarnThreshold[] => {
+				const action = readStoredWarnThresholdAction(row.action);
+				return action === null
+					? []
+					: [{ action, count: row.count, duration: row.duration, period: row.period }];
+			})
 			.toSorted((a, b) => a.count - b.count)
 	);
 }

@@ -11,7 +11,7 @@ const rule = {
 	name: "Bad words",
 };
 
-async function mountRuleEditor() {
+async function mountRuleEditor(edited: typeof rule = rule) {
 	const opens: boolean[] = [];
 	const saves: unknown[] = [];
 	const wrapper = await mountSuspended(RuleEditor, {
@@ -19,7 +19,7 @@ async function mountRuleEditor() {
 			"open": true,
 			"onUpdate:open": (value: boolean) => opens.push(value),
 			"onSave": (body: unknown) => saves.push(body),
-			rule,
+			"rule": edited,
 			"guild": createMockOauthFlattenedGuild({ id: rule.guildId }),
 		},
 		attachTo: document.body,
@@ -41,6 +41,32 @@ describe("GuildAutomodRuleEditor", () => {
 		button("Cancel")!.click();
 
 		expect(opens).toStrictEqual([false]);
+		wrapper.unmount();
+	});
+
+	it("says a mute of an hour is a Discord timeout, the setting being on by default", async () => {
+		const { wrapper } = await mountRuleEditor({
+			...rule,
+			hardAction: "Mute",
+			hardActionDuration: 3_600_000,
+		});
+
+		expect(document.body.textContent).toContain(
+			"With this duration, the mute is a Discord timeout.",
+		);
+		wrapper.unmount();
+	});
+
+	it("says a permanent mute gives the muted role", async () => {
+		const { wrapper } = await mountRuleEditor({
+			...rule,
+			hardAction: "Mute",
+			hardActionDuration: null,
+		});
+
+		expect(document.body.textContent).toContain(
+			"With this duration, the mute gives the muted role.",
+		);
 		wrapper.unmount();
 	});
 

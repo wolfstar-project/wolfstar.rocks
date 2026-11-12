@@ -94,6 +94,7 @@ export function getDefaultGuildSettings(): DefaultGuildData {
 			moderationTrackRoles: false,
 			moderationTrackKicks: false,
 			moderationConfirmRecentMinutes: 0,
+			moderationMuteTimeout: true,
 			moderationDehoist: false,
 			moderationLockdownChannels: [],
 			moderationDefaultWarnThresholds: true,

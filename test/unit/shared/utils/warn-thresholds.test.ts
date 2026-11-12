@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
 	getDefaultWarnThresholds,
-	MAXIMUM_TIMEOUT_SECONDS,
+	readStoredWarnThresholdAction,
 	MAXIMUM_WARN_THRESHOLD_SECONDS,
 	parseWarnThresholdCount,
 	parseWarnThresholdData,
@@ -30,23 +30,28 @@ describe("parseWarnThresholdData", () => {
 		});
 	});
 
-	it("refuses a timeout without a duration, or longer than Discord gives", () => {
+	it("refuses a Timeout as a new action: it was merged into Mute", () => {
 		expect(
-			parseWarnThresholdData({ action: "Timeout", duration: null, period: 0 }).errors,
-		).toEqual(["duration: A timeout needs a duration."]);
+			parseWarnThresholdData({ action: "Timeout", duration: 3600, period: 0 }).errors,
+		).toEqual(["action: Expected one of Mute, Kick, Softban, Ban, VoiceKick."]);
+	});
+
+	it("takes a permanent mute, and one longer than a Discord timeout", () => {
+		expect(parseWarnThresholdData({ action: "Mute", duration: null, period: 0 }).data).toEqual({
+			action: "Mute",
+			duration: null,
+			period: 0,
+		});
+		const thirtyDays = 30 * 24 * 60 * 60;
 		expect(
-			parseWarnThresholdData({
-				action: "Timeout",
-				duration: MAXIMUM_TIMEOUT_SECONDS + 1,
-				period: 0,
-			}).errors,
-		).toHaveLength(1);
+			parseWarnThresholdData({ action: "Mute", duration: thirtyDays, period: 0 }).data,
+		).toEqual({ action: "Mute", duration: thirtyDays, period: 0 });
 	});
 
 	it("refuses a warning as the action, which would count towards itself", () => {
 		expect(
 			parseWarnThresholdData({ action: "Warning", duration: null, period: 0 }).errors,
-		).toEqual(["action: Expected one of Timeout, Mute, Kick, Softban, Ban, VoiceKick."]);
+		).toEqual(["action: Expected one of Mute, Kick, Softban, Ban, VoiceKick."]);
 	});
 
 	it("refuses a period past a year, or that is not whole seconds", () => {
@@ -83,22 +88,22 @@ describe("parseWarnThresholdCount", () => {
 });
 
 describe("getDefaultWarnThresholds", () => {
-	it("mutes at the third warning when the server has a muted role", () => {
-		expect(getDefaultWarnThresholds(true)[0]).toEqual({
-			action: "Mute",
-			count: 3,
-			duration: 1800,
-			period: 0,
-		});
+	it("mutes for half an hour at the third warning, kicks at five and bans at seven", () => {
+		expect(getDefaultWarnThresholds()).toEqual([
+			{ action: "Mute", count: 3, duration: 1800, period: 0 },
+			{ action: "Kick", count: 5, duration: null, period: 0 },
+			{ action: "Ban", count: 7, duration: null, period: 0 },
+		]);
+	});
+});
+
+describe("readStoredWarnThresholdAction", () => {
+	it("reads a saved Timeout as a Mute", () => {
+		expect(readStoredWarnThresholdAction("Timeout")).toBe("Mute");
 	});
 
-	it("times out instead when it has none, then kicks at five and bans at seven", () => {
-		expect(getDefaultWarnThresholds(false).map(({ action, count }) => [count, action])).toEqual(
-			[
-				[3, "Timeout"],
-				[5, "Kick"],
-				[7, "Ban"],
-			],
-		);
+	it("keeps a known action and skips an unknown one", () => {
+		expect(readStoredWarnThresholdAction("Ban")).toBe("Ban");
+		expect(readStoredWarnThresholdAction("Warning")).toBeNull();
 	});
 });

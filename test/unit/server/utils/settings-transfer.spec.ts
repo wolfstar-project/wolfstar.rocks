@@ -354,6 +354,30 @@ describe("parseConfigurationFile", () => {
 			options: getDefaultAutoModerationRule("Newlines").options,
 		});
 	});
+
+	// A file exported before `Timeout` was merged into `Mute`.
+	it("reads a Timeout of a saved file as a Mute, in the action and in the steps", () => {
+		const parsed = read({
+			version: 2,
+			automod: {
+				rules: [
+					{
+						name: "Lines",
+						type: "Newlines",
+						hardAction: "Timeout",
+						hardActionDuration: 60_000,
+						escalation: [{ action: "Timeout", duration: 120_000 }],
+					},
+				],
+			},
+		});
+
+		expect(parsed.rules?.[0]).toMatchObject({
+			hardAction: "Mute",
+			hardActionDuration: 60_000,
+			escalation: [{ action: "Mute", duration: 120_000 }],
+		});
+	});
 });
 
 describe("planConfigurationImport", () => {
@@ -608,7 +632,7 @@ describe("a file of the bot before V7", () => {
 				name: "Links",
 				type: "Links",
 				enabled: true,
-				hardAction: "Timeout",
+				hardAction: "Mute",
 				hardActionDuration: 60_000,
 				options: { allowed: ["wolfstar.rocks"] },
 			},

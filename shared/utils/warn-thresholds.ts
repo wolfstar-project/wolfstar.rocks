@@ -16,30 +16,21 @@ export const WARN_THRESHOLD_COUNT = { maximum: 50, minimum: 1 } as const;
 
 /**
  * What a threshold does: every hard action but a warning, which would count
- * towards itself (`WarnThresholdActions`), in the bot's order.
+ * towards itself (`WarnThresholdActions`), in the bot's order. A `Timeout` is
+ * no longer one: it is a `Mute`, which times the member out when the server
+ * has `moderationMuteTimeout` and the duration fits (`shared/utils/mute.ts`).
  */
-export const WARN_THRESHOLD_ACTIONS = [
-	"Timeout",
-	"Mute",
-	"Kick",
-	"Softban",
-	"Ban",
-	"VoiceKick",
-] as const;
+export const WARN_THRESHOLD_ACTIONS = ["Mute", "Kick", "Softban", "Ban", "VoiceKick"] as const;
 export type WarnThresholdAction = (typeof WARN_THRESHOLD_ACTIONS)[number];
 
 /** The actions that last: the others are over the moment they are taken. */
 export const TIMED_WARN_THRESHOLD_ACTIONS = [
-	"Timeout",
 	"Mute",
 	"Ban",
 ] as const satisfies readonly WarnThresholdAction[];
 
 /** The longest period, and the longest action, in seconds: a year, as the command takes them. */
 export const MAXIMUM_WARN_THRESHOLD_SECONDS = 365 * 24 * 60 * 60;
-
-/** The longest timeout Discord gives, in seconds: 28 days. */
-export const MAXIMUM_TIMEOUT_SECONDS = 28 * 24 * 60 * 60;
 
 /** What happens to a member who reaches a number of active warnings. */
 export interface WarnThreshold {
@@ -59,6 +50,16 @@ export function isWarnThresholdAction(value: unknown): value is WarnThresholdAct
 	return (WARN_THRESHOLD_ACTIONS as readonly unknown[]).includes(value);
 }
 
+/**
+ * Reads the action of a stored threshold: a `Timeout` saved before it was
+ * merged into `Mute` is a `Mute`, and an action this version does not know is
+ * `null`.
+ */
+export function readStoredWarnThresholdAction(value: unknown): WarnThresholdAction | null {
+	const action = value === "Timeout" ? "Mute" : value;
+	return isWarnThresholdAction(action) ? action : null;
+}
+
 export function isTimedWarnThresholdAction(action: WarnThresholdAction): boolean {
 	return (TIMED_WARN_THRESHOLD_ACTIONS as readonly string[]).includes(action);
 }
@@ -66,12 +67,13 @@ export function isTimedWarnThresholdAction(action: WarnThresholdAction): boolean
 /**
  * The thresholds a server starts with, while it has none of its own and
  * `moderation.default-warn-thresholds` is on (`getDefaultWarnThresholds`): a
- * mute of half an hour at the third warning, a timeout instead when the server
- * has no muted role, a kick at the fifth and a ban at the seventh.
+ * mute of half an hour at the third warning, a kick at the fifth and a ban at
+ * the seventh. Half an hour fits a Discord timeout, so the mute is one when the
+ * server has `moderationMuteTimeout` on or no muted role.
  */
-export function getDefaultWarnThresholds(hasMutedRole: boolean): WarnThreshold[] {
+export function getDefaultWarnThresholds(): WarnThreshold[] {
 	return [
-		{ action: hasMutedRole ? "Mute" : "Timeout", count: 3, duration: 30 * 60, period: 0 },
+		{ action: "Mute", count: 3, duration: 30 * 60, period: 0 },
 		{ action: "Kick", count: 5, duration: null, period: 0 },
 		{ action: "Ban", count: 7, duration: null, period: 0 },
 	];
@@ -98,9 +100,9 @@ function wholeNumberIn(value: unknown, minimum: number, maximum: number): value 
 
 /**
  * Reads the body of a write: `action`, `duration` (seconds or `null`) and
- * `period` (seconds, `0` for every active warning). A timeout needs a
- * duration, as Discord gives none without an end; an action that does not
- * last drops the one it was sent with.
+ * `period` (seconds, `0` for every active warning). An action that does not
+ * last drops the duration it was sent with. A `Timeout` is refused as a new
+ * value: it was merged into `Mute`.
  */
 export function parseWarnThresholdData(body: unknown): WarnThresholdParseResult {
 	const { action, duration, period } =
@@ -119,10 +121,8 @@ export function parseWarnThresholdData(body: unknown): WarnThresholdParseResult 
 		return { errors };
 	}
 
-	const maximum = action === "Timeout" ? MAXIMUM_TIMEOUT_SECONDS : MAXIMUM_WARN_THRESHOLD_SECONDS;
-	if (duration === null || duration === undefined) {
-		if (action === "Timeout") errors.push("duration: A timeout needs a duration.");
-	} else if (!wholeNumberIn(duration, 1, maximum)) {
+	const maximum = MAXIMUM_WARN_THRESHOLD_SECONDS;
+	if (duration !== null && duration !== undefined && !wholeNumberIn(duration, 1, maximum)) {
 		errors.push(`duration: Expected a whole number of seconds from 1 to ${maximum}, or null.`);
 	}
 

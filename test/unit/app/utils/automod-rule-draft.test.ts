@@ -18,7 +18,7 @@ const rule: AutoModerationRule = {
 	type: "Capitals",
 	enabled: true,
 	softAction: 0b101,
-	hardAction: "Timeout",
+	hardAction: "Mute",
 	hardActionDuration: 600_000,
 	thresholdMaximum: 3,
 	thresholdDuration: 60_000,
@@ -151,6 +151,35 @@ describe("escalation defaults", () => {
 				escalation: { escalation: [], escalationDuration: 30_000 },
 			}).escalationDuration,
 		).toBe(60_000);
+	});
+
+	// Defaults saved in the browser before `Timeout` was merged into `Mute`.
+	it("loads saved defaults that hold a Timeout as a Mute", () => {
+		const base = createAutomodRuleDraft("Capitals");
+		const saved = {
+			rule: { ...base, hardAction: "Timeout", hardActionDuration: 600_000 },
+			escalation: {
+				escalation: [{ action: "Timeout", duration: 60_000 }],
+				escalationDuration: 3_600_000,
+			},
+		} as unknown as Parameters<typeof applyAutomodRuleDefaults>[1];
+
+		const draft = applyAutomodRuleDefaults(base, saved);
+
+		expect(draft.hardAction).toBe("Mute");
+		expect(draft.hardActionDuration).toBe(600_000);
+		expect(draft.escalation).toStrictEqual([{ action: "Mute", duration: 60_000 }]);
+	});
+
+	it("sends a permanent Mute with no duration", () => {
+		const body = automodRuleDraftToBody({
+			...createAutomodRuleDraft("Capitals"),
+			name: "Caps",
+			hardAction: "Mute",
+			hardActionDuration: 0,
+		});
+
+		expect(body).toMatchObject({ hardAction: "Mute", hardActionDuration: null });
 	});
 
 	it("keeps a reset window already within the limits", () => {

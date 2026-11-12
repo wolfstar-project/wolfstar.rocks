@@ -226,7 +226,7 @@ export function useShowcaseCommandCatalogue() {
 			ephemeral: true,
 			options: [
 				{ name: "rule", value: "No Invites" },
-				{ name: "punishment", value: "Timeout", focused: true },
+				{ name: "punishment", value: "Mute", focused: true },
 			],
 			responseType: "panel",
 			accentColor: Colors.Blurple,
@@ -1419,7 +1419,7 @@ export function useShowcaseCommandCatalogue() {
 			ephemeral: true,
 			options: [
 				{ name: "count", value: "3" },
-				{ name: "action", value: "Timeout" },
+				{ name: "action", value: "Mute" },
 				{ name: "duration", value: "1h" },
 				{ name: "period", value: "7d", focused: true },
 			],

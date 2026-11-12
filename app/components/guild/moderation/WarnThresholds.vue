@@ -43,6 +43,7 @@
 				:label="ts('guild_settings.warn_thresholds.fields.duration')"
 				:name="`${formId}-duration`"
 				:hint="timed ? durationHint : undefined"
+				:help="muteMethod"
 			>
 				<GuildAutomodDurationInput
 					v-model="draft.duration"
@@ -250,7 +251,6 @@ const ACTION_TONES: Record<WarnThresholdAction, "error" | "warning" | "neutral">
 	Kick: "warning",
 	Mute: "neutral",
 	Softban: "warning",
-	Timeout: "neutral",
 	VoiceKick: "neutral",
 };
 
@@ -259,6 +259,12 @@ const actionItems = computed(() =>
 );
 
 const hasMutedRole = computed(() => Boolean(originalGuildSettings.value?.rolesMuted));
+// What decides whether a mute is a timeout, as the bot reads it. The setting
+// is on until the settings say otherwise, which is its default.
+const muteSettings = computed(() => ({
+	moderationMuteTimeout: originalGuildSettings.value?.moderationMuteTimeout ?? true,
+	rolesMuted: originalGuildSettings.value?.rolesMuted ?? null,
+}));
 
 // The bot holds a server with none of its own to its defaults while the
 // setting is on: they are shown, and the first one added replaces them all.
@@ -268,14 +274,14 @@ const usingDefaults = computed(
 		originalGuildSettings.value?.moderationDefaultWarnThresholds === true,
 );
 const shown = computed<WarnThreshold[]>(() =>
-	usingDefaults.value ? getDefaultWarnThresholds(hasMutedRole.value) : thresholds.value,
+	usingDefaults.value ? getDefaultWarnThresholds() : thresholds.value,
 );
 
 const isLoading = computed(() => status.value === "pending" && thresholds.value.length === 0);
 
 // The fields work in milliseconds; the API keeps whole seconds.
 const draft = reactive({
-	action: "Timeout" as WarnThresholdAction,
+	action: "Mute" as WarnThresholdAction,
 	count: 3 as number | null,
 	duration: 30 * 60 * 1000,
 	period: 0,
@@ -288,12 +294,19 @@ const replacing = computed(() =>
 const atLimit = computed(
 	() => !replacing.value && thresholds.value.length >= MAXIMUM_WARN_THRESHOLDS,
 );
-const needsMutedRole = computed(() => draft.action === "Mute" && !hasMutedRole.value);
-const durationHint = computed(() =>
-	draft.action === "Timeout"
-		? ts("guild_settings.warn_thresholds.timeout_hint")
-		: ts("guild_settings.warn_thresholds.permanent_hint"),
+const muteIsTimeout = computed(() => isMuteTimeout(muteSettings.value, draft.duration));
+// Without a muted role a mute works only as a timeout.
+const needsMutedRole = computed(
+	() => draft.action === "Mute" && !hasMutedRole.value && !muteIsTimeout.value,
 );
+const durationHint = computed(() => ts("guild_settings.warn_thresholds.permanent_hint"));
+// Said only while the server asks for timeouts: turned off, a mute is the role.
+const muteMethod = computed(() => {
+	if (draft.action !== "Mute" || !muteSettings.value.moderationMuteTimeout) return undefined;
+	return ts(
+		muteIsTimeout.value ? "guild_settings.mute.as_timeout" : "guild_settings.mute.as_role",
+	);
+});
 
 const saving = ref(false);
 const submitted = ref(false);
@@ -314,12 +327,7 @@ const clientError = computed(() => {
 	if (toSeconds(draft.period) > MAXIMUM_WARN_THRESHOLD_SECONDS) {
 		return ts("guild_settings.warn_thresholds.errors.period");
 	}
-	if (draft.action === "Timeout") {
-		const seconds = toSeconds(draft.duration);
-		if (seconds < 1) return ts("guild_settings.warn_thresholds.errors.timeout_duration");
-		if (seconds > MAXIMUM_TIMEOUT_SECONDS)
-			return ts("guild_settings.warn_thresholds.errors.timeout_long");
-	} else if (timed.value && toSeconds(draft.duration) > MAXIMUM_WARN_THRESHOLD_SECONDS) {
+	if (timed.value && toSeconds(draft.duration) > MAXIMUM_WARN_THRESHOLD_SECONDS) {
 		return ts("guild_settings.warn_thresholds.errors.duration");
 	}
 	return null;

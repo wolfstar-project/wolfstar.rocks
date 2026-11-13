@@ -337,9 +337,9 @@ export default defineNuxtConfig({
 		"/wolfstar-v7": { redirect: { statusCode: 301, to: "/blog/wolfstar-v7" } },
 
 		// Static pages
-		// The alpha and beta bots' commands change with each image they run, so
-		// their Workers render the page and keep it an hour instead of freezing
-		// it at build time.
+		// The beta bot's commands change with each image it runs, so its Worker
+		// renders the page and keeps it an hour instead of freezing it at build
+		// time.
 		"/commands": isPrereleaseWorker
 			? { appLayout: "default", robots: true, swr: 60 * 60 }
 			: { appLayout: "default", prerender: true, robots: true },
@@ -808,7 +808,7 @@ export default defineNuxtConfig({
 		sourcemaps: {
 			// Without a token nothing is uploaded, yet the plugins still regenerate
 			// every chunk's source map to inject debug ids: that was most of the
-			// server bundling time, enough to time out the alpha Worker's build.
+			// server bundling time, enough to time out a Workers build.
 			disable: !runtimeConfig.sentry.authToken,
 			filesToDeleteAfterUpload: [".*/**/public/**/*.map", ".output/**/public/**/*.map"],
 		},

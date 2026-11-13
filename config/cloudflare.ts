@@ -5,8 +5,7 @@ import { provider } from "std-env";
  * The build for Cloudflare Workers. One Worker, `wolfstar-rocks`, serves
  * wolfstar.rocks, and its `beta` environment serves beta.wolfstar.rocks: Wrangler
  * deploys an environment as a Worker of its own, `wolfstar-rocks-beta`, with the
- * bindings, variables and domain the environment lists. alpha.wolfstar.rocks is
- * the Worker `wolfstar-alpha`.
+ * bindings, variables and domain the environment lists.
  *
  * `NITRO_PRESET=cloudflare_module` selects the build, and Nitro then writes the
  * chosen configuration to `.output/server/wrangler.json` for `npx wrangler
@@ -18,19 +17,28 @@ export const isCloudflareBuild =
 	process.env.NITRO_PRESET?.startsWith("cloudflare") === true ||
 	provider === "cloudflare_workers";
 
-/**
- * `CLOUDFLARE_WORKER` picks what the build deploys to: `production`, the
- * `beta` environment of the same Worker, or alpha, the default.
- */
-const workerName = process.env.CLOUDFLARE_WORKER;
-const isProductionWorker = workerName === "production";
-const isBetaWorker = workerName === "beta";
+/** What a Workers build deploys to: the production Worker or its `beta` environment. */
+type WorkerTarget = "production" | "beta";
 
 /**
- * Whether this build is for a Worker that runs a bot image still in testing,
- * alpha or beta: their commands change with each image.
+ * Reads `CLOUDFLARE_WORKER`. A Workers build must name its target: no Worker is
+ * a safe default, since a build for the wrong one deploys over another site.
  */
-export const isPrereleaseWorker = isCloudflareBuild && !isProductionWorker;
+function parseWorkerTarget(value: string | undefined): WorkerTarget | undefined {
+	if (!isCloudflareBuild) return undefined;
+	if (value === "production" || value === "beta") return value;
+	throw new Error(
+		`CLOUDFLARE_WORKER must be "production" or "beta" for a Workers build, not "${value ?? ""}".`,
+	);
+}
+
+const workerTarget = parseWorkerTarget(process.env.CLOUDFLARE_WORKER);
+
+/**
+ * Whether this build is for the beta Worker, which runs a bot image still in
+ * testing: its commands change with each image.
+ */
+export const isPrereleaseWorker = workerTarget === "beta";
 
 /** Names of the Worker's bindings, as the server code reads them. */
 export const CLOUDFLARE_BINDINGS = {
@@ -110,12 +118,17 @@ const PRODUCTION_WORKER_NAME = "wolfstar-rocks";
  * deploy workflow, and the build stops without them: `vars` replaces what the
  * dashboard holds, so an empty client id would deploy and break sign-in.
  *
- * It serves wolfstar.rocks, and alpha.wolfstar.rocks until the first release
- * from it: that domain is then dropped. beta.wolfstar.rocks is its `beta`
- * environment, {@link BETA_ENVIRONMENT}.
+ * It serves wolfstar.rocks. beta.wolfstar.rocks is its `beta` environment,
+ * {@link BETA_ENVIRONMENT}.
  *
- * The secrets are set as on {@link ALPHA_WORKER}, with `--name wolfstar-rocks`.
- * The Turnstile site key is a public repository variable of the deploy workflow.
+ * Nitro's generated configuration replaces what the Cloudflare dashboard holds,
+ * so every plain variable the Worker needs is listed in `vars`; the build reads
+ * them too. The secrets are set with `npx wrangler secret put <NAME> --name
+ * wolfstar-rocks` and outlive each deploy: `NUXT_BETTER_AUTH_SECRET`,
+ * `NUXT_DISCORD_BOT_TOKEN` and `NUXT_DISCORD_CLIENT_SECRET`, among others. At
+ * run time Nitro overrides a runtime config key from the env var named after its
+ * path, so these are not the `NUXT_OAUTH_DISCORD_*` names the build reads. The
+ * Turnstile site key is a public repository variable of the deploy workflow.
  */
 function createProductionWorker() {
 	return {
@@ -139,10 +152,7 @@ function createProductionWorker() {
 			{ binding: CLOUDFLARE_BINDINGS.skewProtection, id: "416c6dd69b3a4bf7a1cfca13ba1a5955" },
 		],
 		name: PRODUCTION_WORKER_NAME,
-		routes: [
-			{ custom_domain: true, pattern: "wolfstar.rocks" },
-			{ custom_domain: true, pattern: "alpha.wolfstar.rocks" },
-		],
+		routes: [{ custom_domain: true, pattern: "wolfstar.rocks" }],
 		vars: {
 			NUXT_OAUTH_DISCORD_CLIENT_ID: requireEnv("NUXT_OAUTH_DISCORD_CLIENT_ID"),
 			NUXT_PUBLIC_API_BASE_URL: "https://api.wolfstar.rocks",
@@ -153,50 +163,6 @@ function createProductionWorker() {
 		},
 	} satisfies WranglerConfig;
 }
-
-/**
- * The alpha Worker. It shares the database of the WolfStar Alpha bot, the
- * staging environment on Railway, through a Hyperdrive with query caching off,
- * so a setting read back after a save is the saved one. The ids are of
- * resources in the WolfStar Cloudflare account, not secrets.
- *
- * Nitro's generated configuration replaces what the Cloudflare dashboard holds,
- * so every plain variable the Worker needs is listed in `vars`; the build reads
- * them too. The secrets are set with `npx wrangler secret put <NAME> --name
- * wolfstar-alpha` and outlive each deploy: `NUXT_BETTER_AUTH_SECRET`,
- * `NUXT_DISCORD_BOT_TOKEN` and `NUXT_DISCORD_CLIENT_SECRET`. At run time Nitro
- * overrides a runtime config key from the env var named after its path, so
- * these are not the `NUXT_OAUTH_DISCORD_*` names the build reads.
- */
-const ALPHA_WORKER = {
-	...WORKER_DEFAULTS,
-	d1_databases: [
-		{
-			binding: CLOUDFLARE_BINDINGS.contentDatabase,
-			database_id: "b4445647-fed9-40ed-b4d3-299880ad7946",
-			database_name: "wolfstar-alpha-content",
-		},
-	],
-	hyperdrive: [{ binding: CLOUDFLARE_BINDINGS.database, id: "e151ba0c2b0e409c90fbdc4a56ef15aa" }],
-	kv_namespaces: [
-		{ binding: CLOUDFLARE_BINDINGS.cache, id: "de83f44d706f44da83bdcc59975b3c36" },
-		{ binding: CLOUDFLARE_BINDINGS.rateLimit, id: "f9b5b50991c44b7f981a966e35180edb" },
-		{ binding: CLOUDFLARE_BINDINGS.skewProtection, id: "9518d22a8f88456e9fcedb50ab30bdfc" },
-	],
-	name: "wolfstar-alpha",
-	routes: [{ custom_domain: true, pattern: "alpha.wolfstar.rocks" }],
-	vars: {
-		// The WolfStar Alpha application on Discord.
-		NUXT_OAUTH_DISCORD_CLIENT_ID: "1557826376331960380",
-		// The alpha bot's API, which answers this origin only.
-		NUXT_PUBLIC_API_BASE_URL: "https://api.wolfstar.integrations.wolfstar.rocks",
-		// Keeps the alpha site's events apart from production's in Sentry.
-		NUXT_PUBLIC_ENVIRONMENT: "alpha",
-		NUXT_PUBLIC_SITE_URL: "https://alpha.wolfstar.rocks",
-		...optionalVar("NUXT_PUBLIC_TURNSTILE_SITE_KEY"),
-		SENTRY_DSN,
-	},
-} satisfies WranglerConfig;
 
 /**
  * The `beta` environment of the production Worker, deployed as
@@ -213,7 +179,7 @@ const ALPHA_WORKER = {
  * the bot's API have names of their own, or the two sites would read each
  * other's.
  *
- * The secrets are set as on {@link ALPHA_WORKER}, with `--name wolfstar-rocks-beta`.
+ * The secrets are set as on the production Worker, with `--name wolfstar-rocks-beta`.
  */
 const BETA_ENVIRONMENT = {
 	version_metadata: WORKER_DEFAULTS.version_metadata,
@@ -264,23 +230,23 @@ const BETA_BUILD = {
 	env: { beta: BETA_ENVIRONMENT },
 };
 
-const PRODUCTION_WORKER = isProductionWorker ? createProductionWorker() : undefined;
+const PRODUCTION_WORKER = workerTarget === "production" ? createProductionWorker() : undefined;
 
-/** The configuration this build writes for Wrangler. */
-export const WORKER = PRODUCTION_WORKER ?? (isBetaWorker ? BETA_BUILD : ALPHA_WORKER);
+/** The configuration a Workers build writes for Wrangler; none on other builds. */
+export const WORKER = PRODUCTION_WORKER ?? (workerTarget === "beta" ? BETA_BUILD : undefined);
 
 /** The Wrangler environment the build is deployed with (`--env`), if any. */
-export const WORKER_DEPLOY_ENV = isBetaWorker ? "beta" : undefined;
+export const WORKER_DEPLOY_ENV = workerTarget === "beta" ? "beta" : undefined;
 
 /**
  * What the deployed Worker runs with: the top level of the configuration, or
- * the environment it is deployed as.
+ * the environment it is deployed as. None on builds that are not for Workers.
  */
 export const DEPLOYED_WORKER =
-	PRODUCTION_WORKER ?? (isBetaWorker ? BETA_ENVIRONMENT : ALPHA_WORKER);
+	PRODUCTION_WORKER ?? (workerTarget === "beta" ? BETA_ENVIRONMENT : undefined);
 
 /** The id of the KV namespace that keeps past builds' assets for skew protection. */
-export const SKEW_PROTECTION_NAMESPACE_ID = DEPLOYED_WORKER.kv_namespaces.find(
+export const SKEW_PROTECTION_NAMESPACE_ID = DEPLOYED_WORKER?.kv_namespaces.find(
 	(namespace) => namespace.binding === CLOUDFLARE_BINDINGS.skewProtection,
 )?.id;
 
@@ -292,7 +258,7 @@ export const SKEW_PROTECTION_NAMESPACE_ID = DEPLOYED_WORKER.kv_namespaces.find(
  * would run too late.
  */
 export function applyWorkerEnv() {
-	if (!isCloudflareBuild) return;
+	if (!DEPLOYED_WORKER) return;
 	for (const [name, value] of Object.entries(DEPLOYED_WORKER.vars)) {
 		process.env[name] ??= value;
 	}

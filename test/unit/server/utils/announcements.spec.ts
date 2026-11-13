@@ -212,7 +212,7 @@ describe("toAnnouncements with Components V2", () => {
 					components: [
 						{ content: "For <@&400000000000000001>:", type: 10 },
 						{
-							accent_color: 0xFEE75C,
+							accent_color: 0xfee75c,
 							components: [
 								{ content: "## v0.16.0 in <#300000000000000001>", type: 10 },
 								{ divider: true, spacing: 2, type: 14 },

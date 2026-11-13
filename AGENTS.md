@@ -54,7 +54,7 @@ The long-form notes for each area live in [`docs/arch/`](docs/arch/README.md). R
 | Appearance, language, and motion preferences          | [`docs/arch/settings.md`](docs/arch/settings.md)                       |
 | Locale files, Tolgee, Nuxt I18n Micro                 | [`docs/arch/i18n.md`](docs/arch/i18n.md)                               |
 | Workers KV storage, rate-limit storage                | [`docs/arch/storage-and-caching.md`](docs/arch/storage-and-caching.md) |
-| Cloudflare Workers build, alpha.wolfstar.rocks        | [`docs/arch/cloudflare-workers.md`](docs/arch/cloudflare-workers.md)   |
+| Cloudflare Workers build, beta.wolfstar.rocks         | [`docs/arch/cloudflare-workers.md`](docs/arch/cloudflare-workers.md)   |
 | Audit events and the hash chain                       | [`docs/arch/audit-logging.md`](docs/arch/audit-logging.md)             |
 | Router View Transitions                               | [`docs/arch/view-transitions.md`](docs/arch/view-transitions.md)       |
 | Color tokens, theme selectors                         | [`docs/arch/design-tokens.md`](docs/arch/design-tokens.md)             |

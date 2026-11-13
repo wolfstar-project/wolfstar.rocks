@@ -87,6 +87,19 @@
 						<MessageGroupContent v-if="item.content">
 							<DashboardPostMarkdown :source="item.content" />
 						</MessageGroupContent>
+						<template v-for="(part, index) of item.components" :key="index">
+							<DiscordV2Container
+								v-if="part.kind === 'container'"
+								:accent-color="part.accent"
+							>
+								<DashboardPostBlock
+									v-for="(block, blockIndex) of part.components"
+									:key="blockIndex"
+									:block
+								/>
+							</DiscordV2Container>
+							<DashboardPostBlock v-else :block="part" class="mt-1.5" />
+						</template>
 						<Embed
 							v-for="(embed, index) of item.embeds"
 							:key="index"

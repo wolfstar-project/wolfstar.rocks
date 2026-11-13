@@ -116,7 +116,11 @@ import { createError } from "h3";
 import { describe, expect, it, vi } from "vitest";
 import VerifyPage from "~/pages/verify/[guild].vue";
 import { moderationActivityChart } from "~/utils/moderation-activity";
-import { MOCK_ANNOUNCEMENTS, MOCK_APP_INVITE } from "~~/test/mocks/announcements";
+import {
+	MOCK_ANNOUNCEMENTS,
+	MOCK_APP_INVITE,
+	MOCK_COMPONENTS_V2,
+} from "~~/test/mocks/announcements";
 import { MOCK_AUDIT_ENTRY, MOCK_MODERATION_ENTRY } from "~~/test/mocks/auditLogs";
 import { createMockOauthFlattenedGuild, createMockRole } from "~~/test/mocks/discord";
 import { createMockGuildData } from "~~/test/mocks/guildData";
@@ -776,7 +780,11 @@ describe("component accessibility audits", () => {
 				method: "GET",
 				handler: () => [
 					MOCK_ANNOUNCEMENTS[0],
-					{ ...MOCK_ANNOUNCEMENTS[1], apps: [MOCK_APP_INVITE] },
+					{
+						...MOCK_ANNOUNCEMENTS[1],
+						apps: [MOCK_APP_INVITE],
+						components: MOCK_COMPONENTS_V2,
+					},
 				],
 			});
 			clearNuxtState(["dm:posts", "dm:status"]);

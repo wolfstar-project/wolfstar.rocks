@@ -5,6 +5,7 @@ import { DIRECT_MESSAGE_THREADS, groupNewsByDay, unreadNews } from "~/utils/dire
 const post = (id: string, at: string): Announcement => ({
 	apps: [],
 	at,
+	components: [],
 	content: "",
 	embeds: [],
 	id,

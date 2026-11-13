@@ -22,7 +22,7 @@ export function useUser(authUser: MaybeRefOrGetter<AuthUser | null>, options?: U
 	const showManageableOnly = computed(() => options?.search?.showManageableOnly?.value ?? false);
 	const sortAscending = computed(() => options?.search?.sortAscending?.value ?? true);
 
-	const asyncData = useLazyAsyncData(
+	const asyncData = usePersistedAsyncData(
 		() => {
 			const userValue = toValue(authUser);
 			return userValue ? `user:${userValue.id}:data` : "user:anonymous:data";
@@ -49,10 +49,7 @@ export function useUser(authUser: MaybeRefOrGetter<AuthUser | null>, options?: U
 
 			return { ...data, isStale };
 		},
-		{
-			server: false,
-			watch: [() => toValue(authUser)?.id ?? null],
-		},
+		{ watch: [() => toValue(authUser)?.id ?? null] },
 	);
 
 	async function refreshGuildList() {

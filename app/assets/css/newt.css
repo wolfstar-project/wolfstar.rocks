@@ -1,0 +1,155 @@
+/*
+ * newt/ui design tokens, as `npx newtui init` writes them since newtui 2.5:
+ * one complete light `:root`, only `newt` names in `@theme` (the app keeps its
+ * own radii, fonts and shadows), and no second `@import "tailwindcss"`
+ * (`main.css` imports this file).
+ *
+ * Kept by hand: the dark values follow the app's `theme-dark` variant, and
+ * the `midnight` block below gives Onyx its own surfaces. Update the
+ * components with `npx newtui add <name> --overwrite`; `add` writes no
+ * tokens, so a token a new version uses is added here.
+ */
+@theme {
+	--color-newt-bg-base: var(--newt-bg-base);
+	--color-newt-bg-surface: var(--newt-bg-surface);
+	--color-newt-bg-elevated: var(--newt-bg-elevated);
+	--color-newt-bg-floating: var(--newt-bg-floating);
+	--color-newt-bg-input: var(--newt-bg-input);
+	--color-newt-bg-input-elevated: var(--newt-bg-input-elevated);
+	--color-newt-bg-hover: var(--newt-bg-hover);
+	--color-newt-bg-active: var(--newt-bg-active);
+	--color-newt-border: var(--newt-border);
+	--color-newt-text-primary: var(--newt-text-primary);
+	--color-newt-text-secondary: var(--newt-text-secondary);
+	--color-newt-text-muted: var(--newt-text-muted);
+	--color-newt-text-link: var(--newt-text-link);
+	--color-newt-brand: var(--newt-brand);
+	--color-newt-brand-hover: var(--newt-brand-hover);
+	--color-newt-brand-active: var(--newt-brand-active);
+	--color-newt-online: var(--newt-online);
+	--color-newt-idle: var(--newt-idle);
+	--color-newt-dnd: var(--newt-dnd);
+	--color-newt-offline: var(--newt-offline);
+	--color-newt-danger: var(--newt-danger);
+	--color-newt-danger-hover: var(--newt-danger-hover);
+	--color-newt-mention-text: var(--newt-mention-text);
+	--color-newt-mention-role: var(--newt-mention-role);
+	--color-newt-on-accent: var(--newt-on-accent);
+	--color-newt-overlay: var(--newt-overlay);
+	--color-newt-bg-message-hover: var(--newt-bg-message-hover);
+	--color-newt-text-message: var(--newt-text-message);
+	--color-newt-spoiler: var(--newt-spoiler);
+	--color-newt-spoiler-hover: var(--newt-spoiler-hover);
+	--color-newt-code-bg: var(--newt-code-bg);
+	--color-newt-code-keyword: var(--newt-code-keyword);
+	--color-newt-code-string: var(--newt-code-string);
+	--color-newt-code-comment: var(--newt-code-comment);
+	--color-newt-code-function: var(--newt-code-function);
+	--ease-newt: var(--newt-ease);
+}
+
+:root {
+	--newt-bg-base: #e3e5e8;
+	--newt-bg-surface: #f2f3f5;
+	--newt-bg-elevated: #ffffff;
+	--newt-bg-floating: #ffffff;
+	--newt-bg-input: #ebedef;
+	--newt-bg-input-elevated: #ffffff;
+	--newt-bg-hover: rgba(6, 6, 7, 0.08);
+	--newt-bg-active: rgba(6, 6, 7, 0.12);
+	--newt-border: #d3d5d9;
+	--newt-text-primary: #060607;
+	--newt-text-secondary: #4e5058;
+	--newt-text-muted: #5c5e66;
+	--newt-text-link: #006ce7;
+	--newt-brand: #5865f2;
+	--newt-brand-hover: #4752c4;
+	--newt-brand-active: #3c45a5;
+	--newt-online: #248046;
+	--newt-idle: #b58500;
+	--newt-dnd: #d83a3e;
+	--newt-offline: #80848e;
+	--newt-danger: #d83a3e;
+	--newt-danger-hover: #a12828;
+	--newt-mention-text: #505cdc;
+	--newt-mention-role: #a06a00;
+	--newt-on-accent: #ffffff;
+	--newt-overlay: rgba(0, 0, 0, 0.6);
+	--newt-bg-message-hover: rgba(6, 6, 7, 0.03);
+	/* The text of a message, Discord's "text-normal": brighter than the
+	   secondary text the registry's message content uses. App-only. */
+	--newt-text-message: #313338;
+	--newt-spoiler: #d4d7dc;
+	--newt-spoiler-hover: #c4c9ce;
+	--newt-code-bg: #f8f9fa;
+	--newt-code-keyword: #0000ff;
+	--newt-code-string: #a31515;
+	--newt-code-comment: #008000;
+	--newt-code-function: #795e26;
+	--newt-embed-max-width: 520px;
+	--newt-ease: cubic-bezier(0.3, 0.7, 0.4, 1);
+
+	@variant theme-dark {
+		--newt-bg-base: #1e1f22;
+		--newt-bg-surface: #2b2d31;
+		--newt-bg-elevated: #313338;
+		--newt-bg-floating: #1e1f22;
+		--newt-bg-input: #1e1f22;
+		--newt-bg-input-elevated: #383a40;
+		--newt-bg-hover: rgba(78, 80, 88, 0.4);
+		--newt-bg-active: rgba(78, 80, 88, 0.6);
+		--newt-border: #3f4147;
+		--newt-text-primary: #f2f3f5;
+		--newt-text-secondary: #b5bac1;
+		--newt-text-muted: #949ba4;
+		--newt-text-link: #00a8fc;
+		--newt-online: #23a55a;
+		--newt-idle: #f0b232;
+		--newt-dnd: #f23f42;
+		--newt-danger: #da373c;
+		--newt-mention-text: #b3baff;
+		--newt-mention-role: #f3b95f;
+		--newt-bg-message-hover: rgba(2, 2, 2, 0.06);
+		--newt-text-message: #dbdee1;
+		--newt-spoiler: #1a1a1e;
+		--newt-spoiler-hover: #232328;
+		--newt-code-bg: #111214;
+		--newt-code-keyword: #569cd6;
+		--newt-code-string: #ce9178;
+		--newt-code-comment: #6a9955;
+		--newt-code-function: #dcdcaa;
+	}
+}
+
+/* Onyx, the app's `midnight` theme: the dark text on Onyx's own black surfaces. */
+[data-theme="midnight"],
+.midnight {
+	--newt-bg-base: var(--ink-800);
+	--newt-bg-surface: var(--ink-700);
+	--newt-bg-elevated: var(--ink-600);
+	--newt-bg-floating: var(--ink-800);
+	--newt-bg-input: var(--ink-500);
+	--newt-bg-input-elevated: var(--ink-400);
+	--newt-bg-hover: rgba(78, 80, 88, 0.4);
+	--newt-bg-active: rgba(78, 80, 88, 0.6);
+	--newt-border: var(--ink-300);
+	--newt-text-primary: #f2f3f5;
+	--newt-text-secondary: #b5bac1;
+	--newt-text-muted: #949ba4;
+	--newt-text-link: #00a8fc;
+	--newt-online: #23a55a;
+	--newt-idle: #f0b232;
+	--newt-dnd: #f23f42;
+	--newt-danger: #da373c;
+	--newt-mention-text: #b3baff;
+	--newt-mention-role: #f3b95f;
+	--newt-bg-message-hover: rgba(2, 2, 2, 0.06);
+	--newt-text-message: #dbdee1;
+	--newt-spoiler: #1a1a1e;
+	--newt-spoiler-hover: #232328;
+	--newt-code-bg: #111214;
+	--newt-code-keyword: #569cd6;
+	--newt-code-string: #ce9178;
+	--newt-code-comment: #6a9955;
+	--newt-code-function: #dcdcaa;
+}

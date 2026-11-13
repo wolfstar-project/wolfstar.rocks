@@ -16,8 +16,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
  * races remain a documented limitation.
  */
 
-const { storageState, gate, mockRequireUserSession } = vi.hoisted(() => {
+const { storageState, storageTtl, gate, mockRequireUserSession } = vi.hoisted(() => {
 	const storageState = new Map<string, unknown>();
+	const storageTtl = new Map<string, number | undefined>();
 
 	// Gate lets tests pause storage reads so two requests interleave
 	// deterministically: both read before either writes.
@@ -36,8 +37,9 @@ const { storageState, gate, mockRequireUserSession } = vi.hoisted(() => {
 					finish();
 				}
 			}),
-		setItem: async (key: string, value: unknown) => {
+		setItem: async (key: string, value: unknown, options?: { ttl?: number }) => {
 			storageState.set(key, value);
+			storageTtl.set(key, options?.ttl);
 		},
 	});
 	g.requireUserSession = mockRequireUserSession;
@@ -54,7 +56,7 @@ const { storageState, gate, mockRequireUserSession } = vi.hoisted(() => {
 		return clone;
 	};
 
-	return { storageState, gate, mockRequireUserSession };
+	return { storageState, storageTtl, gate, mockRequireUserSession };
 });
 
 vi.mock("evlog", () => ({
@@ -80,9 +82,9 @@ vi.mock("#server/utils/sentry-metrics", () => ({
 	withApiMetrics: vi.fn((_event: unknown, fn: () => unknown) => fn()),
 }));
 
-// The real module pulls in Nitro's storage runtime (`#nitro-internal-virtual/storage`),
-// which is unavailable outside a Nitro build; stub the outdated-client check so the
-// wrapper imports cleanly and stays a no-op for these rate-limit ordering tests.
+// `nuxt-skew-protection/server` reads the version cookie through `nuxt/server`, which only
+// resolves inside a Nuxt build; stub the outdated-client check so the wrapper imports
+// cleanly and stays a no-op for these rate-limit ordering tests.
 vi.mock("nuxt-skew-protection/server", () => ({
 	isClientOutdated: vi.fn(() => false),
 }));
@@ -92,6 +94,7 @@ import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler"
 function makeEvent(): H3Event {
 	return {
 		node: { req: { method: "GET", socket: {} } },
+		context: {},
 		headers: new Headers(),
 	} as unknown as H3Event;
 }
@@ -106,6 +109,7 @@ describe("rate-limit reservations under concurrency", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		storageState.clear();
+		storageTtl.clear();
 		gate.pending = [];
 		gate.hold = false;
 		mockRequireUserSession.mockResolvedValue({ user: { id: "user-1" } });
@@ -145,7 +149,9 @@ describe("rate-limit reservations under concurrency", () => {
 		expect(fulfilled).toHaveLength(1);
 		expect(rejected).toHaveLength(1);
 		expect(innerHandler).toHaveBeenCalledTimes(1);
-		expect(storageState.get("rate-limiter-state:user-1")).toMatchObject({ count: 1 });
+		expect(storageState.get("rate-limiter-state:GET:/api/test:user-1")).toMatchObject({
+			count: 1,
+		});
 	});
 
 	it("rolls back only the failing request's own reservation", async () => {
@@ -177,7 +183,33 @@ describe("rate-limit reservations under concurrency", () => {
 
 		// Request A (t=1000) failed and must be the one removed; request B's
 		// successful reservation (t=2000) must survive.
-		expect(storageState.get("rate-limiter-state:user-1")).toEqual({ timestamps: [2_000] });
+		expect(storageState.get("rate-limiter-state:GET:/api/test:user-1")).toEqual({
+			timestamps: [2_000],
+		});
+	});
+
+	// A route that answers its checks with errors would otherwise leave every
+	// refused try free, as the verification of a join does.
+	it("keeps a failing request's reservation when the route counts failures", async () => {
+		vi.useFakeTimers();
+		vi.setSystemTime(1_000);
+
+		const innerHandler = vi.fn().mockRejectedValue(new Error("refused"));
+		const handler = defineWrappedResponseHandler(innerHandler, {
+			auth: true,
+			rateLimit: {
+				countFailures: true,
+				enabled: true,
+				limit: 2,
+				type: "sliding",
+				window: 60_000,
+			},
+		});
+
+		await expect(handler(makeEvent())).rejects.toThrow("refused");
+		await expect(handler(makeEvent())).rejects.toThrow("refused");
+		await expect(handler(makeEvent())).rejects.toThrow("Too Many Requests");
+		expect(innerHandler).toHaveBeenCalledTimes(2);
 	});
 
 	it("does not rate limit when disabled", async () => {
@@ -212,6 +244,73 @@ describe("rate-limit reservations under concurrency", () => {
 		vi.setSystemTime(12_001);
 		await expect(handler(makeEvent())).resolves.toBe("ok");
 		expect(innerHandler).toHaveBeenCalledTimes(2);
+	});
+
+	it("counts each route on its own, so a busy route cannot starve a strict one", async () => {
+		const g = globalThis as Record<string, unknown>;
+		const originalUrl = g.getRequestURL;
+		const busy = defineWrappedResponseHandler(vi.fn().mockResolvedValue("busy"), {
+			auth: true,
+			rateLimit: { enabled: true, limit: 10, type: "fixed", window: 10_000 },
+		});
+		const strict = defineWrappedResponseHandler(vi.fn().mockResolvedValue("strict"), {
+			auth: true,
+			rateLimit: { enabled: true, limit: 2, type: "fixed", window: 5000 },
+		});
+
+		try {
+			g.getRequestURL = () => new URL("http://localhost/api/guilds/1/settings");
+			for (let i = 0; i < 5; i++) await busy(makeEvent());
+
+			// The same member's first call to another route is theirs to make
+			g.getRequestURL = () => new URL("http://localhost/api/guilds/1/members");
+			await expect(strict(makeEvent())).resolves.toBe("strict");
+			await expect(strict(makeEvent())).resolves.toBe("strict");
+			await expect(strict(makeEvent())).rejects.toThrow("Too Many Requests");
+		} finally {
+			g.getRequestURL = originalUrl;
+		}
+	});
+
+	it("counts the calls to one route together, whatever the IDs in its path", async () => {
+		const g = globalThis as Record<string, unknown>;
+		const originalUrl = g.getRequestURL;
+		const handler = defineWrappedResponseHandler(vi.fn().mockResolvedValue("ok"), {
+			auth: true,
+			rateLimit: { enabled: true, limit: 2, type: "fixed", window: 5000 },
+		});
+		const eventFor = (guild: string) => {
+			g.getRequestURL = () => new URL(`http://localhost/api/guilds/${guild}/members`);
+			const event = makeEvent();
+			event.context = { matchedRoute: { path: "/api/guilds/:guild/members" } };
+			return event;
+		};
+
+		try {
+			await handler(eventFor("1"));
+			await handler(eventFor("2"));
+			await expect(handler(eventFor("3"))).rejects.toThrow("Too Many Requests");
+		} finally {
+			g.getRequestURL = originalUrl;
+		}
+	});
+
+	it("lets a counter expire with its window, so idle routes leave nothing behind", async () => {
+		const fixed = defineWrappedResponseHandler(vi.fn().mockResolvedValue("ok"), {
+			auth: true,
+			rateLimit: { enabled: true, limit: 3, type: "fixed", window: 10_000 },
+		});
+		await fixed(makeEvent());
+		expect(storageTtl.get("rate-limiter-state:GET:/api/test:user-1")).toBe(10);
+
+		storageTtl.clear();
+		storageState.clear();
+		const sliding = defineWrappedResponseHandler(vi.fn().mockResolvedValue("ok"), {
+			auth: true,
+			rateLimit: { enabled: true, limit: 3, type: "sliding", window: 30_000 },
+		});
+		await sliding(makeEvent());
+		expect(storageTtl.get("rate-limiter-state:GET:/api/test:user-1")).toBe(30);
 	});
 
 	it("fails open when the rate-limit storage cannot be read", async () => {

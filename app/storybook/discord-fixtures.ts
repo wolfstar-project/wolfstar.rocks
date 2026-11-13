@@ -3,7 +3,8 @@ import type {
 	DiscordMemberListMember,
 	StringSelectMenuOption,
 } from "~/types/discord";
-import { Colors, showcaseCommands } from "~/utils/constants";
+import { Colors } from "~/types/constants";
+import { showcaseCommands } from "~/utils/constants";
 
 export const discordChatMessages: readonly DiscordChatMessage[] = [
 	{

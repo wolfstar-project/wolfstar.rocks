@@ -29,7 +29,16 @@
 		<ClientOnly>
 			<DeferredMount>
 				<div class="fixed bottom-4 left-4 z-50 flex flex-col space-y-2">
-					<LazyPwaPrompt />
+					<LazySkewPrompt />
+				</div>
+			</DeferredMount>
+		</ClientOnly>
+
+		<!-- Above the floating buttons: on a phone the notice spans the screen's width. -->
+		<ClientOnly>
+			<DeferredMount>
+				<div class="pointer-events-none fixed inset-x-4 bottom-4 z-[60] flex sm:right-auto">
+					<LazyConsentManager />
 				</div>
 			</DeferredMount>
 		</ClientOnly>
@@ -48,6 +57,8 @@ const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"
 .app-layout {
 	@apply flex min-h-screen flex-col;
 	position: relative;
+	/* Its own stacking context, so the glow below sits under the page, not over it. */
+	isolation: isolate;
 	background-color: var(--color-base-100);
 	/* Prevent wide interactive previews from creating page-level horizontal scroll. */
 	overflow-x: clip;
@@ -55,7 +66,7 @@ const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"
 
 .app-layout::before {
 	position: absolute;
-	z-index: 0;
+	z-index: -1;
 	inset: 0;
 	background-image:
 		radial-gradient(

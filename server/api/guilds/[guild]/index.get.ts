@@ -1,5 +1,5 @@
 import type { RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
-import { readSettings } from "#server/database";
+import { isGuildUnconfigured, readSettings } from "#server/database";
 import { GuildQuerySchema } from "#shared/schemas";
 import { createError, useLogger } from "evlog";
 import { parse } from "valibot";
@@ -15,6 +15,11 @@ export default defineWrappedResponseHandler(
 			parse(GuildQuerySchema, body),
 		);
 
+		// The member does not wait on the guild: both are asked for at once.
+		const memberRequest = getCurrentMember(event, guildId);
+		// When the guild is missing the member is never awaited; keep its
+		// failure from surfacing as an unhandled rejection.
+		memberRequest.catch(() => undefined);
 		const guild = await resolveGuildForRequest(event, guildId);
 		if (!guild) {
 			throw createError({
@@ -24,7 +29,7 @@ export default defineWrappedResponseHandler(
 			});
 		}
 
-		const member = await getCurrentMember(event, guild.id);
+		const member = await memberRequest;
 		log.set({ member: { id: member.user.id } });
 
 		const settings = await readSettings(guild.id);
@@ -58,7 +63,7 @@ export default defineWrappedResponseHandler(
 		log.set({
 			result: { channelCount: channels.length, serialized: Boolean(shouldSerialize) },
 		});
-		return result;
+		return isGuildUnconfigured(guild.id) ? { ...result, setupPending: true } : result;
 	},
 	{
 		auth: true,

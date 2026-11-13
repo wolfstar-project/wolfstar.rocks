@@ -1,0 +1,133 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+const { mockFetchGuildData } = vi.hoisted(() => ({ mockFetchGuildData: vi.fn() }));
+
+vi.mock("#server/database/prisma", () => ({ db: { orm: {} } }));
+vi.mock("#server/database/settings/storage", () => ({
+	fetchGuildData: mockFetchGuildData,
+	writeGuildData: vi.fn(async () => undefined),
+}));
+vi.mock("#server/database/settings/context/functions", () => ({
+	getSettingsContext: vi.fn(),
+	updateSettingsContext: vi.fn(),
+}));
+
+import {
+	isGuildUnconfigured,
+	readFreshSettings,
+	readSettings,
+	SETTINGS_CACHE_MAX_AGE,
+	writeSettingsTransaction,
+} from "#server/database/settings/functions";
+
+const GUILD_ID = "123456789012345678";
+
+describe("readFreshSettings", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
+
+	// The bot and the other instances of the dashboard write the settings too,
+	// and this process only learns of its own writes.
+	it("reads what the database has now, where readSettings keeps what this process read", async () => {
+		mockFetchGuildData.mockResolvedValueOnce({ id: GUILD_ID, language: "en-US" });
+		expect((await readSettings(GUILD_ID)).language).toBe("en-US");
+
+		mockFetchGuildData.mockResolvedValueOnce({ id: GUILD_ID, language: "de" });
+		expect((await readSettings(GUILD_ID)).language).toBe("en-US");
+		expect((await readFreshSettings(GUILD_ID)).language).toBe("de");
+		expect((await readSettings(GUILD_ID)).language).toBe("de");
+	});
+
+	// A read that started before a write holds the settings as they were: once
+	// the write is saved, the cache keeps the written copy, not that read's.
+	it("does not cache a read that a write overtook", async () => {
+		const guild = "223456789012345678";
+		mockFetchGuildData.mockResolvedValueOnce({ id: guild, language: "en-US" });
+		{
+			using trx = await writeSettingsTransaction(guild);
+			let answer: (value: unknown) => void = () => undefined;
+			mockFetchGuildData.mockReturnValueOnce(new Promise((resolve) => (answer = resolve)));
+			const overlapping = readFreshSettings(guild);
+
+			await trx.write({ language: "de" }).submit();
+			answer({ id: guild, language: "en-US" });
+			expect((await overlapping).language).toBe("en-US");
+		}
+
+		expect((await readSettings(guild)).language).toBe("de");
+	});
+
+	// The read found no rows, then the guild's first write landed: the guild is
+	// configured, whatever that read saw.
+	it("does not call a guild unconfigured from a read its first write overtook", async () => {
+		const guild = "323456789012345678";
+		mockFetchGuildData.mockResolvedValueOnce(null);
+		{
+			using trx = await writeSettingsTransaction(guild);
+			let answer: (value: unknown) => void = () => undefined;
+			mockFetchGuildData.mockReturnValueOnce(new Promise((resolve) => (answer = resolve)));
+			const overlapping = readFreshSettings(guild);
+
+			await trx.write({ language: "de" }).submit();
+			answer(null);
+			await overlapping;
+		}
+
+		expect(isGuildUnconfigured(guild)).toBe(false);
+	});
+
+	// A write made in another's transaction is not saved until that one
+	// commits: the cache must not serve it before, nor after a rollback.
+	it("caches a write made in another's transaction only once it has committed", async () => {
+		const guild = "423456789012345678";
+		mockFetchGuildData.mockResolvedValueOnce({ id: guild, language: "en-US" });
+		const outer = { execute: vi.fn(), orm: {} };
+		{
+			using trx = await writeSettingsTransaction(guild);
+			await trx.write({ language: "de" }).submit(undefined, undefined, outer as never);
+			expect((await readSettings(guild)).language).toBe("en-US");
+			trx.committed();
+		}
+		expect((await readSettings(guild)).language).toBe("de");
+	});
+
+	it("drops a write made in another's transaction that never committed", async () => {
+		const guild = "523456789012345678";
+		mockFetchGuildData.mockResolvedValueOnce({ id: guild, language: "en-US" });
+		const outer = { execute: vi.fn(), orm: {} };
+		{
+			using trx = await writeSettingsTransaction(guild);
+			await trx.write({ language: "de" }).submit(undefined, undefined, outer as never);
+		}
+		expect((await readSettings(guild)).language).toBe("en-US");
+	});
+});
+
+describe("readSettings", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+		vi.useRealTimers();
+	});
+
+	// The dashboard access lists live in the settings: an allow the owner
+	// removed elsewhere must stop opening the dashboard here too, not only once
+	// this process happens to write the guild.
+	it("reads the database again once its copy is older than the cache's age", async () => {
+		vi.useFakeTimers();
+		const guild = "623456789012345678";
+		mockFetchGuildData.mockResolvedValueOnce({
+			id: guild,
+			permissionsUsers: [{ id: "1", allow: true }],
+		});
+		expect((await readSettings(guild)).permissionsUsers).toHaveLength(1);
+
+		mockFetchGuildData.mockResolvedValueOnce({ id: guild, permissionsUsers: [] });
+		vi.advanceTimersByTime(SETTINGS_CACHE_MAX_AGE - 1);
+		expect((await readSettings(guild)).permissionsUsers).toHaveLength(1);
+
+		vi.advanceTimersByTime(1);
+		expect((await readSettings(guild)).permissionsUsers).toHaveLength(0);
+		vi.useRealTimers();
+	});
+});

@@ -1,9 +1,10 @@
 import type { GuildData } from "#server/database";
-import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
+import { mockNuxtImport, mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
 import { ChannelType } from "discord-api-types/v10";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 import General from "~/components/guild/settings/General.vue";
+import { mapLanguageKeysToNames } from "~/utils/guild-languages";
 import {
 	createMockChannel,
 	createMockOauthFlattenedGuild,
@@ -13,7 +14,6 @@ import { createMockGuildData } from "~~/test/mocks/guildData";
 
 const createInitialGuildSettings = () =>
 	createMockGuildData("123456789012345678", {
-		prefix: "!",
 		language: "en-US",
 	});
 
@@ -32,6 +32,9 @@ const mockGuildData = ref(
 		roles: [createMockRole({ id: "r1" }), createMockRole({ id: "r2" })],
 	}),
 );
+// Two members' reports wait for a moderator; the tile reads only the count.
+registerEndpoint("/api/guilds/123456789012345678/reports", () => ({ entries: [], total: 2 }));
+
 const mockToastAdd = vi.fn();
 const mockCopy = vi.fn();
 const mockCopied = ref(false);
@@ -68,13 +71,10 @@ mockNuxtImport("useToast", () => () => ({
 
 function getSetupState(wrapper: Awaited<ReturnType<typeof mountSuspended>>) {
 	return (wrapper.vm.$ as any).setupState as {
-		mapLanguageKeysToNames: (langKey: string) => [string] | [string, string];
 		mapToGuildData: (formState: {
-			prefix: string;
 			language: { label: string; value: string };
 		}) => Partial<GuildData>;
 		state: {
-			prefix: string;
 			language: { label: string; value: string };
 		};
 	};
@@ -93,7 +93,7 @@ describe("general guild settings", () => {
 		}
 	});
 
-	it("renders prefix input and language select", async () => {
+	it("renders the language select and no prefix field", async () => {
 		const wrapper = await mountSuspended(General, {
 			props: {
 				languages: ["en-US", "es-ES", "de-DE"],
@@ -102,10 +102,8 @@ describe("general guild settings", () => {
 
 		await nextTick();
 
-		const prefixInput = wrapper.find("input#prefix");
-
-		expect(prefixInput.exists()).toBeTruthy();
-		expect((prefixInput.element as HTMLInputElement).value).toBe("!");
+		// V7 is slash-command only: the bot has no prefix setting any more.
+		expect(wrapper.find("input#prefix").exists()).toBe(false);
 		expect(wrapper.text()).toContain("Language");
 		expect(wrapper.html()).toContain("language");
 	});
@@ -119,12 +117,7 @@ describe("general guild settings", () => {
 
 		await nextTick();
 
-		const prefixInput = wrapper.find("input#prefix");
-		const setupState = getSetupState(wrapper);
-
-		expect((prefixInput.element as HTMLInputElement).value).toBe("!");
-		expect(setupState.state.prefix).toBe("!");
-		expect(setupState.state.language).toStrictEqual({
+		expect(getSetupState(wrapper).state.language).toStrictEqual({
 			label: "English, United States",
 			value: "en-US",
 		});
@@ -139,33 +132,19 @@ describe("general guild settings", () => {
 
 		await nextTick();
 
-		const prefixInput = wrapper.find("input#prefix");
-		await prefixInput.setValue("?");
+		const setupState = getSetupState(wrapper);
+		setupState.state.language = { label: "German", value: "de-DE" };
 		await nextTick();
 
-		const setupState = getSetupState(wrapper);
-		const mappedGuildData = setupState.mapToGuildData(setupState.state);
-
-		expect(mappedGuildData).toStrictEqual({
-			language: "en-US",
-			prefix: "?",
+		// The form owns both settings, and stages only the one that changed.
+		expect(setupState.mapToGuildData(setupState.state)).toStrictEqual({
+			language: "de-DE",
+			timezone: "UTC",
 		});
-		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
-			prefix: "?",
-		});
+		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({ language: "de-DE" });
 	});
 
-	it("maps language keys to display names correctly", async () => {
-		const wrapper = await mountSuspended(General, {
-			props: {
-				languages: ["en-US", "de-DE", "unknown-key"],
-			},
-		});
-
-		await nextTick();
-
-		const { mapLanguageKeysToNames } = getSetupState(wrapper);
-
+	it("maps language keys to display names correctly", () => {
 		expect(mapLanguageKeysToNames("en-US")).toStrictEqual([
 			"American English",
 			"English, United States",
@@ -183,23 +162,46 @@ describe("general guild settings", () => {
 
 		await nextTick();
 
-		const selectMenu = wrapper.findComponent({ name: "USelectMenu" });
+		// The select shows each language by its English name and flag, with the
+		// native name and the tag the bot stores set beside it.
+		const select = wrapper.findComponent({ name: "SelectBase" });
 
-		expect(selectMenu.exists()).toBeTruthy();
-		expect(selectMenu.props("items")).toStrictEqual([
+		expect(select.exists()).toBeTruthy();
+		expect(select.props("options")).toStrictEqual([
 			{
+				flag: "/flags/en-US.svg",
 				label: "English, United States",
+				note: "American English \u00B7 en-US",
 				value: "en-US",
 			},
 			{
+				flag: "/flags/es-ES.svg",
 				label: "Spanish",
+				note: "Espa\u00F1ol \u00B7 es-ES",
 				value: "es-ES",
 			},
 			{
+				flag: "/flags/de.svg",
 				label: "German",
+				note: "Deutsch \u00B7 de-DE",
 				value: "de-DE",
 			},
 		]);
+	});
+
+	it("plots the last seven days of moderation actions as a bar chart", async () => {
+		const wrapper = await mountSuspended(General, {
+			props: { languages: ["en-US"] },
+		});
+
+		await nextTick();
+
+		const chart = wrapper.findComponent({ name: "UChart" });
+		expect(chart.exists()).toBe(true);
+		expect(chart.props("type")).toBe("bar");
+		// Drawn from its own definition: narrow bars with their counts, no y axis.
+		expect(chart.props("definition")).toBeDefined();
+		expect(chart.props("ariaLabel")).toContain("Mon");
 	});
 
 	describe("information section", () => {
@@ -210,16 +212,55 @@ describe("general guild settings", () => {
 
 			await nextTick();
 
-			const html = wrapper.html();
-			expect(html).toContain("Members");
-			expect(html).toContain("42");
-			expect(html).toContain("Categories");
-			expect(html).toContain("1");
-			expect(html).toContain("Text Channels");
-			expect(html).toContain("2");
-			expect(html).toContain("Voice Channels");
-			expect(html).toContain("1");
-			expect(html).toContain("Roles");
+			const stats = wrapper.findAll("dl > div").map((card) => ({
+				label: card.find("dt").text(),
+				value: card.find("dd").text(),
+			}));
+
+			expect(stats.map((stat) => stat.label)).toStrictEqual([
+				"Members",
+				"Cases",
+				"AutoMod hits",
+				"Open reports",
+				"Commands",
+				"Channels",
+				"Roles",
+			]);
+			expect(stats.find((stat) => stat.label === "Members")?.value).toBe("42");
+			// Nothing counts these yet, so it says so instead of showing a number.
+			expect(stats.find((stat) => stat.label === "AutoMod hits")?.value).toBe("—");
+			await vi.waitFor(() => {
+				const openReports = wrapper
+					.findAll("dl > div")
+					.find((card) => card.find("dt").text() === "Open reports");
+				expect(openReports?.find("dd").text()).toBe("2");
+			});
+			// Three channels besides the category, which has its own note.
+			expect(stats.find((stat) => stat.label === "Channels")?.value).toBe("3");
+			expect(wrapper.text()).toContain("1 category");
+			expect(stats.find((stat) => stat.label === "Roles")?.value).toBe("2");
+		});
+
+		it("edits the time zone of the server and tells the time it is there", async () => {
+			const wrapper = await mountSuspended(General, {
+				props: { languages: ["en-US"] },
+			});
+
+			await nextTick();
+
+			const timeZone = wrapper
+				.findAllComponents({ name: "SelectBase" })
+				.find((select) => select.props("ariaLabel") === "Time zone");
+			expect(timeZone?.props("modelValue")).toBe("UTC");
+			expect(wrapper.find("#timezone-now").text()).toContain("there now.");
+
+			timeZone?.vm.$emit("update:modelValue", "Europe/Rome");
+			await nextTick();
+			await nextTick();
+
+			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+				timezone: "Europe/Rome",
+			});
 		});
 
 		it("calls copy with server id and toast options when Copy Server ID is clicked", async () => {

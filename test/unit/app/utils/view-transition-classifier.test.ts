@@ -30,6 +30,15 @@ describe("classifyNavigation", () => {
 		expect(result).toEqual(["nav-forward", "route-dashboard"]);
 	});
 
+	it("tags nav-forward + route-dashboard for the /app dashboard", () => {
+		const result = classifyNavigation({
+			toPath: "/app",
+			fromPath: "/profile",
+			isPopstate: false,
+		});
+		expect(result).toEqual(["nav-forward", "route-dashboard"]);
+	});
+
 	it("returns empty array for oauth routes", () => {
 		const result = classifyNavigation({
 			toPath: "/oauth/login",
@@ -41,6 +50,17 @@ describe("classifyNavigation", () => {
 
 	it("returns empty array for same-path reload-equivalent nav", () => {
 		const result = classifyNavigation({ toPath: "/", fromPath: "/", isPopstate: false });
+		expect(result).toEqual([]);
+	});
+
+	it("returns empty array for a popstate that only changes the query", () => {
+		// The phone's back from `/app?screen=page` to the list: the page stays mounted.
+		const result = classifyNavigation({
+			toPath: "/app",
+			fromPath: "/app",
+			isPopstate: true,
+			hasUAVisualTransition: false,
+		});
 		expect(result).toEqual([]);
 	});
 

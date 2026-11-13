@@ -25,6 +25,10 @@ export const RateLimitSchema = object({
 		),
 		true,
 	),
+	// Whether a request the handler refuses still counts: by default a failure
+	// gives its reservation back, which on a route that answers its checks with
+	// errors leaves every refused try free.
+	countFailures: optional(boolean(), false),
 	ipHeader: optional(string()),
 	limit: optional(
 		pipe(
@@ -35,7 +39,10 @@ export const RateLimitSchema = object({
 		),
 		5,
 	),
-	scope: optional(picklist(["global", "route"]), "global"),
+	// One counter per route. A `global` counter is shared by every route a member
+	// calls, but each route checks it against its own limit and window, so a page
+	// that loads one busy route is refused on the strict one before its first call.
+	scope: optional(picklist(["global", "route"]), "route"),
 	type: optional(picklist(["fixed", "sliding"]), "fixed"),
 	whitelist: optional(array(string()), []),
 	window: optional(

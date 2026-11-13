@@ -1,6 +1,5 @@
 import type { GuildData } from "#server/database";
 import type { Options as DeepMergeOptions } from "deepmerge";
-import { useRouteParams } from "@vueuse/router";
 import deepMerge from "deepmerge";
 
 // Overwrite arrays when merging
@@ -9,11 +8,12 @@ const mergeOptions: DeepMergeOptions = {
 };
 
 export function useGuildSettings() {
-	const guildId = useRouteParams("id", null, { transform: String });
+	const { activeGuildId } = useActiveGuild();
 
-	const guildSettings = useState<GuildData | undefined>(
-		`guild:${guildId.value}:settings`,
-		() => undefined,
+	const store = useState<Record<string, GuildData | undefined>>("guild:settings", () => ({}));
+
+	const guildSettings = computed(() =>
+		activeGuildId.value ? store.value[activeGuildId.value] : undefined,
 	);
 
 	const { guildSettingsChanges } = useGuildSettingsChanges();
@@ -30,14 +30,26 @@ export function useGuildSettings() {
 		) as GuildData;
 	});
 
-	const setGuildSettings = (settings?: GuildData) => {
-		guildSettings.value = settings;
-		log.info({ tag: "guild:settings", action: "set_guild_settings", guildId: guildId.value });
+	/**
+	 * Writes settings for `targetGuildId`, defaulting to the active guild.
+	 *
+	 * An in-flight PATCH outlives the guild it was issued for: the admin can
+	 * confirm a switch while it runs. Callers that awaited a response therefore
+	 * pass the id they captured before awaiting, so the response lands on the
+	 * guild it belongs to instead of whichever one is active when it arrives.
+	 */
+	const setGuildSettings = (settings?: GuildData, targetGuildId?: string) => {
+		const guildId = targetGuildId ?? activeGuildId.value;
+		if (!guildId) {
+			return;
+		}
+		store.value = { ...store.value, [guildId]: settings };
+		log.info({ tag: "guild:settings", action: "set_guild_settings", guildId });
 	};
 
 	return {
-		guildSettings: readonly(mergedSettings),
-		originalGuildSettings: readonly(guildSettings),
+		guildSettings: mergedSettings,
+		originalGuildSettings: guildSettings,
 		setGuildSettings,
 	};
 }

@@ -86,6 +86,14 @@ vi.mock("#server/database", () => ({
 	}),
 }));
 
+// Every test probes the same guild with its own mocks; the probe memo has its
+// own spec (`cache.spec.ts`), so here each probe reaches Discord.
+vi.mock("#server/utils/discord/cache", async (importOriginal) => ({
+	...(await importOriginal<typeof import("#server/utils/discord/cache")>()),
+	removePersistedGuild: vi.fn().mockResolvedValue(undefined),
+	rememberGuildProbe: (_guildId: string, run: () => Promise<unknown>) => run(),
+}));
+
 import type { RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
 import { transformGuild } from "#server/utils/discord";
 

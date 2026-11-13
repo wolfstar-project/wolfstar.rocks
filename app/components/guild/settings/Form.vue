@@ -15,7 +15,6 @@
 import type { GuildData } from "#server/database";
 import type { FormError, FormErrorEvent, FormSubmitEvent } from "@nuxt/ui";
 import type { GenericSchema } from "valibot";
-import { setGuildDataChange } from "#shared/utils/guild-settings-map";
 import { objectKeys } from "@sapphire/utilities/objectKeys";
 
 interface Props {
@@ -28,7 +27,8 @@ const { schema, state, mapToGuildData } = defineProps<Props>();
 const emit = defineEmits<{
 	error: [event: FormErrorEvent];
 }>();
-const { setGuildSettingsChanges, removeChange, resetCounter } = useGuildSettingsChanges();
+const { guildSettingsChanges, setGuildSettingsChanges, removeChange, resetCounter } =
+	useGuildSettingsChanges();
 const { originalGuildSettings } = useGuildSettings();
 const formRef = useTemplateRef("form-settings");
 
@@ -106,28 +106,101 @@ watch(
 			removeChange(key);
 		}
 
-		const hasChanges = objectKeys(changes).length > 0;
-		if (hasChanges) {
+		// Reverted keys were dropped one by one above. Clearing the whole draft
+		// here instead would also discard what another form on the same page
+		// has staged.
+		if (objectKeys(changes).length > 0) {
 			setGuildSettingsChanges(changes);
-		} else {
-			setGuildSettingsChanges(undefined);
 		}
 	},
 	{ deep: true },
 );
 
+/**
+ * What the form compares its state with, and what Reset goes back to: the
+ * saved settings. The state a section opens with already holds what was staged
+ * on an earlier visit, so for those keys the baseline is the saved value, not
+ * the state: otherwise the staged edit would pass for saved, a later edit
+ * would count it as reverted and drop it from the draft, and Reset would keep
+ * it on screen. A state not shaped like the settings has no key to read back.
+ */
+function savedBaseline(): T {
+	const baseline: Record<string, unknown> = structuredClone(toRaw(state));
+	const saved = originalGuildSettings.value;
+	const staged = guildSettingsChanges.value;
+	if (!saved || !staged) return baseline as T;
+
+	for (const key of objectKeys(staged)) {
+		if (!(key in baseline)) continue;
+		baseline[key] = asFormValue(baseline[key], structuredClone(toRaw(saved[key])));
+	}
+	return baseline as T;
+}
+
+/**
+ * The saved value of a key, in the shape the form holds it in. A form can keep
+ * a setting in another shape than the settings, as General keeps the language
+ * as a picker item (`{ label, value }`): the saved value goes into that item.
+ * A shape it cannot be put back into keeps what the form opened with.
+ */
+function asFormValue(current: unknown, saved: unknown): unknown {
+	// A text the server holds as nothing is an empty text in the form.
+	if (typeof current === "string" && (saved === null || saved === undefined)) return "";
+	if (
+		typeof current === "object" &&
+		current !== null &&
+		!Array.isArray(current) &&
+		"value" in current
+	) {
+		return { ...current, value: saved };
+	}
+	const sameShape =
+		current === null ||
+		saved === null ||
+		(Array.isArray(current) ? Array.isArray(saved) : typeof current === typeof saved);
+	return sameShape ? saved : current;
+}
+
 watchEffect(() => {
 	if (!isOriginalStateInitialized.value && originalGuildSettings.value !== undefined) {
-		originalState.value = structuredClone(toRaw(state));
+		originalState.value = savedBaseline();
 		isOriginalStateInitialized.value = true;
 	}
 });
 
+// Only the keys whose stored value changed move: a save that never touched the
+// others, such as a command's rules, leaves what Reset goes back to as it was.
+function rebaseOriginalState(stored?: GuildData, previous?: GuildData) {
+	const current: T = structuredClone(toRaw(state));
+	if (!originalState.value || !stored || !previous) {
+		originalState.value = current;
+		return;
+	}
+
+	const moved = (objectKeys(toMappedGuildData(current)) as Array<keyof GuildData>).filter(
+		(key) => !isDeepEqual(stored[key], previous[key]),
+	);
+	if (moved.length === 0) {
+		return;
+	}
+
+	// A state not shaped like the settings has no key to move on its own.
+	if (!moved.every((key) => key in current)) {
+		originalState.value = current;
+		return;
+	}
+
+	originalState.value = {
+		...originalState.value,
+		...Object.fromEntries(moved.map((key) => [key, current[key]])),
+	};
+}
+
 watch(
 	originalGuildSettings,
-	() => {
+	(stored, previous) => {
 		if (isOriginalStateInitialized.value) {
-			originalState.value = structuredClone(toRaw(state));
+			rebaseOriginalState(stored, previous);
 		}
 	},
 	{ flush: "sync" },

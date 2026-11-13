@@ -97,9 +97,9 @@ vi.mock("#server/utils/sentry-metrics", () => ({
 	withApiMetrics: vi.fn((_event: unknown, fn: () => unknown) => fn()),
 }));
 
-// The real module pulls in Nitro's storage runtime (`#nitro-internal-virtual/storage`),
-// which is unavailable outside a Nitro build; stub the outdated-client check so the
-// wrapper imports cleanly and stays a no-op for these cache/auth ordering tests.
+// `nuxt-skew-protection/server` reads the version cookie through `nuxt/server`, which only
+// resolves inside a Nuxt build; stub the outdated-client check so the wrapper imports
+// cleanly and stays a no-op for these cache/auth ordering tests.
 vi.mock("nuxt-skew-protection/server", () => ({
 	isClientOutdated: vi.fn(() => false),
 }));
@@ -222,12 +222,16 @@ describe("defineWrappedCachedResponseHandler cache/auth ordering", () => {
 		});
 
 		await expect(handler(makeEvent("guild-1"))).resolves.toEqual(resolvedBody);
-		expect(rateLimitState.get("rate-limiter-state:manager-user")).toMatchObject({ count: 1 });
+		expect(
+			rateLimitState.get("rate-limiter-state:GET:/api/guilds/guild-1/logs:manager-user"),
+		).toMatchObject({ count: 1 });
 
 		authorize.mockRejectedValue(Object.assign(new Error("Forbidden"), { status: 403 }));
 
 		await expect(handler(makeEvent("guild-1"))).rejects.toThrow("Forbidden");
-		expect(rateLimitState.get("rate-limiter-state:manager-user")).toMatchObject({ count: 1 });
+		expect(
+			rateLimitState.get("rate-limiter-state:GET:/api/guilds/guild-1/logs:manager-user"),
+		).toMatchObject({ count: 1 });
 	});
 
 	it("lets two authorized managers share the same cached result", async () => {

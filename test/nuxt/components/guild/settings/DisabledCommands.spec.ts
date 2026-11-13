@@ -1,13 +1,23 @@
 import type { GuildData } from "#server/database";
 import type { DOMWrapper } from "@vue/test-utils";
-import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { H3Event } from "h3";
+import { mockNuxtImport, mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import DisabledCommands from "~/components/guild/settings/DisabledCommands.vue";
+import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 import { createMockGuildData } from "~~/test/mocks/guildData";
 
 // Mock composables at module scope
 const mockGuildSettings = createMockGuildData("123456789012345678", {
-	disabledCommands: ["ban"],
+	commandsDisabled: ["ban"],
+	commandsRestrictions: [
+		{ command: "kick", ignoredChannels: ["400000000000000001"] },
+		{
+			command: "mute",
+			allowedRoles: ["300000000000000001", "300000000000000002"],
+			ignoredUsers: ["500000000000000001"],
+		},
+	],
 });
 const mockToastAdd = vi.fn();
 const mockSetGuildSettingsChanges = vi.fn();
@@ -36,6 +46,106 @@ mockNuxtImport("useGuildSettingsChanges", () => () => ({
 mockNuxtImport("useToast", () => () => ({
 	add: mockToastAdd,
 }));
+
+mockNuxtImport("useGuildData", () => () => ({
+	guildData: ref(createMockOauthFlattenedGuild({ id: "123456789012345678" })),
+}));
+
+// h3's `readBody` needs Node's `Buffer`, which the browser runner lacks; the
+// stub hands the handler the web request, whose body reads as it is.
+let lastBody: Record<string, unknown> | undefined;
+async function readSentBody(event: H3Event): Promise<Record<string, unknown>> {
+	lastBody = (await event.web?.request?.json()) as Record<string, unknown>;
+	return lastBody;
+}
+function lastPutBody(): Record<string, unknown> | undefined {
+	return lastBody;
+}
+
+registerEndpoint("/api/guilds/123456789012345678/command-rules/ban", {
+	method: "GET",
+	handler: () => ({
+		command: "ban",
+		enabled: false,
+		onlyAllowed: false,
+		rule: {
+			command: "ban",
+			allowedChannels: [],
+			ignoredChannels: [],
+			allowedRoles: [],
+			ignoredRoles: [],
+			allowedUsers: [],
+			ignoredUsers: [],
+		},
+		revision: 3,
+	}),
+});
+registerEndpoint("/api/guilds/123456789012345678/command-rules/ban", {
+	method: "PUT",
+	handler: async (event) => {
+		const body = await readSentBody(event);
+		return {
+			command: "ban",
+			enabled: body.enabled,
+			rule: {
+				command: "ban",
+				allowedChannels: [],
+				ignoredChannels: [],
+				allowedRoles: [],
+				ignoredRoles: [],
+				allowedUsers: [],
+				ignoredUsers: [],
+			},
+			revision: 4,
+			commandsDisabled: body.enabled ? [] : ["ban"],
+			commandsRestrictions: [],
+		};
+	},
+});
+
+const APP_ID = "500000000000000009";
+const KICK_ID = "600000000000000002";
+const MUTE_ID = "600000000000000003";
+
+registerEndpoint("/api/guilds/123456789012345678/command-permissions", {
+	method: "GET",
+	handler: () => ({
+		applicationId: APP_ID,
+		commands: [
+			{ id: KICK_ID, name: "kick", command: "kick", category: "Moderation", description: "" },
+			{ id: MUTE_ID, name: "mute", command: "mute", category: "Moderation", description: "" },
+		],
+		permissions: {
+			// The rule of kick, as Discord's permissions.
+			[KICK_ID]: [{ id: "400000000000000001", type: 3, permission: false }],
+			// Not the rule of mute: changed in Discord.
+			[MUTE_ID]: [{ id: "300000000000000001", type: 1, permission: false }],
+		},
+		snapshot: "x",
+		authorization: { scopeGranted: true, manageGuild: true, manageRoles: true },
+	}),
+});
+
+for (const target of ["kick", "*"]) {
+	registerEndpoint(`/api/guilds/123456789012345678/command-rules/${target}`, {
+		method: "GET",
+		handler: () => ({
+			command: target,
+			enabled: true,
+			onlyAllowed: false,
+			rule: {
+				command: target,
+				allowedChannels: [],
+				ignoredChannels: [],
+				allowedRoles: [],
+				ignoredRoles: [],
+				allowedUsers: [],
+				ignoredUsers: [],
+			},
+			revision: 1,
+		}),
+	});
+}
 
 // Mock commands data with multiple categories
 const mockCommands: FlattenedCommand[] = [
@@ -117,12 +227,12 @@ type MountedDisabledCommands = Awaited<ReturnType<typeof mountSuspended>>;
 
 function getCommandCard(wrapper: MountedDisabledCommands, commandName: string) {
 	const label = wrapper
-		.findAll("p.font-medium")
+		.findAll(".command-tile .font-mono")
 		.find((el: DOMWrapper<Element>) => el.text() === commandName);
 	expect(label, `expected command label "${commandName}"`).toBeDefined();
 
 	let current: Element | null = label!.element.parentElement;
-	while (current && !current.classList.contains("rounded-lg")) {
+	while (current && !current.classList.contains("command-tile")) {
 		current = current.parentElement;
 	}
 
@@ -131,16 +241,35 @@ function getCommandCard(wrapper: MountedDisabledCommands, commandName: string) {
 }
 
 function readCommandEnabled(wrapper: MountedDisabledCommands, commandName: string): boolean {
-	const card = getCommandCard(wrapper, commandName);
-	const commandSwitch = wrapper
-		.findAll('[role="switch"]')
-		.find((switchElement: DOMWrapper<Element>) => card.contains(switchElement.element));
+	const state = getCommandCard(wrapper, commandName).querySelector(".command-state");
 
-	expect(commandSwitch, `expected switch for "${commandName}"`).toBeDefined();
-	return commandSwitch!.attributes("aria-checked") === "true";
+	expect(state, `expected a state pill for "${commandName}"`).not.toBeNull();
+	return state!.textContent?.includes("On") === true;
+}
+
+// Every wrapper is unmounted after its test: one left mounted keeps reading the
+// address, and would open its own editor for a command it names.
+const mountedWrappers: { unmount: () => void }[] = [];
+
+async function mountCommands(
+	options: Parameters<typeof mountSuspended<typeof DisabledCommands>>[1],
+) {
+	const wrapper = await mountSuspended(DisabledCommands, options);
+	mountedWrappers.push(wrapper);
+	return wrapper;
 }
 
 describe("disabledCommands", () => {
+	afterEach(() => {
+		for (const wrapper of mountedWrappers.splice(0)) {
+			try {
+				wrapper.unmount();
+			} catch {
+				// Unmounted by its test already.
+			}
+		}
+	});
+
 	beforeEach(() => {
 		// Clear mocks between tests
 		vi.clearAllMocks();
@@ -152,7 +281,7 @@ describe("disabledCommands", () => {
 	});
 
 	it("renders all command categories as collapsible sections", async () => {
-		const wrapper = await mountSuspended(DisabledCommands, {
+		const wrapper = await mountCommands({
 			props: {
 				commands: mockCommands,
 			},
@@ -189,7 +318,7 @@ describe("disabledCommands", () => {
 	});
 
 	it("displays commands in grid for each category", async () => {
-		const wrapper = await mountSuspended(DisabledCommands, {
+		const wrapper = await mountCommands({
 			props: {
 				commands: mockCommands,
 			},
@@ -204,7 +333,7 @@ describe("disabledCommands", () => {
 		await wrapper.vm.$nextTick();
 
 		// Find command names in the grid
-		const commandElements = wrapper.findAll("p.font-medium");
+		const commandElements = wrapper.findAll(".command-tile .font-mono");
 
 		// Should find General commands: avatar, ping, help
 		const commandNames = commandElements.map((el) => el.text());
@@ -213,7 +342,7 @@ describe("disabledCommands", () => {
 		expect(commandNames).toContain("help");
 
 		// Each command should have a description
-		const descriptions = wrapper.findAll("p.text-sm");
+		const descriptions = wrapper.findAll(".command-tile .text-xs");
 		expect(descriptions.length).toBeGreaterThan(0);
 
 		// Verify visibility of command elements
@@ -227,7 +356,7 @@ describe("disabledCommands", () => {
 	});
 
 	it("toggles category open/closed on trigger click", async () => {
-		const wrapper = await mountSuspended(DisabledCommands, {
+		const wrapper = await mountCommands({
 			props: {
 				commands: mockCommands,
 			},
@@ -238,7 +367,7 @@ describe("disabledCommands", () => {
 
 		// Find a specific command element (use "avatar" from General category)
 		const findAvatarCommand = () =>
-			wrapper.findAll("p.font-medium").find((el) => el.text() === "avatar");
+			wrapper.findAll(".command-tile .font-mono").find((el) => el.text() === "avatar");
 
 		// Initially, commands should not be visible (accordion closed)
 		let avatarElement = findAvatarCommand();
@@ -264,7 +393,7 @@ describe("disabledCommands", () => {
 	});
 
 	it("only one category open at a time (single-open behavior)", async () => {
-		const wrapper = await mountSuspended(DisabledCommands, {
+		const wrapper = await mountCommands({
 			props: {
 				commands: mockCommands,
 			},
@@ -280,7 +409,7 @@ describe("disabledCommands", () => {
 
 		// Find General and Moderation commands
 		const findCommand = (name: string) =>
-			wrapper.findAll("p.font-medium").find((el) => el.text() === name);
+			wrapper.findAll(".command-tile .font-mono").find((el) => el.text() === name);
 
 		// General command (avatar) should be visible
 		let avatarElement = findCommand("avatar");
@@ -311,17 +440,11 @@ describe("disabledCommands", () => {
 	});
 
 	it("category action buttons work (enable all, disable all, reset)", async () => {
-		const wrapper = await mountSuspended(DisabledCommands, {
+		const wrapper = await mountCommands({
 			props: {
 				commands: mockCommands,
 			},
 		});
-
-		const categoryButtons = wrapper.findAll("button");
-		const moderationButton = categoryButtons.find((btn) => btn.text().includes("Moderation"));
-		expect(moderationButton).toBeDefined();
-		await moderationButton!.trigger("click");
-		await nextTick();
 
 		// Collapsed panels stay mounted (`unmount-on-hide=false`), so pick the
 		// visible action buttons for the open Moderation category.
@@ -371,8 +494,54 @@ describe("disabledCommands", () => {
 		);
 	});
 
+	it("shows one tile per command and saves the command's settings name", async () => {
+		// The bot lists every subcommand as an entry and names its command in
+		// `command`; the settings turn off the whole command by that name.
+		const entry = (
+			name: string,
+			command: string,
+			category = "Moderation",
+		): FlattenedCommand => ({
+			category,
+			command,
+			description: `${name} description`,
+			extendedHelp: {},
+			guarded: false,
+			name,
+			permissionLevel: 5,
+			preconditions: { entries: [], mode: 0, runCondition: 0 },
+		});
+		const wrapper = await mountCommands({
+			props: {
+				commands: [
+					entry("ban add", "ban"),
+					entry("ban remove", "ban"),
+					entry("warn-thresholds list", "warnThresholds"),
+				],
+			},
+		});
+
+		expect(wrapper.findAll(".command-tile .font-mono").map((el) => el.text())).toEqual([
+			"ban",
+			"warn-thresholds",
+		]);
+		const banTile = getCommandCard(wrapper, "ban");
+		expect(banTile.textContent).toContain("add, remove");
+		expect(readCommandEnabled(wrapper, "ban")).toBe(false);
+
+		await wrapper
+			.findAll("button")
+			.find((btn) => btn.text().includes("Disable all"))!
+			.trigger("click");
+		await nextTick();
+
+		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+			commandsDisabled: ["ban", "warnThresholds"],
+		});
+	});
+
 	it("does not mark form as changed on initial render", async () => {
-		const wrapper = await mountSuspended(DisabledCommands, {
+		const wrapper = await mountCommands({
 			props: {
 				commands: mockCommands,
 			},
@@ -385,5 +554,222 @@ describe("disabledCommands", () => {
 		// Assert that setGuildSettingsChanges was NOT called during initialization
 		// (It should only be called when the user actually changes something)
 		expect(mockSetGuildSettingsChanges).not.toHaveBeenCalled();
+	});
+
+	it("opens Moderation first, the one category most servers come for", async () => {
+		const wrapper = await mountCommands({
+			props: { commands: mockCommands },
+		});
+		const tile = (name: string) =>
+			wrapper.findAll(".command-tile .font-mono").find((el) => el.text() === name);
+
+		expect(tile("ban")!.isVisible()).toBe(true);
+		expect(tile("avatar")!.isVisible()).toBe(false);
+	});
+
+	it("tells on each tile its status and how many rules it has", async () => {
+		const wrapper = await mountCommands({
+			props: { commands: mockCommands },
+		});
+
+		const kick = getCommandCard(wrapper, "kick");
+		expect(kick.tagName).toBe("BUTTON");
+		expect(kick.textContent).toContain("On");
+		expect(kick.textContent).toContain("1 rule");
+
+		// Members count too: the rule holds them, and the editor edits them.
+		expect(getCommandCard(wrapper, "mute").textContent).toContain("3 rules");
+
+		const ban = getCommandCard(wrapper, "ban");
+		expect(ban.textContent).toContain("Off");
+		expect(ban.textContent).not.toContain("rule");
+		expect(ban.classList).toContain("command-tile--off");
+	});
+
+	it("names each tile for what it opens, and describes it by its status", async () => {
+		const wrapper = await mountCommands({
+			props: { commands: mockCommands },
+		});
+
+		const kick = wrapper.get('button[aria-label="Settings for kick"]');
+		expect(kick.attributes("aria-haspopup")).toBe("dialog");
+		const description = kick.find(`[id="${kick.attributes("aria-describedby")}"]`);
+		expect(description.text()).toContain("On");
+		expect(description.text()).toContain("1 rule");
+	});
+
+	describe("with the rules and the disabled names of a group", () => {
+		const { commandsDisabled, commandsRestrictions } = mockGuildSettings;
+
+		afterEach(() => {
+			Object.assign(mockGuildSettings, { commandsDisabled, commandsRestrictions });
+		});
+
+		it("counts on a tile the rules that apply to its command", async () => {
+			Object.assign(mockGuildSettings, {
+				commandsRestrictions: [
+					{ command: "Moderation.*", ignoredChannels: ["400000000000000001"] },
+					{ command: "kick", ignoredChannels: ["400000000000000002"] },
+					{ command: "Music.*", ignoredChannels: ["400000000000000003"] },
+					{ format: 2 },
+				],
+			});
+			const wrapper = await mountCommands({
+				props: { commands: mockCommands },
+			});
+
+			expect(getCommandCard(wrapper, "kick").textContent).toContain("2 rules");
+			expect(getCommandCard(wrapper, "ban").textContent).toContain("1 rule");
+			expect(getCommandCard(wrapper, "avatar").textContent).not.toContain("rule");
+		});
+
+		it("does not count @everyone, which is the status of a rule", async () => {
+			Object.assign(mockGuildSettings, {
+				// Saved before the format: an allowed role meant "only these".
+				commandsRestrictions: [{ command: "kick", allowedRoles: ["300000000000000001"] }],
+			});
+			useActiveGuild().selectGuild("123456789012345678");
+			const wrapper = await mountCommands({
+				props: { commands: mockCommands },
+			});
+
+			expect(getCommandCard(wrapper, "kick").textContent).toContain("1 rule");
+		});
+
+		it("shows off what a group turned off, and a save keeps the group", async () => {
+			Object.assign(mockGuildSettings, { commandsDisabled: ["Moderation.*", "ban"] });
+			const wrapper = await mountCommands({
+				props: { commands: mockCommands },
+			});
+
+			expect(readCommandEnabled(wrapper, "kick")).toBe(false);
+			expect(wrapper.text()).toContain("0 / 3 on");
+
+			await wrapper
+				.findAll("button")
+				.find((btn) => btn.text().includes("Enable all") && btn.isVisible())!
+				.trigger("click");
+			await nextTick();
+
+			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+				commandsDisabled: ["Moderation.*"],
+			});
+		});
+	});
+
+	it("opens the rules of every command from a row above the commands", async () => {
+		useActiveGuild().selectGuild("123456789012345678");
+		const wrapper = await mountCommands({
+			props: { commands: mockCommands },
+			attachTo: document.body,
+		});
+		const every = wrapper.get('button[aria-label="Rules of every command"]');
+
+		expect(every.attributes("aria-haspopup")).toBe("dialog");
+		expect(every.text()).toContain("The rules every command follows, besides its own.");
+		expect(every.text()).toContain("No rules");
+		await vi.waitFor(() => expect(every.text()).toContain("WolfStar only"));
+
+		await every.trigger("click");
+		await vi.waitFor(() =>
+			expect(document.querySelector('[role="dialog"]')?.textContent).toContain(
+				"What every command uses together with its own rules.",
+			),
+		);
+		wrapper.unmount();
+		await vi.waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull());
+	});
+
+	it("marks the tiles whose rules Discord applies too", async () => {
+		useActiveGuild().selectGuild("123456789012345678");
+		const wrapper = await mountCommands({
+			props: { commands: mockCommands },
+		});
+
+		await vi.waitFor(() =>
+			expect(getCommandCard(wrapper, "kick").textContent).toContain("Also in Discord"),
+		);
+		expect(getCommandCard(wrapper, "kick").querySelector("[title]")?.textContent).toContain(
+			"Discord",
+		);
+		expect(getCommandCard(wrapper, "mute").textContent).toContain("Different in Discord");
+		expect(getCommandCard(wrapper, "ban").textContent).not.toContain("Discord");
+	});
+
+	it("opens the rules of a command named in the address, back from the sign-in", async () => {
+		useActiveGuild().selectGuild("123456789012345678");
+		const wrapper = await mountCommands({
+			props: { commands: mockCommands },
+			route: "/?rules=kick",
+			attachTo: document.body,
+		});
+
+		await vi.waitFor(() =>
+			expect(document.querySelector('[role="dialog"]')?.textContent).toContain(
+				"Command rules (kick)",
+			),
+		);
+		// The address is replaced after the editor opens, which takes a while under load.
+		await vi.waitFor(() => expect(useRouter().currentRoute.value.query.rules).toBeUndefined(), {
+			timeout: 5000,
+		});
+		wrapper.unmount();
+		await vi.waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull());
+	});
+
+	it("adds a channel where no command runs, one at a time", async () => {
+		const wrapper = await mountCommands({
+			props: { commands: mockCommands },
+		});
+		const picker = wrapper.findComponent({ name: "SelectChips" });
+
+		expect(picker.props("oneAtATime")).toBe(true);
+		expect(wrapper.text()).toContain(
+			"Every command is ignored here, whatever its own settings say.",
+		);
+		expect(wrapper.find('button[aria-label="Add to Disabled Channels"]').exists()).toBe(true);
+	});
+
+	it("edits a command's rules from its tile and keeps both statuses in step", async () => {
+		useActiveGuild().selectGuild("123456789012345678");
+		const wrapper = await mountCommands({
+			props: { commands: mockCommands },
+			attachTo: document.body,
+		});
+		// Statuses staged on the other tiles, not saved yet.
+		await wrapper
+			.findAll("button")
+			.find((btn) => btn.text().includes("Disable all") && btn.isVisible())!
+			.trigger("click");
+
+		await wrapper.get('button[aria-label="Settings for ban"]').trigger("click");
+		await vi.waitFor(() =>
+			expect(document.querySelector('[role="dialog"] form')).not.toBeNull(),
+		);
+		const modalSwitch = document.querySelector<HTMLElement>('[role="dialog"] [role="switch"]');
+		expect(modalSwitch?.getAttribute("aria-checked")).toBe("false");
+
+		modalSwitch?.click();
+		await nextTick();
+		[...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button')]
+			.find((button) => button.textContent?.includes("Save rules"))
+			?.click();
+
+		await vi.waitFor(() => expect(readCommandEnabled(wrapper, "ban")).toBe(true));
+		expect(lastPutBody()).toMatchObject({ revision: 3, enabled: true });
+		expect(mockSetGuildSettings).toHaveBeenCalledWith(
+			expect.objectContaining({ commandsDisabled: [], commandsRestrictions: [] }),
+			"123456789012345678",
+		);
+		expect(readCommandEnabled(wrapper, "kick")).toBe(false);
+		await vi.waitFor(() =>
+			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+				commandsDisabled: ["kick", "mute"],
+			}),
+		);
+		await vi.waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull(), {
+			timeout: 5000,
+		});
+		wrapper.unmount();
 	});
 });

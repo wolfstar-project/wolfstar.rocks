@@ -1,7 +1,13 @@
 import type { DashboardAuditEntry } from "#shared/types/audit-log";
 import type { AuditChangeResolver } from "~/utils/audit-log";
 import { describe, expect, it } from "vitest";
-import { auditLogActionDescription, auditLogChangeLines } from "~/utils/audit-log";
+import {
+	auditLogActionDescription,
+	auditLogActionParts,
+	auditLogChangeLines,
+	formatActivityTime,
+	formatDaysAgo,
+} from "~/utils/audit-log";
 
 function makeEntry(partial: Partial<DashboardAuditEntry["changes"]>): DashboardAuditEntry {
 	return {
@@ -99,9 +105,9 @@ describe("auditLogChangeLines", () => {
 		expect(toText.length).toBeGreaterThan(0);
 	});
 
-	it("messagesModerationDm changed false -> true gives Disabled/Enabled", () => {
+	it("moderationTrackBans changed false -> true gives Disabled/Enabled", () => {
 		const entry = makeEntry({
-			changed: { messagesModerationDm: { from: false, to: true } },
+			changed: { moderationTrackBans: { from: false, to: true } },
 		});
 		const lines = auditLogChangeLines(entry, resolver);
 		expect(lines).toHaveLength(1);
@@ -154,5 +160,103 @@ describe("auditLogActionDescription", () => {
 		const entry = makeEntry({ changed: { prefix: { from: "!", to: "?" } } });
 		const desc = auditLogActionDescription(entry, resolver);
 		expect(desc).toContain("\u2192");
+	});
+});
+
+describe("auditLogActionParts", () => {
+	it("marks the setting and its values, not the words around them", () => {
+		const entry = makeEntry({ changed: { language: { from: "en-US", to: "pt-BR" } } });
+		const parts = auditLogActionParts(entry, resolver);
+
+		expect(parts.filter((part) => part.strong).map((part) => part.text)).toHaveLength(3);
+		expect(parts.filter((part) => !part.strong).map((part) => part.text)).toStrictEqual([
+			": ",
+			" \u2192 ",
+		]);
+	});
+
+	it("reads the same as the plain description", () => {
+		const entry = makeEntry({
+			added: { language: "en-US" },
+			changed: { prefix: { from: "!", to: "?" } },
+			removed: { "extra.key": "a" },
+		});
+		expect(
+			auditLogActionParts(entry, resolver)
+				.map((part) => part.text)
+				.join(""),
+		).toBe(auditLogActionDescription(entry, resolver));
+	});
+
+	it("is one plain part when nothing changed", () => {
+		expect(auditLogActionParts(makeEntry({}))).toStrictEqual([
+			{ strong: false, text: "Settings updated" },
+		]);
+	});
+});
+
+describe("formatActivityTime", () => {
+	const now = new Date(2026, 9, 13, 15, 0);
+	const at = (day: number, hour: number, minute: number) => new Date(2026, 9, day, hour, minute);
+
+	it("names today and yesterday and keeps the time", () => {
+		expect(formatActivityTime(at(13, 11, 5), now, "en-GB")).toBe("Today 11:05");
+		expect(formatActivityTime(at(12, 22, 41), now, "en-GB")).toBe("Yesterday 22:41");
+	});
+
+	// Calendar days, not 24-hour spans: late yesterday is not "today".
+	it("counts calendar days", () => {
+		expect(formatActivityTime(at(12, 23, 59), now, "en-GB")).toBe("Yesterday 23:59");
+		expect(formatActivityTime(at(11, 23, 59), now, "en-GB")).toBe("2 days ago");
+		expect(formatActivityTime(at(10, 8, 0), now, "en-GB")).toBe("3 days ago");
+	});
+
+	it("falls back to a date after a week", () => {
+		expect(formatActivityTime(at(1, 8, 0), now, "en-GB")).toBe("1 Oct 2026");
+	});
+
+	it("follows the locale", () => {
+		expect(formatActivityTime(at(12, 22, 41), now, "it-IT")).toBe("Ieri 22:41");
+	});
+});
+
+describe("formatDaysAgo", () => {
+	const now = new Date(2026, 9, 13, 15, 0);
+
+	it("counts calendar days back", () => {
+		expect(formatDaysAgo(new Date(2026, 8, 26, 23, 0), now, "en-GB")).toBe("17 days ago");
+		expect(formatDaysAgo(new Date(2026, 9, 12, 1, 0), now, "en-GB")).toBe("yesterday");
+		expect(formatDaysAgo(new Date(2026, 9, 13, 1, 0), now, "en-GB")).toBe("today");
+	});
+});
+
+describe("auditLogActionParts for access and command permissions", () => {
+	function withAction(
+		action: DashboardAuditEntry["action"],
+		changes: DashboardAuditEntry["changes"],
+	): DashboardAuditEntry {
+		return { ...makeEntry({}), action, changes };
+	}
+
+	it("says how many legacy permission nodes the owner removed", () => {
+		const entry = withAction("guild.access.legacy-removed", {
+			changed: { legacyPermissionNodes: { from: 3, to: 0 } },
+		});
+		expect(auditLogActionDescription(entry)).toBe("Legacy permission nodes removed: 3");
+	});
+
+	it("names the command whose Discord permissions changed", () => {
+		const entry = withAction("guild.command-permissions.update", {
+			changed: { ban: { from: [], to: [{ id: "1", type: 1, permission: true }] } },
+		});
+		expect(auditLogActionParts(entry)).toEqual([
+			{ strong: false, text: "Command permissions updated: " },
+			{ strong: true, text: "ban" },
+		]);
+	});
+
+	it("says a command permissions change was refused", () => {
+		const entry = withAction("guild.command-permissions.access-denied", {});
+		expect(auditLogActionDescription(entry)).toBe("Command permissions change refused");
 	});
 });

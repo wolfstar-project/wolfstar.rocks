@@ -16,8 +16,6 @@ export const authorizeAppealFormManager = authorizeGuildManager(
 	"Insufficient permissions to manage appeal forms",
 );
 
-export { useManagedGuild };
-
 /**
  * A refusal the form editor can act on. Thrown with h3's `createError` rather
  * than evlog's: its `data` reaches the client in the response body, which is

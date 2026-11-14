@@ -870,6 +870,7 @@
 			"ignored_count": "No channels ignored | 1 channel ignored | {count} channels ignored",
 			"logging_channels": "Logging Channels",
 			"logging_channels_help": "Select which channels should receive specific log events. Leave empty to disable logging for that event.",
+			"module_hint": "Turning this off keeps the channels below but stops every event log. The moderation log, reports and honeypot log still post.",
 			"not_logged": "not logged",
 			"nothing_ignored": "Nothing ignored.",
 			"routed_count": "{routed} of {total} routed",

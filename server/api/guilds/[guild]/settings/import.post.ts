@@ -1,8 +1,9 @@
 import type { ConfigurationImportResponse } from "#shared/utils/settings-transfer";
 import { readSettings } from "#server/database";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
-import { authorizeAutoModerationManager, useManagedGuild } from "#server/utils/automod/route";
+import { authorizeAutoModerationManager } from "#server/utils/automod/route";
 import { readAutoModerationRules } from "#server/utils/automod/rules";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 import {
 	applyConfigurationImport,
 	ConfigurationImportStaleError,

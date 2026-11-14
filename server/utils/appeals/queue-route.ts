@@ -1,8 +1,8 @@
 import type { AppealDecision, AppealQueueFilter } from "#shared/utils/appeal-queue";
 import type { H3Event } from "h3";
 import { AppealQueueError } from "#server/utils/appeals/queue-error";
-import { useManagedGuild } from "#server/utils/appeals/route";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 import { guildSettingsAccessDenied, guildSettingsUpdate } from "#shared/audit/actions";
 import { AppealQueueQuerySchema } from "#shared/schemas/appeal-queue";
 import { isAppealDecision, MaximumAppealDecisionReasonLength } from "#shared/utils/appeal-queue";

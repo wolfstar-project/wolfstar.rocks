@@ -1,5 +1,6 @@
 import type { JoinGuardRulesResponse } from "#shared/utils/join-guard";
-import { authorizeJoinGuardManager, useManagedGuild } from "#server/utils/join-guard/route";
+import { useManagedGuild } from "#server/utils/guilds/manager";
+import { authorizeJoinGuardManager } from "#server/utils/join-guard/route";
 import { readJoinGuardRules } from "#server/utils/join-guard/rules";
 
 /** `GET /api/guilds/:guild/joinguard/rules`: the rules of the join guard of a guild, oldest first. */

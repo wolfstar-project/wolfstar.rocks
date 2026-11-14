@@ -1,5 +1,6 @@
-import { authorizeAutoChannelManager, useManagedGuild } from "#server/utils/auto-channels/route";
+import { authorizeAutoChannelManager } from "#server/utils/auto-channels/route";
 import { readAutoPurges } from "#server/utils/auto-channels/write";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 
 /** `GET /api/guilds/:guild/autopurge`: the channels that are purged, oldest first. */
 export default defineWrappedResponseHandler(

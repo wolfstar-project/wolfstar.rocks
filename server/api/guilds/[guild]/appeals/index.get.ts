@@ -1,6 +1,7 @@
 import { readAppealQueue } from "#server/utils/appeals/queue";
 import { parseAppealQueueQuery } from "#server/utils/appeals/queue-route";
-import { authorizeAppealFormManager, useManagedGuild } from "#server/utils/appeals/route";
+import { authorizeAppealFormManager } from "#server/utils/appeals/route";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 
 /**
  * `GET /api/guilds/:guild/appeals?status=pending|accepted|denied|all&limit=&offset=`:

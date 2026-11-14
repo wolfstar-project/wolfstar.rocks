@@ -4,9 +4,9 @@ import {
 	readChannelParam,
 	throwAutoChannelError,
 	throwInvalidAutoChannelBody,
-	useManagedGuild,
 } from "#server/utils/auto-channels/route";
 import { assertGuildTextChannel, setAutoMessage } from "#server/utils/auto-channels/write";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 import { parseAutoMessageData } from "#shared/utils/auto-channels";
 
 /**

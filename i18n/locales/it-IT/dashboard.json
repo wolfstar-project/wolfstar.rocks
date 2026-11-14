@@ -15,7 +15,7 @@
 		"discard_changes": "Elimina modifiche",
 		"dm": {
 			"app_invite": "",
-			"bot_tag": "BOT",
+			"bot_tag": "APP",
 			"direct_message": "Messaggio diretto",
 			"home_aria": "Home, messaggi diretti",
 			"image_preview": "",

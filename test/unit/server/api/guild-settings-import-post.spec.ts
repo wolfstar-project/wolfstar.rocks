@@ -21,6 +21,8 @@ const { mocks } = vi.hoisted(() => {
 
 vi.mock("#server/utils/automod/route", () => ({
 	authorizeAutoModerationManager: vi.fn(),
+}));
+vi.mock("#server/utils/guilds/manager", () => ({
 	useManagedGuild: () => ({
 		guild: { id: "100000000000000009" },
 		member: { user: { id: "user-1", username: "alice" } },

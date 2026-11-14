@@ -3,8 +3,8 @@ import {
 	auditAppealFormChange,
 	authorizeAppealFormManager,
 	throwAppealFormError,
-	useManagedGuild,
 } from "#server/utils/appeals/route";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 
 /** `DELETE /api/guilds/:guild/appeals/forms/:form`: deletes a form. */
 export default defineWrappedResponseHandler(

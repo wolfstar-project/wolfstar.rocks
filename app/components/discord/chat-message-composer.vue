@@ -12,6 +12,9 @@
 				'discord-message-composer-apps-open': appsOpen,
 				'[&>div:nth-child(2)]:hidden': hasValueSlot,
 			},
+			// The built-in add button is a control with no slot to replace it. The showcase
+			// attaches nothing, so it is hidden and a decorative mark takes its place.
+			'[&>button:first-child]:hidden',
 		]"
 		:aria-label="composerLabel"
 		:channel-name="channelName"
@@ -25,6 +28,12 @@
 		@navigate="emit('navigate', $event)"
 	>
 		<template #actions>
+			<span
+				class="discord-message-composer-add order-first inline-flex size-8 shrink-0 items-center justify-center"
+				aria-hidden="true"
+			>
+				<UIcon name="ph:plus-circle-fill" class="size-6" />
+			</span>
 			<div
 				v-if="hasValueSlot"
 				class="discord-message-composer-field flex min-w-0 flex-1 items-center"

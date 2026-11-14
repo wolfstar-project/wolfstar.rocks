@@ -481,7 +481,8 @@
 			</AppLauncherHeader>
 
 			<AppLauncherBody :class="[scrollbarClassName, 'max-md:px-3', VIEW_IN_CLASS]">
-				<AppLauncherList>
+				<!-- A list never shrinks: the body scrolls it, or its last rows are clipped. -->
+				<AppLauncherList class="shrink-0">
 					<DiscordAppLauncherListItem
 						v-for="entry of filteredActiveEntries"
 						:key="entry.id"

@@ -1,14 +1,18 @@
 <template>
-	<SelectMenu
-		v-model="selectedValue"
-		class="discord-string-select-menu"
-		variant="message"
-		:options="menuOptions"
-		:placeholder="placeholder ?? ts('discord.select.placeholder')"
-		:label="ariaLabel ?? ts('discord.select.aria')"
-		:disabled
-		@select="emit('select', $event)"
-	/>
+	<!-- The panel opens inside this element, so it reads the tokens and the typeface of the surface around it. -->
+	<div ref="containerRef" class="contents">
+		<SelectMenu
+			v-model="selectedValue"
+			class="discord-string-select-menu"
+			variant="message"
+			:container="containerRef ?? undefined"
+			:options="menuOptions"
+			:placeholder="placeholder ?? ts('discord.select.placeholder')"
+			:label="ariaLabel ?? ts('discord.select.aria')"
+			:disabled
+			@select="emit('select', $event)"
+		/>
+	</div>
 </template>
 
 <script lang="ts">
@@ -39,6 +43,8 @@ const { ts } = useI18n();
 const { options, placeholder, disabled = false, ariaLabel } = defineProps<StringSelectMenuProps>();
 
 const emit = defineEmits<StringSelectMenuEmits>();
+
+const containerRef = useTemplateRef<HTMLDivElement>("containerRef");
 
 const selectedValue = defineModel<string | undefined>({ default: undefined });
 

@@ -106,8 +106,10 @@ describe("DiscordScrollbar", () => {
 		// ARRANGE / ACT
 		const { wrapper, thumb } = await mountTall({ autoHide: true });
 
-		// ASSERT
-		expect(getComputedStyle(thumb).opacity).toBe("0");
+		// ASSERT — a scroll event while the thumb mounts keeps it shown until the idle delay ends
+		await vi.waitFor(() => expect(getComputedStyle(thumb).opacity).toBe("0"), {
+			timeout: 3000,
+		});
 
 		wrapper.unmount();
 	});

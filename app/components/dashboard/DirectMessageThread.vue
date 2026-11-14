@@ -343,9 +343,12 @@ watch(
 	@apply absolute end-2 -top-3 z-1 rounded-md border border-solid border-newt-border bg-newt-bg-floating px-2 shadow-sm;
 }
 
-/* The time of a joined post, in the avatar's column, shown as the link is. */
+/* The time of a joined post, in the avatar's column, shown as the link is.
+   The column keeps the avatar's width so the text stays aligned; a 12-hour
+   time ("12:04 PM") is wider, so it stays on one line and spills evenly to
+   both sides, as Discord's does. */
 .dm-margin-time {
-	@apply w-10 shrink-0 pt-1 text-center leading-5.5 opacity-0 group-focus-within/post:opacity-100 group-hover/post:opacity-100;
+	@apply flex w-10 shrink-0 justify-center pt-1 leading-5.5 whitespace-nowrap opacity-0 group-focus-within/post:opacity-100 group-hover/post:opacity-100;
 }
 
 /* Discord's tag: a little taller than the registry's, its corners rounder. */

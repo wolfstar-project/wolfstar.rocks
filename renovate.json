@@ -12,8 +12,13 @@
 			"matchPackageNames": ["vite", "/^@vitejs//", "/^vite-/"]
 		},
 		{
+			"description": "vite-plus bundles one vitest. The catalog must match it, so vite-plus bumps vitest and Renovate leaves it alone.",
+			"matchPackageNames": ["vitest", "/^@vitest//"],
+			"enabled": false
+		},
+		{
 			"extends": ["packages:test"],
-			"matchPackageNames": ["c8", "happy-dom", "jsdom", "/vitest/", "/^@vitest//"],
+			"matchPackageNames": ["c8", "happy-dom", "jsdom"],
 			"groupName": "test packages"
 		},
 		{

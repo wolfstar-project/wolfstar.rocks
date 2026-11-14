@@ -30,7 +30,7 @@
 			<UFormField
 				v-for="module in moduleCards"
 				:key="module.section"
-				:name="module.kind === 'setup' ? undefined : module.key"
+				:name="module.key"
 				class="console-card flex flex-col transition-opacity"
 				:ui="{ container: 'flex h-full flex-1 flex-col' }"
 			>
@@ -56,7 +56,6 @@
 							{{ statusLabel(module) }}
 						</UBadge>
 						<USwitch
-							v-if="module.kind !== 'setup'"
 							v-model="state[module.key]"
 							class="shrink-0"
 							:aria-label="
@@ -67,10 +66,7 @@
 						/>
 					</div>
 				</div>
-				<div
-					class="mt-3 min-w-0 flex-1"
-					:class="{ 'opacity-60': module.kind !== 'setup' && !state[module.key] }"
-				>
+				<div class="mt-3 min-w-0 flex-1" :class="{ 'opacity-60': !state[module.key] }">
 					<p class="text-base font-bold">{{ ts(module.labelKey) }}</p>
 					<p class="mt-1 text-[0.8125rem] leading-snug text-muted">
 						{{ ts(module.descriptionKey) }}
@@ -171,9 +167,10 @@ interface SwitchModuleCard extends ModuleCard {
 	key: (typeof MODULE_SWITCH_KEYS)[number];
 }
 
-/** A module the bot sets up in Discord, on once it has what it needs. */
+/** A module the bot sets up in Discord: switched on, it acts once it has what it needs. */
 interface SetupModuleCard extends ModuleCard {
 	kind: "setup";
+	key: (typeof MODULE_SWITCH_KEYS)[number];
 }
 
 /** A module that is a list of channels, with a switch that stops them all. */
@@ -203,6 +200,7 @@ const moduleCards: AnyModuleCard[] = [
 	{
 		descriptionKey: "guild_settings.modules.descriptions.honeypot",
 		icon: "lucide:hexagon",
+		key: "modulesHoneypot",
 		kind: "setup",
 		labelKey: "dashboard.nav.honeypot",
 		section: "honeypot",
@@ -258,8 +256,10 @@ const lists = {
 } satisfies Record<AutoChannelSlug, { rows: Ref<readonly unknown[]> }>;
 
 function isOn(module: AnyModuleCard): boolean {
-	// The honeypot is the one module set up in Discord: it is on with a channel.
-	if (module.kind === "setup") return Boolean(guildSettings.value?.honeypotChannel);
+	// The honeypot is the one module set up in Discord: it catches with a channel.
+	if (module.kind === "setup") {
+		return state[module.key] === true && Boolean(guildSettings.value?.honeypotChannel);
+	}
 	// Its channels do nothing while the switch is off.
 	if (module.kind === "list") {
 		return state[module.key] === true && lists[module.section].rows.value.length > 0;
@@ -271,7 +271,8 @@ function statusLabel(module: SetupModuleCard | ListModuleCard): string {
 	if (module.kind === "list") {
 		return tc("guild_settings.modules.channel_count", lists[module.section].rows.value.length);
 	}
-	return isOn(module)
+	// Whether it has its channel, which the switch keeps while it is off.
+	return guildSettings.value?.honeypotChannel
 		? ts("guild_settings.modules.set_up")
 		: ts("guild_settings.modules.not_set_up");
 }

@@ -28,6 +28,7 @@ describe("DashboardContextCard", () => {
 			modulesAutomessage: false,
 			modulesAutomod: true,
 			modulesAutopurge: false,
+			modulesHoneypot: false,
 			modulesLogs: false,
 			modulesModeration: true,
 			modulesRoles: false,
@@ -35,7 +36,7 @@ describe("DashboardContextCard", () => {
 		const wrapper = await mountSuspended(DashboardContextCard, { route: "/?screen=page" });
 
 		expect(wrapper.text()).toContain("WolfStar HQ");
-		expect(wrapper.text()).toContain("2 of 9 modules on");
+		expect(wrapper.text()).toContain("2 of 10 modules on");
 	});
 
 	it("offers the switch of a module section, bound to its staged setting", async () => {

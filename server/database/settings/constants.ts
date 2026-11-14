@@ -21,6 +21,8 @@ export function getDefaultGuildSettings(): DefaultGuildData {
 			modulesAutodelete: true,
 			modulesAutopurge: true,
 			modulesAutomessage: true,
+			modulesReports: true,
+			modulesHoneypot: true,
 			automodChannel: null,
 			automodTrackNative: false,
 			commandsDisabled: [],

@@ -25,6 +25,8 @@ export const TransferableSettings = [
 	["modules.autodelete", "modulesAutodelete"],
 	["modules.autopurge", "modulesAutopurge"],
 	["modules.automessage", "modulesAutomessage"],
+	["modules.reports", "modulesReports"],
+	["modules.honeypot", "modulesHoneypot"],
 	["automod.track-native", "automodTrackNative"],
 	["commands.disabled", "commandsDisabled"],
 	["honeypot.action", "honeypotAction"],
@@ -99,8 +101,6 @@ export function findTransferableSetting(name: string): TransferableSettingKey | 
  * dashboard may write it.
  */
 export const BotOnlySettings: ReadonlySet<string> = new Set([
-	"modules.reports",
-	"modules.honeypot",
 	"honeypot.reinvite",
 	"honeypot.recreate",
 ]);

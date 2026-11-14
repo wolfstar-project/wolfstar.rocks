@@ -1,30 +1,31 @@
 <template>
-	<div
-		class="discord-message-avatar-wrapper"
-		:class="size.classes"
+	<Avatar
+		class="discord-message-avatar-wrapper select-none"
+		:class="[size.classes, !profile.app && 'bg-transparent']"
 		role="img"
 		:aria-label="`${profile.name}'s avatar`"
 	>
-		<nuxt-img
+		<AvatarImage
 			v-if="profile.app"
 			:src="`/avatars/${user}.png`"
 			:width="size.dimensions"
 			:height="size.dimensions"
-			:alt="`${profile.name} avatar`"
 		/>
-		<UIcon
-			v-else-if="user === 'baddie'"
-			name="ph:smiley-angry-fill"
-			class="discord-message-avatar baddie size-full"
-			aria-hidden="true"
-		/>
-		<UIcon
-			v-else
-			name="ph:shooting-star-fill"
-			class="h-full w-full text-info"
-			aria-hidden="true"
-		/>
-	</div>
+		<AvatarFallback v-else>
+			<UIcon
+				v-if="user === 'baddie'"
+				name="ph:smiley-angry-fill"
+				class="size-full text-error drop-shadow-[0_0_0.2rem_color-mix(in_oklab,var(--color-error)_40%,transparent)]"
+				aria-hidden="true"
+			/>
+			<UIcon
+				v-else
+				name="ph:shooting-star-fill"
+				class="size-full text-info"
+				aria-hidden="true"
+			/>
+		</AvatarFallback>
+	</Avatar>
 </template>
 
 <script lang="ts">
@@ -37,6 +38,8 @@ interface AvatarProps {
 </script>
 
 <script setup lang="ts">
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+
 const { user, size: sizeKey } = defineProps<AvatarProps>();
 
 const Sizes = {
@@ -47,18 +50,3 @@ const Sizes = {
 const profile = computed(() => Profiles[user]);
 const size = computed(() => Sizes[sizeKey]);
 </script>
-
-<style scoped>
-@reference "@/assets/css/main.css";
-.discord-message-avatar-wrapper {
-	@apply flex-none overflow-hidden rounded-full select-none;
-}
-
-.discord-message-avatar.baddie {
-	filter: drop-shadow(0 0 0.2rem oklch(var(--er) / 0.4));
-}
-
-.discord-message-avatar.baddie :deep(path) {
-	@apply fill-error;
-}
-</style>

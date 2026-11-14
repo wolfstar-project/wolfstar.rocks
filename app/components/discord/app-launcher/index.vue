@@ -1,25 +1,28 @@
 <template>
-	<div
+	<AppLauncher
 		v-if="open"
 		ref="rootRef"
-		class="discord-app-launcher"
-		:class="{
-			'discord-app-launcher--sheet-half': sheetSnap === 'half',
-			'discord-app-launcher--sheet-full': sheetSnap === 'full',
-			'discord-app-launcher--sheet-dragging': sheetDragging,
-			'discord-app-launcher--reduce-motion': effectiveReduceMotion,
-		}"
+		:class="[
+			// `discord-app-launcher` is the hook the commands showcase styles the sheet through.
+			// AppLauncher has no bottom-sheet layout, so the phone sheet is local.
+			'discord-app-launcher font-whitney max-md:relative max-md:h-(--discord-app-launcher-sheet-half) max-md:max-h-(--discord-app-launcher-sheet-full) max-md:max-w-none max-md:rounded-t-[16px] max-md:rounded-b-none max-md:border-0 max-md:shadow-none max-md:transition-[height] max-md:duration-200',
+			{
+				'max-md:h-(--discord-app-launcher-sheet-full)': sheetSnap === 'full',
+				'max-md:transition-none': sheetDragging || effectiveReduceMotion,
+			},
+		]"
 		:data-sheet-snap="sheetSnap"
-		:style="sheetDragStyle"
-		role="dialog"
+		:style="sheetStyle"
 		aria-modal="true"
 		:aria-label="dialogLabel"
 		@keydown.escape.prevent.stop="onEscape"
 		@keydown.tab="onTab"
 	>
+		<!-- AppLauncherHandle is a hidden grip; the phone sheet needs a focusable control around it. -->
 		<button
 			type="button"
-			class="discord-app-launcher-handle"
+			data-slot="sheet-handle"
+			class="mb-1.5 hidden shrink-0 cursor-grab touch-none self-center rounded-full border-0 bg-transparent p-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-newt-text-link active:cursor-grabbing max-md:block"
 			:tabindex="isBelowMediumScreen ? 0 : -1"
 			:aria-hidden="isBelowMediumScreen ? undefined : 'true'"
 			:aria-label="
@@ -33,562 +36,452 @@
 			@pointerdown="onHandlePointerDown"
 			@keydown.up.prevent="expandSheet"
 			@keydown.down.prevent="collapseSheet"
-		/>
+		>
+			<AppLauncherHandle class="mt-2.5 h-1.5 w-11 bg-newt-text-muted" />
+		</button>
 
 		<template v-if="activeView === null">
-			<!-- Search sits outside the scroller so the track starts below it, like Discord. -->
-			<div class="discord-app-launcher-search-header">
-				<div class="discord-app-launcher-search">
-					<UIcon
-						name="discord:search"
-						class="discord-app-launcher-search-icon"
-						aria-hidden="true"
-					/>
-					<input
-						ref="searchRef"
-						v-model="searchQuery"
-						type="search"
-						class="discord-app-launcher-search-input"
-						:placeholder="ts('discord.launcher.search')"
-						:aria-label="ts('discord.launcher.search')"
-						autocomplete="off"
-						spellcheck="false"
-						@keydown.enter.prevent="onSearchEnter"
-					/>
-				</div>
-			</div>
+			<AppLauncherSearch class="max-md:pt-2">
+				<AppLauncherSearchInput
+					ref="searchRef"
+					:value="searchQuery"
+					:placeholder="ts('discord.launcher.search')"
+					:aria-label="ts('discord.launcher.search')"
+					class="max-md:h-12 max-md:rounded-full"
+					@input="onSearchInput"
+					@keydown.enter.prevent="onSearchEnter"
+				/>
+			</AppLauncherSearch>
 
-			<DiscordScrollbar
-				class="discord-app-launcher-main-scroll"
-				:min-thumb-height="14"
-				:max-thumb-height="124"
-				auto-hide
-			>
-				<div class="discord-app-launcher-main-content">
-					<div class="discord-app-launcher-main-sections">
-						<!-- Command hits appear only while searching — never a static /commands page. -->
-						<section
-							v-if="filteredCommands.length > 0"
-							class="discord-app-launcher-section"
-							aria-labelledby="discord-app-launcher-commands-heading"
+			<AppLauncherBody :class="[scrollbarClassName, 'max-md:pb-5']">
+				<!-- Command hits appear only while searching — never a static /commands page. -->
+				<AppLauncherSection
+					v-if="filteredCommands.length > 0"
+					class="max-md:gap-2.5"
+					aria-labelledby="discord-app-launcher-commands-heading"
+				>
+					<AppLauncherSectionHeader>
+						<AppLauncherSectionTitle
+							id="discord-app-launcher-commands-heading"
+							class="max-md:text-xl max-md:font-bold"
 						>
-							<div class="discord-app-launcher-section-header">
-								<h2
-									id="discord-app-launcher-commands-heading"
-									class="discord-app-launcher-section-title"
-								>
-									{{ ts("discord.launcher.commands") }}
-								</h2>
-							</div>
-							<div class="discord-app-launcher-server-list">
-								<DiscordAppLauncherListItem
-									v-for="(entry, index) of filteredCommands"
-									:key="entry.id"
-									:class="{
-										'discord-app-launcher-server-row-bordered': index > 0,
-									}"
-									:name="entry.name"
-									:description="entry.description"
-									:avatar="entry.avatar"
-									:icon="entry.icon"
-									:icon-bg="entry.iconBg"
-									:show-eye="false"
-									@select="selectEntry(entry)"
+							{{ ts("discord.launcher.commands") }}
+						</AppLauncherSectionTitle>
+					</AppLauncherSectionHeader>
+					<AppLauncherList>
+						<DiscordAppLauncherListItem
+							v-for="entry of filteredCommands"
+							:key="entry.id"
+							:name="entry.name"
+							:description="entry.description"
+							:avatar="entry.avatar"
+							:icon="entry.icon"
+							:icon-bg="entry.iconBg"
+							:show-eye="false"
+							@select="selectEntry(entry)"
+						/>
+					</AppLauncherList>
+				</AppLauncherSection>
+
+				<AppLauncherSection
+					v-if="filteredRecents.length > 0"
+					class="max-md:gap-2.5"
+					aria-labelledby="discord-app-launcher-recents-heading"
+				>
+					<AppLauncherSectionHeader>
+						<AppLauncherSectionTitle
+							id="discord-app-launcher-recents-heading"
+							class="max-md:text-xl max-md:font-bold"
+						>
+							{{ ts("discord.launcher.views.recents") }}
+							<UIcon
+								name="ph:caret-down-bold"
+								class="hidden size-3.5 max-md:inline-block"
+								aria-hidden="true"
+							/>
+						</AppLauncherSectionTitle>
+						<AppLauncherViewMore
+							v-if="showRecentsViewMore"
+							@click="openListView(recentsListViewId)"
+						>
+							<span class="max-md:hidden">{{
+								ts("discord.launcher.view_more")
+							}}</span>
+							<span class="hidden max-md:inline">{{
+								ts("discord.launcher.view_all")
+							}}</span>
+						</AppLauncherViewMore>
+					</AppLauncherSectionHeader>
+					<!-- AppLauncherRecents is a plain div; the list roles keep the count announced. -->
+					<AppLauncherRecents role="list" class="max-md:hidden">
+						<span v-for="entry of filteredRecents" :key="entry.id" role="listitem">
+							<AppLauncherRecent
+								:title="entry.name"
+								:aria-label="recentTileLabel(entry)"
+								:class="{
+									'[&>img]:object-contain [&>img]:p-1': isWolfstarEntry(entry),
+								}"
+								:style="
+									entry.iconBg ? { backgroundColor: entry.iconBg } : undefined
+								"
+								@click="selectEntry(entry)"
+							>
+								<NuxtImg
+									v-if="entry.avatar"
+									:src="entry.avatar"
+									alt=""
+									width="40"
+									height="40"
 								/>
-							</div>
-						</section>
-
-						<section
-							v-if="filteredRecents.length > 0"
-							class="discord-app-launcher-section"
-							aria-labelledby="discord-app-launcher-recents-heading"
+								<UIcon
+									v-else-if="entry.icon"
+									:name="entry.icon"
+									class="size-6 text-newt-on-accent"
+								/>
+							</AppLauncherRecent>
+						</span>
+					</AppLauncherRecents>
+					<AppLauncherRecents role="list" :class="MOBILE_CAROUSEL_CLASS">
+						<span
+							v-for="entry of mobileRecents"
+							:key="`mobile-recent-${entry.id}`"
+							role="listitem"
+							:class="MOBILE_TILE_SLOT_CLASS"
 						>
-							<div class="discord-app-launcher-section-header">
-								<h2
-									id="discord-app-launcher-recents-heading"
-									class="discord-app-launcher-section-title"
-								>
-									{{ ts("discord.launcher.views.recents") }}
-									<UIcon
-										name="ph:caret-down-bold"
-										class="discord-app-launcher-section-caret"
-										aria-hidden="true"
+							<DiscordAppLauncherListItem
+								:class="MOBILE_TILE_CLASS"
+								:name="entry.tileTitle ?? entry.name"
+								:description="entry.tileSubtitle"
+								:aria-label="recentTileLabel(entry)"
+								:avatar="entry.avatar"
+								:icon="entry.icon"
+								:icon-bg="entry.iconBg"
+								round
+								:show-eye="false"
+								:show-chevron="false"
+								@select="selectEntry(entry)"
+							/>
+						</span>
+					</AppLauncherRecents>
+				</AppLauncherSection>
+
+				<AppLauncherSection
+					v-if="filteredServerApps.length > 0"
+					class="max-md:gap-2.5"
+					aria-labelledby="discord-app-launcher-server-heading"
+				>
+					<AppLauncherSectionHeader>
+						<AppLauncherSectionTitle
+							id="discord-app-launcher-server-heading"
+							class="max-md:text-xl max-md:font-bold"
+						>
+							<span class="max-md:hidden">{{
+								ts("discord.launcher.views.server-apps")
+							}}</span>
+							<span class="hidden max-md:inline">{{
+								ts("discord.launcher.in_server")
+							}}</span>
+						</AppLauncherSectionTitle>
+						<AppLauncherViewMore
+							v-if="showServerAppsViewMore"
+							@click="openListView(serverAppsListViewId)"
+						>
+							<span class="max-md:hidden">{{
+								ts("discord.launcher.view_more")
+							}}</span>
+							<span class="hidden max-md:inline">{{
+								ts("discord.launcher.view_all")
+							}}</span>
+						</AppLauncherViewMore>
+					</AppLauncherSectionHeader>
+					<AppLauncherList class="max-md:hidden">
+						<DiscordAppLauncherListItem
+							v-for="entry of filteredServerApps"
+							:key="entry.id"
+							:name="entry.name"
+							:description="entry.description"
+							:avatar="entry.avatar"
+							:icon="entry.icon"
+							:icon-bg="entry.iconBg"
+							:promoted="entry.promoted"
+							round
+							@select="selectEntry(entry)"
+						/>
+					</AppLauncherList>
+					<AppLauncherRecents role="list" :class="MOBILE_CAROUSEL_CLASS">
+						<span
+							v-for="entry of mobileServerApps"
+							:key="`mobile-server-${entry.id}`"
+							role="listitem"
+							:class="MOBILE_TILE_SLOT_CLASS"
+						>
+							<DiscordAppLauncherListItem
+								:class="MOBILE_TILE_CLASS"
+								:name="entry.name"
+								:aria-label="entry.name"
+								:avatar="entry.avatar"
+								:icon="entry.icon"
+								:icon-bg="entry.iconBg"
+								round
+								:show-eye="false"
+								:show-chevron="false"
+								@select="selectEntry(entry)"
+							/>
+						</span>
+					</AppLauncherRecents>
+				</AppLauncherSection>
+
+				<!-- newt/ui has no promoted card: the cards and their mock art stay local. -->
+				<AppLauncherSection
+					v-if="filteredPromoted.length > 0 && !searchQuery.trim()"
+					class="max-md:gap-2.5"
+					aria-labelledby="discord-app-launcher-promoted-heading"
+				>
+					<AppLauncherSectionHeader>
+						<AppLauncherSectionTitle
+							id="discord-app-launcher-promoted-heading"
+							class="max-md:text-xl max-md:font-bold"
+						>
+							{{ ts("discord.launcher.promoted") }}
+						</AppLauncherSectionTitle>
+					</AppLauncherSectionHeader>
+					<div class="grid grid-cols-2 gap-2.5 max-md:gap-2">
+						<button
+							v-for="promo of filteredPromoted"
+							:key="promo.id"
+							type="button"
+							class="flex cursor-pointer flex-col overflow-hidden rounded-[8px] border-0 bg-newt-bg-elevated p-0 text-start focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-newt-text-link max-md:rounded-[12px]"
+							:aria-label="promoAriaLabel(promo)"
+							@click="emit('selectPromo', promo)"
+						>
+							<span
+								class="promo-art relative flex h-32 w-full shrink-0 items-center justify-center overflow-hidden max-md:h-[6.5rem]"
+								:class="`promo-art--${promo.variant}`"
+								aria-hidden="true"
+							>
+								<template v-if="promo.variant === 'wordle'">
+									<span class="grid grid-cols-3 gap-[3px]">
+										<span
+											v-for="(cell, cellIndex) of WordleCells"
+											:key="`${cell}-${cellIndex}`"
+											class="size-3.5 rounded-[2px]"
+											:class="`promo-wordle-cell--${cell}`"
+										/>
+									</span>
+									<span
+										class="font-serif text-3xl leading-none font-bold tracking-tight"
+										>{{ promo.title }}</span
+									>
+									<span
+										v-if="promo.subtitle"
+										class="promo-wordle-subtitle text-[10px] leading-tight font-semibold tracking-[0.04em]"
+									>
+										{{ promo.subtitle }}
+									</span>
+								</template>
+								<template v-else-if="promo.variant === 'garden'">
+									<span
+										class="promo-garden-vine absolute -top-7 left-1/2 h-20 w-32 -translate-x-1/2 rounded-[50%]"
 									/>
-								</h2>
-								<button
-									v-if="showRecentsViewMore"
-									type="button"
-									class="discord-app-launcher-view-more"
-									@click="openListView(recentsListViewId)"
-								>
 									<span
-										class="discord-app-launcher-view-more-desktop max-md:hidden"
-										>{{ ts("discord.launcher.view_more") }}</span
-									>
+										class="promo-garden-leaf absolute bottom-[48%] left-[12%] size-7 -rotate-25"
+									/>
 									<span
-										class="discord-app-launcher-view-more-mobile hidden max-md:inline"
-										>{{ ts("discord.launcher.view_all") }}</span
-									>
-								</button>
-							</div>
-							<ul
-								class="discord-app-launcher-recents discord-app-launcher-recents-desktop max-md:hidden"
-								role="list"
-							>
-								<li v-for="entry of filteredRecents" :key="entry.id">
-									<button
-										type="button"
-										class="discord-app-launcher-recent"
-										:title="entry.name"
-										:aria-label="recentTileLabel(entry)"
-										@click="selectEntry(entry)"
+										class="promo-garden-leaf absolute right-[10%] bottom-[47%] size-7 scale-85 rotate-28"
+									/>
+									<span
+										class="absolute bottom-[36%] left-1/2 size-14 -translate-x-1/2"
 									>
 										<span
-											class="discord-app-launcher-recent-icon"
-											:class="{
-												'discord-app-launcher-recent-icon--wolfstar':
-													isWolfstarEntry(entry),
-											}"
-											:style="
-												entry.iconBg
-													? { backgroundColor: entry.iconBg }
-													: undefined
-											"
-											aria-hidden="true"
-										>
-											<NuxtImg
-												v-if="entry.avatar"
-												:src="entry.avatar"
-												alt=""
-												width="40"
-												height="40"
-												class="discord-app-launcher-recent-avatar"
-												:class="{
-													'discord-app-launcher-recent-avatar--wolfstar':
-														isWolfstarEntry(entry),
-												}"
-											/>
-											<UIcon
-												v-else-if="entry.icon"
-												:name="entry.icon"
-												class="discord-app-launcher-recent-glyph"
-											/>
-										</span>
-									</button>
-								</li>
-							</ul>
-							<ul
-								class="discord-app-launcher-tile-grid discord-app-launcher-recents-mobile hidden max-md:flex"
-								role="list"
-							>
-								<li
-									v-for="entry of mobileRecents"
-									:key="`mobile-recent-${entry.id}`"
-								>
-									<button
-										type="button"
-										class="discord-app-launcher-tile"
-										:aria-label="recentTileLabel(entry)"
-										@click="selectEntry(entry)"
-									>
+											class="promo-garden-berry absolute inset-0 rounded-[45%_45%_50%_50%]"
+										/>
 										<span
-											class="discord-app-launcher-tile-icon discord-app-launcher-tile-icon--round"
-											:class="{
-												'discord-app-launcher-tile-icon--wolfstar':
-													isWolfstarEntry(entry),
-											}"
-											:style="
-												entry.iconBg
-													? { backgroundColor: entry.iconBg }
-													: undefined
-											"
-											aria-hidden="true"
+											class="promo-garden-face absolute inset-0 z-1 flex items-center justify-center text-sm font-black"
+											>•ᴗ•</span
 										>
-											<NuxtImg
-												v-if="entry.avatar"
-												:src="entry.avatar"
-												alt=""
-												width="40"
-												height="40"
-												class="discord-app-launcher-tile-avatar"
-												:class="{
-													'discord-app-launcher-tile-avatar--wolfstar':
-														isWolfstarEntry(entry),
-												}"
-											/>
-											<UIcon
-												v-else-if="entry.icon"
-												:name="entry.icon"
-												class="discord-app-launcher-tile-glyph"
-											/>
-										</span>
-										<span class="discord-app-launcher-tile-copy">
-											<span class="discord-app-launcher-tile-title">{{
-												entry.tileTitle ?? entry.name
-											}}</span>
-											<span
-												v-if="entry.tileSubtitle"
-												class="discord-app-launcher-tile-subtitle"
-											>
-												{{ entry.tileSubtitle }}
-											</span>
-										</span>
-									</button>
-								</li>
-							</ul>
-						</section>
-
-						<section
-							v-if="filteredServerApps.length > 0"
-							class="discord-app-launcher-section"
-							aria-labelledby="discord-app-launcher-server-heading"
-						>
-							<div class="discord-app-launcher-section-header">
-								<h2
-									id="discord-app-launcher-server-heading"
-									class="discord-app-launcher-section-title"
-								>
-									<span
-										class="discord-app-launcher-server-title-desktop max-md:hidden"
-										>{{ ts("discord.launcher.views.server-apps") }}</span
-									>
-									<span
-										class="discord-app-launcher-server-title-mobile hidden max-md:inline"
-										>{{ ts("discord.launcher.in_server") }}</span
-									>
-								</h2>
-								<button
-									v-if="showServerAppsViewMore"
-									type="button"
-									class="discord-app-launcher-view-more"
-									@click="openListView(serverAppsListViewId)"
-								>
-									<span
-										class="discord-app-launcher-view-more-desktop max-md:hidden"
-										>{{ ts("discord.launcher.view_more") }}</span
-									>
-									<span
-										class="discord-app-launcher-view-more-mobile hidden max-md:inline"
-										>{{ ts("discord.launcher.view_all") }}</span
-									>
-								</button>
-							</div>
-							<div
-								class="discord-app-launcher-server-list discord-app-launcher-server-list-desktop max-md:hidden"
-							>
-								<DiscordAppLauncherListItem
-									v-for="(entry, index) of filteredServerApps"
-									:key="entry.id"
-									:class="{
-										'discord-app-launcher-server-row-bordered': index > 0,
-									}"
-									:name="entry.name"
-									:description="entry.description"
-									:avatar="entry.avatar"
-									:icon="entry.icon"
-									:icon-bg="entry.iconBg"
-									:promoted="entry.promoted"
-									@select="selectEntry(entry)"
-								/>
-							</div>
-							<ul
-								class="discord-app-launcher-tile-grid discord-app-launcher-server-mobile hidden max-md:flex"
-								role="list"
-							>
-								<li
-									v-for="entry of mobileServerApps"
-									:key="`mobile-server-${entry.id}`"
-								>
-									<button
-										type="button"
-										class="discord-app-launcher-tile"
-										:aria-label="entry.name"
-										@click="selectEntry(entry)"
-									>
 										<span
-											class="discord-app-launcher-tile-icon discord-app-launcher-tile-icon--round"
-											:class="{
-												'discord-app-launcher-tile-icon--wolfstar':
-													isWolfstarEntry(entry),
-											}"
-											:style="
-												entry.iconBg
-													? { backgroundColor: entry.iconBg }
-													: undefined
-											"
-											aria-hidden="true"
-										>
-											<NuxtImg
-												v-if="entry.avatar"
-												:src="entry.avatar"
-												alt=""
-												width="40"
-												height="40"
-												class="discord-app-launcher-tile-avatar"
-												:class="{
-													'discord-app-launcher-tile-avatar--wolfstar':
-														isWolfstarEntry(entry),
-												}"
-											/>
-											<UIcon
-												v-else-if="entry.icon"
-												:name="entry.icon"
-												class="discord-app-launcher-tile-glyph"
-											/>
-										</span>
-										<span class="discord-app-launcher-tile-copy">
-											<span class="discord-app-launcher-tile-title">{{
-												entry.name
-											}}</span>
-										</span>
-									</button>
-								</li>
-							</ul>
-						</section>
-
-						<section
-							v-if="filteredPromoted.length > 0 && !searchQuery.trim()"
-							class="discord-app-launcher-section"
-							aria-labelledby="discord-app-launcher-promoted-heading"
-						>
-							<div class="discord-app-launcher-section-header">
-								<h2
-									id="discord-app-launcher-promoted-heading"
-									class="discord-app-launcher-section-title"
-								>
-									{{ ts("discord.launcher.promoted") }}
-								</h2>
-							</div>
-							<div class="discord-app-launcher-promoted-grid">
-								<button
-									v-for="promo of filteredPromoted"
-									:key="promo.id"
-									type="button"
-									class="discord-app-launcher-promo"
-									:class="`discord-app-launcher-promo-${promo.variant}`"
-									:aria-label="promoAriaLabel(promo)"
-									@click="emit('selectPromo', promo)"
-								>
+											class="promo-garden-seed absolute top-[38%] left-[28%] size-1 rounded-full"
+										/>
+										<span
+											class="promo-garden-seed absolute top-[52%] left-[52%] size-1 rounded-full"
+										/>
+										<span
+											class="promo-garden-seed absolute top-[30%] left-[58%] size-1 rounded-full"
+										/>
+										<span
+											class="promo-garden-crown absolute -top-1.5 left-1/2 size-4 -translate-x-1/2 rounded-full"
+										/>
+									</span>
 									<span
-										class="discord-app-launcher-promo-visual"
-										:class="`discord-app-launcher-promo-visual-${promo.variant}`"
-										aria-hidden="true"
+										class="promo-garden-flower absolute right-[22%] bottom-[28%] size-3 rounded-full"
+									/>
+									<span
+										class="promo-garden-title absolute right-5 bottom-2 z-1 m-0 -rotate-3 text-center text-lg leading-[0.78] font-black tracking-[-0.04em] uppercase"
 									>
-										<template v-if="promo.variant === 'wordle'">
-											<span class="discord-app-launcher-promo-wordle-grid">
-												<span
-													v-for="(cell, cellIndex) of WordleCells"
-													:key="`${cell}-${cellIndex}`"
-													class="discord-app-launcher-promo-wordle-cell"
-													:class="`discord-app-launcher-promo-wordle-cell-${cell}`"
-												/>
-											</span>
-											<span class="discord-app-launcher-promo-wordle-title">{{
-												promo.title
-											}}</span>
-											<span
-												v-if="promo.subtitle"
-												class="discord-app-launcher-promo-wordle-subtitle"
-											>
-												{{ promo.subtitle }}
-											</span>
-										</template>
-										<template v-else-if="promo.variant === 'garden'">
-											<span class="discord-app-launcher-promo-garden-vine" />
-											<span
-												class="discord-app-launcher-promo-garden-leaf discord-app-launcher-promo-garden-leaf-a"
-											/>
-											<span
-												class="discord-app-launcher-promo-garden-leaf discord-app-launcher-promo-garden-leaf-b"
-											/>
-											<span class="discord-app-launcher-promo-garden-berry">
-												<span
-													class="discord-app-launcher-promo-garden-berry-body"
-												/>
-												<span class="discord-app-launcher-promo-garden-face"
-													>•ᴗ•</span
-												>
-												<span
-													class="discord-app-launcher-promo-garden-berry-seed discord-app-launcher-promo-garden-berry-seed-1"
-												/>
-												<span
-													class="discord-app-launcher-promo-garden-berry-seed discord-app-launcher-promo-garden-berry-seed-2"
-												/>
-												<span
-													class="discord-app-launcher-promo-garden-berry-seed discord-app-launcher-promo-garden-berry-seed-3"
-												/>
-												<span
-													class="discord-app-launcher-promo-garden-berry-crown"
-												/>
-											</span>
-											<span
-												class="discord-app-launcher-promo-garden-flower"
-											/>
-											<span class="discord-app-launcher-promo-garden-title">
-												<template
-													v-for="(
-														line, lineIndex
-													) of splitDiscordAppLauncherPromoTitle(
-														promo.title,
-													)"
-													:key="`${promo.id}-garden-${lineIndex}`"
-												>
-													<br v-if="lineIndex > 0" />{{ line }}
-												</template>
-											</span>
-										</template>
-										<template v-else-if="promo.variant === 'farm'">
-											<span class="discord-app-launcher-promo-farm-sun" />
-											<span class="discord-app-launcher-promo-farm-field" />
-											<UIcon
-												name="ph:plant-fill"
-												class="discord-app-launcher-promo-farm-icon"
-											/>
-											<span class="discord-app-launcher-promo-farm-title">
-												<template
-													v-for="(
-														line, lineIndex
-													) of splitDiscordAppLauncherPromoTitle(
-														promo.title,
-													)"
-													:key="`${promo.id}-farm-${lineIndex}`"
-												>
-													<br v-if="lineIndex > 0" />{{ line }}
-												</template>
-											</span>
-										</template>
-										<template v-else>
-											<UIcon
-												name="ph:youtube-logo-fill"
-												class="discord-app-launcher-promo-watch-icon"
-											/>
-											<span class="discord-app-launcher-promo-watch-title">{{
-												promo.title
-											}}</span>
+										<template
+											v-for="(
+												line, lineIndex
+											) of splitDiscordAppLauncherPromoTitle(promo.title)"
+											:key="`${promo.id}-garden-${lineIndex}`"
+										>
+											<br v-if="lineIndex > 0" />{{ line }}
 										</template>
 									</span>
-									<span class="discord-app-launcher-promo-footer">
-										<span
-											class="discord-app-launcher-promo-icon"
-											:style="
-												promo.iconBg
-													? { backgroundColor: promo.iconBg }
-													: undefined
-											"
-											aria-hidden="true"
+								</template>
+								<template v-else-if="promo.variant === 'farm'">
+									<span
+										class="promo-farm-sun absolute top-3 right-5 size-8 rounded-full"
+									/>
+									<span
+										class="promo-farm-field absolute inset-x-0 bottom-0 h-12"
+									/>
+									<UIcon
+										name="ph:plant-fill"
+										class="promo-farm-icon relative z-1 ml-5 size-16"
+									/>
+									<span
+										class="promo-farm-title relative z-1 ml-2 -rotate-6 text-xl leading-[0.85] font-black uppercase"
+									>
+										<template
+											v-for="(
+												line, lineIndex
+											) of splitDiscordAppLauncherPromoTitle(promo.title)"
+											:key="`${promo.id}-farm-${lineIndex}`"
 										>
-											<UIcon v-if="promo.icon" :name="promo.icon" />
-										</span>
-										<span class="discord-app-launcher-promo-copy">
-											<span class="discord-app-launcher-promo-title-row">
-												<span class="discord-app-launcher-promo-title">{{
-													promo.title
-												}}</span>
-												<UIcon
-													name="discord:eye"
-													class="discord-app-launcher-promo-eye"
-													aria-hidden="true"
-												/>
-											</span>
-											<span
-												v-if="promo.description"
-												class="discord-app-launcher-promo-description"
-											>
-												{{ promo.description }}
-											</span>
-										</span>
+											<br v-if="lineIndex > 0" />{{ line }}
+										</template>
 									</span>
-								</button>
-							</div>
-						</section>
-
-						<section
-							v-for="category of filteredCategories"
-							:key="category.id"
-							class="discord-app-launcher-section discord-app-launcher-category"
-							:aria-labelledby="`discord-app-launcher-${category.id}-heading`"
-						>
-							<div class="discord-app-launcher-section-header">
-								<h2
-									:id="`discord-app-launcher-${category.id}-heading`"
-									class="discord-app-launcher-section-title"
-								>
-									{{ viewTitle(category) }}
-								</h2>
-								<button
-									v-if="shouldShowCategoryViewMore(category)"
-									type="button"
-									class="discord-app-launcher-view-more discord-app-launcher-view-more-header"
-									@click="openListView(category.id)"
-								>
-									{{ ts("discord.launcher.view_more") }}
-								</button>
-							</div>
-							<div class="discord-app-launcher-server-list">
-								<DiscordAppLauncherListItem
-									v-for="(entry, index) of categoryPreviewEntries(category)"
-									:key="entry.id"
-									:class="{
-										'discord-app-launcher-server-row-bordered': index > 0,
-									}"
-									:name="entry.name"
-									:description="entry.description"
-									:avatar="entry.avatar"
-									:icon="entry.icon"
-									:icon-bg="entry.iconBg"
-									:promoted="entry.promoted"
-									@select="selectEntry(entry)"
-								/>
-								<!-- Discord mobile keeps the category View More inside the card. -->
-								<button
-									v-if="shouldShowCategoryViewMore(category)"
-									type="button"
-									class="discord-app-launcher-view-more discord-app-launcher-view-more-footer"
-									@click="openListView(category.id)"
-								>
-									{{ ts("discord.launcher.view_more") }}
-								</button>
-							</div>
-						</section>
-
-						<aside v-if="!normalizedQuery" class="discord-app-launcher-help">
-							<span>
-								<strong>{{ ts("discord.launcher.help_title") }}</strong>
-								<span>{{ ts("discord.launcher.help_body") }}</span>
+								</template>
+								<template v-else>
+									<UIcon
+										name="ph:youtube-logo-fill"
+										class="promo-watch-icon size-12"
+									/>
+									<span
+										class="promo-watch-title text-3xl font-bold tracking-tight"
+										>{{ promo.title }}</span
+									>
+								</template>
 							</span>
-							<button type="button" @click="emit('requestHelp')">
-								{{ ts("discord.launcher.learn_more") }}
-							</button>
-						</aside>
+							<span
+								class="flex min-h-14 items-center gap-2.5 px-2.5 py-2 max-md:min-h-0 max-md:gap-0 max-md:bg-newt-bg-base max-md:px-3 max-md:py-2.5"
+							>
+								<AppLauncherItemIcon
+									class="max-md:hidden"
+									:style="
+										promo.iconBg ? { backgroundColor: promo.iconBg } : undefined
+									"
+								>
+									<UIcon v-if="promo.icon" :name="promo.icon" class="size-5" />
+								</AppLauncherItemIcon>
+								<span class="flex min-w-0 flex-1 flex-col gap-0.5 max-md:gap-0">
+									<span class="flex min-w-0 items-center gap-1">
+										<span
+											class="truncate text-[15px] leading-tight font-medium text-newt-text-primary max-md:text-[13px] max-md:font-bold"
+											>{{ promo.title }}</span
+										>
+										<UIcon
+											name="discord:eye"
+											class="size-[18px] shrink-0 text-newt-text-secondary max-md:hidden"
+											aria-hidden="true"
+										/>
+									</span>
+									<span
+										v-if="promo.description"
+										class="truncate text-xs leading-snug text-newt-text-muted max-md:hidden"
+									>
+										{{ promo.description }}
+									</span>
+								</span>
+							</span>
+						</button>
 					</div>
-				</div>
-			</DiscordScrollbar>
+				</AppLauncherSection>
+
+				<AppLauncherSection
+					v-for="category of filteredCategories"
+					:key="category.id"
+					class="max-md:gap-2.5"
+					:aria-labelledby="`discord-app-launcher-${category.id}-heading`"
+				>
+					<AppLauncherSectionHeader>
+						<AppLauncherSectionTitle
+							:id="`discord-app-launcher-${category.id}-heading`"
+							class="max-md:text-xl max-md:font-bold"
+						>
+							{{ viewTitle(category) }}
+						</AppLauncherSectionTitle>
+						<AppLauncherViewMore
+							v-if="shouldShowCategoryViewMore(category)"
+							class="max-md:hidden"
+							@click="openListView(category.id)"
+						>
+							{{ ts("discord.launcher.view_more") }}
+						</AppLauncherViewMore>
+					</AppLauncherSectionHeader>
+					<AppLauncherList class="max-md:rounded-[12px]">
+						<DiscordAppLauncherListItem
+							v-for="entry of categoryPreviewEntries(category)"
+							:key="entry.id"
+							:name="entry.name"
+							:description="entry.description"
+							:avatar="entry.avatar"
+							:icon="entry.icon"
+							:icon-bg="entry.iconBg"
+							:promoted="entry.promoted"
+							@select="selectEntry(entry)"
+						/>
+						<!-- Discord mobile keeps the category View More inside the card. -->
+						<AppLauncherViewMore
+							v-if="shouldShowCategoryViewMore(category)"
+							class="hidden w-full py-3.5 text-center max-md:block"
+							@click="openListView(category.id)"
+						>
+							{{ ts("discord.launcher.view_more") }}
+						</AppLauncherViewMore>
+					</AppLauncherList>
+				</AppLauncherSection>
+
+				<aside
+					v-if="!normalizedQuery"
+					class="flex items-center justify-between gap-4 rounded-[8px] bg-newt-bg-elevated px-4 py-3 max-md:flex-col max-md:rounded-[12px] max-md:px-5 max-md:py-6 max-md:text-center"
+				>
+					<span class="flex min-w-0 flex-col gap-1 max-md:items-center max-md:gap-2">
+						<strong class="text-lg leading-tight font-bold max-md:text-xl">{{
+							ts("discord.launcher.help_title")
+						}}</strong>
+						<span
+							class="text-xs leading-snug text-newt-text-primary max-md:text-[15px] max-md:leading-relaxed"
+							>{{ ts("discord.launcher.help_body") }}</span
+						>
+					</span>
+					<Button
+						class="shrink-0 max-md:min-w-[8.5rem] max-md:rounded-full max-md:px-6 max-md:py-3 max-md:text-base"
+						@click="emit('requestHelp')"
+					>
+						{{ ts("discord.launcher.learn_more") }}
+					</Button>
+				</aside>
+			</AppLauncherBody>
 		</template>
 
 		<template v-else>
-			<header class="discord-app-launcher-list-header">
-				<button
+			<AppLauncherHeader :class="['px-4 max-md:pt-2', VIEW_IN_CLASS]">
+				<AppLauncherBack
 					ref="backRef"
-					type="button"
-					class="discord-app-launcher-back"
 					:aria-label="ts('discord.launcher.back')"
 					@click="returnToMainView"
 				>
 					<UIcon name="ph:caret-left-bold" class="size-4" aria-hidden="true" />
-				</button>
-				<h2 class="discord-app-launcher-list-title">
+				</AppLauncherBack>
+				<h2 class="m-0 min-w-0 flex-1 truncate text-center text-base font-semibold">
 					{{ activeListView ? viewTitle(activeListView) : "" }}
 				</h2>
-				<span class="discord-app-launcher-back-spacer" aria-hidden="true" />
-			</header>
+				<span class="size-8 shrink-0" aria-hidden="true" />
+			</AppLauncherHeader>
 
-			<DiscordScrollbar
-				class="discord-app-launcher-list-scroll"
-				:min-thumb-height="14"
-				:max-thumb-height="40"
-				auto-hide
-			>
-				<div class="discord-app-launcher-list-body">
+			<AppLauncherBody :class="[scrollbarClassName, 'max-md:px-3', VIEW_IN_CLASS]">
+				<AppLauncherList>
 					<DiscordAppLauncherListItem
 						v-for="entry of filteredActiveEntries"
 						:key="entry.id"
@@ -600,10 +493,10 @@
 						:promoted="entry.promoted"
 						@select="selectEntry(entry)"
 					/>
-				</div>
-			</DiscordScrollbar>
+				</AppLauncherList>
+			</AppLauncherBody>
 		</template>
-	</div>
+	</AppLauncher>
 </template>
 
 <script lang="ts">
@@ -643,6 +536,18 @@ const WordleCells = [
 	"correct",
 ] as const;
 
+/** Phone sheet heights; the pointer drag clamps between them. */
+const SHEET_HALF_HEIGHT = "min(55dvh, 22rem)";
+/** Nearly the channel column under the header; the parent may hide the composer at full. */
+const SHEET_FULL_HEIGHT = "min(92dvh, 40rem)";
+
+/** Recents and In This Server on phones: two tiles fill the row and the next one peeks in. */
+const MOBILE_CAROUSEL_CLASS = "-me-4 hidden gap-2 pe-4 max-md:flex";
+const MOBILE_TILE_SLOT_CLASS = "w-[calc(50%-0.25rem)] shrink-0";
+const MOBILE_TILE_CLASS = "min-h-15 gap-2.5 rounded-[12px] bg-newt-bg-elevated px-2.5 py-2.5";
+const VIEW_IN_CLASS =
+	"animate-in fade-in slide-in-from-right-1 duration-120 ease-out motion-reduce:animate-none";
+
 interface SheetDragSession {
 	pointerId: number;
 	startY: number;
@@ -662,6 +567,26 @@ import type {
 	DiscordAppLauncherPromo,
 	DiscordAppLauncherSheetSnap,
 } from "~/types/discord";
+import {
+	AppLauncher,
+	AppLauncherBack,
+	AppLauncherBody,
+	AppLauncherHandle,
+	AppLauncherHeader,
+	AppLauncherItemIcon,
+	AppLauncherList,
+	AppLauncherRecent,
+	AppLauncherRecents,
+	AppLauncherSearch,
+	AppLauncherSearchInput,
+	AppLauncherSection,
+	AppLauncherSectionHeader,
+	AppLauncherSectionTitle,
+	AppLauncherViewMore,
+} from "~/components/ui/app-launcher";
+import { Button } from "~/components/ui/button";
+import { scrollbarClassName } from "~/components/ui/scrollbar";
+
 const { ts } = useI18n();
 const {
 	recents = discordAppLauncherRecents,
@@ -682,10 +607,11 @@ const sheetSnap = defineModel<DiscordAppLauncherSheetSnap>("sheetSnap", { defaul
 const emit = defineEmits<AppLauncherEmits>();
 
 const { effectiveReduceMotion } = useReduceMotion();
+const activeElement = useActiveElement();
 
-const rootRef = useTemplateRef<HTMLElement>("rootRef");
-const searchRef = useTemplateRef<HTMLInputElement>("searchRef");
-const backRef = useTemplateRef<HTMLButtonElement>("backRef");
+const rootRef = useTemplateRef("rootRef");
+const searchRef = useTemplateRef("searchRef");
+const backRef = useTemplateRef("backRef");
 
 const searchQuery = ref("");
 const activeView = ref<string | null>(null);
@@ -695,13 +621,13 @@ let returnFocusElement: HTMLElement | null = null;
 
 let sheetDragSession: SheetDragSession | null = null;
 
-const sheetDragStyle = computed(() => {
-	if (sheetDragHeightPx.value === null) return undefined;
-	return {
-		height: `${sheetDragHeightPx.value}px`,
-		maxHeight: "none",
-	};
-});
+const sheetStyle = computed(() => ({
+	"--discord-app-launcher-sheet-half": SHEET_HALF_HEIGHT,
+	"--discord-app-launcher-sheet-full": SHEET_FULL_HEIGHT,
+	...(sheetDragHeightPx.value === null
+		? {}
+		: { height: `${sheetDragHeightPx.value}px`, maxHeight: "none" }),
+}));
 
 const listViewById = computed(() => {
 	const map = new Map<string, DiscordAppLauncherListView>();
@@ -839,6 +765,16 @@ function promoAriaLabel(promo: DiscordAppLauncherPromo): string {
 	return details ? `${promo.title}. ${details}` : promo.title;
 }
 
+function focusRef(target: Parameters<typeof unrefElement>[0]) {
+	const element = unrefElement(target);
+	if (element instanceof HTMLElement) element.focus();
+}
+
+// AppLauncherSearchInput has no `v-model`, so the value and its input event are bound by hand.
+function onSearchInput(event: Event) {
+	if (event.target instanceof HTMLInputElement) searchQuery.value = event.target.value;
+}
+
 function expandSheet() {
 	sheetSnap.value = "full";
 	sheetDragHeightPx.value = null;
@@ -853,46 +789,30 @@ function resetSheetSnap() {
 	sheetSnap.value = initialSheetSnap;
 	sheetDragging.value = false;
 	sheetDragHeightPx.value = null;
-	if (sheetDragSession) {
-		window.removeEventListener("pointermove", onHandlePointerMove);
-		window.removeEventListener("pointerup", onHandlePointerUp);
-		window.removeEventListener("pointercancel", onHandlePointerUp);
-	}
 	sheetDragSession = null;
 }
 
-function resolveSheetHeightBounds(root: HTMLElement): { half: number; full: number } {
-	const styles = getComputedStyle(root);
-	const halfToken = styles.getPropertyValue("--discord-app-launcher-sheet-half").trim();
-	const fullToken = styles.getPropertyValue("--discord-app-launcher-sheet-full").trim();
-	const halfProbe = document.createElement("div");
-	halfProbe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;height:${halfToken || "min(55dvh, 22rem)"};`;
-	const fullProbe = document.createElement("div");
-	fullProbe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;height:${fullToken || "min(90dvh, 32rem)"};`;
-	document.body.append(halfProbe, fullProbe);
-	const half = halfProbe.getBoundingClientRect().height;
-	const full = fullProbe.getBoundingClientRect().height;
-	halfProbe.remove();
-	fullProbe.remove();
-	return {
-		half: half > 0 ? half : 352,
-		full: full > 0 ? full : 640,
-	};
+function measureCssHeight(height: string, fallback: number): number {
+	const probe = document.createElement("div");
+	probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;height:${height};`;
+	document.body.append(probe);
+	const measured = probe.getBoundingClientRect().height;
+	probe.remove();
+	return measured > 0 ? measured : fallback;
 }
 
 function onHandlePointerDown(event: PointerEvent) {
 	if (!isBelowMediumScreen.value || event.button !== 0) return;
-	const root = rootRef.value;
-	if (!root) return;
+	const root = unrefElement(rootRef);
+	if (!(root instanceof HTMLElement)) return;
 
-	const bounds = resolveSheetHeightBounds(root);
 	const startHeight = root.getBoundingClientRect().height;
 	sheetDragSession = {
 		pointerId: event.pointerId,
 		startY: event.clientY,
 		startHeight,
-		halfHeight: bounds.half,
-		fullHeight: bounds.full,
+		halfHeight: measureCssHeight(SHEET_HALF_HEIGHT, 352),
+		fullHeight: measureCssHeight(SHEET_FULL_HEIGHT, 640),
 		lastY: event.clientY,
 		lastTime: event.timeStamp,
 		velocityY: 0,
@@ -945,16 +865,12 @@ function openListView(id: string) {
 	if (!listViewById.value.has(id)) return;
 	activeView.value = id;
 	searchQuery.value = "";
-	nextTick(() => {
-		backRef.value?.focus();
-	});
+	nextTick(() => focusRef(backRef));
 }
 
 function returnToMainView() {
 	activeView.value = null;
-	nextTick(() => {
-		searchRef.value?.focus();
-	});
+	nextTick(() => focusRef(searchRef));
 }
 
 function selectEntry(entry: DiscordAppLauncherEntry) {
@@ -988,8 +904,8 @@ function onEscape() {
 }
 
 function onTab(event: KeyboardEvent) {
-	const root = rootRef.value;
-	if (!root) return;
+	const root = unrefElement(rootRef);
+	if (!(root instanceof HTMLElement)) return;
 
 	const focusable = Array.from(
 		root.querySelectorAll<HTMLElement>(
@@ -1000,12 +916,12 @@ function onTab(event: KeyboardEvent) {
 	const last = focusable.at(-1);
 	if (!first || !last) return;
 
-	if (event.shiftKey && document.activeElement === first) {
+	if (event.shiftKey && activeElement.value === first) {
 		event.preventDefault();
 		last.focus();
 		return;
 	}
-	if (!event.shiftKey && document.activeElement === last) {
+	if (!event.shiftKey && activeElement.value === last) {
 		event.preventDefault();
 		first.focus();
 	}
@@ -1031,457 +947,97 @@ watch(
 			return;
 		}
 		resetSheetSnap();
-		if (document.activeElement instanceof HTMLElement) {
-			returnFocusElement = document.activeElement;
+		if (activeElement.value instanceof HTMLElement) {
+			returnFocusElement = activeElement.value;
 		}
-		nextTick(() => {
-			searchRef.value?.focus();
-		});
+		nextTick(() => focusRef(searchRef));
 	},
 	// Seed `sheetSnap` from `initialSheetSnap` when stories mount with `open` already true.
 	{ immediate: true },
 );
 
 onMounted(() => {
-	if (open.value) searchRef.value?.focus();
-});
-
-onBeforeUnmount(() => {
-	window.removeEventListener("pointermove", onHandlePointerMove);
-	window.removeEventListener("pointerup", onHandlePointerUp);
-	window.removeEventListener("pointercancel", onHandlePointerUp);
+	if (open.value) focusRef(searchRef);
 });
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
-.discord-app-launcher {
-	/* Discord's surfaces in the page's theme (see the `--discord-*` tokens in main.css). */
-	--discord-app-launcher-bg: var(--discord-chrome);
-	--discord-app-launcher-nested: var(--discord-composer);
-	--discord-app-launcher-text: var(--discord-chrome-text);
-	--discord-app-launcher-header: var(--discord-chrome-strong);
-	--discord-app-launcher-muted: var(--discord-chrome-muted);
-	--discord-app-launcher-interactive: var(--discord-chrome-secondary);
-	--discord-app-launcher-link: var(--discord-link);
-	--discord-app-launcher-focus: oklch(57.74% 0.2091 273.85);
-	--discord-app-launcher-search-bg: var(--discord-server);
-	--discord-app-launcher-divider: oklch(from var(--discord-chrome-strong) l c h / 0.06);
-	--discord-app-launcher-icon-bg: oklch(
-		from var(--discord-chrome) calc(l + 0.0535 * var(--discord-raise)) c h
-	);
-	--discord-app-launcher-shadow: oklch(0% 0 0 / 0.24);
-	--discord-app-launcher-wordle-bg: oklch(93% 0.008 95);
-	--discord-app-launcher-wordle-title: oklch(22% 0.02 260);
-	--discord-app-launcher-wordle-subtitle: oklch(42% 0.02 260);
-	--discord-app-launcher-wordle-correct: oklch(55% 0.14 145);
-	--discord-app-launcher-wordle-present: oklch(75% 0.14 95);
-	--discord-app-launcher-wordle-absent: oklch(55% 0.02 260);
-	--discord-app-launcher-garden-sky-from: oklch(78% 0.12 210);
-	--discord-app-launcher-garden-sky-to: oklch(88% 0.1 95);
-	--discord-app-launcher-garden-hill: oklch(62% 0.16 145);
-	--discord-app-launcher-garden-leaf: oklch(55% 0.18 145);
-	--discord-app-launcher-garden-berry: oklch(58% 0.22 25);
-	--discord-app-launcher-garden-seed: oklch(95% 0.04 95);
-	--discord-app-launcher-garden-flower: oklch(78% 0.16 340);
-	--discord-app-launcher-back-bg: oklch(
-		from var(--discord-chrome) calc(l + 0.0535 * var(--discord-raise)) c h
-	);
-	--discord-app-launcher-back-hover: oklch(
-		from var(--discord-chrome) calc(l + 0.1135 * var(--discord-raise)) c h
-	);
-	--discord-app-launcher-help-bg: var(--discord-composer);
-	--discord-app-launcher-wolfstar-bg: oklch(0% 0 0);
-
-	/* Explicit radii: the app theme remaps Tailwind's rounded-* scale to 16px. */
-	@apply flex h-[min(42.5rem,calc(100dvh-2rem))] max-h-[42.5rem] w-full max-w-[31.5rem] flex-col overflow-hidden rounded-[8px] border font-whitney;
-	background-color: var(--discord-app-launcher-bg);
-	border-color: var(--discord-app-launcher-divider);
-	color: var(--discord-app-launcher-text);
-	box-shadow: 0 8px 16px var(--discord-app-launcher-shadow);
-}
-
-.discord-app-launcher-main-scroll {
-	@apply min-h-0 flex-1;
-	max-height: 100%;
-}
-
-.discord-app-launcher-main-content {
-	@apply px-4 pb-4;
-}
-
-.discord-app-launcher-search-header {
-	@apply shrink-0 px-4 pt-4 pb-3;
-	background-color: var(--discord-app-launcher-bg);
-}
-
-.discord-app-launcher-main-sections {
-	@apply flex flex-col gap-6;
-}
-
-.discord-app-launcher-search {
-	@apply relative flex items-center;
-}
-
-.discord-app-launcher-search-icon {
-	@apply pointer-events-none absolute top-1/2 left-3.5 size-5 -translate-y-1/2;
-	color: var(--discord-app-launcher-muted);
-}
-
-.discord-app-launcher-search-input {
-	@apply h-11 w-full rounded-[8px] border-2 bg-transparent py-0 pr-3 pl-11 text-base outline-none;
-	appearance: none;
-	background-color: var(--discord-app-launcher-search-bg);
-	border-color: transparent;
-	color: var(--discord-app-launcher-text);
-}
-
-.discord-app-launcher-search-input:focus,
-.discord-app-launcher-search-input:focus-visible {
-	border-color: var(--discord-app-launcher-focus);
-}
-
-.discord-app-launcher-search-input::placeholder {
-	color: var(--discord-app-launcher-muted);
-	opacity: 1;
-}
-
-.discord-app-launcher-section {
-	@apply flex flex-col gap-2;
-}
-
-.discord-app-launcher-section-header {
-	@apply flex items-center justify-between gap-2 px-0.5;
-}
-
-.discord-app-launcher-section-title {
-	@apply m-0 inline-flex items-center gap-1 text-base font-medium;
-	color: var(--discord-app-launcher-header);
-}
-
-.discord-app-launcher-section-caret {
-	@apply hidden size-3.5;
-	color: var(--discord-app-launcher-header);
-}
-
-.discord-app-launcher-view-more {
-	@apply cursor-pointer border-0 bg-transparent p-0 text-base font-semibold;
-	color: var(--discord-app-launcher-link);
-	text-decoration: none;
-}
-
-.discord-app-launcher-view-more:focus-visible {
-	@apply rounded outline-2 outline-offset-2 outline-primary;
-}
-
-.discord-app-launcher-view-more-mobile,
-.discord-app-launcher-server-title-mobile,
-.discord-app-launcher-view-more-footer,
-.discord-app-launcher-handle {
-	display: none;
-}
-
-.discord-app-launcher-view-more-desktop,
-.discord-app-launcher-server-title-desktop {
-	display: inline;
-}
-
-.discord-app-launcher-recents {
-	@apply m-0 flex list-none gap-3 overflow-x-auto p-0;
-	scrollbar-width: none;
-}
-
-.discord-app-launcher-recents::-webkit-scrollbar {
-	display: none;
-}
-
-.discord-app-launcher-recent {
-	@apply inline-flex cursor-pointer border-0 bg-transparent p-0;
-}
-
-.discord-app-launcher-recent:focus-visible {
-	@apply rounded-xl outline-2 outline-offset-2 outline-primary;
-}
-
-.discord-app-launcher-recent-icon {
-	@apply inline-flex size-12 items-center justify-center overflow-hidden rounded-[14px];
-	background-color: var(--discord-app-launcher-icon-bg);
-	transition: filter 0.12s ease;
-}
-
-.discord-app-launcher-recent-icon--wolfstar {
-	background-color: var(--discord-app-launcher-wolfstar-bg);
-}
-
-.discord-app-launcher-recent:hover .discord-app-launcher-recent-icon {
-	filter: brightness(1.1);
-}
-
-.discord-app-launcher-recent-avatar {
-	@apply size-full object-cover;
-}
-
-.discord-app-launcher-recent-avatar--wolfstar {
-	@apply object-contain p-1;
-}
-
-.discord-app-launcher-recent-glyph {
-	@apply size-6 text-white;
-}
-
-.discord-app-launcher-server-list {
-	@apply flex flex-col overflow-hidden rounded-[8px];
-	background-color: var(--discord-app-launcher-nested);
-}
-
-/* Bots listed for the server use circular avatars; game/activity rows stay squircles. */
-.discord-app-launcher-server-list-desktop :deep(.discord-app-launcher-list-item-icon) {
-	@apply rounded-full;
-}
-
-.discord-app-launcher-server-list :deep(.discord-app-launcher-list-item) {
-	@apply rounded-none px-3 py-3;
-}
-
-.discord-app-launcher-server-row-bordered {
-	position: relative;
-	border-top: none;
-}
-
-.discord-app-launcher-server-row-bordered::before {
-	content: "";
-	position: absolute;
-	top: 0;
-	right: 0;
-	left: 3.75rem;
-	border-top: 1px solid var(--discord-app-launcher-divider);
-}
-
-.discord-app-launcher-promoted-grid {
-	@apply grid grid-cols-2 gap-2.5;
-}
-
-.discord-app-launcher-promo {
-	@apply relative flex h-[7.75rem] cursor-pointer flex-col items-center justify-end overflow-hidden rounded-[8px] border-0 p-0 text-left;
-}
-
-.discord-app-launcher-promo:focus-visible {
-	@apply outline-2 outline-offset-2 outline-primary;
-}
-
-.discord-app-launcher-promo-wordle {
-	@apply items-center justify-center gap-2 p-3;
-	background-color: var(--discord-app-launcher-wordle-bg);
-	color: var(--discord-app-launcher-wordle-title);
-}
-
-.discord-app-launcher-promo-wordle-mark {
-	@apply flex items-center justify-center;
-}
-
-.discord-app-launcher-promo-wordle-grid {
-	@apply grid grid-cols-3 gap-[3px];
-}
-
-.discord-app-launcher-promo-wordle-cell {
-	@apply size-3.5 rounded-[2px];
-}
-
-.discord-app-launcher-promo-wordle-cell-correct {
-	background-color: var(--discord-app-launcher-wordle-correct);
-}
-
-.discord-app-launcher-promo-wordle-cell-present {
-	background-color: var(--discord-app-launcher-wordle-present);
-}
-
-.discord-app-launcher-promo-wordle-cell-absent {
-	background-color: var(--discord-app-launcher-wordle-absent);
-}
-
-.discord-app-launcher-promo-wordle-copy {
-	@apply flex flex-col items-center gap-1 text-center;
-}
-
-.discord-app-launcher-promo-wordle-title {
-	@apply text-[1.35rem] leading-none font-bold tracking-tight;
-	font-family: var(--font-whitney), "Helvetica Neue", Arial, sans-serif;
-	letter-spacing: 0.02em;
-}
-
-.discord-app-launcher-promo-wordle-subtitle {
-	@apply text-[10px] leading-tight font-semibold tracking-[0.04em];
-	color: var(--discord-app-launcher-wordle-subtitle);
-}
-
-.discord-app-launcher-promo-garden {
-	color: oklch(100% 0 0);
-}
-
-.discord-app-launcher-promo-garden-scene {
-	@apply absolute inset-0 overflow-hidden;
-	background-image: linear-gradient(
-		180deg,
-		var(--discord-app-launcher-garden-sky-from),
-		var(--discord-app-launcher-garden-sky-to) 55%,
-		var(--discord-app-launcher-garden-hill)
-	);
-}
-
-.discord-app-launcher-promo-garden-sky {
-	@apply absolute inset-x-0 top-0 h-1/2;
-}
-
-.discord-app-launcher-promo-garden-hill {
-	@apply absolute inset-x-[-10%] bottom-0 h-[48%] rounded-t-[50%];
-	background-color: var(--discord-app-launcher-garden-hill);
-}
-
-.discord-app-launcher-promo-garden-leaf {
-	@apply absolute block size-7 rounded-[40%_60%_55%_45%];
-	background-color: var(--discord-app-launcher-garden-leaf);
-	transform: rotate(-25deg);
-}
-
-.discord-app-launcher-promo-garden-leaf-a {
-	bottom: 42%;
-	left: 14%;
-}
-
-.discord-app-launcher-promo-garden-leaf-b {
-	right: 12%;
-	bottom: 38%;
-	transform: rotate(28deg) scale(0.85);
-}
-
-.discord-app-launcher-promo-garden-berry {
-	@apply absolute left-1/2 size-11 -translate-x-1/2;
-	bottom: 34%;
-}
-
-.discord-app-launcher-promo-garden-berry-body {
-	@apply absolute inset-0 rounded-[45%_45%_50%_50%];
-	background-color: var(--discord-app-launcher-garden-berry);
-	box-shadow: inset -4px -6px 0 oklch(0% 0 0 / 0.12);
-}
-
-.discord-app-launcher-promo-garden-berry-seed {
-	@apply absolute size-1 rounded-full;
-	background-color: var(--discord-app-launcher-garden-seed);
-}
-
-.discord-app-launcher-promo-garden-berry-seed-1 {
-	top: 38%;
-	left: 28%;
-}
-
-.discord-app-launcher-promo-garden-berry-seed-2 {
-	top: 52%;
-	left: 52%;
-}
-
-.discord-app-launcher-promo-garden-berry-seed-3 {
-	top: 30%;
-	left: 58%;
-}
-
-.discord-app-launcher-promo-garden-berry-crown {
-	@apply absolute -top-1.5 left-1/2 size-4 -translate-x-1/2 rounded-full;
-	background-color: var(--discord-app-launcher-garden-leaf);
-	box-shadow:
-		-6px 4px 0 -1px var(--discord-app-launcher-garden-leaf),
-		6px 4px 0 -1px var(--discord-app-launcher-garden-leaf);
-}
-
-.discord-app-launcher-promo-garden-flower {
-	@apply absolute size-3 rounded-full;
-	right: 22%;
-	bottom: 28%;
-	background-color: var(--discord-app-launcher-garden-flower);
-	box-shadow: 0 0 0 3px oklch(100% 0 0 / 0.35);
-}
-
-.discord-app-launcher-promo-garden-title {
-	@apply relative z-1 mb-2.5 text-[11px] font-extrabold tracking-[0.12em] uppercase;
-	text-shadow: 0 1px 3px oklch(0% 0 0 / 0.45);
+/*
+ * Mock art of the promoted cards. It draws other apps' brand art, so its
+ * colours are fixed and do not follow the page theme. No newt/ui part covers it.
+ */
+.promo-art--wordle {
+	flex-direction: column;
+	gap: 0.5rem;
+	background-color: oklch(93% 0.008 95);
+	color: oklch(22% 0.02 260);
 }
 
-.discord-app-launcher-promo {
-	@apply h-auto items-stretch justify-start rounded-[8px] p-0;
-	background-color: var(--discord-app-launcher-nested);
+.promo-wordle-cell--correct {
+	background-color: oklch(55% 0.14 145);
 }
 
-.discord-app-launcher-promo-wordle {
-	@apply gap-0 p-0;
-	background-color: var(--discord-app-launcher-nested);
+.promo-wordle-cell--present {
+	background-color: oklch(75% 0.14 95);
 }
 
-.discord-app-launcher-promo-visual {
-	@apply relative flex h-32 w-full shrink-0 items-center justify-center overflow-hidden;
+.promo-wordle-cell--absent {
+	background-color: oklch(55% 0.02 260);
 }
 
-.discord-app-launcher-promo-visual-wordle {
-	@apply flex-col gap-2;
-	background-color: var(--discord-app-launcher-wordle-bg);
-	color: var(--discord-app-launcher-wordle-title);
+.promo-wordle-subtitle {
+	color: oklch(42% 0.02 260);
 }
 
-.discord-app-launcher-promo-wordle-title {
-	@apply text-3xl leading-none font-bold tracking-tight;
-	font-family: Georgia, "Times New Roman", serif;
+.promo-garden-face {
+	color: oklch(22% 0.02 260);
 }
 
-.discord-app-launcher-promo-visual-garden {
+.promo-art--garden {
 	background-image:
-		linear-gradient(
-			180deg,
-			var(--discord-app-launcher-garden-sky-from),
-			var(--discord-app-launcher-garden-sky-to) 54%,
-			var(--discord-app-launcher-garden-hill)
-		),
-		radial-gradient(
-			circle at 18% 18%,
-			var(--discord-app-launcher-garden-flower),
-			transparent 28%
-		);
+		linear-gradient(180deg, oklch(78% 0.12 210), oklch(88% 0.1 95) 54%, oklch(62% 0.16 145)),
+		radial-gradient(circle at 18% 18%, oklch(78% 0.16 340), transparent 28%);
 }
 
-.discord-app-launcher-promo-garden-vine {
-	@apply absolute -top-7 left-1/2 h-20 w-32 -translate-x-1/2 rounded-[50%];
-	border-bottom: 10px solid var(--discord-app-launcher-garden-leaf);
+.promo-garden-vine {
+	border-bottom: 10px solid oklch(55% 0.18 145);
 	transform: translateX(-50%) rotate(-7deg);
 }
 
-.discord-app-launcher-promo-garden-leaf-a {
-	bottom: 48%;
-	left: 12%;
+.promo-garden-leaf {
+	border-radius: 40% 60% 55% 45%;
+	background-color: oklch(55% 0.18 145);
 }
 
-.discord-app-launcher-promo-garden-leaf-b {
-	right: 10%;
-	bottom: 47%;
+.promo-garden-berry {
+	background-color: oklch(58% 0.22 25);
+	box-shadow: inset -4px -6px 0 oklch(0% 0 0 / 0.12);
 }
 
-.discord-app-launcher-promo-garden-berry {
-	@apply size-14;
-	bottom: 36%;
+.promo-garden-seed {
+	background-color: oklch(95% 0.04 95);
 }
 
-.discord-app-launcher-promo-garden-face {
-	@apply absolute inset-0 z-1 flex items-center justify-center text-sm font-black;
-	color: var(--discord-app-launcher-wordle-title);
+.promo-garden-crown {
+	background-color: oklch(55% 0.18 145);
+	box-shadow:
+		-6px 4px 0 -1px oklch(55% 0.18 145),
+		6px 4px 0 -1px oklch(55% 0.18 145);
 }
 
-.discord-app-launcher-promo-garden-title {
-	@apply absolute right-5 bottom-2 z-1 m-0 -rotate-3 text-center text-lg leading-[0.78] font-black tracking-[-0.04em];
+.promo-garden-flower {
+	background-color: oklch(78% 0.16 340);
+	box-shadow: 0 0 0 3px oklch(100% 0 0 / 0.35);
+}
+
+.promo-garden-title {
 	color: oklch(78% 0.2 90);
 	-webkit-text-stroke: 1px oklch(42% 0.2 305);
 	text-shadow: 0 2px 0 oklch(42% 0.2 305);
 }
 
-.discord-app-launcher-promo-visual-farm {
-	@apply justify-start;
+.promo-art--farm {
+	justify-content: flex-start;
 	background-image: linear-gradient(
 		180deg,
 		oklch(83% 0.12 205),
@@ -1490,13 +1046,11 @@ onBeforeUnmount(() => {
 	);
 }
 
-.discord-app-launcher-promo-farm-sun {
-	@apply absolute top-3 right-5 size-8 rounded-full;
+.promo-farm-sun {
 	background-color: oklch(88% 0.17 85);
 }
 
-.discord-app-launcher-promo-farm-field {
-	@apply absolute inset-x-0 bottom-0 h-12;
+.promo-farm-field {
 	background-image: repeating-linear-gradient(
 		-15deg,
 		oklch(57% 0.18 145) 0 10px,
@@ -1504,484 +1058,26 @@ onBeforeUnmount(() => {
 	);
 }
 
-.discord-app-launcher-promo-farm-icon {
-	@apply relative z-1 ml-5 size-16;
+.promo-farm-icon {
 	color: oklch(52% 0.18 145);
 	filter: drop-shadow(0 2px 0 oklch(100% 0 0 / 0.65));
 }
 
-.discord-app-launcher-promo-farm-title {
-	@apply relative z-1 ml-2 -rotate-6 text-xl leading-[0.85] font-black uppercase;
+.promo-farm-title {
 	color: oklch(96% 0.01 95);
 	text-shadow: 0 2px 0 oklch(43% 0.16 25);
 }
 
-.discord-app-launcher-promo-visual-watch {
-	@apply gap-2;
+.promo-art--watch {
+	gap: 0.5rem;
 	background-color: oklch(93% 0.004 270);
 }
 
-.discord-app-launcher-promo-watch-icon {
-	@apply size-12;
+.promo-watch-icon {
 	color: oklch(58% 0.22 25);
 }
 
-.discord-app-launcher-promo-watch-title {
-	@apply text-3xl font-bold tracking-tight;
+.promo-watch-title {
 	color: oklch(28% 0.015 270);
-}
-
-.discord-app-launcher-promo-footer {
-	@apply flex min-h-14 items-center gap-2.5 px-2.5 py-2;
-}
-
-.discord-app-launcher-promo-icon {
-	@apply inline-flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-[10px] text-xl;
-	color: var(--discord-app-launcher-wordle-title);
-}
-
-.discord-app-launcher-promo-copy {
-	@apply flex min-w-0 flex-1 flex-col gap-0.5;
-}
-
-.discord-app-launcher-promo-title-row {
-	@apply flex min-w-0 items-center gap-1;
-}
-
-.discord-app-launcher-promo-title {
-	@apply truncate text-[15px] leading-tight font-medium;
-	color: var(--discord-app-launcher-header);
-}
-
-.discord-app-launcher-promo-eye {
-	@apply size-[18px] shrink-0;
-	color: var(--discord-app-launcher-interactive);
-}
-
-.discord-app-launcher-promo-description {
-	@apply truncate text-xs leading-snug;
-	color: var(--discord-app-launcher-muted);
-}
-
-.discord-app-launcher-help {
-	@apply flex items-center justify-between gap-4 rounded-[8px] px-4 py-3;
-	background-color: var(--discord-app-launcher-help-bg);
-}
-
-.discord-app-launcher-help > span {
-	@apply flex min-w-0 flex-col gap-1;
-}
-
-.discord-app-launcher-help strong {
-	@apply text-lg leading-tight font-bold;
-}
-
-.discord-app-launcher-help > span > span {
-	@apply text-xs leading-snug;
-	color: var(--discord-app-launcher-header);
-}
-
-.discord-app-launcher-help button {
-	@apply shrink-0 cursor-pointer rounded-lg border-0 px-4 py-2.5 text-sm font-semibold text-white;
-	background-color: var(--discord-app-launcher-focus);
-}
-
-.discord-app-launcher-help button:hover {
-	filter: brightness(1.08);
-}
-
-.discord-app-launcher-help button:focus-visible {
-	@apply outline-2 outline-offset-2 outline-primary;
-}
-
-/* Tiles are mobile-only; the sheet media query restores display on the same selector. */
-.discord-app-launcher-tile-grid {
-	@apply m-0 list-none grid-cols-2 gap-2 p-0;
-	display: none;
-}
-
-.discord-app-launcher-tile {
-	@apply flex w-full cursor-pointer items-center gap-2.5 rounded-[12px] border-0 px-2.5 py-2.5 text-left;
-	background-color: var(--discord-app-launcher-nested);
-	color: var(--discord-app-launcher-text);
-	transition: filter 0.12s ease;
-}
-
-.discord-app-launcher-tile:hover {
-	filter: brightness(1.08);
-}
-
-.discord-app-launcher-tile:focus-visible {
-	@apply outline-2 outline-offset-2 outline-primary;
-}
-
-.discord-app-launcher-tile-icon {
-	@apply inline-flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-[10px];
-	background-color: var(--discord-app-launcher-icon-bg);
-}
-
-.discord-app-launcher-tile-icon--round {
-	@apply rounded-full;
-}
-
-.discord-app-launcher-tile-icon--wolfstar {
-	background-color: var(--discord-app-launcher-wolfstar-bg);
-}
-
-.discord-app-launcher-tile-avatar {
-	@apply size-full object-cover;
-}
-
-.discord-app-launcher-tile-avatar--wolfstar {
-	@apply object-contain p-1;
-}
-
-.discord-app-launcher-tile-glyph {
-	@apply size-5 text-white;
-}
-
-.discord-app-launcher-tile-copy {
-	@apply flex min-w-0 flex-1 flex-col gap-0.5;
-}
-
-.discord-app-launcher-tile-title {
-	@apply truncate text-[15px] leading-tight font-semibold;
-	color: var(--discord-app-launcher-text);
-}
-
-.discord-app-launcher-tile-subtitle {
-	@apply truncate text-[12px] leading-snug;
-	color: var(--discord-app-launcher-muted);
-}
-
-.discord-app-launcher-list-header {
-	@apply grid shrink-0 grid-cols-[2.25rem_1fr_2.25rem] items-center gap-1 px-4 pt-4 pb-2;
-	animation: discord-app-launcher-view-in 0.12s ease-out;
-}
-
-.discord-app-launcher-back {
-	@apply inline-flex size-9 cursor-pointer items-center justify-center rounded-full border-0;
-	background-color: var(--discord-app-launcher-back-bg);
-	color: var(--discord-app-launcher-text);
-}
-
-.discord-app-launcher-back:hover {
-	background-color: var(--discord-app-launcher-back-hover);
-}
-
-.discord-app-launcher-back:focus-visible {
-	@apply outline-2 outline-offset-2 outline-primary;
-}
-
-.discord-app-launcher-list-title {
-	@apply m-0 text-center text-base font-semibold;
-	color: var(--discord-app-launcher-text);
-}
-
-.discord-app-launcher-back-spacer {
-	@apply size-9;
-}
-
-.discord-app-launcher-list-scroll {
-	@apply min-h-0 flex-1;
-	max-height: 100%;
-	animation: discord-app-launcher-view-in 0.12s ease-out;
-}
-
-.discord-app-launcher-list-body {
-	@apply mx-4 mb-4 flex flex-col overflow-hidden rounded-[8px];
-	background-color: var(--discord-app-launcher-nested);
-}
-
-.discord-app-launcher-list-body :deep(.discord-app-launcher-list-item) {
-	@apply rounded-none px-3 py-2.5;
-}
-
-.discord-app-launcher-list-body :deep(.discord-app-launcher-list-item:not(:first-child)) {
-	border-top: 1px solid var(--discord-app-launcher-divider);
-}
-
-@keyframes discord-app-launcher-view-in {
-	from {
-		opacity: 0;
-		transform: translateX(5px);
-	}
-
-	to {
-		opacity: 1;
-		transform: translateX(0);
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.discord-app-launcher-list-header,
-	.discord-app-launcher-list-scroll {
-		animation: none;
-	}
-}
-
-/* Mobile Discord sheet layout (< md / 768px). Use px so rem root changes cannot
- * keep the desktop popover chrome on phones/tablets that still show the site hamburger. */
-@media (max-width: 767.98px) {
-	.discord-app-launcher {
-		--discord-app-launcher-bg: var(--discord-sidebar);
-		--discord-app-launcher-nested: var(--discord-composer);
-		--discord-app-launcher-search-bg: var(--discord-server);
-		--discord-app-launcher-header: var(--discord-chrome-strong);
-		/* Discord mobile links are lavender (#949cf7), not the desktop blue. */
-		--discord-app-launcher-link: oklch(70% 0.125 285);
-		--discord-app-launcher-help-bg: var(--discord-composer);
-		--discord-app-launcher-handle: var(--discord-chrome-muted);
-		--discord-app-launcher-promo-bar: oklch(
-			from var(--discord-server) calc(l + -0.07 * var(--discord-raise)) c h
-		);
-		--discord-app-launcher-help-btn: oklch(
-			from var(--discord-chrome) calc(l + 0.1635 * var(--discord-raise)) c h
-		);
-		--discord-app-launcher-help-btn-text: var(--discord-chrome-strong);
-		--discord-app-launcher-sheet-half: min(55dvh, 22rem);
-		/* Nearly the channel column under the header; parent may hide the composer at full. */
-		--discord-app-launcher-sheet-full: min(92dvh, 40rem);
-
-		@apply relative w-full max-w-none rounded-t-[16px] rounded-b-none border-0;
-		height: var(--discord-app-launcher-sheet-half);
-		max-height: var(--discord-app-launcher-sheet-full);
-		/* No upward drop-shadow; matching ring seals rounded-corner AA bleed. */
-		box-shadow: 0 0 0 1px var(--discord-app-launcher-bg);
-		transition: height 0.2s ease;
-	}
-
-	.discord-app-launcher--sheet-full {
-		height: var(--discord-app-launcher-sheet-full);
-		max-height: var(--discord-app-launcher-sheet-full);
-	}
-
-	.discord-app-launcher--sheet-dragging {
-		transition: none;
-	}
-
-	.discord-app-launcher--reduce-motion {
-		transition: none;
-	}
-
-	.discord-app-launcher-handle {
-		@apply mx-auto mt-2.5 mb-1.5 block h-1.5 w-11 shrink-0 cursor-grab rounded-full border-0 p-0;
-		background-color: var(--discord-app-launcher-handle);
-		touch-action: none;
-	}
-
-	.discord-app-launcher-handle:active {
-		cursor: grabbing;
-	}
-
-	.discord-app-launcher-handle:focus-visible {
-		@apply outline-2 outline-offset-2 outline-primary;
-	}
-
-	.discord-app-launcher-main-content {
-		@apply px-4 pb-5;
-	}
-
-	.discord-app-launcher-search-header {
-		@apply px-4 pt-2 pb-3 shadow-none;
-		background-color: var(--discord-app-launcher-bg);
-	}
-
-	.discord-app-launcher-search-input {
-		@apply h-12 rounded-full border-0 text-base;
-	}
-
-	/* The sheet scrolls without Discord's desktop scrollbar chrome. */
-	.discord-app-launcher-main-scroll :deep(.discord-scrollbar) {
-		grid-template-columns: minmax(0, 1fr) 0;
-	}
-
-	.discord-app-launcher-main-scroll :deep(.discord-scrollbar-track) {
-		display: none;
-	}
-
-	.discord-app-launcher-main-sections {
-		@apply gap-6;
-	}
-
-	.discord-app-launcher-section {
-		@apply gap-2.5;
-	}
-
-	.discord-app-launcher-section-title {
-		@apply text-[20px] font-bold;
-		color: var(--discord-app-launcher-header);
-	}
-
-	.discord-app-launcher-section-caret {
-		@apply inline-block;
-	}
-
-	/* Compound selectors beat the base single-class display rules. */
-	.discord-app-launcher-view-more-desktop,
-	.discord-app-launcher-server-title-desktop,
-	.discord-app-launcher-recents.discord-app-launcher-recents-desktop,
-	.discord-app-launcher-server-list.discord-app-launcher-server-list-desktop,
-	.discord-app-launcher-category .discord-app-launcher-view-more-header {
-		display: none;
-	}
-
-	.discord-app-launcher-view-more-mobile,
-	.discord-app-launcher-server-title-mobile {
-		display: inline;
-	}
-
-	/*
-	 * Recents / In This Server are horizontal carousels: two tiles fill the
-	 * content box and the next one peeks through the bled right padding.
-	 * Target .tile-grid itself so this overrides the base `display: none`.
-	 */
-	.discord-app-launcher-tile-grid.discord-app-launcher-recents-mobile,
-	.discord-app-launcher-tile-grid.discord-app-launcher-server-mobile {
-		@apply -mr-4 gap-2 overflow-x-auto pr-4;
-		display: flex;
-		scrollbar-width: none;
-	}
-
-	.discord-app-launcher-tile-grid.discord-app-launcher-recents-mobile::-webkit-scrollbar,
-	.discord-app-launcher-tile-grid.discord-app-launcher-server-mobile::-webkit-scrollbar {
-		display: none;
-	}
-
-	.discord-app-launcher-tile-grid.discord-app-launcher-recents-mobile > li,
-	.discord-app-launcher-tile-grid.discord-app-launcher-server-mobile > li {
-		@apply shrink-0;
-		width: calc(50% - 0.25rem);
-	}
-
-	.discord-app-launcher-view-more-footer {
-		@apply relative block w-full py-3.5 text-center text-base font-semibold;
-		color: var(--discord-app-launcher-link);
-		text-decoration: none;
-	}
-
-	.discord-app-launcher-view-more-footer::before {
-		content: "";
-		position: absolute;
-		top: 0;
-		right: 0;
-		left: 3.75rem;
-		border-top: 1px solid var(--discord-app-launcher-divider);
-	}
-
-	.discord-app-launcher-tile {
-		@apply min-h-15 gap-2 rounded-[12px] px-2 py-2.5;
-	}
-
-	.discord-app-launcher-tile-icon {
-		@apply size-10;
-	}
-
-	.discord-app-launcher-tile-title {
-		@apply text-[15px] font-semibold;
-	}
-
-	.discord-app-launcher-tile-subtitle {
-		@apply text-[12px];
-	}
-
-	.discord-app-launcher-promoted-grid {
-		@apply gap-2;
-	}
-
-	.discord-app-launcher-promo {
-		@apply overflow-hidden rounded-[12px];
-	}
-
-	.discord-app-launcher-promo-visual {
-		@apply h-[6.5rem];
-	}
-
-	.discord-app-launcher-promo-footer {
-		@apply min-h-0 gap-0 px-3 py-2.5;
-		background-color: var(--discord-app-launcher-promo-bar);
-	}
-
-	.discord-app-launcher-promo-icon,
-	.discord-app-launcher-promo-eye,
-	.discord-app-launcher-promo-description {
-		display: none;
-	}
-
-	.discord-app-launcher-promo-copy {
-		@apply gap-0;
-	}
-
-	.discord-app-launcher-promo-title {
-		@apply text-[13px] font-bold;
-	}
-
-	.discord-app-launcher-category .discord-app-launcher-section-header {
-		@apply px-0.5;
-	}
-
-	.discord-app-launcher-category .discord-app-launcher-server-list {
-		@apply rounded-[12px];
-	}
-
-	.discord-app-launcher-server-list :deep(.discord-app-launcher-list-item) {
-		@apply gap-3 px-3 py-3;
-	}
-
-	.discord-app-launcher-server-list :deep(.discord-app-launcher-list-item-name) {
-		@apply font-semibold;
-	}
-
-	.discord-app-launcher-help {
-		@apply flex-col items-center gap-4 rounded-[12px] px-5 py-6 text-center;
-	}
-
-	.discord-app-launcher-help > span {
-		@apply items-center gap-2;
-	}
-
-	.discord-app-launcher-help strong {
-		@apply text-[20px];
-	}
-
-	.discord-app-launcher-help > span > span {
-		@apply text-[15px] leading-relaxed;
-	}
-
-	.discord-app-launcher-help button {
-		@apply w-auto min-w-[8.5rem] rounded-full px-6 py-3 text-base font-semibold shadow-none;
-		background-color: var(--discord-app-launcher-help-btn);
-		color: var(--discord-app-launcher-help-btn-text);
-	}
-
-	.discord-app-launcher-help button:hover {
-		filter: brightness(1.06);
-	}
-
-	.discord-app-launcher-list-header {
-		@apply pt-2;
-	}
-
-	.discord-app-launcher-list-body {
-		@apply mx-3;
-	}
-
-	.discord-app-launcher-list-body :deep(.discord-app-launcher-list-item:not(:first-child)) {
-		border-top: none;
-	}
-
-	.discord-app-launcher-list-body
-		:deep(.discord-app-launcher-list-item:not(:first-child))::before {
-		content: "";
-		position: absolute;
-		top: 0;
-		right: 0;
-		left: 3.75rem;
-		border-top: 1px solid var(--discord-app-launcher-divider);
-	}
-
-	.discord-app-launcher-list-body :deep(.discord-app-launcher-list-item) {
-		position: relative;
-	}
 }
 </style>

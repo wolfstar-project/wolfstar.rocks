@@ -1,10 +1,5 @@
 <template>
-	<div
-		class="discord-v2-container font-whitney"
-		:style="{ 'border-color': accentColor ?? 'var(--discord-v2-container-default-accent)' }"
-	>
-		<slot></slot>
-	</div>
+	<V2Container :accent-color="accentColor"><slot></slot></V2Container>
 </template>
 
 <script lang="ts">
@@ -20,18 +15,8 @@ interface ContainerSlots {
 </script>
 
 <script setup lang="ts">
+import { V2Container } from "~/components/ui/v2-container";
+
 defineSlots<ContainerSlots>();
 defineProps<ContainerProps>();
 </script>
-
-<style scoped>
-@reference "@/assets/css/main.css";
-.discord-v2-container {
-	--discord-v2-container-default-accent: oklch(from var(--discord-chrome) calc(l - 0.027) c h);
-
-	@apply mt-1 flex max-w-130 flex-col gap-2 border-l-4 p-3 text-sm leading-relaxed;
-	border-radius: 0.25rem;
-	background-color: var(--color-base-200);
-	background-color: oklch(from var(--color-base-200) calc(l - 0.02) c h);
-}
-</style>

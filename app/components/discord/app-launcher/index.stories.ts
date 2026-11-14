@@ -23,7 +23,7 @@ export const Main: Story = {
 			return { args, open };
 		},
 		template: `
-			<div class="flex min-h-[46rem] items-end justify-center bg-[oklch(26.65%_0.006_272.93)] p-6">
+			<div class="flex min-h-[46rem] items-end justify-center bg-newt-bg-base p-6">
 				<div class="w-full max-w-[31.5rem]">
 					<DiscordAppLauncher v-bind="args" v-model:open="open" />
 				</div>
@@ -46,7 +46,7 @@ export const MobileSheet: Story = {
 			return { args, open };
 		},
 		template: `
-			<div class="flex min-h-[100dvh] items-end justify-center bg-[oklch(28%_0.04_25)]">
+			<div class="flex min-h-[100dvh] items-end justify-center bg-newt-bg-base">
 				<div class="w-full max-w-[24rem]">
 					<DiscordAppLauncher v-bind="args" v-model:open="open" />
 				</div>
@@ -69,7 +69,7 @@ export const MobileSheetFull: Story = {
 			return { args, open };
 		},
 		template: `
-			<div class="flex min-h-[100dvh] items-end justify-center bg-[oklch(28%_0.04_25)]">
+			<div class="flex min-h-[100dvh] items-end justify-center bg-newt-bg-base">
 				<div class="w-full max-w-[24rem]">
 					<DiscordAppLauncher v-bind="args" v-model:open="open" />
 				</div>
@@ -89,10 +89,10 @@ export const Closed: Story = {
 			return { args, open };
 		},
 		template: `
-			<div class="flex min-h-[12rem] flex-col items-center justify-center gap-3 bg-[oklch(26.65%_0.006_272.93)] p-6">
+			<div class="flex min-h-[12rem] flex-col items-center justify-center gap-3 bg-newt-bg-base p-6">
 				<button
 					type="button"
-					class="rounded bg-[oklch(57.74%_0.2091_273.85)] px-3 py-2 text-sm text-white"
+					class="rounded bg-newt-brand px-3 py-2 text-sm text-newt-on-accent"
 					@click="open = true"
 				>
 					Open Apps

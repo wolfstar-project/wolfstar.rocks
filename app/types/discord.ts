@@ -163,5 +163,4 @@ export interface StringSelectMenuOption {
 	disabled?: boolean;
 }
 
-export type StringSelectMenuPlacement = "above" | "below";
 // #endregion

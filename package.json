@@ -100,6 +100,7 @@
 		"nuxt-studio": "1.8.0",
 		"nuxt-vitalizer": "^3.0.0",
 		"prisma-orm-extension-typed-json": "8.0.0-rc.5",
+		"reka-ui": "2.11.0",
 		"simple-git": "^4.0.2",
 		"stale-dep": "^0.9.0",
 		"std-env": "^4.3.0",

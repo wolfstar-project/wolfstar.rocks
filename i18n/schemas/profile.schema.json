@@ -49,6 +49,12 @@
 				"from_discord": {
 					"type": "string"
 				},
+				"group_experience": {
+					"type": "string"
+				},
+				"group_support": {
+					"type": "string"
+				},
 				"message_display": {
 					"type": "string"
 				},

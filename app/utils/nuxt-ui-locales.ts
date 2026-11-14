@@ -54,17 +54,14 @@ const nuxtUiLocaleByCode: Record<string, NuxtUiLocale> = {
 };
 
 /**
- * Locale packs for `ULocaleSelect`, covering every app locale from i18n config.
- * Falls back to the English pack with the app locale code/name when Nuxt UI
- * does not ship a matching pack.
+ * The Nuxt UI locale pack for an app locale, for `UApp`, so the library's own
+ * strings (menus, search fields, close buttons) follow the language on screen.
+ * Falls back to the English pack, under the app's code and name, when Nuxt UI
+ * ships none for it.
  */
-export function getNuxtUiLocales(): NuxtUiLocale[] {
-	return currentLocales.map((appLocale) => {
-		const pack = nuxtUiLocaleByCode[appLocale.code];
-		if (pack) return pack;
-		return Object.assign({}, en, {
-			code: appLocale.code,
-			name: appLocale.displayName ?? appLocale.code,
-		});
-	});
+export function getNuxtUiLocale(code: string): NuxtUiLocale {
+	const pack = nuxtUiLocaleByCode[code];
+	if (pack) return pack;
+	const appLocale = currentLocales.find((entry) => entry.code === code);
+	return Object.assign({}, en, { code, name: appLocale?.displayName ?? code });
 }

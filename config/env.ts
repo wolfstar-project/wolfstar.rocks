@@ -1,70 +1,22 @@
 import * as process from "node:process";
-import Git from "simple-git";
-import { version as packageVersion } from "../package.json";
-import { getNextVersion } from "../scripts/next-version";
+import { simpleGit } from "simple-git";
+import packageJson from "../package.json" with { type: "json" };
+import { getNextVersion } from "../scripts/next-version.ts";
 
 /**
- * Environment variable `PULL_REQUEST` provided by Netlify.
- * @see {@link https://docs.netlify.com/build/configure-builds/environment-variables/#git-metadata}
- *
- * Whether triggered by a GitHub PR
+ * The branch of a Workers Build.
+ * @see {@link https://developers.cloudflare.com/workers/ci-cd/builds/configuration/#environment-variables}
  */
-const isPR = process.env.PULL_REQUEST === "true";
-
-/**
- * Environment variable `REVIEW_ID` provided by Netlify.
- * @see {@link https://docs.netlify.com/configure-builds/environment-variables/#git-metadata}
- *
- * Pull request number (if in a PR environment)
- */
-const prNumber = process.env.REVIEW_ID || null;
-
-/**
- * Environment variable `BRANCH` provided by Netlify.
- * @see {@link https://docs.netlify.com/build/configure-builds/environment-variables/#git-metadata}
- *
- * Git branch
- */
-const gitBranch = process.env.BRANCH;
+const gitBranch = process.env.WORKERS_CI_BRANCH;
 
 export const isCanary =
 	(process.env.NODE_ENV === "production" ||
 		process.env.NODE_ENV === "preview" ||
 		process.env.NODE_ENV === "canary") &&
-	gitBranch === "main" &&
-	!isPR;
+	gitBranch === "main";
 
-/**
- * Environment variable `CONTEXT` provided by Netlify.
- * `dev`, `production`, `deploy-preview`, `branch-deploy`, `preview-server`, or a branch name
- * @see {@link https://docs.netlify.com/build/configure-builds/environment-variables/#build-metadata}
- *
- * Whether this is some sort of preview environment.
- */
-const isPreview = isPR || (process.env.CONTEXT && process.env.CONTEXT !== "production");
-const isProduction = process.env.CONTEXT === "production";
+const git = simpleGit();
 
-/**
- * Environment variable `URL` provided by Netlify.
- * This is always the current deploy URL, regardless of env.
- * @see {@link https://docs.netlify.com/build/functions/environment-variables/#functions}
- *
- * Preview URL for the current deployment, only available in preview environments.
- */
-export const getPreviewUrl = () =>
-	isPreview ? (process.env.URL ? process.env.URL : undefined) : undefined;
-
-/**
- * Environment variable `URL` provided by Netlify.
- * This is always the current deploy URL, regardless of env.
- * @see {@link https://docs.netlify.com/build/functions/environment-variables/#functions}
- *
- * Production URL for the current deployment, only available in production environments.
- */
-export const getProductionUrl = () =>
-	isProduction ? (process.env.URL ? process.env.URL : undefined) : undefined;
-
-const git = Git();
 async function getGitInfo() {
 	let branch;
 	try {
@@ -75,8 +27,10 @@ async function getGitInfo() {
 
 	let commit;
 	try {
-		// Netlify: COMMIT_REF
-		commit = process.env.COMMIT_REF || (await git.revparse(["HEAD"]));
+		commit =
+			process.env.WORKERS_CI_COMMIT_SHA ||
+			process.env.GITHUB_SHA ||
+			(await git.revparse(["HEAD"]));
 	} catch {
 		commit = "unknown";
 	}
@@ -113,12 +67,12 @@ export async function getFileLastUpdated(path: string) {
  *
  * Falls back to `package.json` when git is unavailable (e.g. shallow clone).
  */
-export async function getVersion() {
+async function getVersion() {
 	try {
 		const { next } = await getNextVersion();
 		return next;
 	} catch {
-		return packageVersion;
+		return packageJson.version;
 	}
 }
 
@@ -127,17 +81,12 @@ export async function getEnv(isDevelopment: boolean) {
 		getGitInfo(),
 		getVersion(),
 	]);
-	const env = isDevelopment ? "dev" : isCanary ? "canary" : isPreview ? "preview" : "release";
-	const previewUrl = getPreviewUrl();
-	const productionUrl = getProductionUrl();
+	const env = isDevelopment ? "dev" : isCanary ? "canary" : "release";
 	return {
 		version,
 		commit,
 		shortCommit,
 		branch,
 		env,
-		previewUrl,
-		productionUrl,
-		prNumber,
 	} as const;
 }

@@ -4,8 +4,7 @@
 
 # WolfStar.rocks
 
-The official web dashboard for WolfStar, a powerful multi-purpose Discord
-bot.<br/>
+The official web dashboard for WolfStar, a Discord moderation bot.<br/>
 
 [Official Site][official-site] · [Blog][blog] · [WolfStar Invite
 Link][invite-link] · [Support Server][discord-link] ·
@@ -13,7 +12,6 @@ Link][invite-link] · [Support Server][discord-link] ·
 
 <!-- SHIELD GROUP -->
 
-[![Netlify deploy status badge][netlify-status-shield]][netlify-status-link]
 [![GitHub latest release badge][github-release-shield]][github-release-link]
 [![GitHub last commit badge][github-last-commit-shield]][github-last-commit-link]<br/>
 [![Discord community badge][discord-shield]][discord-link]
@@ -24,7 +22,6 @@ Link][invite-link] · [Support Server][discord-link] ·
 [![GitHub issues badge][github-issues-shield]][github-issues-link]
 [![GitHub license badge][github-license-shield]][github-license-link]<br>
 [![PRs welcome badge][pr-welcome-shield]][pr-welcome-link]
-[![Codspeed badge][codspeed-shield]][codspeed-link]
 
 ### Share WolfStar Repository
 
@@ -58,8 +55,9 @@ moderation management. Built for you, the Super Admin.</sup>
 
 ## 👋🏻 Welcome to WolfStar.rocks
 
-WolfStar.rocks is the official web dashboard for WolfStar, a powerful
-multi-purpose Discord bot for moderation and community management.
+WolfStar.rocks is the official web dashboard for WolfStar, a Discord moderation
+bot. It gives your team one place to configure filters and server settings, and
+to review moderation, command, and settings history.
 
 </div>
 
@@ -69,23 +67,23 @@ multi-purpose Discord bot for moderation and community management.
 
 - **Modern Web Interface**: Built with Nuxt 4 and modern web technologies for a
   smooth user experience.
-- **Guild Management**: Manage your Discord server's settings, roles, and
+- **Server Management**: Manage your Discord server's settings, roles, and
   permissions through an intuitive web interface.
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile
   devices.
 - **OAuth Integration**: Secure Discord authentication and authorization.
-- **Audit Trail**: All security-relevant actions (guild settings changes,
-  logins, token refreshes, and OAuth CSRF denials) are captured via a
-  tamper-evident audit log. Each event is persisted to PostgreSQL with a SHA-256
-  hash chain, making the audit trail verifiable and tamper-evident.
+- **Audit Trail**: Dashboard settings changes and denied access attempts are
+  recorded in a tamper-evident audit log. Each event is persisted to PostgreSQL
+  with a SHA-256 hash chain, and `pnpm audit:verify` replays the chain to verify
+  it.
+- **Multi-language Dashboard**: The dashboard is translated through Tolgee, and
+  `/translation-status` shows how far each language has come.
 - **Accessibility**: Built with semantic HTML, keyboard navigation, and
   reduced-motion support.
 
 **On the roadmap**
 
 - **Real-time Updates**: Live updates for guild data and bot status.
-- **Multi-language Support**: Dashboard localization beyond the current
-  server-language setting.
 - **Dashboard Analytics**: Server statistics and bot usage metrics.
 
 </div>
@@ -129,8 +127,11 @@ multi-purpose Discord bot for moderation and community management.
    - Configure Discord OAuth2 settings in your Discord Developer Portal.
 
 4. **Database Setup**
-   - Ensure your WolfStar bot database is accessible.
-   - Run database migrations if needed.
+   - Ensure your WolfStar bot database is accessible. The bot owns the schema
+     and applies its migrations; this app never migrates the database.
+   - The data contract lives in the bot's repository, vendored as a git
+     submodule. `pnpm install` checks it out and emits the Prisma ORM 8
+     artefacts; clone with `--recurse-submodules` to fetch it up front.
 
 5. **Start the development server**
 
@@ -162,36 +163,24 @@ multi-purpose Discord bot for moderation and community management.
 - `pnpm build` - Build for production.
 - `pnpm preview` - Preview production build.
 - `pnpm lint:fix` - Run Oxlint & Oxfmt and fix issues.
-- `pnpm prisma:migrate:dev` - Create and apply a new migration in development.
-- `pnpm prisma:migrate:diff` - Check for schema drift between migrations and
-  schema (exits with error if differences found).
-- `pnpm prisma:migrate:deploy` - Apply all pending migrations to the database.
-- `pnpm prisma:push` - Push the Prisma schema to the database without generating
-  a migration.
-- `pnpm prisma:seed` - Seed the database with initial data.
-- `pnpm prisma:studio` - Open Prisma Studio for database management.
-- `pnpm prisma:generate` - Generate Prisma client.
+- `pnpm prisma:generate` - Emit the Prisma ORM 8 contract artefacts into
+  `server/database/generated/prisma/`. The contract comes from the bot's
+  repository, vendored as the `vendor/wolfstar` git submodule; run this again
+  after bumping it.
 - `pnpm test` - Run all tests.
 - `pnpm test:unit` - Run unit tests.
 - `pnpm test:nuxt` - Run Nuxt environment tests.
 - `pnpm test:browser` - Run browser tests with Playwright.
-- `pnpm test:bench` - Run performance benchmarks.
 - `pnpm typecheck` - Run TypeScript checks.
 
 Occasional one-off tasks are not wrapped in `package.json`. Run their binary
 directly instead:
 
-- `pnpm exec prisma migrate dev --create-only` - Create a migration without
-  applying it.
-- `pnpm exec prisma migrate status` - Check the status of migrations.
-- `pnpm exec prisma migrate resolve` - Mark a migration as applied or rolled
-  back.
-- `pnpm exec prisma migrate reset` - Reset the local database.
-- `pnpm exec prisma generate --watch` - Regenerate the Prisma client on change.
+- `pnpm exec prisma skills sync` - Refresh the vendored Prisma 8 reference docs.
 - `pnpm exec pwa-assets-generator` - Generate PWA icons and assets.
 - `pnpm exec taze` - Interactive dependency updates.
 
-### Testing & Benchmarks
+### Testing
 
 #### Running Tests
 
@@ -199,46 +188,6 @@ directly instead:
 - `pnpm test:unit` - Run unit tests only (Node.js environment)
 - `pnpm test:nuxt` - Run Nuxt component tests (Nuxt environment with browser)
 - `pnpm test:browser` - Run full browser E2E tests with Playwright
-- `pnpm test:bench` - Run performance benchmarks
-
-#### Performance Benchmarks
-
-WolfStar.rocks uses [CodSpeed](https://codspeed.io) for continuous performance
-tracking. Benchmarks automatically run in CI on every commit and PR, with
-results visible on the [CodSpeed dashboard][codspeed-link].
-
-**Currently Benchmarked:**
-
-- **`shared/utils/comparators.ts`**
-  - Functions: `differenceArray`, `differenceMap`
-  - Benchmark: `test/unit/shared/utils/comparators.bench.ts`
-- **`server/utils/guildNameToAcronym.ts`**
-  - Function: `guildNameToAcronym`
-  - Benchmark: `test/unit/server/utils/guild-name-to-acronym.bench.ts`
-
-**Adding New Benchmarks:**
-
-1. Create a `.bench.ts` file under `test/unit/` mirroring the path of the code
-   you're benchmarking (e.g., for `shared/utils/myUtil.ts`, create
-   `test/unit/shared/utils/myUtil.bench.ts`)
-2. Import the utility and Vitest's `bench()` function:
-   ```typescript
-   import { bench, describe } from "vitest";
-   import { myUtility } from "../../../../shared/utils/myUtility";
-   ```
-3. Write benchmarks with descriptive names:
-   ```typescript
-   describe("myUtility benchmarks", () => {
-     bench("small dataset (10 items)", () => {
-       myUtility(smallData);
-     });
-     bench("large dataset (1000 items)", () => {
-       myUtility(largeData);
-     });
-   });
-   ```
-4. Run locally: `pnpm test:bench`
-5. CI will automatically track performance when you open a PR
 
 ### Development Guidelines
 
@@ -254,7 +203,8 @@ results visible on the [CodSpeed dashboard][codspeed-link].
 - **TypeScript** - Type safety
 - **Oxlint** - Code linting
 - **Oxfmt** - Code formatting
-- **Prisma** - Database ORM
+- **Prisma ORM 8** - Database client (the WolfStar bot owns the schema and its
+  migrations; this app consumes the same data contract)
 - **Tailwind CSS** - Utility-first CSS framework
 - **Nuxt UI** - Vue component library and design tokens
 
@@ -404,15 +354,7 @@ Copyright © 2024 [WolfStar][profile-link]. <br /> This project is
   https://shieldcn.dev/github/stars/wolfstar-project/wolfstar.rocks?variant=branded
 [issues-link]:
   https://img.shields.io/github/issues/wolfstar-project/wolfstar.rocks.svg?style=flat
-[netlify-status-shield]:
-  https://api.netlify.com/api/v1/badges/80592647-d7bf-49b3-b82c-d0a3b3d7b3d0/deploy-status
-[netlify-status-link]:
-  https://app.netlify.com/projects/wolfstar-rocks-et34281/deploys
 [official-site]: https://wolfstar.rocks
-[codspeed-link]:
-  https://codspeed.io/wolfstar-project/wolfstar.rocks?utm_source=badge
-[codspeed-shield]:
-  https://img.shields.io/endpoint?url=https://codspeed.io/badge.json
 [pr-welcome-link]: https://github.com/wolfstar-project/wolfstar.rocks/pulls
 [pr-welcome-shield]:
   https://shieldcn.dev/badge/PRs-welcome-ffcb47?variant=branded

@@ -25,6 +25,7 @@ import type {
 	APIGuildCategoryChannel,
 	APIGuildChannel,
 	APIGuildForumChannel,
+	APIGuildForumTag,
 	APIGuildMediaChannel,
 	APIGuildMember,
 	APIGuildStageVoiceChannel,
@@ -384,13 +385,19 @@ function flattenChannelGroupDM(channel: APIGroupDMChannel): FlattenedGroupDMChan
 	};
 }
 
+/**
+ * A forum or media channel's tags, each with its emoji as one object. Discord
+ * can leave `available_tags` out of a guild's channel list.
+ */
+function flattenForumTags(tags: APIGuildForumTag[] | undefined) {
+	return (tags ?? []).map((tag) =>
+		Object.assign({ emoji: { id: tag.emoji_id ?? null, name: tag.emoji_name ?? null } }, tag),
+	);
+}
+
 function flattenChannelForum(channel: APIGuildForumChannel): FlattenedForumChannel {
 	return {
-		availableTags:
-			channel.available_tags.map((tag) => ({
-				emoji: { id: tag.emoji_id ?? null, name: tag.emoji_name ?? null },
-				...tag,
-			})) ?? [],
+		availableTags: flattenForumTags(channel.available_tags),
 		createdTimestamp: DiscordSnowflake.timestampFrom(channel.id),
 		defaultAutoArchiveDuration: channel.default_auto_archive_duration ?? 60,
 		defaultReactionEmoji: {
@@ -417,11 +424,7 @@ function flattenChannelForum(channel: APIGuildForumChannel): FlattenedForumChann
 
 function flattenChannelMedia(channel: APIGuildMediaChannel): FlattenedMediaChannel {
 	return {
-		availableTags:
-			channel.available_tags.map((tag) => ({
-				...tag,
-				emoji: { id: tag.emoji_id ?? null, name: tag.emoji_name ?? null },
-			})) ?? [],
+		availableTags: flattenForumTags(channel.available_tags),
 		createdTimestamp: DiscordSnowflake.timestampFrom(channel.id),
 		defaultAutoArchiveDuration: channel.default_auto_archive_duration ?? 60,
 		defaultReactionEmoji: {

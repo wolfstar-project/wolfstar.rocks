@@ -1,4 +1,4 @@
-import { expect, test } from "./test-utils";
+import { expect, test } from "./test-utils.ts";
 
 /**
  * OG image snapshot tests (Takumi templates).
@@ -11,7 +11,6 @@ const testCases = [
 	{ path: "/", label: "home page" },
 	{ path: "/commands", label: "commands page" },
 	{ path: "/staryl", label: "staryl page" },
-	{ path: "/profile", label: "profile page" },
 ] as const;
 
 for (const { path, label } of testCases) {

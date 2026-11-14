@@ -1,12 +1,12 @@
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { isAbsolute, join, relative, resolve } from "node:path";
 import { defineNuxtModule } from "nuxt/kit";
-import { localeFeatureFiles, localeSourceDirs } from "../config/i18n";
 import {
 	type LocaleMessages,
 	mergeLocaleMessages,
 	parseLocaleMessages,
-} from "../config/i18n-empty-placeholders";
+} from "../config/i18n-empty-placeholders.ts";
+import { localeFeatureFiles, localeSourceDirs } from "../config/i18n.ts";
 
 /**
  * Nuxt I18n Micro loads exactly one global message file per locale

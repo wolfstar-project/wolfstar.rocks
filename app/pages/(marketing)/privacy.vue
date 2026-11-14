@@ -98,42 +98,76 @@
 							What cookies do we use?
 						</h2>
 						<p class="mb-4 leading-relaxed text-base-content">
-							We only use essential technical cookies for purposes strictly necessary
-							for the site's functionality. We do not use third-party advertising
-							cookies.
+							The Site sets the necessary cookies below to work, and asks before
+							turning on anything else. The only optional item today is Sentry session
+							replay. The Site does not use advertising cookies. You can change your
+							choice at any time from
+							<span class="font-semibold">Cookie settings</span>
+							in the footer.
 						</p>
 						<ul class="list-none space-y-3 pl-0 text-base-content">
 							<li class="flex items-start gap-3 leading-relaxed">
 								<span class="shrink-0 text-base-content/50">&mdash;</span>
 								<span>
-									<span class="font-semibold">h3 (Session Cookie):</span> This is
-									our secure session cookie. It stores the OAuth access token when
-									you connect your Discord account. It is essential for
-									maintaining your authenticated session. This cookie is HTTP-only
-									and encrypted for your security.
-								</span>
-							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
-								<span>
-									<span class="font-semibold">Sentry (error monitoring):</span>
-									Sentry may set first‑party cookies or use local storage to
-									persist session identifiers for error correlation and session
-									replay. These identifiers are used only for debugging and are
-									not used for advertising; personal data is masked where
-									possible.
+									<span class="font-semibold"
+										>Sign-in cookies (<code>wolfstar-session.*</code>):</span
+									>
+									Set only when you sign in with Discord.
+									<code>session_token</code> and <code>session_data</code> keep
+									you signed in for up to 7 days; <code>account_data</code> holds
+									your linked Discord account and the access token the dashboard
+									uses to act on your behalf; <code>oauth_state</code> lasts 10
+									minutes and ties the sign-in to the browser that started it.
+									They are HTTP-only and encrypted, and on HTTPS their names start
+									with <code>__Secure-</code>.
 								</span>
 							</li>
 							<li class="flex items-start gap-3 leading-relaxed">
 								<span class="shrink-0 text-base-content/50">&mdash;</span>
 								<span>
 									<span class="font-semibold"
-										>Hosting provider cookies (Netlify):</span
+										>Version cookie (<code>__nkpv</code>):</span
+									>
+									Stores the identifier of the version of the site your browser is
+									running, for up to 7 days. When the site is updated while a tab
+									is open, it lets the server tell that the tab is older and ask
+									you to reload, instead of sending data the page cannot read. It
+									holds a build identifier only, with nothing about you.
+								</span>
+							</li>
+							<li class="flex items-start gap-3 leading-relaxed">
+								<span class="shrink-0 text-base-content/50">&mdash;</span>
+								<span>
+									<span class="font-semibold"
+										>Cookie choices (<code>ncc_c</code>,
+										<code>ncc_e</code>):</span
+									>
+									Remember whether you made a choice and which optional items you
+									turned on, for 6 months. They are read only by the Site.
+								</span>
+							</li>
+							<li class="flex items-start gap-3 leading-relaxed">
+								<span class="shrink-0 text-base-content/50">&mdash;</span>
+								<span>
+									<span class="font-semibold"
+										>Sentry session replay (optional):</span
+									>
+									Only with your consent. Sentry keeps a session identifier in
+									your browser's session storage to tie a replay together. It is
+									used only for debugging, never for advertising, and text and
+									inputs in the replay are masked.
+								</span>
+							</li>
+							<li class="flex items-start gap-3 leading-relaxed">
+								<span class="shrink-0 text-base-content/50">&mdash;</span>
+								<span>
+									<span class="font-semibold"
+										>Hosting provider cookies (Cloudflare):</span
 									>
 									Our hosting/CDN may set essential operational cookies (caching,
-									routing, preview or identity/session features). These are
-									infrastructure cookies required to deliver the site and are not
-									used for advertising or cross‑site tracking.
+									routing or bot protection). These are infrastructure cookies
+									required to deliver the site and are not used for advertising or
+									cross‑site tracking.
 								</span>
 							</li>
 						</ul>
@@ -144,15 +178,43 @@
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Local storage
 						</h2>
-						<p class="leading-relaxed text-base-content">
-							In addition to session cookies, we use your browser's Local Storage to
-							save your display preferences. This allows us to remember the theme
-							(light/dark) and other settings you have selected, so you don't have to
-							reconfigure them on each visit. This information is purely functional,
-							stored only on your device, and contains no personal data nor is it used
-							to track you. We use it exclusively to improve your experience on our
-							website.
+						<p class="mb-4 leading-relaxed text-base-content">
+							In addition to cookies, the Site uses your browser's Local Storage. What
+							it keeps there stays on your device, is never sent to us as a cookie,
+							and is not used to track you:
 						</p>
+						<ul class="list-none space-y-3 pl-0 text-base-content">
+							<li class="flex items-start gap-3 leading-relaxed">
+								<span class="shrink-0 text-base-content/50">&mdash;</span>
+								<span>
+									<span class="font-semibold">Preferences:</span> your theme,
+									colors, language and motion settings, and the sections you
+									pinned or folded away in the dashboard sidebar.
+								</span>
+							</li>
+							<li class="flex items-start gap-3 leading-relaxed">
+								<span class="shrink-0 text-base-content/50">&mdash;</span>
+								<span>
+									<span class="font-semibold">Dashboard state:</span> the server
+									and section you had open, a server setup you have not finished,
+									the default values you chose for new auto-moderation rules, the
+									emoji you used last, and which direct messages you have read or
+									reacted to.
+								</span>
+							</li>
+							<li class="flex items-start gap-3 leading-relaxed">
+								<span class="shrink-0 text-base-content/50">&mdash;</span>
+								<span>
+									<span class="font-semibold">Dashboard cache:</span> the last
+									answers the dashboard received for the servers you manage, which
+									can include server, channel, role and member names and log
+									entries, so a reload shows them at once while they are asked for
+									again. An answer older than 24 hours is not shown, and the cache
+									is emptied when you sign out or another account signs in on this
+									browser.
+								</span>
+							</li>
+						</ul>
 					</section>
 
 					<!-- Managing Cookies -->
@@ -161,9 +223,11 @@
 							Managing cookies
 						</h2>
 						<p class="mb-4 leading-relaxed text-base-content">
-							You can configure your browser to accept, reject, or delete cookies
-							according to your preferences. However, please note that rejecting
-							essential cookies may prevent full access to the application.
+							Use <span class="font-semibold">Cookie settings</span> in the footer to
+							turn optional items on or off; the change applies at once. You can also
+							configure your browser to accept, reject, or delete cookies. Rejecting
+							the necessary cookies there prevents signing in and may break other
+							parts of the Site.
 						</p>
 						<p class="mb-3 leading-relaxed text-base-content">
 							Below are links with instructions for cookie management in the most
@@ -219,39 +283,10 @@
 							Analytics
 						</h2>
 						<p class="mb-4 leading-relaxed text-base-content">
-							We use Netlify Analytics to understand how visitors use our website.
-							This helps us improve the user experience and identify issues.
-						</p>
-						<p class="mb-3 leading-relaxed text-base-content">
-							Netlify Analytics is designed with privacy in mind:
-						</p>
-						<ul class="list-none space-y-2 pl-0 text-base-content">
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
-								<span>It does not use cookies</span>
-							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
-								<span>It does not collect personal identifiers</span>
-							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
-								<span>It does not track users across websites</span>
-							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
-								<span>All data is aggregated and anonymised</span>
-							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
-								<span>Data is collected server-side, not from your browser</span>
-							</li>
-						</ul>
-						<p class="mt-4 leading-relaxed text-base-content">
-							The only information collected includes: page URLs, referrer,
-							country/region, device type, browser, and operating system. This data
-							cannot be used to identify individual users. All analytics data is
-							processed server-side by our hosting provider.
+							Cloudflare, our hosting provider, keeps aggregated statistics about
+							traffic to the site, which we use to understand how it is used and to
+							identify issues. We do not add an analytics script or analytics cookies
+							to the site.
 						</p>
 					</section>
 
@@ -299,15 +334,14 @@
 						</ul>
 						<p class="mt-4 leading-relaxed text-base-content">
 							Session replays capture user interactions (clicks, scrolls, navigation)
-							to help us understand how errors occur. Personal information entered in
-							forms is automatically masked. Sentry may set first‑party cookies or use
-							local storage to correlate sessions for error reporting and session
-							replay; these mechanisms are used solely for debugging and are not used
-							for advertising. To opt out of session replay, contact us at
+							to help us understand how errors occur, and are recorded only on the
+							dashboard and only if you turned session replay on in Cookie settings.
+							Text and form inputs are masked. Turning it off in Cookie settings stops
+							the replay at once. Error reports themselves do not depend on that
+							choice. Questions about this processing go to
 							<NuxtLink to="mailto:contact@wolfstar.rocks"
 								>contact@wolfstar.rocks</NuxtLink
-							>. All data is processed in accordance with GDPR requirements and stored
-							securely.
+							>.
 						</p>
 					</section>
 
@@ -622,25 +656,40 @@
 							<li class="flex items-start gap-3 leading-relaxed">
 								<span class="shrink-0 text-base-content/50">&mdash;</span>
 								<span>
-									<span class="font-semibold">Session Cookies:</span>
-									Automatically deleted when you close your browser or after a
-									period of inactivity (typically 7 days).
+									<span class="font-semibold">Sign-in Cookies:</span> Expire 7
+									days after you sign in, or as soon as you sign out. The
+									<code>oauth_state</code> cookie expires after 10 minutes.
 								</span>
 							</li>
 							<li class="flex items-start gap-3 leading-relaxed">
 								<span class="shrink-0 text-base-content/50">&mdash;</span>
 								<span>
-									<span class="font-semibold">Local Storage Preferences:</span>
-									Remain on your device until you clear your browser data or
-									manually reset preferences.
+									<span class="font-semibold">Version Cookie:</span> Expires 7
+									days after it was last set.
+								</span>
+							</li>
+							<li class="flex items-start gap-3 leading-relaxed">
+								<span class="shrink-0 text-base-content/50">&mdash;</span>
+								<span>
+									<span class="font-semibold">Cookie Choices:</span> Expire 6
+									months after you made your choice; you are then asked again.
+								</span>
+							</li>
+							<li class="flex items-start gap-3 leading-relaxed">
+								<span class="shrink-0 text-base-content/50">&mdash;</span>
+								<span>
+									<span class="font-semibold">Local Storage:</span> Remains on
+									your device until you clear your browser data. Cached dashboard
+									answers are no longer shown after 24 hours and are removed when
+									you sign out or another account signs in.
 								</span>
 							</li>
 							<li class="flex items-start gap-3 leading-relaxed">
 								<span class="shrink-0 text-base-content/50">&mdash;</span>
 								<span>
 									<span class="font-semibold">Analytics Data:</span> Retained in
-									aggregate form by Netlify and cannot be linked to individual
-									users. Retained according to Netlify's data retention policy.
+									aggregate form by Cloudflare and cannot be linked to individual
+									users. Retained according to Cloudflare's data retention policy.
 								</span>
 							</li>
 							<li class="flex items-start gap-3 leading-relaxed">

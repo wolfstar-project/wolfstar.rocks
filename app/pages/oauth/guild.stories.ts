@@ -20,7 +20,7 @@ export const NoGuildId: Story = {
 	render: () => ({
 		template: `
 			<div>
-				<h1 class="sr-only">Guild OAuth Callback</h1>
+				<h1 class="sr-only">Server OAuth Callback</h1>
 				<OauthStatusPanel
 					tone="error"
 					title="Server Not Found"
@@ -51,7 +51,7 @@ export const SetupError: Story = {
 					</template>
 					<template #actions>
 						<UButton to="/login" size="sm" variant="outline" class="w-full sm:w-auto">
-							Return to Login
+							Return to sign in
 						</UButton>
 					</template>
 				</OauthStatusPanel>

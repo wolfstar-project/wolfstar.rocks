@@ -1,6 +1,7 @@
 import { promises as fsp } from "node:fs";
 import { join } from "node:path";
 import { createPostgresAuditDrain } from "#server/utils/audit/postgres-drain";
+import { findRequestDatabase, forgetRequestDatabase } from "#server/utils/audit/request-database";
 import { type DrainContext, auditOnly, signed } from "evlog";
 import { createFsDrain } from "evlog/fs";
 import { createDrainPipeline } from "evlog/pipeline";
@@ -9,16 +10,17 @@ import { createSentryDrain } from "evlog/sentry";
 const AUDIT_DIR = join(process.cwd(), ".audit");
 const AUDIT_HEAD_FILE = join(AUDIT_DIR, "head");
 
+const isWorkers = globalThis.navigator?.userAgent === "Cloudflare-Workers";
+
 export default defineNitroPlugin((nitroApp) => {
 	const config = useRuntimeConfig();
 	const sentry = config.public.sentry.dsn ? createSentryDrain() : undefined;
-	const postgresAudit = createPostgresAuditDrain();
+	// On Workers, with the client of the event's own request: see `request-database.ts`.
+	const postgresAudit = createPostgresAuditDrain((ctx) =>
+		findRequestDatabase(ctx.request?.requestId),
+	);
 
-	const pipeline = createDrainPipeline<DrainContext>({
-		batch: { size: 50, intervalMs: 5000 },
-	});
-
-	const drain = pipeline(async (batch) => {
+	async function drainBatch(batch: DrainContext[]) {
 		const tasks: Array<{ promise: Promise<unknown>; tag: string; ctx?: DrainContext }> = [];
 
 		for (const ctx of batch) {
@@ -53,7 +55,29 @@ export default defineNitroPlugin((nitroApp) => {
 				}
 			}
 		}
+	}
+
+	if (isWorkers) {
+		// A Worker stops a request's I/O when the request ends, and evlog keeps the
+		// drain hook alive with `waitUntil`, so each event is written inside the
+		// hook instead of in a batch that a later timer would flush outside any
+		// request. A Worker has no file system for the secondary journal either;
+		// the Postgres hash chain is the record there.
+		nitroApp.hooks.hook("evlog:drain", async (ctx) => {
+			try {
+				await drainBatch([ctx]);
+			} finally {
+				forgetRequestDatabase(ctx.request?.requestId);
+			}
+		});
+		return;
+	}
+
+	const pipeline = createDrainPipeline<DrainContext>({
+		batch: { size: 50, intervalMs: 5000 },
 	});
+
+	const drain = pipeline(drainBatch);
 
 	nitroApp.hooks.hook("evlog:drain", drain);
 

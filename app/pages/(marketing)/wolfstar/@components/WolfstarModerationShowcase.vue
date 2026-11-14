@@ -1037,24 +1037,38 @@ onUnmounted(cleanup);
 <style scoped>
 @reference "@/assets/css/main.css";
 
+/* The demos are drawn in Discord's desktop chrome (`--discord-chrome`, dark or
+   light with the page): the frame, the header and the channel are one surface,
+   as in Discord and in the commands demo. */
 .showcase-surface-shield {
 	position: relative;
 	z-index: 1;
 	isolation: isolate;
 }
 
+.showcase-surface-shield.home-surface-card {
+	background-color: var(--discord-chrome);
+	border-color: var(--discord-chrome-border);
+}
+
 .showcase-channel-header {
 	@apply flex items-center gap-2.5 border-b px-5 py-3.5;
-	border-color: var(--home-border-subtle);
+	background-color: var(--discord-chrome);
+	border-color: var(--discord-chrome-border);
+	box-shadow: 0 1px 0 var(--discord-chrome-edge);
+	color: var(--discord-chrome-text);
 }
 
 .showcase-card-body {
-	background-color: var(--color-base-300);
+	--discord-surface: var(--discord-chrome);
+	background-color: var(--discord-chrome);
 }
 
-.showcase-discord-feed {
-	@apply rounded-none shadow-none;
+/* No card inside the card: the messages sit straight on the channel. */
+.showcase-card-body .showcase-discord-feed {
+	@apply rounded-none;
 	background-color: transparent;
+	filter: none;
 }
 
 :deep(.showcase-discord-feed .discord-message) {

@@ -38,7 +38,7 @@ const label = computed(() => labelOverride ?? SlashCommandApps[app].label);
 }
 
 .discord-slash-command-suggestion-group-header {
-	--discord-slash-command-suggestion-group-header: oklch(100% 0 0);
+	--discord-slash-command-suggestion-group-header: var(--discord-chrome-strong);
 
 	/* Same sticky section-header pattern as Frequently Used — pins while this
 	   app group is in view, then scrolls away with the group. Background uses
@@ -46,9 +46,5 @@ const label = computed(() => labelOverride ?? SlashCommandApps[app].label);
 	@apply sticky top-0 z-[1] flex items-center gap-1.5 px-2 py-1.5 font-whitney text-sm font-semibold;
 	color: var(--discord-slash-command-suggestion-group-header);
 	background-color: var(--discord-slash-command-suggestions-bg, oklch(23.47% 0.005 272.95));
-}
-
-:global([data-theme="light"]) .discord-slash-command-suggestion-group-header {
-	--discord-slash-command-suggestion-group-header: oklch(21.15% 0.009 264);
 }
 </style>

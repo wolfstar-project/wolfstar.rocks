@@ -81,6 +81,19 @@ describe("useUnsavedChanges", () => {
 		expect(composable.showDialog.value).toBeTruthy();
 	});
 
+	// The phone's list and page of `/app` differ by `?screen=page` only: the edits stay staged.
+	it("should not block a change of the query alone", async () => {
+		const composable = await setupComposable(ref(true));
+
+		const result = capturedGuard!(
+			{ fullPath: "/app?screen=page", path: "/app" },
+			{ fullPath: "/app", path: "/app" },
+		);
+
+		expect(result).toBeUndefined();
+		expect(composable.showDialog.value).toBeFalsy();
+	});
+
 	it("should not block navigation within the same guild manage area", async () => {
 		const composable = await setupComposable(ref(true));
 

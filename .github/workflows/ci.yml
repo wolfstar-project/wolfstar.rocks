@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - release
+      - refactor/v3
   push:
     branches:
       - main
@@ -24,6 +25,7 @@ jobs:
   lint:
     name: 🔠 Lint project
     runs-on: ubuntu-24.04-arm
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -44,6 +46,7 @@ jobs:
   typecheck:
     name: 🔎 Typecheck project
     runs-on: ubuntu-24.04-arm
+    timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -65,6 +68,7 @@ jobs:
   unit:
     name: 🧪 Unit tests
     runs-on: ubuntu-24.04-arm
+    timeout-minutes: 15
     env:
       # Match package.json test scripts; CI calls `vp test` directly.
       TEST: "1"
@@ -108,6 +112,7 @@ jobs:
   test:
     name: 🧪 Component tests
     runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
     env:
       # Match package.json test scripts; CI calls `vp test` directly.
       TEST: "1"
@@ -129,23 +134,35 @@ jobs:
       - name: 🔼 Generate Prisma Client
         run: vp run prisma:generate
 
-      # Vitest browser-playwright occasionally drops the Chromium session mid-suite
-      # (`Browser connection was closed` / `route.fulfill: Route is already handled!`)
-      # after most or all assertions already passed. Retry the whole project so files
-      # interrupted by the provider flake still run.
+      # One Chromium session does not outlive the whole suite: after some 80 of the
+      # 118 files it drops the connection (`Browser connection was closed while
+      # running tests`) with every assertion so far passing. So the files run in
+      # shards, each in a browser of its own, one after the other, and the blob
+      # reports merge into the one JUnit and coverage report Codecov reads. A shard
+      # the provider still drops (`route.fulfill: Route is already handled!`) runs
+      # once more on its own.
       - name: 🧪 Component tests
         run: |
           set -euo pipefail
+          shards=4
           max_attempts=2
-          attempt=1
-          until vp test --project nuxt --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml; do
-            if [ "${attempt}" -ge "${max_attempts}" ]; then
-              exit 1
-            fi
-            echo "::warning::Component tests failed (attempt ${attempt}/${max_attempts}); retrying after Vitest browser flake"
-            attempt=$((attempt + 1))
-            sleep 5
+          failed=0
+          for shard in $(seq 1 "${shards}"); do
+            attempt=1
+            until vp test --project nuxt --coverage --shard="${shard}/${shards}" --reporter=blob; do
+              if [ "${attempt}" -ge "${max_attempts}" ]; then
+                echo "::error::Component tests shard ${shard}/${shards} failed ${max_attempts} times"
+                failed=1
+                break
+              fi
+              echo "::warning::Component tests shard ${shard}/${shards} failed (attempt ${attempt}/${max_attempts}); retrying after Vitest browser flake"
+              attempt=$((attempt + 1))
+              sleep 5
+            done
           done
+          # Merged even after a failure, so Codecov still gets the results of the run.
+          vp test --project nuxt --mergeReports --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml || failed=1
+          exit "${failed}"
         env:
           NODE_OPTIONS: --max-old-space-size=8192
 
@@ -174,8 +191,9 @@ jobs:
   browser:
     name: 🖥️ Browser tests
     runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
     container:
-      image: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+      image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:6e3fb709361521eb27161606e6da6d2674e5e89fa16516cb37d6fdd91372273d
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -212,30 +230,10 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-  benchmark:
-    name: ⚡ Benchmarks
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      - uses: voidzero-dev/setup-vp@143f5f385f39b1b753ffed1a01ad443811855c8b # v1.16.1
-        with:
-          node-version: lts/*
-          cache: true
-          sfw: true
-
-      - name: ⚡ Run benchmarks
-        uses: CodSpeedHQ/action@f22792bfac16f3e14eb9fbea76f4a48e9cc22b93 # v4.19.1
-        with:
-          mode: simulation
-          run: vp run test:bench
-
   a11y:
     name: ♿ Accessibility audit
     runs-on: ubuntu-latest # See https://github.com/GoogleChrome/lighthouse/discussions/16834
+    timeout-minutes: 30
     strategy:
       matrix:
         mode: [dark, light]
@@ -268,6 +266,7 @@ jobs:
   perf:
     name: ⚡ Performance
     runs-on: ubuntu-latest # See https://github.com/GoogleChrome/lighthouse/discussions/16834
+    timeout-minutes: 30
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -293,9 +292,43 @@ jobs:
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
+  worker:
+    name: ☁️ Worker build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: voidzero-dev/setup-vp@143f5f385f39b1b753ffed1a01ad443811855c8b # v1.16.1
+        with:
+          node-version: lts/*
+          cache: true
+          sfw: true
+
+      - name: 🔼 Generate Prisma Client
+        run: vp run prisma:generate
+
+      - name: 🏗️ Build the production Worker
+        run: vp run build
+        env:
+          NITRO_PRESET: cloudflare_module
+          CLOUDFLARE_WORKER: production
+          CLOUDFLARE_HYPERDRIVE_ID: "00000000000000000000000000000000"
+          NODE_OPTIONS: --max-old-space-size=8192
+          NUXT_BETTER_AUTH_SECRET: only-for-the-prerender-of-this-check
+          NUXT_OAUTH_DISCORD_CLIENT_ID: "0"
+
+      - name: ☁️ Check the Worker can be deployed
+        run: npx --yes wrangler@4.156.0 deploy --dry-run -c .output/server/wrangler.json --autoconfig=false
+
   knip:
     name: 🧹 Unused code check
     runs-on: ubuntu-24.04-arm
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -311,9 +344,34 @@ jobs:
       - name: 🧹 Check for unused code
         run: vp run knip
 
+  # .skills/skilld.json declares every agent skill by exact source commit. The
+  # check fails when the installed copies or the lock drift from it, and never
+  # fetches remote bytes.
+  skills:
+    name: 🧩 Declared skills
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: voidzero-dev/setup-vp@143f5f385f39b1b753ffed1a01ad443811855c8b # v1.16.1
+        with:
+          node-version: lts/*
+          sfw: true
+          # root only, no scripts
+          run-install: |
+            - args: ["--filter", ".", "--ignore-scripts"]
+
+      - name: 🧩 Check declared skills
+        run: vp run skills:check
+
   i18n:
     name: 🌐 i18n validation
     runs-on: ubuntu-slim
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

@@ -46,16 +46,13 @@ const dimension = computed(() => Dimensions[size]);
 @reference "@/assets/css/main.css";
 
 .discord-slash-command-app-icon {
-	--discord-slash-command-app-icon-bg: oklch(35.52% 0.0099 264.44);
-	--discord-slash-command-app-icon-glyph: oklch(73.06% 0.0048 264.53);
+	--discord-slash-command-app-icon-bg: oklch(
+		from var(--discord-chrome) calc(l + 0.089 * var(--discord-raise)) c h
+	);
+	--discord-slash-command-app-icon-glyph: var(--discord-chrome-muted);
 
 	@apply inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full;
 	background-color: var(--discord-slash-command-app-icon-bg);
-}
-
-:global([data-theme="light"]) .discord-slash-command-app-icon {
-	--discord-slash-command-app-icon-bg: oklch(92.64% 0.006 264);
-	--discord-slash-command-app-icon-glyph: oklch(47.12% 0.012 264);
 }
 
 .discord-slash-command-app-icon-header {

@@ -44,6 +44,26 @@ const config = {
 			},
 		});
 
+		// Nuxt 4.6 keeps client-side app contexts in its own registry
+		// (`globalThis.__nuxt_app_ctx__`) instead of unctx, so the
+		// `getContext("nuxt-app").set(nuxt)` that @storybook-vue/nuxt's preview
+		// performs no longer reaches it. Plugins then run under the story's
+		// `nuxt-app-<canvas id>` context while composables such as `useState()`
+		// look up the default `nuxt-app` one, and every story fails with
+		// NUXT_E1001. Creating the story app under the default id makes Nuxt's own
+		// `callWithNuxt()` register it where those composables look; the preview
+		// already treated `nuxt-app` as a per-story singleton, so isolation is
+		// unchanged. The regex no-ops if a future release changes the call.
+		newConfig.plugins.unshift({
+			name: "storybook-nuxt-default-app-id",
+			enforce: "pre",
+			transform(code: string, id: string) {
+				if (!id.includes("@storybook-vue/nuxt/dist/preview")) return null;
+				const patched = code.replace(/\bid:\s*storyNuxtAppId\b/, 'id: "nuxt-app"');
+				return patched === code ? null : patched;
+			},
+		});
+
 		// unhead v3 builds `head.hooks` from hookable's `HookableCore`, a trimmed
 		// base class that implements only `hook`/`removeHook`/`callHook` and omits
 		// `hookOnce`. @nuxt/ui's colors plugin calls

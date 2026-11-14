@@ -1,8 +1,16 @@
 # Core Requirements
 
 - The end goal is stability, speed, great user experience, and accessibility.
-- WolfStar.rocks is a Nuxt 4 full-stack dashboard for **WolfStar** (Discord moderation bot) and **Staryl** (social notifications bot). Built with Vue 3, TypeScript, Prisma, and PostgreSQL, featuring Discord OAuth2 authentication and guild management.
+- WolfStar.rocks is a Nuxt 4 full-stack dashboard for **WolfStar** (Discord moderation bot) and **Staryl** (social notifications bot). Built with Vue 3, TypeScript, Prisma ORM 8, and PostgreSQL, featuring Discord OAuth2 authentication and guild management.
 - Always reference these instructions first and fall back to search or documentation queries only when you encounter unexpected information.
+
+## Read First
+
+- [`VISION.md`](VISION.md) — the product filter: mission, money posture, seven principles, anti-scope. Read before any product, scope, or design decision. When it conflicts with the code, VISION wins.
+- [`GLOSSARY.md`](GLOSSARY.md) — every product term and the words it replaces. Read before a user-visible string, a route segment, or a doc heading.
+- [`COPY.md`](COPY.md) — canonical strings, claims policy, and banned language. Read before writing or changing any user-visible text.
+- [`.claude/DESIGN.md`](.claude/DESIGN.md) — the visual system: tokens, components, motion. Read before UI work.
+- [`docs/arch/`](docs/arch/README.md) — architecture notes for each area: auth, i18n, storage, audit, transitions, tokens. The Traps list below says which one to open.
 
 ## Code Quality Requirements
 
@@ -33,61 +41,43 @@
 | Constants        | UPPER_SNAKE_CASE | `API_BASE_URL`          |
 | Types/Interfaces | PascalCase       | `GuildSettings`         |
 
-## Server API Patterns
+## Architecture Notes
 
-- Routes go under `server/api/` with HTTP suffix (`.get.ts`, `.post.ts`)
-- Always wrap handlers with `defineWrappedResponseHandler` for auth + rate limiting
-- Use `defineWrappedCachedResponseHandler` for cached responses
-- Rate limiting (`server/utils/wrappedEventHandler.ts`) reserves a fixed- or sliding-window quota in storage before the handler runs and rolls the reservation back if the handler throws; it fails open (lets the request through) if the rate-limit storage read/write itself errors
-- Use the `authorize` option (not an inline check in the handler body) for per-request permission checks — e.g. `canManage()` — that must run on every request, including warm cache hits on `defineWrappedCachedResponseHandler` routes
-- Use `createError` for error responses with proper status codes
-- Use the `onError` callback for error logging
-- Validate query strings with shared Valibot schemas from `shared/schemas/` via `getValidatedQuery(event, (body) => parse(Schema, body))`
-- For paginated guild log routes, use stable cache keys that include the guild id, route segment, and `url.search`
-- `defineWrappedResponseHandler`/`defineWrappedCachedResponseHandler` reject outdated browser sessions before auth, rate limiting, or cache resolution: `isClientOutdated()` from `nuxt-skew-protection/server` throws a 409 (with an `x-client-outdated` response header) so stale clients never consume quota or read data shaped for a newer server build (header name: `CLIENT_OUTDATED_HEADER` in `shared/utils/skew-protection.ts`, shared with the client)
-- `app/plugins/skew-protection.client.ts` is what makes that 409 truthful and actionable, and must not be removed while `skewProtection.updateStrategy` is `"polling"`. `isClientOutdated()` compares the `__nkpv` cookie against the server build id, but that cookie is only written by the module's Nitro middleware on document responses and by `createSkewConnection()` — a plugin that only ships with the `sse`/`ws`/adapter strategies. Marketing routes are prerendered and served statically, so a visitor entering through one keeps whatever build id last rendered an SSR document for them and every `/api/**` call 409s even though the browser runs the current build, unfixable by reloading. The plugin pins the cookie to the running build (via `resolveSkewCookie()`, whose attributes must keep matching the middleware's or the browser stores a second cookie), registers the `app:manifest:update` hook that populates `useSkewProtection().manifest` — otherwise `isAppOutdated` stays false until the lazy, `DeferredMount`-gated prompt mounts — and wraps `globalThis.fetch` to re-check the manifest on a real 409. That wrapper is the only global seam: Nuxt's auto-imported `$fetch` is a const captured from `#build/fetch` before any plugin runs, so replacing `globalThis.$fetch` would miss every existing call site, while `ofetch` resolves `globalThis.fetch` per request
+The long-form notes for each area live in [`docs/arch/`](docs/arch/README.md). Read the matching file before changing that area. The traps below are the rules that fail silently when forgotten.
 
-## Vue Component Patterns
+| Area                                                  | Read                                                                   |
+| ----------------------------------------------------- | ---------------------------------------------------------------------- |
+| `nuxt.config.ts`, Nuxt 5 flags, import extensions     | [`docs/arch/nuxt-5.md`](docs/arch/nuxt-5.md)                           |
+| `server/api/**` handlers, rate limiting, skew guard   | [`docs/arch/server-api.md`](docs/arch/server-api.md)                   |
+| Vue components, Discord embed, link cards, error page | [`docs/arch/vue-components.md`](docs/arch/vue-components.md)           |
+| Sign-in, sessions, tokens, feedback                   | [`docs/arch/auth.md`](docs/arch/auth.md)                               |
+| Appearance, language, and motion preferences          | [`docs/arch/settings.md`](docs/arch/settings.md)                       |
+| Locale files, Tolgee, Nuxt I18n Micro                 | [`docs/arch/i18n.md`](docs/arch/i18n.md)                               |
+| Workers KV storage, rate-limit storage                | [`docs/arch/storage-and-caching.md`](docs/arch/storage-and-caching.md) |
+| Cloudflare Workers build, beta.wolfstar.rocks         | [`docs/arch/cloudflare-workers.md`](docs/arch/cloudflare-workers.md)   |
+| Audit events and the hash chain                       | [`docs/arch/audit-logging.md`](docs/arch/audit-logging.md)             |
+| Router View Transitions                               | [`docs/arch/view-transitions.md`](docs/arch/view-transitions.md)       |
+| Color tokens, theme selectors                         | [`docs/arch/design-tokens.md`](docs/arch/design-tokens.md)             |
 
-- Block order: template -> script -> script setup -> styles
-- Never create reactive state at module scope; use composables in `app/composables/`
-- Place feature-specific components in grouped directories once a feature has multiple pieces, e.g. feedback UI in `app/components/feedback/`, OAuth status UI in `app/components/oauth/` (`StatusPanel.vue`, shared by all `app/pages/oauth/*.vue` for loading/success/error states)
-- In guild-settings `mapToGuildData()`/`calculateChanges()` functions, assign values onto `Partial<GuildData>` with `setGuildDataChange()` from `#shared/utils/guild-settings-map` instead of an `as any`/`as never` cast — it skips `undefined` so untouched keys stay out of PATCH payloads while keeping key/value types checked
-- Fatal errors render through `app/error.vue` → `app/components/ErrorPage.vue` (built on Nuxt UI's `UError`), with copy sourced from a dedicated `errors` i18n feature file (not `common`/`components`). Because `error.vue` replaces the app root on fatal errors it cannot rely on page-level setup, but it needs no message preloading of its own: Nuxt I18n Micro loads the whole locale as one global bundle in its plugin
-- `DiscordEmbed`'s `theme` prop (`app/components/discord/embed.vue`) wins over the ambient app-wide `data-theme` selector: `.discord-embed--light` applies whenever `theme === "light"`, and `:global([data-theme="light"] .discord-embed):not(.discord-embed--dark)` applies the same light colors when `theme` is omitted and the ambient theme is light — both selectors share one light color-variable declaration block so there's a single place to update Discord light-theme colors. Omitting `theme` follows the ambient theme instead of defaulting to dark.
-- Marketing pages register a Discord Components v2 link-card preview (the card Discord's crawler renders instead of the Open Graph preview when the page's link is pasted into a message) by calling `useDiscordLinkCard()` (`app/composables/useDiscordLinkCard.ts`) in `<script setup>`, backed by `buildDiscordLinkCard()` in `app/utils/discord-component-embed.ts` and the `discord-component-embed` package. The composable no-ops off the server (`import.meta.server` guard) since Discord's crawler never runs client JS and prerendered pages already ship the tag in their HTML; it writes a `discord:component-embed` `application/json` script tag via `useHead()`. Accent colors are inlined as decimal RGB integers (`WOLFSTAR_ACCENT_COLOR`, `STARYL_ACCENT_COLOR`) derived from the `--branding-*` design tokens rather than imported, since oxlint's `unicorn/number-literal-case` and oxfmt's hex-literal casing disagree on hex literals.
+## Traps
 
-## Auth and Feedback
+Each line is a rule that has failed in production or fails silently. The linked note carries the reason.
 
-- Authentication runs on `better-auth` + `@nuxtjs/better-auth` (renamed from the deprecated `@onmax/nuxt-better-auth`) — `nuxt-auth-utils` was fully removed in #297. Server config lives in `server/auth.config.ts`, built with `defineServerAuth()` from `@nuxtjs/better-auth/config`; it registers the Discord social provider, rate limiting through `secondaryStorage`, and a `jwe`-strategy session cookie cache. `advanced.ipAddress.ipAddressHeaders` trusts Netlify's `x-nf-client-connection-ip` (falling back to `cf-connecting-ip`) so the rate limiter keys on the real client IP instead of a shared proxy IP; `rateLimit.customRules` exempts `/get-session` entirely (hit on every hydration, tab refresh, and OAuth-callback recovery, so it must never block a session that already exists) and tightens `/sign-in/social` to `{ window: 10, max: 5 }`
-- Never set `secret` or `baseURL` in `defineServerAuth()`: the module spreads its own values over the resolved config, so both are silently ignored. `baseURL` comes from `runtimeConfig.public.siteUrl` (declared in `server/utils/runtimeConfig.ts` so `NUXT_PUBLIC_SITE_URL` can override it) and is what Discord callback URLs are built from — an undeclared key means the base URL is re-inferred per request
-- `trustedOrigins` uses the function form (`(request) => resolveTrustedOrigins(request)` from `server/utils/auth-origins.ts`), not a static array: the module caches one Better Auth instance across requests, so a request-derived origin captured at construction time would be frozen in. The resolver adds the request's origin only when its host matches `TRUSTED_HOST_PATTERNS`, which is what keeps Netlify deploy previews able to sign in without trusting arbitrary origins
-- Redirect targets live in `nuxt.config.ts` under `auth.redirects` (`login`, `guest`, `authenticated`, `logout`) alongside `redirectQueryKey: "next"`, which must stay `"next"` because that is the query key `/oauth/login` and `/oauth/callback` read. With `redirects.logout` set, `signOut()` needs no `onSuccess`/`navigateTo` at the call site. `/login` repeats the `auth: { only: "guest" }` route rule from `/oauth/login`: it is a `definePageMeta` alias, and route rules match the requested path, not the resolved page
-- The Discord social-provider options come from `createDiscordProviderOptions()` in `server/utils/discord/provider.ts` (unit-tested in `test/unit/server/utils/discord-provider.spec.ts`; `server/auth.config.ts` itself reads Nitro auto-imports at module scope and can't be imported outside a Nitro runtime). Two invariants live there: `prompt: "consent"` must stay set — Better Auth's Discord provider otherwise sends `prompt=none`, which Discord only honours when the user already approved exactly the requested scopes, so every sign-in fails once the scope set changes — and `scope` lists only the extras (`guilds` for GET /users/@me/guilds, `guilds.members.read` for per-guild member lookups) on top of Better Auth's own `identify`/`email` defaults. `mapProfileToUser()` must not return `id`: since better-auth 1.7 the provider account id comes from `accountSubject` and `OAuthMappedUser` types `id` as `never`, so the session user id is a generated id, not the Discord snowflake (read the snowflake from `/api/users`, never from `session.user.id`)
-- `server/auth.config.ts` builds its `secondaryStorage` via `createAuthSecondaryStorage()` from `server/utils/auth-rate-limit-storage.ts`, which adapts a Nitro/unstorage mount to better-auth's `SecondaryStorage` shape and adds an `increment()` with an in-process keyed mutex (mirroring `server/utils/wrappedEventHandler.ts`) so better-auth's fixed-window rate limiter gets a single-step atomic-ish counter instead of its non-atomic get-then-set fallback. The same keyed mutex backs `getAndDelete()`, which better-auth 1.7 requires on `SecondaryStorage` to consume single-use verification values in one step. Neither is atomic across instances — the production driver (Cloudflare KV over HTTP) has no such primitive — which is an accepted limitation of the storage backend
-- Mock authentication in Nuxt component tests with `mockAuth()` from `test/nuxt/utils/auth.ts` (wraps `mockNuxtImport("useUserSession", ...)` plus an `$authorization` provide fallback) instead of hand-rolling `useUserSession`/`$authorization` mocks per spec
-- There is no `server/api/auth/discord.get.ts` or `server/utils/oauth-state.ts` anymore. Better-auth's own `/api/auth/sign-in/social` and `/api/auth/callback/discord` routes own the OAuth flow and its CSRF state — do not reintroduce a custom `oauth-state`/`verify-state` endpoint
-- The Discord application registers `<site>/oauth/callback` — an app page — as its redirect URI, not better-auth's `/api/auth/callback/discord`. This works because better-auth resolves the redirect URI as `options.redirectURI || redirectURI` in both `create-authorization-url` and `validate-authorization-code`, so a provider-level `redirectURI` is replayed identically on the authorization request and the token exchange. Better Auth serves no route at `/oauth/callback`, so `server/middleware/oauth-callback.ts` + `server/utils/oauth-callback.ts` (`resolveOAuthProviderCallbackRedirect()`) forward the provider response (query carrying `state` plus `code`/`error`) to `/api/auth/callback/discord`; the post-sign-in landing carries `next` but never `state`, so it falls through to the Vue callback page at `app/pages/oauth/callback.vue`. `nuxt.config.ts` sets `routeRules["/oauth/callback"].prerender: false` — a prerendered copy would bypass the middleware and strand the browser on the static callback page instead of forwarding Discord's response
-- That `redirectURI` is derived in `server/auth.config.ts` via `resolveDiscordRedirectURI()` from the same origin the module resolves `baseURL` from (`runtimeConfig.public.siteUrl`, falling back to `ctx.requestOrigin`) — never from its own env var. `NUXT_OAUTH_DISCORD_REDIRECT_URL` is gone and must not come back: a separate variable can drift from `NUXT_PUBLIC_SITE_URL`, and when it is unset or empty better-auth silently substitutes `/api/auth/callback/discord`, which Discord has not registered, so the authorization request fails with no useful error. `createDiscordProviderOptions()` omits the key entirely rather than passing an empty string, for the same reason
-- `/oauth/login` (aliased at `/login`) starts sign-in with `useSignIn("social")` in `onMounted`, not the raw `useAuthClient()?.signIn.social`: the action handle never throws, so a failed hand-off renders a retry panel instead of an endless spinner
-- `app/pages/oauth/callback.vue` must load the fresh session with `fetchSessionWithRetry()` (`app/utils/oauth-session-retry.ts`) and a plain `fetchSession()` — never `fetchSession({ force: true })`. Sessions live in the eventually-consistent secondary storage (Cloudflare KV over HTTP in production), so `force: true` bypasses the jwe cookie cache the callback just wrote and races the KV write, surfacing a false "session not found" right after a successful sign-in; the retry backoff (`attemptDelays()`, a generator over `DEFAULT_RETRY_DELAYS`) covers the storage-read fallback while the write propagates
-- `server/api/auth/refresh.get.ts` refreshes the Discord access token via `refreshSessionTokens()` in `server/utils/oauth-tokens.ts`, which wraps better-auth's `auth.api.getAccessToken()` / `auth.api.refreshToken()`. Both take `body: { useAccountCookie: true }`: better-auth 1.7 replaced the `providerId` selector with a union of `{ accountId }` (a database row id) and `{ useAccountCookie: true }`, and this deployment runs database-less — `account.storeAccountCookie` keeps the Discord account in a signed cookie, so the cookie is the only account source
-- Server code reads the current user/tokens through `event.context.$authorization` (`resolveServerUser()`, `resolveServerTokens()`), wired up in `server/plugins/authorization-resolver.ts`. The `AuthUser` type comes from `#nuxt-better-auth` (declared in `shared/types/auth.d.ts`) — there is no more `#auth-utils` `User` type. Since `@nuxtjs/better-auth` 0.1.x, `#nuxt-better-auth` is an ambient `declare module` rather than a real alias, so it is importable for types only — never `import` a value from it. `resolveServerUser()` reads through `getRequestSession(event)` (request-memoized) rather than `getUserSession(event)`
-- Client code uses the `useUserSession()` composable (`user`, `loggedIn`, `ready`, `fetchSession()`, `signOut()`) for session state, and the action-handle composables (`useSignIn()`, `useSignUp()`, `useAuthClientAction()`) for auth actions that need loading/error state
-- `app/auth.config.ts` must override `baseURL` to `window.location.origin` on the client (falling back to `ctx.siteUrl` on the server, since `window` doesn't exist there). The module's own client factory prefers the configured `runtimeConfig.public.siteUrl` unconditionally, even in the browser — harmless in production where the app is served from that same domain, but it breaks any build served from a different origin, such as CI's Playwright preview: `build:test` sets `NUXT_PUBLIC_SITE_URL=https://wolfstar.rocks` for correct SEO/OG output, then serves the prebuilt app on `http://localhost:5678`, where a same-origin-assuming client would otherwise call the real production API and get blocked by CORS
-- `useSessionRefresh()` (`app/composables/useSessionRefresh.ts`) calls `/api/auth/refresh` then `fetchSession()` on mount and whenever the tab regains visibility
-- Feedback UI uses the custom Sentry feedback flow under `app/components/feedback/`
-- `useAuthErrorMessage()` (`app/composables/useAuthErrorMessage.ts`) takes the whole failure — an `AuthActionError` from `useSignIn()`, a raw `?error=` query value, or a repeated query array — and tries `auth.errors.<CODE>` before `auth.errors.<MESSAGE>`, falling back to the message text. Better Auth's `code` is the stable translation key; `message` is only a fallback for failures that carry no code. When a provider's code has no matching i18n key (e.g. Better Auth's `INVALID_CODE`, which localizes as `INVALID_CALLBACK_REQUEST`), add the mapping to `AUTH_ERROR_CODE_MISMATCHES` in the same file instead of adding a duplicate i18n key
-- The local session helper in `server/utils/wrappedEventHandler.ts` is called `resolveHandlerSession`, not `getUserSession`: the module auto-imports a server util of the latter name into every `server/` file, and a local declaration silently shadows it module-wide
-- Keep feedback validation in `shared/schemas/feedback.ts` so forms and submit handlers share the same Valibot schema
+- **Nuxt 5 flags.** Never repeat `typedPages`, `payloadExtraction`, `routeTypedFetch` and the other `compatibilityVersion: 5` defaults in `experimental`. `nitroAutoImports: true` stays until `server/` uses explicit imports. Relative imports in `nuxt.config.ts`, `modules/`, `config/` and `test/e2e/` carry an explicit `.ts` extension. New entry points are real pages or `definePageMeta` aliases, not middleware redirects. ([nuxt-5](docs/arch/nuxt-5.md))
+- **Handlers.** Wrap every `server/api` handler with `defineWrappedResponseHandler` or `defineWrappedCachedResponseHandler`. Per-request permission checks such as `canManage()` go in the `authorize` option, never in the handler body, so they run on cache hits. Validate queries with shared Valibot schemas. ([server-api](docs/arch/server-api.md))
+- **Skew protection.** Do not remove `app/plugins/skew-protection.client.ts` while `skewProtection.updateStrategy` is `"polling"`. Without it every `/api/**` call from a prerendered entry page returns 409. ([server-api](docs/arch/server-api.md))
+- **Auth config.** Never set `secret` or `baseURL` in `defineServerAuth()`. The Discord redirect URI comes from `runtimeConfig.public.siteUrl` via `resolveDiscordRedirectURI()`, and `NUXT_OAUTH_DISCORD_REDIRECT_URL` must not return. `prompt: "consent"` stays set. Do not reintroduce a custom OAuth state endpoint. ([auth](docs/arch/auth.md))
+- **Sessions.** The OAuth callback loads the session with `fetchSessionWithRetry()` and a plain `fetchSession()`, never `fetchSession({ force: true })`. `#nuxt-better-auth` is importable for types only. The local server helper is `resolveHandlerSession`, not `getUserSession`. The session user id is not the Discord snowflake. ([auth](docs/arch/auth.md))
+- **Translations.** Untranslated keys are empty strings, never English copies. Components call `ts()`, never `t()`. Read the locale through `useAppLocale()`. In-page anchors pass `:locale="false"`. Locale sources use plain interpolation. Never prune the `nuxtSiteConfig` keys in `common.json`. ([i18n](docs/arch/i18n.md))
+- **Storage.** On a Worker the cache and the rate limiters are on KV bindings through the fallback driver, which uses memory while a binding is not there. ([storage-and-caching](docs/arch/storage-and-caching.md))
+- **Workers.** On the Cloudflare build no database client, connection or timer outlives the request that made it: import `db` from `server/database/prisma.ts`, which resolves to the request's client, and never build a client at module scope. An audit write happens inside the drain hook, not in a later batch. ([cloudflare-workers](docs/arch/cloudflare-workers.md))
+- **Bot notify.** A write of guild settings, auto-moderation rules or automatic channels runs `notifyGuildSettingsUpdate()` inside its transaction, or the running bot keeps its cached copy until it restarts. `Transaction.submit()`, `writeAutoModerationRules()` and `writeAutoChannels()` already do; a new write path must too. ([server-api](docs/arch/server-api.md))
+- **Audit trail.** A dashboard write path emits its audit event, and a denied attempt emits its own. `userLogin`, `userLogout`, `sessionRefresh` and `oauthStateInvalid` are defined but not emitted today. Treat that as a known gap. Audit `changes` stay JSON-serializable. ([audit-logging](docs/arch/audit-logging.md))
+- **View Transitions.** OAuth pages and any page that redirects on mount set `definePageMeta({ viewTransition: false })`. Do not add a `view-transition-name` to a shared element without a per-page uniqueness audit. ([view-transitions](docs/arch/view-transitions.md))
+- **Color.** No hardcoded color literals in components, pages, or layouts. Theme-conditional CSS uses the `theme-light` and `theme-dark` variants, never a bare `[data-theme]` selector. Only one DaisyUI theme declares `default: true`. ([design-tokens](docs/arch/design-tokens.md))
+- **Components.** No reactive state at module scope. Assign guild settings changes with `setGuildDataChange()`, never an `as any` cast. ([vue-components](docs/arch/vue-components.md))
 
-## Settings and Preferences
-
-- Browser-local appearance/locale/motion preferences are consolidated behind `useSettings()` (`app/composables/useSettings.ts`), backed by a single `wolfstar-settings` localStorage key (`AppSettings`: `colorMode`, `reduceMotion`, `selectedLocale`). Its `useLocalStorage` ref is created once in a detached `effectScope`, not in the first caller's own setup scope, so persistence survives that caller unmounting
-- Prefer `useAppColorMode()`, `usePreferredLocale()`, and `useReduceMotion()` — thin wrappers around `useSettings()` — over reading/writing `wolfstar-settings` directly. `useAppColorMode()` also keeps `useColorMode().preference` in sync; `colorMode` supports `"system" | "light" | "dark" | "midnight"` (`midnight` is an experimental DaisyUI theme)
-- Legacy keys (`wolfstar-theme`, `user-prefers-locale`, `user-prefers-reduced-motion`) migrate into `wolfstar-settings` once, only when `wolfstar-settings` has never been persisted — that check must run before the storage ref is created, since `useLocalStorage` writes defaults synchronously on first read
-- `/profile` (aliased at `/account`) is not auth-gated: guests get a Settings tab (Appearance, Language, Accessibility) and a Discord sign-in CTA in place of the Servers tab, and guild data fetches skip `/api/users` when the user is anonymous
-- Theme and language controls live on `/profile`, not the footer
+A forbidden-pattern test enforces the greppable subset of these traps in `test/unit/guardrails/forbidden-patterns.test.ts`. Add a rule there when a new trap can be matched by text.
 
 ## Development Commands
 
@@ -119,35 +109,28 @@ pnpm test:a11y                   # Lighthouse accessibility checks in dark and l
 pnpm test:a11y:prebuilt          # Lighthouse accessibility checks against an existing prebuilt app
 pnpm test:perf                   # Lighthouse performance checks
 pnpm test:perf:prebuilt          # Lighthouse performance checks against an existing prebuilt app
-pnpm test:bench                  # Vitest benchmark suite
 pnpm start:playwright:webserver  # Preview a test build on port 5678 for Playwright
 pnpm audit:verify                # Replay and verify the AuditEvent hash chain
 pnpm design:lint                 # Lint .claude/DESIGN.md with designmd
 pnpm skills:install              # Install/refresh skill packages via skilld (--direct --agent codex)
 pnpm skills:list                 # List skill packages skilld currently tracks
+pnpm skills:sync                 # Sync skilld skill packages (plain output)
+pnpm skills:check                # Check skilld skills are in sync without writing
 pnpm storybook                   # Start Storybook dev server (http://localhost:6006)
 pnpm build-storybook             # Build static Storybook output
 pnpm vp run zizmor               # Lint GitHub Actions workflows for security issues (zizmor)
 pnpm vp run zizmor:fix           # Auto-fix zizmor findings
 pnpm vp run lint:type-aware      # Opt-in Oxlint type-aware linting (tsgolint); not part of the default lint/CI gate
-pnpm prisma:push                 # Push schema changes (development)
-pnpm prisma:migrate:dev          # Create and apply migration
-pnpm prisma:migrate:diff         # Check migration drift against the Prisma schema
-pnpm prisma:migrate:deploy       # Apply migrations in deployment environments
-pnpm prisma:generate             # Regenerate Prisma client
-pnpm prisma:seed                 # Seed the database
-pnpm prisma:studio               # Visual database editor (http://localhost:5555)
+pnpm prisma:generate             # Emit the Prisma ORM 8 contract artefacts (alias of prisma8:emit)
+pnpm prisma8:emit                # prisma contract emit → server/database/generated/prisma/
+git submodule update --remote vendor/wolfstar  # Move to the bot's latest contract (then prisma:generate + typecheck)
 ```
 
 Rarely-used tasks are no longer wrapped in `package.json`; run the underlying
 binary through `pnpm exec` instead:
 
 ```bash
-pnpm exec prisma migrate dev --create-only  # Create a migration without applying it
-pnpm exec prisma migrate status             # Inspect migration status
-pnpm exec prisma migrate resolve            # Resolve migration history state
-pnpm exec prisma migrate reset              # Reset the local database
-pnpm exec prisma generate --watch           # Regenerate Prisma client in watch mode
+pnpm exec prisma skills sync                # Refresh the vendored Prisma 8 reference docs (.agents/skills/prisma-8)
 pnpm exec knip --fix                        # Auto-fix unused files, exports, and dependencies
 pnpm exec taze                              # Interactive dependency updates
 pnpm exec tolgee extract print              # Print strings the Tolgee CLI would extract (dry run)
@@ -156,73 +139,47 @@ pnpm test:browser:prebuilt --ui             # Playwright UI mode against a prebu
 pnpm test:browser:prebuilt --update-snapshots  # Update Playwright snapshots
 ```
 
-## Localization (i18n)
-
-- `i18n/locales/en/*.json` is the source of truth; every other locale carries the same key set
-- **Untranslated keys are empty strings, never a copy of the English text** — an English copy is indistinguishable from a real translation for Tolgee, Lunaria and translators, and it hides regional variants (`es-419` merges `es/*` then `es-419/*`)
-- Translation runtime is **Nuxt I18n Micro** (`nuxt-i18n-micro`), not `@nuxtjs/i18n`/vue-i18n — those, `@intlify/core-base` and `@intlify/shared` were removed. There is no `i18n/i18n.config.ts` any more: `fallbackLocale`, `datetimeFormats` and `numberFormats` all live in the `i18n` block in `nuxt.config.ts`
-- Components read translations through `const { ts } = useI18n()` and call `ts("…")` — never `t()`. Micro's `t()` returns `CleanTranslation` (it can hand back an object or array for a non-leaf key), while `ts()` is the string-safe variant with the same `(key, params, defaultValue)` signature. Destructure micro's own names rather than aliasing them back to vue-i18n's: `te()` is `has()`, and pluralization is `tc(key, count)` (`t(key, named, plural)` no longer exists)
-- Micro exposes locale state as plain getters rather than refs, so reactive locale access goes through `useAppLocale()` (`app/composables/useAppLocale.ts`): it wraps `$getLocale()`/`$getLocales()` in computeds and pairs `$switchLocale()` with `setPreferredLocale()`. Never read `$getLocale()` directly in a template — it will not re-render on a locale switch
-- Nuxt UI's `ULink` (so `UButton`, `UNavigationMenu`, …) pipes every internal `to`/`href` through `nuxtApp.$localePath` when an i18n module provides one, and micro's `$localePath` rewrites a hash-only target (`#showcase`) into an absolute path (`/#showcase`) — which sends the click to another page. In-page anchors must therefore pass `:locale="false"`; `test/nuxt/ssr.spec.ts` asserts the bare fragments
-- Locale message sources are plain interpolation only: vue-i18n's literal escapes (`{'@'}`, `{'|'}`) are not understood by micro and would render verbatim. Write `@` and `|` directly
-- `i18n.translationDir` points at `i18n/.locales-build/` (gitignored), not at `i18n/locales/`: micro loads exactly one `{locale}.json` per locale, while the sources stay split per feature for Tolgee/Lunaria. `modules/i18n-locale-bundles.ts` regenerates that directory on every Nuxt startup — merging each locale's feature files (base language first, regional variant last, so `es-419` merges `es/*` then `es-419/*`) and dropping `$schema` plus every empty placeholder _before_ the merge, so an untranslated variant key keeps the base translation instead of blanking it. It refreshes affected locales through `builder:watch` in dev. `config/i18n-empty-placeholders.ts` holds the parse/strip/merge helpers; there is no Vite transform any more, because micro never routes locale JSON through the bundler
-- Pluralization rules live in `config/i18n-plural.ts` and are installed by `modules/i18n-plural.ts`, **not** by the `i18n.plural` option. Micro stringifies whatever function that option holds into `#build/i18n.plural.mjs`, and the Nuxt build `@nuxt/test-utils` runs for Vitest hands module options a cloned config whose functions stringify to `function () { [native code] }` — every browser test then fails to import that template. Writing the template from a module's own import sidesteps the clone. The function must stay self-contained (no imports, no module-scope references), exactly as the option itself requires
-- Micro fetches messages from `/_locales/{page}/{locale}/data.json` instead of bundling them, and `@nuxt/test-utils`' in-browser h3 stub 404s every unregistered relative URL. `test/nuxt/setup.ts` registers that route and seeds the default locale into the running app, which is what keeps component tests asserting real copy
-- `common.json` carries a `nuxtSiteConfig` namespace (`name`, `description`) that no app code references: nuxt-site-config's i18n integration reads those keys to localize the site name and meta description, and micro returns the raw key when they are absent (its empty-string default is falsy), which is how `nuxtSiteConfig.name` ends up rendered in `<title>`. Never let `pnpm i18n:report:fix` prune them
-- nuxt-seo-utils' fallback title calls `t('pages.<route>.title', fallback, { missingWarn: false })` — vue-i18n's signature, where micro reads the third argument as the default value and returns that options _object_ when the key is missing. Nothing renders it today because every page sets its own title through `useSeoMetadata()`; keep it that way
-- `pnpm i18n:check:fix` (`scripts/compare-translations.ts`) adds missing keys as `""` and removes extra keys
-- `.tolgeerc.cjs` pulls `states: ["TRANSLATED", "REVIEWED", "UNTRANSLATED"]`; without `UNTRANSLATED`, `scripts/tolgee-pull-remap.ts` would wipe untranslated keys from disk on every sync (see wolfstar-project/wolfstar#240)
-- The `$schema` pointer in each locale file is editor tooling metadata and never migrates through Tolgee in either direction. `pnpm tolgee:push` runs `scripts/tolgee-push-prepare.ts` first, which mirrors `i18n/locales/**` into the gitignored `i18n/.tolgee-push/` with `$schema` stripped — `.tolgeerc.cjs` points `push.files[*].path` at that mirror, never at `i18n/locales/`, so the pointer cannot become a platform key translators see and edit. On the way back, `scripts/tolgee-pull-remap.ts` discards whatever `$schema` the export carries and re-inserts `localeSchemaPointer(namespace)` (`../../schemas/{namespace}.schema.json`) as the first key, so a stale key left on the platform from an earlier push can never overwrite the local pointer
-- `.tolgeerc.cjs`'s `NAMESPACES` is derived from `i18n/locale-features.json` (`.json` suffix stripped), not hardcoded, so the Tolgee namespace list and the app's feature-file list can't drift — a new feature file (e.g. `errors.json`, `marketing.json`) is picked up automatically. All eight namespaces put the project at ~907 string keys, past the Tolgee free plan's 500-key cap (per-project, not per-language, so `--languages` scoping doesn't help); confirm the plan has been upgraded, or scope `push.files` (not `patterns`, which only drives extraction and doesn't limit what `push.files` uploads) to a subset of namespaces, before running `pnpm tolgee:push` for real
-
 ## Prisma and Database Conventions
 
-- Prisma schema lives in `server/database/schema.prisma`; migrations live in `server/database/migrations/`
-- Treat migrations as append-only once merged
-- Use raw SQL migrations for database features Prisma cannot express, such as partial indexes on nullable columns
-- Do not add Prisma `@@index` entries for the manually-managed partial indexes on `Moderation.createdAt`; see migration `20260515000000_command_log_and_moderation_indexes`
+- The database layer is **Prisma ORM 8 only** (`@prisma/orm-postgres`), set up the way the bot's `projects/database` package is (wolfstar-project/wolfstar, V7). Prisma 7 — `schema.prisma`, `@prisma/client`, the pg adapter, `prisma migrate` — is gone and must not come back; before touching anything here, read the vendored `prisma-8` skill (`pnpm exec prisma skills sync` refreshes it for the installed version)
+- The data contract is **not in this repository**. `vendor/wolfstar` is a git submodule of the bot's repository (wolfstar-project/wolfstar, tracking its `V7` branch), and `prisma.config.ts` reads `vendor/wolfstar/projects/database/src/contract.prisma` from it. The bot changes the contract and migrates the database first; this app then moves to that state by bumping the submodule (`git submodule update --remote vendor/wolfstar`, or the Renovate PR — `git-submodules` is enabled in `renovate.json`). Never copy the contract into this repo and never edit anything under `vendor/`
+- A submodule bump is a database change: after it, run `pnpm prisma:generate` and fix what `pnpm typecheck` reports. `server/database/settings/columns.ts`, `storage.ts` and `constants.ts` are ports of the bot's files of the same name and have to follow them by hand, since the bot's sources import its own build output and cannot be imported from here. So is `shared/utils/dashboard-access.ts` of the bot's `settings/access.ts`, and `test/unit/shared/utils/dashboard-access-pin.spec.ts` runs the two against each other. `test/unit/server/database/contract-pin.spec.ts` fails if the emitted contract's storage hash is not the one the pinned bot commit records in `projects/database/migrations/app/refs/db.json`
+- Only the contract (and that `refs/db.json`) is read from the submodule. It is excluded from lint, format, knip and Tailwind's source scan; keep it that way
+- `pnpm prisma:generate` emits `contract.json` / `contract.d.ts` into `server/database/generated/prisma/` (gitignored). Both it and `postinstall` first run `scripts/ensure-contract.ts`, which initializes the submodule when it is not checked out, so a plain `git clone` and CI checkouts without `submodules: true` still work
+- The bot owns and migrates the shared database. `prisma.config.ts` wires no `migrations` directory on purpose: never run `prisma db sign`, `prisma db update`, `prisma migration plan` or `prisma contract infer` from this repo; the bot's migrations are in `vendor/wolfstar/projects/database/migrations/`. `server/database/migrations/` is the frozen SQL record of how the tables the contract marks `@@control(external)` were created before the bot's ORM 8 migrations took over — keep it append-only and do not expect any script here to apply it
+- `server/database/prisma.ts` exports `db`, the one client: `postgres<Contract>({ url, contractJson, extensions: [typedRuntimeDescriptor], middleware: [lints()] })`. The typed-JSON extension (`prisma-orm-extension-typed-json`, pinned and patched in `pnpm-workspace.yaml` exactly as the bot pins it) gives the contract's `typed.Json("PrismaJson.X")` columns their types; those names are declared in the global `PrismaJson` namespace in `shared/types/prisma.ts`. `lints()` refuses an `UPDATE`/`DELETE` without a `WHERE`
+- Snowflakes are `BIGINT` columns and `timestamp(3)` columns are `TimestampString`. Convert at the boundary: ids cross the API as strings (a `bigint` makes `JSON.stringify` throw), and timestamps go through `asTimestampString()` / `timestampStringToUtcIso()` in `server/utils/timestamp-string.ts`, which read the zoneless text as UTC
+- A guild's settings are spread over normalized tables (`Guild`, `Modules`, `GuildLogs`, `GuildRoles`, …) but the app — like the bot — works with one flat `GuildData` object. `server/database/settings/columns.ts` maps every flat key to its table, column and conversion kind, and `GuildData`'s type is derived from that map and the contract; `storage.ts` (`fetchGuildData()`, `writeGuildData()`) reads the tables and writes the changed ones in one transaction, creating the parent rows a change needs. `columns.ts`, `storage.ts` and `constants.ts` mirror the bot's files of the same name: to add a setting, add its column and default in both repos
+- `parseSettingsChanges()` (`server/database/settings/validation.ts`) is the only gate between a PATCH body and those tables: it refuses unknown keys and values of the wrong type, and `null` resets a key to its default. A column added to `Columns` without a validator is refused rather than written unchecked
+- Auto-moderation is one `GuildAutoModerationRule` row per rule (type, thresholds, actions, JSON options), not per-filter columns. The rule types, limits, defaults and normalizers live in `shared/utils/automod-rules.ts`, ported from the bot's `settings/automod/types.ts`
+- The V7 model has no command prefix, no reaction roles and no `selfmod*` / `events*` settings. The `messagesModeration*` keys are the moderation table's direct message and display switches (`moderation.direct-message` and `moderation.display-*` in a settings file); the bot turned the direct message on by default after the pinned contract, so `getDefaultGuildSettings()` follows the bot. Audit rows written before the move keep their V6 keys, so `shared/utils/audit-field-metadata.ts` aliases the renamed ones (`LEGACY_AUDIT_FIELD_ALIASES`) to keep the activity feed readable
 - `AuditEvent` is hash-chained and tamper-evident; `CommandLog` is not hash-chained and is written directly by the bot/shared PostgreSQL producer
 
-## Storage and Caching
+## Dashboard (`/app`)
 
-- Netlify's Nitro storage (`cache`, `fetch-cache`, `skew-protection`) mounts a resilient unstorage driver at `shared/utils/storage/netlify-blobs-resilient.ts` (registered from `modules/cache.ts`, which activates on any non-test build where `std-env`'s `provider === "netlify"` — production and deploy previews alike, not just production) instead of the stock `unstorage/drivers/netlify-blobs`. It fails open on transient failures instead of surfacing a 500 or an unhandled Sentry error: `getKeys`/`getItem` swallow both mid-body TCP resets (`isTransientNetworkError()`) and Netlify's short-lived edge token expiring mid-request (`isTransientBlobsTokenError()`, a `BlobsInternalError: Token expired` that self-heals on the next call) — see `shared/utils/storage/transient-network-error.ts`. `setItem`/`removeItem` get a couple of short retries first via `withFailOpenRetry()` (mirroring `resilient-fetch.ts`'s 3-attempt/short-backoff shape), since a dropped mutation leaves stale data behind rather than just missing a read
-- `createResilientNetlifyBlobsFetch()` (`shared/utils/storage/resilient-fetch.ts`) wraps `fetch` for that driver: it fully buffers each response body before returning, because `@netlify/blobs` only retries when `fetch()` itself throws, and a 200 with a truncated body would otherwise fail later inside `res.json()`/`res.arrayBuffer()`, past that retry loop. It skips buffering for null-body statuses (101/103/204/205/304) — constructing a `Response` with a non-null body for those throws a `TypeError` under Node 24's undici
-- The app's own rate limiter (`wolfstar:ratelimiter`, `wolfstar:auth-ratelimiter` in `modules/cache.ts`) mounts straight to `cloudflareKVHttp`, not the resilient Blobs driver — the fail-open behavior above only covers Netlify Blobs-backed storage (`defineCachedFunction`, the i18n handler cache, SWR fetch caching, and — on Netlify builds only, production or preview — `nuxt-skew-protection`'s `version-manifest.json` + rollback asset storage; `nuxt.config.ts`'s `skewProtection.storage` falls back to a plain `fs-lite` mount at `./.cache/skew-protection` everywhere else (local dev, CI, non-Netlify deploys), which has no transient-network failures to fail open on). None of this covers the `__nkpv` cookie itself, which is written on document responses and pinned client-side by `app/plugins/skew-protection.client.ts`, unrelated to this storage driver
+- The guild dashboard is a single client-rendered page, `app/pages/app.vue` (route rule `"/app": { ssr: false }`), rendered inside `app/layouts/dashboard.vue`. The guild snowflake never appears in the URL: `useActiveGuild()` (`app/composables/useActiveGuild.ts`) holds `activeGuildId`, the open `section` (a slug such as `""` for Home, `modules`, `automod`, `moderation`, `roles`, `honeypot`, `appeals`, `channels`, `commands`, `logs`) and the `logsTab`, and `app/plugins/active-guild.client.ts` mirrors them to the `wolfstar-active-guild` localStorage key so a reload lands on the same server and section
+- `useGuildData()`, `useGuildSettings()` and `useGuildSettingsChanges()` are keyed by the active guild (one `useState` map per store), so switching servers never leaks another guild's settings or staged edits
+- Switch sections or guilds through `useDashboardNavigation()` (`goToSection()`, `goToGuild()`), never by writing the state directly from components: with staged changes the switch is parked in `pendingNavigation` and the layout's "Unsaved Changes" dialog confirms or cancels it. In-dashboard links to other sections are buttons calling `goToSection()`, not `NuxtLink`s
+- `/guilds/:id/manage/*` and `/guilds/:id/logs/*` are legacy routes: the pages under `app/pages/(app)/guilds/[...id]/` only record the guild and section into state on the client and `navigateTo("/app")`. Do not add new pages under `/guilds/`
+- The Modules section (`app/components/guild/settings/Modules.vue`) and the Home summary card read the module registry in `shared/utils/guild-modules.ts`: one entry per flag of the `Modules` table (`modulesAutomod`, `modulesModeration`, `modulesRoles`) with its label, help key, icon and the section that configures it. Next to them they show the two modules with a table of their own: the Appeals, whose switch `appealsEnabled` is in `OWN_TABLE_MODULE_SWITCHES` and so is counted and flipped with the flags (`MODULE_SWITCH_KEYS`), the Honeypot, whose switch `modulesHoneypot` is in `OWN_TABLE_MODULE_SWITCHES` too and which catches only while `honeypotChannel` is also set, and the three lists of channels (Auto-Delete, Auto-Purge, Auto-Message), on while they have a row and counted from `useAutoChannels`. The Events are a module with a switch, `modulesLogs` (the `logs` column of `Modules`): turned off, the bot sends no log of the server's events (the `logs*` channels), while the moderation log, the reports and the honeypot's log, which belong to other modules, are still sent. A module whose switch does not do all it says yet can carry a `noteKey` in the registry, a line its card shows under the description; none needs one today. Commands and Logs are not modules: they are sections of their own in the unlabelled group of the sidebar. The `Modules` table still has a `commands` column, but the bot dropped it from its settings, so `GuildData` has no key for it. A module's section opens on `GuildModuleBanner` (`app/components/guild/ModuleBanner.vue`): Auto Moderation and Moderation put their switch in it, and the Auto-Delete, Auto-Purge and Auto-Message pages, which have no switch in the bot, show whether a channel keeps them on
+- The honeypot's channel, action and warning are shown, not edited (`BotManagedHoneypotSettings`): only `/honeypot` in Discord posts, rewrites or takes down the warning in the channel and checks the bot's permissions there, so a dashboard write would leave a channel with no warning, or a warning naming the wrong action. The PATCH route still takes them, as the bot's own import does
+- A settings section whose controls each edit one `GuildData` key as-is (a channel or role picker, a multi-picker, a switch, a whole number, a choice between a few words) is built from `useSettingsForm({ one, many, toggles, numbers, choices })` (`app/composables/useSettingsForm.ts`) and the entry lists in `shared/utils/settingsDataEntries.ts`: the composable returns the state, the Valibot schema, `mapToGuildData` and the error handler, and the entry types (`SingleSettingKey`, `ListSettingKey`, `ToggleSettingKey`, `NumberSettingKey`, `ChoiceSettingKey`) only accept keys of the right value type. The ranges of the numbers and the words of the choices live in `shared/utils/settings-choices.ts`, which the server validator reads too. Switch rows are `GuildSettingsToggleRow`, numbers `GuildSettingsNumberField` and choices `GuildSettingsChoiceCards`. Do not hand-write a schema or a `mapToGuildData` for such a section
+- A section may hold more than one `GuildSettingsForm` (Commands does). Each form only removes its own reverted keys from the staged draft; it must never clear the whole draft
+- Auto-moderation rules are rows, not `GuildData` keys, so they bypass the staged-changes bar: `useAutomodRules()` (`app/composables/useAutomodRules.ts`) calls `GET/POST /api/guilds/:guild/automod/rules` and `PATCH/DELETE …/rules/:rule`, each call writes at once and returns `{ ok, value | code }`, and the list is patched with the server's answer. The UI is `app/components/guild/automod/` (`Rules.vue`, `RuleEditor.vue`, `DurationInput.vue`); the editor's form shape and its conversion to a request body live in `app/utils/automod-rule-draft.ts`. Server side, `server/utils/automod/` holds the body validator (`validation.ts`, ported from the bot, including its `confusables` word normalization), the write queue and name rules (`rules.ts`), and the route helpers (`route.ts`): the routes take `authorizeAutoModerationManager` as their `authorize` option, read its result with `useManagedGuild(event)`, and audit every change under `automodRule.<name>`
+- Auto-Delete, Auto-Purge and Auto-Message are rows too, one per channel (`GuildAutoDelete`, `GuildAutoPurge`, `GuildAutoMessage`, the bot's `/autodelete`, `/autopurge` and `/automessage`), and like the rules they bypass the staged-changes bar: `useAutoChannels(slug)` reads `GET /api/guilds/:guild/<slug>` and writes with `PUT` and `DELETE …/<slug>/:channel`, each at once. The limits and body parsers are ported from the bot in `shared/utils/auto-channels.ts` (delays and intervals in whole seconds, as the columns keep them); `server/utils/auto-channels/write.ts` writes under a queue and an advisory lock per guild and table, keeps a schedule's next run while its interval stays (it leaves the column alone, since the bot moves it after each run under no lock of ours), and `assertGuildTextChannel` refuses a channel that is no text or announcement channel of the guild, since the channel is unique in each table whatever the guild. The routes take `authorizeAutoChannelManager` (`server/utils/guilds/manager.ts` builds it and the rules' one) and audit every change under `<kind>.<channel>`. The UI is `app/components/guild/auto/` (`Section.vue` holds the header, the states, the shared `Editor.vue` and the stop dialog) with a page per table in `app/components/guild/settings/Auto*.vue`. The bot reads Auto-Purge and Auto-Message from the database every minute, but caches Auto-Delete until it restarts, which the page says
+- The bot caches settings and rules per process and only drops that cache on its own writes. A change made here reaches the database at once, but the bot acts on it only once its cache is invalidated — this is a bot-side concern, the same for settings and rules
+- Who opens a server's dashboard besides the owner and the admins is decided by dashboard access rules (`shared/utils/dashboard-access.ts`), entries of `permissions.users` / `permissions.roles` marked by a `dashboard` key (`"allow"` or `"deny"`) and kept with two empty `allow`/`deny` lists, so code that reads every entry of those columns as a permission node finds no command in them. `manage()` (`server/utils/discord/index.ts`) checks the owner, then the member's own rule, then the rule of their highest role, `@everyone` included (`accessSubject` adds it, since `member.roles` never lists it), and only without a rule falls back to the admin check and the legacy nodes, which it runs on `settings` (never `conf`, the command's old name). Only the owner or a member who passes the admin check alone may write the rules, and a write that would lock its writer out is refused (`assertCanEditDashboardAccess`, `server/utils/dashboard-access.ts`). The section is `access` (`app/components/guild/settings/Access.vue`): it imports a legacy node that names the dashboard (`settings`, `conf`, `*`, `Management.*`, `Management.settings`) on a click, lists the others as not convertible with a JSON download, and lets the owner remove every legacy node (`DELETE /api/guilds/:guild/access/legacy`, confirmed with `REMOVE`). The bot applies the same rules wherever the settings are managed (`canManageServerSettings`)
+- The Commands section is one page: the disabled commands, a row for the rule of every command (`*`), and tiles that open one rule editor per command (`app/components/guild/commands/RuleEditor.vue`, `shared/utils/command-rules.ts` ports the bot's reader). The editor saves the WolfStar rule (`PUT /api/guilds/:guild/command-rules/:command`, which takes `*` and the member lists; category targets such as `Moderation.*` stay `/commands`-only) and, when "Also in Discord" is on, writes the same rule as Discord's own command permissions (`commandRuleOverwrites()` in `shared/utils/command-permissions.ts`; `*` is the app default, keyed by the application id). Nothing stores that switch: it is on when the command has Discord permissions of its own, and `commandDiscordState()` tells rules that match from rules changed in Discord. Discord's side is written with the user's own token, which needs `applications.commands.permissions.update`: every sign-in asks for that scope (`DISCORD_OAUTH_SCOPES`), a session from before it was added is asked to sign in again, and the server reads which scopes a token has from `GET /oauth2/@me` (`server/utils/discord/token-scopes.ts`), since the account cookie never updates its stored scope. `PUT /api/guilds/:guild/command-permissions/:command` re-reads the command's set from Discord and refuses with 409 when it differs from the snapshot the page read, checks the editor first (`checkEditorRequirements`), and writes the whole set. The 100-row limit, `@everyone` = the guild id and All channels = the guild id minus one are in `shared/utils/command-permissions.ts`
+- `resolveLegacyDashboardSection()` (`app/utils/guild-dashboard.ts`) maps pre-V7 slugs from old `/guilds/:id/manage/*` links (`moderation/word`, `events`, …) to the section that holds those settings now
 
 ## Guild Logs and Activity Patterns
 
-- Guild log routes live under `server/api/guilds/[guild]/logs/`
+- Guild log routes live under `server/api/guilds/[guild]/logs/`; the client renders them in the Logs section of `/app` through `app/components/guild/logs/Panel.vue`
 - Use `defineWrappedCachedResponseHandler` with `auth: true`, explicit `maxAge`, `swr: false`, `onError`, and route-specific rate limits for log endpoints
 - Validate log route filters with `DashboardActivityQuerySchema`, `CommandLogQuerySchema`, or `ModerationLogQuerySchema` from `shared/schemas/log-queries.ts`
 - Use `resolveGuildMembers()` and `fallbackMember()` from `server/utils/audit/resolve-members.ts` when log rows need Discord member metadata
 - Guild permission checks (`canManage()`) belong in the `authorize` option, not the handler body, so they still run when the response is served from cache
 - Client-side log data access lives in focused composables (`useAuditLog`, `useCommandLog`, `useModerationLog`) that accept `MaybeRefOrGetter` inputs and expose computed `entries` and `total`
-
-## View Transitions
-
-Router-driven View Transitions are enabled via a **manual plugin** (not `experimental.viewTransition`).
-
-| File                                               | Purpose                                                                      |
-| -------------------------------------------------- | ---------------------------------------------------------------------------- |
-| `app/plugins/view-transition.client.ts`            | `router.beforeResolve` + `document.startViewTransition` — the entry point    |
-| `app/middleware/disable-vue-transitions.global.ts` | Disables Vue `pageTransition`/`layoutTransition` to prevent double-animation |
-| `app/assets/css/view-transitions.css`              | All VT CSS rules (imported via `main.css`)                                   |
-| `app/utils/view-transition-classifier.ts`          | Pure classifier; unit-testable without mounting Nuxt                         |
-
-### Type vocabulary
-
-| Type              | When added                                                                                |
-| ----------------- | ----------------------------------------------------------------------------------------- |
-| `nav-forward`     | Client-side push navigation                                                               |
-| `nav-back`        | Popstate (browser back/forward) without UA visual transition                              |
-| `route-marketing` | Destination is `/`, `/wolfstar`, `/staryl`, `/privacy`, `/terms`, `/commands`, `/profile` |
-| `route-dashboard` | Destination starts with `/guilds/`                                                        |
-
-### Rules
-
-- **OAuth pages** and any page that redirects on mount **must** have `definePageMeta({ viewTransition: false })`. Transitions freeze DOM updates mid-flight.
-- **Do not add `view-transition-name`** to elements shared across pages without a per-page uniqueness audit. Duplicate names cause silent VT skip.
-- Reduced-motion is honored at two layers: system (`prefers-reduced-motion: reduce` checked in plugin, CSS `@media` kill-switch) and user override (`wolfstar-settings.reduceMotion` via `useReduceMotion()`; legacy `user-prefers-reduced-motion` is migrated on first load).
 
 ## Pre-commit Checklist
 
@@ -238,8 +195,8 @@ Commit messages must follow Conventional Commits: `<type>(<scope>): <subject>`
 ## Troubleshooting
 
 - **Build issues:** Clear `.nuxt`, `.output`, and `node_modules/.cache`, then rebuild
-- **Prisma types stale:** Run `pnpm prisma:generate` after schema changes
-- **OAuth redirect fails:** Ensure the Discord Developer Portal lists `<NUXT_PUBLIC_SITE_URL>/oauth/callback` verbatim, and that `NUXT_PUBLIC_SITE_URL` is set on the deployed environment — the redirect URI is derived from it
+- **`#server/database/generated/prisma/contract` not found, or contract types stale:** Run `pnpm prisma:generate` (it also initializes the `vendor/wolfstar` submodule when it is empty); run it again after every submodule bump
+- **OAuth redirect fails:** Ensure the Discord Developer Portal lists `<NUXT_PUBLIC_SITE_URL>/oauth/callback` and `<NUXT_PUBLIC_SITE_URL>/oauth/guild` verbatim, and that `NUXT_PUBLIC_SITE_URL` is set on the deployed environment — the redirect URI is derived from it
 - **Hot reload broken:** Check file watcher limits on Linux, restart dev server
 - **Type errors after updates:** Run `pnpm nuxt prepare && pnpm prisma:generate`
 - **Duplicate/incompatible `vue`, `discord-api-types`, or `@unhead/vue`/`unhead` types after a dependency update:** Check the `overrides` in `pnpm-workspace.yaml` still pin a single version of each — two copies make structurally identical (nominally-branded) types incompatible during typecheck
@@ -254,117 +211,6 @@ Commit messages must follow Conventional Commits: `<type>(<scope>): <subject>`
 - Keep `sentry.sourcemaps.filesToDeleteAfterUpload` in `nuxt.config.ts` whenever changing source-map or build-output behavior so uploaded `.map` files are removed from `.output/**/public` and hidden deploy output directories.
 - Sentry runtime configuration lives in `sentry.client.config.ts`, `sentry.server.config.ts`, and `server/utils/runtimeConfig.ts`; keep DSNs and sampling in runtime config, not hardcoded values.
 - `sentry.server.config.ts`'s `Sentry.init` `beforeSend` drops events for expected `createError()` HTTP statuses (400/401/403/404/409/429). It distinguishes deliberate application errors from h3-normalized upstream failures (e.g. an ofetch `FetchError` from the bot API) via h3's `unhandled` flag on the `__h3_error__`-marked exception — only `unhandled: false` (deliberate) errors are filtered, so unexpected upstream failures still reach Sentry.
-
-## Audit Logging
-
-All security-relevant actions are captured via `evlog`'s `log.audit()` pipeline, persisted to `AuditEvent` in PostgreSQL with a tamper-evident SHA-256 hash chain.
-
-### Action Registry
-
-Defined in `shared/audit/actions.ts`:
-
-| Action Creator              | Action Name                    | Emitted When                                  |
-| --------------------------- | ------------------------------ | --------------------------------------------- |
-| `guildSettingsUpdate`       | `guild.settings.update`        | PATCH guild settings succeeds                 |
-| `guildSettingsAccessDenied` | `guild.settings.access-denied` | `canManage()` throws                          |
-| `userLogin`                 | `user.login`                   | Not currently invoked anywhere in server code |
-| `userLogout`                | `user.logout`                  | Not currently invoked anywhere in server code |
-| `sessionRefresh`            | `session.refresh`              | Not currently invoked anywhere in server code |
-| `oauthStateInvalid`         | `oauth.state.invalid`          | Not currently invoked anywhere in server code |
-
-Only exported action creators are listed above. `command.executed` is currently an internal action-name constant; command history is read from `CommandLog`, not emitted through the audit hash chain. `userLogin`, `userLogout`, `sessionRefresh`, and `oauthStateInvalid` were wired to the pre-migration `nuxt-auth-utils` OAuth flow (`server/api/auth/discord.get.ts`, `server/utils/oauth-state.ts`); both files were deleted by the better-auth migration (#297) and nothing currently calls these action creators outside their own unit test. `server/middleware/evlog-auth-identify.ts` only identifies the request actor for enrichment — it does not emit audit events. Treat these four as a known gap (dead code or a missing re-wire) rather than assuming login/logout/refresh/CSRF-failure events are being recorded.
-
-### Instrumentation Pattern
-
-```ts
-import { withAuditMethods, useLogger } from "evlog";
-import { myAction } from "#shared/audit/actions";
-
-const log = withAuditMethods(useLogger(event));
-
-// Success path
-log.audit(
-	myAction({
-		actor: { type: "user", id: userId, displayName: username },
-		target: { type: "guild", id: guildId },
-		outcome: "success",
-		changes: auditDiff(before, after),
-	}),
-);
-
-// Denial path (inside try/catch or before throw)
-log.audit(
-	myAction({
-		actor: { type: "system", id: "oauth-flow" },
-		outcome: "denied",
-		reason: result.reason,
-	}),
-);
-```
-
-### Key Files
-
-- `shared/audit/actions.ts` — typed action creators
-- `shared/audit/envelope.ts` — canonical hash/envelope helpers
-- `shared/utils/audit-field-metadata.ts` — field labels and render metadata for dashboard-managed guild settings
-- `server/middleware/evlog-auth-identify.ts` — auto-identifies the request actor from the better-auth session via evlog's `createAuthMiddleware()` (`evlog/better-auth`, excludes `/api/auth/**`) so audit enrichers can resolve the actor without each handler calling `log.set({ user })` manually
-- `server/utils/audit/postgres-drain.ts` — Postgres sink with hash-chain (P2002 swallowed, P2034 retried 5x)
-- `server/utils/audit/actor-bridge.ts` — resolves actor from request context
-- `server/utils/audit/patch-to-changes.ts` — converts `auditDiff()` JSON patches into dashboard-friendly change groups
-- `server/utils/audit/resolve-members.ts` — resolves Discord guild members for log display with fallback placeholders
-- `server/plugins/evlog-drain.ts` — routes audit events to the drain
-- `server/plugins/evlog-enrich.ts` — enriches events with UA, trace, and audit context
-- `shared/audit/persisted.ts` — reconstructs chain order from `prevHash` linkage (timestamps are not assumed unique) and reports topology problems (forks, cycles, multiple/no roots, unreachable rows, head mismatch) plus hash/link failures
-- `scripts/audit-verify.ts` — offline hash-chain verifier run with `pnpm audit:verify`; loads all `AuditEvent` rows and the `AuditChainHead` row, then delegates to `verifyPersistedAuditChain()` in `shared/audit/persisted.ts`
-
-### Dashboard Activity Feed
-
-- `DASHBOARD_AUDIT_ACTIONS` controls which audit actions appear in the dashboard activity feed
-- Add new dashboard-visible actions to both the exported action creators and `DASHBOARD_AUDIT_ACTIONS`
-- Keep audit `changes` payloads JSON-serializable; `AuditEnvelope` rejects `BigInt`, `Date`, `Map`, `Set`, circular references, and `undefined` array entries before hashing
-
-## Design Token Discipline
-
-All styling must use semantic tokens or CSS custom properties — no hardcoded color literals.
-
-### Guardrail
-
-`test/unit/design-tokens/no-hardcoded-colors.test.ts` enforces this on every `app/components/**/*.vue`, `app/pages/**/*.vue`, and `app/layouts/**/*.vue` file.
-
-It checks:
-
-1. **Raw Tailwind palette classes** in `<template>` — e.g. `text-red-500`, `bg-blue-700`. Use semantic Nuxt UI classes (`text-primary`, `text-muted`, `bg-success`) instead.
-2. **Hex literals** in `<style>` — e.g. `#5865f2`. Move to a scoped CSS custom property declaration.
-3. **Color functions with literal arguments** in `<style>` — e.g. `hsla(235, 85.6%, 64.7%, 0.5)`. Move to a scoped CSS custom property. Allowed patterns:
-    - `oklch(from var(--token) l c h / alpha)` — relative-color syntax
-    - `oklch(var(--token) / alpha)` — CSS variable inside the call
-    - `oklch(20% 0 H / alpha)` — zero-chroma neutrals (achromatic grays)
-
-### Allow-list
-
-Files added to `ALLOW_LIST` in the test are permanently exempt. Current exemptions:
-
-- `app/components/OgImage/Page.takumi.vue` — Satori does not support `var()` references
-- `app/components/discord/*.vue` (message, embed, mention, role, reaction, scrollbar, the `chat-input-command/` autocomplete family, and the `app-launcher/` family) — Discord brand fidelity requires Discord brand colors; see `ALLOW_LIST` in the test for the exact, growing file list
-
-### Theme Selectors
-
-`@nuxtjs/color-mode` applies `data-theme` (and the matching class) from an inline script, so with JavaScript disabled the html element carries no theme at all. Theme-conditional CSS must therefore go through the `theme-light`/`theme-dark` custom variants declared in `app/assets/css/main.css` — `@variant theme-dark { … }`, never a bare `[data-theme="dark"] & { … }` — because those variants also resolve the attribute-less state from `prefers-color-scheme`. Tailwind's own `dark:` variant is redefined alongside them and must stay identical to `theme-dark`.
-
-Only one DaisyUI theme may declare `default: true` (`light`): two defaults both emit `:where(:root)`, so the last one silently wins wherever no `data-theme` is set. `dark` stays reachable through `prefersdark: true`. `test/unit/design-tokens/theme-fallback.test.ts` enforces all of the above.
-
-### Token Reference
-
-Prefer these semantic classes before reaching for palette colors:
-
-| Purpose              | Class                                                  |
-| -------------------- | ------------------------------------------------------ |
-| Primary brand        | `text-primary`, `bg-primary`, `border-primary`         |
-| Muted / subdued text | `text-muted`                                           |
-| Success indicator    | `bg-success`, `text-success`                           |
-| Error state          | `text-error`, `border-error`                           |
-| Gradient hero text   | `gradient-text-hero`, `gradient-text-cool`             |
-| Card surfaces        | `card-glass`, `card-glass-soft`, `card-glass-bordered` |
 
 <!-- nuxt-skill-hub:start -->
 

@@ -14,30 +14,23 @@ describe("AUDIT_FIELD_METADATA", () => {
 		});
 	});
 
-	it("channelsLogsMemberAdd is type channel, array false, verbatim label", () => {
-		expect(AUDIT_FIELD_METADATA["channelsLogsMemberAdd"]).toStrictEqual({
+	it("logsMemberAdd is type channel, array false, verbatim label", () => {
+		expect(AUDIT_FIELD_METADATA["logsMemberAdd"]).toStrictEqual({
 			label: "Member Add Logs",
 			type: "channel",
 			array: false,
 		});
 	});
 
-	it("channelsIgnoreReactionAdd is type channel, array true", () => {
-		expect(AUDIT_FIELD_METADATA["channelsIgnoreReactionAdd"]).toMatchObject({
+	it("logsIgnoreReactions is type channel, array true", () => {
+		expect(AUDIT_FIELD_METADATA["logsIgnoreReactions"]).toMatchObject({
 			type: "channel",
 			array: true,
 		});
 	});
 
-	it("prefix is type string, array false", () => {
-		expect(AUDIT_FIELD_METADATA["prefix"]).toMatchObject({
-			type: "string",
-			array: false,
-		});
-	});
-
-	it("disabledCommands is type command-name, array true", () => {
-		expect(AUDIT_FIELD_METADATA["disabledCommands"]).toMatchObject({
+	it("commandsDisabled is type command-name, array true", () => {
+		expect(AUDIT_FIELD_METADATA["commandsDisabled"]).toMatchObject({
 			type: "command-name",
 			array: true,
 		});
@@ -50,18 +43,24 @@ describe("AUDIT_FIELD_METADATA", () => {
 		});
 	});
 
-	it("rolesInitial is type role, array false", () => {
+	it("rolesInitial holds several roles in V7", () => {
 		expect(AUDIT_FIELD_METADATA["rolesInitial"]).toMatchObject({
+			type: "role",
+			array: true,
+		});
+	});
+
+	it("rolesMuted is type role, array false", () => {
+		expect(AUDIT_FIELD_METADATA["rolesMuted"]).toMatchObject({
 			type: "role",
 			array: false,
 		});
 	});
 
-	it("eventsBanAdd is type boolean, array false", () => {
-		expect(AUDIT_FIELD_METADATA["eventsBanAdd"]).toMatchObject({
-			type: "boolean",
-			array: false,
-		});
+	it("module flags and track toggles are booleans", () => {
+		for (const key of ["modulesAutomod", "moderationTrackBans", "reportsNotify"]) {
+			expect(AUDIT_FIELD_METADATA[key]).toMatchObject({ type: "boolean", array: false });
+		}
 	});
 });
 
@@ -70,6 +69,36 @@ describe("getAuditFieldMetadata", () => {
 		expect(getAuditFieldMetadata("rolesAdmin")).toStrictEqual({
 			label: "Administrator",
 			type: "role",
+			array: true,
+		});
+	});
+
+	// Rows written before the V7 move keep their V6 keys.
+	it("resolves a renamed V6 key to its V7 entry", () => {
+		expect(getAuditFieldMetadata("channelsLogsMemberAdd")).toStrictEqual({
+			label: "Member Add Logs",
+			type: "channel",
+			array: false,
+		});
+		expect(getAuditFieldMetadata("disabledCommands")).toMatchObject({
+			type: "command-name",
+			array: true,
+		});
+	});
+
+	it("still labels a V6 key that V7 dropped", () => {
+		expect(getAuditFieldMetadata("prefix")).toStrictEqual({
+			label: "Prefix",
+			type: "string",
+			array: false,
+		});
+	});
+
+	// The questions became forms, but audit rows written before still carry the key.
+	it("still reads the appeal questions of an audit row written before the forms", () => {
+		expect(getAuditFieldMetadata("appealsQuestions")).toStrictEqual({
+			label: "Appeal Form Questions",
+			type: "string",
 			array: true,
 		});
 	});
@@ -85,7 +114,7 @@ describe("getAuditFieldMetadata", () => {
 
 describe("humanizeKey", () => {
 	it("splits camelCase words and title-cases each", () => {
-		expect(humanizeKey("channelsLogsMemberAdd")).toBe("Channels Logs Member Add");
+		expect(humanizeKey("logsMemberAdd")).toBe("Logs Member Add");
 	});
 
 	it("replaces dots with spaces and title-cases each word", () => {

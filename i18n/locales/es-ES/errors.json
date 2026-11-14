@@ -13,7 +13,7 @@
 		"server_error_title": "Server Error",
 		"if_persists": "If this persists, please contact support.",
 		"retrying": "Retrying...",
-		"session_expired_description": "Your session has expired. Please log in again.",
+		"session_expired_description": "",
 		"access_denied_description": "You don't have permission to access this resource.",
 		"too_many_requests_description": "You've made too many requests. Please wait a moment before trying again.",
 		"request_timeout_description": "The request took too long to complete.",

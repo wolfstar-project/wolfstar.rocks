@@ -1,0 +1,22 @@
+diff --git a/dist/no-prefix-strategy.cjs b/dist/no-prefix-strategy.cjs
+index a82c46d..9ffecd3 100644
+--- a/dist/no-prefix-strategy.cjs
++++ b/dist/no-prefix-strategy.cjs
+@@ -1 +1 @@
+-Object.defineProperty(exports,Symbol.toStringTag,{value:"Module"});const o=require("./base-strategy.cjs"),n=require("./common.cjs");var u=class extends o.BasePathStrategy{buildLocalizedPath(e,r,t){return o.normalizePath(e)}getCanonicalPath(e,r){const t=o.resolveCustomPath(this.ctx,e,r)??"";return t?t.charCodeAt(0)===47?t:`/${t}`:null}resolveLocaleFromPath(e){return null}getSwitchLocaleFallbackWhenNoRoute(e,r){return e}switchLocaleRoute(e,r,t,l){return n.defaultSwitchLocaleRoute(this,e,r,t,l)}resolveLocaleRoute(e,r,t){return n.defaultResolveLocaleRoute(this,e,r,t)}getRedirect(e,r){if(this.ctx.noPrefixRedirect===!1)return null;const t=this.getLocaleFromPath(e);if(!t)return null;const l=`/${t}`;let a=e.slice(l.length);return(!a||a.charCodeAt(0)!==47)&&(a=`/${a||""}`),o.cleanDoubleSlashes(a)||"/"}formatPathForResolve(e,r,t){return e}getClientRedirect(e,r){return null}shouldReturn404(e){return null}};exports.NoPrefixPathStrategy=u;exports.Strategy=u;
++Object.defineProperty(exports,Symbol.toStringTag,{value:"Module"});const o=require("./base-strategy.cjs"),n=require("./common.cjs");var u=class extends o.BasePathStrategy{buildLocalizedPath(e,r,t){return o.normalizePath(e)}getCanonicalPath(e,r){const t=o.resolveCustomPath(this.ctx,e,r)??"";return t?t.charCodeAt(0)===47?t:`/${t}`:null}resolveLocaleFromPath(e){return null}getSwitchLocaleFallbackWhenNoRoute(e,r){return e}switchLocaleRoute(e,r,t,l){return{path:t.path,query:t.query,hash:t.hash}}resolveLocaleRoute(e,r,t){return n.defaultResolveLocaleRoute(this,e,r,t)}getRedirect(e,r){if(this.ctx.noPrefixRedirect===!1)return null;const t=this.getLocaleFromPath(e);if(!t)return null;const l=`/${t}`;let a=e.slice(l.length);return(!a||a.charCodeAt(0)!==47)&&(a=`/${a||""}`),o.cleanDoubleSlashes(a)||"/"}formatPathForResolve(e,r,t){return e}getClientRedirect(e,r){return null}shouldReturn404(e){return null}};exports.NoPrefixPathStrategy=u;exports.Strategy=u;
+diff --git a/dist/no-prefix-strategy.mjs b/dist/no-prefix-strategy.mjs
+index 405f711..6b609c9 100644
+--- a/dist/no-prefix-strategy.mjs
++++ b/dist/no-prefix-strategy.mjs
+@@ -15,7 +15,9 @@ var m = class extends c {
+     return e;
+   }
+   switchLocaleRoute(e, r, t, l) {
+-    return u(this, e, r, t, l);
++    // wolfstar.rocks: with no prefix the URL never carries the locale, so a
++    // switch stays on the same path (an alias such as "/" included).
++    return { path: t.path, query: t.query, hash: t.hash };
+   }
+   resolveLocaleRoute(e, r, t) {
+     return h(this, e, r, t);

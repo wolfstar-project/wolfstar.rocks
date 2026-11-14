@@ -16,6 +16,7 @@ jobs:
   stale-bugs:
     name: 🧹 Mark stale bug issues
     runs-on: ubuntu-slim
+    timeout-minutes: 10
     permissions:
       issues: write # mark and close stale bug issues
     steps:
@@ -34,6 +35,7 @@ jobs:
   stale-prs:
     name: 🧹 Mark stale pull requests
     runs-on: ubuntu-slim
+    timeout-minutes: 10
     permissions:
       pull-requests: write # mark and close stale pull requests
     steps:

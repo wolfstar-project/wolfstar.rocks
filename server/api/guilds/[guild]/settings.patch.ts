@@ -1,5 +1,14 @@
-import { coerceBigIntFields, serializeSettings, writeSettingsTransaction } from "#server/database";
+import type { ReadonlyGuildData } from "#server/database";
+import { serializeSettings, writeSettingsTransaction } from "#server/database";
+import { parseSettingsChanges } from "#server/database/settings/validation";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
+import {
+	assertCanEditDashboardAccess,
+	assertKeepsDashboardAccess,
+} from "#server/utils/dashboard-access";
+import { assertHoneypotIsUsable } from "#server/utils/honeypot/permissions";
+import { assertJoinGuardRolesManageable } from "#server/utils/join-guard/roles";
+import { assertJoinGuardRolesDiffer } from "#server/utils/join-guard/settings";
 import { guildSettingsAccessDenied, guildSettingsUpdate } from "#shared/audit/actions";
 import { SettingsUpdateSchema } from "#shared/schemas";
 import { isNullOrUndefined, isNullishOrEmpty } from "@sapphire/utilities";
@@ -73,8 +82,6 @@ export default defineWrappedResponseHandler(
 			throw canManageErr;
 		}
 
-		using trx = await writeSettingsTransaction(guild.id);
-
 		if (!data.every((entry): entry is [string, unknown] => entry !== undefined)) {
 			throw createError({
 				message: "Invalid data entries",
@@ -84,11 +91,64 @@ export default defineWrappedResponseHandler(
 			});
 		}
 
-		const settingsData = Object.fromEntries(data);
+		const parsed = parseSettingsChanges(data);
+		if (parsed.errors) {
+			throw createError({
+				message: "Invalid settings",
+				status: 400,
+				why: parsed.errors.join(" "),
+				fix: "Send only known setting keys, each with a value of its type",
+			});
+		}
+
+		const settingsData = parsed.data;
 		log.set({ settings: { keysUpdated: Object.keys(settingsData).length } });
 
-		// Coerce BigInt fields from JSON (numbers/strings) to BigInt
-		coerceBigIntFields(settingsData);
+		using trx = await writeSettingsTransaction(guild.id);
+
+		// Read inside the transaction, so the check sees what the database has now.
+		const { permissionsRoles, permissionsUsers, rolesAdmin } = settingsData;
+		try {
+			assertCanEditDashboardAccess(guild, member, trx.settings, settingsData);
+			if (
+				permissionsRoles !== undefined ||
+				permissionsUsers !== undefined ||
+				rolesAdmin !== undefined
+			) {
+				// The decision runs the proposed rules and the proposed legacy nodes,
+				// with a manager of its own: the guild's cached one holds the saved
+				// nodes, and never an unsaved change.
+				await assertKeepsDashboardAccess(
+					guild,
+					member,
+					{ ...trx.settings, ...settingsData } as ReadonlyGuildData,
+					(target, who, proposed) => canManage(target, who, proposed, true),
+				);
+			}
+		} catch (accessErr) {
+			log.audit(
+				guildSettingsAccessDenied({
+					actor: { type: "user", id: member.user.id, displayName: member.user.username },
+					target: { type: "guild", id: guild.id },
+					outcome: "denied",
+					reason:
+						accessErr instanceof Error &&
+						"why" in accessErr &&
+						typeof accessErr.why === "string"
+							? accessErr.why
+							: "Refused change of the dashboard access rules",
+				}),
+			);
+			throw accessErr;
+		}
+
+		// The bot sets the honeypot up from these settings once told of the write:
+		// a channel it could not use is refused here, as `/honeypot setup` refuses it.
+		await assertHoneypotIsUsable(guild, trx.settings, settingsData);
+		// The bot's `manageableRole` serializer refuses one role for both, as this does:
+		assertJoinGuardRolesDiffer(trx.settings, settingsData);
+		// And a role it could not give: the pickers list every role of the server.
+		await assertJoinGuardRolesManageable(guild, settingsData);
 
 		const beforeSettings = JSON.parse(serializeSettings(trx.settings)) as Record<
 			string,

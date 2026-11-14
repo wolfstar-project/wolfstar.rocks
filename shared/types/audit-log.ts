@@ -4,7 +4,10 @@ export type DashboardAuditAction =
 	| "guild.settings.update"
 	| "guild.settings.add"
 	| "guild.settings.remove"
-	| "guild.settings.access-denied";
+	| "guild.settings.access-denied"
+	| "guild.access.legacy-removed"
+	| "guild.command-permissions.update"
+	| "guild.command-permissions.access-denied";
 
 export interface DashboardAuditChanges {
 	added?: Record<string, unknown>;

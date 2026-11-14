@@ -12,7 +12,9 @@ import { createAuthMiddleware } from "evlog/better-auth";
  * doesn't guarantee hook order between plugins, so `event.context.log` may
  * not exist yet if this identified from a second `request` hook. Server
  * middleware runs once the h3 app dispatches, after Nitro's request-hook
- * phase, so the logger is guaranteed to already be on the context.
+ * phase, so the logger is already on the context, unless an earlier `request`
+ * hook threw: Nitro then skips the hooks after it. Such a request has no
+ * logger to enrich, and `useLogger` would throw.
  *
  * evlog's BetterAuthInstance is a minimal structural interface (just
  * api.getSession); Better Auth's real Auth<...> type is a much richer
@@ -24,6 +26,7 @@ import { createAuthMiddleware } from "evlog/better-auth";
  * of marketing pages that never carry a real request host.
  */
 export default defineEventHandler(async (event) => {
+	if (!event.context.log) return;
 	const auth = serverAuth(event) as unknown as BetterAuthInstance;
 	const identify = createAuthMiddleware(auth, {
 		exclude: ["/api/auth/**"],

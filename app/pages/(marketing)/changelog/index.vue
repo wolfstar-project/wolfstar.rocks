@@ -15,7 +15,7 @@
 					size="xs"
 					target="_blank"
 				>
-					GitHub Releases
+					{{ ts("changelog.github_releases") }}
 				</UButton>
 			</template>
 		</UPageHero>
@@ -27,14 +27,14 @@
 					:key="version.path"
 					:to="version.path"
 					:title="version.title"
-					:date="formatDateByLocale('en', version.date)"
+					:date="formatDateByLocale(locale, version.date)"
 					:image="
 						version.image
 							? {
 									src: version.image,
 									width: 1200,
 									height: 630,
-									alt: `${version.title} cover`,
+									alt: ts('changelog.cover_alt', { title: version.title }),
 								}
 							: undefined
 					"
@@ -42,12 +42,14 @@
 				/>
 			</UBlogPosts>
 
-			<p v-else class="text-muted">No releases have been published yet.</p>
+			<p v-else class="text-muted">{{ ts("changelog.empty") }}</p>
 		</UPageBody>
 	</UContainer>
 </template>
 
 <script setup lang="ts">
+const { ts } = useI18n();
+const { locale } = useAppLocale();
 const site = useSiteConfig();
 
 const { data: page } = await useAsyncData("changelog-hero", () =>
@@ -58,10 +60,8 @@ const { data: versions } = await useAsyncData("changelog-versions", () =>
 	queryCollection("changelogVersions").order("date", "DESC").all(),
 );
 
-const title = page.value?.title ?? "Changelog";
-const description =
-	page.value?.description ??
-	"Track every release, improvement, and fix across the WolfStar Project.";
+const title = page.value?.title ?? ts("changelog.title");
+const description = page.value?.description ?? ts("changelog.description");
 
 useSeoMeta({
 	titleTemplate: "%s",

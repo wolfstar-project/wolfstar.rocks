@@ -26,7 +26,7 @@ export const Default: Story = {
 	render: () => ({
 		template: `
 			<div>
-				<h1 class="sr-only">Login</h1>
+				<h1 class="sr-only">Sign In</h1>
 				<OauthStatusPanel
 					tone="info"
 					loading

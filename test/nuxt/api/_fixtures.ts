@@ -69,7 +69,7 @@ export const FIXTURE_ROLE = createMockRole({ guildId: GUILD_ID, id: "44444444444
  */
 export const FIXTURE_SERIALIZED_SETTINGS = {
 	language: "en-US",
-	prefix: "!",
+	modulesAutomod: true,
 	rolesAdmin: [],
 	rolesModerator: [],
 };

@@ -21,6 +21,7 @@ jobs:
       statuses: write # for amannn/action-semantic-pull-request to mark status of analyzed PR
     if: github.repository == 'wolfstar-project/wolfstar.rocks'
     runs-on: ubuntu-slim
+    timeout-minutes: 5
     name: 🏷️ Validate PR title
     steps:
       - name: Validate PR title

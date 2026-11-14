@@ -32,6 +32,14 @@
 const localeFeatures = require("./i18n/locale-features.json");
 const NAMESPACES = localeFeatures.features.map((file) => file.replace(/\.json$/, ""));
 
+/**
+ * Namespaces that exist locally but were never pushed to Tolgee (the ~907 keys
+ * exceed the free plan's 500-key cap). `scripts/tolgee-pull-remap.ts` skips them
+ * only while the platform has no copy; remove an entry once it has been pushed
+ * so a missing export fails the sync again.
+ */
+const UNPUSHED_NAMESPACES = ["errors", "marketing"];
+
 /** Local directory → Tolgee language tag (canonical sources only). */
 const LOCALE_MAP = {
 	"en": "en",
@@ -115,6 +123,7 @@ module.exports = {
 	// Exported for scripts/tolgee-pull-remap.ts
 	tolgeeToLocal: TOLGEE_TO_LOCAL,
 	namespaces: NAMESPACES,
+	unpushedNamespaces: UNPUSHED_NAMESPACES,
 	// Exported for scripts/tolgee-push-prepare.ts
 	pushStaging: {
 		path: PUSH_STAGING_DIR,

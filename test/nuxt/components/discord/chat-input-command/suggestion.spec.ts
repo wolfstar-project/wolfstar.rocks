@@ -21,10 +21,23 @@ describe("DiscordChatInputCommandSuggestion", () => {
 
 		// ASSERT
 		expect(option.attributes("aria-selected")).toBe("true");
-		expect(option.attributes("aria-label")).toContain("warn");
-		expect(wrapper.text()).toContain("/warn");
+		expect(option.attributes("tabindex")).toBe("0");
+		expect(option.attributes("aria-label")).toContain("/warn");
+		expect(option.attributes("aria-label")).toContain("Warn a member");
+		expect(wrapper.text()).toMatch(/\/\s*warn/);
 		expect(wrapper.text()).toContain("Warn a member");
+		expect(wrapper.text()).toContain("WolfStar");
 		expect(wrapper.emitted("select")).toHaveLength(2);
+	});
+
+	it("shows the app label override (positive)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordChatInputCommandSuggestion, {
+			props: { name: "warn", appLabel: "WolfStar Beta" },
+		});
+
+		// ASSERT
+		expect(wrapper.text()).toContain("WolfStar Beta");
 	});
 
 	it("ignores activation when the suggestion is disabled (negative)", async () => {
@@ -45,7 +58,6 @@ describe("DiscordChatInputCommandSuggestion", () => {
 		// ASSERT
 		expect(option.attributes("aria-disabled")).toBe("true");
 		expect(option.attributes("tabindex")).toBe("-1");
-		expect(option.classes()).toContain("discord-slash-command-suggestion-disabled");
 		expect(wrapper.emitted("select")).toBeUndefined();
 	});
 });

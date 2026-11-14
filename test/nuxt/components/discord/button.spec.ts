@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import DiscordButton from "~/components/discord/button.vue";
 
 describe("DiscordButton", () => {
-	it("renders the label, variant class, and launch icon for link buttons (positive)", async () => {
+	it("renders the label and the launch icon for link buttons, hidden from assistive technology (positive)", async () => {
 		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordButton, {
 			props: {
@@ -16,16 +16,25 @@ describe("DiscordButton", () => {
 
 		// ASSERT
 		const button = wrapper.find(".discord-button");
-		expect(button.exists()).toBe(true);
-		expect(button.classes()).toContain("discord-button-link");
-		expect(button.classes()).toContain("discord-button-hoverable");
-		expect(button.classes()).not.toContain("discord-button-disabled");
 		expect(button.text()).toContain("Open docs");
-		expect(wrapper.find(".discord-button-launch").exists()).toBe(true);
+		expect(button.find("svg").exists()).toBe(true);
 		expect(button.attributes("aria-hidden")).toBe("true");
+		// Chrome, never a control: nothing to focus, nothing to follow.
+		expect(button.element.tagName).toBe("SPAN");
+		expect(button.attributes("href")).toBeUndefined();
 	});
 
-	it("marks the button as disabled by default and ignores interactive styling (negative)", async () => {
+	it("draws the launch icon on any button with a url (positive)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordButton, {
+			props: { label: "Watch", variant: "secondary", url: "https://example.com" },
+		});
+
+		// ASSERT
+		expect(wrapper.find("svg").exists()).toBe(true);
+	});
+
+	it("takes no pointer by default and draws no launch icon without a url (negative)", async () => {
 		// ARRANGE / ACT — default `disabled` is true for showcase chrome
 		const wrapper = await mountSuspended(DiscordButton, {
 			props: { label: "Muted", variant: "primary" },
@@ -33,10 +42,18 @@ describe("DiscordButton", () => {
 
 		// ASSERT
 		const button = wrapper.find(".discord-button");
-		expect(button.classes()).toContain("discord-button-primary");
-		expect(button.classes()).toContain("discord-button-disabled");
-		expect(button.classes()).not.toContain("discord-button-hoverable");
-		expect(wrapper.find(".discord-button-launch").exists()).toBe(false);
+		expect(button.classes()).toContain("pointer-events-none");
+		expect(button.find("svg").exists()).toBe(false);
+	});
+
+	it("takes the pointer when it is not disabled (positive)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordButton, {
+			props: { label: "Hover me", disabled: false },
+		});
+
+		// ASSERT
+		expect(wrapper.find(".discord-button").classes()).not.toContain("pointer-events-none");
 	});
 
 	it("prefers slot content over the label prop (positive)", async () => {
@@ -63,8 +80,7 @@ describe("DiscordButton", () => {
 		});
 
 		// ASSERT
-		const img = wrapper.find("img.discord-button-emoji");
-		expect(img.exists()).toBe(true);
+		const img = wrapper.find("img");
 		expect(img.attributes("alt")).toBe("wave");
 		expect(img.attributes("src")).toBe("/emojis/wave.png");
 	});
@@ -81,7 +97,7 @@ describe("DiscordButton", () => {
 		});
 
 		// ASSERT
-		expect(wrapper.find("img.discord-button-emoji").exists()).toBe(false);
+		expect(wrapper.find("img").exists()).toBe(false);
 		expect(wrapper.text()).toContain("Gear");
 	});
 });

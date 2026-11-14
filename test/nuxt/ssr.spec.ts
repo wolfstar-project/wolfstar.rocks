@@ -15,8 +15,6 @@ import {
 	DiscordChatMessageComposer,
 	DiscordMessage,
 	DiscordMessages,
-	DiscordReaction,
-	DiscordReactions,
 	DiscordRole,
 	DiscordChatInputCommand,
 	DiscordChatInputCommandSuggestion,
@@ -33,6 +31,30 @@ import {
 } from "#components";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { describe, expect, it } from "vitest";
+
+interface TextNode {
+	text(): string;
+}
+
+/**
+ * The text with the slash of each command name joined to it: newt/ui spaces the
+ * slash from the command path with a non-breaking space (`/` then U+00A0, then `warn`).
+ */
+function commandText(node: TextNode) {
+	return node.text().replaceAll("/\u00A0", "/");
+}
+
+/** The first slash command suggestion whose text names `command`, such as `/kick`. */
+function findSuggestion(wrapper: Awaited<ReturnType<typeof mountSuspended>>, command: string) {
+	return wrapper
+		.findAll(".discord-slash-command-suggestion")
+		.find((suggestion: TextNode) => commandText(suggestion).includes(command));
+}
+
+/** The command path a suggestion announces, without the slash: `case archive`. */
+function suggestionPath(suggestion: { attributes(name: string): string | undefined }) {
+	return /slash command: \/(.+?)(?:\. |$)/.exec(suggestion.attributes("aria-label") ?? "")?.[1];
+}
 
 describe("component SSR rendering", () => {
 	describe("Discord components", () => {
@@ -59,27 +81,34 @@ describe("component SSR rendering", () => {
 					},
 				});
 
-				expect(wrapper.find(".discord-channel-header").exists()).toBe(true);
+				expect(wrapper.find("header.discord-channel-header").exists()).toBe(true);
 				expect(wrapper.text()).toContain("mod-commands");
 				expect(wrapper.text()).toContain(
 					"WolfStar moderation commands — try a slash command below.",
 				);
 				expect(wrapper.text()).toContain("Search");
-				expect(wrapper.find(".discord-channel-header-toolbar").exists()).toBe(true);
-				expect(wrapper.find(".discord-channel-header-divider").exists()).toBe(true);
-				expect(wrapper.find(".discord-channel-header-topic").exists()).toBe(true);
-				const actions = wrapper.findAll(".discord-channel-header-action");
-				expect(actions.length).toBe(4);
-				expect(actions[0]?.attributes("aria-label")).toBe("Threads");
-				expect(actions[1]?.attributes("aria-label")).toBe("Notification settings");
-				expect(actions[2]?.attributes("aria-label")).toBe("Pinned messages");
-				expect(actions[3]?.attributes("aria-label")).toBe("Hide member list");
-				expect(actions[3]?.attributes("aria-pressed")).toBe("true");
-				expect(actions[3]?.classes()).toContain("discord-channel-header-action-active");
-				expect(wrapper.find(".discord-channel-header-mobile").exists()).toBe(true);
-				expect(wrapper.find(".discord-channel-header-desktop").exists()).toBe(true);
+				// The search field is decoration: hidden from assistive technology.
+				const actionLabels = wrapper
+					.findAll("button[aria-label]:not([aria-hidden='true'])")
+					.map((button) => button.attributes("aria-label"))
+					.filter((label) => !label?.startsWith("Open channel info"));
+				expect(actionLabels).toEqual([
+					"Threads",
+					"Notification settings",
+					"Pinned messages",
+					"Hide member list",
+				]);
+				const membersButton = wrapper.find("button[aria-pressed]");
+				expect(membersButton.attributes("aria-label")).toBe("Hide member list");
+				expect(membersButton.attributes("aria-pressed")).toBe("true");
+				expect(membersButton.attributes("data-state")).toBe("active");
+				expect(
+					wrapper
+						.find("button[aria-label='Open channel info for #mod-commands']")
+						.exists(),
+				).toBe(true);
 				expect(wrapper.text()).toContain("19 Online");
-				expect(wrapper.find(".discord-channel-header-badge").text()).toBe("48");
+				expect(wrapper.find("[data-slot='notification-badge']").text()).toBe("48");
 			});
 
 			it("toggles membersOpen via the users toolbar action", async () => {
@@ -90,11 +119,9 @@ describe("component SSR rendering", () => {
 					},
 				});
 
-				const membersButton = wrapper
-					.findAll(".discord-channel-header-action")
-					.find((action) => action.attributes("aria-pressed") !== undefined);
-				expect(membersButton).toBeDefined();
-				await membersButton!.trigger("click");
+				const membersButton = wrapper.find("button[aria-pressed]");
+				expect(membersButton.exists()).toBe(true);
+				await membersButton.trigger("click");
 
 				expect(wrapper.emitted("update:membersOpen")?.[0]).toEqual([false]);
 				expect(wrapper.emitted("toggle-members")).toHaveLength(1);
@@ -109,7 +136,7 @@ describe("component SSR rendering", () => {
 				});
 
 				const mobileTitle = wrapper.find(
-					"button.discord-channel-header-mobile-title[aria-label='Open channel info for #mod-commands']",
+					"button[aria-label='Open channel info for #mod-commands']",
 				);
 				expect(mobileTitle.exists()).toBe(true);
 				await mobileTitle.trigger("click");
@@ -133,8 +160,9 @@ describe("component SSR rendering", () => {
 				expect(wrapper.text()).toContain(
 					"This is the start of the #mod-commands channel. WolfStar moderation commands — try a slash command below.",
 				);
-				expect(wrapper.find(".discord-channel-welcome-edit").exists()).toBe(true);
-				expect(wrapper.text()).toContain("Edit Channel");
+				const edit = wrapper.find("button[aria-hidden='true']");
+				expect(edit.text()).toContain("Edit Channel");
+				expect(edit.attributes("tabindex")).toBe("-1");
 				expect(wrapper.find("time").attributes("datetime")).toBe("2026-07-16");
 			});
 		});
@@ -156,10 +184,12 @@ describe("component SSR rendering", () => {
 					},
 				});
 
-				expect(wrapper.find(".discord-scrollbar").exists()).toBe(true);
-				expect(wrapper.find(".discord-channel-welcome").exists()).toBe(true);
-				expect(wrapper.find("[role='log']").attributes("aria-live")).toBe("polite");
-				expect(wrapper.findAll(".discord-message")).toHaveLength(1);
+				const scroller = wrapper.find("[role='group']");
+				expect(scroller.attributes("aria-label")).toBe("mod-commands channel messages");
+				expect(scroller.text()).toContain("Welcome to #mod-commands!");
+				const log = scroller.find("[role='log']");
+				expect(log.attributes("aria-live")).toBe("polite");
+				expect(log.findAll("article")).toHaveLength(1);
 				expect(wrapper.text()).toContain("Saved all changes.");
 				expect(wrapper.text()).toContain("Today at 15:49");
 			});
@@ -178,13 +208,19 @@ describe("component SSR rendering", () => {
 							},
 						],
 					},
+					attachTo: document.body,
 				});
 
-				const scrollerInner = wrapper.find(".discord-chat-scroller-inner");
-				expect(scrollerInner.exists()).toBe(true);
-				expect(scrollerInner.find(".discord-channel-welcome").exists()).toBe(true);
-				expect(scrollerInner.find(".discord-chat-messages").exists()).toBe(true);
-				expect(scrollerInner.classes()).toContain("mt-auto");
+				// The welcome and the log share one column that sticks to the bottom
+				// of the scrollport, so a short channel reads up from the composer.
+				const log = wrapper.find("[role='log']").element;
+				const column = log.parentElement;
+				expect(column?.textContent).toContain("Welcome to #mod-commands!");
+				// Tailwind may emit `flex-end` or the logical `flow-end`.
+				expect(column && getComputedStyle(column).justifyContent).toMatch(
+					/^(flex|flow)-end$/,
+				);
+				wrapper.unmount();
 			});
 		});
 
@@ -209,13 +245,12 @@ describe("component SSR rendering", () => {
 				expect(wrapper.text()).toContain("Online — 1");
 				expect(wrapper.text()).toContain("Offline — 1");
 				expect(wrapper.text()).toContain("Moderation");
-				expect(wrapper.find(".discord-member-list-summary").exists()).toBe(false);
-				expect(wrapper.findAll(".discord-member-list-member")).toHaveLength(2);
-				expect(wrapper.find(".discord-member-list-section-offline").exists()).toBe(true);
-				expect(wrapper.find(".discord-member-list-app").attributes("role")).toBe("img");
-				expect(wrapper.find(".discord-member-list-avatar .discord-presence").exists()).toBe(
-					true,
+				expect(wrapper.findAll("[role='listitem']")).toHaveLength(2);
+				expect(wrapper.find("section[data-offline]").text()).toContain("Stella");
+				expect(wrapper.find("[role='img'][aria-label='Verified application']").text()).toBe(
+					"APP",
 				);
+				expect(wrapper.find("[role='listitem'] [data-status]").exists()).toBe(true);
 			});
 
 			it("groups pinned role-colored members above Online", async () => {
@@ -245,16 +280,15 @@ describe("component SSR rendering", () => {
 					},
 				});
 
-				expect(wrapper.text()).toContain("Moderation — 1");
-				expect(wrapper.text()).toContain("Online — 1");
-				expect(wrapper.text()).toContain("Offline — 1");
-				expect(wrapper.find(".discord-member-list-heading-role").exists()).toBe(true);
-				expect(wrapper.find(".discord-member-list-member").attributes("style")).toContain(
-					"--member-name-color: oklch(57.74% 0.2091 273.85)",
+				expect(wrapper.findAll("h3").map((heading) => heading.text())).toEqual([
+					"Moderation — 1",
+					"Online — 1",
+					"Offline — 1",
+				]);
+				expect(wrapper.find("[data-slot='member-name']").attributes("style")).toContain(
+					"oklch(57.74% 0.2091 273.85)",
 				);
-				expect(
-					wrapper.find(".discord-member-list-section-offline .discord-presence").exists(),
-				).toBe(false);
+				expect(wrapper.find("section[data-offline] [data-status]").exists()).toBe(false);
 			});
 
 			it("renders dnd presence and skips an empty Online section", async () => {
@@ -279,8 +313,10 @@ describe("component SSR rendering", () => {
 				expect(wrapper.text()).toContain("Developers — 1");
 				expect(wrapper.text()).not.toContain("Online — ");
 				expect(wrapper.text()).toContain("Offline — 1");
-				expect(wrapper.find(".discord-presence").attributes("data-status")).toBe("dnd");
-				expect(wrapper.find(".discord-member-list-member-decorated").exists()).toBe(true);
+				expect(wrapper.find("[data-status]").attributes("data-status")).toBe("dnd");
+				expect(wrapper.find("[role='listitem']").attributes("style")).toContain(
+					"linear-gradient",
+				);
 			});
 
 			it("hides presence for HTTP-only (serverless) applications", async () => {
@@ -308,11 +344,10 @@ describe("component SSR rendering", () => {
 					},
 				});
 
-				const members = wrapper.findAll(".discord-member-list-member");
+				const members = wrapper.findAll("[role='listitem']");
 				expect(members).toHaveLength(2);
-				expect(members[0]?.find(".discord-presence").exists()).toBe(false);
-				expect(members[1]?.find(".discord-presence").exists()).toBe(true);
-				expect(members[1]?.find(".discord-presence-icon").exists()).toBe(true);
+				expect(members[0]?.find("[data-status]").exists()).toBe(false);
+				expect(members[1]?.find("[data-status]").attributes("data-status")).toBe("online");
 			});
 		});
 
@@ -334,7 +369,7 @@ describe("component SSR rendering", () => {
 					slots: { default: "Secret message" },
 				});
 				const article = wrapper.find("article");
-				expect(article.classes()).toContain("discord-message-ephemeral");
+				expect(article.attributes("data-ephemeral")).toBe("true");
 
 				const footer = wrapper.find("[role='status']");
 				expect(footer.exists()).toBe(true);
@@ -358,9 +393,10 @@ describe("component SSR rendering", () => {
 				expect(reply.text()).toContain("used");
 				expect(reply.text()).toContain("help");
 				expect(reply.text()).not.toContain("/help");
+				expect(reply.text()).toMatch(/^Stella\s*used\s*help$/);
+				expect(reply.attributes("aria-label")).toBe("Stella used the help slash command");
 				expect(reply.find(".discord-message-reply-spine").exists()).toBe(true);
-				expect(reply.find(".discord-message-reply-command").exists()).toBe(true);
-				expect(reply.find(".discord-message-reply-command-icon").exists()).toBe(true);
+				expect(reply.find("svg[aria-hidden='true']").exists()).toBe(true);
 			});
 
 			it("formats slash command names like Discord", async () => {
@@ -376,9 +412,11 @@ describe("component SSR rendering", () => {
 					},
 					slots: { default: "Saved changes" },
 				});
-				const reply = wrapper.find(".discord-message-reply-command-name");
-				expect(reply.exists()).toBe(true);
-				expect(reply.text()).toBe("conf menu");
+				const reply = wrapper.find("[role='complementary']");
+				expect(reply.text()).toMatch(/used\s*conf menu$/);
+				expect(reply.attributes("aria-label")).toBe(
+					"Stella used the conf menu slash command",
+				);
 			});
 
 			it("formats grouped slash command paths", async () => {
@@ -395,8 +433,8 @@ describe("component SSR rendering", () => {
 					},
 					slots: { default: "Saved changes" },
 				});
-				const reply = wrapper.find(".discord-message-reply-command-name");
-				expect(reply.text()).toBe("conf menu save");
+				const reply = wrapper.find("[role='complementary']");
+				expect(reply.text()).toMatch(/used\s*conf menu save$/);
 			});
 
 			it("renders message reply context with user and preview", async () => {
@@ -424,9 +462,9 @@ describe("component SSR rendering", () => {
 					props: { name: "wolfstar" },
 					slots: { default: "Content" },
 				});
-				const header = wrapper.find("header");
-				expect(header.exists()).toBe(true);
-				expect(header.text()).toContain("WolfStar");
+				const article = wrapper.find("article");
+				expect(article.attributes("aria-label")).toBe("Message from WolfStar");
+				expect(article.text()).toMatch(/^WolfStar/);
 			});
 		});
 
@@ -446,11 +484,11 @@ describe("component SSR rendering", () => {
 					props: { title: "Colored", color: "#FF0000" },
 					slots: { default: "<p>Content</p>" },
 				});
-				const accent = wrapper.find(".discord-embed-left-border");
-				expect(accent.exists()).toBe(true);
-				const style = accent.attributes("style") ?? "";
+				const embed = wrapper.find("[role='complementary']");
+				expect(embed.exists()).toBe(true);
+				const style = embed.attributes("style") ?? "";
 				// Browser may normalize #FF0000 to rgb(255, 0, 0)
-				expect(style).toMatch(/#FF0000|rgb\(255,\s*0,\s*0\)/);
+				expect(style).toMatch(/--newt-embed-color:\s*(#FF0000|rgb\(255,\s*0,\s*0\))/i);
 			});
 
 			it("renders embed with author info", async () => {
@@ -492,7 +530,7 @@ describe("component SSR rendering", () => {
 				expect(wrapper.text()).toMatch(/Type:\s*Warning/);
 				expect(wrapper.text()).toMatch(/User:\s*@?baddie/);
 				expect(wrapper.text()).toMatch(/Reason:\s*spam/);
-				expect(wrapper.find(".tag").exists()).toBe(true);
+				expect(wrapper.find("[data-variant='user']").text()).toBe("@baddie");
 			});
 		});
 
@@ -522,10 +560,12 @@ describe("component SSR rendering", () => {
 				const wrapper = await mountSuspended(DiscordMention, {
 					props: { kind: "mention" },
 					slots: { default: "baddie" },
+					attachTo: document.body,
 				});
-				const button = wrapper.find("button.tag");
+				const button = wrapper.find("button[data-variant='user']");
 				expect(button.exists()).toBe(true);
-				expect(button.classes()).toContain("tag");
+				expect(getComputedStyle(button.element).display).toBe("inline-flex");
+				wrapper.unmount();
 			});
 
 			it("renders the avatar when avatar prop is provided", async () => {
@@ -533,9 +573,8 @@ describe("component SSR rendering", () => {
 					props: { kind: "mention", avatar: "/avatars/baddie.png" },
 					slots: { default: "baddie" },
 				});
-				const button = wrapper.find("button.tag");
-				const avatar = wrapper.find("img.avatar");
-				expect(button.classes()).toContain("tag--with-avatar");
+				const button = wrapper.find("button[data-variant='user']");
+				const avatar = button.find("img");
 				expect(avatar.exists()).toBe(true);
 				expect(avatar.attributes("src")).toBe("/avatars/baddie.png");
 				expect(avatar.attributes("aria-hidden")).toBe("true");
@@ -548,8 +587,8 @@ describe("component SSR rendering", () => {
 					props: { kind: "mention" },
 					slots: { default: "everyone" },
 				});
-				expect(wrapper.find("img.avatar").exists()).toBe(false);
-				expect(wrapper.find("button.tag").classes()).not.toContain("tag--with-avatar");
+				expect(wrapper.find("button[data-variant='user']").exists()).toBe(true);
+				expect(wrapper.find("img").exists()).toBe(false);
 			});
 		});
 
@@ -563,7 +602,8 @@ describe("component SSR rendering", () => {
 				expect(button.exists()).toBe(true);
 				expect(button.text()).toContain("@");
 				expect(button.text()).toContain("Moderator");
-				expect(button.attributes("style")).toContain("--role-color: #5865F2");
+				expect(button.attributes("data-variant")).toBe("role");
+				expect(button.attributes("style")).toContain("--newt-mention-color: #5865F2");
 			});
 		});
 
@@ -620,7 +660,8 @@ describe("component SSR rendering", () => {
 				const option = wrapper.find("[role='option']");
 				expect(option.exists()).toBe(true);
 				expect(option.attributes("aria-selected")).toBe("true");
-				expect(wrapper.text()).toContain("/warn");
+				// The slash may be followed by a non-breaking space.
+				expect(wrapper.text()).toMatch(/\/\s*warn/);
 				expect(wrapper.text()).toContain("Warn a member");
 				expect(wrapper.text()).toContain("WolfStar");
 			});
@@ -678,96 +719,20 @@ describe("component SSR rendering", () => {
 				});
 				expect(wrapper.text()).toContain("Frequently Used");
 				expect(wrapper.text()).not.toContain("Matched Command");
-				expect(
-					wrapper.find(".discord-slash-command-suggestions-sidebar-scroll").exists(),
-				).toBe(true);
-				expect(wrapper.find(".discord-slash-command-suggestions-inner").exists()).toBe(
-					true,
-				);
-				expect(wrapper.find(".discord-slash-command-suggestions-sidebar").exists()).toBe(
-					true,
-				);
-				expect(
-					wrapper.findAll(".discord-slash-command-suggestions-sidebar-item").length,
-				).toBe(8);
-				expect(
-					wrapper
-						.find(".discord-scrollbar-viewport")
-						.find(".discord-slash-command-suggestions-sidebar")
-						.exists(),
-				).toBe(false);
-				expect(wrapper.find(".discord-slash-command-suggestions-recent").exists()).toBe(
-					true,
-				);
-				expect(
-					wrapper
-						.find(".discord-scrollbar-viewport")
-						.find(".discord-slash-command-suggestions-header")
-						.exists(),
-				).toBe(true);
-				expect(
-					wrapper
-						.find(".discord-scrollbar-viewport")
-						.find(".discord-slash-command-suggestion-matched")
-						.exists(),
-				).toBe(false);
-				expect(wrapper.find("[role='listbox']").exists()).toBe(true);
-				expect(wrapper.find(".discord-scrollbar").exists()).toBe(true);
-				// One continuous list scrollbar (FU header + rows + bot groups).
-				expect(wrapper.findAll(".discord-scrollbar").length).toBe(1);
-				expect(wrapper.find(".discord-slash-command-suggestions-scroll").exists()).toBe(
-					true,
-				);
-				expect(
-					wrapper
-						.find(
-							".discord-slash-command-suggestions-scroll .discord-scrollbar-viewport",
-						)
-						.find(".discord-slash-command-suggestions-recent")
-						.exists(),
-				).toBe(true);
-				expect(
-					wrapper
-						.find(
-							".discord-slash-command-suggestions-scroll .discord-scrollbar-viewport",
-						)
-						.find(".discord-slash-command-suggestion")
-						.exists(),
-				).toBe(true);
-				expect(wrapper.find(".discord-slash-command-suggestions-matched").exists()).toBe(
-					true,
-				);
-				expect(
-					wrapper
-						.find(
-							".discord-slash-command-suggestions-matched .discord-slash-command-suggestion-matched",
-						)
-						.exists(),
-				).toBe(true);
-				// App rail nests under the scrollbar root (below-viewport) so the track spans full height.
-				const scroll = wrapper.find(".discord-slash-command-suggestions-scroll");
-				const rail = scroll.find(".discord-slash-command-suggestions-sidebar-scroll");
-				expect(scroll.exists()).toBe(true);
-				expect(rail.exists()).toBe(true);
-				expect(
-					wrapper
-						.find(
-							".discord-scrollbar .discord-slash-command-suggestions-sidebar-scroll",
-						)
-						.exists(),
-				).toBe(true);
-				// Mobile DOM: viewport (list) before below-viewport (rail); desktop CSS orders rail left.
-				const body = scroll.find(".discord-scrollbar-body");
-				const viewport = body.find(".discord-scrollbar-viewport");
-				const below = body.find(".discord-scrollbar-below-viewport");
-				expect(body.exists()).toBe(true);
-				expect(viewport.exists()).toBe(true);
-				expect(below.exists()).toBe(true);
-				expect(below.element.contains(rail.element)).toBe(true);
-				const bodyChildren = [...body.element.children];
-				expect(bodyChildren.indexOf(viewport.element)).toBeLessThan(
-					bodyChildren.indexOf(below.element),
-				);
+				// The app rail sits beside the list, not inside it.
+				const rail = wrapper.find("nav[aria-label='Applications']");
+				expect(rail.findAll("button")).toHaveLength(8);
+				expect(rail.findAll("button")[0]?.attributes("aria-pressed")).toBe("true");
+				// One continuous command list: the Frequently Used header and its rows.
+				const [list, matched] = wrapper.findAll("[role='listbox']");
+				expect(list?.attributes("aria-label")).toBe("Slash command suggestions");
+				expect(list?.text()).toContain("Frequently Used");
+				expect(list?.findAll("[role='option']")).toHaveLength(1);
+				expect(list?.element.contains(rail.element)).toBe(false);
+				// The matched command sits in its own footer list under the command list.
+				expect(matched?.attributes("aria-label")).toBe("Matched slash command");
+				expect(matched?.find("[role='option']").attributes("aria-selected")).toBe("true");
+				expect(list?.element.contains(matched?.element ?? null)).toBe(false);
 			});
 		});
 
@@ -788,27 +753,6 @@ describe("component SSR rendering", () => {
 				expect(wrapper.find(".discord-scrollbar-thumb").exists()).toBe(true);
 			});
 
-			it("renders optional arrow controls when showArrows is true", async () => {
-				const wrapper = await mountSuspended(DiscordScrollbar, {
-					props: { showArrows: true },
-					slots: { default: "<p>Scrollable content</p>" },
-				});
-
-				expect(wrapper.find(".discord-scrollbar-arrow-up").exists()).toBe(true);
-				expect(wrapper.find(".discord-scrollbar-arrow-down").exists()).toBe(true);
-			});
-
-			it("renders idle track when alwaysShowTrack is true", async () => {
-				const wrapper = await mountSuspended(DiscordScrollbar, {
-					props: { alwaysShowTrack: true },
-					slots: { default: "<p>Short content</p>" },
-				});
-
-				// alwaysShowTrack keeps the track rail rendered; the thumb is driven by runtime
-				// overflow measurement and is covered by the scrollable-content test above.
-				expect(wrapper.find(".discord-scrollbar-track").exists()).toBe(true);
-			});
-
 			it("applies auto-hide class when autoHide is true", async () => {
 				const wrapper = await mountSuspended(DiscordScrollbar, {
 					props: { autoHide: true },
@@ -824,40 +768,26 @@ describe("component SSR rendering", () => {
 				const wrapper = await mountSuspended(DiscordChatMessageComposer, {
 					props: { channelName: "mod-commands" },
 				});
-				const input = wrapper.find(".discord-message-composer-input");
+				const input = wrapper.find("input");
 
 				expect(input.attributes("placeholder")).toBe("Message #mod-commands");
 				expect(input.attributes()).not.toHaveProperty("readonly");
-				expect(wrapper.findAll(".discord-message-composer-action")).toHaveLength(5);
-				expect(wrapper.find(".discord-message-composer-field").exists()).toBe(true);
-				// Mobile empty-state chrome is in the DOM; CSS shows it only below md.
-				expect(wrapper.find(".discord-message-composer-apps-mobile").exists()).toBe(true);
-				expect(wrapper.find(".discord-message-composer-gift-mobile").exists()).toBe(true);
-				expect(wrapper.find(".discord-message-composer-send").exists()).toBe(true);
+				expect(wrapper.find("[role='group']").attributes("aria-label")).toBe(
+					"Message composer for mod-commands",
+				);
+				// Only the apps control is reachable; the other toolbar icons are decoration.
 				expect(wrapper.find("[aria-label='Open attachment menu']").exists()).toBe(false);
 				expect(wrapper.find("[aria-label='Open GIF picker']").exists()).toBe(false);
 				expect(wrapper.find("[aria-label='Open sticker picker']").exists()).toBe(false);
-				expect(wrapper.find("[aria-label='Open apps and commands']").exists()).toBe(true);
 				expect(wrapper.find("[aria-label='Choose an emoji']").exists()).toBe(false);
-				// Empty state uses decorative mic (no Send label); typed state exposes Send.
-				expect(wrapper.find("[aria-label='Send message']").exists()).toBe(false);
+				expect(wrapper.findAll("[aria-label='Open apps and commands']")).toHaveLength(1);
 				expect(wrapper.find("[aria-label='Notifiche']").exists()).toBe(false);
-				// Mobile DOM order: + → leading (apps/gift) → field pill → send/mic.
-				const composer = wrapper.find(".discord-message-composer");
-				const add = composer.find(".discord-message-composer-add");
-				const leading = composer.find(".discord-message-composer-mobile-leading");
-				const field = composer.find(".discord-message-composer-field");
-				const send = composer.find(".discord-message-composer-send");
-				const children = [...composer.element.children];
-				expect(children.indexOf(add.element)).toBeLessThan(
-					children.indexOf(leading.element),
-				);
-				expect(children.indexOf(leading.element)).toBeLessThan(
-					children.indexOf(field.element),
-				);
-				expect(children.indexOf(field.element)).toBeLessThan(
-					children.indexOf(send.element),
-				);
+				// The field comes before the send control.
+				const field = input.element;
+				const send = wrapper.find("button[aria-label='Send message']").element;
+				expect(
+					field.compareDocumentPosition(send) & Node.DOCUMENT_POSITION_FOLLOWING,
+				).toBeTruthy();
 			});
 
 			it("mutes the send control when the composer is empty", async () => {
@@ -865,50 +795,17 @@ describe("component SSR rendering", () => {
 					props: { channelName: "mod-commands" },
 				});
 
-				expect(empty.find(".discord-message-composer-has-value").exists()).toBe(false);
 				expect(
-					empty.find(".discord-message-composer-send").attributes("disabled"),
+					empty.find("button[aria-label='Send message']").attributes("disabled"),
 				).toBeDefined();
-				expect(empty.find("[aria-label='Send message']").exists()).toBe(false);
 
 				const filled = await mountSuspended(DiscordChatMessageComposer, {
 					props: { channelName: "mod-commands", modelValue: "/warn" },
 				});
 
-				expect(filled.find(".discord-message-composer-has-value").exists()).toBe(true);
 				expect(
-					filled.find(".discord-message-composer-send").attributes("disabled"),
+					filled.find("button[aria-label='Send message']").attributes("disabled"),
 				).toBeUndefined();
-				expect(filled.find("[aria-label='Send message']").exists()).toBe(true);
-			});
-		});
-
-		describe("DiscordReaction", () => {
-			it("renders reaction with emoji and count", async () => {
-				const wrapper = await mountSuspended(DiscordReaction, {
-					props: { count: 5 },
-					slots: { default: "thumbsup" },
-				});
-				const reaction = wrapper.find(".discord-reaction");
-				expect(reaction.exists()).toBe(true);
-				expect(wrapper.text()).toContain("5");
-			});
-
-			it("applies self class when self prop is true", async () => {
-				const wrapper = await mountSuspended(DiscordReaction, {
-					props: { count: 3, self: true },
-					slots: { default: "heart" },
-				});
-				expect(wrapper.find(".discord-reaction.self").exists()).toBe(true);
-			});
-		});
-
-		describe("DiscordReactions", () => {
-			it("renders slot content in a flex container", async () => {
-				const wrapper = await mountSuspended(DiscordReactions, {
-					slots: { default: "<span>Reaction</span>" },
-				});
-				expect(wrapper.text()).toContain("Reaction");
 			});
 		});
 
@@ -1083,10 +980,10 @@ describe("component SSR rendering", () => {
 			expect(wrapper.text()).toContain(
 				"This is the start of the #mod-commands channel. WolfStar moderation commands — try a slash command below.",
 			);
-			expect(wrapper.find(".discord-channel-header-topic").text()).toBe(
+			expect(wrapper.find("header.discord-channel-header").text()).toContain(
 				"WolfStar moderation commands — try a slash command below.",
 			);
-			expect(wrapper.find(".discord-channel-header-search-placeholder").text()).toBe(
+			expect(wrapper.find("button[aria-label='Search WolfStar HQ']").text()).toBe(
 				"Search WolfStar HQ",
 			);
 			expect(wrapper.find(".discord-chat-messages[role='log']").exists()).toBe(true);
@@ -1096,9 +993,10 @@ describe("component SSR rendering", () => {
 			expect(
 				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
 			).toBe("");
-			expect(wrapper.find(".showcase-mobile-command-browser").exists()).toBe(false);
 			expect(wrapper.text()).not.toContain("Command Browser");
-			expect(wrapper.find(".discord-channel-header-mobile").exists()).toBe(true);
+			expect(
+				wrapper.find("button[aria-label='Open channel info for #mod-commands']").exists(),
+			).toBe(true);
 			expect(wrapper.text()).toContain("10 Online");
 			expect(wrapper.find(".discord-member-list").exists()).toBe(true);
 			expect(wrapper.text()).toContain("Star Network — 4");
@@ -1111,11 +1009,9 @@ describe("component SSR rendering", () => {
 			expect(wrapper.text()).toContain("WolfStar Beta");
 			expect(wrapper.text()).toContain("Ko-fi Bot");
 			expect(wrapper.text()).toContain("Patreon");
-			const membersToggle = wrapper
-				.findAll(".discord-channel-header-action")
-				.find((action) => action.attributes("aria-pressed") !== undefined);
-			expect(membersToggle?.attributes("aria-pressed")).toBe("true");
-			expect(membersToggle?.attributes("aria-label")).toBe("Hide member list");
+			const membersToggle = wrapper.find("header button[aria-pressed]");
+			expect(membersToggle.attributes("aria-pressed")).toBe("true");
+			expect(membersToggle.attributes("aria-label")).toBe("Hide member list");
 		});
 
 		// WolfStar V7 answers a moderation action with a green embed, the target
@@ -1151,22 +1047,20 @@ describe("component SSR rendering", () => {
 
 			expect(wrapper.find(".discord-member-list").exists()).toBe(true);
 
-			const membersToggle = wrapper
-				.findAll(".discord-channel-header-action")
-				.find((action) => action.attributes("aria-pressed") !== undefined);
-			expect(membersToggle).toBeDefined();
-			await membersToggle!.trigger("click");
+			const membersToggle = wrapper.find("header button[aria-pressed]");
+			expect(membersToggle.exists()).toBe(true);
+			await membersToggle.trigger("click");
 			await wrapper.vm.$nextTick();
 
 			expect(wrapper.find(".discord-member-list").exists()).toBe(false);
-			expect(membersToggle!.attributes("aria-pressed")).toBe("false");
-			expect(membersToggle!.attributes("aria-label")).toBe("Show member list");
+			expect(membersToggle.attributes("aria-pressed")).toBe("false");
+			expect(membersToggle.attributes("aria-label")).toBe("Show member list");
 
-			await membersToggle!.trigger("click");
+			await membersToggle.trigger("click");
 			await wrapper.vm.$nextTick();
 
 			expect(wrapper.find(".discord-member-list").exists()).toBe(true);
-			expect(membersToggle!.attributes("aria-pressed")).toBe("true");
+			expect(membersToggle.attributes("aria-pressed")).toBe("true");
 		});
 
 		it("opens mobile channel info from the channel header and closes via back", async () => {
@@ -1175,9 +1069,7 @@ describe("component SSR rendering", () => {
 			expect(wrapper.find(".discord-channel-info").exists()).toBe(false);
 
 			await wrapper
-				.find(
-					"button.discord-channel-header-mobile-title[aria-label='Open channel info for #mod-commands']",
-				)
+				.find("button[aria-label='Open channel info for #mod-commands']")
 				.trigger("click");
 			await wrapper.vm.$nextTick();
 
@@ -1203,7 +1095,8 @@ describe("component SSR rendering", () => {
 				.findAll("[role='tab']")
 				.find((tab) => tab.text() === "Media");
 			expect(mediaTab).toBeDefined();
-			await mediaTab!.trigger("click");
+			// Reka selects a tab on a primary-button press.
+			await mediaTab!.trigger("mousedown", { button: 0 });
 			await wrapper.vm.$nextTick();
 
 			expect(channelInfo.text()).toContain("We searched far and wide.");
@@ -1213,7 +1106,7 @@ describe("component SSR rendering", () => {
 				.findAll("[role='tab']")
 				.find((tab) => tab.text() === "Threads");
 			expect(threadsTab).toBeDefined();
-			await threadsTab!.trigger("click");
+			await threadsTab!.trigger("mousedown", { button: 0 });
 			await wrapper.vm.$nextTick();
 
 			expect(channelInfo.text()).toContain("There are no threads.");
@@ -1231,68 +1124,37 @@ describe("component SSR rendering", () => {
 
 			expect(wrapper.text()).toContain("Frequently Used");
 			expect(wrapper.text()).not.toContain("Matched Command");
-			expect(wrapper.find(".discord-slash-command-suggestions-sidebar").exists()).toBe(true);
-			expect(wrapper.findAll(".discord-slash-command-suggestions-sidebar-item").length).toBe(
-				8,
+			const rail = wrapper.find("nav[aria-label='Applications']");
+			expect(rail.findAll("button")).toHaveLength(8);
+			// One continuous list: 5 Frequently Used WolfStar rows, then the bot-grouped catalog.
+			const list = wrapper.find("[role='listbox'][aria-label='Slash command suggestions']");
+			expect(list.element.contains(rail.element)).toBe(false);
+			expect(list.findAll(".discord-slash-command-suggestion")).toHaveLength(13);
+			expect(list.findAll("[role='option'][aria-disabled='true']")).toHaveLength(8);
+			expect(list.findAll(".discord-slash-command-suggestion-group")).toHaveLength(6);
+			expect(list.find(".discord-slash-command-suggestion-group").text()).toContain("Staryl");
+			expect(list.find(".discord-slash-command-suggestions-header").text()).toBe(
+				"Frequently Used",
 			);
-			// 5 Frequently Used WolfStar rows + full bot-grouped catalog in the lower scroll pane.
-			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(13);
-			expect(wrapper.findAll(".discord-slash-command-suggestion-disabled").length).toBe(8);
-			expect(wrapper.findAll(".discord-slash-command-suggestion-group").length).toBe(6);
-			expect(wrapper.find(".discord-slash-command-suggestion-group").text()).toContain(
-				"Staryl",
-			);
-			expect(wrapper.find(".discord-slash-command-suggestions-sidebar-scroll").exists()).toBe(
-				true,
-			);
-			expect(wrapper.find(".discord-slash-command-suggestions-inner").exists()).toBe(true);
-			expect(wrapper.find(".discord-slash-command-suggestions-recent").exists()).toBe(true);
-			expect(wrapper.find(".discord-scrollbar").exists()).toBe(true);
-			// Chat scroll + member-list scroll + one continuous picker list scroll.
-			expect(wrapper.findAll(".discord-scrollbar").length).toBe(3);
-			const pickerScroll = wrapper.find(".discord-slash-command-suggestions-scroll");
-			expect(pickerScroll.exists()).toBe(true);
-			expect(
-				pickerScroll.find(".discord-slash-command-suggestions-sidebar-scroll").exists(),
-			).toBe(true);
-			expect(
-				pickerScroll
-					.find(".discord-scrollbar-viewport")
-					.findAll(".discord-slash-command-suggestion").length,
-			).toBe(13);
-			expect(
-				pickerScroll
-					.find(".discord-scrollbar-viewport")
-					.find(".discord-slash-command-suggestions-header")
-					.exists(),
-			).toBe(true);
-			expect(
-				pickerScroll
-					.find(".discord-scrollbar-viewport")
-					.find(".discord-slash-command-suggestions-recent")
-					.exists(),
-			).toBe(true);
-			expect(wrapper.find(".discord-slash-command-suggestions-matched").exists()).toBe(false);
+			expect(wrapper.find("[aria-label='Matched slash command']").exists()).toBe(false);
 			expect(wrapper.find(".discord-slash-command-suggestion-matched").exists()).toBe(false);
-			expect(wrapper.text()).toContain("/warn");
-			expect(wrapper.text()).toContain("/ban");
-			expect(wrapper.text()).toContain("/kick");
-			expect(wrapper.text()).toContain("/mute");
-			expect(wrapper.text()).toContain("/settings server");
-			expect(wrapper.text()).toContain("/subscriptions twitch show");
-			expect(wrapper.text()).toContain("/subscriptions twitch add");
-			expect(wrapper.text()).toContain("/addfriend");
+			const text = commandText(wrapper);
+			expect(text).toContain("/warn");
+			expect(text).toContain("/ban");
+			expect(text).toContain("/kick");
+			expect(text).toContain("/mute");
+			expect(text).toContain("/settings server");
+			expect(text).toContain("/subscriptions twitch show");
+			expect(text).toContain("/subscriptions twitch add");
+			expect(text).toContain("/addfriend");
 			expect(wrapper.findAll("input[name='matched-command']").length).toBe(0);
-			expect(wrapper.find(".discord-slash-command-input").exists()).toBe(false);
 		});
 
 		it("keeps the executed response visible when the slash picker reopens", async () => {
 			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
-			const kickSuggestion = wrapper
-				.findAll(".discord-slash-command-suggestion")
-				.find((suggestion) => suggestion.text().includes("/kick"));
+			const kickSuggestion = findSuggestion(wrapper, "/kick");
 			expect(kickSuggestion).toBeDefined();
 			await kickSuggestion!.trigger("click");
 			await wrapper.vm.$nextTick();
@@ -1332,9 +1194,7 @@ describe("component SSR rendering", () => {
 			const suggestions = wrapper.findAll(".discord-slash-command-suggestion");
 			// Every leaf V7 registers, once: the scripted commands, then the rest of
 			// the bot's catalogue. A command added to or dropped from the bot moves this.
-			const paths = suggestions.map((suggestion) =>
-				suggestion.find(".discord-slash-command-suggestion-name-path").text(),
-			);
+			const paths = suggestions.map((suggestion) => suggestionPath(suggestion));
 			expect(paths).toHaveLength(112);
 			expect(new Set(paths).size).toBe(paths.length);
 			expect(paths).not.toContain("settings server menu");
@@ -1355,11 +1215,11 @@ describe("component SSR rendering", () => {
 				"/settings user",
 				"/archive create",
 			]) {
-				expect(wrapper.text()).toContain(command);
+				expect(commandText(wrapper)).toContain(command);
 			}
 
 			const archiveSuggestion = suggestions.find((suggestion) =>
-				suggestion.text().includes("/case archive"),
+				commandText(suggestion).includes("/case archive"),
 			);
 			expect(archiveSuggestion).toBeDefined();
 			await archiveSuggestion!.trigger("click");
@@ -1368,7 +1228,7 @@ describe("component SSR rendering", () => {
 			expect(wrapper.find(".discord-message-reply").attributes("aria-label")).toMatch(
 				/used the case archive slash command/i,
 			);
-			expect(wrapper.find(".discord-message-ephemeral").exists()).toBe(true);
+			expect(wrapper.find("article[data-ephemeral='true']").exists()).toBe(true);
 			expect(wrapper.find(".showcase-desktop-text-response").text()).toBe(
 				"Successfully archived case 3.",
 			);
@@ -1384,9 +1244,7 @@ describe("component SSR rendering", () => {
 			).toBe("/");
 			expect(wrapper.find(".showcase-typed-command-message").exists()).toBe(false);
 
-			const kickSuggestion = wrapper
-				.findAll(".discord-slash-command-suggestion")
-				.find((suggestion) => suggestion.text().includes("/kick"));
+			const kickSuggestion = findSuggestion(wrapper, "/kick");
 			expect(kickSuggestion).toBeDefined();
 			await kickSuggestion!.trigger("click");
 			await wrapper.vm.$nextTick();
@@ -1409,9 +1267,7 @@ describe("component SSR rendering", () => {
 			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
-			const settingsSuggestion = wrapper
-				.findAll(".discord-slash-command-suggestion")
-				.find((suggestion) => suggestion.text().includes("/settings server"));
+			const settingsSuggestion = findSuggestion(wrapper, "/settings server");
 			expect(settingsSuggestion).toBeDefined();
 			await settingsSuggestion!.trigger("click");
 			await wrapper.vm.$nextTick();
@@ -1421,7 +1277,9 @@ describe("component SSR rendering", () => {
 				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
 			).toBe("");
 			expect(
-				wrapper.find(".showcase-desktop-command-response .discord-v2-container").exists(),
+				wrapper
+					.find(".showcase-desktop-command-response [style*='--newt-v2-accent']")
+					.exists(),
 			).toBe(true);
 			// V7's settings menu: the module select, the root keys, the reset section.
 			expect(wrapper.text()).toContain("Core Configurations");
@@ -1446,7 +1304,7 @@ describe("component SSR rendering", () => {
 			expect(wrapper.find('[role="dialog"][aria-label="Apps"]').exists()).toBe(true);
 			expect(wrapper.find("[data-sheet-snap]").exists()).toBe(true);
 			expect(
-				wrapper.find(".discord-app-launcher-search-input").attributes("placeholder"),
+				wrapper.find("[role='dialog'] input[type='search']").attributes("placeholder"),
 			).toBe("Search Apps & Commands");
 			expect(wrapper.text()).toContain("Recents");
 			expect(wrapper.text()).toContain("Promoted");
@@ -1455,10 +1313,13 @@ describe("component SSR rendering", () => {
 				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
 			).toBe("");
 
-			await wrapper.find("[aria-label='Open apps and commands']").trigger("click");
+			// While the launcher is open, the same control is named as its close action.
+			expect(wrapper.find("[aria-label='Open apps and commands']").exists()).toBe(false);
+			await wrapper.find("[aria-label='Close apps and commands']").trigger("click");
 			await wrapper.vm.$nextTick();
 
 			expect(wrapper.find(".discord-app-launcher").exists()).toBe(false);
+			expect(wrapper.find("[aria-label='Open apps and commands']").exists()).toBe(true);
 		});
 
 		it("hides the message composer when the Apps sheet expands to full (positive)", async () => {
@@ -1468,7 +1329,7 @@ describe("component SSR rendering", () => {
 			expect(wrapper.find(".discord-message-composer").exists()).toBe(true);
 			expect(wrapper.find('[data-sheet-snap="half"]').exists()).toBe(true);
 
-			await wrapper.find(".discord-app-launcher-handle").trigger("keydown", {
+			await wrapper.find("[data-slot='sheet-handle']").trigger("keydown", {
 				key: "ArrowUp",
 			});
 			await wrapper.vm.$nextTick();
@@ -1477,7 +1338,7 @@ describe("component SSR rendering", () => {
 			expect(wrapper.find(".showcase-command-picker-apps-full").exists()).toBe(true);
 			expect(wrapper.find(".discord-message-composer").exists()).toBe(false);
 
-			await wrapper.find(".discord-app-launcher-handle").trigger("keydown", {
+			await wrapper.find("[data-slot='sheet-handle']").trigger("keydown", {
 				key: "ArrowDown",
 			});
 			await wrapper.vm.$nextTick();
@@ -1501,19 +1362,17 @@ describe("component SSR rendering", () => {
 			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openAppLauncher(wrapper);
 
-			const search = wrapper.find(".discord-app-launcher-search-input");
+			const search = wrapper.find("[role='dialog'] input[type='search']");
 			await search.setValue("warn");
 			await wrapper.vm.$nextTick();
 
 			expect(wrapper.find("#discord-app-launcher-commands-heading").exists()).toBe(true);
-			expect(wrapper.text()).toContain("/warn");
+			expect(commandText(wrapper)).toContain("/warn");
 			expect(wrapper.find(".showcase-typed-command-message").exists()).toBe(false);
 
-			const warnRow = wrapper
-				.findAll(".discord-app-launcher-list-item")
-				.find((row) => row.text().includes("/warn"));
-			expect(warnRow).toBeDefined();
-			await warnRow!.trigger("click");
+			const warnRow = wrapper.find("[role='dialog'] button[aria-label^='/warn']");
+			expect(warnRow.exists()).toBe(true);
+			await warnRow.trigger("click");
 			await wrapper.vm.$nextTick();
 
 			expect(wrapper.find(".discord-app-launcher").exists()).toBe(false);
@@ -1534,7 +1393,9 @@ describe("component SSR rendering", () => {
 
 			const input = wrapper.find(".discord-message-composer-input");
 			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(true);
-			expect(wrapper.find(".discord-message-composer-has-value").exists()).toBe(true);
+			expect(
+				wrapper.find("button[aria-label='Send message']").attributes("disabled"),
+			).toBeUndefined();
 
 			// Prefer focusing first so onComposerEscape can blur away focus-visible.
 			// Happy-dom may leave activeElement on <body>; blur is still a no-op-safe path.
@@ -1545,8 +1406,10 @@ describe("component SSR rendering", () => {
 
 			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(false);
 			expect((input.element as HTMLInputElement).value).toBe("");
-			expect(wrapper.find(".discord-message-composer-has-value").exists()).toBe(false);
-			expect(wrapper.find("[aria-label='Send message']").exists()).toBe(false);
+			// Idle again: the send control stays visible but is disabled while empty.
+			expect(
+				wrapper.find("button[aria-label='Send message']").attributes("disabled"),
+			).toBeDefined();
 			expect(document.activeElement).not.toBe(input.element);
 			// Channel history (used-reply + response) stays — Esc only exits slash mode.
 			expect(wrapper.find(".showcase-typed-command-message").exists()).toBe(false);
@@ -1565,16 +1428,16 @@ describe("component SSR rendering", () => {
 
 			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(false);
 			expect((input.element as HTMLInputElement).value).toBe("");
-			expect(wrapper.find(".discord-message-composer-has-value").exists()).toBe(false);
+			expect(
+				wrapper.find("button[aria-label='Send message']").attributes("disabled"),
+			).toBeDefined();
 		});
 
 		it("keeps third-party app rows non-selectable", async () => {
 			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
-			const starylSuggestion = wrapper
-				.findAll(".discord-slash-command-suggestion")
-				.find((suggestion) => suggestion.text().includes("/subscriptions twitch show"));
+			const starylSuggestion = findSuggestion(wrapper, "/subscriptions twitch show");
 			expect(starylSuggestion).toBeDefined();
 			expect(starylSuggestion!.attributes("aria-disabled")).toBe("true");
 
@@ -1624,9 +1487,7 @@ describe("component SSR rendering", () => {
 			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
-			const settingsSuggestion = wrapper
-				.findAll(".discord-slash-command-suggestion")
-				.find((suggestion) => suggestion.text().includes("/settings server"));
+			const settingsSuggestion = findSuggestion(wrapper, "/settings server");
 			expect(settingsSuggestion).toBeDefined();
 			await settingsSuggestion!.trigger("click");
 			await wrapper.vm.$nextTick();
@@ -1641,7 +1502,9 @@ describe("component SSR rendering", () => {
 				/used the settings server slash command/i,
 			);
 			expect(
-				wrapper.find(".showcase-desktop-command-response .discord-v2-container").exists(),
+				wrapper
+					.find(".showcase-desktop-command-response [style*='--newt-v2-accent']")
+					.exists(),
 			).toBe(true);
 		});
 	});
@@ -1651,7 +1514,7 @@ describe("component SSR rendering", () => {
 			const wrapper = await mountSuspended(StarylCommandsShowcase);
 
 			// `/setup` comes first: its menu is Components V2.
-			expect(wrapper.find(".staryl-setup-menu .discord-v2-container").text()).toContain(
+			expect(wrapper.find(".staryl-setup-menu [style*='--newt-v2-accent']").text()).toContain(
 				"Staryl setup",
 			);
 			expect(wrapper.find(".staryl-setup-menu").text()).toContain("Current notifications: 2");
@@ -1669,7 +1532,7 @@ describe("component SSR rendering", () => {
 				"/subscriptions twitch show",
 				"/subscriptions twitch test",
 			]) {
-				expect(wrapper.text()).toContain(command);
+				expect(commandText(wrapper)).toContain(command);
 			}
 			expect(wrapper.text()).not.toContain("Placeholder");
 
@@ -1677,26 +1540,23 @@ describe("component SSR rendering", () => {
 			// Every row is Staryl's, with its avatar: none falls back to WolfStar's.
 			for (const suggestion of suggestions) {
 				expect(suggestion.find("img").attributes("src")).toContain("staryl");
-				expect(suggestion.find(".discord-slash-command-suggestion-app").text()).toBe(
-					"Staryl",
-				);
+				expect(suggestion.attributes("aria-label")).toMatch(/^Staryl slash command: /);
+				expect(suggestion.text()).toMatch(/Staryl$/);
 			}
 
 			const addSuggestion = suggestions.find((suggestion) =>
-				suggestion.text().includes("/subscriptions twitch add"),
+				commandText(suggestion).includes("/subscriptions twitch add"),
 			);
 			await addSuggestion!.trigger("click");
 			await wrapper.vm.$nextTick();
-			expect(wrapper.find(".discord-message-ephemeral").exists()).toBe(true);
+			expect(wrapper.find("article[data-ephemeral='true']").exists()).toBe(true);
 			expect(wrapper.find(".staryl-command-response").text()).toContain(
 				"Whenever stella goes live",
 			);
 
 			await wrapper.find(".discord-message-composer-input").setValue("/");
 			await wrapper.vm.$nextTick();
-			const showSuggestion = wrapper
-				.findAll(".discord-slash-command-suggestion")
-				.find((suggestion) => suggestion.text().includes("/subscriptions twitch show"));
+			const showSuggestion = findSuggestion(wrapper, "/subscriptions twitch show");
 			expect(showSuggestion).toBeDefined();
 			await showSuggestion!.trigger("click");
 			await wrapper.vm.$nextTick();
@@ -1717,32 +1577,34 @@ describe("component SSR rendering", () => {
 			};
 
 			// Live: the components the bot builds, with a live Watch Stream button.
-			const container = wrapper.find(".discord-v2-container");
+			const container = wrapper.find("[style*='--newt-v2-accent']");
 			expect(container.text()).toContain("Stella is now live on Twitch!");
 			expect(container.find("a").attributes("href")).toBe("https://twitch.tv/stella");
 			expect(container.text()).toContain("Game");
-			expect(container.find(".discord-v2-media-gallery img").attributes("alt")).toBeTruthy();
+			// The stream preview in the media gallery.
+			expect(container.find("img[src$='stream-preview.svg']").attributes("alt")).toBeTruthy();
 			expect(container.text()).toContain("Staryl Twitch Notifications • October 26, 2026");
-			expect(wrapper.find(".discord-action-row .discord-button").classes()).not.toContain(
-				"discord-button-disabled",
-			);
+			const watchButton = wrapper.find("[role='group'] .discord-button");
+			expect(watchButton.text()).toContain("Watch Stream");
+			expect(watchButton.classes()).not.toContain("pointer-events-none");
+			expect(watchButton.find("svg").exists()).toBe(true);
 
 			await pick("ping");
-			expect(wrapper.find(".discord-mention").text()).toContain("Stream Pings");
+			expect(wrapper.find("[data-variant='user']").text()).toContain("Stream Pings");
 
 			// Offline: plain text, as `buildOfflineMessage()` writes it.
 			await pick("offline");
-			expect(wrapper.find(".discord-v2-container").exists()).toBe(false);
+			expect(wrapper.find("[style*='--newt-v2-accent']").exists()).toBe(false);
 			expect(wrapper.find(".staryl-showcase-feed").text()).toContain(
 				"Stella's stream is over, thanks for watching! | October 26, 2026",
 			);
-			expect(wrapper.text()).toContain("/subscriptions twitch add type:Stream Offline");
+			expect(commandText(wrapper)).toContain("/subscriptions twitch add type:Stream Offline");
 
 			// A test on a streamer who is not live: the notice, the placeholder title, no preview.
 			await pick("test");
 			expect(wrapper.find(".staryl-showcase-feed").text()).toContain("Test notification");
-			expect(wrapper.find(".discord-v2-container a").text()).toBe("Test notification");
-			expect(wrapper.find(".discord-v2-media-gallery").exists()).toBe(false);
+			expect(wrapper.find("[style*='--newt-v2-accent'] a").text()).toBe("Test notification");
+			expect(wrapper.find("img[src$='stream-preview.svg']").exists()).toBe(false);
 		});
 	});
 

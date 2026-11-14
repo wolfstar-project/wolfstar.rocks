@@ -2,75 +2,34 @@
 	<div
 		class="discord-scrollbar"
 		:class="{
-			'discord-scrollbar-with-arrows': showArrows,
-			'discord-scrollbar-with-below-viewport': Boolean(slots['below-viewport']),
 			'discord-scrollbar-auto-hide': autoHide,
 			'discord-scrollbar-overlay': overlay,
 			'discord-scrollbar-themed': themed,
 			'discord-scrollbar-scrolling': isScrolling || isDragging,
-			'discord-scrollbar-scrollable': isScrollable || alwaysShowTrack,
+			'discord-scrollbar-scrollable': isScrollable,
 		}"
 	>
-		<div class="discord-scrollbar-body">
-			<div
-				ref="viewportRef"
-				class="discord-scrollbar-viewport"
-				:tabindex="focusable ? 0 : undefined"
-				:role="focusable ? 'group' : undefined"
-				:aria-label="focusable ? viewportLabel : undefined"
-			>
-				<div ref="contentRef" class="discord-scrollbar-content">
-					<slot />
-				</div>
-			</div>
-
-			<div v-if="slots['below-viewport']" class="discord-scrollbar-below-viewport">
-				<slot name="below-viewport" />
+		<div ref="viewportRef" class="discord-scrollbar-viewport">
+			<div ref="contentRef" class="discord-scrollbar-content">
+				<slot />
 			</div>
 		</div>
 
-		<div
-			v-show="isScrollable || alwaysShowTrack"
-			class="discord-scrollbar-track"
-			aria-hidden="true"
-		>
-			<button
-				v-if="showArrows"
-				type="button"
-				class="discord-scrollbar-arrow discord-scrollbar-arrow-up"
-				tabindex="-1"
-				aria-hidden="true"
-				@click="scrollByStep(-1)"
-			>
-				<span class="discord-scrollbar-arrow-icon" />
-			</button>
-
+		<div v-show="isScrollable" class="discord-scrollbar-track" aria-hidden="true">
 			<div
 				ref="thumbRailRef"
 				class="discord-scrollbar-thumb-rail"
 				@pointerdown.self="pageTowards"
 			>
 				<div
-					v-show="isScrollable"
+					ref="thumbRef"
 					class="discord-scrollbar-thumb rounded-full"
-					@pointerdown="startDrag"
 					:style="{
 						height: `${thumbHeight}px`,
 						transform: `translateY(${thumbOffset}px)`,
 					}"
 				/>
 			</div>
-
-			<button
-				v-if="showArrows"
-				type="button"
-				class="discord-scrollbar-arrow discord-scrollbar-arrow-down"
-				tabindex="-1"
-				aria-hidden="true"
-				@click="scrollByStep(1)"
-			>
-				<span class="discord-scrollbar-arrow-icon" />
-			</button>
 		</div>
 	</div>
 </template>
@@ -78,65 +37,48 @@
 <script lang="ts">
 import type { VNode } from "vue";
 
+/*
+ * Use newt/ui's `ScrollArea` where a native thin scrollbar is enough. This
+ * drawn thumb stays for what `ScrollArea` cannot do: float over the content
+ * (`overlay`), stop short of a card laid over the foot (the track's `bottom`),
+ * hide until hover (`autoHide`), and clamp the thumb's height.
+ */
 interface DiscordScrollbarProps {
-	alwaysShowTrack?: boolean;
-	showArrows?: boolean;
-	/** Minimum thumb height in px. */
-	minThumbHeight?: number;
-	/** Maximum thumb height in px — keeps Discord picker thumbs short and chunky. */
+	/** Maximum thumb height in px: keeps the server rail's thumb short. */
 	maxThumbHeight?: number;
-	/**
-	 * Discord chat behavior: hide the thumb until the scrollbar is hovered or
-	 * the viewport is actively scrolling.
-	 */
+	/** Hide the thumb until the scrollbar is hovered or the content scrolls. */
 	autoHide?: boolean;
-	/**
-	 * Make the viewport keyboard-focusable so scrollable content without
-	 * focusable children stays keyboard-accessible (WCAG 2.1.1,
-	 * axe `scrollable-region-focusable`).
-	 */
-	focusable?: boolean;
-	/** Accessible name for the focusable viewport; pair with `focusable`. */
-	viewportLabel?: string;
 	/**
 	 * Float the thumb over the content instead of keeping a lane for it, so a
 	 * narrow column (the server rail) keeps its full width.
 	 */
 	overlay?: boolean;
-	/** Tint the thumb from the selected theme's muted text instead of Discord's grey. */
+	/** Tint the thumb from the selected theme's muted text instead of newt/ui's grey. */
 	themed?: boolean;
 }
 
 interface DiscordScrollbarSlots {
-	"default"?(props?: Record<string, never>): VNode[];
-	/** Renders under the viewport in the content column so the track spans full root height. */
-	"below-viewport"?(props?: Record<string, never>): VNode[];
+	default?(props?: Record<string, never>): VNode[];
 }
 </script>
 
 <script setup lang="ts">
 defineSlots<DiscordScrollbarSlots>();
 
-const SCROLL_STEP = 40;
+const MIN_THUMB_HEIGHT = 24;
 const SCROLLING_IDLE_MS = 800;
 
 const {
-	alwaysShowTrack = false,
-	showArrows = false,
-	minThumbHeight = 24,
 	maxThumbHeight,
 	autoHide = false,
-	focusable = false,
-	viewportLabel,
 	overlay = false,
 	themed = false,
 } = defineProps<DiscordScrollbarProps>();
 
-const slots = useSlots();
-
 const viewportRef = useTemplateRef<HTMLDivElement>("viewportRef");
 const contentRef = useTemplateRef<HTMLDivElement>("contentRef");
 const thumbRailRef = useTemplateRef<HTMLDivElement>("thumbRailRef");
+const thumbRef = useTemplateRef<HTMLDivElement>("thumbRef");
 
 const isScrollable = ref(false);
 const thumbHeight = ref(0);
@@ -144,49 +86,37 @@ const thumbOffset = ref(0);
 const isScrolling = ref(false);
 const isDragging = ref(false);
 
-let scrollingIdleTimer: ReturnType<typeof setTimeout> | undefined;
-
-function markScrolling() {
-	if (!autoHide) return;
-	isScrolling.value = true;
-	if (scrollingIdleTimer !== undefined) clearTimeout(scrollingIdleTimer);
-	scrollingIdleTimer = setTimeout(() => {
+const { start: restartScrollingIdle } = useTimeoutFn(
+	() => {
 		isScrolling.value = false;
-		scrollingIdleTimer = undefined;
-	}, SCROLLING_IDLE_MS);
-}
+	},
+	SCROLLING_IDLE_MS,
+	{ immediate: false },
+);
 
 function updateThumb() {
 	const viewport = viewportRef.value;
 	const thumbRail = thumbRailRef.value;
-	if (!viewport || !thumbRail) {
+	if (!viewport || !thumbRail || viewport.scrollHeight <= viewport.clientHeight + 1) {
 		isScrollable.value = false;
 		thumbHeight.value = 0;
 		thumbOffset.value = 0;
 		return;
 	}
+	isScrollable.value = true;
 
 	const { scrollTop, scrollHeight, clientHeight } = viewport;
-	const overflow = scrollHeight > clientHeight + 1;
-	isScrollable.value = overflow;
-
-	if (!overflow) {
-		thumbHeight.value = 0;
-		thumbOffset.value = 0;
-		return;
-	}
-
 	const railHeight = thumbRail.clientHeight;
 	const proportionalHeight = (clientHeight / scrollHeight) * railHeight;
-	const cappedMax =
+	const capped =
 		maxThumbHeight === undefined
 			? proportionalHeight
 			: Math.min(proportionalHeight, maxThumbHeight);
-	const computedThumbHeight = Math.max(cappedMax, minThumbHeight);
-	const maxThumbOffset = Math.max(railHeight - computedThumbHeight, 0);
+	const height = Math.max(capped, MIN_THUMB_HEIGHT);
+	const maxThumbOffset = Math.max(railHeight - height, 0);
 	const maxScrollTop = scrollHeight - clientHeight;
 
-	thumbHeight.value = computedThumbHeight;
+	thumbHeight.value = height;
 	thumbOffset.value = maxScrollTop > 0 ? (scrollTop / maxScrollTop) * maxThumbOffset : 0;
 }
 
@@ -194,7 +124,9 @@ const { y } = useScroll(viewportRef, {
 	behavior: "smooth",
 	onScroll: () => {
 		updateThumb();
-		markScrolling();
+		if (!autoHide) return;
+		isScrolling.value = true;
+		restartScrollingIdle();
 	},
 });
 
@@ -202,48 +134,41 @@ useResizeObserver(viewportRef, updateThumb);
 useResizeObserver(contentRef, updateThumb);
 useResizeObserver(thumbRailRef, updateThumb);
 
-onBeforeUnmount(() => {
-	if (scrollingIdleTimer !== undefined) clearTimeout(scrollingIdleTimer);
-});
-
-function scrollByStep(direction: 1 | -1) {
-	y.value += direction * SCROLL_STEP;
-}
-
 // The thumb drags the content as the native bar's does: each pixel of the rail
 // is worth as much scroll as the rail is shorter than the content.
-function startDrag(event: PointerEvent) {
+let drag: { startY: number; startScroll: number; ratio: number } | undefined;
+
+useEventListener(thumbRef, "pointerdown", (event: PointerEvent) => {
 	const viewport = viewportRef.value;
 	const thumbRail = thumbRailRef.value;
-	if (event.button !== 0 || !viewport || !thumbRail) return;
+	const thumb = thumbRef.value;
+	if (event.button !== 0 || !viewport || !thumbRail || !thumb) return;
 	event.preventDefault();
 
-	const thumb = event.currentTarget as HTMLElement;
-	const startY = event.clientY;
-	const startScroll = viewport.scrollTop;
 	const travel = Math.max(thumbRail.clientHeight - thumbHeight.value, 1);
-	const ratio = (viewport.scrollHeight - viewport.clientHeight) / travel;
-
+	drag = {
+		startY: event.clientY,
+		startScroll: viewport.scrollTop,
+		ratio: (viewport.scrollHeight - viewport.clientHeight) / travel,
+	};
 	// A pointer the browser no longer tracks cannot be captured; the drag then
 	// follows it only while it stays over the thumb.
 	try {
 		thumb.setPointerCapture(event.pointerId);
 	} catch {}
 	isDragging.value = true;
+});
 
-	const move = (moveEvent: PointerEvent) => {
-		viewport.scrollTop = startScroll + (moveEvent.clientY - startY) * ratio;
-	};
-	const stop = () => {
-		isDragging.value = false;
-		thumb.removeEventListener("pointermove", move);
-		thumb.removeEventListener("pointerup", stop);
-		thumb.removeEventListener("pointercancel", stop);
-	};
-	thumb.addEventListener("pointermove", move);
-	thumb.addEventListener("pointerup", stop);
-	thumb.addEventListener("pointercancel", stop);
-}
+useEventListener(thumbRef, "pointermove", (event: PointerEvent) => {
+	const viewport = viewportRef.value;
+	if (!drag || !viewport) return;
+	viewport.scrollTop = drag.startScroll + (event.clientY - drag.startY) * drag.ratio;
+});
+
+useEventListener(thumbRef, ["pointerup", "pointercancel"], () => {
+	drag = undefined;
+	isDragging.value = false;
+});
 
 // A click on the rail moves a page towards it, as the native bar's track does.
 function pageTowards(event: PointerEvent) {
@@ -260,15 +185,10 @@ function pageTowards(event: PointerEvent) {
 
 .discord-scrollbar {
 	/*
-	 * Discord dark scrollbar (floating pill):
-	 * - thumb ~5px, fully rounded
-	 * - ~3px gap from the container’s right edge (not flush)
-	 * - ~4px inset from top/bottom of the scroll area
-	 * - transparent track; color ≈ #4e5058
+	 * Discord's floating pill: a 5px thumb, 3px from the right edge, 4px from
+	 * the ends. The thumb takes newt/ui's scrollbar colour, as `ScrollArea` does.
 	 */
-	--discord-scrollbar-track: oklch(0% 0 0 / 0);
-	--discord-scrollbar-thumb: oklch(44% 0.012 270);
-	--discord-scrollbar-arrow: oklch(73.06% 0.0048 264.53 / 0.7);
+	--discord-scrollbar-thumb: var(--newt-bg-active);
 	--discord-scrollbar-thumb-width: 5px;
 	--discord-scrollbar-edge-inset: 3px;
 	--discord-scrollbar-end-inset: 4px;
@@ -277,16 +197,9 @@ function pageTowards(event: PointerEvent) {
 		var(--discord-scrollbar-thumb-width) + var(--discord-scrollbar-edge-inset) + 2px
 	);
 
-	@apply grid max-h-[inherit] min-h-0 min-w-0 gap-0;
-	/* Collapse the track lane until content overflows (Discord short channels). */
+	@apply grid max-h-[inherit] min-h-0 min-w-0;
+	/* Collapse the track lane until content overflows. */
 	grid-template-columns: minmax(0, 1fr) 0;
-}
-
-@variant theme-light {
-	.discord-scrollbar {
-		--discord-scrollbar-thumb: oklch(47.12% 0.012 264);
-		--discord-scrollbar-arrow: oklch(47.12% 0.012 264 / 0.7);
-	}
 }
 
 .discord-scrollbar-scrollable {
@@ -295,7 +208,6 @@ function pageTowards(event: PointerEvent) {
 
 .discord-scrollbar.discord-scrollbar-themed {
 	--discord-scrollbar-thumb: color-mix(in oklab, var(--ui-text-muted) 45%, transparent);
-	--discord-scrollbar-arrow: color-mix(in oklab, var(--ui-text-muted) 70%, transparent);
 }
 
 /* The thumb floats over the content's right edge: no lane is kept for it. */
@@ -304,48 +216,27 @@ function pageTowards(event: PointerEvent) {
 	grid-template-columns: minmax(0, 1fr);
 }
 
+/* Over the content only the thumb takes the pointer, so the content under the
+   lane stays clickable. */
 .discord-scrollbar-overlay .discord-scrollbar-track {
 	@apply pointer-events-none absolute inset-y-0 right-0 z-1;
 }
 
-/* Over the content only the thumb takes the pointer, so the lane under it
-   stays clickable. */
 .discord-scrollbar-overlay .discord-scrollbar-thumb {
 	@apply pointer-events-auto;
 }
 
-.discord-scrollbar-thumb {
-	touch-action: none;
-}
-
-.discord-scrollbar-body {
-	@apply flex max-h-[inherit] min-h-0 min-w-0 flex-col;
-}
-
 .discord-scrollbar-viewport {
-	@apply max-h-[inherit] min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto;
+	@apply max-h-[inherit] min-h-0 min-w-0 overflow-x-hidden overflow-y-auto;
 	scrollbar-width: none;
-	-ms-overflow-style: none;
 }
 
 .discord-scrollbar-viewport::-webkit-scrollbar {
 	display: none;
 }
 
-.discord-scrollbar-viewport:focus-visible {
-	/* Inset so the ring stays visible inside overflow-hidden card chrome. */
-	outline: 2px solid var(--color-primary);
-	outline-offset: -2px;
-}
-
 .discord-scrollbar-content {
-	/* Keep overflow visible so position:sticky descendants (e.g. slash-command
-	   section headers) stick against .discord-scrollbar-viewport, not here. */
-	@apply min-w-0 overflow-visible;
-}
-
-.discord-scrollbar-below-viewport {
-	@apply min-h-0 shrink-0;
+	@apply min-w-0;
 }
 
 .discord-scrollbar-track {
@@ -353,23 +244,18 @@ function pageTowards(event: PointerEvent) {
 	width: var(--discord-scrollbar-gutter);
 }
 
-.discord-scrollbar-with-arrows .discord-scrollbar-track {
-	@apply py-0.5;
-}
-
 .discord-scrollbar-thumb-rail {
 	@apply relative min-h-0 w-full flex-1;
 	margin-block: var(--discord-scrollbar-end-inset);
-	background-color: var(--discord-scrollbar-track);
 }
 
 .discord-scrollbar-thumb {
-	/* Floating pill: right-aligned with edge inset — never flush to the border.
-	   `rounded-full` is applied as a template class so the pill shape is assertable. */
+	/* `rounded-full` is a template class so the pill shape is assertable. */
 	@apply absolute top-0;
 	right: var(--discord-scrollbar-edge-inset);
 	width: var(--discord-scrollbar-thumb-width);
 	background-color: var(--discord-scrollbar-thumb);
+	touch-action: none;
 	will-change: transform;
 }
 
@@ -387,21 +273,5 @@ function pageTowards(event: PointerEvent) {
 	.discord-scrollbar-auto-hide .discord-scrollbar-thumb {
 		transition: none;
 	}
-}
-
-.discord-scrollbar-arrow {
-	@apply flex size-3 shrink-0 items-center justify-center border-0 bg-transparent p-0;
-}
-
-.discord-scrollbar-arrow-icon {
-	@apply block size-0 border-x-[3px] border-x-transparent;
-}
-
-.discord-scrollbar-arrow-up .discord-scrollbar-arrow-icon {
-	border-bottom: 4px solid var(--discord-scrollbar-arrow);
-}
-
-.discord-scrollbar-arrow-down .discord-scrollbar-arrow-icon {
-	border-top: 4px solid var(--discord-scrollbar-arrow);
 }
 </style>

@@ -207,6 +207,9 @@ importers:
       prisma-orm-extension-typed-json:
         specifier: 8.0.0-rc.5
         version: 8.0.0-rc.5(patch_hash=0d3a5a0b92c2c9f5ec59df4645d5355dd5751077a9322d29179f9e493a4c240a)(@prisma/cli-engine@0.6.1)(@prisma/orm-target-postgres@8.0.0-rc.13)(@voidzero-dev/vite-plus-core@0.2.8)(magicast@0.5.5)(typanion@3.14.0)(typescript-native-bridge@6.0.3-bridge.19.tsgo.7.0.2)
+      reka-ui:
+        specifier: 2.11.0
+        version: 2.11.0(vue@3.5.44)
       simple-git:
         specifier: ^4.0.2
         version: 4.0.2(supports-color@10.2.2)
@@ -5958,9 +5961,6 @@ packages:
     resolution: {integrity: sha512-ldZXEhOBb8Is7xLs01fR3YEc3DERiz5silj8tnGkFZytt1abEvl/GhUmCE0PMLaMPTa3Jk4HbKmRlHmu+gCftg==}
     engines: {node: '>=12'}
 
-  '@tanstack/virtual-core@3.17.8':
-    resolution: {integrity: sha512-BfEvehNpOT75r5Ksc5xW6NZuXujTfb7nlSEyVu4XHG3gdxNg1KqXruWbDewXOUaUYIo4oRbSfkjIajz4MAT8tA==}
-
   '@tanstack/virtual-core@3.19.6':
     resolution: {integrity: sha512-CsTW892z23gy7IyxYTTorVu1uZWB+0N349rSMgKz4rFLPpLza7F7TpcCKeI5iUAwYQCt8QUlOU67J+KXCxtpGw==}
 
@@ -5969,11 +5969,6 @@ packages:
     engines: {node: '>=12'}
     peerDependencies:
       vue: '>=3.2'
-
-  '@tanstack/vue-virtual@3.13.36':
-    resolution: {integrity: sha512-gKpExv4RbB9luVG+SucTXoqPZv/gzu/Yvz6BNO+8kpNxJ2x+I/ulryzl5W9BRciahZGp5Tls3Dp5XP1ztVGbMw==}
-    peerDependencies:
-      vue: ^2.7.0 || ^3.0.0
 
   '@tanstack/vue-virtual@3.13.47':
     resolution: {integrity: sha512-6HzdYK9bDyDoD9Q/NjepnC4wGDaZ7mFl5zz8tbn3Fmy7FDicI98ZJ+R37ztFssnoTMoCQhY3GfUhlz+pW/vOTg==}
@@ -20833,18 +20828,11 @@ snapshots:
 
   '@tanstack/table-core@8.21.3': {}
 
-  '@tanstack/virtual-core@3.17.8': {}
-
   '@tanstack/virtual-core@3.19.6': {}
 
   '@tanstack/vue-table@8.21.3(vue@3.5.44)':
     dependencies:
       '@tanstack/table-core': 8.21.3
-      vue: 3.5.44(typescript-native-bridge@6.0.3-bridge.19.tsgo.7.0.2)
-
-  '@tanstack/vue-virtual@3.13.36(vue@3.5.44)':
-    dependencies:
-      '@tanstack/virtual-core': 3.17.8
       vue: 3.5.44(typescript-native-bridge@6.0.3-bridge.19.tsgo.7.0.2)
 
   '@tanstack/vue-virtual@3.13.47(vue@3.5.44)':
@@ -28608,7 +28596,7 @@ snapshots:
       '@floating-ui/vue': 2.0.1(vue@3.5.44)
       '@internationalized/date': 3.12.2
       '@internationalized/number': 3.6.7
-      '@tanstack/vue-virtual': 3.13.36(vue@3.5.44)
+      '@tanstack/vue-virtual': 3.13.47(vue@3.5.44)
       '@vueuse/core': 14.4.0(vue@3.5.44)
       '@vueuse/shared': 14.4.0(vue@3.5.44)
       aria-hidden: 1.2.6

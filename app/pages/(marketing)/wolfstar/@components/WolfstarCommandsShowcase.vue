@@ -1247,12 +1247,15 @@ onMounted(() => {
 	--showcase-discord-composer: var(--discord-composer);
 	--showcase-discord-composer-muted: var(--discord-chrome-muted);
 	--showcase-discord-composer-text: var(--discord-chrome-text);
-	--showcase-discord-composer-hover: oklch(from var(--discord-chrome-text) l c h / 0.06);
 	--showcase-discord-header-edge: var(--discord-chrome-edge);
 	--showcase-discord-message-hover: oklch(from var(--discord-chrome-text) l c h / 0.03);
 	--showcase-discord-primary-text: var(--discord-chrome-text);
 	--showcase-discord-muted-text: var(--discord-chrome-muted);
-	--showcase-mobile-command-link: var(--discord-link);
+
+	/* The same palette for the newt/ui parts, which read these tokens. */
+	--newt-text-primary: var(--showcase-discord-primary-text);
+	--newt-text-muted: var(--showcase-discord-muted-text);
+	--newt-bg-input: var(--showcase-discord-composer);
 
 	/*
 	 * Neutralize DaisyUI / Nuxt UI theme surfaces inside the mock so embeds,
@@ -1299,23 +1302,13 @@ onMounted(() => {
 }
 
 .showcase-discord-shell :deep(.discord-channel-header) {
-	--discord-channel-header-bg: var(--showcase-discord-chrome);
-	--discord-channel-header-border: var(--showcase-discord-chrome-border);
-	--discord-channel-header-edge: var(--showcase-discord-header-edge);
-	--discord-channel-header-text: var(--showcase-discord-primary-text);
-	--discord-channel-header-muted: var(--showcase-discord-muted-text);
-	--discord-channel-header-search-bg: var(--showcase-discord-server);
-	--discord-channel-header-search-border: var(--showcase-discord-composer);
-	--discord-channel-header-search-placeholder: var(--showcase-discord-muted-text);
-	--discord-channel-header-search-icon: var(--showcase-discord-primary-text);
-	background-color: var(--discord-channel-header-bg);
-	border-color: var(--discord-channel-header-border);
-	box-shadow: 0 1px 0 var(--discord-channel-header-edge);
+	background-color: var(--showcase-discord-chrome);
+	border-color: var(--showcase-discord-chrome-border);
+	box-shadow: 0 1px 0 var(--showcase-discord-header-edge);
 }
 
 .showcase-discord-shell :deep(.discord-chat) {
-	--discord-chat-bg: var(--showcase-discord-chrome);
-	background-color: var(--discord-chat-bg);
+	background-color: var(--showcase-discord-chrome);
 }
 
 .showcase-discord-shell :deep(.discord-chat-messages .discord-message:hover) {
@@ -1327,11 +1320,6 @@ onMounted(() => {
 }
 
 .showcase-discord-shell :deep(.showcase-discord-members.discord-member-list) {
-	--discord-member-list-bg: var(--showcase-discord-sidebar);
-	--discord-member-list-border: var(--showcase-discord-server);
-	--discord-member-list-text: var(--showcase-discord-primary-text);
-	--discord-member-list-muted: var(--showcase-discord-muted-text);
-	--discord-member-list-presence-ring: var(--showcase-discord-sidebar);
 	background-color: var(--showcase-discord-sidebar);
 	border-color: var(--showcase-discord-server);
 }
@@ -1348,15 +1336,6 @@ onMounted(() => {
 .showcase-app-launcher {
 	@apply relative z-2 mr-3 mb-2 ml-auto;
 	width: min(31.5rem, calc(100% - 1.5rem));
-}
-
-.showcase-command-picker :deep(.discord-message-composer) {
-	--discord-message-composer-bg: var(--showcase-discord-composer);
-	--discord-message-composer-text: var(--showcase-discord-composer-text);
-	--discord-message-composer-muted: var(--showcase-discord-composer-muted);
-	--discord-message-composer-hover: var(--showcase-discord-composer-hover);
-	--discord-message-composer-add-bg: oklch(from var(--discord-chrome-text) l c h / 0.1);
-	--discord-message-composer-pill-bg: oklch(from var(--discord-chrome-text) l c h / 0.12);
 }
 
 .showcase-composer-slash-field {
@@ -1403,8 +1382,6 @@ onMounted(() => {
 	.showcase-discord-shell {
 		/* The same surfaces on mobile; the composer bar is the channel. */
 		--showcase-discord-composer-bar: var(--showcase-discord-chrome);
-		--showcase-discord-composer-add-bg: var(--showcase-discord-server);
-		--showcase-discord-composer-pill-bg: var(--showcase-discord-composer);
 	}
 
 	/* Scoped .discord-member-list { display: flex } beats Tailwind `hidden`. */
@@ -1483,20 +1460,6 @@ onMounted(() => {
 		@apply mx-0 mb-0;
 		border: none;
 	}
-
-	.showcase-command-picker :deep(.discord-message-composer) {
-		--discord-message-composer-text: var(--showcase-discord-composer-text);
-		--discord-message-composer-muted: var(--showcase-discord-composer-muted);
-		--discord-message-composer-hover: var(--showcase-discord-composer-hover);
-		--discord-message-composer-add-bg: var(--showcase-discord-composer-add-bg);
-		--discord-message-composer-pill-bg: var(--showcase-discord-composer-pill-bg);
-	}
-
-	.showcase-discord-shell :deep(.discord-channel-welcome-edit) {
-		background-color: transparent;
-		color: var(--showcase-mobile-command-link);
-		@apply px-0;
-	}
 }
 
 /* Channel info is a mobile Discord pattern; never show over the desktop layout. */
@@ -1527,30 +1490,24 @@ onMounted(() => {
  * components; a section is two 20px lines beside a 60×32 button. The surfaces
  * are the channel made lighter as Discord does (OKLCH lightness): the container
  * +0.035, the select +0.022, the buttons +0.083, the separator and timestamp +0.1;
- * darker by as much on the light theme (`--discord-raise`).
+ * darker by as much on the light theme (`--discord-raise`). They are set as the
+ * newt/ui tokens the parts read, so nothing here reaches into a part.
  */
 .showcase-settings-menu {
-	--showcase-v2-container: oklch(
+	--newt-bg-surface: oklch(
 		from var(--showcase-discord-chrome) calc(l + 0.035 * var(--discord-raise)) c h
 	);
-	--showcase-v2-select: oklch(
+	--newt-bg-input: oklch(
 		from var(--showcase-discord-chrome) calc(l + 0.022 * var(--discord-raise)) c h
 	);
-	--showcase-v2-button: oklch(
+	--newt-bg-elevated: oklch(
 		from var(--showcase-discord-chrome) calc(l + 0.083 * var(--discord-raise)) c h
 	);
-	--showcase-v2-line: oklch(
+	--newt-border: oklch(
 		from var(--showcase-discord-chrome) calc(l + 0.1 * var(--discord-raise)) c h
 	);
 
 	@apply mt-1 flex max-w-125 flex-col gap-2;
-}
-
-.showcase-settings-menu :deep(.discord-v2-container) {
-	@apply m-0 max-w-none gap-2 p-4 text-base leading-5;
-	border-left-width: 4px;
-	border-radius: 8px;
-	background-color: var(--showcase-v2-container);
 }
 
 /* A section: its text on the left, its button as the accessory. */
@@ -1581,37 +1538,6 @@ onMounted(() => {
 	@apply m-0 h-8 min-w-15 shrink-0 rounded-[8px] px-4;
 }
 
-.showcase-settings-menu :deep(.discord-button-secondary) {
-	background-color: var(--showcase-v2-button);
-	color: var(--showcase-discord-primary-text);
-}
-
-.showcase-settings-menu :deep(.discord-button-emoji) {
-	@apply mr-0 size-5;
-}
-
-.showcase-settings-menu :deep(.discord-action-row) {
-	@apply gap-0;
-}
-
-.showcase-settings-menu :deep(.discord-string-select-menu-trigger) {
-	@apply h-10 min-h-10 rounded-[8px] px-3 text-base font-normal;
-	--discord-string-select-menu-bg: var(--showcase-v2-select);
-	--discord-string-select-menu-border: var(--showcase-v2-line);
-}
-
-.showcase-settings-menu :deep(.discord-string-select-menu-value-emoji) {
-	@apply size-6;
-}
-
-.showcase-settings-menu :deep(.discord-v2-separator) {
-	@apply py-0;
-}
-
-.showcase-settings-menu :deep(.discord-v2-separator-line) {
-	border-color: var(--showcase-v2-line);
-}
-
 /* "-# ⏳ This menu closes in 15 minutes if it is not used.": Discord's subtext. */
 .showcase-settings-expires {
 	@apply m-0 text-[0.8125rem] leading-4;
@@ -1625,6 +1551,6 @@ onMounted(() => {
 /* A <t:…:R> timestamp: the time on a faint chip. */
 .showcase-timestamp {
 	@apply rounded-[3px] px-0.5;
-	background-color: var(--showcase-v2-line);
+	background-color: var(--newt-border);
 }
 </style>

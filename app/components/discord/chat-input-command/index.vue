@@ -1,48 +1,31 @@
 <template>
-	<span class="discord-slash-command-composed" role="group" :aria-label="ariaLabel">
-		<span class="discord-slash-command-composed-name">/{{ name }}</span>
-		<span v-if="commandPath.subcommandGroup" class="discord-slash-command-composed-segment">
-			{{ commandPath.subcommandGroup }}
-		</span>
-		<span v-if="commandPath.subcommand" class="discord-slash-command-composed-segment">
-			{{ commandPath.subcommand }}
-		</span>
-		<template v-for="option in options" :key="option.name">
-			<span
-				class="discord-slash-command-option"
-				:class="{ 'discord-slash-command-option-focused': option.focused }"
-			>
-				<span class="discord-slash-command-option-name">{{ option.name }}</span>
-				<span v-if="option.value" class="discord-slash-command-option-value">{{
-					option.value
-				}}</span>
-				<span v-else class="discord-slash-command-option-placeholder">{{
-					option.description ?? option.name
-				}}</span>
-			</span>
-		</template>
-		<slot />
-	</span>
+	<!-- newt/ui hardcodes an English aria-label; the fallthrough attribute replaces it. -->
+	<SlashCommand
+		class="discord-slash-command-composed"
+		:aria-label="ariaLabel"
+		:name="commandPath.commandName"
+		:subcommand="commandPath.subcommand"
+		:subcommand-group="commandPath.subcommandGroup"
+		:options="options"
+	/>
 </template>
 
 <script lang="ts">
-import type { VNode } from "vue";
-
 interface SlashCommandProps extends SlashCommandInvocation {}
-
-interface SlashCommandSlots {
-	default?(props?: Record<string, never>): VNode[];
-}
 </script>
 
 <script setup lang="ts">
-import type { SlashCommandInvocation } from "#shared/types/chat-input-command";
+import type {
+	SlashCommandDisplayParts,
+	SlashCommandInvocation,
+} from "#shared/types/chat-input-command";
+import { SlashCommand } from "~/components/ui/slash-command";
+
 const { ts } = useI18n();
-defineSlots<SlashCommandSlots>();
 
 const { name, subcommand, subcommandGroup, options = [] } = defineProps<SlashCommandProps>();
 
-const commandPath = computed(() => {
+const commandPath = computed((): SlashCommandDisplayParts => {
 	try {
 		return validateSlashCommandDisplayParts({
 			commandName: name,
@@ -55,11 +38,8 @@ const commandPath = computed(() => {
 });
 
 const ariaLabel = computed(() => {
-	const path = formatSlashCommandDisplayName({
-		commandName: name,
-		subcommand,
-		subcommandGroup,
-	});
+	// The validated parts: a group without a subcommand would throw here.
+	const path = formatSlashCommandDisplayName(commandPath.value);
 	const optionText = options
 		.map((option) => {
 			const valueText = option.value ?? option.description ?? option.name;
@@ -72,72 +52,3 @@ const ariaLabel = computed(() => {
 	});
 });
 </script>
-
-<style scoped>
-@reference "@/assets/css/main.css";
-
-.discord-slash-command-composed {
-	--discord-slash-command-composed-name: var(--discord-chrome-strong);
-	--discord-slash-command-option-name: var(--discord-chrome-muted);
-	--discord-slash-command-option-value: var(--discord-chrome-strong);
-	--discord-slash-command-option-focused: oklch(57.7% 0.209 273.88 / 0.35);
-	--discord-slash-command-option-placeholder: var(--discord-chrome-muted);
-
-	@apply inline font-whitney text-sm whitespace-nowrap;
-}
-
-@variant theme-light {
-	.discord-slash-command-composed {
-		--discord-slash-command-option-focused: oklch(57.7% 0.209 273.88 / 0.2);
-	}
-}
-
-.discord-slash-command-composed-name,
-.discord-slash-command-composed-segment {
-	@apply font-semibold;
-	color: var(--discord-slash-command-composed-name);
-}
-
-.discord-slash-command-composed-segment::before {
-	content: " ";
-}
-
-.discord-slash-command-option {
-	@apply inline;
-}
-
-.discord-slash-command-option::before {
-	content: " ";
-}
-
-.discord-slash-command-option-focused {
-	@apply rounded-sm px-0.5;
-	background-color: var(--discord-slash-command-option-focused);
-}
-
-.discord-slash-command-option-name {
-	color: var(--discord-slash-command-option-name);
-}
-
-.discord-slash-command-option-name::after {
-	content: ":";
-}
-
-.discord-slash-command-option-value {
-	@apply font-medium;
-	color: var(--discord-slash-command-option-value);
-}
-
-.discord-slash-command-option-value::before {
-	content: " ";
-}
-
-.discord-slash-command-option-placeholder {
-	@apply italic;
-	color: var(--discord-slash-command-option-placeholder);
-}
-
-.discord-slash-command-option-placeholder::before {
-	content: " ";
-}
-</style>

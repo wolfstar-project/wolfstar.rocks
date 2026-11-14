@@ -23,7 +23,7 @@ allowBuilds:
 
 catalogs:
     msw:
-        msw: ^2.15.0
+        msw: ^3.0.5
 
     storybook:
         "@storybook-vue/nuxt": 10.0.3

@@ -1,6 +1,7 @@
 import { readFreshSettings } from "#server/database";
-import { authorizeAutoModerationManager, useManagedGuild } from "#server/utils/automod/route";
+import { authorizeAutoModerationManager } from "#server/utils/automod/route";
 import { readAutoModerationRules } from "#server/utils/automod/rules";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 import { createConfigurationFile } from "#server/utils/settings-transfer/format";
 import { ConfigurationFileName } from "#shared/utils/settings-transfer";
 

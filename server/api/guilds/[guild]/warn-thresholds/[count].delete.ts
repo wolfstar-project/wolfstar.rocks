@@ -1,10 +1,10 @@
+import { useManagedGuild } from "#server/utils/guilds/manager";
 import {
 	auditWarnThresholdChange,
 	authorizeWarnThresholdManager,
 	clearWarnThreshold,
 	readCountParam,
 	throwWarnThresholdError,
-	useManagedGuild,
 } from "#server/utils/warn-thresholds";
 
 /** `DELETE /api/guilds/:guild/warn-thresholds/:count`: removes what happens at a number of warnings. */

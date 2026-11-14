@@ -4,8 +4,8 @@ import {
 	authorizeAppealFormManager,
 	throwAppealFormError,
 	throwInvalidFormBody,
-	useManagedGuild,
 } from "#server/utils/appeals/route";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 
 function isStringArray(value: unknown): value is string[] {
 	return Array.isArray(value) && value.every((entry: unknown) => typeof entry === "string");

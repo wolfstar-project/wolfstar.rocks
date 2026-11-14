@@ -1,10 +1,10 @@
+import { useManagedGuild } from "#server/utils/guilds/manager";
 import { requestJoinGuardModeratorAction } from "#server/utils/join-guard/queue";
 import {
 	auditJoinGuardRequest,
 	authorizeJoinGuardManager,
 	parseJoinGuardInput,
 	throwJoinGuardQueueError,
-	useManagedGuild,
 } from "#server/utils/join-guard/route";
 import { JoinGuardModeratorRequestBodySchema } from "#shared/schemas/join-guard";
 

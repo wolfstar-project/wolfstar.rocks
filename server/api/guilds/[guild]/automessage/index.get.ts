@@ -1,5 +1,6 @@
-import { authorizeAutoChannelManager, useManagedGuild } from "#server/utils/auto-channels/route";
+import { authorizeAutoChannelManager } from "#server/utils/auto-channels/route";
 import { readAutoMessages } from "#server/utils/auto-channels/write";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 
 /** `GET /api/guilds/:guild/automessage`: the messages sent in a channel again and again, oldest first. */
 export default defineWrappedResponseHandler(

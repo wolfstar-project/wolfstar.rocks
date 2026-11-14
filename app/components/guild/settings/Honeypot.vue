@@ -19,17 +19,16 @@
 				:on="isOn"
 			>
 				<USwitch
-					:model-value="switchOn"
+					v-model="state.modulesHoneypot"
 					:aria-label="
 						ts('guild_settings.modules.toggle_aria', {
 							title: ts('guild_settings.honeypot.title'),
 						})
 					"
-					@update:model-value="setSwitch"
 				/>
 			</GuildModuleBanner>
 
-			<template v-if="switchOn">
+			<template v-if="state.modulesHoneypot">
 				<section class="console-card" :aria-labelledby="channelsHeadingId">
 					<div class="honeypot-card-heading">
 						<h2 :id="channelsHeadingId">
@@ -139,7 +138,6 @@ const SETUP_COMMAND = "/honeypot setup";
 
 const { ts } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
-const { activeGuildId } = useActiveGuild();
 const { guildData } = useGuildData();
 const { copy } = useClipboard();
 
@@ -158,28 +156,18 @@ const {
 // or takes down the warning in the channel to match.
 const { mapToGuildData, onError, schema, state } = useSettingsForm({
 	one: ["honeypotChannel", ...ConfigurableHoneypotChannels.map((entry) => entry.key)],
-	toggles: ["honeypotWarning", ...ConfigurableHoneypotToggles.map((entry) => entry.key)],
+	toggles: [
+		"modulesHoneypot",
+		"honeypotWarning",
+		...ConfigurableHoneypotToggles.map((entry) => entry.key),
+	],
 	choices: ["honeypotAction"],
 });
 
-// A channel is what turns the honeypot on, as `/honeypot setup` sets one and
-// `/honeypot disable` clears it. Turning the switch on only opens the form:
-// nothing is staged until a channel is picked.
-const enabling = ref(false);
-const isOn = computed(() => state.honeypotChannel !== null);
-const switchOn = computed(() => isOn.value || enabling.value);
-
-function setSwitch(on: boolean) {
-	enabling.value = on;
-	if (!on) state.honeypotChannel = null;
-}
-
-// A guild switch or a reset of the staged changes puts the saved settings
-// back: a switch turned on without saving goes back off with them.
-const { resetCounter } = useGuildSettingsChanges();
-watch([activeGuildId, resetCounter], () => {
-	enabling.value = false;
-});
+// The switch is the module's flag, staged like any other: turned off, nobody is
+// caught and the channel is not kept up, but the trap keeps its settings. It
+// catches only with a channel too, which `/honeypot setup` creates.
+const isOn = computed(() => state.modulesHoneypot && state.honeypotChannel !== null);
 
 const trapChannels = computed(() => (state.honeypotChannel ? [state.honeypotChannel] : []));
 
@@ -199,9 +187,9 @@ const channelName = computed(() => {
 });
 
 const bannerHint = computed(() => {
-	if (isOn.value) return ts("guild_settings.honeypot.catching", { channel: channelName.value });
-	return enabling.value
-		? ts("guild_settings.honeypot.pick_channel_hint")
+	if (!state.modulesHoneypot) return ts("guild_settings.honeypot.module_off_summary");
+	return isOn.value
+		? ts("guild_settings.honeypot.catching", { channel: channelName.value })
 		: ts("guild_settings.honeypot.off_summary");
 });
 

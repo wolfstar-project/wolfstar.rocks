@@ -24,7 +24,7 @@ export const WARN_THRESHOLD_ACTIONS = ["Mute", "Kick", "Softban", "Ban", "VoiceK
 export type WarnThresholdAction = (typeof WARN_THRESHOLD_ACTIONS)[number];
 
 /** The actions that last: the others are over the moment they are taken. */
-export const TIMED_WARN_THRESHOLD_ACTIONS = [
+const TIMED_WARN_THRESHOLD_ACTIONS = [
 	"Mute",
 	"Ban",
 ] as const satisfies readonly WarnThresholdAction[];

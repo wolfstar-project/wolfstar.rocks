@@ -15,8 +15,6 @@ export const CONSENT_COOKIE_IDS = {
 	sessionReplay: "r",
 } as const;
 
-export type ConsentCookieId = (typeof CONSENT_COOKIE_IDS)[keyof typeof CONSENT_COOKIE_IDS];
-
 /** Separator `nuxt-cookie-control` joins the enabled ids with in its `ncc_e` cookie. */
 const ENABLED_IDS_SEPARATOR = "~";
 

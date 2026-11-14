@@ -405,7 +405,7 @@ export const getGuildChannels = defineCachedFunction(
 	},
 );
 
-export async function fetchBotGuildFromDiscord(guildId: string): Promise<APIGuild | null> {
+async function fetchBotGuildFromDiscord(guildId: string): Promise<APIGuild | null> {
 	const api = useApi();
 	Sentry.metrics.count("discord_api.call", 1, {
 		attributes: { endpoint: "guilds.get", guild_id: guildId },

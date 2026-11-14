@@ -1,4 +1,4 @@
-export interface BlogAuthor {
+interface BlogAuthor {
 	name: string;
 	description?: string;
 	to?: string;

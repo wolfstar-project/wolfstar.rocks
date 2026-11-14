@@ -3,7 +3,7 @@
  * spells them. The enum is narrower than the bot's case types, so the bot writes
  * the closest action here and encodes the real type in `metadata`.
  */
-export const MODERATION_ACTIONS = [
+const MODERATION_ACTIONS = [
 	"AddRole",
 	"RemoveRole",
 	"Nickname",

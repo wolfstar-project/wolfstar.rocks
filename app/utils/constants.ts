@@ -574,13 +574,11 @@ export const showcaseCommands: ShowcaseCommand[] = [
 	},
 ];
 
-export const EmojiRegexExtractName = /<?a?:(\w{2,32}):\d{17,21}>?/gi;
-
 /** Minimum vertical drag (px) before committing to the other snap. */
 export const DISCORD_APP_LAUNCHER_SHEET_DRAG_DISTANCE_PX = 56;
 
 /** Flick velocity (px/ms) that commits a snap even below the distance threshold. */
-export const DISCORD_APP_LAUNCHER_SHEET_DRAG_VELOCITY_PX_MS = 0.35;
+const DISCORD_APP_LAUNCHER_SHEET_DRAG_VELOCITY_PX_MS = 0.35;
 
 /**
  * Preview row count for category cards on the main launcher scroll.
@@ -891,7 +889,7 @@ export const discordAppLauncherRecentsList: readonly DiscordAppLauncherEntry[] =
 ];
 
 /** Secondary list opened via Chill Together → View More. */
-export const discordAppLauncherChillTogether: readonly DiscordAppLauncherEntry[] = [
+const discordAppLauncherChillTogether: readonly DiscordAppLauncherEntry[] = [
 	{
 		id: "watch-together",
 		name: "Watch Together",
@@ -1017,7 +1015,7 @@ export const discordAppLauncherChillTogether: readonly DiscordAppLauncherEntry[]
 	},
 ];
 
-export const discordAppLauncherPuzzleGames: readonly DiscordAppLauncherEntry[] = [
+const discordAppLauncherPuzzleGames: readonly DiscordAppLauncherEntry[] = [
 	{
 		id: "daily-sudoku",
 		name: "Daily Sudoku Together",
@@ -1055,7 +1053,7 @@ export const discordAppLauncherPuzzleGames: readonly DiscordAppLauncherEntry[] =
 	},
 ];
 
-export const discordAppLauncherCardGames: readonly DiscordAppLauncherEntry[] = [
+const discordAppLauncherCardGames: readonly DiscordAppLauncherEntry[] = [
 	discordAppLauncherRecentsList[2]!,
 	{
 		id: "blazing-eights",
@@ -1080,7 +1078,7 @@ export const discordAppLauncherCardGames: readonly DiscordAppLauncherEntry[] = [
 	},
 ];
 
-export const discordAppLauncherStrategyGames: readonly DiscordAppLauncherEntry[] = [
+const discordAppLauncherStrategyGames: readonly DiscordAppLauncherEntry[] = [
 	{
 		id: "roll20",
 		name: "Roll20",
@@ -1111,7 +1109,7 @@ export const discordAppLauncherStrategyGames: readonly DiscordAppLauncherEntry[]
 	},
 ];
 
-export const discordAppLauncherSocialActivities: readonly DiscordAppLauncherEntry[] = [
+const discordAppLauncherSocialActivities: readonly DiscordAppLauncherEntry[] = [
 	{
 		id: "codenames",
 		name: "Codenames Online",
@@ -1142,7 +1140,7 @@ export const discordAppLauncherSocialActivities: readonly DiscordAppLauncherEntr
 	},
 ];
 
-export const discordAppLauncherActionGames: readonly DiscordAppLauncherEntry[] = [
+const discordAppLauncherActionGames: readonly DiscordAppLauncherEntry[] = [
 	{
 		id: "poxel",
 		name: "Poxel.io",
@@ -1187,7 +1185,7 @@ export const discordAppLauncherActionGames: readonly DiscordAppLauncherEntry[] =
 	},
 ];
 
-export const discordAppLauncherBotGames: readonly DiscordAppLauncherEntry[] = [
+const discordAppLauncherBotGames: readonly DiscordAppLauncherEntry[] = [
 	{
 		id: "owo",
 		name: "OwO",

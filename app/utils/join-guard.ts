@@ -203,7 +203,7 @@ export interface JoinGuardRuleDraft {
 }
 
 /** The days a new rule's age box starts with, as the design's does. */
-export const JOIN_GUARD_DEFAULT_AGE_DAYS = 7;
+const JOIN_GUARD_DEFAULT_AGE_DAYS = 7;
 
 /**
  * A new rule, as the design opens it: the account age ticked at 7 days, a

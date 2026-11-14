@@ -4,7 +4,7 @@ import type { GuildData } from "#server/database";
  * The settings of `GuildData` whose value is exactly `Value`, so an entry list
  * can only name keys a control of its kind can edit.
  */
-export type GuildSettingKeyOf<Value> = {
+type GuildSettingKeyOf<Value> = {
 	[Key in keyof GuildData]-?: [GuildData[Key]] extends [Value]
 		? [Value] extends [GuildData[Key]]
 			? Key

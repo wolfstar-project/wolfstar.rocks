@@ -1,7 +1,8 @@
 import type { KnipConfig } from "knip";
 
 const config: KnipConfig = {
-	treatConfigHintsAsErrors: true,
+	/** Knip 6.38 needs the `test/nuxt/setup.ts` entry and `ohash/*`; 6.45 reports them as redundant. Hints stay warnings until the bump lands, then re-enable. */
+	treatConfigHintsAsErrors: false,
 	workspaces: {
 		".": {
 			entry: [

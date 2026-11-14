@@ -1,4 +1,4 @@
-export const DASHBOARD_NAV_STORAGE_KEY = "wolfstar-dashboard-nav";
+const DASHBOARD_NAV_STORAGE_KEY = "wolfstar-dashboard-nav";
 
 const MAX_RECENT = 3;
 

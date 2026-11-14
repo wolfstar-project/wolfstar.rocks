@@ -36,7 +36,7 @@ const LOG_CHANNEL_TYPES: ReadonlySet<ChannelType> = new Set([
 ]);
 
 /** A channel of the server, with what decides who can do what in it. */
-export interface HoneypotChannelCandidate {
+interface HoneypotChannelCandidate {
 	id: string;
 	type: ChannelType;
 	permission_overwrites?: readonly APIOverwrite[];

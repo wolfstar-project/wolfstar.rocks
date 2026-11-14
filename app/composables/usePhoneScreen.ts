@@ -1,5 +1,5 @@
 /** Below this width the dashboard shows one screen at a time (Tailwind's `sm`). */
-export const PHONE_MEDIA_QUERY = "(max-width: 639.98px)";
+const PHONE_MEDIA_QUERY = "(max-width: 639.98px)";
 
 export type PhoneScreen = "list" | "page";
 

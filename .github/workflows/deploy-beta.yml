@@ -55,7 +55,7 @@ jobs:
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .cache/skew-protection
-          key: skew-protection-beta-${{ github.run_id }}
+          key: skew-protection-beta-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: skew-protection-beta-
 
       - name: 🏗️ Build the Worker
@@ -85,9 +85,10 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
       # Saved only once the deploy went through, so a failed or cancelled run never
-      # hands the next one a release that was not served.
+      # hands the next one a release that was not served. The key names the attempt
+      # too: a cache key cannot be overwritten, and a rerun deploys a new build.
       - name: 💾 Save the assets of past deploys
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .cache/skew-protection
-          key: skew-protection-beta-${{ github.run_id }}
+          key: skew-protection-beta-${{ github.run_id }}-${{ github.run_attempt }}

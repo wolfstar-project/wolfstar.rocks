@@ -109,9 +109,10 @@ describe("DiscordScrollbar", () => {
 		const { wrapper, root, thumb } = await mountTall({ autoHide: true });
 		root.style.pointerEvents = "none";
 
-		// ASSERT
-		expect(root.matches(":hover")).toBe(false);
-		expect(getComputedStyle(thumb).opacity).toBe("0");
+		// ASSERT — the browser drops `:hover` on a later frame, and the thumb then
+		// fades out over 0.1s
+		await vi.waitFor(() => expect(root.matches(":hover")).toBe(false));
+		await vi.waitFor(() => expect(getComputedStyle(thumb).opacity).toBe("0"));
 
 		// ACT — hover it
 		root.style.pointerEvents = "";

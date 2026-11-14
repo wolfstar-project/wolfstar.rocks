@@ -101,8 +101,9 @@ const query = ref("");
 const rows = computed(() => {
 	const search = query.value.trim().toLocaleLowerCase();
 	return threads.value
-		.filter((thread) => thread.name.toLocaleLowerCase().includes(search))
-		.map((thread) => {
+		.map((thread) => ({ name: thread.author ?? thread.name, thread }))
+		.filter(({ name }) => name.toLocaleLowerCase().includes(search))
+		.map(({ name, thread }) => {
 			const newest = thread.news.at(-1);
 			const text =
 				newest &&
@@ -116,7 +117,7 @@ const rows = computed(() => {
 				avatar: thread.avatar,
 				current: page.value === "thread" && thread.id === threadId.value,
 				id: thread.id,
-				name: thread.name,
+				name,
 				preview,
 				unread: unreadCount(thread),
 			};

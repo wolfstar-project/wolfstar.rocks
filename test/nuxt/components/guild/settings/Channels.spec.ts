@@ -171,6 +171,21 @@ describe("channels guild settings", () => {
 		});
 	});
 
+	it("has a switch for the Events module, and stages the flag when it is turned off", async () => {
+		const wrapper = await mountReady();
+		const moduleSwitch = wrapper.find('[aria-label="Toggle Events"]');
+
+		expect(moduleSwitch.attributes("aria-checked")).toBe("true");
+
+		await moduleSwitch.trigger("click");
+		await nextTick();
+
+		expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({ modulesLogs: false });
+		expect(wrapper.find('[aria-label="Toggle Events"]').attributes("aria-checked")).toBe(
+			"false",
+		);
+	});
+
 	it("follows the saved settings when they change", async () => {
 		const wrapper = await mountSuspended(Channels);
 

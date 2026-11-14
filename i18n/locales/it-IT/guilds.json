@@ -870,6 +870,7 @@
 			"ignored_count": "Nessun canale ignorato | 1 canale ignorato | {count} canali ignorati",
 			"logging_channels": "Canali di registro",
 			"logging_channels_help": "Scegli dove WolfStar pubblica ogni tipo di registro.",
+			"module_hint": "",
 			"not_logged": "non registrato",
 			"nothing_ignored": "Nessun canale ignorato.",
 			"routed_count": "{routed} di {total} instradati",

@@ -870,6 +870,7 @@
 			"ignored_count": "",
 			"logging_channels": "Logging Channels",
 			"logging_channels_help": "Select which channels should receive specific log events. Leave empty to disable logging for that event.",
+			"module_hint": "",
 			"not_logged": "",
 			"nothing_ignored": "",
 			"routed_count": "",

@@ -13,6 +13,8 @@ export interface DirectMessageThreadInfo {
 	id: DirectMessageThreadId;
 	name: string;
 	avatar: string;
+	/** The name its posts are signed with on Discord, when not the bot's own. */
+	author?: string;
 	/** What the thread is for, shown at its top. */
 	introKey: string;
 	/** The route its posts are read from; a thread without one has none yet. */
@@ -25,6 +27,7 @@ export interface DirectMessageThread extends DirectMessageThreadInfo {
 
 export const DIRECT_MESSAGE_THREADS: readonly DirectMessageThreadInfo[] = [
 	{
+		author: "WolfStar Announcements",
 		avatar: "/avatars/wolfstar.png",
 		id: "wolfstar",
 		introKey: "dashboard.dm.wolfstar_intro",

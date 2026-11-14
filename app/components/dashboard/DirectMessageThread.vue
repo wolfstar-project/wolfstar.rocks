@@ -91,7 +91,7 @@
 						</Button>
 						<MessageGroupHeader v-else :class="compact && 'mb-0'">
 							<MessageGroupAuthor class="text-base font-medium">
-								{{ thread.name }}
+								{{ thread.author ?? thread.name }}
 							</MessageGroupAuthor>
 							<MessageGroupBotTag
 								class="dm-app-tag"

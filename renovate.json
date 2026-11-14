@@ -9,11 +9,26 @@
 		{
 			"groupName": "vite dependencies",
 			"groupSlug": "vite",
-			"matchPackageNames": ["vite", "/^@vitejs//", "/^vite-/"]
+			"matchPackageNames": ["vite", "@voidzero-dev/vite-plus-core", "/^@vitejs//", "/^vite-/"]
+		},
+		{
+			"description": "vite-plus bundles one vitest. The catalog must match it, so vite-plus bumps vitest and Renovate leaves it alone.",
+			"matchPackageNames": ["vitest", "/^@vitest//"],
+			"enabled": false
+		},
+		{
+			"description": "The Prisma packages follow the bot's contract (vendor/wolfstar). A newer rc breaks the typed-json contract pack. Bump them with the submodule.",
+			"matchPackageNames": ["prisma", "/^@prisma//"],
+			"enabled": false
+		},
+		{
+			"description": "vue-tsc 3.3.14 reports false type errors in v-else-if chains and a nullable ref in two templates. Remove this rule after a fixed release.",
+			"matchPackageNames": ["vue-tsc"],
+			"enabled": false
 		},
 		{
 			"extends": ["packages:test"],
-			"matchPackageNames": ["c8", "happy-dom", "jsdom", "/vitest/", "/^@vitest//"],
+			"matchPackageNames": ["c8", "happy-dom", "jsdom"],
 			"groupName": "test packages"
 		},
 		{

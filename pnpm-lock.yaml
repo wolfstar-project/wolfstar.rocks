@@ -57,7 +57,7 @@ overrides:
   vitest: 4.1.10
 
 patchedDependencies:
-  '@i18n-micro/path-strategy@1.3.20': 8a7c4641a7774f8e66e1618eb3c55bef9615081c67b6aaac95571412e5275d28
+  '@i18n-micro/path-strategy': 8a7c4641a7774f8e66e1618eb3c55bef9615081c67b6aaac95571412e5275d28
   nitropack@2.13.6: 9c772a4481f2e81878182e4c208fdd2bcf715bf6ef27d82bb0ae966aa1c5d107
   nuxt-studio@1.8.0: 70ac52747c4f8ccc6b39a032cfcc8a4d10406e6e8041087fc7d700cad37a659a
   prisma-orm-extension-typed-json: 0d3a5a0b92c2c9f5ec59df4645d5355dd5751077a9322d29179f9e493a4c240a

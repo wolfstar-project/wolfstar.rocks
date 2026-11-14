@@ -1,11 +1,11 @@
 import type { JoinGuardRule } from "#shared/utils/join-guard";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 import {
 	auditJoinGuardRuleChange,
 	authorizeJoinGuardManager,
 	parseJoinGuardInput,
 	readJoinGuardRowParam,
 	throwJoinGuardRuleError,
-	useManagedGuild,
 } from "#server/utils/join-guard/route";
 import { updateJoinGuardRule } from "#server/utils/join-guard/rules";
 import { JoinGuardRulePatchSchema } from "#shared/schemas/join-guard";

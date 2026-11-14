@@ -5,9 +5,9 @@ import {
 	authorizeAppealFormManager,
 	throwAppealFormError,
 	throwInvalidFormBody,
-	useManagedGuild,
 } from "#server/utils/appeals/route";
 import { parseAppealFormPatch } from "#server/utils/appeals/validation";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 
 /**
  * `PATCH /api/guilds/:guild/appeals/forms/:form`: edits a form. The body has

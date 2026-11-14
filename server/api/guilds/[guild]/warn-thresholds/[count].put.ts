@@ -1,3 +1,4 @@
+import { useManagedGuild } from "#server/utils/guilds/manager";
 import {
 	auditWarnThresholdChange,
 	authorizeWarnThresholdManager,
@@ -5,7 +6,6 @@ import {
 	setWarnThreshold,
 	throwInvalidWarnThresholdBody,
 	throwWarnThresholdError,
-	useManagedGuild,
 } from "#server/utils/warn-thresholds";
 import { parseWarnThresholdData } from "#shared/utils/warn-thresholds";
 

@@ -62,8 +62,6 @@ async function getUserIdFromEvent(event: H3Event): Promise<string> {
 	return userId;
 }
 
-export { hasAdminPermissions };
-
 /**
  * @param proposedNodes Whether `settings` is a change not saved yet: its legacy
  * nodes are then read from it, not from the guild's cached manager, which

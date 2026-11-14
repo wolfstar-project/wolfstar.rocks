@@ -1,10 +1,10 @@
 import type { JoinGuardRequestState } from "#shared/utils/join-guard";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 import { JoinGuardQueueError, readJoinGuardRequestState } from "#server/utils/join-guard/queue";
 import {
 	authorizeJoinGuardManager,
 	readJoinGuardRowParam,
 	throwJoinGuardQueueError,
-	useManagedGuild,
 } from "#server/utils/join-guard/route";
 
 /**

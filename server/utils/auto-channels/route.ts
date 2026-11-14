@@ -15,8 +15,6 @@ export const authorizeAutoChannelManager = authorizeGuildManager(
 	"Insufficient permissions to manage the automatic channels",
 );
 
-export { useManagedGuild };
-
 /**
  * A refusal the editor can act on, with its code in `data`: h3's
  * `createError` puts it in the response body, where the client reads it.

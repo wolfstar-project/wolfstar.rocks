@@ -5,10 +5,10 @@ import {
 	throwAutoModerationRuleError,
 	throwInvalidLogChannel,
 	throwInvalidRuleBody,
-	useManagedGuild,
 } from "#server/utils/automod/route";
 import { createAutoModerationRule } from "#server/utils/automod/rules";
 import { parseAutoModerationRulePatch } from "#server/utils/automod/validation";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 import { isAutoModerationRuleType } from "#shared/utils/automod-rules";
 
 /**

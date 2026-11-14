@@ -3,9 +3,9 @@ import {
 	authorizeAutoChannelManager,
 	readChannelParam,
 	throwAutoChannelError,
-	useManagedGuild,
 } from "#server/utils/auto-channels/route";
 import { clearAutoChannel } from "#server/utils/auto-channels/write";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 
 /** `DELETE /api/guilds/:guild/automessage/:channel`: stops sending the automatic message of a channel. */
 export default defineWrappedResponseHandler(

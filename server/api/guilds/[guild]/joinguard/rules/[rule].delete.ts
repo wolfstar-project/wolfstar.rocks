@@ -1,9 +1,9 @@
+import { useManagedGuild } from "#server/utils/guilds/manager";
 import {
 	auditJoinGuardRuleChange,
 	authorizeJoinGuardManager,
 	readJoinGuardRowParam,
 	throwJoinGuardRuleError,
-	useManagedGuild,
 } from "#server/utils/join-guard/route";
 import { deleteJoinGuardRule } from "#server/utils/join-guard/rules";
 

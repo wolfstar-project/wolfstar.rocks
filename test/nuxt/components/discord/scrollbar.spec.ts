@@ -103,8 +103,10 @@ describe("DiscordScrollbar", () => {
 	});
 
 	it("hides the thumb until hover when autoHide is set (positive)", async () => {
-		// ARRANGE / ACT
-		const { wrapper, thumb } = await mountTall({ autoHide: true });
+		// ARRANGE / ACT — a real browser starts with its pointer at the top left, which would
+		// hover a scrollbar mounted there, so move the scrollbar away from it
+		const { wrapper, root, thumb } = await mountTall({ autoHide: true });
+		root.style.margin = "300px";
 
 		// ASSERT — a scroll event while the thumb mounts keeps it shown until the idle delay ends
 		await vi.waitFor(() => expect(getComputedStyle(thumb).opacity).toBe("0"), {

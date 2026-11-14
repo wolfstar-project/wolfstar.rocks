@@ -1,5 +1,11 @@
 <template>
-	<V2Container :accent-color="accentColor"><slot></slot></V2Container>
+	<!-- The classes are hooks: a surface that draws the container its own way styles it through them. -->
+	<V2Container
+		:accent-color="accentColor"
+		:class="['discord-v2-container', { 'discord-v2-container-accented': accentColor }]"
+	>
+		<slot></slot>
+	</V2Container>
 </template>
 
 <script lang="ts">

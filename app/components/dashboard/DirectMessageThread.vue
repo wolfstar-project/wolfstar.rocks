@@ -13,7 +13,7 @@
 				</Avatar>
 				<div class="mt-1.5 flex items-center gap-2">
 					<h2 class="text-[1.625rem] leading-tight font-bold">{{ thread.name }}</h2>
-					<MessageGroupBotTag :aria-label="ts('dashboard.dm.bot_tag')">
+					<MessageGroupBotTag class="dm-app-tag" :aria-label="ts('dashboard.dm.bot_tag')">
 						{{ ts("dashboard.dm.bot_tag") }}
 					</MessageGroupBotTag>
 				</div>
@@ -52,25 +52,58 @@
 			<template v-for="group of days" v-else :key="group.day">
 				<Divider>{{ formatDay(group.day) }}</Divider>
 				<MessageGroup
-					v-for="item of group.news"
+					v-for="(item, index) of group.news"
 					:key="item.id"
 					as="article"
-					class="group/post rounded-[4px] px-1"
-					:class="compact && 'gap-2 py-0.5'"
+					class="group/post relative rounded-[4px] px-1"
+					:class="[
+						compact && 'gap-2 py-0.5',
+						isContinued(group.news, index) ? 'py-0.5' : !compact && index > 0 && 'mt-3',
+					]"
 				>
 					<!-- Compact, as Discord's: no avatar, the time ahead of the name. -->
-					<MessageGroupAvatar v-if="!compact">
-						<Avatar>
-							<AvatarImage :src="thread.avatar" />
-						</Avatar>
-					</MessageGroupAvatar>
+					<template v-if="!compact">
+						<!-- A post that joins the one before it: its time in the margin. -->
+						<MessageGroupTime
+							v-if="isContinued(group.news, index)"
+							:datetime="item.at"
+							class="dm-margin-time"
+						>
+							{{ formatClock(item.at) }}
+						</MessageGroupTime>
+						<MessageGroupAvatar v-else>
+							<Avatar>
+								<AvatarImage :src="thread.avatar" />
+							</Avatar>
+						</MessageGroupAvatar>
+					</template>
 					<MessageGroupBody class="min-w-0 grow">
-						<MessageGroupHeader :class="compact && 'mb-0'">
-							<MessageGroupAuthor>{{ thread.name }}</MessageGroupAuthor>
-							<MessageGroupBotTag :aria-label="ts('dashboard.dm.bot_tag')">
+						<Button
+							v-if="isContinued(group.news, index)"
+							:href="item.url"
+							target="_blank"
+							rel="noopener noreferrer"
+							variant="link"
+							size="sm"
+							class="dm-open dm-open-floating"
+						>
+							{{ ts("dashboard.dm.open_in_discord") }}
+						</Button>
+						<MessageGroupHeader v-else :class="compact && 'mb-0'">
+							<MessageGroupAuthor class="text-base font-medium">
+								{{ thread.author ?? thread.name }}
+							</MessageGroupAuthor>
+							<MessageGroupBotTag
+								class="dm-app-tag"
+								:aria-label="ts('dashboard.dm.bot_tag')"
+							>
 								{{ ts("dashboard.dm.bot_tag") }}
 							</MessageGroupBotTag>
-							<MessageGroupTime :datetime="item.at" :class="compact && 'order-first'">
+							<MessageGroupTime
+								:datetime="item.at"
+								class="text-xs"
+								:class="compact && 'order-first'"
+							>
 								{{ formatActivityTime(item.at, now, timeLocale) }}
 							</MessageGroupTime>
 							<Button
@@ -84,7 +117,7 @@
 								{{ ts("dashboard.dm.open_in_discord") }}
 							</Button>
 						</MessageGroupHeader>
-						<MessageGroupContent v-if="item.content">
+						<MessageGroupContent v-if="item.content" class="text-base leading-[1.375]">
 							<DashboardPostMarkdown :source="item.content" />
 						</MessageGroupContent>
 						<template v-for="(part, index) of item.components" :key="index">
@@ -204,6 +237,7 @@
 </template>
 
 <script setup lang="ts">
+import type { Announcement } from "#shared/types/announcement";
 import {
 	AppInvite,
 	AppInviteBanner,
@@ -252,6 +286,20 @@ function formatDay(day: string): string {
 	return new Date(day).toLocaleDateString(locale.value, { dateStyle: "long" });
 }
 
+/** The hour and minute alone, for the margin of a post that joins another. */
+function formatClock(at: string): string {
+	return new Date(at).toLocaleTimeString(timeLocale.value, {
+		hour: "2-digit",
+		minute: "2-digit",
+	});
+}
+
+/** Compact posts each keep their own line of time and name, as Discord's. */
+function isContinued(news: readonly Announcement[], index: number): boolean {
+	const item = news[index];
+	return !compact.value && item !== undefined && continuesPost(news[index - 1], item);
+}
+
 const log = useTemplateRef<HTMLElement>("log");
 
 // A thread opens on its newest post, as a conversation does, and is read. A
@@ -287,5 +335,41 @@ watch(
 /* Shown on the post the pointer or focus is on, as Discord shows its actions. */
 .dm-open {
 	@apply opacity-0 group-hover/post:opacity-100 focus-visible:opacity-100;
+}
+
+/* A joined post has no line of its own for the link: it floats over the
+   post's top edge, where Discord puts a message's actions. */
+.dm-open-floating {
+	@apply absolute end-2 -top-3 z-1 rounded-md border border-solid border-newt-border bg-newt-bg-floating px-2 shadow-sm;
+}
+
+/* The time of a joined post, in the avatar's column, shown as the link is.
+   The column keeps the avatar's width so the text stays aligned; a 12-hour
+   time ("12:04 PM") is wider, so it stays on one line and spills evenly to
+   both sides, as Discord's does. */
+.dm-margin-time {
+	@apply flex w-10 shrink-0 justify-center pt-1 leading-5.5 whitespace-nowrap opacity-0 group-focus-within/post:opacity-100 group-hover/post:opacity-100;
+}
+
+/* Discord's tag: a little taller than the registry's, its corners rounder. */
+.dm-app-tag {
+	@apply h-4.5 self-center rounded-[4px] px-1.25 py-0 text-xs leading-none font-bold;
+}
+
+/* A Components V2 container as Discord draws it in a channel: a raised
+   surface with a hairline border, the accent down its start edge, and the
+   size of a message's text. */
+.dm-log :deep(.discord-v2-container) {
+	@apply max-w-190 gap-2 rounded-lg p-4 text-base leading-[1.375];
+	border: 1px solid var(--newt-border);
+	background-color: var(--newt-bg-elevated);
+}
+
+.dm-log :deep(.discord-v2-container-accented) {
+	border-inline-start: 4px solid var(--discord-v2-container-accent);
+}
+
+.dm-log :deep(.discord-v2-separator-line) {
+	border-color: var(--newt-border);
 }
 </style>

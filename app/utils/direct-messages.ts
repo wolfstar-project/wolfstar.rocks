@@ -69,3 +69,17 @@ export function groupNewsByDay<T extends { at: string }>(news: readonly T[]) {
 	}
 	return days;
 }
+
+/** How long after a post the next one still joins it, as in Discord. */
+const POST_GROUP_WINDOW = 7 * 60_000;
+
+/**
+ * Whether a post joins the one before it, as Discord groups an author's
+ * messages: it is drawn without the avatar and the name, its time in the
+ * margin. Every post of a thread has the same author, so only the time counts.
+ */
+export function continuesPost(previous: { at: string } | undefined, item: { at: string }): boolean {
+	if (!previous) return false;
+	const gap = Date.parse(item.at) - Date.parse(previous.at);
+	return gap >= 0 && gap <= POST_GROUP_WINDOW;
+}

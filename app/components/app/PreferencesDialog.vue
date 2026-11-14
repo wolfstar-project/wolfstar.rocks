@@ -60,11 +60,12 @@
 					>
 						{{ ts("profile.search_empty") }}
 					</p>
-					<template v-for="(group, index) in pageGroups" :key="group[0]!.id">
+					<template v-for="(group, index) in pageGroups" :key="group.items[0]!.id">
 						<div v-if="index > 0" class="settings-nav-divider"></div>
+						<p v-if="group.label" class="settings-group-label">{{ group.label }}</p>
 						<div class="settings-nav-group">
 							<button
-								v-for="item in group"
+								v-for="item in group.items"
 								:key="item.id"
 								type="button"
 								class="settings-nav-item"
@@ -90,7 +91,10 @@
 						v-if="pageGroups.length && (reportSection || !searchQuery.trim())"
 						class="settings-nav-divider"
 					></div>
-					<!-- Reporting a bug and leaving sit together, apart from the pages. -->
+					<!-- Help and the cookie choice have a group; leaving is alone under it, as on Discord. -->
+					<p v-if="!searchQuery.trim()" class="settings-group-label">
+						{{ ts("profile.group_support") }}
+					</p>
 					<div v-if="reportSection || !searchQuery.trim()" class="settings-nav-group">
 						<button
 							v-if="reportSection"
@@ -126,7 +130,10 @@
 							/>
 							<span class="grow">{{ ts("consent.footer_link") }}</span>
 						</button>
-						<template v-if="account && !searchQuery.trim()">
+					</div>
+					<template v-if="account && !searchQuery.trim()">
+						<div class="settings-nav-divider"></div>
+						<div class="settings-nav-group">
 							<button
 								type="button"
 								class="settings-nav-item text-error!"
@@ -139,8 +146,8 @@
 								/>
 								<span class="grow">{{ ts("user_menu.sign_out") }}</span>
 							</button>
-						</template>
-					</div>
+						</div>
+					</template>
 				</nav>
 
 				<section class="settings-page" :aria-labelledby="headingId">
@@ -468,13 +475,16 @@ const pageSections = computed(() =>
 const ACCOUNT_PAGES = new Set<SettingsSection>(["account", "notifications", "connections"]);
 const pageGroups = computed(() => {
 	const pages = pageSections.value;
-	const groups = searchQuery.value.trim()
-		? [pages]
+	const groups: { label?: string; items: typeof pages }[] = searchQuery.value.trim()
+		? [{ items: pages }]
 		: [
-				pages.filter((item) => ACCOUNT_PAGES.has(item.id)),
-				pages.filter((item) => !ACCOUNT_PAGES.has(item.id)),
+				{ items: pages.filter((item) => ACCOUNT_PAGES.has(item.id)) },
+				{
+					items: pages.filter((item) => !ACCOUNT_PAGES.has(item.id)),
+					label: ts("profile.group_experience"),
+				},
 			];
-	return groups.filter((group) => group.length);
+	return groups.filter((group) => group.items.length);
 });
 const reportSection = computed(() =>
 	sections.value.find((item) => item.id === "report" && matchesSearch(item.label)),
@@ -601,6 +611,11 @@ async function logOut() {
 
 .settings--detail .settings-page {
 	@apply flex;
+}
+
+/* Discord's group names: small and quiet, in sentence case, over their group. */
+.settings-group-label {
+	@apply px-1 pb-2 text-sm font-medium text-muted md:px-3 md:pb-1.5 md:text-[0.8125rem];
 }
 
 .settings-nav-label {

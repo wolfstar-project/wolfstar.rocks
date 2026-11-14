@@ -15,6 +15,8 @@
 		"edit_on_discord": "Edit on Discord",
 		"email": "Email",
 		"from_discord": "From Discord",
+		"group_experience": "Experience",
+		"group_support": "Support",
 		"message_display": "Message display",
 		"message_display_description": "Change how the Home's messages and the logs' entries look.",
 		"message_display_preview": {

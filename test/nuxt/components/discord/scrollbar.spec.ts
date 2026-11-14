@@ -1,5 +1,6 @@
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { describe, expect, it, vi } from "vitest";
+import { userEvent } from "vitest/browser";
 import DiscordScrollbar from "~/components/discord/scrollbar.vue";
 
 type ScrollbarProps = {
@@ -103,15 +104,22 @@ describe("DiscordScrollbar", () => {
 	});
 
 	it("hides the thumb until hover when autoHide is set (positive)", async () => {
-		// ARRANGE / ACT — a real browser starts with its pointer at the top left, which would
-		// hover a scrollbar mounted there, so move the scrollbar away from it
+		// ARRANGE — the browser's real pointer may rest wherever an earlier spec left
+		// it, over this scrollbar too: with no hit-testing the root cannot be hovered.
 		const { wrapper, root, thumb } = await mountTall({ autoHide: true });
-		root.style.margin = "300px";
+		root.style.pointerEvents = "none";
 
-		// ASSERT — a scroll event while the thumb mounts keeps it shown until the idle delay ends
-		await vi.waitFor(() => expect(getComputedStyle(thumb).opacity).toBe("0"), {
-			timeout: 3000,
-		});
+		// ASSERT — the browser drops `:hover` on a later frame, and the thumb then
+		// fades out over 0.1s
+		await vi.waitFor(() => expect(root.matches(":hover")).toBe(false));
+		await vi.waitFor(() => expect(getComputedStyle(thumb).opacity).toBe("0"));
+
+		// ACT — hover it
+		root.style.pointerEvents = "";
+		await userEvent.hover(root);
+
+		// ASSERT
+		await vi.waitFor(() => expect(getComputedStyle(thumb).opacity).toBe("1"));
 
 		wrapper.unmount();
 	});

@@ -3283,6 +3283,9 @@
 						"form_aria": {
 							"type": "string"
 						},
+						"module_off_summary": {
+							"type": "string"
+						},
 						"not_reported": {
 							"type": "string"
 						},
@@ -3296,9 +3299,6 @@
 							"type": "string"
 						},
 						"pick_channel": {
-							"type": "string"
-						},
-						"pick_channel_hint": {
 							"type": "string"
 						},
 						"subtitle": {

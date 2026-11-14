@@ -40,6 +40,15 @@ jobs:
       - name: 🌐 Build Lunaria
         run: vp run build:lunaria
 
+      # Skew protection keeps the assets of past deploys in this directory, carried
+      # from one production deploy to the next: the build serves them next to its own.
+      - name: ♻️ Restore the assets of past deploys
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .cache/skew-protection
+          key: skew-protection-production-${{ github.run_id }}
+          restore-keys: skew-protection-production-
+
       - name: 🏗️ Build the Worker
         run: vp run build
         env:
@@ -118,6 +127,14 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           ROLLOUT_PERCENTAGE: ${{ vars.WORKER_ROLLOUT_PERCENTAGE }}
+
+      # Saved only once the deploy went through, so a failed or cancelled run never
+      # hands the next one a release that was not served.
+      - name: 💾 Save the assets of past deploys
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .cache/skew-protection
+          key: skew-protection-production-${{ github.run_id }}
 
     outputs:
       rollout: ${{ steps.deploy.outputs.rollout }}

@@ -78,13 +78,6 @@ describe("the Worker a build deploys to", () => {
 		expect(worker).not.toHaveProperty("kv_namespaces");
 	});
 
-	it("finds the skew protection namespace of the environment it deploys", async () => {
-		vi.stubEnv("CLOUDFLARE_WORKER", "beta");
-		const config = await import("../../../config/cloudflare");
-
-		expect(config.SKEW_PROTECTION_NAMESPACE_ID).toBe("68a50da1ca7b4f2985b874440ed258a9");
-	});
-
 	// Production's cookies cover the whole domain, so beta reaches them too.
 	it("names beta's cookies apart from production's", async () => {
 		vi.stubEnv("CLOUDFLARE_WORKER", "beta");

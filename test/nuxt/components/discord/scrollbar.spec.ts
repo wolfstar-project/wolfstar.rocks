@@ -1,5 +1,6 @@
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { describe, expect, it, vi } from "vitest";
+import { userEvent } from "vitest/browser";
 import DiscordScrollbar from "~/components/discord/scrollbar.vue";
 
 type ScrollbarProps = {
@@ -103,11 +104,21 @@ describe("DiscordScrollbar", () => {
 	});
 
 	it("hides the thumb until hover when autoHide is set (positive)", async () => {
-		// ARRANGE / ACT
-		const { wrapper, thumb } = await mountTall({ autoHide: true });
+		// ARRANGE — the browser's real pointer may rest wherever an earlier spec left
+		// it, over this scrollbar too: with no hit-testing the root cannot be hovered.
+		const { wrapper, root, thumb } = await mountTall({ autoHide: true });
+		root.style.pointerEvents = "none";
 
 		// ASSERT
+		expect(root.matches(":hover")).toBe(false);
 		expect(getComputedStyle(thumb).opacity).toBe("0");
+
+		// ACT — hover it
+		root.style.pointerEvents = "";
+		await userEvent.hover(root);
+
+		// ASSERT
+		await vi.waitFor(() => expect(getComputedStyle(thumb).opacity).toBe("1"));
 
 		wrapper.unmount();
 	});

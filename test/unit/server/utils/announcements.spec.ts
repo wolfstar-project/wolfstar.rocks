@@ -202,6 +202,142 @@ describe("toAnnouncements", () => {
 	});
 });
 
+describe("toAnnouncements with Components V2", () => {
+	const media = (url: string) => ({ height: 400, url, width: 800 });
+
+	it("keeps a post whose only content is its components", () => {
+		const [post] = toAnnouncements(
+			[
+				message("900000000000000001", {
+					components: [
+						{ content: "For <@&400000000000000001>:", type: 10 },
+						{
+							accent_color: 16_705_372, // #fee75c
+							components: [
+								{ content: "## v0.16.0 in <#300000000000000001>", type: 10 },
+								{ divider: true, spacing: 2, type: 14 },
+								{
+									accessory: {
+										media: media("https://cdn.example/icon.png"),
+										type: 11,
+									},
+									components: [{ content: "What's new", type: 10 }],
+									type: 9,
+								},
+								{
+									items: [
+										{
+											description: "The dashboard",
+											media: media("https://cdn.example/a.png"),
+										},
+										{
+											media: media("https://cdn.example/hidden.png"),
+											spoiler: true,
+										},
+									],
+									type: 12,
+								},
+								{
+									components: [
+										{
+											label: "Open",
+											style: 5,
+											type: 2,
+											url: "https://wolfstar.rocks",
+										},
+										{ custom_id: "vote", label: "Vote", style: 1, type: 2 },
+									],
+									type: 1,
+								},
+							],
+							type: 17,
+						},
+					],
+					flags: 1 << 15,
+				}),
+			],
+			GUILD_ID,
+			names,
+		);
+
+		expect(post?.components).toEqual([
+			{ content: "For <@Moderator>:", kind: "text" },
+			{
+				accent: "#fee75c",
+				components: [
+					{ content: "## v0.16.0 in <#rules>", kind: "text" },
+					{ divider: true, kind: "separator", spacing: "large" },
+					{
+						accessory: {
+							image: { alt: undefined, ...media("https://cdn.example/icon.png") },
+							kind: "thumbnail",
+						},
+						kind: "section",
+						texts: ["What's new"],
+					},
+					{
+						images: [{ alt: "The dashboard", ...media("https://cdn.example/a.png") }],
+						kind: "gallery",
+					},
+					{ kind: "links", links: [{ label: "Open", url: "https://wolfstar.rocks" }] },
+				],
+				kind: "container",
+			},
+		]);
+	});
+
+	it("gives a section's link button as its accessory", () => {
+		const [post] = toAnnouncements(
+			[
+				message("900000000000000001", {
+					components: [
+						{
+							accessory: {
+								label: "Docs",
+								style: 5,
+								type: 2,
+								url: "https://docs.example",
+							},
+							components: [{ content: "Read more", type: 10 }],
+							type: 9,
+						},
+					],
+				}),
+			],
+			GUILD_ID,
+			names,
+		);
+
+		expect(post?.components).toEqual([
+			{
+				accessory: { kind: "link", label: "Docs", url: "https://docs.example" },
+				kind: "section",
+				texts: ["Read more"],
+			},
+		]);
+	});
+
+	it("drops rows and galleries left with nothing a reader can use", () => {
+		const posts = toAnnouncements(
+			[
+				message("900000000000000001", {
+					components: [
+						{ components: [{ custom_id: "a", style: 1, type: 2 }], type: 1 },
+						{
+							items: [{ media: media("https://cdn.example/x.png"), spoiler: true }],
+							type: 12,
+						},
+					],
+				}),
+			],
+			GUILD_ID,
+			names,
+		);
+
+		expect(posts).toEqual([]);
+	});
+});
+
 describe("appInvites", () => {
 	it("finds the apps a post invites to, each once, in order", () => {
 		expect(

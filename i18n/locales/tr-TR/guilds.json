@@ -870,6 +870,7 @@
 			"ignored_count": "",
 			"logging_channels": "",
 			"logging_channels_help": "",
+			"module_hint": "",
 			"not_logged": "",
 			"nothing_ignored": "",
 			"routed_count": "",
@@ -1093,12 +1094,12 @@
 				"unknown_channel": ""
 			},
 			"form_aria": "",
+			"module_off_summary": "",
 			"not_reported": "",
 			"off_body": "",
 			"off_summary": "",
 			"off_title": "",
 			"pick_channel": "",
-			"pick_channel_hint": "",
 			"subtitle": "",
 			"title": "",
 			"warning_help": ""

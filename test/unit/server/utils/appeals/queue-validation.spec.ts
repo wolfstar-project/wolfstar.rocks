@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 // The helpers read the request, not the database: what they import is not needed.
-vi.mock("#server/utils/appeals/route", () => ({ useManagedGuild: vi.fn() }));
+vi.mock("#server/utils/guilds/manager", () => ({ useManagedGuild: vi.fn() }));
 
 import { AppealQueueError } from "#server/utils/appeals/queue-error";
 import {

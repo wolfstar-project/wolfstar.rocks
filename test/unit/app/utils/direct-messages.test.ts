@@ -1,10 +1,16 @@
 import type { Announcement } from "#shared/types/announcement";
 import { describe, expect, it } from "vitest";
-import { DIRECT_MESSAGE_THREADS, groupNewsByDay, unreadNews } from "~/utils/direct-messages";
+import {
+	continuesPost,
+	DIRECT_MESSAGE_THREADS,
+	groupNewsByDay,
+	unreadNews,
+} from "~/utils/direct-messages";
 
 const post = (id: string, at: string): Announcement => ({
 	apps: [],
 	at,
+	components: [],
 	content: "",
 	embeds: [],
 	id,
@@ -54,5 +60,14 @@ describe("direct messages", () => {
 			["3"],
 		]);
 		expect(days[0]?.day).toBe(new Date(2026, 9, 15).toISOString());
+	});
+
+	it("joins a post to the one before it within seven minutes", () => {
+		const first = { at: "2026-11-13T15:59:00Z" };
+
+		expect(continuesPost(undefined, first)).toBe(false);
+		expect(continuesPost(first, { at: "2026-11-13T16:01:00Z" })).toBe(true);
+		expect(continuesPost(first, { at: "2026-11-13T16:06:00Z" })).toBe(true);
+		expect(continuesPost(first, { at: "2026-11-13T16:06:01Z" })).toBe(false);
 	});
 });

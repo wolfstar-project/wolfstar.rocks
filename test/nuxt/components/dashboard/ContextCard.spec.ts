@@ -28,6 +28,7 @@ describe("DashboardContextCard", () => {
 			modulesAutomessage: false,
 			modulesAutomod: true,
 			modulesAutopurge: false,
+			modulesHoneypot: false,
 			modulesLogs: false,
 			modulesModeration: true,
 			modulesRoles: false,
@@ -35,7 +36,16 @@ describe("DashboardContextCard", () => {
 		const wrapper = await mountSuspended(DashboardContextCard, { route: "/?screen=page" });
 
 		expect(wrapper.text()).toContain("WolfStar HQ");
-		expect(wrapper.text()).toContain("2 of 9 modules on");
+		expect(wrapper.text()).toContain("2 of 10 modules on");
+	});
+
+	it("says the honeypot is off while it has no channel, its switch on", async () => {
+		openServer({ honeypotChannel: null, modulesHoneypot: true });
+		useActiveGuild().setSection("honeypot");
+		const wrapper = await mountSuspended(DashboardContextCard, { route: "/?screen=page" });
+
+		expect(wrapper.find('[role="switch"]').attributes("aria-checked")).toBe("true");
+		expect(wrapper.text()).toContain("Honeypot · Off");
 	});
 
 	it("offers the switch of a module section, bound to its staged setting", async () => {

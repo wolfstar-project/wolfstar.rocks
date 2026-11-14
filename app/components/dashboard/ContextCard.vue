@@ -49,10 +49,19 @@ const moduleOn = computed(() =>
 	moduleKey.value ? guildSettings.value?.[moduleKey.value] === true : false,
 );
 
+// A module that also needs a setting, as the honeypot needs its channel, does
+// nothing while that setting is empty: the summary says off, as the sidebar does.
+const moduleWorking = computed(() => {
+	const requiredKey = item.value?.requiredKey;
+	return (
+		moduleOn.value && (requiredKey === undefined || Boolean(guildSettings.value?.[requiredKey]))
+	);
+});
+
 const summary = computed(() => {
 	if (!isLoaded.value) return label.value;
 	if (moduleKey.value) {
-		return moduleOn.value
+		return moduleWorking.value
 			? ts("dashboard.phone.module_on", { name: label.value })
 			: ts("dashboard.phone.module_off", { name: label.value });
 	}

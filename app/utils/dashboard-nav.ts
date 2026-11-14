@@ -74,6 +74,7 @@ export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
 		group: "modules",
 		icon: "ic:round-hive",
 		labelKey: "dashboard.nav.honeypot",
+		moduleKey: "modulesHoneypot",
 		requiredKey: "honeypotChannel",
 		slug: "honeypot",
 	},

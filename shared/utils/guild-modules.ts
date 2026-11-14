@@ -61,11 +61,12 @@ type GuildModuleKey = GuildModuleEntry["key"];
 
 /**
  * The switches of the modules that are set up in a table of their own: the
- * appeals, the join guard, and the channels of the Auto-* modules, which stay while their flag
- * of `Modules` is off and do nothing. They are shown, counted and flipped with
- * the other flags.
+ * honeypot, the appeals, the join guard, and the channels of the Auto-*
+ * modules, which stay while their flag of `Modules` is off and do nothing.
+ * They are shown, counted and flipped with the other flags.
  */
 export const OWN_TABLE_MODULE_SWITCHES = [
+	"modulesHoneypot",
 	"appealsEnabled",
 	"joinGuardEnabled",
 	"modulesAutodelete",

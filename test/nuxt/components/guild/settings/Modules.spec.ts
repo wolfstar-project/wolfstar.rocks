@@ -77,8 +77,8 @@ describe("modules guild settings", () => {
 		// the join guard are off until their switch is on.
 		expect(buttonsLabelled("Configure")).toHaveLength(7);
 		expect(buttonsLabelled("Enable first")).toHaveLength(GUILD_MODULES.length - 3 + 2);
-		// The flags of `Modules`, the appeals, the join guard and the three Auto-* modules.
-		expect(wrapper.findAll('[aria-label^="Toggle "]')).toHaveLength(GUILD_MODULES.length + 5);
+		// The flags of `Modules`, the honeypot, the appeals, the join guard and the three Auto-* modules.
+		expect(wrapper.findAll('[aria-label^="Toggle "]')).toHaveLength(GUILD_MODULES.length + 6);
 	});
 
 	it("tells whether the honeypot is set up, from its channel", async () => {
@@ -120,7 +120,7 @@ describe("modules guild settings", () => {
 		await nextTick();
 
 		expect(getSetupState(wrapper).state.modulesLogs).toBe(false);
-		expect(getSetupState(wrapper).enabledCount).toBe(5);
+		expect(getSetupState(wrapper).enabledCount).toBe(6);
 	});
 
 	it("switches the appeals like a module, Disable all included", async () => {
@@ -130,7 +130,7 @@ describe("modules guild settings", () => {
 		await wrapper.find('[aria-label="Toggle Appeals"]').trigger("click");
 		await nextTick();
 		expect(getSetupState(wrapper).state.appealsEnabled).toBe(true);
-		expect(getSetupState(wrapper).enabledCount).toBe(7);
+		expect(getSetupState(wrapper).enabledCount).toBe(8);
 
 		const disableAll = wrapper
 			.findAll("button")
@@ -167,9 +167,9 @@ describe("modules guild settings", () => {
 		expect(state.modulesRoles).toBe(true);
 		expect(state.modulesAutomod).toBe(false);
 		expect(state.modulesLogs).toBe(true);
-		expect(enabledCount).toBe(6);
-		// The flags of `Modules`, and the switches of the appeals and the join guard.
-		expect(wrapper.text()).toContain("6 / 9 enabled");
+		expect(enabledCount).toBe(7);
+		// The flags of `Modules`, and the switches of the modules with a table of their own.
+		expect(wrapper.text()).toContain("7 / 10 enabled");
 	});
 
 	it("enables and disables every module at once", async () => {
@@ -186,7 +186,7 @@ describe("modules guild settings", () => {
 
 		await enableAll!.trigger("click");
 		await nextTick();
-		expect(getSetupState(wrapper).enabledCount).toBe(GUILD_MODULES.length + 5);
+		expect(getSetupState(wrapper).enabledCount).toBe(GUILD_MODULES.length + 6);
 
 		await disableAll!.trigger("click");
 		await nextTick();

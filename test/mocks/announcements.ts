@@ -1,10 +1,15 @@
-import type { Announcement, AnnouncementApp } from "#shared/types/announcement";
+import type {
+	Announcement,
+	AnnouncementApp,
+	AnnouncementComponent,
+} from "#shared/types/announcement";
 
 /** Two posts of WolfStar's announcement channel, as `/api/announcements/wolfstar` returns them. */
 export const MOCK_ANNOUNCEMENTS: Announcement[] = [
 	{
 		apps: [],
 		at: "2026-10-11T09:12:00.000Z",
+		components: [],
 		content:
 			"## Dashboard v3\nThanks <@Moderator> and <@Jane Doe>, read more in <#rules>.\n- Pins\n- Recent modules",
 		embeds: [],
@@ -23,6 +28,7 @@ export const MOCK_ANNOUNCEMENTS: Announcement[] = [
 	{
 		apps: [],
 		at: "2026-10-15T11:05:00.000Z",
+		components: [],
 		content: "",
 		embeds: [
 			{
@@ -48,3 +54,24 @@ export const MOCK_APP_INVITE: AnnouncementApp = {
 	name: "WolfStar Alpha",
 	url: "https://discord.com/oauth2/authorize?client_id=1557826376331960380",
 };
+
+/** A post sent with Components V2: a ping, then a container, and no `content`. */
+export const MOCK_COMPONENTS_V2: AnnouncementComponent[] = [
+	{ content: "<@Subscribers>", kind: "text" },
+	{
+		accent: "#fee75c",
+		components: [
+			{ content: "## wolfstar.rocks v0.16.0 preview", kind: "text" },
+			{ divider: true, kind: "separator", spacing: "small" },
+			{ content: "- **New dashboard** at `/app`", kind: "text" },
+			{
+				kind: "links",
+				links: [
+					{ label: "Open wolfstar.rocks", url: "https://wolfstar.rocks" },
+					{ label: "Release notes", url: "https://wolfstar.rocks/changelog" },
+				],
+			},
+		],
+		kind: "container",
+	},
+];

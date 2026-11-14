@@ -870,6 +870,7 @@
 			"ignored_count": "No channels ignored | 1 channel ignored | {count} channels ignored",
 			"logging_channels": "Logging Channels",
 			"logging_channels_help": "Select which channels should receive specific log events. Leave empty to disable logging for that event.",
+			"module_hint": "Turning this off keeps the channels below but stops every event log. The moderation log, reports and honeypot log still post.",
 			"not_logged": "not logged",
 			"nothing_ignored": "Nothing ignored.",
 			"routed_count": "{routed} of {total} routed",
@@ -1093,12 +1094,12 @@
 				"unknown_channel": "The honeypot needs a text channel of the server. Pick another channel."
 			},
 			"form_aria": "Honeypot settings form",
+			"module_off_summary": "Nobody is caught while it is off.",
 			"not_reported": "Not reported",
 			"off_body": "Turn it on and pick a channel no member has a reason to write in. Or run /honeypot setup in Discord: WolfStar creates one at the top of the list, where the bots look first.",
 			"off_summary": "Nobody is caught while it has no channel.",
 			"off_title": "The honeypot is off",
 			"pick_channel": "Pick the honeypot channel",
-			"pick_channel_hint": "Pick the honeypot channel to turn it on.",
 			"subtitle": "A trap for spam bots: no member has a reason to write in its channel, so WolfStar acts on whoever does and deletes what they sent. The moderators are never caught.",
 			"title": "Honeypot",
 			"warning_help": "Without it the channel says nothing, which is harder for a bot to learn to avoid, and for a member too. WolfStar posts or takes down the warning when you save."

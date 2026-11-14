@@ -20,8 +20,6 @@ export const authorizeJoinGuardManager = authorizeGuildManager(
 	"Insufficient permissions to manage the join guard",
 );
 
-export { useManagedGuild };
-
 /**
  * A refusal the dashboard can act on. Thrown with h3's `createError` rather
  * than evlog's: its `data` reaches the client in the response body, which is

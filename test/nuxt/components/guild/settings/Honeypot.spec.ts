@@ -14,7 +14,6 @@ const LOG_CHANNEL = "345678901234567890";
 
 const mockGuildSettings = ref<GuildData | undefined>(createMockGuildData(GUILD_ID));
 const mockSetGuildSettingsChanges = vi.fn();
-const mockResetCounter = ref(0);
 const mockCopy = vi.fn();
 
 mockNuxtImport("useGuildSettings", () => () => ({
@@ -28,7 +27,6 @@ mockNuxtImport("useGuildSettingsChanges", () => () => ({
 	setGuildSettingsChanges: mockSetGuildSettingsChanges,
 	removeChange: vi.fn(),
 	resetGuildSettingsChanges: vi.fn(),
-	resetCounter: mockResetCounter,
 }));
 
 mockNuxtImport("useGuildData", () => () => ({
@@ -74,11 +72,16 @@ describe("honeypot guild settings", () => {
 	const moduleSwitch = (wrapper: Awaited<ReturnType<typeof mountReady>>) =>
 		wrapper.find('[aria-label="Toggle Honeypot"]');
 
-	describe("without a channel", () => {
+	describe("switched off", () => {
+		beforeEach(() => {
+			mockGuildSettings.value = createMockGuildData(GUILD_ID, { modulesHoneypot: false });
+		});
+
 		it("is off, with the switch and the Discord way to set it up", async () => {
 			const wrapper = await mountReady();
 
 			expect(moduleSwitch(wrapper).attributes("aria-checked")).toBe("false");
+			expect(wrapper.text()).toContain("Nobody is caught while it is off.");
 			expect(wrapper.text()).toContain("The honeypot is off");
 			expect(wrapper.text()).toContain("/honeypot setup in Discord");
 			expect(wrapper.findAllComponents(SelectChannel)).toHaveLength(0);
@@ -98,19 +101,27 @@ describe("honeypot guild settings", () => {
 			);
 		});
 
-		it("opens the form on the switch and stages nothing until a channel is picked", async () => {
+		it("stages the module's flag when switched on, and opens the form", async () => {
 			const wrapper = await mountReady();
 
 			await moduleSwitch(wrapper).trigger("click");
 			await nextTick();
 
-			expect(wrapper.text()).toContain("Pick the honeypot channel to turn it on.");
-			const [trap] = wrapper.findAllComponents(SelectChannel);
-			expect(trap!.props("label")).toBe("Honeypot Channel");
-			expect(trap!.props("modelValue")).toBeNull();
-			expect(mockSetGuildSettingsChanges).not.toHaveBeenCalledWith(
-				expect.objectContaining({ honeypotChannel: expect.anything() }),
+			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({ modulesHoneypot: true });
+			expect(wrapper.findAllComponents(SelectChannel)[0]!.props("label")).toBe(
+				"Honeypot Channel",
 			);
+		});
+	});
+
+	describe("switched on without a channel", () => {
+		it("says nobody is caught and stages the channel picked", async () => {
+			const wrapper = await mountReady();
+
+			expect(moduleSwitch(wrapper).attributes("aria-checked")).toBe("true");
+			expect(wrapper.text()).toContain("Nobody is caught while it has no channel.");
+			const [trap] = wrapper.findAllComponents(SelectChannel);
+			expect(trap!.props("modelValue")).toBeNull();
 
 			trap!.vm.$emit("update:modelValue", TRAP_CHANNEL);
 			await nextTick();
@@ -118,26 +129,6 @@ describe("honeypot guild settings", () => {
 			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
 				honeypotChannel: TRAP_CHANNEL,
 			});
-		});
-
-		it("is off again after the staged changes are reset", async () => {
-			const wrapper = await mountReady();
-
-			await moduleSwitch(wrapper).trigger("click");
-			await nextTick();
-			wrapper
-				.findAllComponents(SelectChannel)[0]!
-				.vm.$emit("update:modelValue", TRAP_CHANNEL);
-			await nextTick();
-
-			// A reset puts the saved settings back (no channel) and counts one more reset.
-			mockGuildSettings.value = createMockGuildData(GUILD_ID);
-			mockResetCounter.value += 1;
-			await nextTick();
-			await nextTick();
-
-			expect(moduleSwitch(wrapper).attributes("aria-checked")).toBe("false");
-			expect(wrapper.findAllComponents(SelectChannel)).toHaveLength(0);
 		});
 	});
 
@@ -172,13 +163,16 @@ describe("honeypot guild settings", () => {
 			expect(logs!.props("exclude")).toStrictEqual([TRAP_CHANNEL]);
 		});
 
-		it("turns off by clearing the channel", async () => {
+		it("turns off with the module's flag and keeps its channel", async () => {
 			const wrapper = await mountReady();
 
 			await moduleSwitch(wrapper).trigger("click");
 			await nextTick();
 
-			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({ honeypotChannel: null });
+			expect(mockSetGuildSettingsChanges).toHaveBeenLastCalledWith({
+				modulesHoneypot: false,
+			});
+			expect(wrapper.text()).toContain("Nobody is caught while it is off.");
 		});
 
 		it("stages the action and the warning like the other settings", async () => {

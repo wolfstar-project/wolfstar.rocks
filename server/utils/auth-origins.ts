@@ -108,12 +108,11 @@ const SHARED_COOKIE_DOMAIN = "wolfstar.rocks";
 
 /**
  * The domain the auth cookies are set on, or none to keep them on the host
- * that set them. Production serves wolfstar.rocks and its alpha subdomain
- * from one Worker, while Discord sends every sign-in back to the site URL. A
- * host-only state cookie set on alpha would be missing there, so on production
- * the cookies cover the whole domain. Other sites, such as the beta and alpha
- * Workers or localhost, keep host-only cookies: their sessions must not reach
- * production's hosts.
+ * that set them. Discord sends every sign-in back to the site URL, so a
+ * host-only state cookie set on another host of the domain would be missing
+ * there: on production the cookies cover the whole domain. Other sites, such
+ * as the beta Worker or localhost, keep host-only cookies: their sessions must
+ * not reach production's hosts.
  */
 export function resolveAuthCookieDomain(siteUrl: string | undefined | null): string | undefined {
 	if (!siteUrl) return undefined;

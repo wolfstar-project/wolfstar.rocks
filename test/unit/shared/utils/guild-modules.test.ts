@@ -54,6 +54,7 @@ describe("guild modules registry", () => {
 			"modulesModeration",
 			"modulesRoles",
 			"modulesLogs",
+			"modulesHoneypot",
 			"appealsEnabled",
 			"joinGuardEnabled",
 			"modulesAutodelete",

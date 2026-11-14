@@ -27,14 +27,14 @@ catalogs:
 
     storybook:
         "@storybook-vue/nuxt": 10.0.3
-        "@storybook/addon-a11y": ^10.6.6
-        "@storybook/addon-docs": ^10.6.6
-        "@storybook/addon-themes": ^10.6.6
+        "@storybook/addon-a11y": ^10.6.7
+        "@storybook/addon-docs": ^10.6.7
+        "@storybook/addon-themes": ^10.6.7
         msw-storybook-addon: ^2.0.7
-        storybook: ^10.6.6
+        storybook: ^10.6.7
 
     vite-plus:
-        vite: npm:@voidzero-dev/vite-plus-core@0.2.8
+        vite: npm:@voidzero-dev/vite-plus-core@0.3.3
         vite-plus: 0.2.7
         vitest: 4.1.10
         "@vitest/browser-playwright": 4.1.10
@@ -69,15 +69,15 @@ overrides:
     discord-api-types: 0.38.58
     # Keep one unhead version (Nuxt 4.x still ships unhead/legacy) so Nitro cannot link the
     # server bundle to a different traced package copy that omits legacy.mjs.
-    "@unhead/vue": 3.4.2
-    "@unhead/bundler": 3.4.2
-    unhead: 3.4.2
-    sharp: 0.35.3
+    "@unhead/vue": 3.4.3
+    "@unhead/bundler": 3.4.3
+    unhead: 3.4.3
+    sharp: 0.35.5
     # prisma-orm-extension-typed-json is only published for rc.5: run it on the rc.13 packs the
     # contract needs, exactly as the bot does (wolfstar-project/wolfstar, V7).
-    prisma-orm-extension-typed-json>@prisma/orm-family-sql: 8.0.0-rc.13
-    prisma-orm-extension-typed-json>@prisma/orm-framework: 8.0.0-rc.13
-    "@prisma/orm-target-postgres": 8.0.0-rc.13
+    prisma-orm-extension-typed-json>@prisma/orm-family-sql: 8.0.0-rc.23
+    prisma-orm-extension-typed-json>@prisma/orm-framework: 8.0.0-rc.23
+    "@prisma/orm-target-postgres": 8.0.0-rc.23
     typescript: npm:typescript-native-bridge@6.0.3-bridge.19.tsgo.7.0.2
     vite: catalog:vite-plus
     vitest: catalog:vite-plus

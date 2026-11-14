@@ -13,7 +13,7 @@ export interface DirectMessageThreadInfo {
 	id: DirectMessageThreadId;
 	name: string;
 	avatar: string;
-	/** The name its posts are signed with on Discord, when not the bot's own. */
+	/** The name its posts and its row in the list carry on Discord, when not the bot's own. */
 	author?: string;
 	/** What the thread is for, shown at its top. */
 	introKey: string;

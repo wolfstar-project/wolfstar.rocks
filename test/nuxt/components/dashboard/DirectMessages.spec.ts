@@ -95,6 +95,14 @@ describe("dashboard direct messages", () => {
 		list.unmount();
 	});
 
+	// The row carries the name the posts are signed with on Discord.
+	it("lists WolfStar's thread as WolfStar Announcements", async () => {
+		const list = await mountSuspended(DashboardDirectMessages);
+
+		await vi.waitFor(() => expect(list.text()).toContain("WolfStar Announcements"));
+		list.unmount();
+	});
+
 	it("offers to load the posts again when Discord fails", async () => {
 		failing = true;
 		const thread = await mountSuspended(DashboardDirectMessageThread);

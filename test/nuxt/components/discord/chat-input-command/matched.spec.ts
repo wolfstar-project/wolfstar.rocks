@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import DiscordChatInputCommandMatched from "~/components/discord/chat-input-command/matched.vue";
 
 describe("DiscordChatInputCommandMatched", () => {
-	it("renders the matched invocation and emits select on Space (positive)", async () => {
+	it("renders the matched invocation and emits select on Space and click (positive)", async () => {
 		// ARRANGE
 		const wrapper = await mountSuspended(DiscordChatInputCommandMatched, {
 			props: {
@@ -21,8 +21,10 @@ describe("DiscordChatInputCommandMatched", () => {
 
 		// ASSERT
 		expect(option.attributes("aria-selected")).toBe("true");
-		expect(option.attributes("aria-label")).toContain("Slash command: /conf menu");
-		expect(wrapper.find(".discord-slash-command-composed").exists()).toBe(true);
+		expect(option.attributes("aria-label")).toBe("Slash command: /conf menu key: prefix");
+		expect(option.find("[role='group']").attributes("aria-label")).toBe(
+			"Slash command /conf menu key: prefix",
+		);
 		expect(wrapper.emitted("select")).toHaveLength(2);
 	});
 
@@ -35,6 +37,7 @@ describe("DiscordChatInputCommandMatched", () => {
 		// ASSERT
 		const option = wrapper.find("[role='option']");
 		expect(option.attributes("aria-selected")).toBe("false");
-		expect(option.classes()).not.toContain("discord-slash-command-suggestion-matched-active");
+		expect(option.attributes("data-state")).toBe("inactive");
+		expect(wrapper.emitted("select")).toBeUndefined();
 	});
 });

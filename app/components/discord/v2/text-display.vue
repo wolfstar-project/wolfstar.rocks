@@ -1,5 +1,6 @@
 <template>
-	<div class="discord-v2-text-display"><slot></slot></div>
+	<!-- newt/ui has no Text Display part: the text of a Components V2 message keeps its line breaks. -->
+	<div class="whitespace-pre-line"><slot></slot></div>
 </template>
 
 <script lang="ts">
@@ -13,10 +14,3 @@ interface TextDisplaySlots {
 <script setup lang="ts">
 defineSlots<TextDisplaySlots>();
 </script>
-
-<style scoped>
-@reference "@/assets/css/main.css";
-.discord-v2-text-display {
-	@apply font-whitney whitespace-pre-line;
-}
-</style>

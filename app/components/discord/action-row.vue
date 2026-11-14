@@ -1,5 +1,5 @@
 <template>
-	<div class="discord-action-row"><slot></slot></div>
+	<ActionRow><slot></slot></ActionRow>
 </template>
 
 <script lang="ts">
@@ -11,13 +11,7 @@ interface ActionRowSlots {
 </script>
 
 <script setup lang="ts">
+import { ActionRow } from "~/components/ui/action-row";
+
 defineSlots<ActionRowSlots>();
 </script>
-
-<style scoped>
-@reference "@/assets/css/main.css";
-/* Skyra discord-action-row: display flex; flex-wrap wrap. */
-.discord-action-row {
-	@apply flex flex-row flex-wrap items-center gap-2 font-whitney;
-}
-</style>

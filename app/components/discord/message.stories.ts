@@ -1,11 +1,10 @@
 import type { Meta, StoryObj } from "@storybook-vue/nuxt";
+import { Reaction, ReactionGroup } from "~/components/ui/reaction";
 import { caseEmbedColor } from "~/storybook/discord-fixtures";
 import { discordDecorator } from "../../../.storybook/decorators";
 import DiscordEmbed from "./embed.vue";
 import DiscordMention from "./mention.vue";
 import DiscordMessage from "./message.vue";
-import DiscordReaction from "./reaction.vue";
-import DiscordReactions from "./reactions.vue";
 
 const meta = {
 	component: DiscordMessage,
@@ -95,8 +94,8 @@ export const WithEmbedAndReactions: Story = {
 			DiscordMessage,
 			DiscordEmbed,
 			DiscordMention,
-			DiscordReactions,
-			DiscordReaction,
+			ReactionGroup,
+			Reaction,
 		},
 		setup: () => ({ args, caseEmbedColor, caseTimestamp: 1_721_145_000_000 }),
 		template: `
@@ -116,9 +115,9 @@ export const WithEmbedAndReactions: Story = {
 					</span><br />
 					<span><strong>❯ Reason:</strong>{{ " " }}spam</span>
 				</DiscordEmbed>
-				<DiscordReactions>
-					<DiscordReaction :count="3" :self="true">👍</DiscordReaction>
-				</DiscordReactions>
+				<ReactionGroup>
+					<Reaction readonly active emoji="👍" :count="3" />
+				</ReactionGroup>
 			</DiscordMessage>
 		`,
 	}),

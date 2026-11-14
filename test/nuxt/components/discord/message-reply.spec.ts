@@ -18,11 +18,9 @@ describe("DiscordMessageReply", () => {
 		// ASSERT
 		const reply = wrapper.find("[role='complementary']");
 		expect(reply.exists()).toBe(true);
-		expect(reply.classes()).toContain("discord-message-reply-kind-command");
 		expect(reply.attributes("aria-label")).toBe("Stella used the conf menu save slash command");
-		expect(wrapper.find(".discord-message-reply-command-name").text()).toBe("conf menu save");
-		expect(wrapper.find(".discord-message-reply-spine").attributes("aria-hidden")).toBe("true");
-		expect(wrapper.find(".discord-message-reply-preview").exists()).toBe(false);
+		expect(reply.text()).toMatch(/^Stella\s*used\s*conf menu save$/);
+		expect(reply.find("[role='img']").attributes("aria-label")).toBe("Stella's avatar");
 	});
 
 	it("renders a message reply preview instead of a command chip (positive)", async () => {
@@ -37,15 +35,11 @@ describe("DiscordMessageReply", () => {
 
 		// ASSERT
 		const reply = wrapper.find("[role='complementary']");
-		expect(reply.classes()).not.toContain("discord-message-reply-kind-command");
 		expect(reply.attributes("aria-label")).toBe(
 			"Replying to RedStar: Can someone help me with moderation?",
 		);
-		expect(wrapper.find(".discord-message-reply-preview").text()).toContain(
-			"Can someone help me with moderation?",
-		);
-		expect(wrapper.find(".discord-message-reply-command").exists()).toBe(false);
-		expect(wrapper.find(".discord-message-reply-username-emphasis").exists()).toBe(true);
+		expect(reply.text()).toContain("Can someone help me with moderation?");
+		expect(reply.text()).not.toContain("used");
 	});
 
 	it("does not invent a command name when command props are missing (negative)", async () => {
@@ -55,9 +49,8 @@ describe("DiscordMessageReply", () => {
 		});
 
 		// ASSERT
-		expect(wrapper.find(".discord-message-reply-command-name").text()).toBe("");
-		expect(wrapper.find("[role='complementary']").attributes("aria-label")).toBe(
-			"Stella used the  slash command",
-		);
+		const reply = wrapper.find("[role='complementary']");
+		expect(reply.text()).toMatch(/^Stella\s*used$/);
+		expect(reply.attributes("aria-label")).toBe("Stella used the  slash command");
 	});
 });

@@ -1,3 +1,4 @@
+import type { VueWrapper } from "@vue/test-utils";
 import type { DiscordMemberListMember } from "~/types/discord";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { describe, expect, it } from "vitest";
@@ -22,26 +23,48 @@ const online: DiscordMemberListMember[] = [
 
 const offline: DiscordMemberListMember[] = [{ id: "3", name: "Stella", presence: "offline" }];
 
+/** Each section: its heading text and the member names of the list it labels. */
+function readSections(wrapper: VueWrapper) {
+	return wrapper.findAll("[role='list']").map((list) => {
+		const heading = wrapper.find(`[id='${list.attributes("aria-labelledby")}']`);
+		return {
+			heading: heading.text(),
+			items: list.findAll("[role='listitem']"),
+		};
+	});
+}
+
 describe("DiscordMemberList", () => {
-	it("renders labeled sections, members, and verified APP badge (positive)", async () => {
+	it("renders labeled sections, members, and the verified APP tag (positive)", async () => {
 		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordMemberList, {
 			props: { online, offline, label: "Server members" },
 		});
 
 		// ASSERT
-		const aside = wrapper.find("aside.discord-member-list");
-		expect(aside.attributes("aria-label")).toBe("Server members");
-		expect(wrapper.findAll(".discord-member-list-member")).toHaveLength(3);
-		expect(wrapper.find(".discord-member-list-section-offline").exists()).toBe(true);
-		expect(wrapper.find(".discord-member-list-app").attributes("role")).toBe("img");
-		expect(wrapper.find(".discord-member-list-app").attributes("aria-label")).toBe(
-			"Verified application",
-		);
+		expect(wrapper.find("aside").attributes("aria-label")).toBe("Server members");
+		const sections = readSections(wrapper);
+		expect(sections.map((section) => section.heading)).toEqual(["Online — 2", "Offline — 1"]);
+		expect(sections.map((section) => section.items.length)).toEqual([2, 1]);
+		const appTag = wrapper.find("[role='img'][aria-label='Verified application']");
+		expect(appTag.text()).toBe("APP");
 		expect(wrapper.text()).toContain("Shipping tests");
 	});
 
-	it("hides presence badges for offline sections and HTTP apps (negative)", async () => {
+	it("shows the member presence on online rows (positive)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordMemberList, {
+			props: { online, offline: [] },
+		});
+
+		// ASSERT
+		const statuses = wrapper
+			.findAll("[role='listitem'] [data-status]")
+			.map((dot) => dot.attributes("data-status"));
+		expect(statuses).toEqual(["online", "dnd"]);
+	});
+
+	it("hides presence for offline sections and HTTP apps (negative)", async () => {
 		// ARRANGE
 		const httpApp: DiscordMemberListMember[] = [
 			{ id: "http", name: "Webhook", app: true, http: true },
@@ -56,14 +79,11 @@ describe("DiscordMemberList", () => {
 		});
 
 		// ASSERT
-		const members = wrapper.findAll(".discord-member-list-member");
-		expect(members[0]?.find(".discord-presence").exists()).toBe(false);
-		expect(
-			wrapper.find(".discord-member-list-section-offline .discord-presence").exists(),
-		).toBe(false);
+		expect(wrapper.find("[data-status]").exists()).toBe(false);
+		expect(wrapper.find("[role='img'][aria-label='Application']").exists()).toBe(true);
 	});
 
-	it("groups pinned role members when showRoles is enabled (positive)", async () => {
+	it("groups pinned role members under their role heading (positive)", async () => {
 		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordMemberList, {
 			props: {
@@ -83,16 +103,16 @@ describe("DiscordMemberList", () => {
 		});
 
 		// ASSERT
-		expect(wrapper.find(".discord-member-list-heading-role").exists()).toBe(true);
-		expect(wrapper.find(".discord-member-list-member").attributes("style")).toContain(
-			"linear-gradient",
+		const [section] = readSections(wrapper);
+		expect(section?.heading).toBe("Developers — 1");
+		expect(section?.items[0]?.attributes("style")).toContain("linear-gradient");
+		expect(wrapper.find("[data-slot='member-name']").attributes("style")).toContain(
+			"oklch(70% 0.15 250)",
 		);
-		expect(wrapper.find(".discord-member-list-member-decorated").exists()).toBe(true);
 	});
 
 	it("does not show role as secondary text when showRoles is false (negative)", async () => {
-		// ARRANGE / ACT — pinned headings are independent of showRoles; this asserts
-		// the subtitle path only (role name stays out of Online rows when disabled).
+		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordMemberList, {
 			props: {
 				showRoles: false,
@@ -109,9 +129,29 @@ describe("DiscordMemberList", () => {
 		});
 
 		// ASSERT
-		expect(wrapper.find(".discord-member-list-heading-role").exists()).toBe(false);
-		expect(wrapper.text()).toContain("Online");
+		expect(readSections(wrapper).map((section) => section.heading)).toEqual(["Online — 1"]);
 		expect(wrapper.text()).toContain("Shipping tests");
 		expect(wrapper.text()).not.toContain("Developers");
+	});
+
+	it("shows the role beside the status line when showRoles is true (positive)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordMemberList, {
+			props: {
+				showRoles: true,
+				online: [
+					{
+						id: "dev",
+						name: "Dev",
+						role: "Developers",
+						description: "Shipping tests",
+					},
+				],
+				offline: [],
+			},
+		});
+
+		// ASSERT
+		expect(wrapper.text()).toContain("Developers · Shipping tests");
 	});
 });

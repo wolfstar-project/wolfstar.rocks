@@ -1,7 +1,9 @@
 <template>
-	<div class="discord-messages">
+	<MessageList
+		class="discord-messages rounded-xl bg-(--discord-surface) p-1 font-whitney drop-shadow-md sm:p-2"
+	>
 		<slot></slot>
-	</div>
+	</MessageList>
 </template>
 
 <script lang="ts">
@@ -13,13 +15,7 @@ interface MessagesSlots {
 </script>
 
 <script setup lang="ts">
+import { MessageList } from "~/components/ui/message-list";
+
 defineSlots<MessagesSlots>();
 </script>
-
-<style scoped>
-@reference "@/assets/css/main.css";
-.discord-messages {
-	@apply flex flex-col rounded-xl font-whitney drop-shadow-md;
-	background-color: var(--discord-surface);
-}
-</style>

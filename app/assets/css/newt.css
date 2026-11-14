@@ -46,6 +46,9 @@
 	--color-newt-code-comment: var(--newt-code-comment);
 	--color-newt-code-function: var(--newt-code-function);
 	--ease-newt: var(--newt-ease);
+	--shadow-elevation-low: var(--newt-shadow-elevation-low);
+	--shadow-elevation-high: var(--newt-shadow-elevation-high);
+	--transition-duration-fast: var(--newt-duration-fast);
 }
 
 :root {
@@ -88,6 +91,10 @@
 	--newt-code-function: #795e26;
 	--newt-embed-max-width: 520px;
 	--newt-ease: cubic-bezier(0.3, 0.7, 0.4, 1);
+	--newt-duration-fast: 100ms;
+	--newt-shadow-elevation-low:
+		0 1px 0 rgba(6, 6, 7, 0.1), 0 1.5px 0 rgba(6, 6, 7, 0.025), 0 2px 0 rgba(6, 6, 7, 0.025);
+	--newt-shadow-elevation-high: 0 8px 16px rgba(6, 6, 7, 0.16);
 
 	@variant theme-dark {
 		--newt-bg-base: #1e1f22;
@@ -118,6 +125,9 @@
 		--newt-code-string: #ce9178;
 		--newt-code-comment: #6a9955;
 		--newt-code-function: #dcdcaa;
+		--newt-shadow-elevation-low:
+			0 1px 0 rgba(0, 0, 0, 0.2), 0 1.5px 0 rgba(0, 0, 0, 0.05), 0 2px 0 rgba(0, 0, 0, 0.05);
+		--newt-shadow-elevation-high: 0 8px 16px rgba(0, 0, 0, 0.24);
 	}
 }
 
@@ -152,4 +162,7 @@
 	--newt-code-string: #ce9178;
 	--newt-code-comment: #6a9955;
 	--newt-code-function: #dcdcaa;
+	--newt-shadow-elevation-low:
+		0 1px 0 rgba(0, 0, 0, 0.2), 0 1.5px 0 rgba(0, 0, 0, 0.05), 0 2px 0 rgba(0, 0, 0, 0.05);
+	--newt-shadow-elevation-high: 0 8px 16px rgba(0, 0, 0, 0.24);
 }

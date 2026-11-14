@@ -1,7 +1,33 @@
+import type { DOMWrapper, VueWrapper } from "@vue/test-utils";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { describe, expect, it } from "vitest";
 import DiscordAppLauncher from "~/components/discord/app-launcher/index.vue";
 import { discordAppLauncherRecentsList } from "~/utils/constants";
+
+const WARN_COMMAND = {
+	id: "command-warn",
+	kind: "command",
+	commandName: "warn",
+	name: "/warn",
+	description: "Warn a member in the server",
+	avatar: "/avatars/wolfstar.png",
+} as const;
+
+function section(wrapper: VueWrapper, headingId: string): DOMWrapper<Element> {
+	return wrapper.find(`section[aria-labelledby="${headingId}"]`);
+}
+
+function buttonsWithText(root: VueWrapper | DOMWrapper<Element>, text: string) {
+	return root.findAll("button").filter((button) => button.text().includes(text));
+}
+
+function searchInput(wrapper: VueWrapper): DOMWrapper<HTMLInputElement> {
+	return wrapper.find<HTMLInputElement>('input[type="search"]');
+}
+
+function listTitle(wrapper: VueWrapper): string {
+	return wrapper.find('[role="dialog"] h2').text();
+}
 
 describe("DiscordAppLauncher", () => {
 	it("renders search, Recents, server apps, and Promoted when open (positive)", async () => {
@@ -14,31 +40,29 @@ describe("DiscordAppLauncher", () => {
 		// ASSERT
 		const dialog = wrapper.find('[role="dialog"]');
 		expect(dialog.attributes("aria-label")).toBe("Apps");
-		expect(wrapper.find(".discord-app-launcher-search-input").attributes("placeholder")).toBe(
-			"Search Apps & Commands",
-		);
+		expect(dialog.attributes("aria-modal")).toBe("true");
+		expect(searchInput(wrapper).attributes("placeholder")).toBe("Search Apps & Commands");
+		expect(searchInput(wrapper).attributes("aria-label")).toBe("Search Apps & Commands");
 		expect(wrapper.text()).toContain("Recents");
 		expect(wrapper.text()).toContain("Apps in this Server");
 		expect(wrapper.text()).toContain("In This Server");
-		expect(wrapper.text()).toContain("Promoted");
 		expect(wrapper.text()).toContain("Puzzle Games");
 		expect(wrapper.text()).toContain("Chill Together");
-		expect(wrapper.findAll(".discord-app-launcher-recent").length).toBeGreaterThan(0);
-		expect(wrapper.findAll(".discord-app-launcher-tile").length).toBeGreaterThan(0);
-		expect(wrapper.find(".discord-app-launcher-handle").exists()).toBe(true);
-		expect(wrapper.findAll(".discord-app-launcher-promo")).toHaveLength(4);
 		expect(wrapper.text()).toContain("WolfStar Beta");
 		expect(wrapper.text()).toContain("settings server");
-		expect(wrapper.text()).toContain("Wordle");
-		expect(wrapper.find(".discord-app-launcher-promo-garden-title").text()).toContain("Magic");
-		expect(wrapper.find(".discord-app-launcher-promo-garden-title").text()).toContain("Garden");
-		expect(wrapper.find(".discord-app-launcher-promo-farm-title").text()).toContain("Farm");
-		expect(wrapper.find(".discord-app-launcher-promo-farm-title").text()).toContain(
-			"Merge Valley",
-		);
-		expect(wrapper.find(".discord-app-launcher-promo-watch-title").text()).toBe(
-			"Watch Together",
-		);
+
+		const recents = section(wrapper, "discord-app-launcher-recents-heading");
+		expect(recents.findAll('[role="list"] [role="listitem"] button').length).toBeGreaterThan(0);
+		expect(wrapper.find('[data-slot="sheet-handle"]').exists()).toBe(true);
+
+		const promoted = section(wrapper, "discord-app-launcher-promoted-heading");
+		expect(promoted.find("h2").text()).toBe("Promoted");
+		expect(promoted.findAll("button")).toHaveLength(4);
+		expect(promoted.text()).toContain("Wordle");
+		expect(promoted.text()).toContain("Magic");
+		expect(promoted.text()).toContain("Garden");
+		expect(promoted.text()).toContain("Merge Valley");
+		expect(promoted.text()).toContain("Watch Together");
 	});
 
 	it("does not render the dialog when closed (negative)", async () => {
@@ -49,7 +73,7 @@ describe("DiscordAppLauncher", () => {
 
 		// ASSERT
 		expect(wrapper.find('[role="dialog"]').exists()).toBe(false);
-		expect(wrapper.find(".discord-app-launcher").exists()).toBe(false);
+		expect(wrapper.find('input[type="search"]').exists()).toBe(false);
 	});
 
 	it("navigates to Recents via its View More control and back (positive)", async () => {
@@ -58,8 +82,10 @@ describe("DiscordAppLauncher", () => {
 			props: { open: true },
 			attachTo: document.body,
 		});
-		const viewMoreButtons = wrapper.findAll(".discord-app-launcher-view-more");
-		const recentsViewMore = viewMoreButtons[0];
+		const recentsViewMore = buttonsWithText(
+			section(wrapper, "discord-app-launcher-recents-heading"),
+			"View More",
+		)[0];
 		expect(recentsViewMore).toBeDefined();
 
 		// ACT
@@ -67,36 +93,40 @@ describe("DiscordAppLauncher", () => {
 
 		// ASSERT
 		expect(wrapper.find('[role="dialog"]').attributes("aria-label")).toBe("Recents");
-		expect(wrapper.find(".discord-app-launcher-list-title").text()).toBe("Recents");
+		expect(listTitle(wrapper)).toBe("Recents");
 		expect(wrapper.text()).toContain("Watch Together");
-		expect(wrapper.text()).toContain("PROMOTED");
-		expect(wrapper.findAll(".discord-app-launcher-list-item").length).toBe(
-			discordAppLauncherRecentsList.length,
+		expect(wrapper.text()).toContain("Promoted");
+		const rows = discordAppLauncherRecentsList.map((entry) =>
+			wrapper.findAll("button").find((button) => button.text().includes(entry.name)),
 		);
+		expect(rows.every((row) => row !== undefined)).toBe(true);
+		expect(searchInput(wrapper).exists()).toBe(false);
 
 		// ACT — back
-		await wrapper.find(".discord-app-launcher-back").trigger("click");
+		await wrapper.find('button[aria-label="Back to Apps"]').trigger("click");
 
 		// ASSERT
 		expect(wrapper.find('[role="dialog"]').attributes("aria-label")).toBe("Apps");
-		expect(wrapper.find(".discord-app-launcher-search-input").exists()).toBe(true);
-		expect(wrapper.text()).toContain("Promoted");
+		expect(searchInput(wrapper).exists()).toBe(true);
+		expect(section(wrapper, "discord-app-launcher-promoted-heading").exists()).toBe(true);
 	});
 
-	it("opens Apps in this Server list from the second View More (positive)", async () => {
+	it("opens Apps in this Server list from its View More (positive)", async () => {
 		// ARRANGE
 		const wrapper = await mountSuspended(DiscordAppLauncher, {
 			props: { open: true },
 		});
-		const viewMoreButtons = wrapper.findAll(".discord-app-launcher-view-more");
-		const serverViewMore = viewMoreButtons[1];
+		const serverViewMore = buttonsWithText(
+			section(wrapper, "discord-app-launcher-server-heading"),
+			"View More",
+		)[0];
 		expect(serverViewMore).toBeDefined();
 
 		// ACT
 		await serverViewMore!.trigger("click");
 
 		// ASSERT
-		expect(wrapper.find(".discord-app-launcher-list-title").text()).toBe("Apps in this Server");
+		expect(listTitle(wrapper)).toBe("Apps in this Server");
 		expect(wrapper.text()).toContain("Flamey");
 	});
 
@@ -105,33 +135,21 @@ describe("DiscordAppLauncher", () => {
 		const wrapper = await mountSuspended(DiscordAppLauncher, {
 			props: { open: true },
 		});
-		const input = wrapper.find(".discord-app-launcher-search-input");
 
 		// ACT
-		await input.setValue("Staryl");
+		await searchInput(wrapper).setValue("Staryl");
 
 		// ASSERT
+		expect(searchInput(wrapper).element.value).toBe("Staryl");
 		expect(wrapper.text()).toContain("Staryl");
 		expect(wrapper.text()).not.toContain("Flamey");
-		expect(wrapper.find(".discord-app-launcher-promoted-grid").exists()).toBe(false);
+		expect(section(wrapper, "discord-app-launcher-promoted-heading").exists()).toBe(false);
 	});
 
 	it("does not list commands until the user searches (negative)", async () => {
 		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordAppLauncher, {
-			props: {
-				open: true,
-				commands: [
-					{
-						id: "command-warn",
-						kind: "command",
-						commandName: "warn",
-						name: "/warn",
-						description: "Warn a member in the server",
-						avatar: "/avatars/wolfstar.png",
-					},
-				],
-			},
+			props: { open: true, commands: [WARN_COMMAND] },
 		});
 
 		// ASSERT — idle launcher has apps only; no static /commands listing
@@ -145,14 +163,7 @@ describe("DiscordAppLauncher", () => {
 			props: {
 				open: true,
 				commands: [
-					{
-						id: "command-warn",
-						kind: "command",
-						commandName: "warn",
-						name: "/warn",
-						description: "Warn a member in the server",
-						avatar: "/avatars/wolfstar.png",
-					},
+					WARN_COMMAND,
 					{
 						id: "command-ban",
 						kind: "command",
@@ -164,18 +175,17 @@ describe("DiscordAppLauncher", () => {
 				],
 			},
 		});
-		const input = wrapper.find(".discord-app-launcher-search-input");
 
 		// ACT
-		await input.setValue("warn");
-		await wrapper
-			.findAll(".discord-app-launcher-list-item")
-			.find((row) => row.text().includes("/warn"))!
+		await searchInput(wrapper).setValue("warn");
+		const commands = section(wrapper, "discord-app-launcher-commands-heading");
+		await commands
+			.find('button[aria-label="/warn. Warn a member in the server"]')
 			.trigger("click");
 
 		// ASSERT
-		expect(wrapper.find("#discord-app-launcher-commands-heading").exists()).toBe(true);
-		expect(wrapper.text()).toContain("/warn");
+		expect(wrapper.find("#discord-app-launcher-commands-heading").text()).toBe("Commands");
+		expect(commands.text()).toContain("/warn");
 		expect(wrapper.text()).not.toContain("/ban");
 		const selected = wrapper.emitted("select");
 		expect(selected).toHaveLength(1);
@@ -203,11 +213,10 @@ describe("DiscordAppLauncher", () => {
 				],
 			},
 		});
-		const input = wrapper.find(".discord-app-launcher-search-input");
-		await input.setValue("mute");
+		await searchInput(wrapper).setValue("mute");
 
 		// ACT
-		await input.trigger("keydown", { key: "Enter" });
+		await searchInput(wrapper).trigger("keydown", { key: "Enter" });
 
 		// ASSERT
 		expect(wrapper.emitted("select")?.[0]?.[0]).toMatchObject({
@@ -221,13 +230,13 @@ describe("DiscordAppLauncher", () => {
 		const wrapper = await mountSuspended(DiscordAppLauncher, {
 			props: { open: true },
 		});
+		const row = section(wrapper, "discord-app-launcher-server-heading")
+			.findAll("button")
+			.find((button) => button.attributes("aria-label")?.startsWith("WolfStar Beta"));
+		expect(row).toBeDefined();
 
 		// ACT
-		await wrapper
-			.findAll(
-				".discord-app-launcher-server-list-desktop .discord-app-launcher-list-item",
-			)[0]!
-			.trigger("click");
+		await row!.trigger("click");
 
 		// ASSERT
 		const selected = wrapper.emitted("select");
@@ -235,16 +244,18 @@ describe("DiscordAppLauncher", () => {
 		expect(selected?.[0]?.[0]).toMatchObject({ id: "wolfstar", name: "WolfStar Beta" });
 	});
 
-	it("emits select when a mobile Recents tile is clicked (positive)", async () => {
+	it("emits select when a Recents tile with a subtitle is clicked (positive)", async () => {
 		// ARRANGE
 		const wrapper = await mountSuspended(DiscordAppLauncher, {
 			props: { open: true },
 		});
+		const tile = section(wrapper, "discord-app-launcher-recents-heading")
+			.findAll("button")
+			.find((button) => button.text().includes("settings server"));
+		expect(tile).toBeDefined();
 
 		// ACT
-		await wrapper
-			.find(".discord-app-launcher-recents-mobile .discord-app-launcher-tile")
-			.trigger("click");
+		await tile!.trigger("click");
 
 		// ASSERT
 		const selected = wrapper.emitted("select");
@@ -278,14 +289,14 @@ describe("DiscordAppLauncher", () => {
 			props: { open: true },
 			attachTo: document.body,
 		});
-		await wrapper.findAll(".discord-app-launcher-view-more")[0]!.trigger("click");
-		expect(wrapper.find(".discord-app-launcher-list-title").exists()).toBe(true);
+		await buttonsWithText(wrapper, "View More")[0]!.trigger("click");
+		expect(wrapper.find('button[aria-label="Back to Apps"]').exists()).toBe(true);
 
 		// ACT
 		await wrapper.find('[role="dialog"]').trigger("keydown", { key: "Escape" });
 
 		// ASSERT
-		expect(wrapper.find(".discord-app-launcher-search-input").exists()).toBe(true);
+		expect(searchInput(wrapper).exists()).toBe(true);
 		expect(wrapper.emitted("close")).toBeUndefined();
 		expect(wrapper.props("open")).toBe(true);
 	});
@@ -298,8 +309,7 @@ describe("DiscordAppLauncher", () => {
 		});
 
 		// ASSERT
-		expect(wrapper.find('[data-sheet-snap="half"]').exists()).toBe(true);
-		expect(wrapper.find(".discord-app-launcher--sheet-half").exists()).toBe(true);
+		expect(wrapper.find('[role="dialog"]').attributes("data-sheet-snap")).toBe("half");
 	});
 
 	it("expands to full via the handle ArrowUp key and collapses via ArrowDown (positive)", async () => {
@@ -308,21 +318,20 @@ describe("DiscordAppLauncher", () => {
 			props: { open: true },
 			attachTo: document.body,
 		});
-		const handle = wrapper.find(".discord-app-launcher-handle");
+		const handle = wrapper.find('[data-slot="sheet-handle"]');
 
 		// ACT
 		await handle.trigger("keydown", { key: "ArrowUp" });
 
 		// ASSERT
-		expect(wrapper.find('[data-sheet-snap="full"]').exists()).toBe(true);
-		expect(wrapper.find(".discord-app-launcher--sheet-full").exists()).toBe(true);
+		expect(wrapper.find('[role="dialog"]').attributes("data-sheet-snap")).toBe("full");
 		expect(wrapper.emitted("update:sheetSnap")?.at(-1)).toEqual(["full"]);
 
 		// ACT — collapse only, never close
 		await handle.trigger("keydown", { key: "ArrowDown" });
 
 		// ASSERT
-		expect(wrapper.find('[data-sheet-snap="half"]').exists()).toBe(true);
+		expect(wrapper.find('[role="dialog"]').attributes("data-sheet-snap")).toBe("half");
 		expect(wrapper.emitted("update:sheetSnap")?.at(-1)).toEqual(["half"]);
 		expect(wrapper.props("open")).toBe(true);
 		expect(wrapper.emitted("close")).toBeUndefined();
@@ -336,7 +345,7 @@ describe("DiscordAppLauncher", () => {
 		});
 
 		// ASSERT
-		expect(wrapper.find('[data-sheet-snap="full"]').exists()).toBe(true);
+		expect(wrapper.find('[role="dialog"]').attributes("data-sheet-snap")).toBe("full");
 		expect(wrapper.emitted("update:sheetSnap")?.at(-1)).toEqual(["full"]);
 	});
 
@@ -372,16 +381,20 @@ describe("DiscordAppLauncher", () => {
 		});
 
 		// ASSERT
-		const overflowSection = wrapper
-			.findAll(".discord-app-launcher-category")
-			.find((section) => section.text().includes("Overflow Games"));
-		const exactSection = wrapper
-			.findAll(".discord-app-launcher-category")
-			.find((section) => section.text().includes("Exact Games"));
-		expect(overflowSection).toBeDefined();
-		expect(exactSection).toBeDefined();
-		expect(overflowSection!.find(".discord-app-launcher-view-more-footer").exists()).toBe(true);
-		expect(exactSection!.find(".discord-app-launcher-view-more-footer").exists()).toBe(false);
+		const overflowSection = section(wrapper, "discord-app-launcher-overflow-games-heading");
+		const exactSection = section(wrapper, "discord-app-launcher-exact-games-heading");
+		expect(overflowSection.text()).toContain("Overflow Games");
+		expect(overflowSection.text()).not.toContain("Echo");
+		expect(buttonsWithText(overflowSection, "View More").length).toBeGreaterThan(0);
+		expect(exactSection.text()).toContain("India");
+		expect(buttonsWithText(exactSection, "View More")).toHaveLength(0);
+
+		// ACT
+		await buttonsWithText(overflowSection, "View More")[0]!.trigger("click");
+
+		// ASSERT
+		expect(listTitle(wrapper)).toBe("Overflow Games");
+		expect(wrapper.text()).toContain("Echo");
 	});
 
 	it("emits requestHelp from the Learn More button (positive)", async () => {
@@ -391,7 +404,7 @@ describe("DiscordAppLauncher", () => {
 		});
 
 		// ACT
-		await wrapper.find(".discord-app-launcher-help button").trigger("click");
+		await buttonsWithText(wrapper, "Learn More")[0]!.trigger("click");
 
 		// ASSERT
 		expect(wrapper.emitted("requestHelp")).toHaveLength(1);

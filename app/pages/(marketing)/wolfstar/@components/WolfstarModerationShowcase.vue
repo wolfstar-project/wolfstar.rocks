@@ -227,24 +227,16 @@
 															"marketing.wolfstar.showcase.msg_reactions",
 														)
 													}}
-													<LazyDiscordReactions>
-														<LazyDiscordReaction :count="7" self>
-															<UIcon
-																name="ph:cheers-fill"
-																class="text-success"
-																aria-hidden="true"
-															/>
-														</LazyDiscordReaction>
-														<LazyDiscordReaction
-															:count="1"
-															class="text-error"
-														>
-															<UIcon
-																name="ph:knife-fill"
-																aria-hidden="true"
-															/>
-														</LazyDiscordReaction>
-													</LazyDiscordReactions>
+													<ReactionGroup>
+														<!-- Counts to look at: the showcase reacts to nothing. -->
+														<Reaction
+															readonly
+															active
+															emoji="🥂"
+															:count="7"
+														/>
+														<Reaction readonly emoji="🔪" :count="1" />
+													</ReactionGroup>
 												</template>
 												<template
 													v-else-if="featureIndex === AutomodFeature.Spam"
@@ -869,6 +861,7 @@
 
 <script setup lang="ts">
 import { cast } from "@sapphire/utilities/cast";
+import { Reaction, ReactionGroup } from "~/components/ui/reaction";
 
 enum AutomodFeature {
 	Attachments,

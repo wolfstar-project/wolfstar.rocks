@@ -508,15 +508,17 @@ onMounted(() => {
 	--staryl-discord-composer: oklch(28.84% 0.007 272.93);
 	--staryl-discord-composer-muted: oklch(71.01% 0.01 273.13);
 	--staryl-discord-composer-text: oklch(91.56% 0.004 272.93);
-	--staryl-discord-composer-hover: oklch(100% 0 0 / 0.06);
 	--staryl-discord-header-edge: oklch(0% 0 0 / 0.2);
 	--staryl-discord-message-hover: oklch(100% 0 0 / 0.03);
 	--staryl-discord-primary-text: oklch(91.56% 0.004 272.93);
 	--staryl-discord-muted-text: oklch(71.01% 0.01 273.13);
-	--staryl-discord-composer-add: oklch(19.34% 0.004 273.16);
-	--staryl-discord-composer-pill: oklch(28.84% 0.007 272.93);
 
 	/* Neutralize DaisyUI / Nuxt UI theme surfaces inside the mock. */
+	/* The same palette for the newt/ui parts, which read these tokens. */
+	--newt-text-primary: var(--staryl-discord-primary-text);
+	--newt-text-muted: var(--staryl-discord-muted-text);
+	--newt-bg-input: var(--staryl-discord-composer);
+
 	--color-base-100: var(--staryl-discord-chrome);
 	--color-base-200: var(--staryl-discord-sidebar);
 	--color-base-300: var(--staryl-discord-chrome);
@@ -535,13 +537,10 @@ onMounted(() => {
 	--staryl-discord-composer: oklch(93.74% 0.005 264);
 	--staryl-discord-composer-muted: oklch(47.12% 0.012 264);
 	--staryl-discord-composer-text: oklch(21.15% 0.009 264);
-	--staryl-discord-composer-hover: oklch(21.15% 0.009 264 / 0.08);
 	--staryl-discord-header-edge: oklch(21.15% 0.009 264 / 0.08);
 	--staryl-discord-message-hover: oklch(21.15% 0.009 264 / 0.035);
 	--staryl-discord-primary-text: oklch(21.15% 0.009 264);
 	--staryl-discord-muted-text: oklch(47.12% 0.012 264);
-	--staryl-discord-composer-add: var(--staryl-discord-composer-muted);
-	--staryl-discord-composer-pill: var(--staryl-discord-chrome);
 }
 
 .staryl-discord-workspace {
@@ -564,23 +563,13 @@ onMounted(() => {
 }
 
 .staryl-discord-shell :deep(.discord-channel-header) {
-	--discord-channel-header-bg: var(--staryl-discord-chrome);
-	--discord-channel-header-border: var(--staryl-discord-server);
-	--discord-channel-header-edge: var(--staryl-discord-header-edge);
-	--discord-channel-header-text: var(--staryl-discord-primary-text);
-	--discord-channel-header-muted: var(--staryl-discord-muted-text);
-	--discord-channel-header-search-bg: var(--staryl-discord-server);
-	--discord-channel-header-search-border: var(--staryl-discord-composer);
-	--discord-channel-header-search-placeholder: var(--staryl-discord-muted-text);
-	--discord-channel-header-search-icon: var(--staryl-discord-primary-text);
-	background-color: var(--discord-channel-header-bg);
-	border-color: var(--discord-channel-header-border);
-	box-shadow: 0 1px 0 var(--discord-channel-header-edge);
+	background-color: var(--staryl-discord-chrome);
+	border-color: var(--staryl-discord-server);
+	box-shadow: 0 1px 0 var(--staryl-discord-header-edge);
 }
 
 .staryl-discord-shell :deep(.discord-chat) {
-	--discord-chat-bg: var(--staryl-discord-chrome);
-	background-color: var(--discord-chat-bg);
+	background-color: var(--staryl-discord-chrome);
 }
 
 .staryl-discord-shell :deep(.discord-chat-messages .discord-message:hover) {
@@ -590,15 +579,6 @@ onMounted(() => {
 .staryl-command-picker {
 	@apply absolute inset-x-0 bottom-0 z-2;
 	background-color: transparent;
-}
-
-.staryl-command-picker :deep(.discord-message-composer) {
-	--discord-message-composer-bg: var(--staryl-discord-composer);
-	--discord-message-composer-text: var(--staryl-discord-composer-text);
-	--discord-message-composer-muted: var(--staryl-discord-composer-muted);
-	--discord-message-composer-hover: var(--staryl-discord-composer-hover);
-	--discord-message-composer-add-bg: var(--staryl-discord-composer-add);
-	--discord-message-composer-pill-bg: var(--staryl-discord-composer-pill);
 }
 
 .staryl-composer-slash-field {

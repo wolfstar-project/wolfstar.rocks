@@ -1,23 +1,15 @@
 <template>
-	<span
-		class="discord-slash-command-app-icon"
-		:class="`discord-slash-command-app-icon-${size}`"
-		aria-hidden="true"
-	>
+	<SlashCommandAppIcon :size>
 		<NuxtImg
 			v-if="resolvedApp.avatar"
 			:src="resolvedApp.avatar"
 			:width="dimension"
 			:height="dimension"
 			alt=""
-			class="discord-slash-command-app-icon-image"
 		/>
-		<UIcon
-			v-else-if="resolvedApp.icon"
-			:name="resolvedApp.icon"
-			class="discord-slash-command-app-icon-glyph"
-		/>
-	</span>
+		<!-- newt/ui sizes only `img` and `svg` children; the CSS-mode icon is a span. -->
+		<UIcon v-else-if="resolvedApp.icon" :name="resolvedApp.icon" class="size-1/2" />
+	</SlashCommandAppIcon>
 </template>
 
 <script lang="ts">
@@ -30,6 +22,8 @@ interface SlashCommandAppIconProps {
 </script>
 
 <script setup lang="ts">
+import { SlashCommandAppIcon } from "~/components/ui/slash-command-suggestions";
+
 const Dimensions = {
 	header: 16,
 	rail: 32,
@@ -41,38 +35,3 @@ const { app, size = "row" } = defineProps<SlashCommandAppIconProps>();
 const resolvedApp = computed(() => SlashCommandApps[app]);
 const dimension = computed(() => Dimensions[size]);
 </script>
-
-<style scoped>
-@reference "@/assets/css/main.css";
-
-.discord-slash-command-app-icon {
-	--discord-slash-command-app-icon-bg: oklch(
-		from var(--discord-chrome) calc(l + 0.089 * var(--discord-raise)) c h
-	);
-	--discord-slash-command-app-icon-glyph: var(--discord-chrome-muted);
-
-	@apply inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full;
-	background-color: var(--discord-slash-command-app-icon-bg);
-}
-
-.discord-slash-command-app-icon-header {
-	@apply size-4;
-}
-
-.discord-slash-command-app-icon-rail {
-	@apply size-8;
-}
-
-.discord-slash-command-app-icon-row {
-	@apply size-6;
-}
-
-.discord-slash-command-app-icon-image {
-	@apply size-full object-cover;
-}
-
-.discord-slash-command-app-icon-glyph {
-	@apply size-1/2;
-	color: var(--discord-slash-command-app-icon-glyph);
-}
-</style>

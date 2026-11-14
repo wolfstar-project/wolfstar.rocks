@@ -18,7 +18,7 @@
  * `*.wolfstar.rocks` covers `beta.` and `main.` but not a nested attacker
  * subdomain.
  */
-export const TRUSTED_HOST_PATTERNS = [
+const TRUSTED_HOST_PATTERNS = [
 	"localhost",
 	"127.0.0.1",
 	"wolfstar.rocks",
@@ -77,7 +77,7 @@ export function isTrustedOrigin(
 }
 
 /** Extracts the origin of a `Request`, or `undefined` when it cannot be parsed. */
-export function getRequestOrigin(request: Request | undefined): string | undefined {
+function getRequestOrigin(request: Request | undefined): string | undefined {
 	if (!request?.url) {
 		return undefined;
 	}

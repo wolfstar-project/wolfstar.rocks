@@ -47,14 +47,14 @@ export type ConfigurationNotice =
 	| { kind: "ruleFailed"; path: string; rule: string; reason: string };
 
 /** A setting an import changes, by its name in the file. */
-export interface ConfigurationSettingChange {
+interface ConfigurationSettingChange {
 	name: string;
 	before: unknown;
 	after: unknown;
 }
 
 /** What an import does to the auto-moderation rules, by their names. */
-export interface ConfigurationRulesChange {
+interface ConfigurationRulesChange {
 	/**
 	 * `replace` when the rules of the server become the ones of the file;
 	 * `add` when the file has no `automod` section and its filters of the bot

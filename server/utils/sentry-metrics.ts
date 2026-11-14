@@ -7,7 +7,7 @@ const CACHE_ADDRESS = "nitro:fs-lite";
  * Normalizes a request path by replacing numeric path segments (Discord snowflake IDs,
  * numeric IDs) with :id placeholders to keep metric cardinality bounded.
  */
-export function getMetricRoute(event: H3Event): string {
+function getMetricRoute(event: H3Event): string {
 	const { method } = event.node.req;
 	const { pathname } = getRequestURL(event);
 	const normalized = pathname
@@ -16,7 +16,7 @@ export function getMetricRoute(event: H3Event): string {
 	return `${method ?? "UNKNOWN"} ${normalized}`;
 }
 
-export function extractStatusCode(error: unknown): number {
+function extractStatusCode(error: unknown): number {
 	if (
 		error &&
 		typeof error === "object" &&

@@ -4,7 +4,6 @@ import { GUILD_MODULES } from "#shared/utils/guild-modules";
 
 /** The steps of a server's first setup, in order. */
 export const SETUP_STEPS = ["modules", "channels", "roles", "language", "review"] as const;
-export type SetupStep = (typeof SETUP_STEPS)[number];
 
 type ModuleKey = GuildModuleEntry["key"];
 

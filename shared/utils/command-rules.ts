@@ -145,7 +145,7 @@ export function readCommandRules(value: unknown, guildId: string): CommandRule[]
 }
 
 /** Whether a rule rules nothing, and so is not stored. */
-export function isCommandRuleEmpty(rule: CommandRule): boolean {
+function isCommandRuleEmpty(rule: CommandRule): boolean {
 	return COMMAND_RULE_LISTS.every((list) => rule[list].length === 0);
 }
 

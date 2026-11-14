@@ -58,7 +58,7 @@ export interface AppealLimitSettings {
 const DAY = 86_400_000;
 
 /** The form of a server that set none up: every kind, every member. */
-export const BuiltInEligibleForm: EligibleForm = {
+const BuiltInEligibleForm: EligibleForm = {
 	enabled: true,
 	types: [],
 	requiredRoles: [],

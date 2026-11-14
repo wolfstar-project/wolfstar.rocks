@@ -1,3 +1,4 @@
+import type { VueWrapper } from "@vue/test-utils";
 import type { DiscordMemberListMember } from "~/types/discord";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { describe, expect, it } from "vitest";
@@ -22,6 +23,18 @@ function mountInfo(
 	});
 }
 
+function findTab(wrapper: VueWrapper, label: string) {
+	const tab = wrapper.findAll("[role='tab']").find((candidate) => candidate.text() === label);
+	if (!tab) {
+		throw new Error(`No tab named ${label}`);
+	}
+	return tab;
+}
+
+function membersRegion(wrapper: VueWrapper) {
+	return wrapper.find("aside[aria-label='Members in #mod-commands']");
+}
+
 describe("DiscordChannelInfo", () => {
 	it("opens as a dialog on Members with the member list visible (positive)", async () => {
 		// ARRANGE / ACT
@@ -34,40 +47,54 @@ describe("DiscordChannelInfo", () => {
 		expect(wrapper.find("[role='tablist']").attributes("aria-label")).toBe(
 			"Channel information sections",
 		);
-		const membersTab = wrapper.find("#discord-channel-info-tab-members");
-		expect(membersTab.attributes("aria-selected")).toBe("true");
-		expect(wrapper.find(".discord-channel-info-members").exists()).toBe(true);
+		expect(findTab(wrapper, "Members").attributes("aria-selected")).toBe("true");
+		expect(membersRegion(wrapper).exists()).toBe(true);
 		expect(wrapper.text()).toContain("WolfStar");
+		expect(document.activeElement?.getAttribute("aria-label")).toBe("Back to channel");
 	});
 
-	it("switches tabs on click and shows empty state for non-members panels (positive)", async () => {
+	it("links the selected tab to its panel (positive)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountInfo();
+		const membersTab = findTab(wrapper, "Members");
+		const panel = wrapper.find("[role='tabpanel']");
+
+		// ASSERT
+		expect(membersTab.attributes("aria-controls")).toBe(panel.attributes("id"));
+		expect(panel.attributes("aria-labelledby")).toBe(membersTab.attributes("id"));
+	});
+
+	it("switches tabs on press and shows the empty state for non-members panels (positive)", async () => {
 		// ARRANGE
 		const wrapper = await mountInfo();
 
 		// ACT
-		await wrapper.find("#discord-channel-info-tab-threads").trigger("click");
+		await findTab(wrapper, "Threads").trigger("mousedown", { button: 0 });
 
 		// ASSERT
-		expect(wrapper.find("#discord-channel-info-tab-threads").attributes("aria-selected")).toBe(
-			"true",
-		);
-		expect(wrapper.find(".discord-channel-info-members").exists()).toBe(false);
+		expect(findTab(wrapper, "Threads").attributes("aria-selected")).toBe("true");
+		expect(membersRegion(wrapper).exists()).toBe(false);
 		expect(wrapper.text()).toContain("There are no threads.");
+		expect(
+			wrapper
+				.findAll("button")
+				.find((button) => button.text() === "Create Thread")
+				?.attributes("disabled"),
+		).toBeDefined();
 	});
 
-	it("moves focus across tabs with arrow keys (positive)", async () => {
+	it("moves focus and selection across tabs with arrow keys (positive)", async () => {
 		// ARRANGE
 		const wrapper = await mountInfo();
-		const membersTab = wrapper.find("#discord-channel-info-tab-members");
+		const membersTab = findTab(wrapper, "Members");
+		(membersTab.element as HTMLElement).focus();
 
 		// ACT
 		await membersTab.trigger("keydown", { key: "ArrowRight" });
 
 		// ASSERT
-		expect(wrapper.find("#discord-channel-info-tab-media").attributes("aria-selected")).toBe(
-			"true",
-		);
-		expect(document.activeElement?.id).toBe("discord-channel-info-tab-media");
+		expect(findTab(wrapper, "Media").attributes("aria-selected")).toBe("true");
+		expect(document.activeElement).toBe(findTab(wrapper, "Media").element);
 	});
 
 	it("emits close from the back button and Escape (positive)", async () => {
@@ -83,17 +110,29 @@ describe("DiscordChannelInfo", () => {
 		expect(wrapper.emitted("close")?.length).toBeGreaterThanOrEqual(2);
 	});
 
+	it("keeps the decorative toolbar actions out of the tab order (negative)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountInfo();
+		const decorative = wrapper.findAll("[aria-hidden='true'] button");
+
+		// ASSERT
+		expect(decorative).toHaveLength(3);
+		for (const button of decorative) {
+			expect(button.attributes("tabindex")).toBe("-1");
+		}
+	});
+
 	it("does not change tabs for unrelated keys (negative)", async () => {
 		// ARRANGE
 		const wrapper = await mountInfo({ initialTab: "members" });
-		const membersTab = wrapper.find("#discord-channel-info-tab-members");
+		const membersTab = findTab(wrapper, "Members");
 
 		// ACT
 		await membersTab.trigger("keydown", { key: "a" });
 
 		// ASSERT
 		expect(membersTab.attributes("aria-selected")).toBe("true");
-		expect(wrapper.find(".discord-channel-info-members").exists()).toBe(true);
+		expect(membersRegion(wrapper).exists()).toBe(true);
 	});
 
 	it("shows the empty search copy for media instead of members (negative)", async () => {
@@ -101,7 +140,8 @@ describe("DiscordChannelInfo", () => {
 		const wrapper = await mountInfo({ initialTab: "media" });
 
 		// ASSERT
-		expect(wrapper.find(".discord-channel-info-members").exists()).toBe(false);
+		expect(findTab(wrapper, "Media").attributes("aria-selected")).toBe("true");
+		expect(membersRegion(wrapper).exists()).toBe(false);
 		expect(wrapper.text()).toContain("Unfortunately, no results were found.");
 	});
 });

@@ -94,7 +94,7 @@ export function isApplicationProfile(value: unknown): value is ApplicationProfil
 }
 
 /** An app's card, from its public profile, for the invite link a post wrote. */
-export function toAppCard(profile: ApplicationProfile, url: string): AnnouncementApp {
+function toAppCard(profile: ApplicationProfile, url: string): AnnouncementApp {
 	const image = (hash: string | null | undefined, size: number) =>
 		hash
 			? `https://cdn.discordapp.com/app-icons/${profile.id}/${hash}.webp?size=${size}`
@@ -129,7 +129,7 @@ export function resolveMentions(content: string, names: MentionNames): string {
 }
 
 /** The names of the users a message mentions, which Discord sends with it. */
-export function mentionedUsers(message: Pick<APIMessage, "mentions">): Map<string, string> {
+function mentionedUsers(message: Pick<APIMessage, "mentions">): Map<string, string> {
 	return new Map(message.mentions.map((user) => [user.id, user.global_name ?? user.username]));
 }
 
@@ -243,7 +243,7 @@ function toReaction(reaction: APIReaction): AnnouncementReaction {
 }
 
 /** A message of the announcement channel, as the Home shows it. */
-export function toAnnouncement(
+function toAnnouncement(
 	message: APIMessage,
 	guildId: string,
 	names: MentionNames,

@@ -15,7 +15,7 @@ import {
 	type AutoModerationRuleType,
 } from "#shared/utils/automod-rules";
 
-export interface PlannedSettingChange {
+interface PlannedSettingChange {
 	name: string;
 	key: TransferableSettingKey;
 	before: unknown;
@@ -28,7 +28,7 @@ interface PlannedRuleUpdate {
 	data: ConfigurationRule;
 }
 
-export interface PlannedRuleCreate {
+interface PlannedRuleCreate {
 	data: ConfigurationRule;
 	/**
 	 * The rule of the guild this one takes the place of, `null` for a rule the

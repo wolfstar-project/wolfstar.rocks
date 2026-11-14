@@ -58,13 +58,7 @@ export const JoinGuardHardActions = ["Kick", "Ban"] as const;
 export type JoinGuardHardAction = (typeof JoinGuardHardActions)[number];
 
 /** Where a stopped member is now, the `JoinGuardCheckpointStatus` enum. */
-export const JoinGuardCheckpointStatuses = [
-	"Waiting",
-	"Verified",
-	"Kicked",
-	"Banned",
-	"Left",
-] as const;
+const JoinGuardCheckpointStatuses = ["Waiting", "Verified", "Kicked", "Banned", "Left"] as const;
 export type JoinGuardCheckpointStatus = (typeof JoinGuardCheckpointStatuses)[number];
 
 /**
@@ -76,10 +70,6 @@ export type JoinGuardResolution = "Rule" | "Checkpoint" | "Timeout" | "Moderator
 
 /** What the website asks the bot to do, the `JoinGuardRequestKind` enum. */
 export type JoinGuardRequestKind = "Pass" | "Verify" | "Kick" | "PostButton";
-
-/** The kinds a moderator asks for from the dashboard; `Pass` is the page's. */
-export const JoinGuardModeratorRequestKinds = ["Verify", "Kick", "PostButton"] as const;
-export type JoinGuardModeratorRequestKind = (typeof JoinGuardModeratorRequestKinds)[number];
 
 /**
  * A rule as the dashboard edits it: every condition it sets must match a
@@ -393,7 +383,6 @@ export const JoinGuardFailureCodes = [
 	"Refused",
 	"Failed",
 ] as const;
-export type JoinGuardFailureCode = (typeof JoinGuardFailureCodes)[number];
 
 /**
  * Reads the `error` column of a request, `<code>: <detail>`. A code the

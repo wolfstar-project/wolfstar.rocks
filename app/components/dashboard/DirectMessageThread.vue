@@ -366,10 +366,6 @@ watch(
 }
 
 .dm-log :deep(.discord-v2-container-accented) {
-	border-inline-start: 4px solid var(--discord-v2-container-accent);
-}
-
-.dm-log :deep(.discord-v2-separator-line) {
-	border-color: var(--newt-border);
+	border-inline-start: 4px solid var(--newt-v2-accent);
 }
 </style>

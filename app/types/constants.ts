@@ -152,7 +152,7 @@ interface ShowcaseCommandModerationResponse {
  * text values and codes are shown as inline code, after the readable name:
  * "English (United States) (`en-US`)", "`UTC`".
  */
-export interface ShowcaseSettingsRow {
+interface ShowcaseSettingsRow {
 	label: string;
 	value?: string;
 	code?: string;

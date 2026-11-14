@@ -15,20 +15,20 @@ describe("DiscordMessage", () => {
 		});
 
 		// ASSERT
-		const article = wrapper.find("article.discord-message");
+		const article = wrapper.find("article");
 		expect(article.exists()).toBe(true);
 		expect(article.attributes("aria-label")).toBe("Message from WolfStar");
-		expect(wrapper.find("header").text()).toContain("WolfStar");
-		expect(wrapper.find(".app-badge").attributes("aria-label")).toBe(
-			"Verified application badge",
-		);
-		expect(wrapper.find("time.discord-message-timestamp").attributes("datetime")).toBe(
-			"2026-07-21T16:00:00",
-		);
+		expect(article.text()).toContain("WolfStar");
+		const badge = wrapper.find("[aria-label='Verified application badge']");
+		expect(badge.attributes("role")).toBe("img");
+		expect(badge.text()).toBe("APP");
+		const time = wrapper.find("time");
+		expect(time.attributes("datetime")).toBe("2026-07-21T16:00:00");
+		expect(time.text()).toBe("Today at 4:00 PM");
 		expect(wrapper.text()).toContain("Moderation help is ready.");
 	});
 
-	it("omits the APP badge and ephemeral footer for a normal user message (negative)", async () => {
+	it("omits the APP badge, time and ephemeral footer for a normal user message (negative)", async () => {
 		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordMessage, {
 			props: { name: "stella" },
@@ -36,8 +36,9 @@ describe("DiscordMessage", () => {
 		});
 
 		// ASSERT
-		expect(wrapper.find(".app-badge").exists()).toBe(false);
-		expect(wrapper.find(".discord-message-ephemeral").exists()).toBe(false);
+		expect(wrapper.find("[aria-label='Verified application badge']").exists()).toBe(false);
+		expect(wrapper.find("time").exists()).toBe(false);
+		expect(wrapper.find("article").attributes("data-ephemeral")).toBeUndefined();
 		expect(wrapper.find("[role='status']").exists()).toBe(false);
 		expect(wrapper.find("article").attributes("aria-label")).toBe("Message from Stella");
 	});
@@ -50,14 +51,16 @@ describe("DiscordMessage", () => {
 		});
 
 		// ASSERT
-		expect(wrapper.find("article").classes()).toContain("discord-message-ephemeral");
+		expect(wrapper.find("article").attributes("data-ephemeral")).toBe("true");
 		const footer = wrapper.find("[role='status']");
 		expect(footer.attributes("aria-label")).toBe("Ephemeral message notice");
 		expect(footer.text()).toContain("Only you can see this");
-		expect(wrapper.find("button[aria-label='Dismiss ephemeral message']").exists()).toBe(true);
+		const dismiss = footer.find("button[aria-label='Dismiss ephemeral message']");
+		expect(dismiss.attributes("type")).toBe("button");
+		expect(dismiss.text()).toBe("Dismiss message");
 	});
 
-	it("renders command reply context when reply kind is command (positive)", async () => {
+	it("puts the command reply above the author line (positive)", async () => {
 		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordMessage, {
 			props: {
@@ -65,14 +68,38 @@ describe("DiscordMessage", () => {
 				reply: { kind: "command", user: "stella", commandName: "help" },
 			},
 			slots: { default: "Help response" },
+			attachTo: document.body,
 		});
 
 		// ASSERT
-		expect(wrapper.find("article").classes()).toContain("discord-message-with-reply");
 		const reply = wrapper.find("[role='complementary']");
 		expect(reply.exists()).toBe(true);
 		expect(reply.attributes("aria-label")).toContain("used the help slash command");
 		expect(reply.text()).not.toContain("/help");
+		const replyBox = reply.element.getBoundingClientRect();
+		const badge = wrapper.find("[aria-label='Verified application badge']").element;
+		expect(replyBox.bottom).toBeLessThanOrEqual(badge.getBoundingClientRect().top);
+		// The reply line sits close to the author line, not a full column gap away.
+		expect(getComputedStyle(wrapper.find("article").element).rowGap).toBe("6px");
+
+		wrapper.unmount();
+	});
+
+	it("lets a caller's text colour reach the message content (positive)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordMessage, {
+			props: { name: "baddie" },
+			attrs: { class: "text-error" },
+			slots: { default: "<span class='spam'>spam</span>" },
+			attachTo: document.body,
+		});
+
+		// ASSERT
+		const article = wrapper.find("article").element;
+		const content = wrapper.find(".spam").element;
+		expect(getComputedStyle(content).color).toBe(getComputedStyle(article).color);
+
+		wrapper.unmount();
 	});
 
 	it("does not render reply chrome when reply is omitted (negative)", async () => {
@@ -83,8 +110,7 @@ describe("DiscordMessage", () => {
 		});
 
 		// ASSERT
-		expect(wrapper.find("article").classes()).not.toContain("discord-message-with-reply");
 		expect(wrapper.find("[role='complementary']").exists()).toBe(false);
-		expect(wrapper.find(".discord-message-reply").exists()).toBe(false);
+		expect(wrapper.find("[data-slot='message-reply']").exists()).toBe(false);
 	});
 });

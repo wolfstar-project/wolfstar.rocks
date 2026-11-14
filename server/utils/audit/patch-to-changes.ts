@@ -3,7 +3,7 @@ import { isDeepEqual } from "#shared/utils/isDeepEqual";
 import { auditDiff } from "evlog";
 
 // Ported from the WolfStar bot's auditLogEmbeds.ts — traverses a JSON-patch path.
-export function getNestedValue(obj: Record<string, unknown>, path: string): unknown {
+function getNestedValue(obj: Record<string, unknown>, path: string): unknown {
 	const parts = path.split("/").filter(Boolean);
 	let current: unknown = obj;
 	for (const part of parts) {
@@ -38,7 +38,7 @@ function dedupeShallowAncestors(map: Record<string, unknown>): Record<string, un
  * value (remove/replace) so the dashboard can render before→after without the
  * full settings snapshots.
  */
-export interface CompactSettingsChangeOp {
+interface CompactSettingsChangeOp {
 	op: "add" | "remove" | "replace";
 	path: string;
 	value?: unknown;

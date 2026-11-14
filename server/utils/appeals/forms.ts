@@ -69,7 +69,7 @@ const FORMS_LOCK_KEY_RANGE = 2_147_483_647n;
  * The bot is not told: it reads the forms from the database every time it
  * needs them and caches none, so there is nothing to drop.
  */
-export async function writeAppealForms<T>(
+async function writeAppealForms<T>(
 	guildId: Snowflake,
 	callback: (forms: readonly AppealForm[], orm: Orm) => Promise<T>,
 ): Promise<T> {

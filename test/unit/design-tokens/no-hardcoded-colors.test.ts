@@ -20,22 +20,8 @@ const ALLOW_LIST = new Set([
 	"app/components/OgImage/Page.takumi.vue",
 	"app/components/OgImage/BlogPost.takumi.vue",
 	"app/components/OgImage/Changelog.takumi.vue",
-	// Discord-domain components maintain Discord brand fidelity with scoped vars
-	"app/components/discord/message.vue",
-	"app/components/discord/message-reply.vue",
-	"app/components/discord/embed.vue",
-	"app/components/discord/mention.vue",
-	"app/components/discord/role.vue",
-	"app/components/discord/reaction.vue",
-	"app/components/discord/chat-input-command/index.vue",
-	"app/components/discord/chat-input-command/app-icon.vue",
-	"app/components/discord/chat-input-command/suggestion.vue",
-	"app/components/discord/chat-input-command/group.vue",
-	"app/components/discord/chat-input-command/matched.vue",
-	"app/components/discord/chat-input-command/suggestions.vue",
-	"app/components/discord/scrollbar.vue",
+	// The promoted cards of the App Launcher keep their own mock art
 	"app/components/discord/app-launcher/index.vue",
-	"app/components/discord/app-launcher/list-item.vue",
 ]);
 
 /** Tailwind color palette names that map to raw colors (not semantic tokens). */

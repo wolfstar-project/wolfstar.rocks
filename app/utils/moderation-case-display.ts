@@ -51,7 +51,7 @@ export function moderationCaseTone(entry: Pick<ModerationLogEntry, "metadata" | 
 }
 
 /** The i18n key of each case type's name, so the bot's identifiers never reach the page. */
-export const MODERATION_CASE_TYPE_KEY = {
+const MODERATION_CASE_TYPE_KEY = {
 	Ban: "guild_logs.case_types.ban",
 	Kick: "guild_logs.case_types.kick",
 	Mute: "guild_logs.case_types.mute",

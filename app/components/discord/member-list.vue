@@ -1,63 +1,65 @@
 <template>
-	<aside class="discord-member-list" :aria-label="label ?? ts('discord.member_list.label')">
-		<DiscordScrollbar class="discord-member-list-scrollbar">
-			<div class="discord-member-list-content">
-				<section
-					v-for="section of sections"
+	<aside
+		:class="
+			cn(
+				'discord-member-list flex min-h-0 w-60 shrink-0 flex-col overflow-hidden border-l border-newt-border bg-newt-bg-surface font-whitney text-newt-text-primary',
+				props.class,
+			)
+		"
+		:aria-label="label ?? ts('discord.member_list.label')"
+	>
+		<ScrollArea class="h-full min-h-0 flex-1">
+			<div class="px-2 py-3">
+				<MemberListSection
+					v-for="(section, index) of sections"
 					:key="section.id"
-					class="discord-member-list-section"
-					:class="{ 'discord-member-list-section-offline': section.offline }"
+					:offline="section.offline"
 				>
-					<h2
-						class="discord-member-list-heading"
-						:class="{ 'discord-member-list-heading-role': section.pinned }"
-					>
+					<MemberListHeading :id="`${headingIdPrefix}-${index}`">
 						{{ section.label }} — {{ section.members.length }}
-					</h2>
-					<ul class="discord-member-list-members">
-						<li
+					</MemberListHeading>
+					<MemberList :aria-labelledby="`${headingIdPrefix}-${index}`">
+						<MemberListItem
 							v-for="member of section.members"
 							:key="member.id"
-							class="discord-member-list-member"
-							:class="{
-								'discord-member-list-member-decorated': Boolean(
-									member.rowBackground,
-								),
-							}"
-							:style="memberRowStyle(member)"
+							class="min-h-10 cursor-default gap-3 py-0.5"
+							:class="
+								member.rowBackground &&
+								'bg-cover bg-center bg-no-repeat hover:shadow-[inset_0_0_0_999px_var(--newt-bg-hover)]'
+							"
+							:style="
+								member.rowBackground
+									? { backgroundImage: member.rowBackground }
+									: undefined
+							"
 						>
-							<div class="discord-member-list-avatar" aria-hidden="true">
-								<NuxtImg
-									v-if="member.avatar"
-									:src="member.avatar"
-									:alt="`${member.name} avatar`"
-									width="32"
-									height="32"
-								/>
-								<UIcon
-									v-else
-									:name="member.icon ?? 'ph:user-fill'"
-									class="size-5"
-								/>
-								<span
+							<StatusIndicator aria-hidden="true" class="shrink-0">
+								<Avatar class="size-8">
+									<AvatarImage v-if="member.avatar" :src="member.avatar" />
+									<AvatarFallback v-else>
+										<UIcon
+											:name="member.icon ?? 'ph:user-fill'"
+											class="size-5"
+										/>
+									</AvatarFallback>
+								</Avatar>
+								<StatusDot
 									v-if="showPresence(member, section.offline)"
-									class="discord-presence"
-									:data-status="memberPresence(member)"
-								>
-									<UIcon
-										:name="presenceIcon(member)"
-										class="discord-presence-icon"
-										aria-hidden="true"
-									/>
-								</span>
-							</div>
-							<div class="discord-member-list-identity">
-								<div class="discord-member-list-name-row">
-									<span class="discord-member-list-name">{{ member.name }}</span>
-									<span
+									:status="memberPresence(member)"
+									class="border-newt-bg-surface"
+								/>
+							</StatusIndicator>
+							<MemberListInfo class="flex-1">
+								<MemberListNameRow>
+									<MemberListName
+										:color="member.color"
+										class="text-base leading-5"
+									>
+										{{ member.name }}
+									</MemberListName>
+									<MemberListAppTag
 										v-if="member.app"
-										class="discord-member-list-app"
-										role="img"
+										:verified="member.verified"
 										:aria-label="
 											ts(
 												member.verified
@@ -65,28 +67,17 @@
 													: 'discord.member_list.app',
 											)
 										"
-									>
-										<UIcon
-											v-if="member.verified"
-											name="ph:check-bold"
-											class="size-2.5"
-											aria-hidden="true"
-										/>
-										APP
-									</span>
-								</div>
-								<span
-									v-if="secondaryText(member, section.pinned)"
-									class="discord-member-list-description"
-								>
+									/>
+								</MemberListNameRow>
+								<MemberListRole v-if="secondaryText(member, section.pinned)">
 									{{ secondaryText(member, section.pinned) }}
-								</span>
-							</div>
-						</li>
-					</ul>
-				</section>
+								</MemberListRole>
+							</MemberListInfo>
+						</MemberListItem>
+					</MemberList>
+				</MemberListSection>
 			</div>
-		</DiscordScrollbar>
+		</ScrollArea>
 	</aside>
 </template>
 
@@ -96,6 +87,7 @@ interface MemberListProps {
 	offline: readonly DiscordMemberListMember[];
 	label?: string;
 	showRoles?: boolean;
+	class?: HTMLAttributes["class"];
 }
 
 interface MemberSection {
@@ -114,15 +106,33 @@ interface PinnedRoleGroup {
 </script>
 
 <script setup lang="ts">
-import type { DiscordMemberListMember, DiscordMemberPresence } from "~/types/discord";
+import type { HTMLAttributes } from "vue";
+import type { DiscordMemberListMember } from "~/types/discord";
+import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import {
+	MemberList,
+	MemberListAppTag,
+	MemberListHeading,
+	MemberListInfo,
+	MemberListItem,
+	MemberListName,
+	MemberListNameRow,
+	MemberListRole,
+	MemberListSection,
+} from "~/components/ui/member-list";
+import { ScrollArea } from "~/components/ui/scrollbar";
+import { StatusDot, StatusIndicator } from "~/components/ui/status-indicator";
+
 const { ts } = useI18n();
-const { online, offline, label, showRoles = false } = defineProps<MemberListProps>();
+const props = defineProps<MemberListProps>();
+const headingIdPrefix = useId();
 
 const sections = computed<MemberSection[]>(() => {
 	const pinnedGroups = new Map<string, PinnedRoleGroup>();
 	const onlineRest: DiscordMemberListMember[] = [];
 
-	for (const member of online) {
+	for (const member of props.online) {
 		if (member.pinned && member.role) {
 			const existing = pinnedGroups.get(member.role);
 			if (existing) {
@@ -160,11 +170,11 @@ const sections = computed<MemberSection[]>(() => {
 		});
 	}
 
-	if (offline.length > 0) {
+	if (props.offline.length > 0) {
 		next.push({
 			id: "offline",
 			label: ts("discord.member_list.offline"),
-			members: offline,
+			members: props.offline,
 			offline: true,
 			pinned: false,
 		});
@@ -173,14 +183,7 @@ const sections = computed<MemberSection[]>(() => {
 	return next;
 });
 
-const PresenceIcons = {
-	online: "discord:status-online",
-	idle: "discord:status-idle",
-	dnd: "discord:status-dnd",
-	offline: "discord:status-online",
-} as const satisfies Record<DiscordMemberPresence, string>;
-
-function memberPresence(member: DiscordMemberListMember): DiscordMemberPresence {
+function memberPresence(member: DiscordMemberListMember) {
 	return member.presence ?? "online";
 }
 
@@ -189,185 +192,17 @@ function showPresence(member: DiscordMemberListMember, sectionOffline: boolean) 
 	return !sectionOffline && !member.http;
 }
 
-function presenceIcon(member: DiscordMemberListMember) {
-	return PresenceIcons[memberPresence(member)];
-}
-
-function memberRowStyle(member: DiscordMemberListMember) {
-	const style: Record<string, string> = {};
-	if (member.color) {
-		style["--member-name-color"] = member.color;
-	}
-	if (member.rowBackground) {
-		style["--member-row-bg"] = member.rowBackground;
-	}
-	return Object.keys(style).length > 0 ? style : undefined;
-}
-
 function secondaryText(member: DiscordMemberListMember, inPinnedRoleSection: boolean) {
 	// Role is already the section heading for hoisted groups — only show status/activity.
 	if (inPinnedRoleSection) {
 		return member.description;
 	}
-	if (showRoles && member.role && member.description) {
+	if (props.showRoles && member.role && member.description) {
 		return `${member.role} · ${member.description}`;
 	}
-	if (showRoles && member.role) {
+	if (props.showRoles && member.role) {
 		return member.role;
 	}
 	return member.description;
 }
 </script>
-
-<style scoped>
-@reference "@/assets/css/main.css";
-
-.discord-member-list {
-	/* Discord member sidebar surfaces (oklch only). */
-	--discord-member-list-bg: var(--discord-sidebar);
-	--discord-member-list-border: var(--discord-server);
-	--discord-member-list-text: var(--discord-chrome-text);
-	--discord-member-list-muted: var(--discord-chrome-muted);
-	--discord-member-list-hover: var(--discord-hover);
-	--discord-member-list-avatar-bg: oklch(from var(--discord-chrome-strong) l c h / 0.1);
-	--discord-member-list-presence-ring: var(--discord-sidebar);
-	--discord-member-list-app-bg: oklch(57.74% 0.2091 273.85);
-	--discord-member-list-app-text: oklch(100% 0 0);
-
-	@apply flex min-h-0 w-60 shrink-0 flex-col overflow-hidden border-l font-whitney;
-	border-color: var(--discord-member-list-border);
-	background-color: var(--discord-member-list-bg);
-	color: var(--discord-member-list-text);
-}
-
-.discord-member-list-scrollbar {
-	/* Overlay thumb on content (Discord member sidebar); inherit Discord pill chrome. */
-	--discord-scrollbar-track: transparent;
-
-	@apply relative h-full max-h-full min-h-0 flex-1;
-	/* Content uses full width; track overlays the right edge (see track rules below). */
-	grid-template-columns: minmax(0, 1fr);
-}
-
-.discord-member-list-scrollbar :deep(.discord-scrollbar-viewport),
-.discord-member-list-scrollbar :deep(.discord-scrollbar-track) {
-	grid-column: 1;
-}
-
-.discord-member-list-scrollbar :deep(.discord-scrollbar-track) {
-	/*
-	 * Overlay lane wide enough for thumb + right edge inset (matches Discord floating pill).
-	 * Previous w-1 + 4px thumb centered made the thumb flush to the panel border.
-	 */
-	@apply pointer-events-none absolute inset-y-0 right-0 z-1 opacity-0;
-	width: var(--discord-scrollbar-gutter);
-	transition: opacity 120ms ease;
-}
-
-.discord-member-list:hover .discord-member-list-scrollbar :deep(.discord-scrollbar-track),
-.discord-member-list-scrollbar:focus-within :deep(.discord-scrollbar-track) {
-	@apply pointer-events-auto opacity-100;
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.discord-member-list-scrollbar :deep(.discord-scrollbar-track) {
-		transition: none;
-	}
-}
-
-.discord-member-list-content {
-	/* Compact Discord member sidebar padding so short lists fit without scroll. */
-	@apply px-2 pt-3 pb-3;
-}
-
-.discord-member-list-section + .discord-member-list-section {
-	@apply mt-3;
-}
-
-.discord-member-list-heading {
-	@apply px-2 pb-0.5 text-[12px] leading-4 font-semibold tracking-wide uppercase;
-	color: var(--discord-member-list-muted);
-}
-
-.discord-member-list-members {
-	@apply m-0 flex list-none flex-col p-0;
-}
-
-.discord-member-list-member {
-	@apply relative flex min-h-10 min-w-0 items-center gap-3 overflow-hidden rounded-md px-2 py-0.5;
-}
-
-.discord-member-list-member:hover {
-	background-color: var(--discord-member-list-hover);
-}
-
-.discord-member-list-member-decorated {
-	background-image: var(--member-row-bg);
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
-}
-
-.discord-member-list-member-decorated:hover {
-	/* Keep decoration visible; Discord darkens slightly via overlay. */
-	background-color: transparent;
-	box-shadow: inset 0 0 0 999px var(--discord-member-list-hover);
-}
-
-.discord-member-list-avatar {
-	@apply relative flex size-8 shrink-0 items-center justify-center overflow-visible rounded-full;
-	color: var(--discord-member-list-muted);
-	background-color: var(--discord-member-list-avatar-bg);
-}
-
-.discord-member-list-avatar img {
-	@apply size-full rounded-full object-cover;
-}
-
-.discord-presence {
-	/*
-	 * Discord avatar status pip: sidebar-colored cutout/halo around the glyph.
-	 * Status SVGs use r=6 in a 16×16 viewBox (~75% fill). At 16px the colored
-	 * disk is ~12px; a 17px ring leaves ~2.5px of --discord-member-list-presence-ring
-	 * between fill and avatar (no extra box-shadow — that stacked with SVG pad to ~5px).
-	 */
-	@apply absolute -right-1 -bottom-1 flex size-[17px] items-center justify-center rounded-full;
-	background-color: var(--discord-member-list-presence-ring);
-}
-
-.discord-presence-icon {
-	@apply size-4;
-}
-
-.discord-member-list-identity {
-	@apply relative z-1 min-w-0 flex-1;
-}
-
-.discord-member-list-name-row {
-	@apply flex min-w-0 items-center gap-1;
-}
-
-.discord-member-list-name {
-	@apply truncate text-base leading-5 font-medium;
-	color: var(--member-name-color, var(--discord-member-list-text));
-}
-
-.discord-member-list-app {
-	@apply inline-flex shrink-0 items-center gap-0.5 rounded-sm px-1 py-px text-[9px] leading-none font-bold;
-	background-color: var(--discord-member-list-app-bg);
-	color: var(--discord-member-list-app-text);
-}
-
-.discord-member-list-description {
-	@apply block truncate text-xs leading-4;
-	color: var(--discord-member-list-muted);
-}
-
-.discord-member-list-section-offline .discord-member-list-member {
-	@apply opacity-45;
-}
-
-.discord-member-list-section-offline .discord-member-list-name {
-	color: var(--discord-member-list-muted);
-}
-</style>

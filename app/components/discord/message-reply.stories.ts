@@ -21,7 +21,7 @@ export const Command: Story = {
 		components: { DiscordMessageReply },
 		setup: () => ({ args }),
 		template: `
-			<div class="discord-message-with-reply" style="--message-reply-avatar-size: 1rem; --message-reply-gutter: 1rem;">
+			<div class="ps-8" style="--message-reply-avatar-size: 1rem; --message-reply-gutter: 1rem;">
 				<DiscordMessageReply v-bind="args" />
 			</div>
 		`,
@@ -39,7 +39,7 @@ export const Message: Story = {
 		components: { DiscordMessageReply },
 		setup: () => ({ args }),
 		template: `
-			<div class="discord-message-with-reply" style="--message-reply-avatar-size: 1rem; --message-reply-gutter: 1rem;">
+			<div class="ps-8" style="--message-reply-avatar-size: 1rem; --message-reply-gutter: 1rem;">
 				<DiscordMessageReply v-bind="args" />
 			</div>
 		`,

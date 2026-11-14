@@ -6,7 +6,7 @@
 
 export type ColorThemeBase = "dark" | "light";
 
-export interface ColorThemeStop {
+interface ColorThemeStop {
 	color: string;
 	/** Position along the gradient, in percent. */
 	at: number;

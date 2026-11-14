@@ -38,7 +38,7 @@ export interface AutomodWordDraft {
 /**
  * A word as a `Words` rule stores it: lowercase and without look-alike characters, as the server saves it.
  */
-export function normalizeAutomodWord(word: string) {
+function normalizeAutomodWord(word: string) {
 	return removeConfusables(word.trim().toLowerCase());
 }
 
@@ -50,7 +50,7 @@ const MODE_BY_BOUNDARY: Record<WordBoundary, AutomodWordMode> = {
 };
 
 /** The word without the wildcards that say where it sits. */
-export function automodWordCore(word: string) {
+function automodWordCore(word: string) {
 	switch (processWordBoundaries(word)) {
 		case WordBoundary.None:
 			return word;
@@ -67,7 +67,7 @@ export function automodWordMode(word: string): AutomodWordMode {
 	return MODE_BY_BOUNDARY[processWordBoundaries(word)];
 }
 
-export function withAutomodWordMode(core: string, mode: AutomodWordMode) {
+function withAutomodWordMode(core: string, mode: AutomodWordMode) {
 	const start = mode === "prefixed" || mode === "anywhere" ? kWordBoundaryWildcard : "";
 	const end = mode === "continues" || mode === "anywhere" ? kWordBoundaryWildcard : "";
 	return `${start}${core}${end}`;
@@ -132,7 +132,7 @@ export type AutomodWordProblem =
 	| "brackets"
 	| "listFull";
 
-export type AutomodWordNote = "innerWildcard" | "normalized";
+type AutomodWordNote = "innerWildcard" | "normalized";
 
 export interface AutomodWordCheck {
 	/** The word as it is saved. */
@@ -175,7 +175,7 @@ export function checkAutomodWord(word: string, others: readonly string[]): Autom
 /**
  * A text the word takes: each group written with its first character.
  */
-export function automodWordSample(word: string) {
+function automodWordSample(word: string) {
 	return automodWordCore(word).replaceAll(GROUP, (group) => group.charAt(1));
 }
 

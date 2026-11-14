@@ -18,9 +18,6 @@ const config: KnipConfig = {
 				 * vite.config.ts build:lunaria, and lunaria.config.ts is also read
 				 * externally by the lunariajs/action GitHub Action. */
 				"lunaria.config.ts",
-				/** Vitest setupFiles for the nuxt project; knip cannot see through the
-				 * defineVitestProject() factory in vite.config.ts. */
-				"test/nuxt/setup.ts",
 				/** Loaded by @nuxt/content at build time, not imported directly */
 				"content.config.ts",
 				/** MDC components rendered from Markdown (e.g. ::card, ::note), so usage isn't statically visible */
@@ -62,7 +59,6 @@ const config: KnipConfig = {
 
 				/** Framework-provided: re-exported or bundled by Nuxt/Nitro/Vite */
 				"ufo",
-				"ohash/*",
 				"scule",
 
 				/** Transitive deps used directly but provided by parent packages */

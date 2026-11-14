@@ -33,7 +33,7 @@ import { ChannelType } from "discord-api-types/v10";
  * namespace of the advisory lock its writes run under. The namespaces are
  * arbitrary; they only differ from each other and from the rules' one.
  */
-export const AutoChannelKinds = {
+const AutoChannelKinds = {
 	autoDelete: { lockNamespace: 1_635_086_446, maximum: MAXIMUM_AUTO_DELETES },
 	autoMessage: { lockNamespace: 1_635_086_448, maximum: MAXIMUM_AUTO_MESSAGES },
 	autoPurge: { lockNamespace: 1_635_086_447, maximum: MAXIMUM_AUTO_PURGES },

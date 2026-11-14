@@ -54,7 +54,7 @@ export const DISPLAY_NAME_BACKGROUNDS = {
 } as const;
 
 /** A nameplate's palette: the colour Discord tints it with, per theme. */
-export const NAMEPLATE_PALETTES: Readonly<Record<string, { dark: string; light: string }>> = {
+const NAMEPLATE_PALETTES: Readonly<Record<string, { dark: string; light: string }>> = {
 	berry: { dark: "#893A99", light: "#B11FCF" },
 	black: { dark: "#000000", light: "#000000" },
 	bubble_gum: { dark: "#DC3E97", light: "#F957B3" },
@@ -138,7 +138,7 @@ function relativeLuminance(hex: string): number {
 	return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
-export function contrastRatio(a: string, b: string): number {
+function contrastRatio(a: string, b: string): number {
 	const [light, dark] = [relativeLuminance(a), relativeLuminance(b)].toSorted(
 		(x, y) => y - x,
 	) as [number, number];
@@ -163,7 +163,7 @@ export function ensureContrast(colour: string, background: string, ratio = 3): s
 }
 
 /** The shades Discord derives from a style's first colour for its effects. */
-export function displayNameShades(colour: string) {
+function displayNameShades(colour: string) {
 	const hsl = hexToHsl(colour);
 	const at = (l: number, s = hsl.s) => hslToHex({ h: hsl.h, l, s });
 	return {

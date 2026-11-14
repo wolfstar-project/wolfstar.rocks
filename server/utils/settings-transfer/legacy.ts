@@ -139,7 +139,7 @@ export function isLegacySetting(name: string): boolean {
 }
 
 /** A setting of the bot before V7, under the name it has in V7. */
-export interface LegacySettingConversion {
+interface LegacySettingConversion {
 	name: TransferableSettingName;
 	value: unknown;
 	/** The names it had, which what is wrong with it is told under. */

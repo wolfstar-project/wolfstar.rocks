@@ -4,7 +4,6 @@ import {
 	AutoModerationSoftActionBits,
 	normalizeAutoModerationHardAction,
 	getDefaultAutoModerationRule,
-	getDefaultAutoModerationRuleOptions,
 	MaximumAutoModerationRuleNameLength,
 	type AutoModerationEscalationAction,
 	type AutoModerationHardAction,
@@ -13,9 +12,9 @@ import {
 } from "#shared/utils/automod-rules";
 import { toRaw } from "vue";
 
-export type AutomodRuleOptionValue = number | boolean | string[];
+type AutomodRuleOptionValue = number | boolean | string[];
 
-export interface AutomodEscalationDraft {
+interface AutomodEscalationDraft {
 	action: AutoModerationEscalationAction;
 	/** Milliseconds; `0` for a permanent action. */
 	duration: number;
@@ -86,13 +85,6 @@ export function createAutomodRuleDraft(type: AutoModerationRuleType): AutomodRul
 /** The form an existing rule is edited in. */
 export function automodRuleToDraft(rule: AutoModerationRule): AutomodRuleDraft {
 	return toDraft(rule);
-}
-
-/** The options a draft takes when its type changes: the new type's defaults. */
-export function defaultAutomodRuleOptions(
-	type: AutoModerationRuleType,
-): Record<string, AutomodRuleOptionValue> {
-	return getDefaultAutoModerationRuleOptions(type) as Record<string, AutomodRuleOptionValue>;
 }
 
 /**

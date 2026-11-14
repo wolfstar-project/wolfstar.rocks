@@ -1,4 +1,4 @@
-export const MARKETING_PATHS = [
+const MARKETING_PATHS = [
 	"/",
 	"/wolfstar",
 	"/staryl",

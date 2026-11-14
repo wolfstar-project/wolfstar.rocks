@@ -105,10 +105,6 @@ export const BotOnlySettings: ReadonlySet<string> = new Set([
 	"honeypot.recreate",
 ]);
 
-export function getTransferableSettingName(key: TransferableSettingKey): string {
-	return TransferableSettings.find(([, entry]) => entry === key)?.[0] ?? key;
-}
-
 /**
  * The settings the bot no longer has, which a file exported before may still
  * hold: an import leaves them out instead of reporting them. The questions of

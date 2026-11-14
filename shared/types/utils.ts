@@ -1,16 +1,3 @@
-export type RefType<T> = T extends { value: infer V } ? V : never;
-
-export type DeepPartial<T> = {
-	[P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P] | undefined;
-};
-
-export interface TightMap<O = any> {
-	[key: string]: TightMap | O;
-}
-export type PartialString<T> = {
-	[K in keyof T]?: string;
-};
-
 export type ValuesType<T extends ReadonlyArray<any> | ArrayLike<any> | Record<any, any>> =
 	T extends readonly any[]
 		? T[number]

@@ -19,10 +19,10 @@ export type DiscordInline =
 	| { type: "mention"; kind: "user" | "channel"; name: string };
 
 /** A span of formatting, which can hold links, mentions and other spans. */
-export type DiscordFormat = "bold" | "italic" | "underline" | "strike";
+type DiscordFormat = "bold" | "italic" | "underline" | "strike";
 
 /** How a `<t:…>` timestamp reads: Discord's `t`, `T`, `d`, `D`, `f`, `F` or `R`. */
-export type DiscordTimeStyle = "t" | "T" | "d" | "D" | "f" | "F" | "R";
+type DiscordTimeStyle = "t" | "T" | "d" | "D" | "f" | "F" | "R";
 
 export type DiscordBlockType =
 	| "line"

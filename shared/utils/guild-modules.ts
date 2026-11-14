@@ -65,7 +65,7 @@ type GuildModuleKey = GuildModuleEntry["key"];
  * modules, which stay while their flag of `Modules` is off and do nothing.
  * They are shown, counted and flipped with the other flags.
  */
-export const OWN_TABLE_MODULE_SWITCHES = [
+const OWN_TABLE_MODULE_SWITCHES = [
 	"modulesHoneypot",
 	"appealsEnabled",
 	"joinGuardEnabled",

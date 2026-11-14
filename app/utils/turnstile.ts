@@ -22,7 +22,7 @@ declare global {
 }
 
 /** Turnstile's script, in explicit mode: it draws nothing until asked to. */
-export const TURNSTILE_SCRIPT_URL =
+const TURNSTILE_SCRIPT_URL =
 	"https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
 
 /**

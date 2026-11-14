@@ -19,7 +19,7 @@ export const DEFAULT_SKEW_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 
 const SAME_SITE_VALUES = ["lax", "none", "strict"] as const;
 
-export type SkewCookieSameSite = (typeof SAME_SITE_VALUES)[number];
+type SkewCookieSameSite = (typeof SAME_SITE_VALUES)[number];
 
 /**
  * Shape of `runtimeConfig.public.skewProtection.cookie`. Nuxt generates its

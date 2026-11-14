@@ -25,16 +25,12 @@ export const authorizeJoinGuardManager = authorizeGuildManager(
  * than evlog's: its `data` reaches the client in the response body, which is
  * where the page reads the code from.
  */
-export function joinGuardError(
-	statusCode: number,
-	statusMessage: string,
-	data: Record<string, unknown>,
-) {
+function joinGuardError(statusCode: number, statusMessage: string, data: Record<string, unknown>) {
 	return createH3Error({ statusCode, statusMessage, message: statusMessage, data });
 }
 
 /** Answers a request whose path, query or body was refused, one message per field. */
-export function throwInvalidJoinGuardRequest(errors: readonly string[]): never {
+function throwInvalidJoinGuardRequest(errors: readonly string[]): never {
 	throw joinGuardError(400, "Invalid request", { code: "invalid", errors: [...errors] });
 }
 

@@ -36,13 +36,13 @@ export interface SlashCommandOption {
 	required?: boolean;
 }
 
-export interface SlashCommandDefinitionSubcommand {
+interface SlashCommandDefinitionSubcommand {
 	name: string;
 	description?: string;
 	options?: SlashCommandOption[];
 }
 
-export interface SlashCommandDefinitionGroup {
+interface SlashCommandDefinitionGroup {
 	name: string;
 	description?: string;
 	subcommands: SlashCommandDefinitionSubcommand[];

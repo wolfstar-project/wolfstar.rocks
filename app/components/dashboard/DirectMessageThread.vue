@@ -327,9 +327,9 @@ watch(
 /* The link floats over the post's top edge, where Discord puts a message's
    actions, and shows on the post the pointer or focus is on. Out of the flow,
    it takes no room from the name and time, so a phone's thread never scrolls
-   sideways. */
+   sideways. Hidden, it takes no clicks either: it overlaps the post above. */
 .dm-open {
-	@apply absolute end-2 -top-3 z-1 rounded-md border border-solid border-newt-border bg-newt-bg-floating px-2 opacity-0 shadow-sm group-hover/post:opacity-100 focus-visible:opacity-100;
+	@apply pointer-events-none absolute end-2 -top-3 z-1 rounded-md border border-solid border-newt-border bg-newt-bg-floating px-2 opacity-0 shadow-sm group-hover/post:pointer-events-auto group-hover/post:opacity-100 focus-visible:pointer-events-auto focus-visible:opacity-100;
 }
 
 /* The time of a joined post, in the avatar's column, shown as the link is.

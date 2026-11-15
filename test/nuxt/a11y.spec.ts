@@ -105,6 +105,7 @@ import {
 	StarylHeroSection,
 	StarylNotificationShowcase,
 	StarylSetupSection,
+	StarylSocialNotification,
 	StarylProductProofSection,
 	// #endregion
 	UChart,
@@ -2210,6 +2211,19 @@ describe("component accessibility audits", () => {
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
 			});
+		});
+
+		describe("StarylSocialNotification", () => {
+			it.each(["feed", "post"] as const)(
+				"should have no accessibility violations as a %s card",
+				async (kind) => {
+					const component = await mountSuspended(StarylSocialNotification, {
+						props: { kind },
+					});
+					const results = await runAxe(component);
+					expect(results.violations).toEqual([]);
+				},
+			);
 		});
 
 		describe("StarylCommandsShowcase", () => {

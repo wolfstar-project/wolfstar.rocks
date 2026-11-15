@@ -119,7 +119,7 @@ const { inviteUrl, release = null } = defineProps<{
 
 const { ts } = useI18n();
 
-const SETUP_COMMAND = "/setup";
+const SETUP_COMMAND = "/settings";
 </script>
 
 <style scoped>

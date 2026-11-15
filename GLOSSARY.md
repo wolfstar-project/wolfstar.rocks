@@ -67,8 +67,8 @@ Collisions
 
 ### Staryl
 
-**Is:** the Discord app from the WolfStar Project that posts social updates into a server. Twitch live and
-offline notifications are supported today, and its public invite is live.
+**Is:** the Discord app from the WolfStar Project that posts social updates into a server. Its sources are
+Twitch, RSS and Atom feeds, Bluesky, Mastodon, and X, and its public invite is live.
 
 **Casing:** `Staryl`.
 
@@ -255,20 +255,22 @@ An excluded channel is ignored for logged events.
 
 ### subscription
 
-**Is:** one Staryl rule: one streamer, one channel, one alert type. Managed with Staryl's `add`, `remove`,
-`reset`, `show`, and `test` commands.
+**Is:** one Staryl rule: one streamer, feed, or account, sent to one channel, with its own message and
+filters. Managed with Staryl's `add`, `remove`, `reset`, `show`, and `test` commands, or in `/settings`.
 
-**Never:** follow, feed, tracker, watch.
+**Never:** follow, tracker, watch. "Feed" only names an RSS or Atom feed, never a subscription.
 
 ### source
 
-**Is:** a platform Staryl reads updates from. Twitch is the only source today.
+**Is:** a platform Staryl reads updates from: Twitch, RSS and Atom feeds, Bluesky, Mastodon, and X.
 
-**Never:** integration, provider, connector.
+**Never:** integration, provider, connector. The bot's own replies say "provider". Quote them as they are
+in a Discord preview, and write "source" in our own copy.
 
 ### notification
 
-**Is:** the message Staryl posts in a channel when a source changes: live or offline.
+**Is:** the message Staryl posts in a channel when a source changes: a stream goes live or offline, a feed
+publishes an item, or an account posts.
 
 **Never:** ping, push, webhook (as a product word).
 

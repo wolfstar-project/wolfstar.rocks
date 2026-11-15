@@ -35,7 +35,9 @@
 					</div>
 
 					<template v-if="feature.id === 'moderation-tools'">
-						<div class="grid items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12">
+						<div
+							class="grid grid-cols-1 items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12"
+						>
 							<div
 								class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row"
 							>
@@ -447,7 +449,9 @@
 					</template>
 
 					<template v-else-if="feature.id === 'advanced-logging'">
-						<div class="grid items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12">
+						<div
+							class="grid grid-cols-1 items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12"
+						>
 							<div class="flex flex-col items-center gap-4 lg:flex-row">
 								<SurfaceCard
 									padding="none"
@@ -648,7 +652,9 @@
 					</template>
 
 					<template v-else-if="feature.id === 'moderation-logs'">
-						<div class="grid items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12">
+						<div
+							class="grid grid-cols-1 items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12"
+						>
 							<div
 								class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row"
 							>

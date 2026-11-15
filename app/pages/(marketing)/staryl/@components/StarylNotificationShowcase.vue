@@ -26,7 +26,7 @@
 					</p>
 				</div>
 
-				<div class="grid items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12">
+				<div class="grid grid-cols-1 items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12">
 					<div
 						class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row"
 					>

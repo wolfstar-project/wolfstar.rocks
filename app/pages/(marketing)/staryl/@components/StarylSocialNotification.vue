@@ -54,7 +54,8 @@ const FEED_NAME = "The WolfStar Blog";
 const ARTICLE_TITLE = "WolfStar v7";
 const ARTICLE_URL = "https://wolfstar.rocks/blog/wolfstar-v7";
 const ACCOUNT_NAME = "Stella";
-const POST_URL = "https://bsky.app/profile/stella.bsky.social";
+// A handle on the project's own domain: a `bsky.social` name can belong to a stranger.
+const POST_URL = "https://bsky.app/profile/stella.wolfstar.rocks";
 
 const { ts } = useI18n();
 const { locale } = useAppLocale();

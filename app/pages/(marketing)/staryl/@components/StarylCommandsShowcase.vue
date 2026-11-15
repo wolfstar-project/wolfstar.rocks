@@ -206,7 +206,7 @@ const feedOptions = computed<SlashCommandOption[]>(() => [
 ]);
 
 const accountOptions = computed<SlashCommandOption[]>(() => [
-	{ name: "target", value: "stella.bsky.social" },
+	{ name: "target", value: "stella.wolfstar.rocks" },
 	{ name: "channel", value: `#${CHANNEL_NAME}` },
 	{ name: "exclude_replies", value: "True", focused: true },
 ]);

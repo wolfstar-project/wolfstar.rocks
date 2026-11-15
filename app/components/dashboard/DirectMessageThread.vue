@@ -354,18 +354,21 @@ watch(
 	background-color: var(--newt-bg-elevated);
 }
 
-/* Discord's accent is a straight bar, cut only by the rounded corners. A thick
-   coloured border would bend into the top and bottom edges, so the border
-   stays a hairline and the bar is painted over its start edge, with the
-   container's own corners. The padding makes room for the 3px it adds. */
+/* Discord's accent is a straight bar, cut only by the rounded corners, and the
+   hairline stops where the bar starts. A thick coloured border would bend into
+   the top and bottom edges, and a real border would show as an arc over the
+   bar's corner. So the hairline is an inset shadow, and the bar is painted over
+   it, with the container's own corners. The padding keeps the 1px border's
+   room, and the start edge adds the bar's 3px. */
 .dm-log :deep(.discord-v2-container-accented) {
-	@apply relative ps-[15px] sm:ps-[19px];
+	@apply relative border-0 p-[13px] ps-4 sm:p-[17px] sm:ps-5;
+	box-shadow: inset 0 0 0 1px var(--newt-border);
 }
 
 .dm-log :deep(.discord-v2-container-accented)::before {
 	content: "";
 	position: absolute;
-	inset: -1px;
+	inset: 0;
 	border-radius: inherit;
 	background-image: linear-gradient(to right, var(--newt-v2-accent) 4px, transparent 4px);
 	pointer-events: none;

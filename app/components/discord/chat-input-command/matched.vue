@@ -1,9 +1,7 @@
 <template>
-	<div
+	<SlashCommandSuggestionMatched
 		class="discord-slash-command-suggestion-matched"
-		:class="{ 'discord-slash-command-suggestion-matched-active': active }"
-		role="option"
-		:aria-selected="active"
+		:active
 		:aria-label="ariaLabel"
 		tabindex="0"
 		@click="emit('select')"
@@ -16,7 +14,7 @@
 			:subcommand-group="subcommandGroup"
 			:options="options"
 		/>
-	</div>
+	</SlashCommandSuggestionMatched>
 </template>
 
 <script lang="ts">
@@ -31,6 +29,8 @@ interface SlashCommandSuggestionMatchedEmits {
 
 <script setup lang="ts">
 import type { SlashCommandInvocation } from "#shared/types/chat-input-command";
+import { SlashCommandSuggestionMatched } from "~/components/ui/slash-command-suggestions";
+
 const { ts } = useI18n();
 const {
 	active = false,
@@ -59,23 +59,3 @@ const ariaLabel = computed(() => {
 	});
 });
 </script>
-
-<style scoped>
-@reference "@/assets/css/main.css";
-
-.discord-slash-command-suggestion-matched {
-	--discord-slash-command-suggestion-matched-hover: var(--discord-hover);
-	--discord-slash-command-suggestion-matched-active: var(--discord-active);
-
-	@apply min-h-11 cursor-pointer rounded-md px-3 py-2;
-}
-
-.discord-slash-command-suggestion-matched:hover,
-.discord-slash-command-suggestion-matched-active {
-	background-color: var(--discord-slash-command-suggestion-matched-hover);
-}
-
-.discord-slash-command-suggestion-matched-active {
-	background-color: var(--discord-slash-command-suggestion-matched-active);
-}
-</style>

@@ -5,7 +5,6 @@ import {
 	applyWorkerEnv,
 	CLOUDFLARE_BINDINGS,
 	isPrereleaseWorker,
-	SKEW_PROTECTION_NAMESPACE_ID,
 	isCloudflareBuild,
 	WORKER,
 } from "./config/cloudflare.ts";
@@ -19,8 +18,8 @@ applyWorkerEnv();
 
 const runtimeConfig = generateRuntimeConfig();
 const isStorybook = process.env.STORYBOOK === "true" || process.env.VITEST_STORYBOOK === "true";
-// Opt-in: the module uploads the assets of past deploys through `wrangler`, which
-// only a build with Cloudflare credentials can run (see `skewProtection` below).
+// Opt-in: only the deploy workflows keep the assets of past deploys, in a store
+// they carry from one deploy to the next (see `skewProtection` below).
 const bundleSkewAssets =
 	isCloudflareBuild && isCI && process.env.SKEW_PROTECTION_BUNDLE_ASSETS === "true";
 
@@ -664,26 +663,17 @@ export default defineNuxtConfig({
 		// Storybook's Nuxt build turns `experimental.appManifest` off, which the module
 		// refuses to run without; there is no deploy to skew against there anyway.
 		enabled: !isStorybook,
-		// A Workers build that keeps past assets stores them in a KV namespace of its
-		// own, the way the module's Cloudflare guide sets it up. The module reads and
-		// writes that namespace through `wrangler` at build time, so every other build
-		// (CI checks, local previews) uses the module's fs cache instead: it has no
-		// `wrangler` on the path and no Cloudflare credentials to give it.
-		storage: bundleSkewAssets
-			? {
-					binding: CLOUDFLARE_BINDINGS.skewProtection,
-					driver: "cloudflare-kv-binding",
-					// The module looks for the binding at the top level of the Wrangler
-					// configuration, where the beta build has none: it is in `env.beta`.
-					namespaceId: SKEW_PROTECTION_NAMESPACE_ID,
-				}
-			: {
-					base: "./.cache/skew-protection",
-					// nuxt-skew-protection imports `unstorage/drivers/${driver}` verbatim,
-					// so this must be the kebab-case file name (fs-lite.mjs), unlike the
-					// Nitro storage mounts above where "fsLite" is a registered driver name.
-					driver: "fs-lite",
-				},
+		// Every build keeps its versions on disk. The deploy workflows carry this
+		// directory from one deploy to the next in the GitHub Actions cache: the
+		// module's KV store ran two `wrangler` processes for each asset it read, and a
+		// deploy spent 40 minutes restoring the past releases' 3,400 assets.
+		storage: {
+			base: "./.cache/skew-protection",
+			// nuxt-skew-protection imports `unstorage/drivers/${driver}` verbatim,
+			// so this must be the kebab-case file name (fs-lite.mjs), unlike the
+			// Nitro storage mounts above where "fsLite" is a registered driver name.
+			driver: "fs-lite",
+		},
 		updateStrategy: "polling",
 		// @nuxtjs/seo hands the module `cookie: false` as its default, which drops the
 		// version cookie and with it the 409 that the wrapped API handlers send to a
@@ -697,13 +687,9 @@ export default defineNuxtConfig({
 		// preview server then serves the app manifest with stale content-length,
 		// and clients fail with NUXT_E5004/NUXT_E5002 on client-side navigation.
 		// A Worker serves those files from its asset binding as they are, so there
-		// the assets of past deploys are kept, for clients still on them, by a
-		// build in CI: the module uploads them through `wrangler`, 25 processes at
-		// a time, which a machine with 4 GB of memory does not survive. Workers
-		// Builds hands the build an API token, and there the upload of the 626
-		// assets of each of the last releases outlasted the 30 minute limit, so it
-		// is opt-in with SKEW_PROTECTION_BUNDLE_ASSETS; without it the build keeps
-		// no past assets.
+		// the assets of past deploys are kept, for clients still on them, by the
+		// deploy workflows, which set SKEW_PROTECTION_BUNDLE_ASSETS and restore the
+		// store first; without it the build keeps no past assets.
 		bundleAssets: bundleSkewAssets,
 	},
 

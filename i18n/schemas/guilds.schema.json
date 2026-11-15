@@ -2614,6 +2614,9 @@
 						"logging_channels_help": {
 							"type": "string"
 						},
+						"module_hint": {
+							"type": "string"
+						},
 						"not_logged": {
 							"type": "string"
 						},

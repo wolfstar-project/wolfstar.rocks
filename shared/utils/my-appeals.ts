@@ -20,7 +20,7 @@ export type MyAppealCaseType = (typeof MyAppealCaseTypes)[number];
  * Where a case stands for the member: it can be appealed, its appeal waits, was
  * denied or accepted, or the server takes no appeal for it.
  */
-export const MyAppealStatuses = ["open", "pending", "denied", "accepted", "closed"] as const;
+const MyAppealStatuses = ["open", "pending", "denied", "accepted", "closed"] as const;
 export type MyAppealStatus = (typeof MyAppealStatuses)[number];
 
 /** The filters of the area, the mockup's: every case, the ones that can be appealed, waiting, decided. */
@@ -42,7 +42,7 @@ export function isInMyAppealFilter(status: MyAppealStatus, filter: MyAppealFilte
  * waiting as the server allows, or a denial is too recent (`againAt` says until
  * when).
  */
-export const MyAppealClosedReasons = [
+const MyAppealClosedReasons = [
 	"off",
 	"type",
 	"blocked",
@@ -73,7 +73,7 @@ export interface MyAppealCase {
 }
 
 /** The appeal the member sent for a case. */
-export interface MyAppealSent {
+interface MyAppealSent {
 	/** The form it was sent with, `null` for the built-in one or a deleted form. */
 	formName: string | null;
 	answers: AppealQueueAnswer[];

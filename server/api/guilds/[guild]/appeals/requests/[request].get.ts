@@ -1,7 +1,8 @@
 import { readAppealRequestOutcome } from "#server/utils/appeals/queue";
 import { AppealQueueError } from "#server/utils/appeals/queue-error";
 import { throwAppealQueueError } from "#server/utils/appeals/queue-route";
-import { authorizeAppealFormManager, useManagedGuild } from "#server/utils/appeals/route";
+import { authorizeAppealFormManager } from "#server/utils/appeals/route";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 
 /**
  * `GET /api/guilds/:guild/appeals/requests/:request`: where a request to decide

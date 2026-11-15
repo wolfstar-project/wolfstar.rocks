@@ -1,75 +1,51 @@
 <template>
-	<div
-		class="discord-embed"
-		:class="{
-			'discord-embed--light': theme === 'light',
-			'discord-embed--dark': theme === 'dark',
-		}"
-		role="complementary"
-		:aria-label="embedAriaLabel"
-	>
-		<div
-			class="discord-embed-left-border"
-			:style="{ backgroundColor: color ?? 'var(--discord-embed-default-border)' }"
-		/>
-		<div class="discord-embed-wrapper">
-			<div class="discord-embed-grid">
-				<div v-if="author" class="discord-embed-author">
-					<NuxtImg
-						v-if="author.icon"
-						:src="author.icon"
-						class="discord-embed-author-image"
-						width="24"
-						height="24"
-						:alt="`${author.name} avatar`"
-						decoding="async"
-					/>
-					<span class="discord-embed-author-name">{{ author.name }}</span>
-				</div>
+	<Embed :color class="discord-embed" role="complementary" :aria-label="embedAriaLabel">
+		<EmbedAuthor v-if="author">
+			<EmbedAuthorIcon
+				v-if="author.icon"
+				:src="author.icon"
+				:alt="`${author.name} avatar`"
+				width="24"
+				height="24"
+				decoding="async"
+			/>
+			<EmbedAuthorName>{{ author.name }}</EmbedAuthorName>
+		</EmbedAuthor>
 
-				<div v-if="title" class="discord-embed-title">{{ title }}</div>
+		<EmbedTitle v-if="title">{{ title }}</EmbedTitle>
 
-				<div v-if="$slots.default" class="discord-embed-description">
-					<slot />
-				</div>
+		<EmbedDescription v-if="$slots.default">
+			<slot />
+		</EmbedDescription>
 
-				<div v-if="footer || timestamp" class="discord-embed-footer">
-					<NuxtImg
-						v-if="footer?.icon"
-						:src="footer.icon"
-						class="discord-embed-footer-image"
-						width="16"
-						height="16"
-						:alt="ts('discord.embed.footer_icon', { text: footer.text })"
-						decoding="async"
-					/>
-					<span class="discord-embed-footer-content">
-						<span v-if="footer">{{ footer.text }}</span>
-						<span
-							v-if="footer && timestamp"
-							class="discord-embed-footer-separator"
-							aria-hidden="true"
-							>•</span
-						>
-						<time v-if="timestamp" :datetime="timestampIso">{{
-							formattedTimestamp
-						}}</time>
-					</span>
-				</div>
-			</div>
-		</div>
-	</div>
+		<EmbedFooter v-if="footer || timestampDate">
+			<EmbedFooterIcon
+				v-if="footer?.icon"
+				:src="footer.icon"
+				:alt="ts('discord.embed.footer_icon', { text: footer.text })"
+				width="16"
+				height="16"
+				decoding="async"
+			/>
+			<span v-if="footer">{{ footer.text }}</span>
+			<EmbedFooterSeparator v-if="footer && timestampDate" />
+			<!-- The slot, since the part formats in `en-US` only. -->
+			<EmbedTimestamp v-if="timestampDate" :date="timestampDate">{{
+				formattedTimestamp
+			}}</EmbedTimestamp>
+		</EmbedFooter>
+	</Embed>
 </template>
 
 <script lang="ts">
 import type { VNode } from "vue";
 
-interface EmbedAuthor {
+interface EmbedAuthorData {
 	icon?: string;
 	name: string;
 }
 
-interface EmbedFooter {
+interface EmbedFooterData {
 	icon?: string;
 	text: string;
 }
@@ -77,10 +53,9 @@ interface EmbedFooter {
 interface EmbedProps {
 	title?: string;
 	color?: string;
-	author?: EmbedAuthor;
-	footer?: EmbedFooter;
+	author?: EmbedAuthorData;
+	footer?: EmbedFooterData;
 	timestamp?: number | Date;
-	theme?: "light" | "dark";
 }
 
 interface EmbedSlots {
@@ -89,17 +64,28 @@ interface EmbedSlots {
 </script>
 
 <script setup lang="ts">
+import {
+	Embed,
+	EmbedAuthor,
+	EmbedAuthorIcon,
+	EmbedAuthorName,
+	EmbedDescription,
+	EmbedFooter,
+	EmbedFooterIcon,
+	EmbedFooterSeparator,
+	EmbedTimestamp,
+	EmbedTitle,
+} from "~/components/ui/embed";
+
 const { ts } = useI18n();
 defineSlots<EmbedSlots>();
 
-const { title, color, author, footer, timestamp, theme } = defineProps<EmbedProps>();
+const { title, color, author, footer, timestamp } = defineProps<EmbedProps>();
 
 const timestampDate = computed(() => {
 	if (timestamp === undefined) return undefined;
 	return timestamp instanceof Date ? timestamp : new Date(timestamp);
 });
-
-const timestampIso = computed(() => timestampDate.value?.toISOString());
 
 const { timeLocale } = useAppLocale();
 
@@ -119,260 +105,3 @@ const embedAriaLabel = computed(() => {
 	return ts("discord.embed.generic");
 });
 </script>
-
-<style scoped>
-@reference "@/assets/css/main.css";
-
-/*
- * Structure mirrors skyra-project/discord-components DiscordEmbed:
- * left 4px accent bar + rounded content card (max 520px).
- * Colors use Discord brand tokens as oklch CSS vars (allow-listed under discord/).
- */
-.discord-embed {
-	/* Discord's dark embed chrome, drawn from the channel so it follows Ash, Dark and Onyx. */
-	--discord-embed-default-border: oklch(from var(--discord-chrome) calc(l - 0.027) c h);
-	--discord-embed-bg: oklch(from var(--discord-chrome) calc(l + 0.0546) c h);
-	--discord-embed-border: oklch(from var(--discord-chrome) calc(l + 0.109) c h);
-	--discord-embed-text: oklch(78.71% 0.0114 256.71);
-	--discord-embed-title: oklch(89.92% 0.0052 247.88);
-	--discord-embed-author: oklch(89.92% 0.0052 247.88);
-	--discord-embed-footer: oklch(78.71% 0.0114 256.71);
-	--discord-embed-footer-separator: oklch(78.71% 0.0114 256.71);
-	--discord-embed-code-bg: oklch(from var(--discord-chrome) calc(l + 0.03) c h);
-	--discord-embed-code-text: oklch(89.92% 0.0052 247.88);
-	--discord-embed-quote-bar: oklch(43.23% 0.0134 274.64);
-	--discord-embed-link: oklch(72% 0.14 230);
-
-	/*
-	 * Discord sits the embed flush under the author row (≈0–2px). Avoid
-	 * skyra’s my-2 (8px) outer gap — keep only a small bottom margin for
-	 * “(edited)” / stacked content under the card.
-	 */
-	@apply mt-0 mb-1 flex max-w-[520px] font-whitney;
-	color: var(--discord-embed-text);
-	font-size: 0.875rem;
-	line-height: 1.125rem;
-}
-
-/* `theme="dark"` keeps Ash's surfaces on any page. */
-.discord-embed--dark {
-	--discord-embed-default-border: oklch(23.95% 0.0059 271.17);
-	--discord-embed-bg: oklch(32.11% 0.0093 268.38);
-	--discord-embed-border: oklch(37.56% 0.0106 271.13);
-	--discord-embed-code-bg: oklch(29.67% 0.0078 264.45);
-}
-
-.discord-embed--light {
-	--discord-embed-default-border: oklch(92.12% 0.0046 258.33);
-	--discord-embed-bg: oklch(96.4% 0.0029 264.54);
-	--discord-embed-border: oklch(92.12% 0.0046 258.33);
-	--discord-embed-text: oklch(43.23% 0.0134 274.64);
-	--discord-embed-title: oklch(32.11% 0.0093 268.38);
-	--discord-embed-author: oklch(32.11% 0.0093 268.38);
-	--discord-embed-footer: oklch(43.23% 0.0134 274.64);
-	--discord-embed-footer-separator: oklch(43.23% 0.0134 274.64);
-	--discord-embed-code-bg: oklch(92.12% 0.0046 258.33);
-	--discord-embed-code-text: oklch(32.11% 0.0093 268.38);
-	--discord-embed-quote-bar: oklch(78.71% 0.0114 256.71);
-	--discord-embed-link: oklch(62% 0.16 230);
-}
-
-@variant theme-light {
-	.discord-embed:not(.discord-embed--dark) {
-		--discord-embed-default-border: oklch(92.12% 0.0046 258.33);
-		--discord-embed-bg: oklch(96.4% 0.0029 264.54);
-		--discord-embed-border: oklch(92.12% 0.0046 258.33);
-		--discord-embed-text: oklch(43.23% 0.0134 274.64);
-		--discord-embed-title: oklch(32.11% 0.0093 268.38);
-		--discord-embed-author: oklch(32.11% 0.0093 268.38);
-		--discord-embed-footer: oklch(43.23% 0.0134 274.64);
-		--discord-embed-footer-separator: oklch(43.23% 0.0134 274.64);
-		--discord-embed-code-bg: oklch(92.12% 0.0046 258.33);
-		--discord-embed-code-text: oklch(32.11% 0.0093 268.38);
-		--discord-embed-quote-bar: oklch(78.71% 0.0114 256.71);
-		--discord-embed-link: oklch(62% 0.16 230);
-	}
-}
-
-.discord-embed-left-border {
-	flex-shrink: 0;
-	width: 4px;
-	border-radius: 4px 0 0 4px;
-	background-color: var(--discord-embed-default-border);
-}
-
-.discord-embed-wrapper {
-	display: grid;
-	max-width: 520px;
-	justify-self: start;
-	align-self: start;
-	box-sizing: border-box;
-	border: 1px solid var(--discord-embed-border);
-	border-radius: 0 4px 4px 0;
-	background-color: var(--discord-embed-bg);
-}
-
-.discord-embed-grid {
-	display: inline-grid;
-	grid-template-columns: auto;
-	grid-template-rows: auto;
-	grid-auto-flow: row;
-	row-gap: 0;
-	min-width: 0;
-	min-height: 0;
-	padding: 0.5rem 1rem 1rem 0.75rem;
-	text-indent: 0;
-}
-
-.discord-embed-author {
-	display: flex;
-	align-items: center;
-	grid-column: 1 / 1;
-	min-width: 0;
-	margin-top: 8px;
-	color: var(--discord-embed-author);
-	font-size: 0.875rem;
-	font-weight: 600;
-	line-height: 1.375rem;
-}
-
-.discord-embed-author-image {
-	flex-shrink: 0;
-	width: 24px;
-	height: 24px;
-	margin-right: 8px;
-	border-radius: 50%;
-	object-fit: cover;
-}
-
-.discord-embed-author-name {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-.discord-embed-title {
-	display: inline-block;
-	grid-column: 1 / 1;
-	min-width: 0;
-	margin-top: 8px;
-	color: var(--discord-embed-title);
-	font-size: 1rem;
-	font-weight: 600;
-	line-height: 1.375rem;
-}
-
-.discord-embed-description {
-	grid-column: 1 / 1;
-	min-width: 0;
-	margin-top: 8px;
-	font-size: 0.875rem;
-	font-weight: 400;
-	line-height: 1.125rem;
-	overflow-wrap: break-word;
-	word-wrap: break-word;
-}
-
-.discord-embed-footer {
-	display: flex;
-	align-items: center;
-	grid-column: 1 / 1;
-	min-width: 0;
-	margin-top: 8px;
-	color: var(--discord-embed-footer);
-	font-size: 0.75rem;
-	font-weight: 500;
-	line-height: 1rem;
-}
-
-.discord-embed-footer-image {
-	flex-shrink: 0;
-	width: 16px;
-	height: 16px;
-	margin-right: 8px;
-	border-radius: 50%;
-	object-fit: cover;
-}
-
-.discord-embed-footer-content {
-	display: inline-flex;
-	flex-wrap: wrap;
-	align-items: center;
-	min-width: 0;
-}
-
-/* Middle dot — Discord footer separator (not a vertical bar) */
-.discord-embed-footer-separator {
-	display: inline-block;
-	margin: 0 4px;
-	color: var(--discord-embed-footer-separator);
-	font-weight: 500;
-}
-
-/* Description markdown chrome (slot content keeps caller scope) */
-.discord-embed-description :deep(a) {
-	color: var(--discord-embed-link);
-	font-weight: 400;
-	text-decoration: none;
-}
-
-.discord-embed-description :deep(a:hover) {
-	text-decoration: underline;
-}
-
-.discord-embed-description :deep(strong),
-.discord-embed-description :deep(b) {
-	font-weight: 600;
-}
-
-.discord-embed-description :deep(em),
-.discord-embed-description :deep(i) {
-	font-style: italic;
-}
-
-/* Discord inline code pill */
-.discord-embed-description :deep(code) {
-	padding: 0.2em;
-	border-radius: 3px;
-	background-color: var(--discord-embed-code-bg);
-	color: var(--discord-embed-code-text);
-	font-family:
-		Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter",
-		"DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco,
-		"Courier New", Courier, monospace;
-	font-size: 0.85em;
-	line-height: 1.125rem;
-	white-space: pre-wrap;
-}
-
-/* Discord blockquote: 4px bar + padded content (skyra discord-quote) */
-.discord-embed-description :deep(blockquote) {
-	display: flex;
-	margin: 0;
-	padding: 0;
-}
-
-.discord-embed-description :deep(blockquote)::before {
-	flex-shrink: 0;
-	width: 4px;
-	margin: 0;
-	border-radius: 4px;
-	background-color: var(--discord-embed-quote-bar);
-	content: "";
-}
-
-.discord-embed-description :deep(blockquote > *) {
-	padding: 0 8px 0 12px;
-}
-</style>
-
-<!--
-  Unscoped on purpose: slot content keeps the caller scope id, so a scoped
-  :deep(strong)::after does not always win in DevTools / cascade. Vue's
-  whitespace:condense also drops spaces between </strong> and following nodes.
--->
-<style>
-.discord-embed .discord-embed-description strong::after {
-	content: " ";
-}
-</style>

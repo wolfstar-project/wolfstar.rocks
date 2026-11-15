@@ -34,12 +34,12 @@ const axeRunOptions: RunOptions = {
  * Pass `include` for nodes outside the wrapper tree (e.g. Teleport targets).
  */
 export async function runAxe(
-	wrapper: VueWrapper,
+	target: VueWrapper | Element,
 	options?: { include?: Element[] },
 ): Promise<AxeResults> {
 	const container = document.createElement("div");
 	document.body.appendChild(container);
-	container.appendChild(wrapper.element.cloneNode(true));
+	container.appendChild((target instanceof Element ? target : target.element).cloneNode(true));
 	for (const element of options?.include ?? []) {
 		container.appendChild(element.cloneNode(true));
 	}

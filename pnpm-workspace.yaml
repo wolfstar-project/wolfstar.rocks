@@ -64,6 +64,10 @@ minimumReleaseAgeExclude:
     - unrouting@0.3.2
 
 overrides:
+    # Nuxt 4.6.4 resolves `devServer.host` to `{}` when no host is set, and
+    # @nuxt/cli 4.0.1 crashes on it (`options.hostname.toLowerCase is not a function`).
+    # 4.0.3 ignores the malformed value. Drop this once nuxt ships a cli >= 4.0.3.
+    "@nuxt/cli": 4.0.3
     # Keep a single discord-api-types instance; two copies make structurally
     # identical Discord payload types nominally incompatible during typecheck
     discord-api-types: 0.38.58
@@ -97,7 +101,7 @@ shellEmulator: true
 # those callers as hung, so there the patch lets each call run on its own (see
 # docs/arch/cloudflare-workers.md).
 patchedDependencies:
-    "@i18n-micro/path-strategy@1.3.20": patches/@i18n-micro__path-strategy@1.3.20.patch
+    "@i18n-micro/path-strategy": patches/@i18n-micro__path-strategy.patch
     nitropack@2.13.6: patches/nitropack@2.13.6.patch
     nuxt-studio@1.8.0: patches/nuxt-studio@1.8.0.patch
     prisma-orm-extension-typed-json: patches/prisma-orm-extension-typed-json.patch

@@ -13,6 +13,8 @@ export interface DirectMessageThreadInfo {
 	id: DirectMessageThreadId;
 	name: string;
 	avatar: string;
+	/** The name its posts and its row in the list carry on Discord, when not the bot's own. */
+	author?: string;
 	/** What the thread is for, shown at its top. */
 	introKey: string;
 	/** The route its posts are read from; a thread without one has none yet. */
@@ -25,6 +27,7 @@ export interface DirectMessageThread extends DirectMessageThreadInfo {
 
 export const DIRECT_MESSAGE_THREADS: readonly DirectMessageThreadInfo[] = [
 	{
+		author: "WolfStar Announcements",
 		avatar: "/avatars/wolfstar.png",
 		id: "wolfstar",
 		introKey: "dashboard.dm.wolfstar_intro",
@@ -68,4 +71,18 @@ export function groupNewsByDay<T extends { at: string }>(news: readonly T[]) {
 		else days.push({ day, news: [item] });
 	}
 	return days;
+}
+
+/** How long after a post the next one still joins it, as in Discord. */
+const POST_GROUP_WINDOW = 7 * 60_000;
+
+/**
+ * Whether a post joins the one before it, as Discord groups an author's
+ * messages: it is drawn without the avatar and the name, its time in the
+ * margin. Every post of a thread has the same author, so only the time counts.
+ */
+export function continuesPost(previous: { at: string } | undefined, item: { at: string }): boolean {
+	if (!previous) return false;
+	const gap = Date.parse(item.at) - Date.parse(previous.at);
+	return gap >= 0 && gap <= POST_GROUP_WINDOW;
 }

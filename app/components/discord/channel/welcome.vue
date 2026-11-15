@@ -1,25 +1,26 @@
 <template>
-	<section class="discord-channel-welcome">
-		<div class="discord-channel-welcome-icon" aria-hidden="true">
+	<ChannelWelcome class="discord-channel-welcome pb-0 font-whitney sm:px-6 sm:pt-12">
+		<ChannelWelcomeIcon>
 			<UIcon name="discord:text-channel" class="size-10" />
-		</div>
-		<h2 class="discord-channel-welcome-title">
+		</ChannelWelcomeIcon>
+		<ChannelWelcomeTitle class="sm:text-[32px]">
 			{{ ts("discord.welcome.title", { name: channelName }) }}
-		</h2>
-		<p class="discord-channel-welcome-description">
+		</ChannelWelcomeTitle>
+		<ChannelWelcomeDescription>
 			{{ ts("discord.welcome.start", { name: channelName })
 			}}<template v-if="topic">{{ ` ${topic}` }}</template>
-		</p>
-		<div class="discord-channel-welcome-edit" aria-hidden="true">
+		</ChannelWelcomeDescription>
+		<!-- Decorative: the showcase cannot edit the channel, so it is not a control. -->
+		<ChannelWelcomeAction
+			aria-hidden="true"
+			tabindex="-1"
+			class="pointer-events-none cursor-default"
+		>
 			<UIcon name="discord:edit" class="size-4 shrink-0" />
 			<span>{{ ts("discord.welcome.edit") }}</span>
-		</div>
-		<div class="discord-channel-welcome-date">
-			<span aria-hidden="true" />
-			<time :datetime="dateTime">{{ date }}</time>
-			<span aria-hidden="true" />
-		</div>
-	</section>
+		</ChannelWelcomeAction>
+		<ChannelWelcomeDate :date-time>{{ date }}</ChannelWelcomeDate>
+	</ChannelWelcome>
 </template>
 
 <script lang="ts">
@@ -33,41 +34,15 @@ interface ChannelWelcomeProps {
 </script>
 
 <script setup lang="ts">
+import {
+	ChannelWelcome,
+	ChannelWelcomeAction,
+	ChannelWelcomeDate,
+	ChannelWelcomeDescription,
+	ChannelWelcomeIcon,
+	ChannelWelcomeTitle,
+} from "~/components/ui/channel-welcome";
+
 const { ts } = useI18n();
 defineProps<ChannelWelcomeProps>();
 </script>
-
-<style scoped>
-@reference "@/assets/css/main.css";
-
-.discord-channel-welcome {
-	@apply px-4 pt-10 font-whitney sm:px-6 sm:pt-12;
-}
-
-.discord-channel-welcome-icon {
-	@apply mb-4 flex size-[68px] items-center justify-center rounded-full text-base-content;
-	background-color: oklch(from var(--color-base-content) l c h / 0.12);
-}
-
-.discord-channel-welcome-title {
-	@apply text-[28px] leading-tight font-bold text-base-content sm:text-[32px];
-}
-
-.discord-channel-welcome-description {
-	@apply mt-2 text-base text-muted;
-}
-
-.discord-channel-welcome-edit {
-	@apply mt-3 inline-flex items-center gap-2 rounded px-4 py-1.5 text-sm font-medium text-base-content;
-	background-color: oklch(from var(--color-base-content) l c h / 0.1);
-}
-
-.discord-channel-welcome-date {
-	@apply mt-6 grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-[12px] font-semibold tracking-wide text-muted uppercase;
-}
-
-.discord-channel-welcome-date > span {
-	@apply h-px;
-	background-color: oklch(from var(--color-base-content) l c h / 0.1);
-}
-</style>

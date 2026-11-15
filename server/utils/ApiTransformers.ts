@@ -18,9 +18,7 @@ import type {
 } from "#shared/types";
 import type {
 	APIChannel,
-	APIDMChannel,
 	APIEmoji,
-	APIGroupDMChannel,
 	APIGuild,
 	APIGuildCategoryChannel,
 	APIGuildChannel,
@@ -40,7 +38,6 @@ import type {
 	RESTGetAPIGuildChannelsResult,
 } from "discord-api-types/v10";
 import { DiscordSnowflake } from "@sapphire/snowflake";
-import { lazy } from "@sapphire/utilities";
 import { ChannelType, GuildFeature } from "discord-api-types/v10";
 import { createError, log } from "evlog";
 
@@ -116,7 +113,7 @@ export function flattenGuild(
 
 // #region Emoji
 
-export function flattenGuildEmoji(guildId: string, emoji: APIEmoji): FlattenedGuildEmoji {
+function flattenGuildEmoji(guildId: string, emoji: APIEmoji): FlattenedGuildEmoji {
 	return {
 		animated: emoji.animated ?? false,
 		available: emoji.available ?? false,
@@ -158,80 +155,6 @@ function transformPermissionOverwrites(
 			type: String(overwrite.type),
 		},
 	]);
-}
-
-export function getParentChannel(
-	channel: APIThreadChannel | Exclude<APIChannel, APIDMChannel | APIGroupDMChannel>,
-) {
-	const channelResult = lazy(async () => {
-		if (!channel.parent_id) {
-			return null;
-		}
-		const parentChannel = await useApi().channels.get(channel.parent_id);
-		if (parentChannel.type !== ChannelType.GuildCategory) {
-			return null;
-		}
-		return flattenChannelCategory(parentChannel as APIGuildCategoryChannel);
-	});
-	return channelResult;
-}
-
-// #endregion Role
-
-// #region Channel
-
-export function flattenChannel(channel: APINewsChannel): FlattenedAnnouncementChannel;
-export function flattenChannel(channel: APITextChannel): FlattenedTextChannel;
-export function flattenChannel(channel: APIGuildVoiceChannel): FlattenedVoiceChannel;
-export function flattenChannel(channel: APIDMChannel): FlattenedDMChannel;
-export function flattenChannel(channel: APIThreadChannel): FlattenedThreadChannel;
-export function flattenChannel(channel: APIGuildCategoryChannel): FlattenedCategoryChannel;
-export function flattenChannel(channel: APIGuildForumChannel): FlattenedForumChannel;
-export function flattenChannel(channel: APIGuildMediaChannel): FlattenedMediaChannel;
-export function flattenChannel(channel: APIThreadChannel | APIChannel): FlattenedAnyChannel {
-	switch (channel.type) {
-		case ChannelType.GuildAnnouncement: {
-			return flattenChannelAnnouncement(channel);
-		}
-		case ChannelType.GuildText: {
-			return flattenChannelText(channel);
-		}
-		case ChannelType.GuildVoice: {
-			return flattenChannelVoice(channel);
-		}
-		case ChannelType.GuildStageVoice: {
-			return flattenChannelStageVoice(channel);
-		}
-		case ChannelType.DM: {
-			return flattenChannelDM(channel);
-		}
-		case ChannelType.GroupDM: {
-			return flattenChannelGroupDM(channel);
-		}
-		case ChannelType.GuildCategory: {
-			return flattenChannelCategory(channel);
-		}
-		case ChannelType.PublicThread:
-		case ChannelType.PrivateThread:
-		case ChannelType.AnnouncementThread: {
-			return flattenChannelThread(channel);
-		}
-
-		case ChannelType.GuildForum: {
-			return flattenChannelForum(channel);
-		}
-
-		case ChannelType.GuildMedia: {
-			return flattenChannelMedia(channel);
-		}
-		default: {
-			throw createError({
-				message: "Unsupported channel type",
-				status: 500,
-				why: "Discord returned a channel with an unrecognized type",
-			});
-		}
-	}
 }
 
 export function flattenGuildChannel(channel: APINewsChannel): FlattenedAnnouncementChannel;
@@ -371,20 +294,6 @@ function flattenChannelStageVoice(
 	};
 }
 
-function flattenChannelGroupDM(channel: APIGroupDMChannel): FlattenedGroupDMChannel {
-	return {
-		applicationId: channel.application_id ?? null,
-		createdTimestamp: DiscordSnowflake.timestampFrom(channel.id),
-		icon: channel.icon ?? null,
-		id: channel.id,
-		lastMessageId: channel.last_message_id ?? null,
-		name: channel.name ?? null,
-		ownerId: channel.owner_id ?? null,
-		recipients: channel.recipients?.map((recipient) => flattenUser(recipient)) ?? null,
-		type: channel.type,
-	};
-}
-
 /**
  * A forum or media channel's tags, each with its emoji as one object. Discord
  * can leave `available_tags` out of a guild's channel list.
@@ -449,15 +358,6 @@ function flattenChannelMedia(channel: APIGuildMediaChannel): FlattenedMediaChann
 	};
 }
 
-function flattenChannelDM(channel: APIDMChannel): FlattenedDMChannel {
-	return {
-		createdTimestamp: DiscordSnowflake.timestampFrom(channel.id),
-		id: channel.id,
-		recipient: channel.recipients?.[0]?.id ?? null,
-		type: channel.type,
-	};
-}
-
 function flattenChannelThread(channel: APIThreadChannel, guildId?: string): FlattenedThreadChannel {
 	return {
 		id: channel.id,
@@ -490,7 +390,7 @@ function flattenChannelThread(channel: APIThreadChannel, guildId?: string): Flat
 
 // #region User
 
-export function flattenUser(user: APIUser): FlattenedUser {
+function flattenUser(user: APIUser): FlattenedUser {
 	return {
 		avatar: user.avatar,
 		bot: user.bot ?? false,

@@ -1,7 +1,6 @@
 import type {
 	APIEmoji,
 	APIGuild,
-	APIGuildChannel,
 	APIGuildForumTag,
 	ChannelFlags,
 	ChannelType,
@@ -32,11 +31,6 @@ export interface OauthFlattenedGuild extends PartialOauthFlattenedGuild {
 	 * Only `/api/guilds/:guild` sets it, and only when it is true.
 	 */
 	setupPending?: boolean;
-}
-
-export interface OauthFlattenedUser {
-	user: FlattenedUser;
-	guilds: OauthFlattenedGuild[];
 }
 
 export interface LoginData {
@@ -149,19 +143,19 @@ export interface FlattenedRole {
 
 // #endregion
 
-export interface FlattenedPartialChannel {
+interface FlattenedPartialChannel {
 	id: string;
 	createdTimestamp: number;
 }
 
-export interface FlattenedBaseChannel<
+interface FlattenedBaseChannel<
 	T extends GuildChannelTypeWithThreads,
 > extends FlattenedPartialChannel {
 	type: T;
 	flags?: ChannelFlags;
 }
 
-export interface FlattenedGuildTextBasedChannel<
+interface FlattenedGuildTextBasedChannel<
 	T extends GuildChannelTypeWithThreads,
 > extends FlattenedGuildChannel<T> {
 	lastMessageId?: Snowflake | null;
@@ -181,9 +175,7 @@ export interface FlattenedGuildChannel<
 	rawPosition: number;
 }
 
-export interface FlattenedBaseVoiceChannel<
-	T extends ChannelType.GuildStageVoice | ChannelType.GuildVoice,
->
+interface FlattenedBaseVoiceChannel<T extends ChannelType.GuildStageVoice | ChannelType.GuildVoice>
 	extends
 		FlattenedGuildChannel<T>,
 		Omit<FlattenedGuildTextBasedChannel<T>, "lastPinTimestamp" | "name"> {
@@ -203,9 +195,7 @@ export type GuildChannelType =
 	| ChannelType.GuildForum
 	| ChannelType.GuildNews;
 
-export type GuildChannelTypeWithThreads = GuildChannelType | ThreadChannelType;
-
-export type BaseAPIGuildChannel = APIGuildChannel<GuildChannelTypeWithThreads>;
+type GuildChannelTypeWithThreads = GuildChannelType | ThreadChannelType;
 
 export interface FlattenedAnnouncementChannel extends FlattenedGuildTextBasedChannel<ChannelType.GuildAnnouncement> {
 	nsfw: boolean;
@@ -226,7 +216,7 @@ export type FlattenedStageVoiceChannel = FlattenedBaseVoiceChannel<ChannelType.G
 export type FlattenedVoiceChannel = FlattenedBaseVoiceChannel<ChannelType.GuildVoice>;
 
 // #region Forum and Media Channels
-export interface FlattenedThreadOnlyChannel<
+interface FlattenedThreadOnlyChannel<
 	T extends ChannelType.GuildForum | ChannelType.GuildMedia,
 > extends FlattenedGuildChannel<T> {
 	topic: string | null;
@@ -240,19 +230,16 @@ export interface FlattenedThreadOnlyChannel<
 	defaultSortOrder: SortOrderType | null;
 }
 
-export interface FlattenedGuildForumTag extends Exclude<
-	APIGuildForumTag,
-	"emoji_id" | "emoji_name"
-> {
+interface FlattenedGuildForumTag extends Exclude<APIGuildForumTag, "emoji_id" | "emoji_name"> {
 	emoji: FlattenedEmojiGuildForumTag;
 }
-export interface FlattenedEmojiGuildForumTag {
+interface FlattenedEmojiGuildForumTag {
 	id: string | null;
 	name: string | null;
 }
 // #endregion
 
-export interface FlattenedBaseThreadChannel<T extends ThreadChannelType> extends Pick<
+interface FlattenedBaseThreadChannel<T extends ThreadChannelType> extends Pick<
 	FlattenedBaseChannel<T>,
 	"id" | "createdTimestamp"
 > {
@@ -274,12 +261,12 @@ export interface FlattenedBaseThreadChannel<T extends ThreadChannelType> extends
 	rawPosition: number | null;
 }
 
-export type FlattenedAnnouncementThreadChannel =
+type FlattenedAnnouncementThreadChannel =
 	FlattenedBaseThreadChannel<ChannelType.AnnouncementThread>;
 
-export type FlattenedPublicThreadChannel = FlattenedBaseThreadChannel<ChannelType.PublicThread>;
+type FlattenedPublicThreadChannel = FlattenedBaseThreadChannel<ChannelType.PublicThread>;
 
-export type FlattenedPrivateThreadChannel = FlattenedBaseThreadChannel<ChannelType.PrivateThread>;
+type FlattenedPrivateThreadChannel = FlattenedBaseThreadChannel<ChannelType.PrivateThread>;
 
 export type FlattenedThreadChannel =
 	| FlattenedAnnouncementThreadChannel
@@ -394,7 +381,7 @@ export interface WolfCommand extends FlattenedCommand {
 	subCategory: string;
 }
 
-export interface Preconditions {
+interface Preconditions {
 	entries: PreconditionsEntry[];
 
 	mode: number;
@@ -402,7 +389,7 @@ export interface Preconditions {
 	runCondition: number;
 }
 
-export interface PreconditionsEntry {
+interface PreconditionsEntry {
 	entries: PreconditionEntryEntry[];
 
 	mode: number;
@@ -410,7 +397,7 @@ export interface PreconditionsEntry {
 	runCondition: number;
 }
 
-export interface PreconditionEntryEntry {
+interface PreconditionEntryEntry {
 	context: unknown;
 
 	name: string;

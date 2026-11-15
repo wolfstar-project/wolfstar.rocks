@@ -30,7 +30,7 @@ export const MaximumAutoModerationRuleIgnored = 100;
 /**
  * A word as a `Words` rule stores it: lowercase and without look-alike characters, as the messages are matched.
  */
-export function normalizeAutoModerationRuleWord(word: string) {
+function normalizeAutoModerationRuleWord(word: string) {
 	return removeConfusables(word.trim().toLowerCase());
 }
 

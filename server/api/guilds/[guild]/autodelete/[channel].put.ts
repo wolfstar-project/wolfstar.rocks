@@ -4,9 +4,9 @@ import {
 	readChannelParam,
 	throwAutoChannelError,
 	throwInvalidAutoChannelBody,
-	useManagedGuild,
 } from "#server/utils/auto-channels/route";
 import { assertGuildTextChannel, setAutoDelete } from "#server/utils/auto-channels/write";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 import { parseAutoDeleteData } from "#shared/utils/auto-channels";
 
 /**

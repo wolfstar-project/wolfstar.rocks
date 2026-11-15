@@ -1,5 +1,6 @@
-import { authorizeAutoChannelManager, useManagedGuild } from "#server/utils/auto-channels/route";
+import { authorizeAutoChannelManager } from "#server/utils/auto-channels/route";
 import { readAutoDeletes } from "#server/utils/auto-channels/write";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 
 /** `GET /api/guilds/:guild/autodelete`: the channels whose messages are deleted, oldest first. */
 export default defineWrappedResponseHandler(

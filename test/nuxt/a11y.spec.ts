@@ -35,8 +35,6 @@ import {
 	DiscordMemberList,
 	DiscordMessage,
 	DiscordMessages,
-	DiscordReaction,
-	DiscordReactions,
 	DiscordRole,
 	DiscordChatInputCommand,
 	DiscordChatInputCommandSuggestion,
@@ -532,36 +530,6 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("DiscordReaction", () => {
-			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(DiscordReaction, {
-					props: { count: 5 },
-					slots: { default: "👍" },
-				});
-				const results = await runAxe(component);
-				expect(results.violations).toEqual([]);
-			});
-
-			it("should have no accessibility violations with self reaction", async () => {
-				const component = await mountSuspended(DiscordReaction, {
-					props: { count: 3, self: true },
-					slots: { default: "❤️" },
-				});
-				const results = await runAxe(component);
-				expect(results.violations).toEqual([]);
-			});
-		});
-
-		describe("DiscordReactions", () => {
-			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(DiscordReactions, {
-					slots: { default: "<span>Reaction slot</span>" },
-				});
-				const results = await runAxe(component);
-				expect(results.violations).toEqual([]);
-			});
-		});
-
 		describe("DiscordStringSelectMenu", () => {
 			const selectOptions = [
 				{
@@ -591,13 +559,21 @@ describe("component accessibility audits", () => {
 					props: { options: selectOptions, ariaLabel: "Configuration category" },
 					attachTo: document.body,
 				});
-				await component.find("button[role='combobox']").trigger("click");
+				const trigger = component.find("button[role='combobox']");
+				(trigger.element as HTMLElement).focus();
+				await trigger.trigger("keydown", { key: "Enter" });
 				await nextTick();
-				const panel = document.querySelector(".discord-string-select-menu-panel");
-				expect(panel).not.toBeNull();
-				const results = await runAxe(component, {
-					include: panel ? [panel] : [],
-				});
+				await new Promise((resolve) => requestAnimationFrame(resolve));
+				await nextTick();
+				expect(trigger.attributes("aria-expanded")).toBe("true");
+				const panel = document.querySelector("[role='listbox']");
+				if (!panel) throw new Error("The select menu did not open");
+				// The panel alone. While it is open Reka UI hides the rest of the page from
+				// assistive technology, the trigger included, and holds the focus in the list;
+				// axe reads the hidden trigger as focusable (`aria-hidden-focus`). The closed
+				// test above audits the trigger.
+				const results = await runAxe(panel);
+				component.unmount();
 				expect(results.violations).toEqual([]);
 			});
 		});

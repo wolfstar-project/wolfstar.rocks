@@ -14,7 +14,7 @@ export type LogDensity = "cozy" | "compact";
 export type TimeFormat = "auto" | "12h" | "24h";
 
 /** Which of Discord's two dark themes the dark mode draws: Ash, or the darker Dark. */
-export type DarkShade = "ash" | "dark";
+type DarkShade = "ash" | "dark";
 
 export interface AppSettings {
 	colorMode: ColorModePreference;

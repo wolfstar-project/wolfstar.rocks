@@ -1,110 +1,87 @@
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { describe, expect, it, vi } from "vitest";
+import { userEvent } from "vitest/browser";
 import DiscordScrollbar from "~/components/discord/scrollbar.vue";
 
+type ScrollbarProps = {
+	overlay?: boolean;
+	autoHide?: boolean;
+	themed?: boolean;
+	maxThumbHeight?: number;
+};
+
+// A 200px scrollbar over 1000px of content.
+async function mountTall(props: ScrollbarProps) {
+	const wrapper = await mountSuspended(DiscordScrollbar, {
+		props,
+		slots: { default: '<div class="tall" style="height: 1000px">tall</div>' },
+		attachTo: document.body,
+	});
+	const root = wrapper.element as HTMLElement;
+	root.style.height = "200px";
+	const parts = {
+		wrapper,
+		root,
+		viewport: wrapper.find(".discord-scrollbar-viewport").element as HTMLElement,
+		track: wrapper.find(".discord-scrollbar-track").element as HTMLElement,
+		thumb: wrapper.find(".discord-scrollbar-thumb").element as HTMLElement,
+		rail: wrapper.find(".discord-scrollbar-thumb-rail").element as HTMLElement,
+	};
+	await vi.waitFor(() => expect(parts.thumb.style.height).not.toBe("0px"));
+	return parts;
+}
+
+const pointer = (type: string, clientY: number, target: HTMLElement) =>
+	target.dispatchEvent(
+		new PointerEvent(type, { bubbles: true, button: 0, clientY, pointerId: 1 }),
+	);
+
 describe("DiscordScrollbar", () => {
-	it("renders viewport, track, and slotted content (positive)", async () => {
+	it("draws a hidden-from-AT thumb when the content overflows (positive)", async () => {
 		// ARRANGE / ACT
-		const wrapper = await mountSuspended(DiscordScrollbar, {
-			props: { alwaysShowTrack: true },
-			slots: { default: "<p class='scroll-item'>Tall content</p>" },
-		});
+		const { wrapper, viewport, track, thumb } = await mountTall({});
 
 		// ASSERT
-		expect(wrapper.find(".discord-scrollbar").exists()).toBe(true);
-		expect(wrapper.find(".discord-scrollbar-viewport").exists()).toBe(true);
-		expect(wrapper.find(".discord-scrollbar-track").exists()).toBe(true);
-		expect(wrapper.find(".discord-scrollbar-track").attributes("aria-hidden")).toBe("true");
-		expect(wrapper.find(".scroll-item").text()).toBe("Tall content");
+		expect(viewport.clientHeight).toBe(200);
+		expect(track.getAttribute("aria-hidden")).toBe("true");
+		expect(getComputedStyle(track).display).not.toBe("none");
+		expect(thumb.classList).toContain("rounded-full");
+		expect(getComputedStyle(thumb).width).toBe("5px");
+		expect(wrapper.find(".tall").text()).toBe("tall");
+
+		wrapper.unmount();
 	});
 
-	it("shows arrow controls when showArrows is enabled (positive)", async () => {
-		// ARRANGE / ACT
-		const wrapper = await mountSuspended(DiscordScrollbar, {
-			props: { showArrows: true, alwaysShowTrack: true },
-			slots: { default: "<div style='height: 400px'>overflow</div>" },
-		});
-
-		// ASSERT
-		expect(wrapper.find(".discord-scrollbar-with-arrows").exists()).toBe(true);
-		expect(wrapper.find(".discord-scrollbar-arrow-up").exists()).toBe(true);
-		expect(wrapper.find(".discord-scrollbar-arrow-down").exists()).toBe(true);
-		expect(wrapper.find(".discord-scrollbar-arrow-up").attributes("aria-hidden")).toBe("true");
-	});
-
-	it("omits arrow controls by default (negative)", async () => {
+	it("draws no thumb when the content fits (negative)", async () => {
 		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordScrollbar, {
 			slots: { default: "<p>short</p>" },
-		});
-
-		// ASSERT
-		expect(wrapper.find(".discord-scrollbar-with-arrows").exists()).toBe(false);
-		expect(wrapper.find(".discord-scrollbar-arrow-up").exists()).toBe(false);
-		expect(wrapper.find(".discord-scrollbar-arrow-down").exists()).toBe(false);
-	});
-
-	it("applies auto-hide class and renders below-viewport slot (positive)", async () => {
-		// ARRANGE / ACT
-		const wrapper = await mountSuspended(DiscordScrollbar, {
-			props: { autoHide: true },
-			slots: {
-				"default": "<p>list</p>",
-				"below-viewport": "<nav class='rail'>rail</nav>",
-			},
-		});
-
-		// ASSERT
-		expect(wrapper.find(".discord-scrollbar-auto-hide").exists()).toBe(true);
-		expect(wrapper.find(".discord-scrollbar-with-below-viewport").exists()).toBe(true);
-		expect(wrapper.find(".discord-scrollbar-below-viewport .rail").text()).toBe("rail");
-	});
-
-	it("does not render a below-viewport region when that slot is empty (negative)", async () => {
-		// ARRANGE / ACT
-		const wrapper = await mountSuspended(DiscordScrollbar, {
-			slots: { default: "<p>only viewport</p>" },
-		});
-
-		// ASSERT
-		expect(wrapper.find(".discord-scrollbar-below-viewport").exists()).toBe(false);
-		expect(wrapper.find(".discord-scrollbar-with-below-viewport").exists()).toBe(false);
-	});
-
-	it("exposes Discord floating-pill scrollbar tokens (positive)", async () => {
-		// ARRANGE / ACT — attach to the document so getComputedStyle resolves the
-		// scoped tokens; a detached element reports empty computed styles.
-		const wrapper = await mountSuspended(DiscordScrollbar, {
-			props: { alwaysShowTrack: true },
-			slots: { default: "<p>content</p>" },
 			attachTo: document.body,
 		});
-		const root = wrapper.find(".discord-scrollbar").element as HTMLElement;
-		const styles = getComputedStyle(root);
 
-		// ASSERT — matches Discord dark thumb geometry from reference crops
-		expect(styles.getPropertyValue("--discord-scrollbar-thumb-width").trim()).toBe("5px");
-		expect(styles.getPropertyValue("--discord-scrollbar-edge-inset").trim()).toBe("3px");
-		expect(styles.getPropertyValue("--discord-scrollbar-end-inset").trim()).toBe("4px");
-		expect(wrapper.find(".discord-scrollbar-thumb").classes()).toContain("rounded-full");
+		// ASSERT
+		const track = wrapper.find(".discord-scrollbar-track").element as HTMLElement;
+		expect(getComputedStyle(track).display).toBe("none");
+
+		wrapper.unmount();
+	});
+
+	it("caps the thumb at maxThumbHeight (positive)", async () => {
+		// ARRANGE / ACT — the proportional thumb would be about 38px
+		const { wrapper, thumb } = await mountTall({ maxThumbHeight: 26 });
+
+		// ASSERT
+		expect(thumb.style.height).toBe("26px");
 
 		wrapper.unmount();
 	});
 
 	it("floats the thumb over the content and tints it from the theme when asked (positive)", async () => {
 		// ARRANGE / ACT
-		const wrapper = await mountSuspended(DiscordScrollbar, {
-			props: { alwaysShowTrack: true, overlay: true, themed: true },
-			slots: { default: "<p>content</p>" },
-			attachTo: document.body,
-		});
-		const root = wrapper.find(".discord-scrollbar").element as HTMLElement;
+		const { wrapper, root, track } = await mountTall({ overlay: true, themed: true });
 
 		// ASSERT — one column for the content, the track laid over it
-		expect(root.classList).toContain("discord-scrollbar-overlay");
-		expect(root.classList).toContain("discord-scrollbar-themed");
 		expect(getComputedStyle(root).gridTemplateColumns.split(" ")).toHaveLength(1);
-		const track = wrapper.find(".discord-scrollbar-track").element as HTMLElement;
 		expect(getComputedStyle(track).position).toBe("absolute");
 		expect(getComputedStyle(root).getPropertyValue("--discord-scrollbar-thumb")).toContain(
 			"color-mix",
@@ -113,17 +90,11 @@ describe("DiscordScrollbar", () => {
 		wrapper.unmount();
 	});
 
-	it("keeps a lane for the thumb and Discord's grey by default (negative)", async () => {
+	it("keeps a lane for the thumb and newt/ui's grey by default (negative)", async () => {
 		// ARRANGE / ACT
-		const wrapper = await mountSuspended(DiscordScrollbar, {
-			props: { alwaysShowTrack: true },
-			slots: { default: "<p>content</p>" },
-			attachTo: document.body,
-		});
-		const root = wrapper.find(".discord-scrollbar").element as HTMLElement;
+		const { wrapper, root } = await mountTall({});
 
 		// ASSERT
-		expect(root.classList).not.toContain("discord-scrollbar-overlay");
 		expect(getComputedStyle(root).gridTemplateColumns.split(" ")).toHaveLength(2);
 		expect(getComputedStyle(root).getPropertyValue("--discord-scrollbar-thumb")).not.toContain(
 			"color-mix",
@@ -132,28 +103,25 @@ describe("DiscordScrollbar", () => {
 		wrapper.unmount();
 	});
 
-	async function mountTall(props: { overlay?: boolean }) {
-		// A 200px viewport over 1000px of content.
-		const wrapper = await mountSuspended(DiscordScrollbar, {
-			props,
-			slots: { default: '<div style="height: 1000px">tall</div>' },
-			attachTo: document.body,
-		});
-		(wrapper.element as HTMLElement).style.height = "200px";
-		const parts = {
-			wrapper,
-			viewport: wrapper.find(".discord-scrollbar-viewport").element as HTMLElement,
-			thumb: wrapper.find(".discord-scrollbar-thumb").element as HTMLElement,
-			rail: wrapper.find(".discord-scrollbar-thumb-rail").element as HTMLElement,
-		};
-		await vi.waitFor(() => expect(parts.thumb.style.height).not.toBe("0px"));
-		return parts;
-	}
+	it("hides the thumb until hover when autoHide is set (positive)", async () => {
+		// ARRANGE — the browser's real pointer may rest wherever an earlier spec left it,
+		// over this scrollbar too. Move it off the scrollbar: the browser only
+		// recomputes `:hover` when the pointer moves.
+		const { wrapper, root, thumb } = await mountTall({ autoHide: true });
+		await userEvent.unhover(root);
 
-	const pointer = (type: string, clientY: number, target: HTMLElement) =>
-		target.dispatchEvent(
-			new PointerEvent(type, { bubbles: true, button: 0, clientY, pointerId: 1 }),
-		);
+		// ASSERT — the thumb fades out over 0.1s once nothing hovers the root
+		await vi.waitFor(() => expect(root.matches(":hover")).toBe(false));
+		await vi.waitFor(() => expect(getComputedStyle(thumb).opacity).toBe("0"));
+
+		// ACT — hover it
+		await userEvent.hover(root);
+
+		// ASSERT
+		await vi.waitFor(() => expect(getComputedStyle(thumb).opacity).toBe("1"));
+
+		wrapper.unmount();
+	});
 
 	it("scrolls the content when the thumb is dragged, over the content too (positive)", async () => {
 		// ARRANGE — the overlay thumb is the only part that takes the pointer
@@ -168,6 +136,21 @@ describe("DiscordScrollbar", () => {
 
 		// ASSERT — the content moved by more than the pointer did
 		expect(viewport.scrollTop).toBeGreaterThan(40);
+
+		wrapper.unmount();
+	});
+
+	it("stops scrolling when the pointer is released (negative)", async () => {
+		// ARRANGE
+		const { wrapper, viewport, thumb } = await mountTall({ overlay: true });
+		pointer("pointerdown", 10, thumb);
+		pointer("pointerup", 10, thumb);
+
+		// ACT — a move after the release
+		pointer("pointermove", 80, thumb);
+
+		// ASSERT
+		expect(viewport.scrollTop).toBe(0);
 
 		wrapper.unmount();
 	});

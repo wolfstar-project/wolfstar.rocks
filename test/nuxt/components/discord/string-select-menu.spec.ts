@@ -1,8 +1,8 @@
-import type { DOMWrapper } from "@vue/test-utils";
 import type { StringSelectMenuOption } from "~/types/discord";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
-import { DOMWrapper as VtDOMWrapper } from "@vue/test-utils";
+import { DOMWrapper } from "@vue/test-utils";
 import { afterEach, describe, expect, it } from "vitest";
+import { nextTick } from "vue";
 import StringSelectMenu from "~/components/discord/string-select-menu.vue";
 
 const options: StringSelectMenuOption[] = [
@@ -27,20 +27,22 @@ const options: StringSelectMenuOption[] = [
 	},
 ];
 
-// mountSuspended wrappers aren't auto-unmounted, so their window-level side effects
-// (defineShortcuts keydown, the capture-phase scroll listener, onClickOutside) and any
-// open Teleport panel would otherwise leak into later tests and crash Vue on the next
-// patch. Track every wrapper and unmount it before clearing any leftover DOM.
+// mountSuspended wrappers are not unmounted for us, and the open panel is portalled
+// to `body`: unmount every wrapper so no panel or listener leaks into the next test.
 const mountedWrappers: { unmount: () => void }[] = [];
 
 afterEach(() => {
 	while (mountedWrappers.length) mountedWrappers.pop()?.unmount();
-	// Teleported panels outlive the wrapper unless unmounted — clear any stragglers.
-	document.querySelectorAll(".discord-string-select-menu-panel").forEach((el) => el.remove());
-	document.querySelectorAll(".discord-string-select-menu").forEach((el) => el.remove());
 });
 
-async function mountMenu(props: Partial<{ disabled: boolean; placeholder: string }> = {}) {
+type MenuProps = Partial<{
+	options: StringSelectMenuOption[];
+	disabled: boolean;
+	placeholder: string;
+	ariaLabel: string;
+}>;
+
+async function mountMenu(props: MenuProps = {}) {
 	const wrapper = await mountSuspended(StringSelectMenu, {
 		props: { options, ...props },
 		attachTo: document.body,
@@ -49,34 +51,29 @@ async function mountMenu(props: Partial<{ disabled: boolean; placeholder: string
 	return wrapper;
 }
 
-/** Listbox is Teleported to `body`, so query the document rather than the wrapper tree. */
+/** The panel is portalled to `body`, so query the document rather than the wrapper tree. */
 function findListbox() {
-	const el = document.querySelector<HTMLElement>("[role='listbox']");
-	expect(el).not.toBeNull();
-	return new VtDOMWrapper(el!);
+	return document.querySelector<HTMLElement>("[role='listbox']");
 }
 
 function findOptions() {
 	return Array.from(
 		document.querySelectorAll<HTMLElement>("[role='option']"),
-		(el) => new VtDOMWrapper(el),
+		(element) => new DOMWrapper(element),
 	);
 }
 
-function findPanel() {
-	const el = document.querySelector<HTMLElement>(".discord-string-select-menu-panel");
-	expect(el).not.toBeNull();
-	return new VtDOMWrapper(el!);
+/** Wait for the portal, the popper and the focus move that follow an open or a pick. */
+async function settle() {
+	await nextTick();
+	await new Promise((resolve) => requestAnimationFrame(resolve));
+	await nextTick();
 }
 
-/**
- * The menu's shortcuts are registered through `defineShortcuts`, which listens on the
- * window and is gated on the trigger being focused (or the menu already being open), so
- * keyboard tests have to focus the trigger the way a real Tab would.
- */
-async function pressKey(trigger: DOMWrapper<Element>, key: string) {
-	if (trigger.element instanceof HTMLElement) trigger.element.focus();
+async function openWithKeyboard(trigger: DOMWrapper<Element>, key = "Enter") {
+	(trigger.element as HTMLElement).focus();
 	await trigger.trigger("keydown", { key });
+	await settle();
 }
 
 describe("DiscordStringSelectMenu", () => {
@@ -86,86 +83,72 @@ describe("DiscordStringSelectMenu", () => {
 
 		expect(trigger.text()).toContain("Choose an option...");
 		expect(trigger.attributes("aria-expanded")).toBe("false");
-		expect(document.querySelector("[role='listbox']")).toBeNull();
+		expect(findListbox()).toBeNull();
 	});
 
-	it("opens on click and exposes the listbox to assistive tech", async () => {
+	it("falls back to the translated placeholder and accessible name", async () => {
 		const wrapper = await mountMenu();
 		const trigger = wrapper.find("button[role='combobox']");
 
-		await trigger.trigger("click");
-		await nextTick();
+		expect(trigger.text()).toContain("Make a selection");
+		expect(trigger.attributes("aria-label")).toBe("Select an option");
+	});
+
+	it("opens from the keyboard and exposes a labelled listbox", async () => {
+		const wrapper = await mountMenu({ ariaLabel: "Configuration category" });
+		const trigger = wrapper.find("button[role='combobox']");
+
+		await openWithKeyboard(trigger);
 
 		expect(trigger.attributes("aria-expanded")).toBe("true");
-		const listbox = findListbox();
-		expect(listbox.isVisible()).toBe(true);
+		expect(findListbox()?.getAttribute("aria-label")).toBe("Configuration category");
 		expect(findOptions()).toHaveLength(options.length);
-		// The first selectable option is highlighted on open.
-		expect(trigger.attributes("aria-activedescendant")).toBe(
-			findOptions()[0]?.attributes("id"),
+	});
+
+	it("opens on a plain left pointer press", async () => {
+		const wrapper = await mountMenu();
+		const trigger = wrapper.find("button[role='combobox']");
+
+		trigger.element.dispatchEvent(
+			new PointerEvent("pointerdown", { bubbles: true, button: 0, pointerType: "mouse" }),
 		);
+		await settle();
+
+		expect(trigger.attributes("aria-expanded")).toBe("true");
+		expect(findListbox()).not.toBeNull();
 	});
 
-	it("opens the listbox above the trigger by default (Discord near-composer behavior)", async () => {
+	it("draws each emoji as a glyph, not as its Iconify name", async () => {
 		const wrapper = await mountMenu();
-		// Seat the trigger low in the viewport like Discord's near-composer action row,
-		// so there is room above it; flush against the top there is only room below.
-		(wrapper.element as HTMLElement).style.marginTop = "400px";
-		const trigger = wrapper.find("button[role='combobox']");
-		await trigger.trigger("click");
-		await nextTick();
+		await openWithKeyboard(wrapper.find("button[role='combobox']"));
 
-		const panel = findPanel();
-		expect(panel.attributes("data-placement")).toBe("above");
-		expect(panel.classes()).toContain("discord-string-select-menu-panel-above");
-		expect((panel.element as HTMLElement).style.position).toBe("fixed");
-		expect((panel.element as HTMLElement).style.bottom).not.toBe("auto");
+		const option = findOptions()[0]!;
+		expect(option.text()).toContain("Root / Permissions");
+		expect(option.text()).toContain("Currently at: Root / Permissions");
+		expect(option.text()).not.toContain("ph:folder-fill");
+		expect(option.find("[aria-hidden='true'] > *").exists()).toBe(true);
 	});
 
-	it("opens with ArrowDown and skips disabled options while navigating", async () => {
+	it("marks a disabled option and keeps it out of selection", async () => {
 		const wrapper = await mountMenu();
-		const trigger = wrapper.find("button[role='combobox']");
+		await openWithKeyboard(wrapper.find("button[role='combobox']"));
 
-		await pressKey(trigger, "ArrowDown");
-		await nextTick();
-		const optionIds = findOptions().map((o) => o.attributes("id"));
-		expect(trigger.attributes("aria-activedescendant")).toBe(optionIds[0]);
+		const disabled = findOptions()[1]!;
+		expect(disabled.attributes("aria-disabled")).toBe("true");
 
-		// "channels" (index 1) is disabled, so ArrowDown lands on "prefix" (index 2).
-		await pressKey(trigger, "ArrowDown");
-		expect(trigger.attributes("aria-activedescendant")).toBe(optionIds[2]);
+		await disabled.trigger("keydown", { key: "Enter" });
+		await settle();
 
-		// Wraps back around to the first selectable option.
-		await pressKey(trigger, "ArrowDown");
-		expect(trigger.attributes("aria-activedescendant")).toBe(optionIds[0]);
-
-		// ArrowUp wraps backwards, again skipping the disabled option.
-		await pressKey(trigger, "ArrowUp");
-		expect(trigger.attributes("aria-activedescendant")).toBe(optionIds[2]);
+		expect(wrapper.emitted("select")).toBeUndefined();
 	});
 
-	it("jumps to the first and last selectable option with Home and End", async () => {
+	it("selects an option with Enter, emits select and the model, and closes", async () => {
 		const wrapper = await mountMenu();
 		const trigger = wrapper.find("button[role='combobox']");
-		await trigger.trigger("click");
-		await nextTick();
-		const optionIds = findOptions().map((o) => o.attributes("id"));
+		await openWithKeyboard(trigger);
 
-		await pressKey(trigger, "End");
-		expect(trigger.attributes("aria-activedescendant")).toBe(optionIds[2]);
-
-		await pressKey(trigger, "Home");
-		expect(trigger.attributes("aria-activedescendant")).toBe(optionIds[0]);
-	});
-
-	it("selects the active option with Enter, emits select and closes", async () => {
-		const wrapper = await mountMenu();
-		const trigger = wrapper.find("button[role='combobox']");
-
-		await pressKey(trigger, "ArrowDown");
-		await nextTick();
-		await pressKey(trigger, "ArrowDown");
-		await pressKey(trigger, "Enter");
+		await findOptions()[2]!.trigger("keydown", { key: "Enter" });
+		await settle();
 
 		expect(wrapper.emitted("select")).toEqual([["prefix"]]);
 		expect(wrapper.emitted("update:modelValue")).toEqual([["prefix"]]);
@@ -173,84 +156,24 @@ describe("DiscordStringSelectMenu", () => {
 		expect(trigger.text()).toContain("Root / Prefix");
 	});
 
-	it("opens and selects with Space", async () => {
+	it("marks the bound value as selected when reopened", async () => {
 		const wrapper = await mountMenu();
-		const trigger = wrapper.find("button[role='combobox']");
+		await wrapper.setProps({ modelValue: "permissions" });
+		await openWithKeyboard(wrapper.find("button[role='combobox']"));
 
-		await pressKey(trigger, " ");
-		await nextTick();
-		expect(trigger.attributes("aria-expanded")).toBe("true");
-
-		await pressKey(trigger, " ");
-		expect(wrapper.emitted("select")).toEqual([["permissions"]]);
-		expect(trigger.attributes("aria-expanded")).toBe("false");
-	});
-
-	it("renders Currently at rows with a path folder icon", async () => {
-		const wrapper = await mountMenu();
-		const trigger = wrapper.find("button[role='combobox']");
-		await trigger.trigger("click");
-		await nextTick();
-
-		const option = findOptions()[0]!;
-		expect(option.text()).toContain("Root / Permissions");
-		expect(option.text()).toContain("Currently at:");
-		expect(option.find(".discord-string-select-menu-option-path-folder").exists()).toBe(true);
-		expect(option.find(".discord-string-select-menu-option-check").exists()).toBe(false);
-	});
-
-	it("closes when focus leaves the menu, so Tab is not trapped", async () => {
-		const wrapper = await mountMenu();
-		const trigger = wrapper.find("button[role='combobox']");
-		const outside = document.createElement("button");
-		document.body.append(outside);
-
-		await trigger.trigger("click");
-		await nextTick();
-		expect(trigger.attributes("aria-expanded")).toBe("true");
-
-		await trigger.trigger("focusout", { relatedTarget: outside });
-
-		expect(trigger.attributes("aria-expanded")).toBe("false");
-		outside.remove();
-	});
-
-	it("selects an option on click and marks it as selected", async () => {
-		const wrapper = await mountMenu();
-		const trigger = wrapper.find("button[role='combobox']");
-		await trigger.trigger("click");
-		await nextTick();
-
-		await findOptions()[0]!.trigger("click");
-
-		expect(wrapper.emitted("select")).toEqual([["permissions"]]);
-		await trigger.trigger("click");
-		await nextTick();
 		expect(findOptions()[0]!.attributes("aria-selected")).toBe("true");
-	});
-
-	it("ignores clicks on disabled options", async () => {
-		const wrapper = await mountMenu();
-		const trigger = wrapper.find("button[role='combobox']");
-		await trigger.trigger("click");
-		await nextTick();
-
-		const disabledOption = findOptions()[1]!;
-		expect(disabledOption.attributes("aria-disabled")).toBe("true");
-
-		await disabledOption.trigger("click");
-
-		expect(wrapper.emitted("select")).toBeUndefined();
-		expect(trigger.attributes("aria-expanded")).toBe("true");
+		expect(findOptions()[2]!.attributes("aria-selected")).toBe("false");
 	});
 
 	it("closes on Escape and returns focus to the trigger", async () => {
 		const wrapper = await mountMenu();
 		const trigger = wrapper.find("button[role='combobox']");
+		await openWithKeyboard(trigger);
 
-		await trigger.trigger("click");
-		await nextTick();
-		await pressKey(trigger, "Escape");
+		document.activeElement?.dispatchEvent(
+			new KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
+		);
+		await settle();
 
 		expect(trigger.attributes("aria-expanded")).toBe("false");
 		expect(document.activeElement).toBe(trigger.element);
@@ -262,29 +185,9 @@ describe("DiscordStringSelectMenu", () => {
 
 		expect(trigger.attributes("disabled")).toBeDefined();
 
-		await trigger.trigger("click");
-		await pressKey(trigger, "ArrowDown");
+		await openWithKeyboard(trigger, "ArrowDown");
 
 		expect(trigger.attributes("aria-expanded")).toBe("false");
-		expect(document.querySelector("[role='listbox']")).toBeNull();
-	});
-
-	it("renders Iconify twemoji names as SVG icons instead of literal text", async () => {
-		const wrapper = await mountSuspended(StringSelectMenu, {
-			props: {
-				options: [{ value: "prefix", label: "prefix", emoji: "twemoji:gear" }],
-			},
-			attachTo: document.body,
-		});
-		mountedWrappers.push(wrapper);
-		const trigger = wrapper.find("button[role='combobox']");
-		await trigger.trigger("click");
-		await nextTick();
-
-		const option = findOptions()[0]!;
-		const emojiEl = option.find(".discord-string-select-menu-option-emoji");
-		expect(emojiEl.exists()).toBe(true);
-		expect(option.text()).not.toContain("twemoji:gear");
-		expect(emojiEl.text()).toBe("");
+		expect(findListbox()).toBeNull();
 	});
 });

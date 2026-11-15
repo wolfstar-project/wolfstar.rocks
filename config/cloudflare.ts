@@ -51,9 +51,10 @@ export const CLOUDFLARE_BINDINGS = {
 	/** KV namespace for the rate limiters and Better Auth's secondary storage. */
 	rateLimit: "RATE_LIMIT",
 	/**
-	 * KV namespace that keeps the build assets of past deploys for skew
-	 * protection. `nuxt-skew-protection` finds its id at build time by this exact
-	 * name, and writes the new build's assets there through `npx wrangler`.
+	 * KV namespace that held the build assets of past deploys for skew
+	 * protection. The deploy workflows now keep them in the GitHub Actions cache
+	 * (see `skewProtection.storage` in nuxt.config.ts); the binding stays until
+	 * the namespace is emptied and removed.
 	 */
 	skewProtection: "SKEW_PROTECTION",
 } as const;
@@ -244,11 +245,6 @@ export const WORKER_DEPLOY_ENV = workerTarget === "beta" ? "beta" : undefined;
  */
 export const DEPLOYED_WORKER =
 	PRODUCTION_WORKER ?? (workerTarget === "beta" ? BETA_ENVIRONMENT : undefined);
-
-/** The id of the KV namespace that keeps past builds' assets for skew protection. */
-export const SKEW_PROTECTION_NAMESPACE_ID = DEPLOYED_WORKER?.kv_namespaces.find(
-	(namespace) => namespace.binding === CLOUDFLARE_BINDINGS.skewProtection,
-)?.id;
 
 /**
  * Fills the env with the Worker's own `vars` on the Workers build, leaving any

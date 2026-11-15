@@ -62,8 +62,6 @@ async function getUserIdFromEvent(event: H3Event): Promise<string> {
 	return userId;
 }
 
-export { hasAdminPermissions };
-
 /**
  * @param proposedNodes Whether `settings` is a change not saved yet: its legacy
  * nodes are then read from it, not from the guild's cached manager, which
@@ -407,7 +405,7 @@ export const getGuildChannels = defineCachedFunction(
 	},
 );
 
-export async function fetchBotGuildFromDiscord(guildId: string): Promise<APIGuild | null> {
+async function fetchBotGuildFromDiscord(guildId: string): Promise<APIGuild | null> {
 	const api = useApi();
 	Sentry.metrics.count("discord_api.call", 1, {
 		attributes: { endpoint: "guilds.get", guild_id: guildId },

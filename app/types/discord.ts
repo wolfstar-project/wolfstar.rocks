@@ -39,7 +39,7 @@ export interface DiscordChatMessage {
 	command?: SlashCommandInvocation;
 }
 
-export type DiscordMemberPresence = "online" | "idle" | "dnd" | "offline";
+type DiscordMemberPresence = "online" | "idle" | "dnd" | "offline";
 
 /**
  * Member-list view-model for Discord UI components.
@@ -163,5 +163,4 @@ export interface StringSelectMenuOption {
 	disabled?: boolean;
 }
 
-export type StringSelectMenuPlacement = "above" | "below";
 // #endregion

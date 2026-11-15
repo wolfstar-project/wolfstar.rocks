@@ -4,7 +4,9 @@
 		aria-labelledby="staryl-hero-heading"
 	>
 		<Container>
-			<div class="grid items-end gap-16 lg:grid-cols-[minmax(0,1.25fr)_minmax(20rem,0.75fr)]">
+			<div
+				class="grid grid-cols-1 items-end gap-16 lg:grid-cols-[minmax(0,1.25fr)_minmax(20rem,0.75fr)]"
+			>
 				<div class="max-w-190 animate-fade-in-up-safe">
 					<p class="staryl-hero-kicker mb-6 font-mono text-sm font-medium text-primary">
 						{{ ts("marketing.staryl.hero.kicker") }}

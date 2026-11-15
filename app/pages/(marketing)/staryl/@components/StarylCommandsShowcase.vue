@@ -451,59 +451,44 @@ onMounted(() => {
 <style scoped>
 @reference "@/assets/css/main.css";
 
-/* SurfaceCard defaults to theme --color-base-300; pin Discord charcoal so the card never reads warm. */
+/* SurfaceCard defaults to theme --color-base-300; draw it in Discord's channel colour instead. */
 :deep(.staryl-showcase-card.home-surface-card) {
-	--staryl-showcase-card-bg: oklch(26.65% 0.006 272.93);
-	--staryl-showcase-card-border: oklch(19.34% 0.004 273.16);
-	background-color: var(--staryl-showcase-card-bg);
-	border-color: var(--staryl-showcase-card-border);
-}
-
-:global([data-theme="light"]) :deep(.staryl-showcase-card.home-surface-card) {
-	--staryl-showcase-card-bg: oklch(97.31% 0.003 264);
-	--staryl-showcase-card-border: oklch(89.75% 0.008 264);
+	background-color: var(--discord-chrome);
+	border-color: var(--discord-chrome-border);
 }
 
 .staryl-discord-shell {
-	--staryl-discord-chrome: oklch(26.65% 0.006 272.93);
-	--staryl-discord-sidebar: oklch(23.47% 0.005 272.95);
-	--staryl-discord-server: oklch(19.34% 0.004 273.16);
-	--staryl-discord-composer: oklch(28.84% 0.007 272.93);
-	--staryl-discord-composer-muted: oklch(71.01% 0.01 273.13);
-	--staryl-discord-composer-text: oklch(91.56% 0.004 272.93);
-	--staryl-discord-header-edge: oklch(0% 0 0 / 0.2);
-	--staryl-discord-message-hover: oklch(100% 0 0 / 0.03);
-	--staryl-discord-primary-text: oklch(91.56% 0.004 272.93);
-	--staryl-discord-muted-text: oklch(71.01% 0.01 273.13);
+	/*
+	 * Discord's desktop surfaces in the page's theme (Light, Ash, Dark or Onyx;
+	 * see the `--discord-*` tokens in main.css). Hovers are the text colour at
+	 * a low alpha, so they darken on Light and lighten on the others.
+	 */
+	--staryl-discord-chrome: var(--discord-chrome);
+	--staryl-discord-sidebar: var(--discord-sidebar);
+	--staryl-discord-server: var(--discord-server);
+	--staryl-discord-composer: var(--discord-composer);
+	--staryl-discord-composer-muted: var(--discord-chrome-muted);
+	--staryl-discord-composer-text: var(--discord-chrome-text);
+	--staryl-discord-header-edge: var(--discord-chrome-edge);
+	--staryl-discord-message-hover: oklch(from var(--discord-chrome-text) l c h / 0.03);
+	--staryl-discord-primary-text: var(--discord-chrome-text);
+	--staryl-discord-muted-text: var(--discord-chrome-muted);
 
-	/* Neutralize DaisyUI / Nuxt UI theme surfaces inside the mock. */
 	/* The same palette for the newt/ui parts, which read these tokens. */
 	--newt-text-primary: var(--staryl-discord-primary-text);
 	--newt-text-muted: var(--staryl-discord-muted-text);
 	--newt-bg-input: var(--staryl-discord-composer);
 
+	/* Neutralize DaisyUI / Nuxt UI theme surfaces inside the mock. */
 	--color-base-100: var(--staryl-discord-chrome);
 	--color-base-200: var(--staryl-discord-sidebar);
 	--color-base-300: var(--staryl-discord-chrome);
+	--color-base-content: var(--staryl-discord-primary-text);
 	--discord-surface: var(--staryl-discord-chrome);
 
 	@apply relative flex flex-col overflow-hidden;
 	background-color: var(--staryl-discord-chrome);
 	color: var(--staryl-discord-primary-text);
-}
-
-/* Discord's light client: a cool off-white canvas, distinct side surfaces, and near-black copy. */
-:global([data-theme="light"]) .staryl-discord-shell {
-	--staryl-discord-chrome: oklch(98.17% 0.002 264);
-	--staryl-discord-sidebar: oklch(95.74% 0.004 264);
-	--staryl-discord-server: oklch(92.64% 0.006 264);
-	--staryl-discord-composer: oklch(93.74% 0.005 264);
-	--staryl-discord-composer-muted: oklch(47.12% 0.012 264);
-	--staryl-discord-composer-text: oklch(21.15% 0.009 264);
-	--staryl-discord-header-edge: oklch(21.15% 0.009 264 / 0.08);
-	--staryl-discord-message-hover: oklch(21.15% 0.009 264 / 0.035);
-	--staryl-discord-primary-text: oklch(21.15% 0.009 264);
-	--staryl-discord-muted-text: oklch(47.12% 0.012 264);
 }
 
 .staryl-discord-workspace {

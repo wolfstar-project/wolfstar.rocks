@@ -1,15 +1,10 @@
 <template>
 	<Chat class="discord-chat font-whitney" :aria-label="`${channelName} channel chat`">
 		<!--
-			ScrollArea has no auto-hide and no inset focus ring: the classes below
-			hide the thumb until the log is hovered or focused, and keep the ring
-			inside the chat, which clips its overflow.
+			ChatBody passes `auto-hide` on to its ScrollArea. The thumb then shows
+			on hover, on keyboard focus and while the log scrolls.
 		-->
-		<ChatBody
-			focusable
-			:viewport-label="`${channelName} channel messages`"
-			class="discord-chat-scrollbar [scrollbar-color:transparent_transparent] focus-within:[scrollbar-color:var(--newt-bg-active)_transparent] hover:[scrollbar-color:var(--newt-bg-active)_transparent] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary [&::-webkit-scrollbar-thumb]:bg-transparent focus-within:[&::-webkit-scrollbar-thumb]:bg-newt-bg-active hover:[&::-webkit-scrollbar-thumb]:bg-newt-bg-active"
-		>
+		<ChatBody focusable auto-hide :viewport-label="`${channelName} channel messages`">
 			<DiscordChannelWelcome :channel-name :date :date-time :topic />
 			<MessageList
 				class="discord-chat-messages"
@@ -60,15 +55,3 @@ const { ts } = useI18n();
 defineProps<ChatProps>();
 defineSlots<ChatSlots>();
 </script>
-
-<style scoped>
-@reference "@/assets/css/main.css";
-
-/*
- * MessageList pads only its direct rows. A `message` slot may wrap a row
- * (`display: contents` in the commands showcase), so pad nested rows too.
- */
-.discord-chat-messages :deep([data-slot="message-row"]) {
-	@apply rounded-sm px-2 py-1.5;
-}
-</style>

@@ -1,6 +1,8 @@
-/* Discord's typeface. The newt/ui parts that name `font-sans` follow it inside. */
+/* Discord's typeface. The newt/ui parts inside read it from `--newt-font-sans`. */
 @utility font-whitney {
 	--font-sans: "Whitney", ui-sans-serif, system-ui, sans-serif;
+	--newt-font-sans: var(--font-sans);
+	--newt-font-display: var(--font-sans);
 	font-family: var(--font-sans);
 }
 

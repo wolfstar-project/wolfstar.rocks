@@ -21,9 +21,7 @@
 						{{ message.time }}
 					</MessageGroupTime>
 				</MessageGroupHeader>
-				<MessageGroupContent class="text-newt-text-message">{{
-					message.text
-				}}</MessageGroupContent>
+				<MessageGroupContent>{{ message.text }}</MessageGroupContent>
 			</MessageGroupBody>
 		</MessageGroup>
 	</div>

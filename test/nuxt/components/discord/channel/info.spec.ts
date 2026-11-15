@@ -1,7 +1,7 @@
 import type { VueWrapper } from "@vue/test-utils";
 import type { DiscordMemberListMember } from "~/types/discord";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import DiscordChannelInfo from "~/components/discord/channel/info.vue";
 
 const online: DiscordMemberListMember[] = [
@@ -36,14 +36,16 @@ function membersRegion(wrapper: VueWrapper) {
 }
 
 describe("DiscordChannelInfo", () => {
-	it("opens as a dialog on Members with the member list visible (positive)", async () => {
+	it("opens as a named dialog on Members with the member list visible (positive)", async () => {
 		// ARRANGE / ACT
 		const wrapper = await mountInfo();
 
 		// ASSERT
 		const dialog = wrapper.find("[role='dialog']");
-		expect(dialog.attributes("aria-modal")).toBe("true");
-		expect(dialog.attributes("aria-label")).toBe("Channel information for #mod-commands");
+		const title = wrapper.find(`[id='${dialog.attributes("aria-labelledby")}']`);
+		expect(title.text()).toBe("Channel information for #mod-commands");
+		// The panel covers the showcase only, so the page around it stays in use.
+		expect(dialog.attributes("aria-modal")).toBeUndefined();
 		expect(wrapper.find("[role='tablist']").attributes("aria-label")).toBe(
 			"Channel information sections",
 		);
@@ -113,13 +115,35 @@ describe("DiscordChannelInfo", () => {
 	it("keeps the decorative toolbar actions out of the tab order (negative)", async () => {
 		// ARRANGE / ACT
 		const wrapper = await mountInfo();
-		const decorative = wrapper.findAll("[aria-hidden='true'] button");
+		const toolbarButtons = wrapper
+			.findAll("button:not([role='tab'])")
+			.map((button) => button.attributes("aria-label") ?? button.text());
 
 		// ASSERT
-		expect(decorative).toHaveLength(3);
-		for (const button of decorative) {
-			expect(button.attributes("tabindex")).toBe("-1");
-		}
+		expect(toolbarButtons).toEqual(["Back to channel"]);
+		expect(
+			wrapper.findAll("span[aria-hidden='true']:not([tabindex])").length,
+		).toBeGreaterThanOrEqual(3);
+	});
+
+	it("returns focus to the opener when it closes (positive)", async () => {
+		// ARRANGE
+		const opener = document.createElement("button");
+		document.body.append(opener);
+		opener.focus();
+		const wrapper = await mountInfo();
+		await vi.waitFor(() => {
+			expect(document.activeElement?.getAttribute("aria-label")).toBe("Back to channel");
+		});
+
+		// ACT
+		wrapper.unmount();
+
+		// ASSERT
+		await vi.waitFor(() => {
+			expect(document.activeElement).toBe(opener);
+		});
+		opener.remove();
 	});
 
 	it("does not change tabs for unrelated keys (negative)", async () => {

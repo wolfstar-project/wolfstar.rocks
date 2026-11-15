@@ -7,8 +7,7 @@
 			:height="dimension"
 			alt=""
 		/>
-		<!-- newt/ui sizes only `img` and `svg` children; the CSS-mode icon is a span. -->
-		<UIcon v-else-if="resolvedApp.icon" :name="resolvedApp.icon" class="size-1/2" />
+		<UIcon v-else-if="resolvedApp.icon" :name="resolvedApp.icon" />
 	</SlashCommandAppIcon>
 </template>
 

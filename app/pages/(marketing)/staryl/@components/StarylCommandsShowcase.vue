@@ -118,6 +118,7 @@
 							<DiscordChatMessageComposer
 								v-model="composerText"
 								:channel-name="CHANNEL_NAME"
+								:placeholder="composerLabel"
 								autocomplete
 								:aria-controls="
 									showCommandPicker ? 'staryl-slash-suggestions' : undefined
@@ -128,7 +129,8 @@
 								@escape="onComposerEscape"
 								@navigate="onComposerNavigate"
 							>
-								<template #value>
+								<!-- `inputProps` carry the name, the combobox attributes and the keys. -->
+								<template #input="{ inputProps }">
 									<div class="staryl-composer-slash-field">
 										<DiscordChatInputCommand
 											v-if="matchedCommand"
@@ -141,25 +143,11 @@
 										<input
 											v-model="composerText"
 											type="text"
+											v-bind="inputProps"
 											class="discord-message-composer-input w-full min-w-0 flex-1 outline-none"
 											:class="{
 												'staryl-composer-slash-mirror': matchedCommand,
 											}"
-											:placeholder="
-												matchedCommand ? undefined : composerLabel
-											"
-											:aria-label="composerLabel"
-											:aria-controls="
-												showCommandPicker
-													? 'staryl-slash-suggestions'
-													: undefined
-											"
-											:aria-expanded="showCommandPicker"
-											:aria-activedescendant="activeDescendantId"
-											role="combobox"
-											autocomplete="off"
-											spellcheck="false"
-											@keydown="onComposerInputKeydown"
 										/>
 									</div>
 								</template>
@@ -442,31 +430,6 @@ function onComposerNavigate(direction: "up" | "down") {
 	highlightedIndex.value = (highlightedIndex.value - 1 + total) % total;
 }
 
-function onComposerInputKeydown(event: KeyboardEvent) {
-	if (event.key === "Enter") {
-		event.preventDefault();
-		onComposerSubmit();
-		return;
-	}
-
-	if (event.key === "Escape") {
-		event.preventDefault();
-		onComposerEscape();
-		return;
-	}
-
-	if (event.key === "ArrowDown") {
-		event.preventDefault();
-		onComposerNavigate("down");
-		return;
-	}
-
-	if (event.key === "ArrowUp") {
-		event.preventDefault();
-		onComposerNavigate("up");
-	}
-}
-
 watch(slashQuery, () => {
 	highlightedIndex.value = 0;
 });
@@ -605,8 +568,9 @@ onMounted(() => {
 	opacity: 1;
 }
 
+/* The chip is inline text with real spaces: a flex box would drop them. */
 .staryl-composer-slash-composed {
-	@apply pointer-events-none absolute inset-y-0 left-1 z-0 flex items-center;
+	@apply pointer-events-none absolute top-1/2 left-1 z-0 -translate-y-1/2;
 }
 
 .staryl-composer-slash-mirror {

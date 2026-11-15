@@ -241,7 +241,7 @@
 	   in a track of 9px, with no arrows, tinted from the muted text so it reads
 	   on every theme, on the page as in a dialog. Chromium and Safari draw it
 	   from the parts below; Firefox has none, and gets the slim bar it offers.
-	   The lists of the console use `DiscordScrollbar` instead. */
+	   The lists of the console use newt/ui's overlay `ScrollArea` instead. */
 	*::-webkit-scrollbar {
 		width: 9px;
 		height: 9px;

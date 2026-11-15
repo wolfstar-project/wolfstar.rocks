@@ -1,12 +1,8 @@
 <template>
-	<!--
-		The avatar size and gutter feed the reply spine in `DiscordMessageReply`.
-		The content inherits the row's colour, so a caller's `text-*` class reaches it.
-	-->
+	<!-- The reply's spine starts above the centre of the avatar, so the row says how big it is. -->
 	<MessageGroup
 		as="article"
-		class="discord-message w-full font-whitney text-newt-text-message [--message-reply-avatar-size:2rem] [--message-reply-gutter:1rem] md:[--message-reply-avatar-size:3rem]"
-		:class="reply && 'gap-y-1.5'"
+		class="discord-message w-full font-whitney [--newt-message-group-avatar-size:2rem] md:[--newt-message-group-avatar-size:3rem]"
 		:with-reply="Boolean(reply)"
 		:ephemeral
 		:aria-label="ts('discord.message.from', { name: profile.name })"
@@ -23,13 +19,14 @@
 				<MessageGroupBotTag
 					v-if="profile.app"
 					:verified="profile.verified"
-					:aria-label="ts('discord.message.verified_badge')"
+					:label="ts('discord.message.app_badge')"
+					:verified-label="ts('discord.message.verified_badge')"
 				>
 					APP
 				</MessageGroupBotTag>
 				<MessageGroupTime v-if="timestamp" :datetime>{{ timestamp }}</MessageGroupTime>
 			</MessageGroupHeader>
-			<MessageGroupContent class="text-inherit"><slot></slot></MessageGroupContent>
+			<MessageGroupContent><slot></slot></MessageGroupContent>
 			<MessageGroupEphemeralNotice
 				v-if="ephemeral"
 				:aria-label="ts('discord.message.ephemeral_notice')"

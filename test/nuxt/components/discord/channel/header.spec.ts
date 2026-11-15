@@ -4,13 +4,18 @@ import { describe, expect, it } from "vitest";
 import DiscordChannelHeader from "~/components/discord/channel/header.vue";
 
 function findMembersButton(wrapper: VueWrapper) {
+	return wrapper.find("button[aria-pressed]");
+}
+
+/** Names of the controls a keyboard or a screen reader can reach. */
+function controlNames(wrapper: VueWrapper) {
 	return wrapper
 		.findAll("button")
-		.find((button) => button.attributes("aria-pressed") !== undefined);
+		.map((button) => button.attributes("aria-label") ?? button.text());
 }
 
 describe("DiscordChannelHeader", () => {
-	it("renders channel name, topic, online count, badge and toolbar labels (positive)", async () => {
+	it("renders channel name, topic, online count and badge (positive)", async () => {
 		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordChannelHeader, {
 			props: {
@@ -25,26 +30,70 @@ describe("DiscordChannelHeader", () => {
 		});
 
 		// ASSERT
-		expect(wrapper.find("header.discord-channel-header").exists()).toBe(true);
 		expect(wrapper.text()).toContain("mod-commands");
 		expect(wrapper.text()).toContain("Try a slash command below.");
 		expect(wrapper.text()).toContain("19 Online");
-		expect(wrapper.find("[data-slot='notification-badge']").text()).toBe("48");
-		const labels = wrapper
-			.findAll("button[aria-label]")
-			.map((button) => button.attributes("aria-label"));
-		expect(labels).toEqual(
-			expect.arrayContaining([
-				"Threads",
-				"Notification settings",
-				"Pinned messages",
-				"Hide member list",
-			]),
-		);
-		const membersButton = findMembersButton(wrapper);
-		expect(membersButton?.attributes("aria-label")).toBe("Hide member list");
-		expect(membersButton?.attributes("aria-pressed")).toBe("true");
-		expect(membersButton?.attributes("data-state")).toBe("active");
+		const badge = wrapper
+			.findAll("[aria-hidden='true']")
+			.find((element) => element.text() === "48");
+		expect(badge?.exists()).toBe(true);
+	});
+
+	it("renders a div, so the bar adds no banner landmark (negative)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordChannelHeader, {
+			props: { name: "mod-commands" },
+		});
+
+		// ASSERT
+		expect(wrapper.find("header").exists()).toBe(false);
+		expect(wrapper.find("[role='banner']").exists()).toBe(false);
+	});
+
+	it("reaches only the controls that work in the showcase (positive)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordChannelHeader, {
+			props: { name: "mod-commands", searchPlaceholder: "Search WolfStar Laboratory" },
+		});
+
+		// ASSERT
+		expect(controlNames(wrapper)).toEqual([
+			"Open channel info for #mod-commands",
+			"Show member list",
+		]);
+		expect(wrapper.find("[tabindex]").exists()).toBe(false);
+	});
+
+	it("keeps the search and the other toolbar actions as decoration (positive)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordChannelHeader, {
+			props: { name: "mod-commands", searchPlaceholder: "Search WolfStar Laboratory" },
+		});
+		const searches = wrapper
+			.findAll("[aria-hidden='true']")
+			.filter((element) => element.text() === "Search WolfStar Laboratory");
+
+		// ASSERT
+		expect(searches).toHaveLength(2);
+		for (const search of searches) {
+			expect(search.element.tagName).toBe("SPAN");
+		}
+	});
+
+	it("reports the member list toggle state with aria-pressed and a fixed label (positive)", async () => {
+		// ARRANGE / ACT
+		const open = await mountSuspended(DiscordChannelHeader, {
+			props: { name: "mod-commands", membersOpen: true },
+		});
+		const closed = await mountSuspended(DiscordChannelHeader, {
+			props: { name: "mod-commands", membersOpen: false },
+		});
+
+		// ASSERT
+		expect(findMembersButton(open).attributes("aria-label")).toBe("Show member list");
+		expect(findMembersButton(open).attributes("aria-pressed")).toBe("true");
+		expect(findMembersButton(closed).attributes("aria-label")).toBe("Show member list");
+		expect(findMembersButton(closed).attributes("aria-pressed")).toBe("false");
 	});
 
 	it("emits members toggle events when the members toolbar button is clicked (positive)", async () => {
@@ -54,24 +103,11 @@ describe("DiscordChannelHeader", () => {
 		});
 
 		// ACT
-		await findMembersButton(wrapper)!.trigger("click");
+		await findMembersButton(wrapper).trigger("click");
 
 		// ASSERT
 		expect(wrapper.emitted("update:membersOpen")?.[0]).toEqual([false]);
 		expect(wrapper.emitted("toggle-members")).toHaveLength(1);
-	});
-
-	it("shows Show member list when membersOpen is false (negative)", async () => {
-		// ARRANGE / ACT
-		const wrapper = await mountSuspended(DiscordChannelHeader, {
-			props: { name: "mod-commands", membersOpen: false },
-		});
-
-		// ASSERT
-		const membersButton = findMembersButton(wrapper);
-		expect(membersButton?.attributes("aria-label")).toBe("Show member list");
-		expect(membersButton?.attributes("aria-pressed")).toBe("false");
-		expect(membersButton?.attributes("data-state")).toBe("inactive");
 	});
 
 	it("emits open-channel-info from the mobile title button (positive)", async () => {
@@ -85,7 +121,7 @@ describe("DiscordChannelHeader", () => {
 		await title.trigger("click");
 
 		// ASSERT
-		expect(title.exists()).toBe(true);
+		expect(title.text()).toContain("mod-commands");
 		expect(wrapper.emitted("open-channel-info")).toHaveLength(1);
 	});
 
@@ -96,25 +132,8 @@ describe("DiscordChannelHeader", () => {
 		});
 
 		// ASSERT
-		expect(wrapper.find("[data-slot='notification-badge']").exists()).toBe(false);
+		expect(wrapper.text()).not.toMatch(/\d/);
 		expect(wrapper.text()).not.toContain("Online");
-	});
-
-	it("renders the search field as decoration, out of the tab order (positive)", async () => {
-		// ARRANGE / ACT
-		const wrapper = await mountSuspended(DiscordChannelHeader, {
-			props: {
-				name: "mod-commands",
-				searchPlaceholder: "Search WolfStar Laboratory",
-			},
-		});
-		const search = wrapper
-			.findAll("button")
-			.find((button) => button.text() === "Search WolfStar Laboratory");
-
-		// ASSERT
-		expect(search?.attributes("aria-hidden")).toBe("true");
-		expect(search?.attributes("tabindex")).toBe("-1");
 	});
 
 	it("prefers the guild name over the plain search placeholder (positive)", async () => {

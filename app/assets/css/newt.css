@@ -1,13 +1,18 @@
 /*
  * newt/ui design tokens, as `npx newtui init` writes them since newtui 2.5:
- * one complete light `:root`, only `newt` names in `@theme` (the app keeps its
- * own radii, fonts and shadows), and no second `@import "tailwindcss"`
- * (`main.css` imports this file).
+ * one complete light `:root`, only `newt` names in `@theme`, and no second
+ * `@import "tailwindcss"` (`main.css` imports this file).
+ *
+ * Since newtui 2.9 the components read their radii and font stacks from
+ * `--newt-radius-*` and `--newt-font-*`, so Nuxt UI's larger radius scale no
+ * longer reaches them. The radii keep Discord's values; the fonts follow the
+ * app's, and `font-whitney` sets `--newt-font-sans` to Discord's typeface.
  *
  * Kept by hand: the dark values follow the app's `theme-dark` variant, and
  * the `midnight` block below gives Onyx its own surfaces. Update the
  * components with `npx newtui add <name> --overwrite`; `add` writes no
- * tokens, so a token a new version uses is added here.
+ * tokens, so a token a new version uses is added here. `add` lists the
+ * names a component uses that this file does not declare.
  */
 @theme {
 	--color-newt-bg-base: var(--newt-bg-base);
@@ -30,6 +35,9 @@
 	--color-newt-idle: var(--newt-idle);
 	--color-newt-dnd: var(--newt-dnd);
 	--color-newt-offline: var(--newt-offline);
+	--color-newt-streaming: var(--newt-streaming);
+	--color-newt-embed-bg: var(--newt-embed-bg);
+	--color-newt-embed-border: var(--newt-embed-border);
 	--color-newt-danger: var(--newt-danger);
 	--color-newt-danger-hover: var(--newt-danger-hover);
 	--color-newt-mention-text: var(--newt-mention-text);
@@ -45,6 +53,7 @@
 	--color-newt-code-string: var(--newt-code-string);
 	--color-newt-code-comment: var(--newt-code-comment);
 	--color-newt-code-function: var(--newt-code-function);
+	--font-display: var(--newt-font-display);
 	--ease-newt: var(--newt-ease);
 	--shadow-elevation-low: var(--newt-shadow-elevation-low);
 	--shadow-elevation-high: var(--newt-shadow-elevation-high);
@@ -72,6 +81,7 @@
 	--newt-idle: #b58500;
 	--newt-dnd: #d83a3e;
 	--newt-offline: #80848e;
+	--newt-streaming: #593695;
 	--newt-danger: #d83a3e;
 	--newt-danger-hover: #a12828;
 	--newt-mention-text: #505cdc;
@@ -79,8 +89,6 @@
 	--newt-on-accent: #ffffff;
 	--newt-overlay: rgba(0, 0, 0, 0.6);
 	--newt-bg-message-hover: rgba(6, 6, 7, 0.03);
-	/* The text of a message, Discord's "text-normal": brighter than the
-	   secondary text the registry's message content uses. App-only. */
 	--newt-text-message: #313338;
 	--newt-spoiler: #d4d7dc;
 	--newt-spoiler-hover: #c4c9ce;
@@ -90,6 +98,16 @@
 	--newt-code-comment: #008000;
 	--newt-code-function: #795e26;
 	--newt-embed-max-width: 520px;
+	--newt-embed-bg: rgba(6, 6, 7, 0.03);
+	--newt-embed-border: rgba(6, 6, 7, 0.08);
+	--newt-radius-sm: 4px;
+	--newt-radius-md: 8px;
+	--newt-radius-lg: 12px;
+	--newt-font-sans: var(--font-sans);
+	--newt-font-mono: var(--font-mono);
+	--newt-font-display: var(--font-sans);
+	/* Writing direction as a multiplier for sideways transforms. */
+	--newt-dir: 1;
 	--newt-ease: cubic-bezier(0.3, 0.7, 0.4, 1);
 	--newt-duration-fast: 100ms;
 	--newt-shadow-elevation-low:
@@ -118,6 +136,8 @@
 		--newt-mention-role: #f3b95f;
 		--newt-bg-message-hover: rgba(2, 2, 2, 0.06);
 		--newt-text-message: #dbdee1;
+		--newt-embed-bg: rgba(255, 255, 255, 0.05);
+		--newt-embed-border: rgba(255, 255, 255, 0.08);
 		--newt-spoiler: #1a1a1e;
 		--newt-spoiler-hover: #232328;
 		--newt-code-bg: #111214;
@@ -129,6 +149,11 @@
 			0 1px 0 rgba(0, 0, 0, 0.2), 0 1.5px 0 rgba(0, 0, 0, 0.05), 0 2px 0 rgba(0, 0, 0, 0.05);
 		--newt-shadow-elevation-high: 0 8px 16px rgba(0, 0, 0, 0.24);
 	}
+}
+
+/* Components are written with logical properties; only sideways transforms flip. */
+[dir="rtl"] {
+	--newt-dir: -1;
 }
 
 /* Onyx, the app's `midnight` theme: the dark text on Onyx's own black surfaces. */
@@ -155,6 +180,8 @@
 	--newt-mention-role: #f3b95f;
 	--newt-bg-message-hover: rgba(2, 2, 2, 0.06);
 	--newt-text-message: #dbdee1;
+	--newt-embed-bg: rgba(255, 255, 255, 0.05);
+	--newt-embed-border: rgba(255, 255, 255, 0.08);
 	--newt-spoiler: #1a1a1e;
 	--newt-spoiler-hover: #232328;
 	--newt-code-bg: #111214;

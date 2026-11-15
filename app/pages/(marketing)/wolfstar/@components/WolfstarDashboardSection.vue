@@ -7,7 +7,7 @@
 		class="py-28"
 	>
 		<div
-			class="grid items-start gap-14 lg:grid-cols-[minmax(0,0.8fr)_minmax(28rem,1.2fr)] lg:gap-20"
+			class="grid grid-cols-1 items-start gap-14 lg:grid-cols-[minmax(0,0.8fr)_minmax(28rem,1.2fr)] lg:gap-20"
 		>
 			<div class="lg:sticky lg:top-28">
 				<p

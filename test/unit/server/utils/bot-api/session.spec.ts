@@ -16,7 +16,7 @@ const { config, fetchMock } = vi.hoisted(() => {
 
 vi.mock("ofetch", () => ({ $fetch: fetchMock }));
 
-vi.mock("#server/utils/sentry-metrics", () => ({
+vi.mock("#server/utils/sentry/metrics", () => ({
 	instrumentBotApiCall: (_route: string, run: () => unknown) => run(),
 }));
 

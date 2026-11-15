@@ -7,16 +7,19 @@
 		as="span"
 		aria-hidden="true"
 		:variant
+		size="message"
 		:emoji="emojiIsImage ? emoji : undefined"
 		:emoji-alt="emojiName"
 		:launch-icon="variant === 'link' || Boolean(url)"
-		:class="['discord-button h-8 min-w-15', { 'pointer-events-none': disabled }]"
+		:class="['discord-button min-w-15', { 'pointer-events-none': disabled }]"
 	>
-		<UIcon
-			v-if="!emojiIsImage && icon"
-			:name="icon"
-			class="me-2 size-[1.375em] shrink-0 align-bottom"
-		/><slot>{{ label }}</slot>
+		<template v-if="icon && !emojiIsImage" #leading>
+			<UIcon :name="icon" class="size-[1.375em]" />
+		</template>
+		<!-- An icon-only button passes no label, so it draws no empty label box. -->
+		<template v-if="$slots.default || label" #default>
+			<slot>{{ label }}</slot>
+		</template>
 	</Button>
 </template>
 

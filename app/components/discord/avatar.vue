@@ -1,15 +1,16 @@
 <template>
 	<Avatar
 		class="discord-message-avatar-wrapper select-none"
-		:class="[size.classes, !profile.app && 'bg-transparent']"
+		:class="[sizeEntry.class, !profile.app && 'bg-transparent']"
+		:size="sizeEntry.size"
 		role="img"
-		:aria-label="`${profile.name}'s avatar`"
+		:aria-label="ts('discord.avatar.label', { name: profile.name })"
 	>
 		<AvatarImage
 			v-if="profile.app"
 			:src="`/avatars/${user}.png`"
-			:width="size.dimensions"
-			:height="size.dimensions"
+			:width="sizeEntry.dimensions"
+			:height="sizeEntry.dimensions"
 		/>
 		<AvatarFallback v-else>
 			<UIcon
@@ -35,18 +36,27 @@ interface AvatarProps {
 	user: ProfileName;
 	size: AvatarSizeKey;
 }
+
+interface AvatarSizeEntry {
+	size: AvatarVariants["size"];
+	class?: string;
+	/** Intrinsic size of the image, the largest box it fills. */
+	dimensions: number;
+}
+
+/** `medium` is a message avatar: 32px on a phone, 48px from `md` up. `tiny` is a reply line. */
+const Sizes = {
+	medium: { size: "md", class: "md:size-12", dimensions: 48 },
+	tiny: { size: "xs", dimensions: 16 },
+} as const satisfies Record<AvatarSizeKey, AvatarSizeEntry>;
 </script>
 
 <script setup lang="ts">
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage, type AvatarVariants } from "~/components/ui/avatar";
 
+const { ts } = useI18n();
 const { user, size: sizeKey } = defineProps<AvatarProps>();
 
-const Sizes = {
-	medium: { classes: "h-8 w-8 md:h-12 md:w-12", dimensions: 48 },
-	tiny: { classes: "h-4 w-4", dimensions: 16 },
-} as const;
-
 const profile = computed(() => Profiles[user]);
-const size = computed(() => Sizes[sizeKey]);
+const sizeEntry = computed<AvatarSizeEntry>(() => Sizes[sizeKey]);
 </script>

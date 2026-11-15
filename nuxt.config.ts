@@ -198,6 +198,13 @@ export default defineNuxtConfig({
 
 	css: ["~/assets/css/main.css"],
 
+	// The newt/ui `index.ts` barrels would register each component twice (NUXT_B3011).
+	components: [
+		{ path: "~/components/islands", island: true },
+		{ path: "~/components/global", global: true },
+		{ path: "~/components", ignore: ["ui/**/index.ts"] },
+	],
+
 	site: {
 		defaultLocale: "en-US",
 		description:

@@ -1,12 +1,11 @@
 <template>
-	<!-- newt/ui hardcodes an English aria-label; the fallthrough attribute replaces it. -->
 	<SlashCommand
 		class="discord-slash-command-composed"
-		:aria-label="ariaLabel"
 		:name="commandPath.commandName"
 		:subcommand="commandPath.subcommand"
 		:subcommand-group="commandPath.subcommandGroup"
 		:options="options"
+		:format-label="formatLabel"
 	/>
 </template>
 
@@ -19,6 +18,7 @@ import type {
 	SlashCommandDisplayParts,
 	SlashCommandInvocation,
 } from "#shared/types/chat-input-command";
+import type { SlashCommandLabelState } from "~/components/ui/slash-command";
 import { SlashCommand } from "~/components/ui/slash-command";
 
 const { ts } = useI18n();
@@ -37,18 +37,14 @@ const commandPath = computed((): SlashCommandDisplayParts => {
 	}
 });
 
-const ariaLabel = computed(() => {
-	// The validated parts: a group without a subcommand would throw here.
-	const path = formatSlashCommandDisplayName(commandPath.value);
-	const optionText = options
-		.map((option) => {
-			const valueText = option.value ?? option.description ?? option.name;
-			return `${option.name}: ${valueText}`;
-		})
+/** The chip's name. The path comes from the validated parts, so a lone group never reaches it. */
+function formatLabel({ path, options: chipOptions }: SlashCommandLabelState) {
+	const optionText = chipOptions
+		.map((option) => `${option.name}: ${option.value ?? option.description ?? option.name}`)
 		.join(" ");
 
 	return ts("discord.command.label", {
 		command: `/${path}${optionText ? ` ${optionText}` : ""}`,
 	});
-});
+}
 </script>

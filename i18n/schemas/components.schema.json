@@ -76,6 +76,15 @@
 		"discord": {
 			"type": "object",
 			"properties": {
+				"avatar": {
+					"type": "object",
+					"properties": {
+						"label": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"channel_info": {
 					"type": "object",
 					"properties": {
@@ -89,6 +98,12 @@
 							"type": "string"
 						},
 						"members_in": {
+							"type": "string"
+						},
+						"no_results": {
+							"type": "string"
+						},
+						"no_results_hint": {
 							"type": "string"
 						},
 						"no_threads": {
@@ -122,6 +137,9 @@
 							"additionalProperties": false
 						},
 						"text_channel": {
+							"type": "string"
+						},
+						"threads_hint": {
 							"type": "string"
 						}
 					},
@@ -193,16 +211,10 @@
 				"header": {
 					"type": "object",
 					"properties": {
-						"hide_members": {
-							"type": "string"
-						},
-						"notifications": {
+						"online_count": {
 							"type": "string"
 						},
 						"open_info": {
-							"type": "string"
-						},
-						"pins": {
 							"type": "string"
 						},
 						"search": {
@@ -212,9 +224,6 @@
 							"type": "string"
 						},
 						"show_members": {
-							"type": "string"
-						},
-						"threads": {
 							"type": "string"
 						}
 					},
@@ -304,6 +313,12 @@
 						"app": {
 							"type": "string"
 						},
+						"dnd": {
+							"type": "string"
+						},
+						"idle": {
+							"type": "string"
+						},
 						"label": {
 							"type": "string"
 						},
@@ -322,6 +337,9 @@
 				"message": {
 					"type": "object",
 					"properties": {
+						"app_badge": {
+							"type": "string"
+						},
 						"dismiss": {
 							"type": "string"
 						},
@@ -370,6 +388,9 @@
 				"suggestions": {
 					"type": "object",
 					"properties": {
+						"app_commands": {
+							"type": "string"
+						},
 						"for_prefix": {
 							"type": "string"
 						},

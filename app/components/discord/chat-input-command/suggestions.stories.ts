@@ -19,8 +19,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const FrequentlyUsed: Story = {
-	render: (args) => ({
+/** The frequently used list with a matched command, in a box of the given width class. */
+function renderFrequentlyUsed(width: string): Story["render"] {
+	return (args) => ({
 		components: {
 			DiscordChatInputCommandSuggestions,
 			DiscordChatInputCommandSuggestion,
@@ -29,7 +30,7 @@ export const FrequentlyUsed: Story = {
 		},
 		setup: () => ({ args, frequentlyUsedShowcaseCommands }),
 		template: `
-			<div class="h-[28rem] max-w-2xl overflow-hidden rounded-md">
+			<div class="h-[28rem] ${width} overflow-hidden rounded-md">
 				<DiscordChatInputCommandSuggestions v-bind="args" class="h-full">
 					<template #frequently-used>
 						<DiscordChatInputCommandSuggestion
@@ -63,7 +64,16 @@ export const FrequentlyUsed: Story = {
 				</DiscordChatInputCommandSuggestions>
 			</div>
 		`,
-	}),
+	});
+}
+
+export const FrequentlyUsed: Story = {
+	render: renderFrequentlyUsed("max-w-2xl"),
+};
+
+/** A picker 360px wide: under 480px of its own width, the rail moves under the list. */
+export const Narrow: Story = {
+	render: renderFrequentlyUsed("max-w-[360px]"),
 };
 
 export const AppFilter: Story = {

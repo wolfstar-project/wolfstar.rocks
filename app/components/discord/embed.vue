@@ -3,6 +3,7 @@
 		<EmbedAuthor v-if="author">
 			<EmbedAuthorIcon
 				v-if="author.icon"
+				:as="NuxtImg"
 				:src="author.icon"
 				:alt="`${author.name} avatar`"
 				width="24"
@@ -18,9 +19,10 @@
 			<slot />
 		</EmbedDescription>
 
-		<EmbedFooter v-if="footer || timestampDate">
+		<EmbedFooter v-if="footer || timestamp !== undefined">
 			<EmbedFooterIcon
 				v-if="footer?.icon"
+				:as="NuxtImg"
 				:src="footer.icon"
 				:alt="ts('discord.embed.footer_icon', { text: footer.text })"
 				width="16"
@@ -28,11 +30,14 @@
 				decoding="async"
 			/>
 			<span v-if="footer">{{ footer.text }}</span>
-			<EmbedFooterSeparator v-if="footer && timestampDate" />
-			<!-- The slot, since the part formats in `en-US` only. -->
-			<EmbedTimestamp v-if="timestampDate" :date="timestampDate">{{
-				formattedTimestamp
-			}}</EmbedTimestamp>
+			<EmbedFooterSeparator v-if="footer && timestamp !== undefined" />
+			<!-- In UTC on the server and in the browser, so hydration writes the same text. -->
+			<EmbedTimestamp
+				v-if="timestamp !== undefined"
+				:date="timestamp"
+				:locale="timeLocale"
+				time-zone="UTC"
+			/>
 		</EmbedFooter>
 	</Embed>
 </template>
@@ -78,25 +83,13 @@ import {
 } from "~/components/ui/embed";
 
 const { ts } = useI18n();
+// The `as` prop takes a component, and `#components` types NuxtImg as a generic one.
+const NuxtImg = resolveComponent("NuxtImg");
 defineSlots<EmbedSlots>();
 
-const { title, color, author, footer, timestamp } = defineProps<EmbedProps>();
-
-const timestampDate = computed(() => {
-	if (timestamp === undefined) return undefined;
-	return timestamp instanceof Date ? timestamp : new Date(timestamp);
-});
+const { title, author, footer } = defineProps<EmbedProps>();
 
 const { timeLocale } = useAppLocale();
-
-const formattedTimestamp = computed(() => {
-	const date = timestampDate.value;
-	if (!date || Number.isNaN(date.getTime())) return "";
-	return new Intl.DateTimeFormat(timeLocale.value, {
-		dateStyle: "short",
-		timeStyle: "short",
-	}).format(date);
-});
 
 const embedAriaLabel = computed(() => {
 	if (title) return ts("discord.embed.titled", { title });

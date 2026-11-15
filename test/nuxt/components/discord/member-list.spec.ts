@@ -64,6 +64,36 @@ describe("DiscordMemberList", () => {
 		expect(statuses).toEqual(["online", "dnd"]);
 	});
 
+	it("names each presence in words beside its colour (positive)", async () => {
+		// ARRANGE
+		const members: DiscordMemberListMember[] = [
+			{ id: "on", name: "On", presence: "online" },
+			{ id: "idle", name: "Away", presence: "idle" },
+			{ id: "dnd", name: "Busy", presence: "dnd" },
+			{ id: "default", name: "Default" },
+		];
+
+		// ACT
+		const wrapper = await mountSuspended(DiscordMemberList, {
+			props: { online: members, offline: [] },
+		});
+
+		// ASSERT
+		const labels = wrapper.findAll("[data-status]").map((dot) => dot.text());
+		expect(labels).toEqual(["Online", "Idle", "Do Not Disturb", "Online"]);
+		expect(wrapper.find("[role='status']").exists()).toBe(false);
+	});
+
+	it("keeps plain rows out of the tab order (negative)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordMemberList, {
+			props: { online, offline },
+		});
+
+		// ASSERT
+		expect(wrapper.find("[role='listitem'] button").exists()).toBe(false);
+	});
+
 	it("hides presence for offline sections and HTTP apps (negative)", async () => {
 		// ARRANGE
 		const httpApp: DiscordMemberListMember[] = [
@@ -105,7 +135,9 @@ describe("DiscordMemberList", () => {
 		// ASSERT
 		const [section] = readSections(wrapper);
 		expect(section?.heading).toBe("Developers — 1");
-		expect(section?.items[0]?.attributes("style")).toContain("linear-gradient");
+		expect(
+			section?.items[0]?.find("[aria-hidden='true'] [style]").attributes("style"),
+		).toContain("linear-gradient");
 		expect(wrapper.find("[data-slot='member-name']").attributes("style")).toContain(
 			"oklch(70% 0.15 250)",
 		);

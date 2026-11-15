@@ -51,6 +51,24 @@ async function mountMenu(props: MenuProps = {}) {
 	return wrapper;
 }
 
+/** The menu below 24rem of room, as under a message close to the composer. */
+async function mountMenuWithRoomAbove() {
+	const wrapper = await mountSuspended(
+		{
+			components: { StringSelectMenu },
+			setup: () => ({ options }),
+			template: `<div style="padding-top: 24rem"><StringSelectMenu :options="options" /></div>`,
+		},
+		{ attachTo: document.body },
+	);
+	mountedWrappers.push(wrapper);
+	return wrapper;
+}
+
+function findPanel() {
+	return document.querySelector<HTMLElement>("[data-slot='select-menu-content']");
+}
+
 /** The panel is portalled to `body`, so query the document rather than the wrapper tree. */
 function findListbox() {
 	return document.querySelector<HTMLElement>("[role='listbox']");
@@ -127,6 +145,42 @@ describe("DiscordStringSelectMenu", () => {
 		expect(option.text()).toContain("Currently at: Root / Permissions");
 		expect(option.text()).not.toContain("ph:folder-fill");
 		expect(option.find("[aria-hidden='true'] > *").exists()).toBe(true);
+	});
+
+	it("draws a Unicode emoji in the row and on the trigger once chosen", async () => {
+		const wrapper = await mountMenu({
+			options: [{ value: "news", label: "Announcements", emoji: "📣" }],
+		});
+		const trigger = wrapper.find("button[role='combobox']");
+		await openWithKeyboard(trigger);
+
+		expect(findOptions()[0]!.text()).toContain("📣");
+
+		await findOptions()[0]!.trigger("keydown", { key: "Enter" });
+		await settle();
+
+		expect(trigger.text()).toContain("📣");
+		expect(trigger.text()).toContain("Announcements");
+	});
+
+	it("is 40px high, as a select under a message is", async () => {
+		const wrapper = await mountMenu();
+
+		expect(wrapper.find("button[role='combobox']").element.getBoundingClientRect().height).toBe(
+			40,
+		);
+	});
+
+	it("opens above the trigger when there is room above", async () => {
+		const wrapper = await mountMenuWithRoomAbove();
+		const trigger = wrapper.find("button[role='combobox']");
+		await openWithKeyboard(trigger);
+
+		const panel = findPanel();
+		expect(panel?.getAttribute("data-side")).toBe("top");
+		expect(panel!.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+			trigger.element.getBoundingClientRect().top,
+		);
 	});
 
 	it("marks a disabled option and keeps it out of selection", async () => {

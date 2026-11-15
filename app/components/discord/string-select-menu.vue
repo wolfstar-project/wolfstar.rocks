@@ -1,10 +1,16 @@
 <template>
 	<!-- The panel opens inside this element, so it reads the tokens and the typeface of the surface around it. -->
 	<div ref="containerRef" class="contents">
+		<!--
+			Under a message the select sits close to the composer, so it opens upwards.
+			Its trigger is 40px high, as Discord draws it there.
+		-->
 		<SelectMenu
 			v-model="selectedValue"
 			class="discord-string-select-menu"
 			variant="message"
+			side="top"
+			trigger-class="min-h-10"
 			:container="containerRef ?? undefined"
 			:options="menuOptions"
 			:placeholder="placeholder ?? ts('discord.select.placeholder')"
@@ -51,25 +57,35 @@ const selectedValue = defineModel<string | undefined>({ default: undefined });
 const UIcon = resolveComponent("UIcon");
 
 /**
- * newt/ui takes the option's glyph as a component. A Discord emoji is an image
- * path, an Iconify name (`ph:folder-fill`, `twemoji:gear`), or Unicode text.
+ * newt/ui draws a Unicode `emoji` itself. A custom emoji image and an Iconify
+ * name (`twemoji:gear`) still go in as an `icon` component, which the trigger
+ * also shows once the option is chosen.
  */
-function emojiIcon(emoji: string): FunctionalComponent {
+function emojiGlyph(emoji: string | undefined): Pick<SelectMenuOption, "emoji" | "icon"> {
+	if (!emoji) return {};
 	if (isImageEmoji(emoji)) {
-		return () =>
+		const image: FunctionalComponent = () =>
 			h("img", { src: emoji, alt: "", draggable: false, class: "size-full object-contain" });
+		return { icon: image };
 	}
-	if (emoji.includes(":")) return () => h(UIcon, { name: emoji, class: "size-full" });
-	return () => h("span", { class: "leading-none" }, emoji);
+	if (emoji.includes(":")) {
+		const icon: FunctionalComponent = () => h(UIcon, { name: emoji, class: "size-full" });
+		return { icon };
+	}
+	return { emoji };
 }
 
 const menuOptions = computed((): SelectMenuOption[] =>
-	options.map((option) => ({
-		value: option.value,
-		label: option.label,
-		description: option.description,
-		disabled: option.disabled,
-		icon: option.emoji ? emojiIcon(option.emoji) : undefined,
-	})),
+	options.map((option) => {
+		const glyph = emojiGlyph(option.emoji);
+		return {
+			value: option.value,
+			label: option.label,
+			description: option.description,
+			disabled: option.disabled,
+			emoji: glyph.emoji,
+			icon: glyph.icon,
+		};
+	}),
 );
 </script>

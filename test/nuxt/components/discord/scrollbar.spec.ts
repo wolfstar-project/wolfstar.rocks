@@ -104,18 +104,17 @@ describe("DiscordScrollbar", () => {
 	});
 
 	it("hides the thumb until hover when autoHide is set (positive)", async () => {
-		// ARRANGE — the browser's real pointer may rest wherever an earlier spec left
-		// it, over this scrollbar too: with no hit-testing the root cannot be hovered.
+		// ARRANGE — the browser's real pointer may rest wherever an earlier spec left it,
+		// over this scrollbar too. Move it off the scrollbar: the browser only
+		// recomputes `:hover` when the pointer moves.
 		const { wrapper, root, thumb } = await mountTall({ autoHide: true });
-		root.style.pointerEvents = "none";
+		await userEvent.unhover(root);
 
-		// ASSERT — the browser drops `:hover` on a later frame, and the thumb then
-		// fades out over 0.1s
+		// ASSERT — the thumb fades out over 0.1s once nothing hovers the root
 		await vi.waitFor(() => expect(root.matches(":hover")).toBe(false));
 		await vi.waitFor(() => expect(getComputedStyle(thumb).opacity).toBe("0"));
 
 		// ACT — hover it
-		root.style.pointerEvents = "";
 		await userEvent.hover(root);
 
 		// ASSERT

@@ -142,13 +142,11 @@ const isPhone = useMediaQuery("(max-width: 767.98px)");
 const resolvedLayout = computed(() => layout ?? (isPhone.value ? "narrow" : "default"));
 const narrow = computed(() => resolvedLayout.value === "narrow");
 
-const labels = computed(
-	(): Partial<MessageComposerLabels> => ({
-		group: (channel) => ts("discord.composer.label", { channel }),
-		placeholder: (channel) => ts("discord.composer.placeholder", { channel }),
-		send: ts("discord.composer.send"),
-	}),
-);
+const labels = computed((): Partial<MessageComposerLabels> => ({
+	group: (channel) => ts("discord.composer.label", { channel }),
+	placeholder: (channel) => ts("discord.composer.placeholder", { channel }),
+	send: ts("discord.composer.send"),
+}));
 
 const hasValue = computed(() => modelValue.value.trim().length > 0);
 

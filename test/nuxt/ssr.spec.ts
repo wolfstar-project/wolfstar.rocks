@@ -1485,9 +1485,9 @@ describe("component SSR rendering", () => {
 		it("uses the commands Staryl registers and the replies it sends", async () => {
 			const wrapper = await mountSuspended(StarylCommandsShowcase);
 
-			// `/setup` comes first: its menu is Components V2.
+			// `/settings` comes first: its menu is Components V2.
 			expect(wrapper.find(".staryl-setup-menu [style*='--newt-v2-accent']").text()).toContain(
-				"Staryl setup",
+				"Server settings",
 			);
 			expect(wrapper.find(".staryl-setup-menu").text()).toContain("Current notifications: 2");
 
@@ -1497,8 +1497,10 @@ describe("component SSR rendering", () => {
 			await wrapper.vm.$nextTick();
 
 			for (const command of [
-				"/setup",
+				"/settings",
 				"/subscriptions twitch add",
+				"/subscriptions rss add",
+				"/subscriptions bluesky add",
 				"/subscriptions twitch remove",
 				"/subscriptions twitch reset",
 				"/subscriptions twitch show",
@@ -1524,6 +1526,16 @@ describe("component SSR rendering", () => {
 			expect(wrapper.find("article[data-ephemeral='true']").exists()).toBe(true);
 			expect(wrapper.find(".staryl-command-response").text()).toContain(
 				"Whenever stella goes live",
+			);
+
+			await wrapper.find(".discord-message-composer-input").setValue("/");
+			await wrapper.vm.$nextTick();
+			const feedSuggestion = findSuggestion(wrapper, "/subscriptions rss add");
+			expect(feedSuggestion).toBeDefined();
+			await feedSuggestion!.trigger("click");
+			await wrapper.vm.$nextTick();
+			expect(wrapper.find(".staryl-command-response").text()).toContain(
+				"Whenever The WolfStar Blog publishes something",
 			);
 
 			await wrapper.find(".discord-message-composer-input").setValue("/");
@@ -1570,7 +1582,28 @@ describe("component SSR rendering", () => {
 			expect(wrapper.find(".staryl-showcase-feed").text()).toContain(
 				"Stella's stream is over, thanks for watching! | October 26, 2026",
 			);
-			expect(commandText(wrapper)).toContain("/subscriptions twitch add type:Stream Offline");
+			expect(commandText(wrapper)).toContain(
+				"/subscriptions twitch add event:Stream goes offline",
+			);
+
+			// A feed item: the heading, the linked title, the footer and a Read button.
+			await pick("feed");
+			const feedCard = wrapper.find("[style*='--newt-v2-accent']");
+			expect(feedCard.text()).toContain("New in The WolfStar Blog");
+			expect(feedCard.find("a").attributes("href")).toBe(
+				"https://wolfstar.rocks/blog/wolfstar-v7",
+			);
+			expect(feedCard.text()).toContain("Staryl Feed Notifications • October 26, 2026");
+			expect(wrapper.find("[role='group'] .discord-button").text()).toContain("Read");
+
+			// An account's post: no title, the avatar, a View post button.
+			await pick("post");
+			const postCard = wrapper.find("[style*='--newt-v2-accent']");
+			expect(postCard.text()).toContain("New post by Stella");
+			expect(postCard.find("a").exists()).toBe(false);
+			expect(postCard.find("img[src*='stella']").exists()).toBe(true);
+			expect(wrapper.find("[role='group'] .discord-button").text()).toContain("View post");
+			expect(commandText(wrapper)).toContain("/subscriptions bluesky add");
 
 			// A test on a streamer who is not live: the notice, the placeholder title, no preview.
 			await pick("test");
@@ -1581,19 +1614,19 @@ describe("component SSR rendering", () => {
 	});
 
 	describe("StarylSetupSection", () => {
-		it("lists the pages of the /setup menu", async () => {
+		it("lists what the /settings menu holds", async () => {
 			const wrapper = await mountSuspended(StarylSetupSection, {
 				props: { inviteUrl: "https://discord.com/oauth2/authorize?client_id=1" },
 			});
 
 			const titles = wrapper.findAll(".staryl-setup-row h3").map((title) => title.text());
 			expect(titles).toStrictEqual([
-				"Overview",
-				"Add a notification",
-				"Manage notifications",
-				"Test notifications",
+				"General",
+				"Twitch live",
+				"Feeds and accounts",
+				"Delivery status",
 			]);
-			expect(wrapper.find("code").text()).toBe("/setup");
+			expect(wrapper.find("code").text()).toBe("/settings");
 		});
 	});
 

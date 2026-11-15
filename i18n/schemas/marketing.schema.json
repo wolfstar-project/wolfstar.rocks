@@ -151,10 +151,10 @@
 						"commands": {
 							"type": "object",
 							"properties": {
-								"eyebrow": {
+								"description": {
 									"type": "string"
 								},
-								"description": {
+								"eyebrow": {
 									"type": "string"
 								},
 								"title": {
@@ -196,6 +196,12 @@
 								"eyebrow": {
 									"type": "string"
 								},
+								"feed_body": {
+									"type": "string"
+								},
+								"feed_title": {
+									"type": "string"
+								},
 								"live_body": {
 									"type": "string"
 								},
@@ -227,6 +233,12 @@
 									"type": "string"
 								},
 								"ping_title": {
+									"type": "string"
+								},
+								"post_body": {
+									"type": "string"
+								},
+								"post_title": {
 									"type": "string"
 								},
 								"previous": {
@@ -307,6 +319,18 @@
 								"box_art_alt": {
 									"type": "string"
 								},
+								"feed_body": {
+									"type": "string"
+								},
+								"feed_footer": {
+									"type": "string"
+								},
+								"feed_header": {
+									"type": "string"
+								},
+								"feed_read": {
+									"type": "string"
+								},
 								"footer": {
 									"type": "string"
 								},
@@ -320,6 +344,18 @@
 									"type": "string"
 								},
 								"message": {
+									"type": "string"
+								},
+								"post_body": {
+									"type": "string"
+								},
+								"post_footer": {
+									"type": "string"
+								},
+								"post_header": {
+									"type": "string"
+								},
+								"post_view": {
 									"type": "string"
 								},
 								"preview_alt": {
@@ -385,46 +421,43 @@
 						"setup": {
 							"type": "object",
 							"properties": {
-								"add_body": {
-									"type": "string"
-								},
-								"add_title": {
-									"type": "string"
-								},
 								"eyebrow": {
+									"type": "string"
+								},
+								"general_body": {
+									"type": "string"
+								},
+								"general_title": {
 									"type": "string"
 								},
 								"index_label": {
 									"type": "string"
 								},
-								"manage_body": {
-									"type": "string"
-								},
-								"manage_title": {
-									"type": "string"
-								},
-								"overview_body": {
-									"type": "string"
-								},
-								"overview_title": {
-									"type": "string"
-								},
-								"pages_count": {
-									"type": "string"
-								},
 								"see_commands": {
+									"type": "string"
+								},
+								"sources_body": {
+									"type": "string"
+								},
+								"sources_title": {
+									"type": "string"
+								},
+								"status_body": {
+									"type": "string"
+								},
+								"status_title": {
 									"type": "string"
 								},
 								"subtitle": {
 									"type": "string"
 								},
-								"test_body": {
-									"type": "string"
-								},
-								"test_title": {
-									"type": "string"
-								},
 								"title": {
+									"type": "string"
+								},
+								"twitch_body": {
+									"type": "string"
+								},
+								"twitch_title": {
 									"type": "string"
 								}
 							},
@@ -437,6 +470,9 @@
 									"type": "string"
 								},
 								"add_response": {
+									"type": "string"
+								},
+								"bluesky_add_response": {
 									"type": "string"
 								},
 								"channel_topic": {
@@ -457,25 +493,28 @@
 								"reset_response": {
 									"type": "string"
 								},
+								"rss_add_response": {
+									"type": "string"
+								},
 								"search_placeholder": {
 									"type": "string"
 								},
-								"setup_count": {
+								"settings_count": {
 									"type": "string"
 								},
-								"setup_description": {
+								"settings_description": {
 									"type": "string"
 								},
-								"setup_heading": {
+								"settings_heading": {
 									"type": "string"
 								},
-								"setup_hint": {
+								"settings_hint": {
 									"type": "string"
 								},
-								"setup_intro": {
+								"settings_intro": {
 									"type": "string"
 								},
-								"setup_placeholder": {
+								"settings_placeholder": {
 									"type": "string"
 								},
 								"show_description": {
@@ -488,6 +527,9 @@
 									"type": "string"
 								},
 								"show_embed_title": {
+									"type": "string"
+								},
+								"social_add_description": {
 									"type": "string"
 								},
 								"test_description": {

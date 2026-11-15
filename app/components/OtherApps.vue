@@ -8,7 +8,7 @@
 		class="py-24"
 	>
 		<div
-			class="grid items-start gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16"
+			class="grid grid-cols-1 items-start gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16"
 		>
 			<div>
 				<p

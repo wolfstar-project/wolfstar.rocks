@@ -11,7 +11,7 @@ import { useLogger, createError } from "evlog";
 import { type SkewProtectionEvent, isClientOutdated } from "nuxt-skew-protection/server";
 import { isDevelopment } from "std-env";
 import { ValiError, parse } from "valibot";
-import { instrumentCacheGet, instrumentCachePut, withApiMetrics } from "./sentry-metrics";
+import { instrumentCacheGet, instrumentCachePut, withApiMetrics } from "./sentry/metrics";
 
 type WrappedLogger = ReturnType<typeof useLogger<Record<string, unknown>>>;
 

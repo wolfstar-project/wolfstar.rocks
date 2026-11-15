@@ -55,7 +55,7 @@
 					v-for="(item, index) of group.news"
 					:key="item.id"
 					as="article"
-					class="group/post relative rounded-[4px] px-1"
+					class="group/post relative rounded-[4px] px-1 max-sm:px-0 max-sm:[--newt-message-group-gap:12px]"
 					:class="[
 						compact && 'gap-2 py-0.5',
 						isContinued(group.news, index) ? 'py-0.5' : !compact && index > 0 && 'mt-3',
@@ -78,19 +78,11 @@
 						</MessageGroupAvatar>
 					</template>
 					<MessageGroupBody class="min-w-0 grow">
-						<Button
-							v-if="isContinued(group.news, index)"
-							:href="item.url"
-							target="_blank"
-							rel="noopener noreferrer"
-							variant="link"
-							size="sm"
-							class="dm-open dm-open-floating"
+						<MessageGroupHeader
+							v-if="!isContinued(group.news, index)"
+							:class="compact && 'mb-0'"
 						>
-							{{ ts("dashboard.dm.open_in_discord") }}
-						</Button>
-						<MessageGroupHeader v-else :class="compact && 'mb-0'">
-							<MessageGroupAuthor class="text-base font-medium">
+							<MessageGroupAuthor class="min-w-0 truncate text-base font-medium">
 								{{ thread.author ?? thread.name }}
 							</MessageGroupAuthor>
 							<MessageGroupBotTag
@@ -101,22 +93,22 @@
 							</MessageGroupBotTag>
 							<MessageGroupTime
 								:datetime="item.at"
-								class="text-xs"
+								class="shrink-0 text-xs whitespace-nowrap"
 								:class="compact && 'order-first'"
 							>
 								{{ formatActivityTime(item.at, now, timeLocale) }}
 							</MessageGroupTime>
-							<Button
-								:href="item.url"
-								target="_blank"
-								rel="noopener noreferrer"
-								variant="link"
-								size="sm"
-								class="dm-open ms-auto"
-							>
-								{{ ts("dashboard.dm.open_in_discord") }}
-							</Button>
 						</MessageGroupHeader>
+						<Button
+							:href="item.url"
+							target="_blank"
+							rel="noopener noreferrer"
+							variant="link"
+							size="sm"
+							class="dm-open"
+						>
+							{{ ts("dashboard.dm.open_in_discord") }}
+						</Button>
 						<MessageGroupContent v-if="item.content" class="text-base leading-[1.375]">
 							<DashboardPostMarkdown :source="item.content" />
 						</MessageGroupContent>
@@ -332,15 +324,12 @@ watch(
 	@apply min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6;
 }
 
-/* Shown on the post the pointer or focus is on, as Discord shows its actions. */
+/* The link floats over the post's top edge, where Discord puts a message's
+   actions, and shows on the post the pointer or focus is on. Out of the flow,
+   it takes no room from the name and time, so a phone's thread never scrolls
+   sideways. Hidden, it takes no clicks either: it overlaps the post above. */
 .dm-open {
-	@apply opacity-0 group-hover/post:opacity-100 focus-visible:opacity-100;
-}
-
-/* A joined post has no line of its own for the link: it floats over the
-   post's top edge, where Discord puts a message's actions. */
-.dm-open-floating {
-	@apply absolute end-2 -top-3 z-1 rounded-md border border-solid border-newt-border bg-newt-bg-floating px-2 shadow-sm;
+	@apply pointer-events-none absolute end-2 -top-3 z-1 rounded-md border border-solid border-newt-border bg-newt-bg-floating px-2 opacity-0 shadow-sm group-hover/post:pointer-events-auto group-hover/post:opacity-100 focus-visible:pointer-events-auto focus-visible:opacity-100;
 }
 
 /* The time of a joined post, in the avatar's column, shown as the link is.
@@ -353,19 +342,39 @@ watch(
 
 /* Discord's tag: a little taller than the registry's, its corners rounder. */
 .dm-app-tag {
-	@apply h-4.5 self-center rounded-[4px] px-1.25 py-0 text-xs leading-none font-bold;
+	@apply h-4.5 shrink-0 self-center rounded-[4px] px-1.25 py-0 text-xs leading-none font-bold;
 }
 
 /* A Components V2 container as Discord draws it in a channel: a raised
    surface with a hairline border, the accent down its start edge, and the
-   size of a message's text. */
+   size of a message's text. A phone's container is as tight as Discord's. */
 .dm-log :deep(.discord-v2-container) {
-	@apply max-w-190 gap-2 rounded-lg p-4 text-base leading-[1.375];
+	@apply max-w-190 gap-2 rounded-lg p-3 text-base leading-[1.375] sm:p-4;
 	border: 1px solid var(--newt-border);
 	background-color: var(--newt-bg-elevated);
 }
 
+/* Discord's accent is a straight bar, cut only by the rounded corners, and the
+   hairline stops where the bar starts. A thick coloured border would bend into
+   the top and bottom edges, and a real border would show as an arc over the
+   bar's corner. So the hairline is an inset shadow, and the bar is painted over
+   it, with the container's own corners. The padding keeps the 1px border's
+   room, and the start edge adds the bar's 3px. */
 .dm-log :deep(.discord-v2-container-accented) {
-	border-inline-start: 4px solid var(--newt-v2-accent);
+	@apply relative border-0 p-[13px] ps-4 sm:p-[17px] sm:ps-5;
+	box-shadow: inset 0 0 0 1px var(--newt-border);
+}
+
+.dm-log :deep(.discord-v2-container-accented)::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	background-image: linear-gradient(to right, var(--newt-v2-accent) 4px, transparent 4px);
+	pointer-events: none;
+}
+
+.dm-log :deep(.discord-v2-container-accented:dir(rtl))::before {
+	background-image: linear-gradient(to left, var(--newt-v2-accent) 4px, transparent 4px);
 }
 </style>

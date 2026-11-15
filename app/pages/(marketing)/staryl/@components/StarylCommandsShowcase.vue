@@ -35,9 +35,9 @@
 										subcommand: activeCommand.subcommand,
 									}"
 								>
-									<!-- `/setup` answers with its menu, made of components (Components V2). -->
+									<!-- `/settings` answers with its menu, made of components (Components V2). -->
 									<div
-										v-if="activeCommand.response.type === 'setup'"
+										v-if="activeCommand.response.type === 'settings'"
 										class="staryl-setup-menu"
 									>
 										<DiscordV2Container>
@@ -174,7 +174,7 @@ interface StarylShowcaseCommand {
 		| { type: "embed"; title: string; lines: string[] }
 		| { type: "text"; content: string }
 		| {
-				type: "setup";
+				type: "settings";
 				heading: string;
 				intro: string;
 				countLabel: string;
@@ -196,26 +196,38 @@ const composerLabel = computed(() =>
 const twitchOptions = computed<SlashCommandOption[]>(() => [
 	{ name: "streamer", value: "stella" },
 	{ name: "channel", value: `#${CHANNEL_NAME}` },
-	{ name: "type", value: "Stream Online", focused: true },
+	{ name: "event", value: "Stream goes live", focused: true },
+]);
+
+const feedOptions = computed<SlashCommandOption[]>(() => [
+	{ name: "target", value: "https://wolfstar.rocks/blog/rss.xml" },
+	{ name: "channel", value: `#${CHANNEL_NAME}` },
+	{ name: "keywords", value: "release, update", focused: true },
+]);
+
+const accountOptions = computed<SlashCommandOption[]>(() => [
+	{ name: "target", value: "stella.bsky.social" },
+	{ name: "channel", value: `#${CHANNEL_NAME}` },
+	{ name: "exclude_replies", value: "True", focused: true },
 ]);
 
 // The commands Staryl registers (staryl, `src/commands`), with the replies the
 // bot sends in English (`src/locales/en-US/commands`).
 const starylCommands = computed<StarylShowcaseCommand[]>(() => [
 	{
-		name: "setup",
-		description: ts("marketing.staryl.showcase.setup_description"),
+		name: "settings",
+		description: ts("marketing.staryl.showcase.settings_description"),
 		invoker: "redstar",
 		options: [],
 		response: {
-			type: "setup",
-			heading: ts("marketing.staryl.showcase.setup_heading"),
-			intro: ts("marketing.staryl.showcase.setup_intro"),
-			countLabel: ts("marketing.staryl.showcase.setup_count"),
+			type: "settings",
+			heading: ts("marketing.staryl.showcase.settings_heading"),
+			intro: ts("marketing.staryl.showcase.settings_intro"),
+			countLabel: ts("marketing.staryl.showcase.settings_count"),
 			// The two subscriptions `/subscriptions twitch show` lists.
 			count: 2,
-			hint: ts("marketing.staryl.showcase.setup_hint"),
-			placeholder: ts("marketing.staryl.showcase.setup_placeholder"),
+			hint: ts("marketing.staryl.showcase.settings_hint"),
+			placeholder: ts("marketing.staryl.showcase.settings_placeholder"),
 		},
 	},
 	{
@@ -228,6 +240,30 @@ const starylCommands = computed<StarylShowcaseCommand[]>(() => [
 		response: {
 			type: "text",
 			content: ts("marketing.staryl.showcase.add_response"),
+		},
+	},
+	{
+		name: "subscriptions",
+		subcommandGroup: "rss",
+		subcommand: "add",
+		description: ts("marketing.staryl.showcase.social_add_description"),
+		invoker: "redstar",
+		options: feedOptions.value,
+		response: {
+			type: "text",
+			content: ts("marketing.staryl.showcase.rss_add_response"),
+		},
+	},
+	{
+		name: "subscriptions",
+		subcommandGroup: "bluesky",
+		subcommand: "add",
+		description: ts("marketing.staryl.showcase.social_add_description"),
+		invoker: "redstar",
+		options: accountOptions.value,
+		response: {
+			type: "text",
+			content: ts("marketing.staryl.showcase.bluesky_add_response"),
 		},
 	},
 	{

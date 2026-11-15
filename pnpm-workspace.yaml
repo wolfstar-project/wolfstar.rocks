@@ -64,6 +64,10 @@ minimumReleaseAgeExclude:
     - unrouting@0.3.2
 
 overrides:
+    # Nuxt 4.6.4 resolves `devServer.host` to `{}` when no host is set, and
+    # @nuxt/cli 4.0.1 crashes on it (`options.hostname.toLowerCase is not a function`).
+    # 4.0.3 ignores the malformed value. Drop this once nuxt ships a cli >= 4.0.3.
+    "@nuxt/cli": 4.0.3
     # Keep a single discord-api-types instance; two copies make structurally
     # identical Discord payload types nominally incompatible during typecheck
     discord-api-types: 0.38.58

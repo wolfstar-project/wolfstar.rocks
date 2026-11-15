@@ -132,7 +132,7 @@
 		"@takumi-rs/core": "2.20.0",
 		"@takumi-rs/wasm": "2.20.0",
 		"@tolgee/cli": "2.21.0",
-		"@types/node": "24.13.3",
+		"@types/node": "26.6.6",
 		"@vitest/ui": "catalog:vite-plus",
 		"changelogen": "0.6.2",
 		"cz-conventional-changelog": "3.3.0",

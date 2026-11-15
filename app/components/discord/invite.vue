@@ -3,6 +3,7 @@
 		<InviteEyebrow>You've been invited to join a server</InviteEyebrow>
 		<InviteBody>
 			<InviteIcon
+				:as="NuxtImg"
 				src="/avatars/wolfstar.png"
 				alt="WolfStar Lounge server icon"
 				width="48"
@@ -12,13 +13,13 @@
 				class="rounded-full"
 			/>
 			<InviteInfo>
-				<InviteName :href="link">WolfStar Lounge</InviteName>
+				<InviteName :as="NuxtLink" :href="link">WolfStar Lounge</InviteName>
 				<InviteCounts>
 					<InviteCount online>{{ online.toLocaleString() }} Online</InviteCount>
 					<InviteCount>{{ members.toLocaleString() }} Members</InviteCount>
 				</InviteCounts>
 			</InviteInfo>
-			<Button :href="link" variant="success" size="sm">Join</Button>
+			<Button :as="NuxtLink" :href="link" variant="success" size="sm">Join</Button>
 		</InviteBody>
 	</Invite>
 </template>
@@ -32,6 +33,7 @@ interface InviteProps {
 </script>
 
 <script setup lang="ts">
+import { NuxtLink } from "#components";
 import { Button } from "~/components/ui/button";
 import {
 	Invite,
@@ -43,6 +45,9 @@ import {
 	InviteInfo,
 	InviteName,
 } from "~/components/ui/invite";
+
+// The `as` prop takes a component, and `#components` types NuxtImg as a generic one.
+const NuxtImg = resolveComponent("NuxtImg");
 
 const { link, online = 0, members = 0 } = defineProps<InviteProps>();
 </script>

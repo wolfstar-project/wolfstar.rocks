@@ -24,11 +24,16 @@
 		"version_name": ""
 	},
 	"discord": {
+		"avatar": {
+			"label": ""
+		},
 		"channel_info": {
 			"back": "",
 			"create_thread": "",
 			"label": "",
 			"members_in": "",
+			"no_results": "",
+			"no_results_hint": "",
 			"no_threads": "",
 			"sections": "",
 			"tabs": {
@@ -39,7 +44,8 @@
 				"pins": "",
 				"threads": ""
 			},
-			"text_channel": ""
+			"text_channel": "",
+			"threads_hint": ""
 		},
 		"chat": {
 			"messages_in": ""
@@ -63,14 +69,11 @@
 			"titled": ""
 		},
 		"header": {
-			"hide_members": "",
-			"notifications": "",
+			"online_count": "",
 			"open_info": "",
-			"pins": "",
 			"search": "",
 			"search_plain": "",
-			"show_members": "",
-			"threads": ""
+			"show_members": ""
 		},
 		"launcher": {
 			"apps": "",
@@ -100,12 +103,15 @@
 		},
 		"member_list": {
 			"app": "",
+			"dnd": "",
+			"idle": "",
 			"label": "",
 			"offline": "",
 			"online": "",
 			"verified_app": ""
 		},
 		"message": {
+			"app_badge": "",
 			"dismiss": "",
 			"dismiss_aria": "",
 			"ephemeral_notice": "",
@@ -122,6 +128,7 @@
 			"placeholder": ""
 		},
 		"suggestions": {
+			"app_commands": "",
 			"for_prefix": "",
 			"frequently_used": "",
 			"listbox": "",

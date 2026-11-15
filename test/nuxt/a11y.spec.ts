@@ -213,6 +213,8 @@ describe("component accessibility audits", () => {
 						type: "text",
 						topic: "WolfStar moderation commands — try a slash command below.",
 						searchPlaceholder: "Search",
+						onlineCount: 19,
+						notificationCount: 48,
 					},
 				});
 				const results = await runAxe(component);
@@ -294,6 +296,14 @@ describe("component accessibility audits", () => {
 								verified: true,
 								color: "oklch(57.74% 0.2091 273.85)",
 								pinned: true,
+							},
+							{
+								id: "redstar",
+								name: "RedStar",
+								presence: "dnd",
+								avatar: "/avatars/redstar.png",
+								rowBackground:
+									"linear-gradient(90deg, oklch(42% 0.16 305 / 0.55), transparent)",
 							},
 						],
 						offline: [{ id: "stella", name: "Stella" }],
@@ -513,7 +523,15 @@ describe("component accessibility audits", () => {
 		describe("DiscordChatMessageComposer", () => {
 			it("should have no accessibility violations", async () => {
 				const component = await mountSuspended(DiscordChatMessageComposer, {
-					props: { channelName: "mod-commands" },
+					props: { channelName: "mod-commands", layout: "default" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+
+			it("should have no accessibility violations in the narrow layout", async () => {
+				const component = await mountSuspended(DiscordChatMessageComposer, {
+					props: { channelName: "mod-commands", layout: "narrow", appsOpen: true },
 				});
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
@@ -521,12 +539,28 @@ describe("component accessibility audits", () => {
 		});
 
 		describe("DiscordAppLauncher", () => {
+			// The launcher is modal: unmount it, or the rest of the page stays inert.
 			it("should have no accessibility violations on the main view", async () => {
 				const component = await mountSuspended(DiscordAppLauncher, {
 					props: { open: true },
 				});
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
+				component.unmount();
+			});
+
+			it("should have no accessibility violations on a list view", async () => {
+				const component = await mountSuspended(DiscordAppLauncher, {
+					props: { open: true },
+				});
+				const viewMore = component
+					.findAll("button")
+					.find((button) => button.text().includes("View More"));
+				await viewMore?.trigger("click");
+				expect(component.find("button[aria-label='Back to Apps']").exists()).toBe(true);
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+				component.unmount();
 			});
 		});
 
@@ -566,13 +600,11 @@ describe("component accessibility audits", () => {
 				await new Promise((resolve) => requestAnimationFrame(resolve));
 				await nextTick();
 				expect(trigger.attributes("aria-expanded")).toBe("true");
-				const panel = document.querySelector("[role='listbox']");
-				if (!panel) throw new Error("The select menu did not open");
-				// The panel alone. While it is open Reka UI hides the rest of the page from
-				// assistive technology, the trigger included, and holds the focus in the list;
-				// axe reads the hidden trigger as focusable (`aria-hidden-focus`). The closed
-				// test above audits the trigger.
-				const results = await runAxe(panel);
+				// The panel opens inside the component, so the audit holds the trigger and the
+				// list. Reka UI hides the trigger while the list is open, and the trigger leaves
+				// the tab order meanwhile, so axe finds no hidden focusable element.
+				expect(component.find("[role='listbox']").exists()).toBe(true);
+				const results = await runAxe(component);
 				component.unmount();
 				expect(results.violations).toEqual([]);
 			});

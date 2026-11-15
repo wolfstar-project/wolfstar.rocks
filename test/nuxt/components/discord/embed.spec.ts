@@ -57,6 +57,16 @@ describe("DiscordEmbed", () => {
 		expect(wrapper.text()).not.toContain("•");
 	});
 
+	it("writes the timestamp in UTC, whatever the zone of the runtime (positive)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordEmbed, {
+			props: { timestamp: new Date("2026-07-21T16:00:00Z") },
+		});
+
+		// ASSERT: 16:00 UTC, in either hour cycle.
+		expect(wrapper.find("time").text()).toMatch(/\b(?:16:00|4:00\s?PM)\b/u);
+	});
+
 	it("uses a middle-dot footer separator between text and timestamp (positive)", async () => {
 		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordEmbed, {

@@ -60,7 +60,7 @@ describe("DiscordMessage", () => {
 		expect(dismiss.text()).toBe("Dismiss message");
 	});
 
-	it("puts the command reply above the author line (positive)", async () => {
+	it("puts the command reply just above the author line (positive)", async () => {
 		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordMessage, {
 			props: {
@@ -76,11 +76,37 @@ describe("DiscordMessage", () => {
 		expect(reply.exists()).toBe(true);
 		expect(reply.attributes("aria-label")).toContain("used the help slash command");
 		expect(reply.text()).not.toContain("/help");
-		const replyBox = reply.element.getBoundingClientRect();
-		const badge = wrapper.find("[aria-label='Verified application badge']").element;
-		expect(replyBox.bottom).toBeLessThanOrEqual(badge.getBoundingClientRect().top);
-		// The reply line sits close to the author line, not a full column gap away.
-		expect(getComputedStyle(wrapper.find("article").element).rowGap).toBe("6px");
+		// The reply line sits a few pixels above the body, not a full column gap away.
+		const replyBottom = reply.element.getBoundingClientRect().bottom;
+		const bodyTop = wrapper
+			.find("[data-slot='message-body']")
+			.element.getBoundingClientRect().top;
+		expect(bodyTop - replyBottom).toBeGreaterThanOrEqual(0);
+		expect(bodyTop - replyBottom).toBeLessThanOrEqual(4);
+
+		wrapper.unmount();
+	});
+
+	it("starts the reply spine above the centre of the avatar (positive)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordMessage, {
+			props: {
+				name: "redstar",
+				reply: { kind: "message", user: "stella", content: "Can someone help?" },
+			},
+			slots: { default: "On it." },
+			attachTo: document.body,
+		});
+
+		// ASSERT: the 2px stroke of the spine is centred on the avatar, at either avatar size.
+		const reply = wrapper.find("[role='complementary']").element;
+		const spine = getComputedStyle(reply, "::before");
+		const strokeCentre =
+			reply.getBoundingClientRect().left +
+			Number.parseFloat(spine.left) +
+			Number.parseFloat(spine.borderLeftWidth) / 2;
+		const avatar = wrapper.find("[data-slot='message-avatar']").element.getBoundingClientRect();
+		expect(Math.abs(strokeCentre - (avatar.left + avatar.width / 2))).toBeLessThanOrEqual(1);
 
 		wrapper.unmount();
 	});

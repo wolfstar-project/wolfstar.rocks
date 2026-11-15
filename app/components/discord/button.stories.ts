@@ -52,3 +52,12 @@ export const Link: Story = {
 		variant: "link",
 	},
 };
+
+/** An icon and no label, as the reset button of `/settings server`: no empty label box. */
+export const IconOnly: Story = {
+	args: {
+		label: undefined,
+		variant: "secondary",
+		icon: "twemoji:counterclockwise-arrows-button",
+	},
+};

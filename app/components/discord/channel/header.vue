@@ -1,56 +1,46 @@
 <template>
 	<ChannelHeader
-		class="discord-channel-header h-14 gap-2 px-2 font-whitney md:h-12 md:gap-3 md:ps-4 md:pe-3"
+		class="discord-channel-header min-h-14 gap-2 px-2 font-whitney md:min-h-12 md:gap-3 md:ps-4 md:pe-3"
 	>
-		<!-- Narrow layout (Discord mobile): back + badge · #channel / Online · search. -->
-		<span
-			class="relative inline-flex size-10 shrink-0 items-center justify-center md:hidden"
-			aria-hidden="true"
-		>
-			<UIcon name="ph:arrow-left-bold" class="size-5" />
-			<span
-				v-if="notificationCount > 0"
-				data-slot="notification-badge"
-				class="absolute top-0.5 right-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-newt-danger px-1 text-[10px] font-bold text-newt-on-accent"
-				>{{ notificationCount }}</span
-			>
-		</span>
+		<!--
+			Narrow layout (Discord mobile): back + badge, #channel / Online, search.
+			The showcase has no channel list and no search, so back and search are decoration.
+		-->
+		<ChannelHeaderBack
+			as="span"
+			:badge="notificationCount > 0 ? notificationCount : undefined"
+			class="h-10 min-w-10 md:hidden"
+		/>
 
-		<button
-			type="button"
-			class="min-w-0 flex-1 cursor-pointer border-0 bg-transparent p-0 text-start text-inherit focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-newt-text-link md:hidden"
-			:aria-label="ts('discord.header.open_info', { name })"
-			@click="emit('open-channel-info')"
-		>
-			<span class="flex min-w-0 items-center gap-1">
+		<div class="me-auto flex min-w-0 flex-col md:hidden">
+			<ChannelHeaderTitle
+				class="py-0.5"
+				:aria-label="ts('discord.header.open_info', { name })"
+				@click="emit('open-channel-info')"
+			>
 				<ChannelHeaderIcon>
 					<UIcon :name="typeIcon" class="block size-4" />
 				</ChannelHeaderIcon>
-				<ChannelHeaderName class="min-w-0 shrink">{{ name }}</ChannelHeaderName>
-				<UIcon
-					name="ph:caret-right-bold"
-					class="size-3 shrink-0 text-newt-text-muted"
-					aria-hidden="true"
-				/>
-			</span>
-			<ChannelHeaderOnline v-if="onlineCount !== undefined" class="mt-0.5 flex">
-				{{ onlineCount }} Online
+				<ChannelHeaderName>{{ name }}</ChannelHeaderName>
+			</ChannelHeaderTitle>
+			<ChannelHeaderOnline v-if="onlineCount !== undefined" class="ps-1.5">
+				{{ ts("discord.header.online_count", { count: onlineCount }) }}
 			</ChannelHeaderOnline>
-		</button>
+		</div>
 
-		<span
-			class="inline-flex size-10 shrink-0 items-center justify-center md:hidden"
-			aria-hidden="true"
-		>
-			<UIcon name="discord:search" class="size-5" />
-		</span>
+		<ChannelHeaderSearch
+			as="span"
+			compact
+			:placeholder="searchPlaceholderText"
+			class="size-10 md:hidden"
+		/>
 
 		<!-- Desktop layout. -->
 		<ChannelHeaderInfo class="hidden md:flex">
 			<ChannelHeaderIcon>
 				<UIcon :name="typeIcon" class="block size-5" />
 			</ChannelHeaderIcon>
-			<ChannelHeaderName class="min-w-0 shrink">{{ name }}</ChannelHeaderName>
+			<ChannelHeaderName>{{ name }}</ChannelHeaderName>
 			<template v-if="topic">
 				<ChannelHeaderDivider />
 				<ChannelHeaderTopic>{{ topic }}</ChannelHeaderTopic>
@@ -58,24 +48,18 @@
 		</ChannelHeaderInfo>
 
 		<ChannelHeaderToolbar class="hidden md:flex">
-			<ChannelHeaderAction
-				v-for="action of ToolbarActions"
-				:key="action.id"
-				:active="action.id === 'members' && membersOpen"
-				:aria-label="action.id === 'members' ? membersToggleLabel : ts(action.labelKey)"
-				:aria-pressed="action.id === 'members' ? membersOpen : undefined"
-				@click="action.id === 'members' ? toggleMembers() : undefined"
-			>
-				<UIcon :name="action.icon" class="size-6" aria-hidden="true" />
+			<!-- Only the member list toggle works in the showcase; the rest is decoration. -->
+			<ChannelHeaderAction v-for="icon of DecorativeToolbarIcons" :key="icon" as="span">
+				<UIcon :name="icon" class="size-6" />
 			</ChannelHeaderAction>
-
-			<!-- Decorative: the showcase has no search, so keep it out of the tab order. -->
-			<ChannelHeaderSearch
-				:placeholder="searchPlaceholderText"
-				aria-hidden="true"
-				tabindex="-1"
-				class="cursor-default"
-			/>
+			<ChannelHeaderAction
+				:active="membersOpen"
+				:aria-label="ts('discord.header.show_members')"
+				@click="toggleMembers"
+			>
+				<UIcon name="discord:members" class="size-6" aria-hidden="true" />
+			</ChannelHeaderAction>
+			<ChannelHeaderSearch as="span" :placeholder="searchPlaceholderText" />
 		</ChannelHeaderToolbar>
 	</ChannelHeader>
 </template>
@@ -101,32 +85,19 @@ interface ChannelHeaderProps {
 	membersOpen?: boolean;
 }
 
-type ToolbarActionId = "threads" | "notifications" | "pins" | "members";
-
-interface ToolbarAction {
-	id: ToolbarActionId;
-	icon: string;
-	labelKey: string;
-}
-
 const TypeIcons = {
 	text: "discord:text-channel",
 } as const satisfies Record<ChannelHeaderType, string>;
 
 /**
  * Order matches Discord desktop channel header:
- * threads → notifications → pins → members, then search.
+ * threads → notifications → pins, then the member list toggle and search.
  */
-const ToolbarActions = [
-	{ id: "threads", icon: "discord:threads", labelKey: "discord.header.threads" },
-	{
-		id: "notifications",
-		icon: "discord:notifications",
-		labelKey: "discord.header.notifications",
-	},
-	{ id: "pins", icon: "discord:pins", labelKey: "discord.header.pins" },
-	{ id: "members", icon: "discord:members", labelKey: "discord.header.show_members" },
-] as const satisfies readonly ToolbarAction[];
+const DecorativeToolbarIcons = [
+	"discord:threads",
+	"discord:notifications",
+	"discord:pins",
+] as const;
 
 interface ChannelHeaderEmits {
 	"update:membersOpen": [value: boolean];
@@ -140,12 +111,14 @@ interface ChannelHeaderEmits {
 import {
 	ChannelHeader,
 	ChannelHeaderAction,
+	ChannelHeaderBack,
 	ChannelHeaderDivider,
 	ChannelHeaderIcon,
 	ChannelHeaderInfo,
 	ChannelHeaderName,
 	ChannelHeaderOnline,
 	ChannelHeaderSearch,
+	ChannelHeaderTitle,
 	ChannelHeaderToolbar,
 	ChannelHeaderTopic,
 } from "~/components/ui/channel-header";
@@ -172,10 +145,6 @@ const searchPlaceholderText = computed(() => {
 	}
 	return searchPlaceholder ?? ts("discord.header.search_plain");
 });
-
-const membersToggleLabel = computed(() =>
-	ts(membersOpen ? "discord.header.hide_members" : "discord.header.show_members"),
-);
 
 function toggleMembers() {
 	emit("toggle-members");

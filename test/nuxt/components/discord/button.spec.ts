@@ -85,6 +85,53 @@ describe("DiscordButton", () => {
 		expect(img.attributes("src")).toBe("/emojis/wave.png");
 	});
 
+	it("is 32px high, as a button in a message is (positive)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordButton, {
+			props: { label: "Confirm", variant: "primary" },
+			attachTo: document.body,
+		});
+
+		// ASSERT
+		expect(wrapper.find(".discord-button").element.getBoundingClientRect().height).toBe(32);
+
+		wrapper.unmount();
+	});
+
+	it("keeps a gap between the icon and the label (positive)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordButton, {
+			props: { label: "Stop", variant: "danger", icon: "ph:stop-fill" },
+			attachTo: document.body,
+		});
+
+		// ASSERT
+		const button = wrapper.find(".discord-button").element;
+		const [icon, label] = Array.from(button.children, (child) => child.getBoundingClientRect());
+		expect(label!.left - icon!.right).toBeGreaterThanOrEqual(8);
+
+		wrapper.unmount();
+	});
+
+	it("centres the icon of a button with no label (negative)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordButton, {
+			props: { icon: "twemoji:counterclockwise-arrows-button" },
+			attachTo: document.body,
+		});
+
+		// ASSERT: no empty label box pushes the icon off centre.
+		const button = wrapper.find(".discord-button").element;
+		expect(button.textContent?.trim()).toBe("");
+		const box = button.getBoundingClientRect();
+		const icon = button.firstElementChild!.getBoundingClientRect();
+		expect(
+			Math.abs(icon.left + icon.width / 2 - (box.left + box.width / 2)),
+		).toBeLessThanOrEqual(1);
+
+		wrapper.unmount();
+	});
+
 	it("does not treat a plain Iconify name as an image emoji (negative)", async () => {
 		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordButton, {

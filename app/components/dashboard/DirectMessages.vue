@@ -13,7 +13,7 @@
 			</label>
 		</div>
 
-		<DiscordScrollbar overlay auto-hide themed class="dm-list-scroll">
+		<ScrollArea variant="overlay" auto-hide class="dm-list-scroll">
 			<nav class="dm-list" :aria-label="ts('dashboard.dm.title')">
 				<!-- The member's own appeals: a page of the Home above the threads. -->
 				<button
@@ -71,7 +71,7 @@
 					{{ ts("select.nothing_matches") }}
 				</p>
 			</nav>
-		</DiscordScrollbar>
+		</ScrollArea>
 
 		<DashboardAccountCard :floating />
 	</div>
@@ -79,6 +79,7 @@
 
 <script setup lang="ts">
 import type { DirectMessageThreadId } from "~/utils/direct-messages";
+import { ScrollArea } from "~/components/ui/scrollbar";
 /** The Home's sidebar: the bots' threads, searchable, above the account card. */
 const { floating = false } = defineProps<{
 	/** Lays the account card over the server rail, as the server sidebar does. */
@@ -173,12 +174,13 @@ function showAppeals() {
 	@apply h-full max-h-full min-h-0 flex-1;
 }
 
-.dm-sidebar--floating .dm-list-scroll :deep(.discord-scrollbar-track) {
-	bottom: 4.75rem;
+/* The thumb stops 4px above the floating account card. */
+.dm-sidebar--floating .dm-list-scroll {
+	--newt-scrollbar-inset-end: calc(4.75rem + 4px);
 
 	/* Clear of the phone's taller account card. */
 	@variant max-sm {
-		bottom: 7rem;
+		--newt-scrollbar-inset-end: calc(7rem + 4px);
 	}
 }
 

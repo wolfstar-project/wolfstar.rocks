@@ -39,11 +39,30 @@ describe("DiscordChatInputCommandSuggestions", () => {
 		expect(listboxes[0]?.text()).toContain("Frequently Used");
 		expect(listboxes[0]?.find("[role='option']").exists()).toBe(true);
 		expect(listboxes[1]?.find("[role='option']").attributes("aria-selected")).toBe("true");
+		// The matched command sits under the command list, not inside it.
+		expect(listboxes[0]?.element.contains(listboxes[1]?.element ?? null)).toBe(false);
 		const rail = wrapper.find("nav");
 		expect(rail.attributes("aria-label")).toBe("Applications");
 		const railItems = rail.findAll("button");
 		expect(railItems.length).toBeGreaterThan(1);
 		expect(railItems[0]?.attributes("aria-pressed")).toBe("true");
+		expect(rail.find("[aria-label='WolfStar commands']").exists()).toBe(true);
+	});
+
+	it("names the rail's apps in the reader's language (positive)", async () => {
+		// ARRANGE
+		useNuxtApp().$mergeTranslations({
+			discord: { suggestions: { app_commands: "Comandi di {app}" } },
+		});
+
+		// ACT
+		const wrapper = await mountSuspended(DiscordChatInputCommandSuggestions, {
+			props: { prefix: "/" },
+			slots: { "frequently-used": "<p>recent</p>" },
+		});
+
+		// ASSERT
+		expect(wrapper.find("nav [aria-label='Comandi di WolfStar']").exists()).toBe(true);
 	});
 
 	it("filters to an app when its rail item is pressed (positive)", async () => {

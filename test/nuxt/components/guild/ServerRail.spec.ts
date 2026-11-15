@@ -1,6 +1,6 @@
 import { GuildServerRail } from "#components";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 
 // Accessibility audits for GuildServerRail live in test/nuxt/a11y.spec.ts.
@@ -85,5 +85,34 @@ describe("GuildServerRail", () => {
 		const rail = wrapper.get("nav");
 		expect(rail.findAll("button.guild-rail-item")).toHaveLength(0);
 		expect(rail.findAll(".guild-rail-skeleton").length).toBeGreaterThan(0);
+	});
+
+	it("floats a short thumb over the servers that stops above the account card", async () => {
+		const guilds = Array.from({ length: 30 }, (_, index) =>
+			createMockOauthFlattenedGuild({ id: `1${String(index).padStart(17, "0")}` }),
+		);
+		const wrapper = await mountSuspended(GuildServerRail, {
+			props: { guilds },
+			attachTo: document.body,
+		});
+		// The rail shows from the `sm` breakpoint; give it a box at any test viewport.
+		const rail = wrapper.element as HTMLElement;
+		rail.style.display = "flex";
+		rail.style.height = "480px";
+
+		const track = wrapper.get("[data-scrollbar-track]").element as HTMLElement;
+		await vi.waitFor(() => expect(track.hidden).toBe(false));
+		const railBox = rail.getBoundingClientRect();
+		const thumbBox = track.firstElementChild!.getBoundingClientRect();
+		// No lane is kept for the thumb: the servers keep the rail's full width.
+		expect(wrapper.get(".guild-rail-list").element.getBoundingClientRect().width).toBe(
+			railBox.width,
+		);
+		expect(thumbBox.width).toBe(3);
+		expect(thumbBox.height).toBeLessThanOrEqual(120);
+		// 4.75rem of account card, then 4px.
+		expect(railBox.bottom - track.getBoundingClientRect().bottom).toBe(80);
+
+		wrapper.unmount();
 	});
 });

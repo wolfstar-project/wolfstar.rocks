@@ -1,59 +1,55 @@
 <template>
 	<AppLauncher
 		v-if="open"
-		ref="rootRef"
+		:variant="isBelowMediumScreen ? 'sheet' : 'popout'"
+		modal
+		:label="ts('discord.launcher.apps')"
 		:class="[
-			// `discord-app-launcher` is the hook the commands showcase styles the sheet through.
-			// AppLauncher has no bottom-sheet layout, so the phone sheet is local.
-			'discord-app-launcher font-whitney max-md:relative max-md:h-(--discord-app-launcher-sheet-half) max-md:max-h-(--discord-app-launcher-sheet-full) max-md:max-w-none max-md:rounded-t-[16px] max-md:rounded-b-none max-md:border-0 max-md:shadow-none max-md:transition-[height] max-md:duration-200',
-			{
-				'max-md:h-(--discord-app-launcher-sheet-full)': sheetSnap === 'full',
-				'max-md:transition-none': sheetDragging || effectiveReduceMotion,
-			},
+			// A popout on desktop, a bottom sheet on a phone. `discord-app-launcher` is the hook
+			// the commands showcase styles the sheet through.
+			'discord-app-launcher font-whitney',
+			isBelowMediumScreen && [
+				'relative rounded-t-[16px] border-0 shadow-none transition-[height] duration-200',
+				(sheetDragging || effectiveReduceMotion) && 'transition-none',
+			],
 		]"
 		:data-sheet-snap="sheetSnap"
 		:style="sheetStyle"
-		aria-modal="true"
-		:aria-label="dialogLabel"
-		@keydown.escape.prevent.stop="onEscape"
-		@keydown.tab="onTab"
+		@escape-key-down="onEscapeKeyDown"
+		@close="closeLauncher"
 	>
-		<!-- AppLauncherHandle is a hidden grip; the phone sheet needs a focusable control around it. -->
-		<button
-			type="button"
-			data-slot="sheet-handle"
-			class="mb-1.5 hidden shrink-0 cursor-grab touch-none self-center rounded-full border-0 bg-transparent p-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-newt-text-link active:cursor-grabbing max-md:block"
-			:tabindex="isBelowMediumScreen ? 0 : -1"
-			:aria-hidden="isBelowMediumScreen ? undefined : 'true'"
-			:aria-label="
-				isBelowMediumScreen
-					? sheetSnap === 'full'
-						? ts('discord.launcher.collapse')
-						: ts('discord.launcher.expand')
-					: undefined
+		<!-- The grip takes the muted text colour: the newt border colour is too faint for the only mark of a control. -->
+		<AppLauncherHandle
+			v-if="isBelowMediumScreen"
+			:label="
+				sheetSnap === 'full'
+					? ts('discord.launcher.collapse')
+					: ts('discord.launcher.expand')
 			"
-			:aria-expanded="isBelowMediumScreen ? sheetSnap === 'full' : undefined"
-			@pointerdown="onHandlePointerDown"
+			:expanded="sheetSnap === 'full'"
+			class="mt-0 cursor-grab touch-none active:cursor-grabbing [&>span]:h-1.5 [&>span]:w-11 [&>span]:bg-newt-text-muted"
+			@click="onHandleClick"
 			@keydown.up.prevent="expandSheet"
 			@keydown.down.prevent="collapseSheet"
-		>
-			<AppLauncherHandle class="mt-2.5 h-1.5 w-11 bg-newt-text-muted" />
-		</button>
+			@pointerdown="onHandlePointerDown"
+			@pointermove="onHandlePointerMove"
+			@pointerup="onHandlePointerUp"
+			@pointercancel="onHandlePointerCancel"
+		/>
 
 		<template v-if="activeView === null">
 			<AppLauncherSearch class="max-md:pt-2">
 				<AppLauncherSearchInput
 					ref="searchRef"
-					:value="searchQuery"
+					v-model="searchQuery"
 					:placeholder="ts('discord.launcher.search')"
 					:aria-label="ts('discord.launcher.search')"
 					class="max-md:h-12 max-md:rounded-full"
-					@input="onSearchInput"
 					@keydown.enter.prevent="onSearchEnter"
 				/>
 			</AppLauncherSearch>
 
-			<AppLauncherBody :class="[scrollbarClassName, 'max-md:pb-5']">
+			<AppLauncherBody class="max-md:pb-5">
 				<!-- Command hits appear only while searching — never a static /commands page. -->
 				<AppLauncherSection
 					v-if="filteredCommands.length > 0"
@@ -112,40 +108,41 @@
 							}}</span>
 						</AppLauncherViewMore>
 					</AppLauncherSectionHeader>
-					<!-- AppLauncherRecents is a plain div; the list roles keep the count announced. -->
-					<AppLauncherRecents role="list" class="max-md:hidden">
-						<span v-for="entry of filteredRecents" :key="entry.id" role="listitem">
-							<AppLauncherRecent
-								:title="entry.name"
-								:aria-label="recentTileLabel(entry)"
-								:class="{
-									'[&>img]:object-contain [&>img]:p-1': isWolfstarEntry(entry),
-								}"
-								:style="
-									entry.iconBg ? { backgroundColor: entry.iconBg } : undefined
-								"
-								@click="selectEntry(entry)"
-							>
-								<NuxtImg
-									v-if="entry.avatar"
-									:src="entry.avatar"
-									alt=""
-									width="40"
-									height="40"
-								/>
-								<UIcon
-									v-else-if="entry.icon"
-									:name="entry.icon"
-									class="size-6 text-newt-on-accent"
-								/>
-							</AppLauncherRecent>
-						</span>
+					<AppLauncherRecents
+						class="max-md:hidden"
+						aria-labelledby="discord-app-launcher-recents-heading"
+					>
+						<AppLauncherRecent
+							v-for="entry of filteredRecents"
+							:key="entry.id"
+							:title="entry.name"
+							:aria-label="recentTileLabel(entry)"
+							:fit="isWolfstarEntry(entry) ? 'contain' : 'cover'"
+							:class="{ 'p-1': isWolfstarEntry(entry) }"
+							:style="entry.iconBg ? { backgroundColor: entry.iconBg } : undefined"
+							@click="selectEntry(entry)"
+						>
+							<NuxtImg
+								v-if="entry.avatar"
+								:src="entry.avatar"
+								alt=""
+								width="40"
+								height="40"
+							/>
+							<UIcon
+								v-else-if="entry.icon"
+								:name="entry.icon"
+								class="size-6 text-newt-on-accent"
+							/>
+						</AppLauncherRecent>
 					</AppLauncherRecents>
-					<AppLauncherRecents role="list" :class="MOBILE_CAROUSEL_CLASS">
-						<span
+					<AppLauncherRecents
+						:class="MOBILE_CAROUSEL_CLASS"
+						aria-labelledby="discord-app-launcher-recents-heading"
+					>
+						<li
 							v-for="entry of mobileRecents"
 							:key="`mobile-recent-${entry.id}`"
-							role="listitem"
 							:class="MOBILE_TILE_SLOT_CLASS"
 						>
 							<DiscordAppLauncherListItem
@@ -161,7 +158,7 @@
 								:show-chevron="false"
 								@select="selectEntry(entry)"
 							/>
-						</span>
+						</li>
 					</AppLauncherRecents>
 				</AppLauncherSection>
 
@@ -208,11 +205,13 @@
 							@select="selectEntry(entry)"
 						/>
 					</AppLauncherList>
-					<AppLauncherRecents role="list" :class="MOBILE_CAROUSEL_CLASS">
-						<span
+					<AppLauncherRecents
+						:class="MOBILE_CAROUSEL_CLASS"
+						aria-labelledby="discord-app-launcher-server-heading"
+					>
+						<li
 							v-for="entry of mobileServerApps"
 							:key="`mobile-server-${entry.id}`"
-							role="listitem"
 							:class="MOBILE_TILE_SLOT_CLASS"
 						>
 							<DiscordAppLauncherListItem
@@ -227,11 +226,11 @@
 								:show-chevron="false"
 								@select="selectEntry(entry)"
 							/>
-						</span>
+						</li>
 					</AppLauncherRecents>
 				</AppLauncherSection>
 
-				<!-- newt/ui has no promoted card: the cards and their mock art stay local. -->
+				<!-- The mock art draws other apps' brand art, so it stays local. -->
 				<AppLauncherSection
 					v-if="filteredPromoted.length > 0 && !searchQuery.trim()"
 					class="max-md:gap-2.5"
@@ -246,126 +245,126 @@
 						</AppLauncherSectionTitle>
 					</AppLauncherSectionHeader>
 					<div class="grid grid-cols-2 gap-2.5 max-md:gap-2">
-						<button
+						<!-- On a phone the footer sits on the base colour. -->
+						<AppLauncherPromoCard
 							v-for="promo of filteredPromoted"
 							:key="promo.id"
-							type="button"
-							class="flex cursor-pointer flex-col overflow-hidden rounded-[8px] border-0 bg-newt-bg-elevated p-0 text-start focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-newt-text-link max-md:rounded-[12px]"
+							class="max-md:rounded-[12px] max-md:bg-newt-bg-base"
 							:aria-label="promoAriaLabel(promo)"
 							@click="emit('selectPromo', promo)"
 						>
-							<span
-								class="promo-art relative flex h-32 w-full shrink-0 items-center justify-center overflow-hidden max-md:h-[6.5rem]"
-								:class="`promo-art--${promo.variant}`"
-								aria-hidden="true"
-							>
-								<template v-if="promo.variant === 'wordle'">
-									<span class="grid grid-cols-3 gap-[3px]">
+							<template #art>
+								<span
+									class="relative flex size-full items-center justify-center overflow-hidden"
+									:class="`promo-art--${promo.variant}`"
+									aria-hidden="true"
+								>
+									<template v-if="promo.variant === 'wordle'">
+										<span class="grid grid-cols-3 gap-[3px]">
+											<span
+												v-for="(cell, cellIndex) of WordleCells"
+												:key="`${cell}-${cellIndex}`"
+												class="size-3.5 rounded-[2px]"
+												:class="`promo-wordle-cell--${cell}`"
+											/>
+										</span>
 										<span
-											v-for="(cell, cellIndex) of WordleCells"
-											:key="`${cell}-${cellIndex}`"
-											class="size-3.5 rounded-[2px]"
-											:class="`promo-wordle-cell--${cell}`"
-										/>
-									</span>
-									<span
-										class="font-serif text-3xl leading-none font-bold tracking-tight"
-										>{{ promo.title }}</span
-									>
-									<span
-										v-if="promo.subtitle"
-										class="promo-wordle-subtitle text-[10px] leading-tight font-semibold tracking-[0.04em]"
-									>
-										{{ promo.subtitle }}
-									</span>
-								</template>
-								<template v-else-if="promo.variant === 'garden'">
-									<span
-										class="promo-garden-vine absolute -top-7 left-1/2 h-20 w-32 -translate-x-1/2 rounded-[50%]"
-									/>
-									<span
-										class="promo-garden-leaf absolute bottom-[48%] left-[12%] size-7 -rotate-25"
-									/>
-									<span
-										class="promo-garden-leaf absolute right-[10%] bottom-[47%] size-7 scale-85 rotate-28"
-									/>
-									<span
-										class="absolute bottom-[36%] left-1/2 size-14 -translate-x-1/2"
-									>
-										<span
-											class="promo-garden-berry absolute inset-0 rounded-[45%_45%_50%_50%]"
-										/>
-										<span
-											class="promo-garden-face absolute inset-0 z-1 flex items-center justify-center text-sm font-black"
-											>•ᴗ•</span
+											class="font-serif text-3xl leading-none font-bold tracking-tight"
+											>{{ promo.title }}</span
 										>
 										<span
-											class="promo-garden-seed absolute top-[38%] left-[28%] size-1 rounded-full"
-										/>
-										<span
-											class="promo-garden-seed absolute top-[52%] left-[52%] size-1 rounded-full"
-										/>
-										<span
-											class="promo-garden-seed absolute top-[30%] left-[58%] size-1 rounded-full"
-										/>
-										<span
-											class="promo-garden-crown absolute -top-1.5 left-1/2 size-4 -translate-x-1/2 rounded-full"
-										/>
-									</span>
-									<span
-										class="promo-garden-flower absolute right-[22%] bottom-[28%] size-3 rounded-full"
-									/>
-									<span
-										class="promo-garden-title absolute right-5 bottom-2 z-1 m-0 -rotate-3 text-center text-lg leading-[0.78] font-black tracking-[-0.04em] uppercase"
-									>
-										<template
-											v-for="(
-												line, lineIndex
-											) of splitDiscordAppLauncherPromoTitle(promo.title)"
-											:key="`${promo.id}-garden-${lineIndex}`"
+											v-if="promo.subtitle"
+											class="promo-wordle-subtitle text-[10px] leading-tight font-semibold tracking-[0.04em]"
 										>
-											<br v-if="lineIndex > 0" />{{ line }}
-										</template>
-									</span>
-								</template>
-								<template v-else-if="promo.variant === 'farm'">
-									<span
-										class="promo-farm-sun absolute top-3 right-5 size-8 rounded-full"
-									/>
-									<span
-										class="promo-farm-field absolute inset-x-0 bottom-0 h-12"
-									/>
-									<UIcon
-										name="ph:plant-fill"
-										class="promo-farm-icon relative z-1 ml-5 size-16"
-									/>
-									<span
-										class="promo-farm-title relative z-1 ml-2 -rotate-6 text-xl leading-[0.85] font-black uppercase"
-									>
-										<template
-											v-for="(
-												line, lineIndex
-											) of splitDiscordAppLauncherPromoTitle(promo.title)"
-											:key="`${promo.id}-farm-${lineIndex}`"
+											{{ promo.subtitle }}
+										</span>
+									</template>
+									<template v-else-if="promo.variant === 'garden'">
+										<span
+											class="promo-garden-vine absolute -top-7 left-1/2 h-20 w-32 -translate-x-1/2 rounded-[50%]"
+										/>
+										<span
+											class="promo-garden-leaf absolute bottom-[48%] left-[12%] size-7 -rotate-25"
+										/>
+										<span
+											class="promo-garden-leaf absolute right-[10%] bottom-[47%] size-7 scale-85 rotate-28"
+										/>
+										<span
+											class="absolute bottom-[36%] left-1/2 size-14 -translate-x-1/2"
 										>
-											<br v-if="lineIndex > 0" />{{ line }}
-										</template>
-									</span>
-								</template>
-								<template v-else>
-									<UIcon
-										name="ph:youtube-logo-fill"
-										class="promo-watch-icon size-12"
-									/>
-									<span
-										class="promo-watch-title text-3xl font-bold tracking-tight"
-										>{{ promo.title }}</span
-									>
-								</template>
-							</span>
-							<span
-								class="flex min-h-14 items-center gap-2.5 px-2.5 py-2 max-md:min-h-0 max-md:gap-0 max-md:bg-newt-bg-base max-md:px-3 max-md:py-2.5"
-							>
+											<span
+												class="promo-garden-berry absolute inset-0 rounded-[45%_45%_50%_50%]"
+											/>
+											<span
+												class="promo-garden-face absolute inset-0 z-1 flex items-center justify-center text-sm font-black"
+												>•ᴗ•</span
+											>
+											<span
+												class="promo-garden-seed absolute top-[38%] left-[28%] size-1 rounded-full"
+											/>
+											<span
+												class="promo-garden-seed absolute top-[52%] left-[52%] size-1 rounded-full"
+											/>
+											<span
+												class="promo-garden-seed absolute top-[30%] left-[58%] size-1 rounded-full"
+											/>
+											<span
+												class="promo-garden-crown absolute -top-1.5 left-1/2 size-4 -translate-x-1/2 rounded-full"
+											/>
+										</span>
+										<span
+											class="promo-garden-flower absolute right-[22%] bottom-[28%] size-3 rounded-full"
+										/>
+										<span
+											class="promo-garden-title absolute right-5 bottom-2 z-1 m-0 -rotate-3 text-center text-lg leading-[0.78] font-black tracking-[-0.04em] uppercase"
+										>
+											<template
+												v-for="(
+													line, lineIndex
+												) of splitDiscordAppLauncherPromoTitle(promo.title)"
+												:key="`${promo.id}-garden-${lineIndex}`"
+											>
+												<br v-if="lineIndex > 0" />{{ line }}
+											</template>
+										</span>
+									</template>
+									<template v-else-if="promo.variant === 'farm'">
+										<span
+											class="promo-farm-sun absolute top-3 right-5 size-8 rounded-full"
+										/>
+										<span
+											class="promo-farm-field absolute inset-x-0 bottom-0 h-12"
+										/>
+										<UIcon
+											name="ph:plant-fill"
+											class="promo-farm-icon relative z-1 ml-5 size-16"
+										/>
+										<span
+											class="promo-farm-title relative z-1 ml-2 -rotate-6 text-xl leading-[0.85] font-black uppercase"
+										>
+											<template
+												v-for="(
+													line, lineIndex
+												) of splitDiscordAppLauncherPromoTitle(promo.title)"
+												:key="`${promo.id}-farm-${lineIndex}`"
+											>
+												<br v-if="lineIndex > 0" />{{ line }}
+											</template>
+										</span>
+									</template>
+									<template v-else>
+										<UIcon
+											name="ph:youtube-logo-fill"
+											class="promo-watch-icon size-12"
+										/>
+										<span
+											class="promo-watch-title text-3xl font-bold tracking-tight"
+											>{{ promo.title }}</span
+										>
+									</template>
+								</span>
+							</template>
+							<template #footer>
 								<AppLauncherItemIcon
 									class="max-md:hidden"
 									:style="
@@ -393,8 +392,8 @@
 										{{ promo.description }}
 									</span>
 								</span>
-							</span>
-						</button>
+							</template>
+						</AppLauncherPromoCard>
 					</div>
 				</AppLauncherSection>
 
@@ -474,13 +473,14 @@
 				>
 					<UIcon name="ph:caret-left-bold" class="size-4" aria-hidden="true" />
 				</AppLauncherBack>
-				<h2 class="m-0 min-w-0 flex-1 truncate text-center text-base font-semibold">
+				<AppLauncherHeaderTitle>
 					{{ activeListView ? viewTitle(activeListView) : "" }}
-				</h2>
+				</AppLauncherHeaderTitle>
+				<!-- As wide as the back control, so the title sits in the centre. -->
 				<span class="size-8 shrink-0" aria-hidden="true" />
 			</AppLauncherHeader>
 
-			<AppLauncherBody :class="[scrollbarClassName, 'max-md:px-3', VIEW_IN_CLASS]">
+			<AppLauncherBody :class="['max-md:px-3', VIEW_IN_CLASS]">
 				<!-- A list never shrinks: the body scrolls it, or its last rows are clipped. -->
 				<AppLauncherList class="shrink-0">
 					<DiscordAppLauncherListItem
@@ -541,11 +541,13 @@ const WordleCells = [
 const SHEET_HALF_HEIGHT = "min(55dvh, 22rem)";
 /** Nearly the channel column under the header; the parent may hide the composer at full. */
 const SHEET_FULL_HEIGHT = "min(92dvh, 40rem)";
+/** A press on the handle that moves less than this is a tap, not a drag. */
+const SHEET_TAP_SLOP_PX = 4;
 
 /** Recents and In This Server on phones: two tiles fill the row and the next one peeks in. */
 const MOBILE_CAROUSEL_CLASS = "-me-4 hidden gap-2 pe-4 max-md:flex";
 const MOBILE_TILE_SLOT_CLASS = "w-[calc(50%-0.25rem)] shrink-0";
-const MOBILE_TILE_CLASS = "min-h-15 gap-2.5 rounded-[12px] bg-newt-bg-elevated px-2.5 py-2.5";
+const MOBILE_TILE_CLASS = "min-h-15 rounded-[12px] bg-newt-bg-elevated px-2.5 py-2.5";
 const VIEW_IN_CLASS =
 	"animate-in fade-in slide-in-from-right-1 duration-120 ease-out motion-reduce:animate-none";
 
@@ -574,8 +576,10 @@ import {
 	AppLauncherBody,
 	AppLauncherHandle,
 	AppLauncherHeader,
+	AppLauncherHeaderTitle,
 	AppLauncherItemIcon,
 	AppLauncherList,
+	AppLauncherPromoCard,
 	AppLauncherRecent,
 	AppLauncherRecents,
 	AppLauncherSearch,
@@ -586,7 +590,6 @@ import {
 	AppLauncherViewMore,
 } from "~/components/ui/app-launcher";
 import { Button } from "~/components/ui/button";
-import { scrollbarClassName } from "~/components/ui/scrollbar";
 
 const { ts } = useI18n();
 const {
@@ -608,9 +611,7 @@ const sheetSnap = defineModel<DiscordAppLauncherSheetSnap>("sheetSnap", { defaul
 const emit = defineEmits<AppLauncherEmits>();
 
 const { effectiveReduceMotion } = useReduceMotion();
-const activeElement = useActiveElement();
 
-const rootRef = useTemplateRef("rootRef");
 const searchRef = useTemplateRef("searchRef");
 const backRef = useTemplateRef("backRef");
 
@@ -618,17 +619,21 @@ const searchQuery = ref("");
 const activeView = ref<string | null>(null);
 const sheetDragging = ref(false);
 const sheetDragHeightPx = ref<number | null>(null);
-let returnFocusElement: HTMLElement | null = null;
 
 let sheetDragSession: SheetDragSession | null = null;
+/** A drag ends with a click on the handle; that click must not toggle the sheet. */
+let ignoreNextHandleClick = false;
 
-const sheetStyle = computed(() => ({
-	"--discord-app-launcher-sheet-half": SHEET_HALF_HEIGHT,
-	"--discord-app-launcher-sheet-full": SHEET_FULL_HEIGHT,
-	...(sheetDragHeightPx.value === null
-		? {}
-		: { height: `${sheetDragHeightPx.value}px`, maxHeight: "none" }),
-}));
+// The sheet variant reads its height from the custom property. A drag sets the height
+// itself, because the commands showcase sets `height` on the full sheet.
+const sheetStyle = computed(() =>
+	sheetDragHeightPx.value === null
+		? {
+				"--newt-app-launcher-sheet-height":
+					sheetSnap.value === "full" ? SHEET_FULL_HEIGHT : SHEET_HALF_HEIGHT,
+			}
+		: { height: `${sheetDragHeightPx.value}px` },
+);
 
 const listViewById = computed(() => {
 	const map = new Map<string, DiscordAppLauncherListView>();
@@ -660,10 +665,6 @@ function viewTitle(view: DiscordAppLauncherListView): string {
 	const key = VIEW_TITLE_KEYS[view.id];
 	return key ? ts(key) : view.title;
 }
-
-const dialogLabel = computed(() =>
-	activeListView.value ? viewTitle(activeListView.value) : ts("discord.launcher.apps"),
-);
 
 function matchesQuery(entry: DiscordAppLauncherEntry, query: string): boolean {
 	if (!query) return true;
@@ -766,14 +767,10 @@ function promoAriaLabel(promo: DiscordAppLauncherPromo): string {
 	return details ? `${promo.title}. ${details}` : promo.title;
 }
 
-function focusRef(target: Parameters<typeof unrefElement>[0]) {
-	const element = unrefElement(target);
+// The parts render one element each, so `$el` is the button or the field.
+function focusPart(part: { $el: unknown } | null) {
+	const element = part?.$el;
 	if (element instanceof HTMLElement) element.focus();
-}
-
-// AppLauncherSearchInput has no `v-model`, so the value and its input event are bound by hand.
-function onSearchInput(event: Event) {
-	if (event.target instanceof HTMLInputElement) searchQuery.value = event.target.value;
 }
 
 function expandSheet() {
@@ -784,6 +781,16 @@ function expandSheet() {
 function collapseSheet() {
 	sheetSnap.value = "half";
 	sheetDragHeightPx.value = null;
+}
+
+function onHandleClick(event: MouseEvent) {
+	// `detail` is 0 for a click from Enter or Space, which always toggles.
+	if (ignoreNextHandleClick && event.detail !== 0) {
+		ignoreNextHandleClick = false;
+		return;
+	}
+	if (sheetSnap.value === "full") collapseSheet();
+	else expandSheet();
 }
 
 function resetSheetSnap() {
@@ -803,11 +810,12 @@ function measureCssHeight(height: string, fallback: number): number {
 }
 
 function onHandlePointerDown(event: PointerEvent) {
-	if (!isBelowMediumScreen.value || event.button !== 0) return;
-	const root = unrefElement(rootRef);
-	if (!(root instanceof HTMLElement)) return;
+	const handle = event.currentTarget;
+	if (event.button !== 0 || !(handle instanceof HTMLElement)) return;
+	const launcher = handle.closest(".discord-app-launcher");
+	if (!launcher) return;
 
-	const startHeight = root.getBoundingClientRect().height;
+	const startHeight = launcher.getBoundingClientRect().height;
 	sheetDragSession = {
 		pointerId: event.pointerId,
 		startY: event.clientY,
@@ -818,28 +826,23 @@ function onHandlePointerDown(event: PointerEvent) {
 		lastTime: event.timeStamp,
 		velocityY: 0,
 	};
+	ignoreNextHandleClick = false;
 	sheetDragging.value = true;
 	sheetDragHeightPx.value = startHeight;
-
-	if (event.currentTarget instanceof HTMLElement) {
-		event.currentTarget.setPointerCapture(event.pointerId);
-	}
+	// The handle keeps the pointer, so the drag goes on outside it.
+	handle.setPointerCapture(event.pointerId);
 }
-
-useEventListener(() => (sheetDragging.value ? window : null), "pointermove", onHandlePointerMove);
-useEventListener(() => (sheetDragging.value ? window : null), "pointerup", onHandlePointerUp);
-useEventListener(() => (sheetDragging.value ? window : null), "pointercancel", onHandlePointerUp);
 
 function onHandlePointerMove(event: PointerEvent) {
 	const session = sheetDragSession;
 	if (!session || event.pointerId !== session.pointerId) return;
 
 	const deltaY = event.clientY - session.startY;
-	const nextHeight = Math.min(
+	if (Math.abs(deltaY) >= SHEET_TAP_SLOP_PX) ignoreNextHandleClick = true;
+	sheetDragHeightPx.value = Math.min(
 		session.fullHeight,
 		Math.max(session.halfHeight, session.startHeight - deltaY),
 	);
-	sheetDragHeightPx.value = nextHeight;
 
 	const elapsed = Math.max(1, event.timeStamp - session.lastTime);
 	session.velocityY = (event.clientY - session.lastY) / elapsed;
@@ -847,31 +850,41 @@ function onHandlePointerMove(event: PointerEvent) {
 	session.lastTime = event.timeStamp;
 }
 
+function endSheetDrag() {
+	sheetDragging.value = false;
+	sheetDragHeightPx.value = null;
+	sheetDragSession = null;
+}
+
 function onHandlePointerUp(event: PointerEvent) {
 	const session = sheetDragSession;
 	if (!session || event.pointerId !== session.pointerId) return;
 
-	const deltaY = event.clientY - session.startY;
 	sheetSnap.value = resolveDiscordAppLauncherSheetSnap({
 		current: sheetSnap.value,
-		deltaY,
+		deltaY: event.clientY - session.startY,
 		velocityY: session.velocityY,
 	});
-	sheetDragging.value = false;
-	sheetDragHeightPx.value = null;
-	sheetDragSession = null;
+	endSheetDrag();
+}
+
+// A cancelled drag sends no click, so nothing is left to ignore.
+function onHandlePointerCancel(event: PointerEvent) {
+	if (sheetDragSession?.pointerId !== event.pointerId) return;
+	ignoreNextHandleClick = false;
+	endSheetDrag();
 }
 
 function openListView(id: string) {
 	if (!listViewById.value.has(id)) return;
 	activeView.value = id;
 	searchQuery.value = "";
-	nextTick(() => focusRef(backRef));
+	nextTick(() => focusPart(backRef.value));
 }
 
 function returnToMainView() {
 	activeView.value = null;
-	nextTick(() => focusRef(searchRef));
+	nextTick(() => focusPart(searchRef.value));
 }
 
 function selectEntry(entry: DiscordAppLauncherEntry) {
@@ -888,78 +901,31 @@ function onSearchEnter() {
 	if (firstApp) selectEntry(firstApp);
 }
 
+// The launcher is modal: it keeps focus inside, and asks to close on Escape and on a press outside it.
 function closeLauncher() {
 	open.value = false;
-	activeView.value = null;
-	searchQuery.value = "";
-	resetSheetSnap();
 	emit("close");
 }
 
-function onEscape() {
-	if (activeView.value !== null) {
-		returnToMainView();
-		return;
-	}
-	closeLauncher();
+// Escape in a list view goes back to the main view. Cancelling the event keeps the dialog open.
+function onEscapeKeyDown(event: KeyboardEvent) {
+	if (activeView.value === null) return;
+	event.preventDefault();
+	returnToMainView();
 }
-
-function onTab(event: KeyboardEvent) {
-	const root = unrefElement(rootRef);
-	if (!(root instanceof HTMLElement)) return;
-
-	const focusable = Array.from(
-		root.querySelectorAll<HTMLElement>(
-			'button:not([disabled]):not([tabindex="-1"]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
-		),
-	);
-	const first = focusable[0];
-	const last = focusable.at(-1);
-	if (!first || !last) return;
-
-	if (event.shiftKey && activeElement.value === first) {
-		event.preventDefault();
-		last.focus();
-		return;
-	}
-	if (!event.shiftKey && activeElement.value === last) {
-		event.preventDefault();
-		first.focus();
-	}
-}
-
-onClickOutside(rootRef, () => {
-	if (open.value) closeLauncher();
-});
 
 watch(
 	open,
-	(isOpen, wasOpen) => {
+	(isOpen) => {
 		if (!isOpen) {
 			activeView.value = null;
 			searchQuery.value = "";
-			resetSheetSnap();
-			if (wasOpen) {
-				nextTick(() => {
-					returnFocusElement?.focus();
-					returnFocusElement = null;
-				});
-			}
-			return;
 		}
 		resetSheetSnap();
-		if (activeElement.value instanceof HTMLElement) {
-			returnFocusElement = activeElement.value;
-		}
-		nextTick(() => focusRef(searchRef));
 	},
 	// Seed `sheetSnap` from `initialSheetSnap` when stories mount with `open` already true.
 	{ immediate: true },
 );
-
-onMounted(() => {
-	if (open.value) focusRef(searchRef);
-});
 </script>
 
 <style scoped>

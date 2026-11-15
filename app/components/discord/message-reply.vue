@@ -1,11 +1,9 @@
 <template>
-	<!-- newt's elbow sits inside the preview; ours hooks over the avatar column. -->
 	<ReplyPreview
-		class="discord-message-reply mb-0 ps-0 font-whitney before:hidden"
+		class="discord-message-reply font-whitney"
 		role="complementary"
 		:aria-label="ariaLabel"
 	>
-		<span class="discord-message-reply-spine" aria-hidden="true" />
 		<DiscordAvatar :user size="tiny" class="shrink-0" />
 		<ReplyPreviewAuthor :class="kind === 'message' && 'font-semibold'">
 			{{ profile.name }}
@@ -13,7 +11,7 @@
 		<template v-if="kind === 'command'">
 			<ReplyPreviewAction>used</ReplyPreviewAction>
 			<ReplyPreviewCommand>
-				<LazyIconsApp class="me-0.5 inline size-3 align-[-0.125em]" aria-hidden="true" />
+				<template #icon><LazyIconsApp aria-hidden="true" /></template>
 				{{ formattedCommandName }}
 			</ReplyPreviewCommand>
 		</template>
@@ -71,24 +69,3 @@ const ariaLabel = computed(() => {
 	});
 });
 </script>
-
-<style scoped>
-/*
- * The spine runs from above the message avatar's centre to this line, as
- * Discord draws it. `DiscordMessage` sets the avatar size and gutter.
- */
-.discord-message-reply-spine {
-	--message-reply-spine-width: 2px;
-
-	position: absolute;
-	top: 50%;
-	right: calc(100% + 0.25rem);
-	width: calc(0.5 * var(--message-reply-avatar-size) + var(--message-reply-gutter));
-	height: calc(50% + 0.125rem);
-	margin-top: calc(-0.5 * var(--message-reply-spine-width));
-	border-top: var(--message-reply-spine-width) solid var(--newt-border);
-	border-left: var(--message-reply-spine-width) solid var(--newt-border);
-	border-top-left-radius: 6px;
-	pointer-events: none;
-}
-</style>

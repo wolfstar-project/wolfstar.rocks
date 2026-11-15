@@ -2,7 +2,11 @@ import { DashboardDirectMessages, DashboardDirectMessageThread } from "#componen
 import { mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
-import { MOCK_ANNOUNCEMENTS, MOCK_APP_INVITE } from "~~/test/mocks/announcements";
+import {
+	MOCK_ANNOUNCEMENTS,
+	MOCK_APP_INVITE,
+	MOCK_COMPONENTS_V2,
+} from "~~/test/mocks/announcements";
 
 registerEndpoint("/api/users/appeals", {
 	method: "GET",
@@ -91,6 +95,14 @@ describe("dashboard direct messages", () => {
 		list.unmount();
 	});
 
+	// The row carries the name the posts are signed with on Discord.
+	it("lists WolfStar's thread as WolfStar Announcements", async () => {
+		const list = await mountSuspended(DashboardDirectMessages);
+
+		await vi.waitFor(() => expect(list.text()).toContain("WolfStar Announcements"));
+		list.unmount();
+	});
+
 	it("offers to load the posts again when Discord fails", async () => {
 		failing = true;
 		const thread = await mountSuspended(DashboardDirectMessageThread);
@@ -139,6 +151,21 @@ describe("dashboard direct messages", () => {
 		const invite = card.get(`a[href="${url}"]`);
 		expect(invite.text()).toBe("Invite WolfStar Alpha");
 		expect(invite.attributes("target")).toBe("_blank");
+		thread.unmount();
+	});
+
+	// A post sent with Components V2 has no content: its layout is all it shows.
+	it("draws a Components V2 post's container and its link buttons", async () => {
+		posts = [{ ...MOCK_ANNOUNCEMENTS[1]!, components: MOCK_COMPONENTS_V2, embeds: [] }];
+		const thread = await mountSuspended(DashboardDirectMessageThread);
+
+		await vi.waitFor(() => expect(thread.findAll("article")).toHaveLength(1));
+		const post = thread.get("article");
+		expect(post.text()).toContain("@Subscribers");
+		expect(post.get("h2, h3, h4").text()).toBe("wolfstar.rocks v0.16.0 preview");
+		const notes = post.get('a[href="https://wolfstar.rocks/changelog"]');
+		expect(notes.text()).toBe("Release notes");
+		expect(notes.attributes("target")).toBe("_blank");
 		thread.unmount();
 	});
 

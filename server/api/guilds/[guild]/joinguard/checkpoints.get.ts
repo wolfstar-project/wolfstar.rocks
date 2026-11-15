@@ -1,10 +1,7 @@
 import type { JoinGuardQueuePage } from "#shared/utils/join-guard";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 import { readJoinGuardQueue } from "#server/utils/join-guard/queue";
-import {
-	authorizeJoinGuardManager,
-	parseJoinGuardInput,
-	useManagedGuild,
-} from "#server/utils/join-guard/route";
+import { authorizeJoinGuardManager, parseJoinGuardInput } from "#server/utils/join-guard/route";
 import { JoinGuardQueueQuerySchema } from "#shared/schemas/join-guard";
 
 /**

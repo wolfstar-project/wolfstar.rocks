@@ -10,7 +10,6 @@ const meta = {
 	decorators: [discordDecorator],
 	args: {
 		color: caseEmbedColor,
-		theme: "dark",
 		author: {
 			icon: "/avatars/redstar.png",
 			name: "@redstar071 (605162125027049472)",
@@ -92,77 +91,5 @@ export const WithAuthor: Story = {
 		components: { DiscordEmbed },
 		setup: () => ({ args }),
 		template: `<DiscordEmbed v-bind="args">Configuration saved successfully.</DiscordEmbed>`,
-	}),
-};
-
-/**
- * Explicit `theme="dark"` must win even when the Storybook toolbar theme
- * (the `data-theme` ambient attribute) is switched to Light.
- */
-export const ForcedDark: Story = {
-	args: {
-		theme: "dark",
-		title: "Forced dark under light ambient",
-	},
-	render: (args) => ({
-		components: { DiscordEmbed },
-		setup: () => ({ args }),
-		template: `<DiscordEmbed v-bind="args">Switch the toolbar theme to Light — this stays dark.</DiscordEmbed>`,
-	}),
-};
-
-/**
- * Explicit `theme="light"` must win even when the Storybook toolbar theme
- * (the `data-theme` ambient attribute) is switched to Dark.
- */
-export const ForcedLight: Story = {
-	args: {
-		theme: "light",
-		title: "Forced light under dark ambient",
-	},
-	render: (args) => ({
-		components: { DiscordEmbed },
-		setup: () => ({ args }),
-		template: `<DiscordEmbed v-bind="args">Switch the toolbar theme to Dark — this stays light.</DiscordEmbed>`,
-	}),
-};
-
-/**
- * Omitting `theme` should follow the ambient `data-theme` set by the
- * Storybook toolbar instead of a fixed default.
- */
-export const FollowsAmbientTheme: Story = {
-	args: {
-		theme: undefined,
-		title: "Follows ambient theme",
-	},
-	render: (args) => ({
-		components: { DiscordEmbed },
-		setup: () => ({ args }),
-		template: `<DiscordEmbed v-bind="args">Toggle the toolbar theme — this follows it.</DiscordEmbed>`,
-	}),
-};
-
-export const BlockquoteDescription: Story = {
-	args: {
-		title: undefined,
-		author: {
-			icon: "/avatars/redstar.png",
-			name: "@redstar071 (605162125027049472)",
-		},
-	},
-	render: (args) => ({
-		components: { DiscordEmbed },
-		setup: () => ({ args }),
-		template: `
-			<DiscordEmbed v-bind="args">
-				<blockquote><strong>Type:</strong>Warning</blockquote>
-				<blockquote><strong>User:</strong>Linear#8542 (957060182561669132)</blockquote>
-				<blockquote>
-					<strong>Reason:</strong>
-					<em>Please use <code>/case edit</code> to set a reason.</em>
-				</blockquote>
-			</DiscordEmbed>
-		`,
 	}),
 };

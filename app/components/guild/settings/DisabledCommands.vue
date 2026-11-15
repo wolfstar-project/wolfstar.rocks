@@ -26,7 +26,7 @@
 					{{ ts("guild_settings.commands.every_hint") }}
 				</span>
 			</span>
-			<span :id="everyId" class="flex shrink-0 flex-wrap justify-end gap-1.5">
+			<span :id="everyId" class="command-every-pills">
 				<span class="command-pill">
 					{{ tc("guild_settings.command_rules.editor.count", everyRuleCount) }}
 				</span>
@@ -573,7 +573,7 @@ watch(
 @reference "@/assets/css/main.css";
 
 .command-every {
-	@apply mb-1.5 flex w-full cursor-pointer items-center gap-3 rounded-[10px] px-3.5 py-3 text-left;
+	@apply mb-1.5 flex w-full cursor-pointer flex-wrap items-center gap-x-3 gap-y-2 rounded-[10px] px-3.5 py-3 text-left sm:flex-nowrap;
 	border: 1px solid var(--field-border);
 	background-color: var(--console-surface, transparent);
 }
@@ -585,6 +585,13 @@ watch(
 .command-every:focus-visible {
 	outline: 2px solid var(--color-primary);
 	outline-offset: 2px;
+}
+
+/* On a phone the pills take a line of their own under the text, lined up with
+   it past the tile: kept on the row, they squeezed the text to a word a line
+   and drew over it. */
+.command-every-pills {
+	@apply order-last flex w-full flex-wrap gap-1.5 ps-12 sm:order-none sm:w-auto sm:shrink-0 sm:justify-end sm:ps-0;
 }
 
 .command-every-tile {

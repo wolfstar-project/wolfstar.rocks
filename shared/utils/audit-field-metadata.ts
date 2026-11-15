@@ -80,6 +80,8 @@ const AUTO_MODULE_LABELS = {
 	modulesAutodelete: "Auto-Delete Module",
 	modulesAutopurge: "Auto-Purge Module",
 	modulesAutomessage: "Auto-Message Module",
+	modulesHoneypot: "Honeypot Module",
+	modulesReports: "Reports Module",
 };
 
 /**

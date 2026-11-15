@@ -28,8 +28,6 @@ export const authorizeWarnThresholdManager = authorizeGuildManager(
 	"Insufficient permissions to manage the warning thresholds",
 );
 
-export { useManagedGuild };
-
 /** What goes wrong when a threshold is set or removed: the server has as many as it can, or none at that number. */
 export type WarnThresholdErrorCode = "limit" | "unknown";
 

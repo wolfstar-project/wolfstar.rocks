@@ -18,16 +18,12 @@ export type AppealStatus = (typeof AppealStatuses)[number];
 export const AppealQueueFilters = [...AppealStatuses, "all"] as const;
 export type AppealQueueFilter = (typeof AppealQueueFilters)[number];
 
-export function isAppealQueueFilter(value: unknown): value is AppealQueueFilter {
-	return AppealQueueFilters.includes(value as AppealQueueFilter);
-}
-
 /** How many appeals a page of the queue holds, and the most a request can ask for. */
 export const AppealQueuePageSize = 25;
 export const MaximumAppealQueueLimit = 100;
 
 /** What the dashboard can ask the bot to do with an appeal, as the bot's `AppealRequestKind` spells it. */
-export const AppealDecisions = ["Approve", "Deny"] as const;
+const AppealDecisions = ["Approve", "Deny"] as const;
 export type AppealDecision = (typeof AppealDecisions)[number];
 
 export function isAppealDecision(value: unknown): value is AppealDecision {
@@ -88,17 +84,11 @@ export interface AppealQueueResponse {
 }
 
 /** Why the bot could not do a request, the codes its `AppealFailureCode` has for a decision. */
-export const AppealFailureCodes = [
-	"caseGone",
-	"decided",
-	"undoFailed",
-	"noAccess",
-	"failed",
-] as const;
+const AppealFailureCodes = ["caseGone", "decided", "undoFailed", "noAccess", "failed"] as const;
 export type AppealFailureCode = (typeof AppealFailureCodes)[number];
 
 /** Where a request of the dashboard is: not claimed yet, done, or refused with a code. */
-export type AppealRequestState = "pending" | "done" | "failed";
+type AppealRequestState = "pending" | "done" | "failed";
 
 export interface AppealRequestOutcome {
 	id: string;

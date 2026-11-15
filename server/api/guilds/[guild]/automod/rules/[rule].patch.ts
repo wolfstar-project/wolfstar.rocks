@@ -6,10 +6,10 @@ import {
 	throwAutoModerationRuleError,
 	throwInvalidLogChannel,
 	throwInvalidRuleBody,
-	useManagedGuild,
 } from "#server/utils/automod/route";
 import { updateAutoModerationRule } from "#server/utils/automod/rules";
 import { parseAutoModerationRulePatch } from "#server/utils/automod/validation";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 import { isSnowflake } from "#shared/utils/snowflake";
 
 /**

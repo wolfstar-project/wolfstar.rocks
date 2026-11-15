@@ -1,7 +1,7 @@
 import type { AuthUser } from "#nuxt-better-auth";
 import { useFuse } from "@vueuse/integrations/useFuse";
 
-export interface UseUserSearchOptions {
+interface UseUserSearchOptions {
 	query?: Ref<string | undefined>;
 	showManageableOnly?: Ref<boolean>;
 	sortAscending?: Ref<boolean>;

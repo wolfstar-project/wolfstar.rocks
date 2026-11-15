@@ -21,6 +21,22 @@
 		class="space-y-4"
 		@error="onError"
 	>
+		<GuildModuleBanner
+			icon="ic:round-notifications"
+			:title="ts('dashboard.nav.channels')"
+			:hint="ts('guild_settings.channels.module_hint')"
+			:on="state.modulesLogs === true"
+		>
+			<USwitch
+				v-model="state.modulesLogs"
+				:aria-label="
+					ts('guild_settings.modules.toggle_aria', {
+						title: ts('dashboard.nav.channels'),
+					})
+				"
+			/>
+		</GuildModuleBanner>
+
 		<p class="text-[0.8125rem] text-muted">
 			{{ ts("guild_settings.channels.logging_channels_help") }}
 		</p>
@@ -191,9 +207,10 @@ const { guildData } = useGuildData();
 const { mapToGuildData, onError, schema, state } = useSettingsForm({
 	one: ConfigurableLoggingChannels.map((entry) => entry.key),
 	many: ConfigurableIgnoreChannels.map((entry) => entry.key),
-	toggles: [...ConfigurableLogToggles, ...ConfigurableLogDeliveryToggles].map(
-		(entry) => entry.key,
-	),
+	toggles: [
+		"modulesLogs",
+		...[...ConfigurableLogToggles, ...ConfigurableLogDeliveryToggles].map((entry) => entry.key),
+	],
 	choices: ConfigurableLogChoices.map((entry) => entry.key),
 });
 

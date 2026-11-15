@@ -1,4 +1,4 @@
-export const GUILD_SETUP_STORAGE_KEY = "wolfstar-guild-setup";
+const GUILD_SETUP_STORAGE_KEY = "wolfstar-guild-setup";
 
 /** How an admin left the setup of a server, kept in this browser. */
 type SetupStatus = "done" | "skipped";

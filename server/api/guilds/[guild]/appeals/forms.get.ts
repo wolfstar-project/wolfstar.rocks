@@ -1,5 +1,6 @@
 import { readAppealForms } from "#server/utils/appeals/forms";
-import { authorizeAppealFormManager, useManagedGuild } from "#server/utils/appeals/route";
+import { authorizeAppealFormManager } from "#server/utils/appeals/route";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 
 /** `GET /api/guilds/:guild/appeals/forms`: the appeal forms of a guild, in their order. */
 export default defineWrappedResponseHandler(

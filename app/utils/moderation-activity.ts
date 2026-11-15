@@ -69,7 +69,7 @@ export const ACTIVITY_QUIET_FILL =
 	"color-mix(in srgb, var(--color-primary) 45%, var(--field-surface))";
 
 /** The most moderation actions of one day in the window, `0` for a quiet week. */
-export function busiestModerationActivity(days: readonly ModerationActivityDay[]): number {
+function busiestModerationActivity(days: readonly ModerationActivityDay[]): number {
 	return Math.max(0, ...days.map((day) => day.count));
 }
 

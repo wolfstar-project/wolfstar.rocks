@@ -62,11 +62,12 @@ const lists = {
 };
 
 // The `Modules` flags, then the modules that live in a table of their own:
-// the honeypot is on once the bot has its channel, the join guard and the
+// the honeypot is on with its switch and a channel, the join guard and the
 // appeals with their switch, and the lists of channels while they have one.
 const modules = computed(() => {
 	const settings = guildSettings.value;
-	const honeypot = Boolean(settings?.honeypotChannel);
+	const honeypotSetUp = Boolean(settings?.honeypotChannel);
+	const honeypot = settings?.modulesHoneypot === true && honeypotSetUp;
 	const joinGuard = settings?.joinGuardEnabled === true;
 	const appeals = settings?.appealsEnabled === true;
 	const onOff = (enabled: boolean) =>
@@ -87,7 +88,7 @@ const modules = computed(() => {
 			key: "honeypot",
 			labelKey: "dashboard.nav.honeypot",
 			section: "honeypot",
-			state: honeypot
+			state: honeypotSetUp
 				? ts("guild_settings.modules.set_up")
 				: ts("guild_settings.modules.not_set_up"),
 		},

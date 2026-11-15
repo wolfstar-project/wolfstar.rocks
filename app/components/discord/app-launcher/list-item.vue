@@ -1,57 +1,39 @@
 <template>
-	<button
-		type="button"
-		class="discord-app-launcher-list-item"
-		:aria-label="ariaLabel"
-		@click="emit('select')"
-	>
+	<!-- The wrapper holds the trailing glyph: AppLauncherItem has no slot after its text. -->
+	<div class="relative">
+		<AppLauncherItem
+			:name="name"
+			:description="description"
+			:promoted="promoted"
+			:aria-label="ariaLabel"
+			:class="{ 'pe-10': hasTrailingGlyph }"
+			v-bind="$attrs"
+			@click="emit('select')"
+		>
+			<template #icon>
+				<AppLauncherItemIcon
+					:round="round"
+					:class="{ '[&>img]:object-contain [&>img]:p-1': isWolfstarAvatar }"
+					:style="iconBg ? { backgroundColor: iconBg } : undefined"
+				>
+					<NuxtImg v-if="avatar" :src="avatar" alt="" width="40" height="40" />
+					<UIcon v-else-if="icon" :name="icon" class="size-5 text-newt-on-accent" />
+				</AppLauncherItemIcon>
+			</template>
+		</AppLauncherItem>
 		<span
-			class="discord-app-launcher-list-item-icon"
-			:class="{
-				'discord-app-launcher-list-item-icon--wolfstar': avatar === '/avatars/wolfstar.png',
-			}"
-			:style="iconBg ? { backgroundColor: iconBg } : undefined"
+			v-if="hasTrailingGlyph"
+			class="pointer-events-none absolute inset-y-0 end-3 flex items-center text-newt-text-secondary"
 			aria-hidden="true"
 		>
-			<NuxtImg
-				v-if="avatar"
-				:src="avatar"
-				:alt="`${name} icon`"
-				width="40"
-				height="40"
-				class="discord-app-launcher-list-item-avatar"
-				:class="{
-					'discord-app-launcher-list-item-avatar--wolfstar':
-						avatar === '/avatars/wolfstar.png',
-				}"
+			<UIcon v-if="showEye" name="discord:eye" class="size-[18px] max-md:hidden" />
+			<UIcon
+				v-if="showChevron"
+				name="ph:caret-right-bold"
+				class="hidden size-4 max-md:block"
 			/>
-			<UIcon v-else-if="icon" :name="icon" class="discord-app-launcher-list-item-glyph" />
 		</span>
-
-		<span class="discord-app-launcher-list-item-body">
-			<span class="discord-app-launcher-list-item-title-row">
-				<span class="discord-app-launcher-list-item-name">{{ name }}</span>
-				<UIcon
-					v-if="showEye"
-					name="discord:eye"
-					class="discord-app-launcher-list-item-eye"
-					aria-hidden="true"
-				/>
-				<span v-if="promoted" class="discord-app-launcher-list-item-promoted">
-					PROMOTED
-				</span>
-			</span>
-			<span v-if="description" class="discord-app-launcher-list-item-description">
-				{{ description }}
-			</span>
-		</span>
-
-		<UIcon
-			name="ph:caret-right-bold"
-			class="discord-app-launcher-list-item-chevron"
-			aria-hidden="true"
-		/>
-	</button>
+	</div>
 </template>
 
 <script lang="ts">
@@ -62,7 +44,12 @@ interface AppLauncherListItemProps {
 	icon?: string;
 	iconBg?: string;
 	promoted?: boolean;
+	/** Bots use circular avatars; games and activities keep the squircle. */
+	round?: boolean;
+	/** Desktop-only preview glyph after the text. */
 	showEye?: boolean;
+	/** Mobile-only chevron after the text. */
+	showChevron?: boolean;
 }
 
 interface AppLauncherListItemEmits {
@@ -71,6 +58,10 @@ interface AppLauncherListItemEmits {
 </script>
 
 <script setup lang="ts">
+import { AppLauncherItem, AppLauncherItemIcon } from "~/components/ui/app-launcher";
+
+defineOptions({ inheritAttrs: false });
+
 const {
 	name,
 	description,
@@ -78,122 +69,22 @@ const {
 	icon,
 	iconBg,
 	promoted = false,
+	round = false,
 	showEye = true,
+	showChevron = true,
 } = defineProps<AppLauncherListItemProps>();
 
 const emit = defineEmits<AppLauncherListItemEmits>();
 
+const { ts } = useI18n();
+
+const isWolfstarAvatar = computed(() => avatar === "/avatars/wolfstar.png");
+const hasTrailingGlyph = computed(() => showEye || showChevron);
+
 const ariaLabel = computed(() => {
 	const parts = [name];
-	if (promoted) parts.push("Promoted");
+	if (promoted) parts.push(ts("discord.launcher.promoted"));
 	if (description) parts.push(description);
 	return parts.join(". ");
 });
 </script>
-
-<style scoped>
-@reference "@/assets/css/main.css";
-
-.discord-app-launcher-list-item {
-	/* Discord row tokens: #35373c hover, #f2f3f5 name, #949ba4 body, #b5bac1 glyphs. */
-	--discord-app-launcher-list-item-hover: var(--discord-hover);
-	--discord-app-launcher-list-item-name: var(--discord-chrome-strong);
-	--discord-app-launcher-list-item-description: var(--discord-chrome-muted);
-	--discord-app-launcher-list-item-eye: var(--discord-chrome-secondary);
-	--discord-app-launcher-list-item-icon-bg: oklch(
-		from var(--discord-chrome) calc(l + 0.0535 * var(--discord-raise)) c h
-	);
-	--discord-app-launcher-list-item-wolfstar-bg: oklch(0% 0 0);
-	--discord-app-launcher-list-item-promoted-bg: var(--discord-chrome-text);
-	--discord-app-launcher-list-item-promoted-text: var(--discord-chrome);
-	--discord-app-launcher-list-item-chevron: var(--discord-chrome-secondary);
-
-	@apply flex w-full cursor-pointer items-center gap-3 rounded-lg border-0 bg-transparent px-2 py-2 text-left font-whitney;
-}
-
-.discord-app-launcher-list-item:hover,
-.discord-app-launcher-list-item:focus-visible {
-	background-color: var(--discord-app-launcher-list-item-hover);
-}
-
-.discord-app-launcher-list-item:focus-visible {
-	@apply outline-2 outline-offset-1 outline-primary;
-}
-
-.discord-app-launcher-list-item-icon {
-	@apply inline-flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-[10px];
-	background-color: var(--discord-app-launcher-list-item-icon-bg);
-}
-
-.discord-app-launcher-list-item-icon--wolfstar {
-	background-color: var(--discord-app-launcher-list-item-wolfstar-bg);
-}
-
-.discord-app-launcher-list-item-avatar {
-	@apply size-full object-cover;
-}
-
-.discord-app-launcher-list-item-avatar--wolfstar {
-	@apply object-contain p-1;
-}
-
-.discord-app-launcher-list-item-glyph {
-	@apply size-5 text-white;
-}
-
-.discord-app-launcher-list-item-body {
-	@apply flex min-w-0 flex-1 flex-col gap-0.5;
-}
-
-.discord-app-launcher-list-item-title-row {
-	@apply flex min-w-0 items-center gap-1.5;
-}
-
-.discord-app-launcher-list-item-name {
-	@apply truncate text-base leading-tight font-medium;
-	color: var(--discord-app-launcher-list-item-name);
-}
-
-.discord-app-launcher-list-item-eye {
-	@apply size-[18px] shrink-0;
-	color: var(--discord-app-launcher-list-item-eye);
-}
-
-.discord-app-launcher-list-item-promoted {
-	@apply shrink-0 rounded-full px-1.5 py-0.5 text-[10px] leading-none font-bold tracking-wide uppercase;
-	background-color: var(--discord-app-launcher-list-item-promoted-bg);
-	color: var(--discord-app-launcher-list-item-promoted-text);
-}
-
-.discord-app-launcher-list-item-description {
-	@apply truncate text-sm leading-snug;
-	color: var(--discord-app-launcher-list-item-description);
-}
-
-.discord-app-launcher-list-item-chevron {
-	@apply hidden size-4 shrink-0;
-	color: var(--discord-app-launcher-list-item-chevron);
-}
-
-@media (max-width: 767.98px) {
-	.discord-app-launcher-list-item-eye {
-		display: none;
-	}
-
-	.discord-app-launcher-list-item-chevron {
-		display: block;
-	}
-
-	.discord-app-launcher-list-item-icon {
-		@apply rounded-[10px];
-	}
-
-	.discord-app-launcher-list-item-name {
-		@apply text-[15px] font-bold;
-	}
-
-	.discord-app-launcher-list-item-description {
-		@apply text-[13px];
-	}
-}
-</style>

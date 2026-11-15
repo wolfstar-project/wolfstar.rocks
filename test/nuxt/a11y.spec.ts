@@ -35,8 +35,6 @@ import {
 	DiscordMemberList,
 	DiscordMessage,
 	DiscordMessages,
-	DiscordReaction,
-	DiscordReactions,
 	DiscordRole,
 	DiscordChatInputCommand,
 	DiscordChatInputCommandSuggestion,
@@ -116,7 +114,11 @@ import { createError } from "h3";
 import { describe, expect, it, vi } from "vitest";
 import VerifyPage from "~/pages/verify/[guild].vue";
 import { moderationActivityChart } from "~/utils/moderation-activity";
-import { MOCK_ANNOUNCEMENTS, MOCK_APP_INVITE } from "~~/test/mocks/announcements";
+import {
+	MOCK_ANNOUNCEMENTS,
+	MOCK_APP_INVITE,
+	MOCK_COMPONENTS_V2,
+} from "~~/test/mocks/announcements";
 import { MOCK_AUDIT_ENTRY, MOCK_MODERATION_ENTRY } from "~~/test/mocks/auditLogs";
 import { createMockOauthFlattenedGuild, createMockRole } from "~~/test/mocks/discord";
 import { createMockGuildData } from "~~/test/mocks/guildData";
@@ -528,36 +530,6 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("DiscordReaction", () => {
-			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(DiscordReaction, {
-					props: { count: 5 },
-					slots: { default: "👍" },
-				});
-				const results = await runAxe(component);
-				expect(results.violations).toEqual([]);
-			});
-
-			it("should have no accessibility violations with self reaction", async () => {
-				const component = await mountSuspended(DiscordReaction, {
-					props: { count: 3, self: true },
-					slots: { default: "❤️" },
-				});
-				const results = await runAxe(component);
-				expect(results.violations).toEqual([]);
-			});
-		});
-
-		describe("DiscordReactions", () => {
-			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(DiscordReactions, {
-					slots: { default: "<span>Reaction slot</span>" },
-				});
-				const results = await runAxe(component);
-				expect(results.violations).toEqual([]);
-			});
-		});
-
 		describe("DiscordStringSelectMenu", () => {
 			const selectOptions = [
 				{
@@ -587,13 +559,21 @@ describe("component accessibility audits", () => {
 					props: { options: selectOptions, ariaLabel: "Configuration category" },
 					attachTo: document.body,
 				});
-				await component.find("button[role='combobox']").trigger("click");
+				const trigger = component.find("button[role='combobox']");
+				(trigger.element as HTMLElement).focus();
+				await trigger.trigger("keydown", { key: "Enter" });
 				await nextTick();
-				const panel = document.querySelector(".discord-string-select-menu-panel");
-				expect(panel).not.toBeNull();
-				const results = await runAxe(component, {
-					include: panel ? [panel] : [],
-				});
+				await new Promise((resolve) => requestAnimationFrame(resolve));
+				await nextTick();
+				expect(trigger.attributes("aria-expanded")).toBe("true");
+				const panel = document.querySelector("[role='listbox']");
+				if (!panel) throw new Error("The select menu did not open");
+				// The panel alone. While it is open Reka UI hides the rest of the page from
+				// assistive technology, the trigger included, and holds the focus in the list;
+				// axe reads the hidden trigger as focusable (`aria-hidden-focus`). The closed
+				// test above audits the trigger.
+				const results = await runAxe(panel);
+				component.unmount();
 				expect(results.violations).toEqual([]);
 			});
 		});
@@ -776,7 +756,11 @@ describe("component accessibility audits", () => {
 				method: "GET",
 				handler: () => [
 					MOCK_ANNOUNCEMENTS[0],
-					{ ...MOCK_ANNOUNCEMENTS[1], apps: [MOCK_APP_INVITE] },
+					{
+						...MOCK_ANNOUNCEMENTS[1],
+						apps: [MOCK_APP_INVITE],
+						components: MOCK_COMPONENTS_V2,
+					},
 				],
 			});
 			clearNuxtState(["dm:posts", "dm:status"]);

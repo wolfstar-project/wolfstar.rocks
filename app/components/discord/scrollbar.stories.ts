@@ -7,9 +7,9 @@ const meta = {
 	title: "Components/Discord/Scrollbar",
 	decorators: [discordDecorator],
 	args: {
-		alwaysShowTrack: true,
-		showArrows: false,
-		minThumbHeight: 24,
+		overlay: false,
+		autoHide: false,
+		themed: false,
 	},
 } satisfies Meta<typeof DiscordScrollbar>;
 
@@ -30,10 +30,12 @@ export const Default: Story = {
 	}),
 };
 
-export const AutoHide: Story = {
+/** The dashboard's sidebars: the thumb floats over the list and shows on hover. */
+export const OverlayAutoHide: Story = {
 	args: {
-		alwaysShowTrack: false,
+		overlay: true,
 		autoHide: true,
+		themed: true,
 	},
 	render: (args) => ({
 		components: { DiscordScrollbar },
@@ -41,7 +43,7 @@ export const AutoHide: Story = {
 		template: `
 			<div class="h-48 w-72 overflow-hidden rounded-md border border-default">
 				<DiscordScrollbar v-bind="args" class="h-full">
-					<p v-for="n in 24" :key="n" class="px-3 py-1">Hover or scroll to reveal — row {{ n }}</p>
+					<p v-for="n in 24" :key="n" class="px-3 py-1">Hover or scroll to reveal, row {{ n }}</p>
 				</DiscordScrollbar>
 			</div>
 		`,

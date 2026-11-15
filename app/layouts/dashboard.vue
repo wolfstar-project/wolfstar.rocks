@@ -158,7 +158,7 @@ usePhoneScreenFocus(
 	useTemplateRef<HTMLElement>("consoleMain"),
 );
 const nuxtError = useError();
-const { setGuildData } = useGuildData();
+const { guildData, setGuildData } = useGuildData();
 const { setGuildSettings, guildSettings } = useGuildSettings();
 const { setGuildSettingsChanges, guildSettingsChanges, resetGuildSettingsChanges } =
 	useGuildSettingsChanges();
@@ -170,11 +170,14 @@ const { guilds: userGuilds, status: userGuildsStatus } = useUser(user);
 const userGuildsPending = computed(
 	() => userGuildsStatus.value === "idle" || userGuildsStatus.value === "pending",
 );
+// The server list's entry stands in for the open server only until its own
+// data lands: the list is sent without channels, and a list that refreshed
+// later would otherwise empty every channel picker.
 watch(
 	[guildId, userGuilds],
 	([newGuildId, newUserGuilds]) => {
 		const seedGuild = newUserGuilds?.find((g) => g.id === newGuildId);
-		if (seedGuild) {
+		if (seedGuild && !guildData.value) {
 			setGuildData(seedGuild);
 		}
 	},

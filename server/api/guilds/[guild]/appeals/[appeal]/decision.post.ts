@@ -5,7 +5,8 @@ import {
 	refuseAppealDecision,
 	throwInvalidAppealRequest,
 } from "#server/utils/appeals/queue-route";
-import { authorizeAppealFormManager, useManagedGuild } from "#server/utils/appeals/route";
+import { authorizeAppealFormManager } from "#server/utils/appeals/route";
+import { useManagedGuild } from "#server/utils/guilds/manager";
 
 /**
  * `POST /api/guilds/:guild/appeals/:appeal/decision`: asks the bot to approve or

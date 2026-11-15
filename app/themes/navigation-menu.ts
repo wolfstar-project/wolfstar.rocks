@@ -17,10 +17,14 @@ export default {
 		},
 		{
 			class: {
-				childItem: "ps-1.5 -ms-px animate-fade-in-delay-1",
+				// The rows open with the panel's height and nothing else: the base
+				// slot's fade ran three times longer than the panel, so the panel
+				// opened empty first. A blur behind a panel that changes height
+				// flickered on phones.
+				childItem: "ps-1.5 -ms-px animate-none",
 				childList: "ms-5 border-s border-base-300",
 				content:
-					"data-[state=open]:animate-[collapsible-down_200ms_ease-out] data-[state=closed]:animate-[collapsible-up_200ms_ease-out] overflow-hidden bg-base-200/60 backdrop-blur-sm",
+					"data-[state=open]:animate-[collapsible-down_200ms_ease-out] data-[state=closed]:animate-[collapsible-up_200ms_ease-out] motion-reduce:animate-none overflow-hidden bg-base-200/60 backdrop-blur-none",
 			},
 			collapsed: false,
 			orientation: "vertical",

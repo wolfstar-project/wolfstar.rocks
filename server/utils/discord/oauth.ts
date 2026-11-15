@@ -18,7 +18,7 @@ function createApiWithToken(accessToken: string) {
 	return useApi(rest);
 }
 
-export async function fetchCurrentUserAndGuilds(accessToken: string): Promise<{
+async function fetchCurrentUserAndGuilds(accessToken: string): Promise<{
 	user: APIUser;
 	guilds: RESTAPIPartialCurrentUserGuild[];
 }> {
@@ -115,10 +115,7 @@ export async function fetchGuildMemberWithRetry(
 	}
 }
 
-export function toDiscordFetchError(
-	error: unknown,
-	resource: "user" | "guilds" | "guild-member",
-): never {
+function toDiscordFetchError(error: unknown, resource: "user" | "guilds" | "guild-member"): never {
 	if (isDiscordUnauthorized(error)) {
 		throw errors.unauthorized();
 	}

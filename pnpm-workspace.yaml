@@ -97,7 +97,7 @@ shellEmulator: true
 # those callers as hung, so there the patch lets each call run on its own (see
 # docs/arch/cloudflare-workers.md).
 patchedDependencies:
-    "@i18n-micro/path-strategy@1.3.20": patches/@i18n-micro__path-strategy@1.3.20.patch
+    "@i18n-micro/path-strategy": patches/@i18n-micro__path-strategy.patch
     nitropack@2.13.6: patches/nitropack@2.13.6.patch
     nuxt-studio@1.8.0: patches/nuxt-studio@1.8.0.patch
     prisma-orm-extension-typed-json: patches/prisma-orm-extension-typed-json.patch

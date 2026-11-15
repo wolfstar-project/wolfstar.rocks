@@ -1,11 +1,27 @@
 import type {
 	Announcement,
 	AnnouncementApp,
+	AnnouncementBlock,
+	AnnouncementComponent,
 	AnnouncementEmbed,
 	AnnouncementImage,
+	AnnouncementLink,
+	AnnouncementMedia,
 	AnnouncementReaction,
 } from "#shared/types/announcement";
-import type { APIEmbed, APIMessage, APIReaction } from "discord-api-types/v10";
+import {
+	ButtonStyle,
+	ComponentType,
+	SeparatorSpacingSize,
+	type APIComponentInContainer,
+	type APIComponentInMessageActionRow,
+	type APIEmbed,
+	type APIMediaGalleryItem,
+	type APIMessage,
+	type APIMessageTopLevelComponent,
+	type APIReaction,
+	type APISectionComponent,
+} from "discord-api-types/v10";
 
 /** How many of the channel's newest posts the Home shows. */
 export const ANNOUNCEMENT_LIMIT = 50;
@@ -78,7 +94,7 @@ export function isApplicationProfile(value: unknown): value is ApplicationProfil
 }
 
 /** An app's card, from its public profile, for the invite link a post wrote. */
-export function toAppCard(profile: ApplicationProfile, url: string): AnnouncementApp {
+function toAppCard(profile: ApplicationProfile, url: string): AnnouncementApp {
 	const image = (hash: string | null | undefined, size: number) =>
 		hash
 			? `https://cdn.discordapp.com/app-icons/${profile.id}/${hash}.webp?size=${size}`
@@ -113,7 +129,7 @@ export function resolveMentions(content: string, names: MentionNames): string {
 }
 
 /** The names of the users a message mentions, which Discord sends with it. */
-export function mentionedUsers(message: Pick<APIMessage, "mentions">): Map<string, string> {
+function mentionedUsers(message: Pick<APIMessage, "mentions">): Map<string, string> {
 	return new Map(message.mentions.map((user) => [user.id, user.global_name ?? user.username]));
 }
 
@@ -137,6 +153,84 @@ function toEmbed(embed: APIEmbed, names: MentionNames): AnnouncementEmbed {
 	};
 }
 
+function toMedia(item: Omit<APIMediaGalleryItem, "spoiler">): AnnouncementMedia {
+	return {
+		alt: item.description ?? undefined,
+		height: item.media.height ?? undefined,
+		url: item.media.url,
+		width: item.media.width ?? undefined,
+	};
+}
+
+/** A link button; the others act through the bot, which the dashboard cannot. */
+function toLink(button: APIComponentInMessageActionRow): AnnouncementLink | undefined {
+	if (button.type !== ComponentType.Button || button.style !== ButtonStyle.Link) return undefined;
+	const label = button.label ?? button.emoji?.name;
+	return label ? { label, url: button.url } : undefined;
+}
+
+function toSectionAccessory(
+	accessory: APISectionComponent["accessory"],
+): Extract<AnnouncementBlock, { kind: "section" }>["accessory"] {
+	// A spoilered thumbnail is left out, as a spoilered link gets no card.
+	if (accessory.type === ComponentType.Thumbnail) {
+		return accessory.spoiler ? undefined : { image: toMedia(accessory), kind: "thumbnail" };
+	}
+	const link = toLink(accessory);
+	return link && { kind: "link", ...link };
+}
+
+/**
+ * A part of a layout, or `undefined` for one with nothing a reader of the
+ * dashboard can see or use: a file, a select menu, a row of bot buttons.
+ */
+function toBlock(
+	component: APIComponentInContainer,
+	names: MentionNames,
+): AnnouncementBlock | undefined {
+	switch (component.type) {
+		case ComponentType.TextDisplay:
+			return { content: resolveMentions(component.content, names), kind: "text" };
+		case ComponentType.Section:
+			return {
+				accessory: toSectionAccessory(component.accessory),
+				kind: "section",
+				texts: component.components.map((text) => resolveMentions(text.content, names)),
+			};
+		case ComponentType.Separator:
+			return {
+				divider: component.divider ?? true,
+				kind: "separator",
+				spacing: component.spacing === SeparatorSpacingSize.Large ? "large" : "small",
+			};
+		case ComponentType.MediaGallery: {
+			const images = component.items.filter((item) => !item.spoiler).map(toMedia);
+			return images.length > 0 ? { images, kind: "gallery" } : undefined;
+		}
+		case ComponentType.ActionRow: {
+			const links = component.components.flatMap((button) => toLink(button) ?? []);
+			return links.length > 0 ? { kind: "links", links } : undefined;
+		}
+		default:
+			return undefined;
+	}
+}
+
+/** A message's Components V2 layout, without the parts the dashboard cannot draw. */
+function toComponents(
+	components: readonly APIMessageTopLevelComponent[],
+	names: MentionNames,
+): AnnouncementComponent[] {
+	return components.flatMap((component): AnnouncementComponent | [] => {
+		if (component.type !== ComponentType.Container) return toBlock(component, names) ?? [];
+		return {
+			accent: cssColor(component.accent_color ?? undefined),
+			components: component.components.flatMap((child) => toBlock(child, names) ?? []),
+			kind: "container",
+		};
+	});
+}
+
 function toReaction(reaction: APIReaction): AnnouncementReaction {
 	const { id, name, animated } = reaction.emoji;
 	return {
@@ -149,7 +243,7 @@ function toReaction(reaction: APIReaction): AnnouncementReaction {
 }
 
 /** A message of the announcement channel, as the Home shows it. */
-export function toAnnouncement(
+function toAnnouncement(
 	message: APIMessage,
 	guildId: string,
 	names: MentionNames,
@@ -165,6 +259,7 @@ export function toAnnouncement(
 			return profile ? [toAppCard(profile, url)] : [];
 		}),
 		at: message.timestamp,
+		components: toComponents(message.components ?? [], withUsers),
 		content: resolveMentions(message.content, withUsers),
 		embeds: message.embeds
 			.filter((embed) => embed.title || embed.description || embed.image || embed.thumbnail)
@@ -198,6 +293,7 @@ export function toAnnouncements(
 			(entry) =>
 				entry.content.trim().length > 0 ||
 				entry.embeds.length > 0 ||
+				entry.components.length > 0 ||
 				entry.images.length > 0,
 		)
 		.toSorted((a, b) => (BigInt(a.id) < BigInt(b.id) ? -1 : 1));

@@ -19,14 +19,12 @@ describe("DiscordChatInputCommand", () => {
 
 		// ASSERT
 		const group = wrapper.find("[role='group']");
-		expect(group.exists()).toBe(true);
-		expect(group.attributes("aria-label")).toContain("Slash command /conf menu save");
-		expect(wrapper.find(".discord-slash-command-composed-name").text()).toBe("/conf");
-		expect(wrapper.text()).toContain("menu");
-		expect(wrapper.text()).toContain("save");
-		expect(wrapper.find(".discord-slash-command-option-focused").exists()).toBe(true);
-		expect(wrapper.find(".discord-slash-command-option-value").text()).toBe("prefix");
-		expect(wrapper.find(".discord-slash-command-option-placeholder").text()).toBe("new value");
+		expect(group.attributes("aria-label")).toBe(
+			"Slash command /conf menu save key: prefix value: new value",
+		);
+		expect(group.text()).toMatch(/^\/conf\s*menu\s*save/);
+		expect(group.text()).toContain("prefix");
+		expect(group.text()).toContain("new value");
 	});
 
 	it("uses the option name as placeholder when value and description are missing (negative)", async () => {
@@ -39,19 +37,31 @@ describe("DiscordChatInputCommand", () => {
 		});
 
 		// ASSERT
-		expect(wrapper.find(".discord-slash-command-option-value").exists()).toBe(false);
-		expect(wrapper.find(".discord-slash-command-option-placeholder").text()).toBe("user");
-		expect(wrapper.find(".discord-slash-command-option-focused").exists()).toBe(false);
+		expect(wrapper.find("[role='group']").attributes("aria-label")).toBe(
+			"Slash command /warn user: user",
+		);
+		expect(wrapper.text().match(/user/g)).toHaveLength(2);
 	});
 
-	it("renders without options chrome when options are empty (negative)", async () => {
+	it("drops a subcommand group that has no subcommand (negative)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordChatInputCommand, {
+			props: { name: "help", subcommandGroup: "orphan" },
+		});
+
+		// ASSERT
+		expect(wrapper.text()).not.toContain("orphan");
+		expect(wrapper.find("[role='group']").attributes("aria-label")).toBe("Slash command /help");
+	});
+
+	it("renders without options when options are empty (negative)", async () => {
 		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordChatInputCommand, {
 			props: { name: "help" },
 		});
 
 		// ASSERT
-		expect(wrapper.find(".discord-slash-command-option").exists()).toBe(false);
+		expect(wrapper.text()).toBe("/help");
 		expect(wrapper.find("[role='group']").attributes("aria-label")).toBe("Slash command /help");
 	});
 });

@@ -1,6 +1,6 @@
-import { SERVER_DATA_COLLECTION } from "#server/utils/sentry-data-collection";
-import { dropExpectedHttpErrors } from "#server/utils/sentry-expected-errors";
+import { SERVER_DATA_COLLECTION } from "#server/utils/sentry/data-collection";
 import { sentryCloudflareNitroPlugin } from "@sentry/nuxt/module/plugins";
+import { dropExpectedHttpErrors } from "~~/server/utils/sentry/expected-errors";
 
 /**
  * Sentry on the Workers. On Node the SDK is preloaded from

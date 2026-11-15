@@ -20,7 +20,7 @@ import {
 	instrumentCacheGet,
 	instrumentCachePut,
 	instrumentDiscordApiCall,
-} from "#server/utils/sentry-metrics";
+} from "#server/utils/sentry/metrics";
 import * as Sentry from "@sentry/nuxt";
 
 describe("instrumentCacheGet", () => {

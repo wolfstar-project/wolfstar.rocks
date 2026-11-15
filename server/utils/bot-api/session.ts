@@ -1,7 +1,7 @@
 import { createCipheriv, randomBytes } from "node:crypto";
-import { instrumentBotApiCall } from "#server/utils/sentry-metrics";
 import { createError } from "evlog";
 import { $fetch as ofetch } from "ofetch";
+import { instrumentBotApiCall } from "~~/server/utils/sentry/metrics";
 
 /**
  * The session the bot's API reads from its cookie: its `AuthData`

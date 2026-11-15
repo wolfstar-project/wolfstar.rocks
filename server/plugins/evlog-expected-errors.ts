@@ -1,6 +1,6 @@
 import { EvlogError } from "evlog";
 import { isError } from "h3";
-import { EXPECTED_HTTP_STATUSES } from "~~/server/utils/sentry-expected-errors";
+import { EXPECTED_HTTP_STATUSES } from "~~/server/utils/sentry/expected-errors";
 
 /**
  * Whether the app answered with this error on purpose: a refusal made with

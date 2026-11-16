@@ -76,7 +76,7 @@ vi.mock("@sentry/nuxt", () => ({
 	getActiveSpan: vi.fn(() => undefined),
 }));
 
-vi.mock("#server/utils/sentry-metrics", () => ({
+vi.mock("#server/utils/sentry/metrics", () => ({
 	instrumentCacheGet: vi.fn((_key: string, fn: () => unknown) => fn()),
 	instrumentCachePut: vi.fn((_key: string, fn: () => unknown) => fn()),
 	withApiMetrics: vi.fn((_event: unknown, fn: () => unknown) => fn()),
@@ -335,7 +335,7 @@ describe("rate-limit reservations under concurrency", () => {
 			// The wrapper module captured its storage at import time, so patching
 			// useStorage here is not enough — drive the failure through the shared
 			// instrumented mocks instead.
-			const sentryMetrics = await import("#server/utils/sentry-metrics");
+			const sentryMetrics = await import("#server/utils/sentry/metrics");
 			vi.mocked(sentryMetrics.instrumentCacheGet).mockRejectedValueOnce(
 				new Error("KV unavailable"),
 			);

@@ -241,7 +241,7 @@
 	   in a track of 9px, with no arrows, tinted from the muted text so it reads
 	   on every theme, on the page as in a dialog. Chromium and Safari draw it
 	   from the parts below; Firefox has none, and gets the slim bar it offers.
-	   The lists of the console use `DiscordScrollbar` instead. */
+	   The lists of the console use newt/ui's overlay `ScrollArea` instead. */
 	*::-webkit-scrollbar {
 		width: 9px;
 		height: 9px;
@@ -336,6 +336,9 @@
 		/* Twitch's brand purple (#9146ff), the accent Staryl gives its notifications;
 		   the same in every theme, as in Discord. */
 		--twitch-brand: oklch(59.1% 0.255 296.1);
+		/* The accents of its feed (#f26522) and Bluesky (#1185fe) notifications. */
+		--rss-brand: oklch(67.6% 0.189 42);
+		--bluesky-brand: oklch(62.6% 0.203 255.4);
 		--discord-chrome-border: oklch(92.64% 0.006 264);
 		--discord-chrome-edge: oklch(21.15% 0.009 264 / 0.08);
 		--discord-chrome-text: oklch(21.15% 0.009 264);

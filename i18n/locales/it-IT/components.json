@@ -24,11 +24,16 @@
 		"version_name": ""
 	},
 	"discord": {
+		"avatar": {
+			"label": ""
+		},
 		"channel_info": {
 			"back": "Torna al canale",
 			"create_thread": "Crea thread",
 			"label": "Informazioni sul canale #{name}",
 			"members_in": "Membri in #{name}",
+			"no_results": "",
+			"no_results_hint": "",
 			"no_threads": "Non ci sono thread.",
 			"sections": "Sezioni delle informazioni sul canale",
 			"tabs": {
@@ -39,7 +44,8 @@
 				"pins": "Fissati",
 				"threads": "Thread"
 			},
-			"text_channel": "Canale testuale"
+			"text_channel": "Canale testuale",
+			"threads_hint": ""
 		},
 		"chat": {
 			"messages_in": "Messaggi in {channel}"
@@ -63,14 +69,11 @@
 			"titled": "Embed: {title}"
 		},
 		"header": {
-			"hide_members": "Nascondi l'elenco dei membri",
-			"notifications": "Impostazioni delle notifiche",
+			"online_count": "",
 			"open_info": "Apri le informazioni del canale #{name}",
-			"pins": "Messaggi fissati",
 			"search": "Cerca in {name}",
 			"search_plain": "Cerca",
-			"show_members": "Mostra l'elenco dei membri",
-			"threads": "Thread"
+			"show_members": "Mostra l'elenco dei membri"
 		},
 		"launcher": {
 			"apps": "App",
@@ -100,12 +103,15 @@
 		},
 		"member_list": {
 			"app": "Applicazione",
+			"dnd": "",
+			"idle": "",
 			"label": "Membri del server",
 			"offline": "Offline",
 			"online": "Online",
 			"verified_app": "Applicazione verificata"
 		},
 		"message": {
+			"app_badge": "",
 			"dismiss": "Ignora messaggio",
 			"dismiss_aria": "Ignora il messaggio temporaneo",
 			"ephemeral_notice": "Avviso di messaggio temporaneo",
@@ -122,6 +128,7 @@
 			"placeholder": "Fai una scelta"
 		},
 		"suggestions": {
+			"app_commands": "",
 			"for_prefix": "Suggerimenti di comandi slash per {prefix}",
 			"frequently_used": "Usati spesso",
 			"listbox": "Suggerimenti di comandi slash",

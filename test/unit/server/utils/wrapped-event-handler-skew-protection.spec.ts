@@ -82,7 +82,7 @@ vi.mock("@sentry/nuxt", () => ({
 	getActiveSpan: vi.fn(() => undefined),
 }));
 
-vi.mock("#server/utils/sentry-metrics", () => ({
+vi.mock("#server/utils/sentry/metrics", () => ({
 	instrumentCacheGet: vi.fn((_key: string, fn: () => unknown) => fn()),
 	instrumentCachePut: vi.fn((_key: string, fn: () => unknown) => fn()),
 	withApiMetrics: vi.fn((_event: unknown, fn: () => unknown) => fn()),

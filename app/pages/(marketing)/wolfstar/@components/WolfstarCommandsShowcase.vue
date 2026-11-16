@@ -387,6 +387,7 @@
 									v-if="!appLauncherSheetFull"
 									v-model="composerText"
 									:channel-name="CHANNEL_NAME"
+									:placeholder="composerLabel"
 									autocomplete
 									:apps-open="appLauncherOpen"
 									:aria-controls="
@@ -402,8 +403,9 @@
 									<!--
 										Stable input so focus survives arming. When matched, Discord
 										hides the raw path glyphs and shows composed slash chrome.
+										`inputProps` carry the name, the combobox attributes and the keys.
 									-->
-									<template #value>
+									<template #input="{ inputProps }">
 										<div class="showcase-composer-slash-field">
 											<DiscordChatInputCommand
 												v-if="matchedCommand"
@@ -415,26 +417,12 @@
 											<input
 												v-model="composerText"
 												type="text"
+												v-bind="inputProps"
 												class="discord-message-composer-input w-full min-w-0 flex-1 outline-none"
 												:class="{
 													'showcase-composer-slash-mirror':
 														matchedCommand,
 												}"
-												:placeholder="
-													matchedCommand ? undefined : composerLabel
-												"
-												:aria-label="composerLabel"
-												:aria-controls="
-													showCommandPicker
-														? 'showcase-slash-suggestions'
-														: undefined
-												"
-												:aria-expanded="showCommandPicker"
-												:aria-activedescendant="activeDescendantId"
-												role="combobox"
-												autocomplete="off"
-												spellcheck="false"
-												@keydown="onComposerInputKeydown"
 											/>
 										</div>
 									</template>
@@ -1103,7 +1091,7 @@ function onComposerSubmit() {
 /**
  * Esc exits slash mode (closes picker) without touching channel history.
  * Blur the slotted input so browsers drop the keyboard `:focus-visible` ring —
- * scoped composer styles do not reach the nested `#value` slot input via
+ * scoped composer styles do not reach the nested `#input` slot input via
  * `:slotted()`, which previously left a white outline hugging the placeholder.
  */
 function onComposerEscape() {
@@ -1149,32 +1137,6 @@ function onComposerNavigate(direction: "up" | "down") {
 	}
 
 	highlightedIndex.value = (highlightedIndex.value - 1 + total) % total;
-}
-
-/** Mirror DiscordChatMessageComposer keyboard handling for the custom value slot. */
-function onComposerInputKeydown(event: KeyboardEvent) {
-	if (event.key === "Enter") {
-		event.preventDefault();
-		onComposerSubmit();
-		return;
-	}
-
-	if (event.key === "Escape") {
-		event.preventDefault();
-		onComposerEscape();
-		return;
-	}
-
-	if (event.key === "ArrowDown") {
-		event.preventDefault();
-		onComposerNavigate("down");
-		return;
-	}
-
-	if (event.key === "ArrowUp") {
-		event.preventDefault();
-		onComposerNavigate("up");
-	}
 }
 
 /** Apps toolbar control toggles the Discord App Launcher popover. */
@@ -1278,7 +1240,7 @@ onMounted(() => {
 	 * Tall enough for the full member list — including Offline (Ko-fi Bot,
 	 * Patreon) — without needing a scrollbar. 12 rows + 4 section headings
 	 * (Star Network / Developers / External Bots / Offline) + compact padding.
-	 * DiscordScrollbar stays for overflow; this height avoids forcing it.
+	 * The member list's ScrollArea stays for overflow; this height avoids forcing it.
 	 */
 	@apply flex min-h-0;
 	height: 46rem;
@@ -1333,7 +1295,8 @@ onMounted(() => {
 	background-color: transparent;
 }
 
-.showcase-app-launcher {
+/* The launcher renders inside a Reka dialog, which does not pass this component's scope to it. */
+.showcase-command-picker :deep(.showcase-app-launcher) {
 	@apply relative z-2 mr-3 mb-2 ml-auto;
 	width: min(31.5rem, calc(100% - 1.5rem));
 }
@@ -1344,7 +1307,7 @@ onMounted(() => {
 }
 
 /*
- * Input lives in this parent’s `#value` slot — composer scoped CSS may not reach it.
+ * Input lives in this parent’s `#input` slot — composer scoped CSS may not reach it.
  * Pin Discord field chrome here so Esc/idle never shows a browser focus ring hugging
  * the placeholder, and the field fills the pill like Discord mobile.
  */
@@ -1367,8 +1330,9 @@ onMounted(() => {
 	opacity: 1;
 }
 
+/* The chip is inline text with real spaces: a flex box would drop them. */
 .showcase-composer-slash-composed {
-	@apply pointer-events-none absolute inset-y-0 left-1 z-0 flex items-center;
+	@apply pointer-events-none absolute top-1/2 left-1 z-0 -translate-y-1/2;
 }
 
 .showcase-composer-slash-mirror {
@@ -1451,7 +1415,7 @@ onMounted(() => {
 		max-height: none;
 	}
 
-	.showcase-app-launcher {
+	.showcase-command-picker :deep(.showcase-app-launcher) {
 		@apply relative z-3 mx-0 mb-0 w-full max-w-none;
 	}
 

@@ -22,9 +22,29 @@ describe("DiscordChatInputCommand", () => {
 		expect(group.attributes("aria-label")).toBe(
 			"Slash command /conf menu save key: prefix value: new value",
 		);
-		expect(group.text()).toMatch(/^\/conf\s*menu\s*save/);
-		expect(group.text()).toContain("prefix");
-		expect(group.text()).toContain("new value");
+		// Real spaces and colons, so a copy or a search reads the command as typed.
+		expect(group.element.textContent).toBe("/conf menu save key:prefix value:new value");
+	});
+
+	it("names the chip in the reader's language (positive)", async () => {
+		// ARRANGE
+		useNuxtApp().$mergeTranslations({
+			discord: { command: { label: "Comando slash {command}" } },
+		});
+
+		// ACT
+		const wrapper = await mountSuspended(DiscordChatInputCommand, {
+			props: {
+				name: "ban",
+				subcommand: "add",
+				options: [{ name: "user", value: "@baddie" }],
+			},
+		});
+
+		// ASSERT
+		expect(wrapper.find("[role='group']").attributes("aria-label")).toBe(
+			"Comando slash /ban add user: @baddie",
+		);
 	});
 
 	it("uses the option name as placeholder when value and description are missing (negative)", async () => {

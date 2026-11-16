@@ -7,7 +7,7 @@
 		class="py-28"
 	>
 		<div
-			class="grid items-start gap-14 lg:grid-cols-[minmax(0,0.8fr)_minmax(28rem,1.2fr)] lg:gap-20"
+			class="grid grid-cols-1 items-start gap-14 lg:grid-cols-[minmax(0,0.8fr)_minmax(28rem,1.2fr)] lg:gap-20"
 		>
 			<div class="lg:sticky lg:top-28">
 				<p
@@ -24,7 +24,7 @@
 				<p class="mt-5 max-w-135 text-base leading-relaxed text-base-content/65">
 					<i18n-t keypath="marketing.staryl.setup.subtitle" tag="span">
 						<template #command>
-							<code class="staryl-setup-command">/setup</code>
+							<code class="staryl-setup-command">/settings</code>
 						</template>
 					</i18n-t>
 				</p>
@@ -51,15 +51,12 @@
 				</div>
 			</div>
 
-			<!-- The pages of the `/setup` menu (staryl, src/locales/en-US/commands/setup.json). -->
+			<!-- What the `/settings` menu holds (staryl, src/locales/en-US/commands/settings.json). -->
 			<div class="staryl-setup-index border-t">
 				<div class="staryl-setup-index-header">
 					<span class="font-mono text-xs tracking-(--home-ls-label) text-muted uppercase">
 						{{ ts("marketing.staryl.setup.index_label") }}
 					</span>
-					<span class="font-mono text-xs text-muted">{{
-						ts("marketing.staryl.setup.pages_count")
-					}}</span>
 				</div>
 				<ol>
 					<li v-for="(page, index) of pages" :key="page.title" class="staryl-setup-row">
@@ -84,17 +81,20 @@ const { ts } = useI18n();
 
 const pages = computed(() => [
 	{
-		title: ts("marketing.staryl.setup.overview_title"),
-		body: ts("marketing.staryl.setup.overview_body"),
-	},
-	{ title: ts("marketing.staryl.setup.add_title"), body: ts("marketing.staryl.setup.add_body") },
-	{
-		title: ts("marketing.staryl.setup.manage_title"),
-		body: ts("marketing.staryl.setup.manage_body"),
+		title: ts("marketing.staryl.setup.general_title"),
+		body: ts("marketing.staryl.setup.general_body"),
 	},
 	{
-		title: ts("marketing.staryl.setup.test_title"),
-		body: ts("marketing.staryl.setup.test_body"),
+		title: ts("marketing.staryl.setup.twitch_title"),
+		body: ts("marketing.staryl.setup.twitch_body"),
+	},
+	{
+		title: ts("marketing.staryl.setup.sources_title"),
+		body: ts("marketing.staryl.setup.sources_body"),
+	},
+	{
+		title: ts("marketing.staryl.setup.status_title"),
+		body: ts("marketing.staryl.setup.status_body"),
 	},
 ]);
 </script>

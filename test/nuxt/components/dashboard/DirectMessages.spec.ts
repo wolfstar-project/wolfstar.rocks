@@ -202,6 +202,38 @@ describe("dashboard direct messages", () => {
 		await page.viewport(1280, 900);
 	});
 
+	// The link floats over the post above, so while it is hidden a click there
+	// must reach that post, not open this one in Discord.
+	it("takes no clicks from its hidden 'Open in Discord' link", async () => {
+		const thread = await mountSuspended(DashboardDirectMessageThread, {
+			attachTo: document.body,
+		});
+
+		await vi.waitFor(() => expect(thread.findAll("article")).toHaveLength(2));
+		const link = thread.get<HTMLElement>("article a.dm-open").element;
+		expect(getComputedStyle(link).pointerEvents).toBe("none");
+		thread.unmount();
+	});
+
+	// A phone has no room to spare beside a post's name and time: the thread
+	// must fit the screen, never scroll sideways.
+	it("fits a phone's width without scrolling sideways", async () => {
+		await page.viewport(390, 844);
+		posts = [
+			MOCK_ANNOUNCEMENTS[0]!,
+			{ ...MOCK_ANNOUNCEMENTS[1]!, components: MOCK_COMPONENTS_V2, embeds: [] },
+		];
+		const thread = await mountSuspended(DashboardDirectMessageThread, {
+			attachTo: document.body,
+		});
+
+		await vi.waitFor(() => expect(thread.findAll("article")).toHaveLength(2));
+		const log = thread.get<HTMLElement>('[role="log"]').element;
+		expect(log.scrollWidth).toBeLessThanOrEqual(log.clientWidth);
+		thread.unmount();
+		await page.viewport(1280, 900);
+	});
+
 	it("filters the threads by name and opens one", async () => {
 		const list = await mountSuspended(DashboardDirectMessages);
 

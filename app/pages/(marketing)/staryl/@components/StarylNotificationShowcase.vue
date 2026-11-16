@@ -26,7 +26,7 @@
 					</p>
 				</div>
 
-				<div class="grid items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12">
+				<div class="grid grid-cols-1 items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12">
 					<div
 						class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row"
 					>
@@ -67,6 +67,14 @@
 											>
 											| {{ ts("marketing.staryl.notification.footer") }}
 										</p>
+										<StarylSocialNotification
+											v-else-if="active.id === 'feed'"
+											kind="feed"
+										/>
+										<StarylSocialNotification
+											v-else-if="active.id === 'post'"
+											kind="post"
+										/>
 										<template v-else>
 											<p class="mb-1">
 												🧪
@@ -162,14 +170,14 @@ const ENDED_AT = "2026-10-26T21:12:00Z";
 const { ts } = useI18n();
 const { locale } = useAppLocale();
 
-// The four ways a notification reaches the channel, each with the command that sets it up.
+// The kinds of notification that reach the channel, each with the command that sets it up.
 const kinds = computed(() => [
 	{
 		id: "live",
 		icon: "ph:broadcast-fill",
 		title: ts("marketing.staryl.features.live_title"),
 		body: ts("marketing.staryl.features.live_body"),
-		command: "/subscriptions twitch add type:Stream Online",
+		command: "/subscriptions twitch add event:Stream goes live",
 	},
 	{
 		id: "ping",
@@ -183,7 +191,21 @@ const kinds = computed(() => [
 		icon: "ph:moon-stars-fill",
 		title: ts("marketing.staryl.features.offline_title"),
 		body: ts("marketing.staryl.features.offline_body"),
-		command: "/subscriptions twitch add type:Stream Offline",
+		command: "/subscriptions twitch add event:Stream goes offline",
+	},
+	{
+		id: "feed",
+		icon: "ph:rss-fill",
+		title: ts("marketing.staryl.features.feed_title"),
+		body: ts("marketing.staryl.features.feed_body"),
+		command: "/subscriptions rss add keywords:",
+	},
+	{
+		id: "post",
+		icon: "ph:chat-circle-text-fill",
+		title: ts("marketing.staryl.features.post_title"),
+		body: ts("marketing.staryl.features.post_body"),
+		command: "/subscriptions bluesky add exclude_replies:True",
 	},
 	{
 		id: "test",

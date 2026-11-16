@@ -20,7 +20,7 @@
 			</h2>
 		</div>
 
-		<div class="grid gap-4 md:grid-cols-3">
+		<div class="grid grid-cols-1 gap-4 md:grid-cols-3">
 			<SurfaceCard
 				v-for="step of proofSteps"
 				:key="step.index"
@@ -55,7 +55,7 @@ const { ts } = useI18n();
 const proofSteps = computed(() => [
 	{
 		description: ts("marketing.staryl.proof.step_1_body"),
-		icon: "ph:twitch-logo-duotone",
+		icon: "ph:broadcast-duotone",
 		index: "01",
 		title: ts("marketing.staryl.proof.step_1_title"),
 	},

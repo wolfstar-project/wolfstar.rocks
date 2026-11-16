@@ -35,9 +35,9 @@
 										subcommand: activeCommand.subcommand,
 									}"
 								>
-									<!-- `/setup` answers with its menu, made of components (Components V2). -->
+									<!-- `/settings` answers with its menu, made of components (Components V2). -->
 									<div
-										v-if="activeCommand.response.type === 'setup'"
+										v-if="activeCommand.response.type === 'settings'"
 										class="staryl-setup-menu"
 									>
 										<DiscordV2Container>
@@ -118,6 +118,7 @@
 							<DiscordChatMessageComposer
 								v-model="composerText"
 								:channel-name="CHANNEL_NAME"
+								:placeholder="composerLabel"
 								autocomplete
 								:aria-controls="
 									showCommandPicker ? 'staryl-slash-suggestions' : undefined
@@ -128,7 +129,8 @@
 								@escape="onComposerEscape"
 								@navigate="onComposerNavigate"
 							>
-								<template #value>
+								<!-- `inputProps` carry the name, the combobox attributes and the keys. -->
+								<template #input="{ inputProps }">
 									<div class="staryl-composer-slash-field">
 										<DiscordChatInputCommand
 											v-if="matchedCommand"
@@ -141,25 +143,11 @@
 										<input
 											v-model="composerText"
 											type="text"
+											v-bind="inputProps"
 											class="discord-message-composer-input w-full min-w-0 flex-1 outline-none"
 											:class="{
 												'staryl-composer-slash-mirror': matchedCommand,
 											}"
-											:placeholder="
-												matchedCommand ? undefined : composerLabel
-											"
-											:aria-label="composerLabel"
-											:aria-controls="
-												showCommandPicker
-													? 'staryl-slash-suggestions'
-													: undefined
-											"
-											:aria-expanded="showCommandPicker"
-											:aria-activedescendant="activeDescendantId"
-											role="combobox"
-											autocomplete="off"
-											spellcheck="false"
-											@keydown="onComposerInputKeydown"
 										/>
 									</div>
 								</template>
@@ -186,7 +174,7 @@ interface StarylShowcaseCommand {
 		| { type: "embed"; title: string; lines: string[] }
 		| { type: "text"; content: string }
 		| {
-				type: "setup";
+				type: "settings";
 				heading: string;
 				intro: string;
 				countLabel: string;
@@ -208,26 +196,38 @@ const composerLabel = computed(() =>
 const twitchOptions = computed<SlashCommandOption[]>(() => [
 	{ name: "streamer", value: "stella" },
 	{ name: "channel", value: `#${CHANNEL_NAME}` },
-	{ name: "type", value: "Stream Online", focused: true },
+	{ name: "event", value: "Stream goes live", focused: true },
+]);
+
+const feedOptions = computed<SlashCommandOption[]>(() => [
+	{ name: "target", value: "https://wolfstar.rocks/blog/rss.xml" },
+	{ name: "channel", value: `#${CHANNEL_NAME}` },
+	{ name: "keywords", value: "release, update", focused: true },
+]);
+
+const accountOptions = computed<SlashCommandOption[]>(() => [
+	{ name: "target", value: "stella.wolfstar.rocks" },
+	{ name: "channel", value: `#${CHANNEL_NAME}` },
+	{ name: "exclude_replies", value: "True", focused: true },
 ]);
 
 // The commands Staryl registers (staryl, `src/commands`), with the replies the
 // bot sends in English (`src/locales/en-US/commands`).
 const starylCommands = computed<StarylShowcaseCommand[]>(() => [
 	{
-		name: "setup",
-		description: ts("marketing.staryl.showcase.setup_description"),
+		name: "settings",
+		description: ts("marketing.staryl.showcase.settings_description"),
 		invoker: "redstar",
 		options: [],
 		response: {
-			type: "setup",
-			heading: ts("marketing.staryl.showcase.setup_heading"),
-			intro: ts("marketing.staryl.showcase.setup_intro"),
-			countLabel: ts("marketing.staryl.showcase.setup_count"),
+			type: "settings",
+			heading: ts("marketing.staryl.showcase.settings_heading"),
+			intro: ts("marketing.staryl.showcase.settings_intro"),
+			countLabel: ts("marketing.staryl.showcase.settings_count"),
 			// The two subscriptions `/subscriptions twitch show` lists.
 			count: 2,
-			hint: ts("marketing.staryl.showcase.setup_hint"),
-			placeholder: ts("marketing.staryl.showcase.setup_placeholder"),
+			hint: ts("marketing.staryl.showcase.settings_hint"),
+			placeholder: ts("marketing.staryl.showcase.settings_placeholder"),
 		},
 	},
 	{
@@ -240,6 +240,30 @@ const starylCommands = computed<StarylShowcaseCommand[]>(() => [
 		response: {
 			type: "text",
 			content: ts("marketing.staryl.showcase.add_response"),
+		},
+	},
+	{
+		name: "subscriptions",
+		subcommandGroup: "rss",
+		subcommand: "add",
+		description: ts("marketing.staryl.showcase.social_add_description"),
+		invoker: "redstar",
+		options: feedOptions.value,
+		response: {
+			type: "text",
+			content: ts("marketing.staryl.showcase.rss_add_response"),
+		},
+	},
+	{
+		name: "subscriptions",
+		subcommandGroup: "bluesky",
+		subcommand: "add",
+		description: ts("marketing.staryl.showcase.social_add_description"),
+		invoker: "redstar",
+		options: accountOptions.value,
+		response: {
+			type: "text",
+			content: ts("marketing.staryl.showcase.bluesky_add_response"),
 		},
 	},
 	{
@@ -442,31 +466,6 @@ function onComposerNavigate(direction: "up" | "down") {
 	highlightedIndex.value = (highlightedIndex.value - 1 + total) % total;
 }
 
-function onComposerInputKeydown(event: KeyboardEvent) {
-	if (event.key === "Enter") {
-		event.preventDefault();
-		onComposerSubmit();
-		return;
-	}
-
-	if (event.key === "Escape") {
-		event.preventDefault();
-		onComposerEscape();
-		return;
-	}
-
-	if (event.key === "ArrowDown") {
-		event.preventDefault();
-		onComposerNavigate("down");
-		return;
-	}
-
-	if (event.key === "ArrowUp") {
-		event.preventDefault();
-		onComposerNavigate("up");
-	}
-}
-
 watch(slashQuery, () => {
 	highlightedIndex.value = 0;
 });
@@ -488,59 +487,44 @@ onMounted(() => {
 <style scoped>
 @reference "@/assets/css/main.css";
 
-/* SurfaceCard defaults to theme --color-base-300; pin Discord charcoal so the card never reads warm. */
+/* SurfaceCard defaults to theme --color-base-300; draw it in Discord's channel colour instead. */
 :deep(.staryl-showcase-card.home-surface-card) {
-	--staryl-showcase-card-bg: oklch(26.65% 0.006 272.93);
-	--staryl-showcase-card-border: oklch(19.34% 0.004 273.16);
-	background-color: var(--staryl-showcase-card-bg);
-	border-color: var(--staryl-showcase-card-border);
-}
-
-:global([data-theme="light"]) :deep(.staryl-showcase-card.home-surface-card) {
-	--staryl-showcase-card-bg: oklch(97.31% 0.003 264);
-	--staryl-showcase-card-border: oklch(89.75% 0.008 264);
+	background-color: var(--discord-chrome);
+	border-color: var(--discord-chrome-border);
 }
 
 .staryl-discord-shell {
-	--staryl-discord-chrome: oklch(26.65% 0.006 272.93);
-	--staryl-discord-sidebar: oklch(23.47% 0.005 272.95);
-	--staryl-discord-server: oklch(19.34% 0.004 273.16);
-	--staryl-discord-composer: oklch(28.84% 0.007 272.93);
-	--staryl-discord-composer-muted: oklch(71.01% 0.01 273.13);
-	--staryl-discord-composer-text: oklch(91.56% 0.004 272.93);
-	--staryl-discord-header-edge: oklch(0% 0 0 / 0.2);
-	--staryl-discord-message-hover: oklch(100% 0 0 / 0.03);
-	--staryl-discord-primary-text: oklch(91.56% 0.004 272.93);
-	--staryl-discord-muted-text: oklch(71.01% 0.01 273.13);
+	/*
+	 * Discord's desktop surfaces in the page's theme (Light, Ash, Dark or Onyx;
+	 * see the `--discord-*` tokens in main.css). Hovers are the text colour at
+	 * a low alpha, so they darken on Light and lighten on the others.
+	 */
+	--staryl-discord-chrome: var(--discord-chrome);
+	--staryl-discord-sidebar: var(--discord-sidebar);
+	--staryl-discord-server: var(--discord-server);
+	--staryl-discord-composer: var(--discord-composer);
+	--staryl-discord-composer-muted: var(--discord-chrome-muted);
+	--staryl-discord-composer-text: var(--discord-chrome-text);
+	--staryl-discord-header-edge: var(--discord-chrome-edge);
+	--staryl-discord-message-hover: oklch(from var(--discord-chrome-text) l c h / 0.03);
+	--staryl-discord-primary-text: var(--discord-chrome-text);
+	--staryl-discord-muted-text: var(--discord-chrome-muted);
 
-	/* Neutralize DaisyUI / Nuxt UI theme surfaces inside the mock. */
 	/* The same palette for the newt/ui parts, which read these tokens. */
 	--newt-text-primary: var(--staryl-discord-primary-text);
 	--newt-text-muted: var(--staryl-discord-muted-text);
 	--newt-bg-input: var(--staryl-discord-composer);
 
+	/* Neutralize DaisyUI / Nuxt UI theme surfaces inside the mock. */
 	--color-base-100: var(--staryl-discord-chrome);
 	--color-base-200: var(--staryl-discord-sidebar);
 	--color-base-300: var(--staryl-discord-chrome);
+	--color-base-content: var(--staryl-discord-primary-text);
 	--discord-surface: var(--staryl-discord-chrome);
 
 	@apply relative flex flex-col overflow-hidden;
 	background-color: var(--staryl-discord-chrome);
 	color: var(--staryl-discord-primary-text);
-}
-
-/* Discord's light client: a cool off-white canvas, distinct side surfaces, and near-black copy. */
-:global([data-theme="light"]) .staryl-discord-shell {
-	--staryl-discord-chrome: oklch(98.17% 0.002 264);
-	--staryl-discord-sidebar: oklch(95.74% 0.004 264);
-	--staryl-discord-server: oklch(92.64% 0.006 264);
-	--staryl-discord-composer: oklch(93.74% 0.005 264);
-	--staryl-discord-composer-muted: oklch(47.12% 0.012 264);
-	--staryl-discord-composer-text: oklch(21.15% 0.009 264);
-	--staryl-discord-header-edge: oklch(21.15% 0.009 264 / 0.08);
-	--staryl-discord-message-hover: oklch(21.15% 0.009 264 / 0.035);
-	--staryl-discord-primary-text: oklch(21.15% 0.009 264);
-	--staryl-discord-muted-text: oklch(47.12% 0.012 264);
 }
 
 .staryl-discord-workspace {
@@ -605,8 +589,9 @@ onMounted(() => {
 	opacity: 1;
 }
 
+/* The chip is inline text with real spaces: a flex box would drop them. */
 .staryl-composer-slash-composed {
-	@apply pointer-events-none absolute inset-y-0 left-1 z-0 flex items-center;
+	@apply pointer-events-none absolute top-1/2 left-1 z-0 -translate-y-1/2;
 }
 
 .staryl-composer-slash-mirror {

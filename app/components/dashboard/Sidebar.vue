@@ -18,7 +18,7 @@
 			</template>
 		</div>
 
-		<DiscordScrollbar overlay auto-hide themed class="dashboard-nav-scroll">
+		<ScrollArea variant="overlay" auto-hide class="dashboard-nav-scroll">
 			<nav
 				class="dashboard-nav flex flex-col gap-0.5 px-2 py-2.5"
 				:aria-label="ts('dashboard.nav_aria')"
@@ -154,7 +154,7 @@
 					</template>
 				</template>
 			</nav>
-		</DiscordScrollbar>
+		</ScrollArea>
 
 		<DashboardAccountCard :floating />
 	</div>
@@ -162,6 +162,7 @@
 
 <script setup lang="ts">
 import type { DashboardNavGroup, DashboardNavItem } from "~/utils/dashboard-nav";
+import { ScrollArea } from "~/components/ui/scrollbar";
 const { floating = false } = defineProps<{
 	/**
 	 * Lays the account card over the server rail and the foot of the sidebar,
@@ -277,12 +278,13 @@ const groups = computed(() =>
 	@apply h-full max-h-full min-h-0 flex-1;
 }
 
-.dashboard-sidebar--floating .dashboard-nav-scroll :deep(.discord-scrollbar-track) {
-	bottom: 4.75rem;
+/* The thumb stops 4px above the floating account card. */
+.dashboard-sidebar--floating .dashboard-nav-scroll {
+	--newt-scrollbar-inset-end: calc(4.75rem + 4px);
 
 	/* Clear of the phone's taller account card. */
 	@variant max-sm {
-		bottom: 7rem;
+		--newt-scrollbar-inset-end: calc(7rem + 4px);
 	}
 }
 

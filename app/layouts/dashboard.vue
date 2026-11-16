@@ -514,6 +514,11 @@ watch(guildId, (newGuildId, oldGuildId) => {
 	--console-active: oklch(100% 0 0 / 0.08);
 	--console-shadow-low:
 		0 1px 0 oklch(0% 0 0 / 0.2), 0 1.5px 0 oklch(0% 0 0 / 0.05), 0 2px 0 oklch(0% 0 0 / 0.05);
+	/* The lists' scroll areas: a slim thumb tinted from the theme's muted text,
+	   so it reads on every colour theme, as the page's own scrollbar does. */
+	--newt-scrollbar-thumb: color-mix(in oklab, var(--ui-text-muted) 45%, transparent);
+	--newt-scrollbar-thumb-hover: color-mix(in oklab, var(--ui-text-muted) 75%, transparent);
+	--newt-scrollbar-thumb-width: 5px;
 
 	color: var(--ui-text);
 }

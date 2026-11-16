@@ -93,3 +93,19 @@ export const WithAuthor: Story = {
 		template: `<DiscordEmbed v-bind="args">Configuration saved successfully.</DiscordEmbed>`,
 	}),
 };
+
+/** No colour: the bar is neutral, as Discord draws an embed that sets none. */
+export const WithoutColor: Story = {
+	args: {
+		color: undefined,
+		title: "Configuration saved",
+		author: undefined,
+		footer: undefined,
+		timestamp: undefined,
+	},
+	render: (args) => ({
+		components: { DiscordEmbed },
+		setup: () => ({ args }),
+		template: `<DiscordEmbed v-bind="args">The prefix is now <code>!</code>.</DiscordEmbed>`,
+	}),
+};

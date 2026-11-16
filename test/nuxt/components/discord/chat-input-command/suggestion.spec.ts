@@ -24,7 +24,7 @@ describe("DiscordChatInputCommandSuggestion", () => {
 		expect(option.attributes("tabindex")).toBe("0");
 		expect(option.attributes("aria-label")).toContain("/warn");
 		expect(option.attributes("aria-label")).toContain("Warn a member");
-		expect(wrapper.text()).toMatch(/\/\s*warn/);
+		expect(wrapper.text()).toContain("/warn");
 		expect(wrapper.text()).toContain("Warn a member");
 		expect(wrapper.text()).toContain("WolfStar");
 		expect(wrapper.emitted("select")).toHaveLength(2);

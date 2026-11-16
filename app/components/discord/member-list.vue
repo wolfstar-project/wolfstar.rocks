@@ -1,8 +1,9 @@
 <template>
+	<!-- The status ring cuts the dot out of this surface, so it takes the same colour. -->
 	<aside
 		:class="
 			cn(
-				'discord-member-list flex min-h-0 w-60 shrink-0 flex-col overflow-hidden border-l border-newt-border bg-newt-bg-surface font-whitney text-newt-text-primary',
+				'discord-member-list flex min-h-0 w-60 shrink-0 flex-col overflow-hidden border-l border-newt-border bg-newt-bg-surface font-whitney text-newt-text-primary [--newt-status-ring:var(--newt-bg-surface)]',
 				props.class,
 			)
 		"
@@ -11,42 +12,40 @@
 		<ScrollArea class="h-full min-h-0 flex-1">
 			<div class="px-2 py-3">
 				<MemberListSection
-					v-for="(section, index) of sections"
+					v-for="section of sections"
 					:key="section.id"
 					:offline="section.offline"
 				>
-					<MemberListHeading :id="`${headingIdPrefix}-${index}`">
+					<MemberListHeading>
 						{{ section.label }} — {{ section.members.length }}
 					</MemberListHeading>
-					<MemberList :aria-labelledby="`${headingIdPrefix}-${index}`">
+					<MemberList>
 						<MemberListItem
 							v-for="member of section.members"
 							:key="member.id"
-							class="min-h-10 cursor-default gap-3 py-0.5"
-							:class="
-								member.rowBackground &&
-								'bg-cover bg-center bg-no-repeat hover:shadow-[inset_0_0_0_999px_var(--newt-bg-hover)]'
-							"
-							:style="
-								member.rowBackground
-									? { backgroundImage: member.rowBackground }
-									: undefined
-							"
+							class="min-h-10 gap-3 py-0.5"
 						>
-							<StatusIndicator aria-hidden="true" class="shrink-0">
-								<Avatar class="size-8">
+							<template v-if="member.rowBackground" #decoration>
+								<span
+									class="block size-full bg-cover bg-center bg-no-repeat"
+									:style="{ backgroundImage: member.rowBackground }"
+								/>
+							</template>
+							<StatusIndicator class="shrink-0">
+								<Avatar size="md">
 									<AvatarImage v-if="member.avatar" :src="member.avatar" />
-									<AvatarFallback v-else>
+									<AvatarFallback>
 										<UIcon
 											:name="member.icon ?? 'ph:user-fill'"
 											class="size-5"
+											aria-hidden="true"
 										/>
 									</AvatarFallback>
 								</Avatar>
 								<StatusDot
 									v-if="showPresence(member, section.offline)"
 									:status="memberPresence(member)"
-									class="border-newt-bg-surface"
+									:label="ts(PresenceLabelKeys[memberPresence(member)])"
 								/>
 							</StatusIndicator>
 							<MemberListInfo class="flex-1">
@@ -60,13 +59,8 @@
 									<MemberListAppTag
 										v-if="member.app"
 										:verified="member.verified"
-										:aria-label="
-											ts(
-												member.verified
-													? 'discord.member_list.verified_app'
-													: 'discord.member_list.app',
-											)
-										"
+										:label="ts('discord.member_list.app')"
+										:verified-label="ts('discord.member_list.verified_app')"
 									/>
 								</MemberListNameRow>
 								<MemberListRole v-if="secondaryText(member, section.pinned)">
@@ -103,6 +97,15 @@ interface PinnedRoleGroup {
 	role: string;
 	members: DiscordMemberListMember[];
 }
+
+type MemberPresence = NonNullable<DiscordMemberListMember["presence"]>;
+
+const PresenceLabelKeys = {
+	online: "discord.member_list.online",
+	idle: "discord.member_list.idle",
+	dnd: "discord.member_list.dnd",
+	offline: "discord.member_list.offline",
+} as const satisfies Record<MemberPresence, string>;
 </script>
 
 <script setup lang="ts">
@@ -126,7 +129,6 @@ import { StatusDot, StatusIndicator } from "~/components/ui/status-indicator";
 
 const { ts } = useI18n();
 const props = defineProps<MemberListProps>();
-const headingIdPrefix = useId();
 
 const sections = computed<MemberSection[]>(() => {
 	const pinnedGroups = new Map<string, PinnedRoleGroup>();
@@ -183,7 +185,7 @@ const sections = computed<MemberSection[]>(() => {
 	return next;
 });
 
-function memberPresence(member: DiscordMemberListMember) {
+function memberPresence(member: DiscordMemberListMember): MemberPresence {
 	return member.presence ?? "online";
 }
 

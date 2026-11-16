@@ -10,12 +10,8 @@
 			{{ ts("discord.welcome.start", { name: channelName })
 			}}<template v-if="topic">{{ ` ${topic}` }}</template>
 		</ChannelWelcomeDescription>
-		<!-- Decorative: the showcase cannot edit the channel, so it is not a control. -->
-		<ChannelWelcomeAction
-			aria-hidden="true"
-			tabindex="-1"
-			class="pointer-events-none cursor-default"
-		>
+		<!-- The showcase cannot edit the channel, so the action is decoration. -->
+		<ChannelWelcomeAction as="span">
 			<UIcon name="discord:edit" class="size-4 shrink-0" />
 			<span>{{ ts("discord.welcome.edit") }}</span>
 		</ChannelWelcomeAction>

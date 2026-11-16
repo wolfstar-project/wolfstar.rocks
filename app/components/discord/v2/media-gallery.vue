@@ -4,6 +4,7 @@
 		<MediaGalleryImage
 			v-for="item of items"
 			:key="item.src"
+			:as="NuxtImg"
 			:src="item.src"
 			:alt="item.alt"
 			:width="item.width"
@@ -16,6 +17,9 @@
 
 <script setup lang="ts">
 import { MediaGallery, MediaGalleryItem as MediaGalleryImage } from "~/components/ui/media-gallery";
+
+// The `as` prop takes a component, and `#components` types NuxtImg as a generic one.
+const NuxtImg = resolveComponent("NuxtImg");
 
 export interface MediaGalleryItem {
 	src: string;

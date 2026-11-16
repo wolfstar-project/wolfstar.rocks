@@ -4,12 +4,12 @@ Read before changing router transitions or page-level motion.
 
 Router-driven View Transitions are enabled via a **manual plugin** (not `experimental.viewTransition`).
 
-| File                                               | Purpose                                                                      |
-| -------------------------------------------------- | ---------------------------------------------------------------------------- |
-| `app/plugins/view-transition.client.ts`            | `router.beforeResolve` + `document.startViewTransition` — the entry point    |
-| `app/middleware/disable-vue-transitions.global.ts` | Disables Vue `pageTransition`/`layoutTransition` to prevent double-animation |
-| `app/assets/css/view-transitions.css`              | All VT CSS rules (imported via `main.css`)                                   |
-| `app/utils/view-transition-classifier.ts`          | Pure classifier; unit-testable without mounting Nuxt                         |
+| File                                                      | Purpose                                                                      |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `app/plugins/view-transition.client.ts`                   | `router.beforeResolve` + `document.startViewTransition` — the entry point    |
+| `app/middleware/disable-vue-transitions.global.client.ts` | Disables Vue `pageTransition`/`layoutTransition` to prevent double-animation |
+| `app/assets/css/view-transitions.css`                     | All VT CSS rules (imported via `main.css`)                                   |
+| `app/utils/view-transition-classifier.ts`                 | Pure classifier; unit-testable without mounting Nuxt                         |
 
 ## Type vocabulary
 

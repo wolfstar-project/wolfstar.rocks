@@ -1,26 +1,21 @@
 <template>
+	<!--
+		The panel covers only the channel of the showcase. The page around it
+		stays in use, so the dialog is not modal.
+	-->
 	<ChannelInfo
 		class="discord-channel-info absolute inset-0 z-20 max-w-none font-whitney motion-safe:animate-in motion-safe:duration-180 motion-safe:ease-out motion-safe:fade-in motion-safe:slide-in-from-right-3"
-		aria-modal="true"
-		:aria-label="ts('discord.channel_info.label', { name })"
+		:label="ts('discord.channel_info.label', { name })"
+		@close="emit('close')"
 	>
 		<ChannelInfoToolbar>
-			<ChannelInfoAction
-				ref="backButton"
-				:aria-label="ts('discord.channel_info.back')"
-				@click="emit('close')"
-			>
+			<ChannelInfoAction :aria-label="ts('discord.channel_info.back')" @click="emit('close')">
 				<UIcon name="ph:arrow-left-bold" class="size-5" aria-hidden="true" />
 			</ChannelInfoAction>
 
-			<!-- Decorative: the showcase has no search, alerts or settings to open. -->
-			<ChannelInfoActions aria-hidden="true">
-				<ChannelInfoAction
-					v-for="icon of DecorativeActionIcons"
-					:key="icon"
-					tabindex="-1"
-					class="pointer-events-none"
-				>
+			<!-- The showcase has no search, alerts or settings to open. -->
+			<ChannelInfoActions>
+				<ChannelInfoAction v-for="icon of DecorativeActionIcons" :key="icon" as="span">
 					<UIcon :name="icon" class="size-5" />
 				</ChannelInfoAction>
 			</ChannelInfoActions>
@@ -38,15 +33,10 @@
 
 		<Tabs v-model="activeTab" class="flex min-h-0 flex-1 flex-col">
 			<TabsList
-				class="mx-4 max-w-[calc(100%-2rem)] shrink-0 overflow-x-auto"
+				class="mx-4 max-w-[calc(100%-2rem)] shrink-0"
 				:aria-label="ts('discord.channel_info.sections')"
 			>
-				<TabsTrigger
-					v-for="tab of ChannelInfoTabs"
-					:key="tab.id"
-					:value="tab.id"
-					class="shrink-0"
-				>
+				<TabsTrigger v-for="tab of ChannelInfoTabs" :key="tab.id" :value="tab.id">
 					{{ ts(tab.labelKey) }}
 				</TabsTrigger>
 			</TabsList>
@@ -76,7 +66,7 @@
 							{{ ts("discord.channel_info.no_threads") }}
 						</ChannelInfoEmptyTitle>
 						<ChannelInfoEmptyBody>
-							Stay focused on a conversation with a thread - a temporary text channel.
+							{{ ts("discord.channel_info.threads_hint") }}
 						</ChannelInfoEmptyBody>
 						<Button class="mt-2 rounded-full" disabled>
 							{{ ts("discord.channel_info.create_thread") }}
@@ -87,8 +77,8 @@
 				<ChannelInfoPanel v-else>
 					<ChannelInfoEmpty>
 						<ChannelInfoEmptyBody>
-							We searched far and wide.<br />
-							Unfortunately, no results were found.
+							{{ ts("discord.channel_info.no_results") }}<br />
+							{{ ts("discord.channel_info.no_results_hint") }}
 						</ChannelInfoEmptyBody>
 					</ChannelInfoEmpty>
 				</ChannelInfoPanel>
@@ -155,20 +145,4 @@ const { name, online, offline, initialTab = "members" } = defineProps<ChannelInf
 const emit = defineEmits<ChannelInfoEmits>();
 
 const activeTab = ref<string>(initialTab);
-const backButton = useTemplateRef("backButton");
-
-function onDocumentKeydown(event: KeyboardEvent) {
-	if (event.key === "Escape") {
-		event.preventDefault();
-		emit("close");
-	}
-}
-
-onMounted(() => {
-	void nextTick(() => {
-		unrefElement(backButton)?.focus();
-	});
-});
-
-useEventListener(document, "keydown", onDocumentKeydown);
 </script>

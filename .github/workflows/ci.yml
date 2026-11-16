@@ -24,7 +24,7 @@ permissions:
 jobs:
   lint:
     name: 🔠 Lint project
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 10
 
     steps:
@@ -45,7 +45,7 @@ jobs:
 
   typecheck:
     name: 🔎 Typecheck project
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 15
 
     steps:
@@ -67,7 +67,7 @@ jobs:
 
   unit:
     name: 🧪 Unit tests
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 15
     env:
       # Match package.json test scripts; CI calls `vp test` directly.
@@ -111,7 +111,7 @@ jobs:
 
   test:
     name: 🧪 Component tests
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 30
     env:
       # Match package.json test scripts; CI calls `vp test` directly.
@@ -190,7 +190,7 @@ jobs:
 
   browser:
     name: 🖥️ Browser tests
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 30
     container:
       image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:6e3fb709361521eb27161606e6da6d2674e5e89fa16516cb37d6fdd91372273d
@@ -294,7 +294,7 @@ jobs:
 
   worker:
     name: ☁️ Worker build
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 45
 
     steps:
@@ -327,7 +327,7 @@ jobs:
 
   knip:
     name: 🧹 Unused code check
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 10
 
     steps:
@@ -349,7 +349,7 @@ jobs:
   # fetches remote bytes.
   skills:
     name: 🧩 Declared skills
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 10
 
     steps:

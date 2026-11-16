@@ -14,7 +14,7 @@ jobs:
   lunaria-overview:
     name: 🌝 Generate Lunaria Overview
     if: github.repository == 'wolfstar-project/wolfstar.rocks'
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 10
     permissions:
       contents: read

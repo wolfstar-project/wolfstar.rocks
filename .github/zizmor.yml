@@ -5,6 +5,10 @@ rules:
     ignore:
       # lunariajs/action has no tag refs; keep the branch commit hash-pinned.
       - lunaria.yml:68
+      # The org's .github repository publishes no tags; its reusable workflows
+      # stay pinned to a commit hash.
+      - labelsync.yml:15
+      - tolgee-sync.yml:19
   dangerous-triggers:
     ignore:
       - enforce-release-source.yml

@@ -93,9 +93,6 @@ shellEmulator: true
 # `@i18n-micro/path-strategy`: with the `no_prefix` strategy a language switch
 # keeps the current path. Upstream navigates to the route by name, which turned
 # an alias such as "/" into "/wolfstar" (see modules/i18n-no-prefix-aliases.ts).
-# nuxt-studio 1.8.0 ships an empty `studio.client.d.ts`; the generated plugin
-# injections import it, so every `useNuxtApp().$x` became `unknown`. The patch
-# restores the declaration 1.7.0 shipped.
 # nitropack: a cached function shares the call already running for a key with
 # the callers that come meanwhile. On Cloudflare Workers the runtime cancels
 # those callers as hung, so there the patch lets each call run on its own (see
@@ -103,5 +100,4 @@ shellEmulator: true
 patchedDependencies:
     "@i18n-micro/path-strategy": patches/@i18n-micro__path-strategy.patch
     nitropack@2.13.6: patches/nitropack@2.13.6.patch
-    nuxt-studio@1.8.0: patches/nuxt-studio@1.8.0.patch
     prisma-orm-extension-typed-json: patches/prisma-orm-extension-typed-json.patch

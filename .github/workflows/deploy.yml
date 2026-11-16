@@ -14,7 +14,7 @@ permissions: {}
 jobs:
   production:
     name: 🚀 Deploy to Cloudflare Workers
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 60
     if: github.repository == 'wolfstar-project/wolfstar.rocks'
     environment: release
@@ -148,7 +148,7 @@ jobs:
     name: 📈 Promote the version to 100%
     needs: production
     if: needs.production.outputs.rollout == 'gradual'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 10
     environment: release-promote
     permissions: {}

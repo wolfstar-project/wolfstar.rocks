@@ -27,11 +27,11 @@ catalogs:
 
     storybook:
         "@storybook-vue/nuxt": 10.0.3
-        "@storybook/addon-a11y": ^10.6.6
-        "@storybook/addon-docs": ^10.6.6
-        "@storybook/addon-themes": ^10.6.6
+        "@storybook/addon-a11y": ^10.6.7
+        "@storybook/addon-docs": ^10.6.7
+        "@storybook/addon-themes": ^10.6.7
         msw-storybook-addon: ^3.0.3
-        storybook: ^10.6.6
+        storybook: ^10.6.7
 
     vite-plus:
         vite: npm:@voidzero-dev/vite-plus-core@0.3.3
@@ -73,10 +73,10 @@ overrides:
     discord-api-types: 0.38.58
     # Keep one unhead version (Nuxt 4.x still ships unhead/legacy) so Nitro cannot link the
     # server bundle to a different traced package copy that omits legacy.mjs.
-    "@unhead/vue": 3.4.2
-    "@unhead/bundler": 3.4.2
-    unhead: 3.4.2
-    sharp: 0.35.3
+    "@unhead/vue": 3.4.3
+    "@unhead/bundler": 3.4.3
+    unhead: 3.4.3
+    sharp: 0.35.5
     # prisma-orm-extension-typed-json is only published for rc.5: run it on the rc.13 packs the
     # contract needs, exactly as the bot does (wolfstar-project/wolfstar, V7).
     prisma-orm-extension-typed-json>@prisma/orm-family-sql: 8.0.0-rc.13
@@ -93,9 +93,6 @@ shellEmulator: true
 # `@i18n-micro/path-strategy`: with the `no_prefix` strategy a language switch
 # keeps the current path. Upstream navigates to the route by name, which turned
 # an alias such as "/" into "/wolfstar" (see modules/i18n-no-prefix-aliases.ts).
-# nuxt-studio 1.8.0 ships an empty `studio.client.d.ts`; the generated plugin
-# injections import it, so every `useNuxtApp().$x` became `unknown`. The patch
-# restores the declaration 1.7.0 shipped.
 # nitropack: a cached function shares the call already running for a key with
 # the callers that come meanwhile. On Cloudflare Workers the runtime cancels
 # those callers as hung, so there the patch lets each call run on its own (see
@@ -103,5 +100,4 @@ shellEmulator: true
 patchedDependencies:
     "@i18n-micro/path-strategy": patches/@i18n-micro__path-strategy.patch
     nitropack@2.13.6: patches/nitropack@2.13.6.patch
-    nuxt-studio@1.8.0: patches/nuxt-studio@1.8.0.patch
     prisma-orm-extension-typed-json: patches/prisma-orm-extension-typed-json.patch

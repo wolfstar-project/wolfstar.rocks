@@ -5,13 +5,11 @@ import type { Preview } from "@storybook-vue/nuxt";
 // (no TooltipProvider) instead of the Nuxt UI app root.
 import { UApp } from "#components";
 import { withThemeByDataAttribute } from "@storybook/addon-themes";
-import { initialize, mswLoader } from "msw-storybook-addon";
+import { mswLoader } from "msw-storybook-addon/csf3";
 import { fn } from "storybook/test";
 import { handlers } from "~/storybook/mocks/handlers";
 import wolfstarDark from "./theme";
 import "./discord-chrome.css";
-
-initialize();
 
 // Stub Nuxt composables that are not available in Storybook context
 // @ts-expect-error - dynamic global name
@@ -28,9 +26,9 @@ const preview: Preview = {
 		docs: {
 			theme: wolfstarDark,
 		},
-		msw: {
-			handlers,
-		},
+	},
+	beforeEach({ msw }) {
+		msw.use(...handlers);
 	},
 	decorators: [
 		// Nuxt UI components (tooltips, overlays, toasts) require the providers
@@ -50,7 +48,7 @@ const preview: Preview = {
 			attributeName: "data-theme",
 		}),
 	],
-	loaders: [mswLoader],
+	loaders: [mswLoader()],
 };
 
 export default preview;

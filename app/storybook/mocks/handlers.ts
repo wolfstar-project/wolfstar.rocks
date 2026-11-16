@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw";
+import { http, HttpResponse } from "msw/http";
 import { mockCommands, mockGuild, mockGuildList, mockUser } from "./fixtures";
 
 export const handlers = [

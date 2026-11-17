@@ -8,7 +8,7 @@
 	>
 		<template #body>
 			<div v-if="editing" class="flex flex-col gap-5">
-				<!-- The account and the source name the subscription: to change them is a new one. -->
+				<!-- The account and the source identify the subscription: changing them makes a new one. -->
 				<p class="flex items-center gap-2 text-sm">
 					<UIcon
 						:name="editing.icon"

@@ -108,7 +108,10 @@ export const SocialStateSchema = object({
 	/** The switch of the module: off, Staryl posts nothing in the server. */
 	enabled: boolean(),
 	limits: object({
+		/** The sum of every provider's `maximum`: Staryl has no total of its own. */
 		subscriptions: number(),
+		/** How many Twitch live notifications the server may have. Optional from an older Staryl. */
+		twitchLive: optional(number()),
 		xAccounts: number(),
 		messageLength: number(),
 		targetLength: number(),
@@ -119,6 +122,8 @@ export const SocialStateSchema = object({
 			/** Whether Staryl holds the credentials the platform asks for. */
 			configured: boolean(),
 			manageable: boolean(),
+			/** How many subscriptions of this platform the server may hold. Optional from an older Staryl. */
+			maximum: optional(number()),
 		}),
 	),
 	/** Whether Staryl can follow a new streamer live. `false` from a Staryl that does not say. */

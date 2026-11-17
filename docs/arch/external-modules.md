@@ -83,6 +83,11 @@ sequenceDiagram
 - **A write that went through stays a success.** Staryl answers an add or a remove with the new list. If it
   saved the write and could not read the list, it answers `subscriptions: null`. The composable then reads
   the list again. It never sends the write again, which would answer `duplicate` or `subscription-not-found`.
+- **Count against the service's limits.** Staryl gives each platform its `maximum` and Twitch live
+  `limits.twitchLive`, with no total. The add dialog shows each source as used against its maximum and
+  greys out a full one, and the header counts the subscriptions without a maximum. A field an older
+  Staryl does not send is optional: a platform then falls back to `limits.subscriptions`, and Twitch live
+  to no limit.
 - **Say why there is nothing to configure.** The composable's `status` is `loading`, `unavailable`,
   `not-installed` or `ready`. Only `ready` has a switch. The page and the card show the other three as
   they are, and never as "off".
@@ -110,7 +115,8 @@ not available. Nothing else in the dashboard depends on them.
   keeps them when it lists the subscription.
 - It lists the subscriptions of connected accounts (Instagram, TikTok) and does not change them. Staryl
   answers these with `manageable: false`, since the connection starts in Discord.
-- Twitch live has no limit and no switch of its own. An end-of-stream notification needs a message, as
+- Twitch live has a limit of its own (`limits.twitchLive`, 15 by default) but no switch of its own. An
+  older Staryl does not send the limit, and the page then shows none. An end-of-stream notification needs a message, as
   `/subscriptions twitch add` asks. A Twitch live row from a Staryl without the Twitch live routes has no
   `subscriptionId`, and the page offers no removal for it.
 - The dashboard opens only for a server WolfStar is in. A server with Staryl alone has no dashboard.

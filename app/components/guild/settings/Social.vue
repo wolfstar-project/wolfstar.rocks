@@ -6,10 +6,10 @@
 		<template v-if="status.kind === 'ready'">
 			<UBadge color="primary" variant="soft" size="lg" class="font-semibold">
 				{{
-					ts("guild_settings.social.count", {
-						count: status.state.subscriptions.length,
-						maximum: status.state.limits.subscriptions,
-					})
+					tc(
+						"guild_settings.modules.subscription_count",
+						status.state.subscriptions.length + status.state.twitch.length,
+					)
 				}}
 			</UBadge>
 			<UButton
@@ -337,7 +337,7 @@ import type {
 } from "#shared/utils/social";
 import type { SocialDraftRequest } from "~/utils/social";
 
-const { ts } = useI18n();
+const { tc, ts } = useI18n();
 const toast = useToast();
 const invites = useInvites();
 const { activeGuildId } = useActiveGuild();

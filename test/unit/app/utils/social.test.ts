@@ -69,20 +69,79 @@ describe("socialSourceOptions", () => {
 		]);
 	});
 
-	// Listed, so an admin sees the source exists; disabled, so no add is sent that Staryl refuses.
-	it("disables a source Staryl has no credentials for", () => {
+	// Listed, so an admin sees the source exists; blocked, so no add is sent that Staryl refuses.
+	it("blocks a source Staryl has no credentials for", () => {
 		const options = socialSourceOptions(state({ twitchLiveConfigured: false }));
 
-		expect(options).toStrictEqual([
-			{ disabled: true, source: "TwitchLive" },
-			{ disabled: false, source: "Rss" },
-			{ disabled: true, source: "YouTube" },
+		expect(options.map(({ blocked, source }) => ({ blocked, source }))).toStrictEqual([
+			{ blocked: "unavailable", source: "TwitchLive" },
+			{ blocked: null, source: "Rss" },
+			{ blocked: "unavailable", source: "YouTube" },
 		]);
+	});
+
+	it("counts each source against its own maximum", () => {
+		const options = socialSourceOptions(
+			state({
+				limits: { ...state().limits, twitchLive: 15 },
+				providers: [{ configured: true, manageable: true, maximum: 10, name: "YouTube" }],
+				subscriptions: [subscription({ provider: "YouTube" }), subscription()],
+				twitch: [],
+			}),
+		);
+
+		expect(options.map(({ source, usage }) => ({ source, usage }))).toStrictEqual([
+			{ source: "TwitchLive", usage: { maximum: 15, used: 0 } },
+			{ source: "YouTube", usage: { maximum: 10, used: 1 } },
+		]);
+	});
+
+	it("blocks a source the server has its maximum of, and only that one", () => {
+		const options = socialSourceOptions(
+			state({
+				providers: [
+					{ configured: true, manageable: true, maximum: 1, name: "Rss" },
+					{ configured: true, manageable: true, maximum: 10, name: "YouTube" },
+				],
+				subscriptions: [subscription()],
+			}),
+		);
+
+		expect(options.find((option) => option.source === "Rss")?.blocked).toBe("full");
+		expect(options.find((option) => option.source === "YouTube")?.blocked).toBeNull();
+	});
+
+	// An older Staryl has one total of 25 every platform shares, not 25 each.
+	it("fills every platform together once an older Staryl's total is reached", () => {
+		const options = socialSourceOptions(
+			state({
+				limits: { ...state().limits, subscriptions: 2 },
+				providers: [
+					{ configured: true, manageable: true, name: "Rss" },
+					{ configured: true, manageable: true, name: "Bluesky" },
+				],
+				subscriptions: [subscription(), subscription({ provider: "Bluesky" })],
+			}),
+		);
+
+		expect(
+			options
+				.filter((option) => option.source !== "TwitchLive")
+				.map((option) => option.blocked),
+		).toStrictEqual(["full", "full"]);
+	});
+
+	// An older Staryl gives no maximum per platform, and none for Twitch live.
+	it("falls back to the total for a platform, and to no limit for Twitch live", () => {
+		const options = socialSourceOptions(state());
+
+		expect(options.find((option) => option.source === "Rss")?.usage.maximum).toBe(25);
+		expect(options.find((option) => option.source === "TwitchLive")?.usage.maximum).toBeNull();
 	});
 });
 
 describe("canAddToSocial", () => {
-	it("still offers Twitch live once the social subscriptions are full", () => {
+	it("still offers Twitch live once every platform is full", () => {
 		expect(canAddToSocial(full())).toBe(true);
 		expect(canAddToSocial({ ...full(), twitchLiveConfigured: false })).toBe(false);
 	});
@@ -95,6 +154,25 @@ describe("canAddToSocial", () => {
 					twitchLiveConfigured: false,
 				}),
 			),
+		).toBe(false);
+	});
+
+	it("has nothing to offer when Twitch live is full too", () => {
+		expect(
+			canAddToSocial({
+				...full(),
+				limits: { ...full().limits, twitchLive: 1 },
+				twitch: [
+					{
+						channelId: CHANNEL,
+						message: null,
+						revoked: false,
+						streamerId: "1",
+						streamerName: null,
+						type: "StreamOnline",
+					},
+				],
+			}),
 		).toBe(false);
 	});
 });

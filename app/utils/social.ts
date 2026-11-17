@@ -43,45 +43,76 @@ export function emptySocialDraft(): SocialDraft {
 	return { channelId: null, event: "StreamOnline", message: "", source: null, target: "" };
 }
 
-/** A source the add dialog lists, and whether it can be picked. */
+/**
+ * How much of a source the server uses: its subscriptions, and how many it
+ * may have. `maximum` is `null` when Staryl does not say, as an older Staryl
+ * does for Twitch live; such a source is not held to a number here.
+ */
+export interface SocialSourceUsage {
+	used: number;
+	maximum: number | null;
+}
+
+export function socialSourceUsage(state: SocialState, source: SocialSource): SocialSourceUsage {
+	if (source === "TwitchLive") {
+		return { maximum: state.limits.twitchLive ?? null, used: state.twitch.length };
+	}
+	const maximum = state.providers.find((entry) => entry.name === source)?.maximum;
+	// An older Staryl gives no maximum per platform, only one total every platform shares: each
+	// counts every subscription against it, so all of them are full together.
+	if (maximum === undefined) {
+		return { maximum: state.limits.subscriptions, used: state.subscriptions.length };
+	}
+	return {
+		maximum,
+		used: state.subscriptions.filter((subscription) => subscription.provider === source).length,
+	};
+}
+
+function isFull({ used, maximum }: SocialSourceUsage): boolean {
+	return maximum !== null && used >= maximum;
+}
+
+/** A source the add dialog lists, how much of it is used, and whether it can be picked. */
 export interface SocialSourceOption {
 	source: SocialSource;
-	/** Staryl has no credentials for it, so an add would be refused. */
-	disabled: boolean;
+	usage: SocialSourceUsage;
+	/** Why it cannot be picked: Staryl has no credentials for it, or the server has its maximum. */
+	blocked: "unavailable" | "full" | null;
 }
 
 /**
  * Every source the add dialog lists, Twitch live first. An account its owner
  * has to connect (Instagram, TikTok) starts in Discord, so it is left out. A
- * source Staryl has no credentials for is listed, disabled, so an admin sees
- * it exists and that it is not on yet.
+ * source Staryl has no credentials for, or one the server has its maximum of,
+ * is listed but blocked, so an admin sees it and why it cannot be picked.
  */
 export function socialSourceOptions(state: SocialState): SocialSourceOption[] {
-	return [
-		{ disabled: !state.twitchLiveConfigured, source: "TwitchLive" },
+	const sources: { source: SocialSource; configured: boolean }[] = [
+		{ configured: state.twitchLiveConfigured, source: "TwitchLive" },
 		...state.providers
 			.filter((provider) => provider.manageable)
-			.map((provider) => ({ disabled: !provider.configured, source: provider.name })),
+			.map((provider) => ({ configured: provider.configured, source: provider.name })),
 	];
+	return sources.map(({ configured, source }) => {
+		const usage = socialSourceUsage(state, source);
+		return {
+			blocked: !configured ? "unavailable" : isFull(usage) ? "full" : null,
+			source,
+			usage,
+		};
+	});
 }
 
-/** Whether a social subscription can be added: one source is on, and the limit is not reached. */
-function canAddSocial(state: SocialState): boolean {
-	return (
-		state.subscriptions.length < state.limits.subscriptions &&
-		state.providers.some((provider) => provider.manageable && provider.configured)
-	);
-}
-
-/** Whether the add dialog has anything to offer. Twitch live has no limit of its own. */
+/** Whether the add dialog has anything to offer: one source can be picked. */
 export function canAddToSocial(state: SocialState): boolean {
-	return state.twitchLiveConfigured || canAddSocial(state);
+	return socialSourceOptions(state).some((option) => option.blocked === null);
 }
 
 /**
- * What keeps the draft from being sent: the server has as many social
- * subscriptions as it may, an offline notification has no message, or a
- * field the request needs is still empty.
+ * What keeps the draft from being sent: the server has its maximum of the
+ * source, an offline notification has no message, or a field the request
+ * needs is still empty.
  */
 export type SocialDraftProblem = "limit" | "message" | "incomplete";
 
@@ -89,8 +120,7 @@ export function socialDraftProblem(
 	draft: SocialDraft,
 	state: SocialState,
 ): SocialDraftProblem | null {
-	const social = draft.source !== null && draft.source !== "TwitchLive";
-	if (social && state.subscriptions.length >= state.limits.subscriptions) return "limit";
+	if (draft.source !== null && isFull(socialSourceUsage(state, draft.source))) return "limit";
 	if (draft.source === null || draft.target.trim() === "" || draft.channelId === null) {
 		return "incomplete";
 	}

@@ -4759,9 +4759,6 @@
 							},
 							"additionalProperties": false
 						},
-						"count": {
-							"type": "string"
-						},
 						"delivery_errors": {
 							"type": "object",
 							"properties": {
@@ -4814,6 +4811,12 @@
 									"type": "string"
 								},
 								"provider_placeholder": {
+									"type": "string"
+								},
+								"source_full": {
+									"type": "string"
+								},
+								"source_usage": {
 									"type": "string"
 								},
 								"subtitle": {
@@ -4892,6 +4895,9 @@
 									"type": "string"
 								},
 								"limit_reached": {
+									"type": "string"
+								},
+								"limit_reached_unknown": {
 									"type": "string"
 								},
 								"message_required": {

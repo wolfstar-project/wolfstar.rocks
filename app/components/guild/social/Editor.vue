@@ -145,19 +145,32 @@ watch(
 );
 
 const sourceOptions = computed(() => socialSourceOptions(state));
-const hasDisabledSources = computed(() => sourceOptions.value.some((option) => option.disabled));
+const hasDisabledSources = computed(() =>
+	sourceOptions.value.some((option) => option.blocked === "unavailable"),
+);
 
-// A source Staryl has no credentials for stays listed, greyed and said so, so it is not mistaken
-// for one the dashboard forgot.
+function sourceName(value: SocialSource): string {
+	return ts(`guild_settings.social.providers.${value}`);
+}
+
+// Each source says how much of it the server uses. One Staryl has no credentials for, or one the
+// server has its maximum of, stays listed and greyed with the reason, so it is not mistaken for one
+// the dashboard forgot.
 const sourceItems = computed(() =>
-	sourceOptions.value.map(({ disabled, source: value }) => {
-		const name = ts(`guild_settings.social.providers.${value}`);
-		return {
-			disabled,
-			icon: SOCIAL_PROVIDER_ICONS[value],
-			label: disabled ? ts("guild_settings.social.editor.not_available", { name }) : name,
-			value,
-		};
+	sourceOptions.value.map(({ blocked, source: value, usage }) => {
+		const name = sourceName(value);
+		let label = name;
+		if (blocked === "unavailable") {
+			label = ts("guild_settings.social.editor.not_available", { name });
+		} else if (usage.maximum !== null) {
+			label = ts(
+				blocked === "full"
+					? "guild_settings.social.editor.source_full"
+					: "guild_settings.social.editor.source_usage",
+				{ maximum: usage.maximum, name, used: usage.used },
+			);
+		}
+		return { disabled: blocked !== null, icon: SOCIAL_PROVIDER_ICONS[value], label, value };
 	}),
 );
 
@@ -199,17 +212,38 @@ const messageHelp = computed(() =>
 const problem = computed(() => socialDraftProblem(draft, state));
 
 // An empty field shows on its own. The limit does not, so it is said; then what the server refused.
+// The server's answer is about the source it was sent for. Once another source is picked it says
+// nothing about the new one, so it is not shown, nor read with the new one's name and maximum.
+const refusedSource = ref<SocialSource | null>(null);
+watch(
+	() => errorCode,
+	(code) => {
+		refusedSource.value = code ? draft.source : null;
+	},
+	{ immediate: true },
+);
+const serverError = computed(() =>
+	errorCode && refusedSource.value === draft.source ? errorCode : null,
+);
+
 const problemMessage = computed(() => {
-	if (problem.value === "limit") {
-		return ts("guild_settings.social.errors.limit_reached", {
-			maximum: state.limits.subscriptions,
+	const maximum = draft.source === null ? null : socialSourceUsage(state, draft.source).maximum;
+	const name = draft.source === null ? "" : sourceName(draft.source);
+	// Staryl can refuse a source whose maximum it did not send, as an older one does for Twitch live:
+	// the message then names no number rather than a wrong one.
+	const limitReached = () =>
+		maximum === null
+			? ts("guild_settings.social.errors.limit_reached_unknown", { name })
+			: ts("guild_settings.social.errors.limit_reached", { maximum, name });
+	if (problem.value === "limit") return limitReached();
+	if (!serverError.value) return null;
+	if (serverError.value === "limit-reached") return limitReached();
+	if (serverError.value === "x-limit-reached") {
+		return ts("guild_settings.social.errors.x_limit_reached", {
+			maximum: state.limits.xAccounts,
 		});
 	}
-	if (!errorCode) return null;
-	return ts(`guild_settings.social.errors.${errorCode.replaceAll("-", "_")}`, {
-		maximum:
-			errorCode === "x-limit-reached" ? state.limits.xAccounts : state.limits.subscriptions,
-	});
+	return ts(`guild_settings.social.errors.${serverError.value.replaceAll("-", "_")}`);
 });
 
 function save() {

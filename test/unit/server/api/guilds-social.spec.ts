@@ -410,6 +410,21 @@ describe("the Social module's routes", () => {
 			expect(mocks.editSocialSubscription).not.toHaveBeenCalled();
 		});
 
+		it("keeps the saved message when the body leaves it out", async () => {
+			mocks.params = { channel: CHANNEL, source: "5" };
+			mocks.body = { channelId: OTHER };
+			const moved = { ...subscription, channelId: OTHER };
+			mocks.editSocialSubscription.mockResolvedValue(
+				ok({ previous: subscription, subscription: moved, subscriptions: [moved] }),
+			);
+
+			await call(editHandler);
+
+			expect(mocks.editSocialSubscription.mock.calls[0]?.[3]).toStrictEqual({
+				channelId: OTHER,
+			});
+		});
+
 		it("passes on that the new channel already follows the account", async () => {
 			mocks.params = { channel: CHANNEL, source: "5" };
 			mocks.body = { channelId: OTHER };

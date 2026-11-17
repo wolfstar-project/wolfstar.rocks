@@ -224,16 +224,19 @@ export type SocialSubscriptionBody = InferOutput<typeof SocialSubscriptionBodySc
  * The body of `PATCH …/social/subscriptions/:channel/:source` and of
  * `PATCH …/social/twitch/:channel/:subscription`. The account, the source and
  * the event name the subscription and stay: those are a removal and an add.
- * An empty message removes it; Staryl refuses that for an offline notification.
+ * A message left out keeps the saved one, as Staryl reads it. An empty or
+ * `null` message removes it; Staryl refuses that for an offline notification.
  */
 export const SocialEditBodySchema = object({
 	channelId: pipe(
 		string(),
 		check((value) => isSnowflake(value), "Expected a channel ID"),
 	),
-	message: pipe(
-		nullish(pipe(string(), trim(), maxLength(SOCIAL_MESSAGE_MAXIMUM)), null),
-		transform((value) => value || null),
+	message: optional(
+		pipe(
+			nullable(pipe(string(), trim(), maxLength(SOCIAL_MESSAGE_MAXIMUM))),
+			transform((value) => value || null),
+		),
 	),
 });
 export type SocialEditBody = InferOutput<typeof SocialEditBodySchema>;

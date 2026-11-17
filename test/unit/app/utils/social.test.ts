@@ -1,11 +1,12 @@
 import type { SocialState, SocialSubscription } from "#shared/utils/social";
-import type { SocialDraft } from "~/utils/social";
+import type { SocialDraft, SocialEditTarget } from "~/utils/social";
 import { describe, expect, it } from "vitest";
 import {
 	canAddToSocial,
 	emptySocialDraft,
 	socialDraftProblem,
 	socialDraftRequest,
+	socialEditBody,
 	socialSourceOptions,
 	socialSubscriptionStatus,
 } from "~/utils/social";
@@ -258,5 +259,47 @@ describe("socialSubscriptionStatus", () => {
 			key: "guild_settings.social.delivery_errors.MissingPermissions",
 			tone: "error",
 		});
+	});
+});
+
+describe("socialEditBody", () => {
+	const OTHER = "345678901234567890";
+	const target = (overrides: Partial<SocialEditTarget> = {}): SocialEditTarget => ({
+		channelId: CHANNEL,
+		detail: "RSS or Atom feed",
+		icon: "simple-icons:rss",
+		key: { kind: "social", sourceId: "5" },
+		message: "New post",
+		messageRequired: false,
+		name: "Example feed",
+		...overrides,
+	});
+
+	it("sends nothing while nothing changed", () => {
+		expect(socialEditBody(target(), CHANNEL, "New post")).toBeNull();
+	});
+
+	// The bot's own add saves a message as typed, spaces and all.
+	it("reads a saved message with spaces around it as unchanged", () => {
+		expect(socialEditBody(target({ message: " New post " }), CHANNEL, " New post ")).toBeNull();
+	});
+
+	it("sends the new channel and the trimmed message", () => {
+		expect(socialEditBody(target(), OTHER, "  Fresh  ")).toStrictEqual({
+			channelId: OTHER,
+			message: "Fresh",
+		});
+	});
+
+	it("removes an emptied message, unless the notification needs one", () => {
+		expect(socialEditBody(target(), CHANNEL, "  ")).toStrictEqual({
+			channelId: CHANNEL,
+			message: null,
+		});
+		expect(socialEditBody(target({ messageRequired: true }), CHANNEL, "")).toBeNull();
+	});
+
+	it("sends nothing without a channel", () => {
+		expect(socialEditBody(target(), null, "Fresh")).toBeNull();
 	});
 });

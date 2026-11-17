@@ -58,7 +58,8 @@ export function socialEditBody(
 	const trimmed = message.trim();
 	if (channelId === null) return null;
 	if (target.messageRequired && trimmed === "") return null;
-	if (channelId === target.channelId && trimmed === (target.message ?? "")) return null;
+	// Compared trimmed on both sides: the bot's add saves a message as typed, spaces included.
+	if (channelId === target.channelId && trimmed === (target.message ?? "").trim()) return null;
 	return { channelId, message: trimmed === "" ? null : trimmed };
 }
 

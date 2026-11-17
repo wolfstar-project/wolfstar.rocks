@@ -228,6 +228,11 @@
 							<th scope="col">{{ ts("guild_settings.social.twitch.event") }}</th>
 							<th scope="col">{{ ts("guild_settings.social.columns.channel") }}</th>
 							<th scope="col">{{ ts("guild_settings.social.columns.status") }}</th>
+							<th scope="col">
+								<span class="sr-only">{{
+									ts("guild_settings.social.columns.actions")
+								}}</span>
+							</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -256,6 +261,24 @@
 									}}
 								</GuildLogsPill>
 							</td>
+							<td>
+								<span class="flex items-center justify-end gap-1">
+									<UButton
+										v-if="entry.subscriptionId"
+										color="neutral"
+										variant="ghost"
+										size="sm"
+										icon="ic:round-close"
+										:aria-label="
+											ts('guild_settings.social.remove_aria', {
+												channel: channelName(entry.channelId),
+												name: streamerName(entry),
+											})
+										"
+										@click="askRemoveTwitch(entry)"
+									/>
+								</span>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -281,7 +304,7 @@
 		:description="
 			ts('guild_settings.social.remove_description', {
 				channel: removing ? channelName(removing.channelId) : '',
-				name: removing?.displayName ?? '',
+				name: removing?.name ?? '',
 			})
 		"
 		:dismissible="!saving"
@@ -310,27 +333,34 @@
 import type {
 	SocialErrorCode,
 	SocialSubscription,
-	SocialSubscriptionBody,
+	SocialTwitchSubscription,
 } from "#shared/utils/social";
+import type { SocialDraftRequest } from "~/utils/social";
 
 const { ts } = useI18n();
 const toast = useToast();
 const invites = useInvites();
 const { activeGuildId } = useActiveGuild();
 const { guildData } = useGuildData();
-const { addSubscription, refresh, removeSubscription, setEnabled, status } =
-	useSocialModule(activeGuildId);
+const {
+	addSubscription,
+	addTwitch,
+	refresh,
+	removeSubscription,
+	removeTwitch,
+	setEnabled,
+	status,
+} = useSocialModule(activeGuildId);
 
 const emptyHeadingId = useId();
 const subscriptionsHeadingId = useId();
 const twitchHeadingId = useId();
 
-const canAdd = computed(
-	() =>
-		status.value.kind === "ready" &&
-		status.value.state.subscriptions.length < status.value.state.limits.subscriptions &&
-		addableSocialProviders(status.value.state).length > 0,
-);
+const canAdd = computed(() => status.value.kind === "ready" && canAddToSocial(status.value.state));
+
+function streamerName(entry: SocialTwitchSubscription): string {
+	return entry.streamerName ?? ts("guild_settings.social.twitch.unknown_streamer");
+}
 
 function channelName(channelId: string): string {
 	const channel = guildData.value?.channels.find((candidate) => candidate.id === channelId);
@@ -379,10 +409,13 @@ function openEditor() {
 	editorOpen.value = true;
 }
 
-async function add(body: SocialSubscriptionBody) {
+async function add(request: SocialDraftRequest) {
 	saving.value = true;
 	errorCode.value = null;
-	const result = await addSubscription(body);
+	const result =
+		request.kind === "twitch"
+			? await addTwitch(request.body)
+			: await addSubscription(request.body);
 	saving.value = false;
 
 	if (!result.ok) {
@@ -393,17 +426,44 @@ async function add(body: SocialSubscriptionBody) {
 	toast.add({
 		color: "success",
 		description: ts("guild_settings.social.added_description", {
-			channel: channelName(body.channelId),
+			channel: channelName(request.body.channelId),
 		}),
 		icon: "heroicons:check",
 		title: ts("guild_settings.social.added_title"),
 	});
 }
 
-const removing = shallowRef<SocialSubscription | null>(null);
+/** What the removal dialog asks about: a subscription, or a Twitch live one. */
+type Removal =
+	| { kind: "social"; channelId: string; name: string; subscription: SocialSubscription }
+	| {
+			kind: "twitch";
+			channelId: string;
+			name: string;
+			entry: SocialTwitchSubscription & { subscriptionId: string };
+	  };
+
+const removing = shallowRef<Removal | null>(null);
 
 function askRemove(subscription: SocialSubscription) {
-	removing.value = subscription;
+	removing.value = {
+		channelId: subscription.channelId,
+		kind: "social",
+		name: subscription.displayName,
+		subscription,
+	};
+}
+
+function askRemoveTwitch(entry: SocialTwitchSubscription) {
+	// A row from a Staryl without the Twitch live routes has no id, and no button.
+	const { subscriptionId } = entry;
+	if (subscriptionId === undefined) return;
+	removing.value = {
+		channelId: entry.channelId,
+		entry: { ...entry, subscriptionId },
+		kind: "twitch",
+		name: streamerName(entry),
+	};
 }
 
 function closeRemove() {
@@ -411,10 +471,13 @@ function closeRemove() {
 }
 
 async function confirmRemove() {
-	const subscription = removing.value;
-	if (!subscription) return;
+	const removal = removing.value;
+	if (!removal) return;
 	saving.value = true;
-	const result = await removeSubscription(subscription);
+	const result =
+		removal.kind === "twitch"
+			? await removeTwitch(removal.entry)
+			: await removeSubscription(removal.subscription);
 	saving.value = false;
 	removing.value = null;
 
@@ -425,8 +488,8 @@ async function confirmRemove() {
 			? {
 					color: "success",
 					description: ts("guild_settings.social.removed_description", {
-						channel: channelName(subscription.channelId),
-						name: subscription.displayName,
+						channel: channelName(removal.channelId),
+						name: removal.name,
 					}),
 					icon: "heroicons:check",
 					title: ts("guild_settings.social.removed_title"),

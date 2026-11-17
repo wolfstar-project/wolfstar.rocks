@@ -20,6 +20,7 @@ import {
 	nullish,
 	number,
 	object,
+	optional,
 	picklist,
 	pipe,
 	string,
@@ -80,15 +81,26 @@ const SocialSubscriptionSchema = object({
 });
 export type SocialSubscription = InferOutput<typeof SocialSubscriptionSchema>;
 
+/** When a Twitch live notification is posted: as the stream starts, or as it ends. */
+const SOCIAL_TWITCH_EVENTS = ["StreamOnline", "StreamOffline"] as const;
+export type SocialTwitchEvent = (typeof SOCIAL_TWITCH_EVENTS)[number];
+
 const SocialTwitchSubscriptionSchema = object({
+	/**
+	 * What a removal names, with the channel. Optional while a Staryl from
+	 * before the Twitch live routes answers: a row without it is listed only.
+	 */
+	subscriptionId: optional(string()),
 	streamerId: string(),
 	streamerName: nullable(string()),
 	channelId: string(),
-	type: picklist(["StreamOnline", "StreamOffline"]),
+	type: picklist(SOCIAL_TWITCH_EVENTS),
 	message: nullable(string()),
 	/** Twitch ended it: no notification arrives until it is added again. */
 	revoked: boolean(),
 });
+
+export type SocialTwitchSubscription = InferOutput<typeof SocialTwitchSubscriptionSchema>;
 
 export const SocialStateSchema = object({
 	/** Whether Staryl is in the server. */
@@ -109,6 +121,8 @@ export const SocialStateSchema = object({
 			manageable: boolean(),
 		}),
 	),
+	/** Whether Staryl can follow a new streamer live. `false` from a Staryl that does not say. */
+	twitchLiveConfigured: optional(boolean(), false),
 	subscriptions: array(SocialSubscriptionSchema),
 	twitch: array(SocialTwitchSubscriptionSchema),
 });
@@ -139,6 +153,18 @@ export const SocialRemovedSchema = object({
 	subscriptions: nullable(array(SocialSubscriptionSchema)),
 });
 
+/** What a Twitch live add answers with, as a social add does. */
+export const SocialTwitchAddedSchema = object({
+	subscription: nullable(SocialTwitchSubscriptionSchema),
+	twitch: nullable(array(SocialTwitchSubscriptionSchema)),
+});
+
+/** What a Twitch live removal answers with, as a social removal does. */
+export const SocialTwitchRemovedSchema = object({
+	removed: SocialTwitchSubscriptionSchema,
+	twitch: nullable(array(SocialTwitchSubscriptionSchema)),
+});
+
 /** The longest target and message Staryl takes; its API repeats them in `limits`. */
 const SOCIAL_TARGET_MAXIMUM = 500;
 const SOCIAL_MESSAGE_MAXIMUM = 200;
@@ -152,11 +178,39 @@ export const SocialSubscriptionBodySchema = object({
 		check((value) => isSnowflake(value), "Expected a channel ID"),
 	),
 	message: pipe(
-		nullish(pipe(string(), trim(), maxLength(SOCIAL_MESSAGE_MAXIMUM))),
+		nullish(pipe(string(), trim(), maxLength(SOCIAL_MESSAGE_MAXIMUM)), null),
 		transform((value) => value || null),
 	),
 });
 export type SocialSubscriptionBody = InferOutput<typeof SocialSubscriptionBodySchema>;
+
+/** A Twitch login: up to 25 letters, digits and underscores, with or without the @. */
+const TWITCH_LOGIN_PATTERN = /^@?\w{1,25}$/u;
+
+/** The body of `POST /api/guilds/:guild/social/twitch`. An offline notification needs a message. */
+export const SocialTwitchBodySchema = pipe(
+	object({
+		streamer: pipe(
+			string(),
+			trim(),
+			check((value) => TWITCH_LOGIN_PATTERN.test(value), "Expected a Twitch login"),
+		),
+		channelId: pipe(
+			string(),
+			check((value) => isSnowflake(value), "Expected a channel ID"),
+		),
+		type: picklist(SOCIAL_TWITCH_EVENTS),
+		message: pipe(
+			nullish(pipe(string(), trim(), maxLength(SOCIAL_MESSAGE_MAXIMUM)), null),
+			transform((value) => value || null),
+		),
+	}),
+	check(
+		(body) => body.type === "StreamOnline" || body.message !== null,
+		"An offline notification needs a message",
+	),
+);
+export type SocialTwitchBody = InferOutput<typeof SocialTwitchBodySchema>;
 
 /**
  * Why a request of the Social module was refused. The first group is Staryl's
@@ -179,6 +233,10 @@ export const SOCIAL_ERROR_CODES = [
 	"target-unsupported",
 	"target-unreachable",
 	"subscription-not-found",
+	"send-failed",
+	"message-required",
+	"streamer-not-found",
+	"twitch-failed",
 	"invalid",
 	"unavailable",
 ] as const;

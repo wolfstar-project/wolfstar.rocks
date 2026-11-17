@@ -1,11 +1,13 @@
 import type { ExternalService } from "#server/utils/external-service";
-import type { SocialSubscriptionBody } from "#shared/utils/social";
+import type { SocialSubscriptionBody, SocialTwitchBody } from "#shared/utils/social";
 import { callExternalService } from "#server/utils/external-service";
 import {
 	SocialAddedSchema,
 	SocialRemovedSchema,
 	SocialStateSchema,
 	SocialSwitchSchema,
+	SocialTwitchAddedSchema,
+	SocialTwitchRemovedSchema,
 } from "#shared/utils/social";
 
 /**
@@ -72,5 +74,32 @@ export function removeSocialSubscription(
 		method: "DELETE",
 		path: `/guilds/${guildId}/subscriptions/${channelId}/${sourceId}`,
 		schema: SocialRemovedSchema,
+	});
+}
+
+/** Notifies a channel when a streamer goes live or offline, through Twitch's EventSub. */
+export function addSocialTwitch(guildId: string, actorId: string, body: SocialTwitchBody) {
+	return callExternalService(staryl(), {
+		actorId,
+		body,
+		endpoint: "twitch.add",
+		method: "POST",
+		path: `/guilds/${guildId}/twitch`,
+		schema: SocialTwitchAddedSchema,
+	});
+}
+
+export function removeSocialTwitch(
+	guildId: string,
+	actorId: string,
+	channelId: string,
+	subscriptionId: string,
+) {
+	return callExternalService(staryl(), {
+		actorId,
+		endpoint: "twitch.remove",
+		method: "DELETE",
+		path: `/guilds/${guildId}/twitch/${channelId}/${subscriptionId}`,
+		schema: SocialTwitchRemovedSchema,
 	});
 }

@@ -1,10 +1,12 @@
 import type { SocialState, SocialSubscription } from "#shared/utils/social";
+import type { SocialDraft } from "~/utils/social";
 import { describe, expect, it } from "vitest";
 import {
-	addableSocialProviders,
+	canAddToSocial,
 	emptySocialDraft,
-	socialDraftBody,
 	socialDraftProblem,
+	socialDraftRequest,
+	socialSourceOptions,
 	socialSubscriptionStatus,
 } from "~/utils/social";
 
@@ -40,55 +42,117 @@ function state(overrides: Partial<SocialState> = {}): SocialState {
 		],
 		subscriptions: [],
 		twitch: [],
+		twitchLiveConfigured: true,
 		...overrides,
 	};
 }
 
-const filled = { ...emptySocialDraft(), channelId: CHANNEL, provider: "Rss", target: "x" } as const;
+const filled: SocialDraft = {
+	...emptySocialDraft(),
+	channelId: CHANNEL,
+	source: "Rss",
+	target: "x",
+};
+const live: SocialDraft = { ...filled, source: "TwitchLive", target: "shroud" };
+const full = () =>
+	state({
+		limits: { messageLength: 200, subscriptions: 1, targetLength: 500, xAccounts: 2 },
+		subscriptions: [subscription()],
+	});
 
-describe("addableSocialProviders", () => {
-	it("offers only what Staryl can read and lets the dashboard change", () => {
-		expect(addableSocialProviders(state())).toStrictEqual(["Rss"]);
+describe("socialSourceOptions", () => {
+	it("lists Twitch live first, then every source but the connected accounts", () => {
+		expect(socialSourceOptions(state()).map((option) => option.source)).toStrictEqual([
+			"TwitchLive",
+			"Rss",
+			"YouTube",
+		]);
+	});
+
+	// Listed, so an admin sees the source exists; disabled, so no add is sent that Staryl refuses.
+	it("disables a source Staryl has no credentials for", () => {
+		const options = socialSourceOptions(state({ twitchLiveConfigured: false }));
+
+		expect(options).toStrictEqual([
+			{ disabled: true, source: "TwitchLive" },
+			{ disabled: false, source: "Rss" },
+			{ disabled: true, source: "YouTube" },
+		]);
+	});
+});
+
+describe("canAddToSocial", () => {
+	it("still offers Twitch live once the social subscriptions are full", () => {
+		expect(canAddToSocial(full())).toBe(true);
+		expect(canAddToSocial({ ...full(), twitchLiveConfigured: false })).toBe(false);
+	});
+
+	it("has nothing to offer when no source has credentials", () => {
+		expect(
+			canAddToSocial(
+				state({
+					providers: [{ configured: false, manageable: true, name: "YouTube" }],
+					twitchLiveConfigured: false,
+				}),
+			),
+		).toBe(false);
 	});
 });
 
 describe("socialDraftProblem", () => {
 	it("lets a filled draft go", () => {
 		expect(socialDraftProblem(filled, state())).toBeNull();
+		expect(socialDraftProblem(live, state())).toBeNull();
 	});
 
 	it.each([
-		["no source", { ...filled, provider: null }],
+		["no source", { ...filled, source: null }],
 		["a blank target", { ...filled, target: "   " }],
 		["no channel", { ...filled, channelId: null }],
 	])("holds a draft with %s", (_name, draft) => {
 		expect(socialDraftProblem(draft, state())).toBe("incomplete");
 	});
 
-	it("names the limit before anything else, since no field can fix it", () => {
-		const full = state({
-			limits: { messageLength: 200, subscriptions: 1, targetLength: 500, xAccounts: 2 },
-			subscriptions: [subscription()],
-		});
+	it("names the limit for a social source, since no field can fix it", () => {
+		expect(socialDraftProblem(emptySocialDraft(), full())).toBe("incomplete");
+		expect(socialDraftProblem({ ...filled, source: "Rss" }, full())).toBe("limit");
+	});
 
-		expect(socialDraftProblem(emptySocialDraft(), full)).toBe("limit");
+	it("does not hold Twitch live to the limit of the social subscriptions", () => {
+		expect(socialDraftProblem(live, full())).toBeNull();
+	});
+
+	it("asks for a message when the notification is for the end of a stream", () => {
+		const offline: SocialDraft = { ...live, event: "StreamOffline" };
+
+		expect(socialDraftProblem(offline, state())).toBe("message");
+		expect(
+			socialDraftProblem({ ...offline, message: "Thanks for watching" }, state()),
+		).toBeNull();
 	});
 });
 
-describe("socialDraftBody", () => {
-	it("trims the target and sends a blank message as none", () => {
+describe("socialDraftRequest", () => {
+	it("sends a social source to the subscriptions, trimmed, a blank message as none", () => {
 		expect(
-			socialDraftBody({ ...filled, message: "   ", target: "  r/discordapp " }),
+			socialDraftRequest({ ...filled, message: "   ", target: "  r/discordapp " }),
 		).toStrictEqual({
-			channelId: CHANNEL,
-			message: null,
-			provider: "Rss",
-			target: "r/discordapp",
+			body: { channelId: CHANNEL, message: null, provider: "Rss", target: "r/discordapp" },
+			kind: "social",
 		});
 	});
 
-	it("makes no body of a draft without a source", () => {
-		expect(socialDraftBody({ ...filled, provider: null })).toBeNull();
+	it("sends Twitch live to its own route, with the event", () => {
+		expect(
+			socialDraftRequest({ ...live, event: "StreamOffline", message: " Bye " }),
+		).toStrictEqual({
+			body: { channelId: CHANNEL, message: "Bye", streamer: "shroud", type: "StreamOffline" },
+			kind: "twitch",
+		});
+	});
+
+	it("makes no request of a draft without a source", () => {
+		expect(socialDraftRequest({ ...filled, source: null })).toBeNull();
 	});
 });
 

@@ -15,6 +15,8 @@ const { mocks } = vi.hoisted(() => {
 		setSocialEnabled: vi.fn(),
 		addSocialSubscription: vi.fn(),
 		removeSocialSubscription: vi.fn(),
+		addSocialTwitch: vi.fn(),
+		removeSocialTwitch: vi.fn(),
 		body: undefined as unknown,
 		params: {} as Record<string, string | undefined>,
 	};
@@ -42,6 +44,8 @@ vi.mock("#server/utils/social/staryl", () => ({
 	readSocialState: mocks.readSocialState,
 	removeSocialSubscription: mocks.removeSocialSubscription,
 	setSocialEnabled: mocks.setSocialEnabled,
+	addSocialTwitch: mocks.addSocialTwitch,
+	removeSocialTwitch: mocks.removeSocialTwitch,
 }));
 
 vi.mock("evlog", async (importOriginal) => ({
@@ -55,6 +59,8 @@ import getHandler from "#server/api/guilds/[guild]/social/index.get";
 import patchHandler from "#server/api/guilds/[guild]/social/index.patch";
 import deleteHandler from "#server/api/guilds/[guild]/social/subscriptions/[channel]/[source].delete";
 import postHandler from "#server/api/guilds/[guild]/social/subscriptions/index.post";
+import twitchDeleteHandler from "#server/api/guilds/[guild]/social/twitch/[channel]/[subscription].delete";
+import twitchPostHandler from "#server/api/guilds/[guild]/social/twitch/index.post";
 
 type Handler = (event: H3Event) => Promise<unknown>;
 const call = (handler: unknown) => (handler as Handler)({} as H3Event);
@@ -316,6 +322,108 @@ describe("the Social module's routes", () => {
 				data: { code: "subscription-not-found" },
 				statusCode: 404,
 			});
+		});
+	});
+
+	describe("POST /api/guilds/:guild/social/twitch", () => {
+		const live = {
+			channelId: CHANNEL,
+			message: null,
+			revoked: false,
+			streamerId: "123",
+			streamerName: "CoolStreamer",
+			subscriptionId: "7",
+			type: "StreamOnline" as const,
+		};
+		const body = { channelId: CHANNEL, streamer: " @shroud ", type: "StreamOnline" };
+
+		it("follows the streamer, answers 201 with the list and records the add", async () => {
+			mocks.body = body;
+			mocks.addSocialTwitch.mockResolvedValue(ok({ subscription: live, twitch: [live] }));
+
+			await expect(call(twitchPostHandler)).resolves.toStrictEqual({ twitch: [live] });
+
+			expect(mocks.status).toHaveBeenCalledWith(201);
+			expect(mocks.addSocialTwitch).toHaveBeenCalledWith(GUILD, MEMBER, {
+				channelId: CHANNEL,
+				message: null,
+				streamer: "@shroud",
+				type: "StreamOnline",
+			});
+			expect(auditedPatch()).toStrictEqual([
+				{
+					op: "add",
+					path: `/social.twitch.${CHANNEL}.7`,
+					value: { event: "StreamOnline", message: null, streamer: "CoolStreamer" },
+				},
+			]);
+		});
+
+		it.each([
+			["an end of stream without a message", { ...body, type: "StreamOffline" }],
+			["a login with a space", { ...body, streamer: "cool streamer" }],
+			["an unknown event", { ...body, type: "StreamRaid" }],
+			["a channel that is not an ID", { ...body, channelId: "news" }],
+		])("refuses %s without asking Staryl", async (_name, invalid) => {
+			mocks.body = invalid;
+
+			await expect(call(twitchPostHandler)).rejects.toMatchObject({
+				data: { code: "invalid" },
+				statusCode: 400,
+			});
+			expect(mocks.addSocialTwitch).not.toHaveBeenCalled();
+		});
+
+		it("passes on that Twitch has no such streamer", async () => {
+			mocks.body = body;
+			mocks.addSocialTwitch.mockResolvedValue(refused(422, "streamer-not-found"));
+
+			await expect(call(twitchPostHandler)).rejects.toMatchObject({
+				data: { code: "streamer-not-found" },
+				statusCode: 422,
+			});
+		});
+	});
+
+	describe("DELETE /api/guilds/:guild/social/twitch/:channel/:subscription", () => {
+		it("removes the subscription and records what was removed", async () => {
+			mocks.params = { channel: CHANNEL, subscription: "7" };
+			mocks.removeSocialTwitch.mockResolvedValue(
+				ok({
+					removed: {
+						channelId: CHANNEL,
+						message: "Bye",
+						revoked: false,
+						streamerId: "123",
+						streamerName: null,
+						subscriptionId: "7",
+						type: "StreamOffline",
+					},
+					twitch: [],
+				}),
+			);
+
+			await expect(call(twitchDeleteHandler)).resolves.toStrictEqual({ twitch: [] });
+
+			expect(mocks.removeSocialTwitch).toHaveBeenCalledWith(GUILD, MEMBER, CHANNEL, "7");
+			// Twitch did not give the name: the id stands in for it.
+			expect(auditedPatch()).toStrictEqual([
+				{
+					from: { event: "StreamOffline", message: "Bye", streamer: "123" },
+					op: "remove",
+					path: `/social.twitch.${CHANNEL}.7`,
+				},
+			]);
+		});
+
+		it("refuses a subscription that climbs the path, without asking Staryl", async () => {
+			mocks.params = { channel: CHANNEL, subscription: "../7" };
+
+			await expect(call(twitchDeleteHandler)).rejects.toMatchObject({
+				data: { code: "invalid" },
+				statusCode: 400,
+			});
+			expect(mocks.removeSocialTwitch).not.toHaveBeenCalled();
 		});
 	});
 });

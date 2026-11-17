@@ -18,13 +18,17 @@ const mockStatus = ref<SocialModuleStatus>({ kind: "loading" });
 const mockSetEnabled = vi.fn();
 const mockAddSubscription = vi.fn();
 const mockRemoveSubscription = vi.fn();
+const mockAddTwitch = vi.fn();
+const mockRemoveTwitch = vi.fn();
 const mockRefresh = vi.fn();
 const mockToastAdd = vi.fn();
 
 mockNuxtImport("useSocialModule", () => () => ({
 	addSubscription: mockAddSubscription,
+	addTwitch: mockAddTwitch,
 	refresh: mockRefresh,
 	removeSubscription: mockRemoveSubscription,
+	removeTwitch: mockRemoveTwitch,
 	setEnabled: mockSetEnabled,
 	state: computed(() => (mockStatus.value.kind === "ready" ? mockStatus.value.state : null)),
 	status: mockStatus,
@@ -77,6 +81,7 @@ function ready(overrides: Partial<SocialState> = {}) {
 			],
 			subscriptions: [],
 			twitch: [],
+			twitchLiveConfigured: true,
 			...overrides,
 		},
 	};
@@ -106,7 +111,10 @@ function editorDraft(wrapper: Awaited<ReturnType<typeof mountSection>>) {
 	const editor = wrapper.findComponent(Editor);
 	return (
 		editor.vm.$ as ComponentInternalInstance & {
-			setupState: { draft: SocialDraft; providerItems: { value: string }[] };
+			setupState: {
+				draft: SocialDraft;
+				sourceItems: { value: string; disabled: boolean; label: string }[];
+			};
 		}
 	).setupState;
 }
@@ -129,6 +137,8 @@ describe("the Social section", () => {
 		}));
 		mockAddSubscription.mockResolvedValue({ ok: true, value: [] });
 		mockRemoveSubscription.mockResolvedValue({ ok: true, value: undefined });
+		mockAddTwitch.mockResolvedValue({ ok: true, value: undefined });
+		mockRemoveTwitch.mockResolvedValue({ ok: true, value: undefined });
 	});
 
 	afterEach(() => {
@@ -215,7 +225,7 @@ describe("the Social section", () => {
 			expect(row.find("button").exists()).toBe(false);
 		});
 
-		it("lists the Twitch live subscriptions, which are changed in Discord", async () => {
+		it("lists the Twitch live subscriptions, revoked ones included", async () => {
 			ready({
 				twitch: [
 					{
@@ -236,6 +246,7 @@ describe("the Social section", () => {
 			expect(row.text()).toContain("The stream starts");
 			expect(row.text()).toContain("#news");
 			expect(row.text()).toContain("Ended by Twitch");
+			// A Staryl from before the Twitch live routes gives no id, so the row cannot be removed.
 			expect(row.find("button").exists()).toBe(false);
 		});
 	});
@@ -278,13 +289,74 @@ describe("the Social section", () => {
 	});
 
 	describe("adding a subscription", () => {
-		it("offers only the sources Staryl can read and the dashboard can change", async () => {
+		it("lists Twitch live and every source but the connected accounts", async () => {
 			ready();
 			const wrapper = await mountSection();
 
-			const { providerItems } = await openEditor(wrapper);
+			const { sourceItems } = await openEditor(wrapper);
 
-			expect(providerItems.map((item) => item.value)).toStrictEqual(["Rss", "Bluesky"]);
+			expect(sourceItems.map((item) => item.value)).toStrictEqual([
+				"TwitchLive",
+				"Rss",
+				"Bluesky",
+				"YouTube",
+			]);
+		});
+
+		it("greys out a source Staryl has no credentials for, and says why", async () => {
+			ready();
+			const wrapper = await mountSection();
+
+			const { sourceItems } = await openEditor(wrapper);
+
+			expect(sourceItems.find((item) => item.value === "YouTube")).toMatchObject({
+				disabled: true,
+				label: "YouTube (not on Staryl yet)",
+			});
+			expect(sourceItems.find((item) => item.value === "Rss")?.disabled).toBe(false);
+			expect(dialog()?.textContent).toContain(
+				"A greyed source needs credentials Staryl does not have yet.",
+			);
+		});
+
+		it("follows a streamer live, and asks for a message for the end of a stream", async () => {
+			ready();
+			const wrapper = await mountSection();
+			const { draft } = await openEditor(wrapper);
+			Object.assign(draft, {
+				channelId: NEWS,
+				event: "StreamOffline",
+				source: "TwitchLive",
+				target: "shroud",
+			});
+			await flushPromises();
+
+			expect(dialog()?.textContent).toContain("Streamer");
+			expect(dialog()?.textContent).toContain("Required when the stream ends");
+			expect(buttonIn(dialog(), "Add subscription")?.disabled).toBe(true);
+
+			draft.message = "Thanks for watching";
+			await flushPromises();
+			buttonIn(dialog(), "Add subscription")?.click();
+			await flushPromises();
+
+			expect(mockAddTwitch).toHaveBeenCalledWith({
+				channelId: NEWS,
+				message: "Thanks for watching",
+				streamer: "shroud",
+				type: "StreamOffline",
+			});
+			expect(mockAddSubscription).not.toHaveBeenCalled();
+		});
+
+		it("still offers Twitch live once the social subscriptions are full", async () => {
+			ready({
+				limits: { messageLength: 200, subscriptions: 1, targetLength: 500, xAccounts: 2 },
+				subscriptions: [subscription()],
+			});
+			const wrapper = await mountSection();
+
+			expect(buttonIn(wrapper.element.parentElement, "Add subscription")).toBeDefined();
 		});
 
 		it("keeps the add button off until the source, the target and the channel are in", async () => {
@@ -294,7 +366,7 @@ describe("the Social section", () => {
 
 			expect(buttonIn(dialog(), "Add subscription")?.disabled).toBe(true);
 
-			Object.assign(draft, { channelId: NEWS, provider: "Rss", target: "example.com" });
+			Object.assign(draft, { channelId: NEWS, source: "Rss", target: "example.com" });
 			await flushPromises();
 
 			expect(buttonIn(dialog(), "Add subscription")?.disabled).toBe(false);
@@ -307,7 +379,7 @@ describe("the Social section", () => {
 			Object.assign(draft, {
 				channelId: NEWS,
 				message: "New post",
-				provider: "Bluesky",
+				source: "Bluesky",
 				target: " bsky.app ",
 			});
 			await flushPromises();
@@ -336,7 +408,7 @@ describe("the Social section", () => {
 			mockAddSubscription.mockResolvedValue({ code: "target-not-found", ok: false });
 			const wrapper = await mountSection();
 			const { draft } = await openEditor(wrapper);
-			Object.assign(draft, { channelId: NEWS, provider: "Rss", target: "nowhere.example" });
+			Object.assign(draft, { channelId: NEWS, source: "Rss", target: "nowhere.example" });
 			await flushPromises();
 
 			buttonIn(dialog(), "Add subscription")?.click();
@@ -348,8 +420,9 @@ describe("the Social section", () => {
 			expect(mockToastAdd).not.toHaveBeenCalled();
 		});
 
-		it("hides the add button once the server has its maximum of subscriptions", async () => {
+		it("hides the add button once the server has its maximum and no Twitch live", async () => {
 			ready({
+				twitchLiveConfigured: false,
 				limits: { messageLength: 200, subscriptions: 1, targetLength: 500, xAccounts: 2 },
 				subscriptions: [subscription()],
 			});
@@ -357,6 +430,41 @@ describe("the Social section", () => {
 
 			expect(wrapper.text()).toContain("1 / 1 subscriptions");
 			expect(buttonIn(wrapper.element.parentElement, "Add subscription")).toBeUndefined();
+		});
+	});
+
+	describe("removing a Twitch live subscription", () => {
+		it("asks first, naming the streamer and the channel, then removes it", async () => {
+			ready({
+				twitch: [
+					{
+						channelId: NEWS,
+						message: null,
+						revoked: false,
+						streamerId: "123",
+						streamerName: "CoolStreamer",
+						subscriptionId: "7",
+						type: "StreamOnline",
+					},
+				],
+			});
+			const wrapper = await mountSection();
+
+			await wrapper
+				.get('[aria-label="Remove the subscription to CoolStreamer in #news"]')
+				.trigger("click");
+			await flushPromises();
+			buttonIn(dialog(), "Remove subscription")?.click();
+			await flushPromises();
+
+			expect(mockRemoveTwitch).toHaveBeenCalledWith(
+				expect.objectContaining({ channelId: NEWS, subscriptionId: "7" }),
+			);
+			expect(mockToastAdd).toHaveBeenCalledWith(
+				expect.objectContaining({
+					description: "#news no longer gets notifications for CoolStreamer.",
+				}),
+			);
 		});
 	});
 

@@ -86,9 +86,11 @@ sequenceDiagram
 - **Say why there is nothing to configure.** The composable's `status` is `loading`, `unavailable`,
   `not-installed` or `ready`. Only `ready` has a switch. The page and the card show the other three as
   they are, and never as "off".
-- **Show only what the service can do.** The add dialog lists the platforms Staryl answers as
-  `configured` and `manageable`. The dashboard holds no list of its own, so `COPY.md`'s claims about
-  Staryl's platforms hold without a second place to edit.
+- **Show what the service can do, and what it cannot yet.** The add dialog lists Twitch live and every
+  platform Staryl answers as `manageable`. One Staryl has no credentials for (`configured: false`, or
+  `twitchLiveConfigured: false`) is listed, disabled, as "not on Staryl yet": an admin sees it exists,
+  and no add is sent that Staryl would refuse. The dashboard holds no list of its own, so `COPY.md`'s
+  claims about Staryl's platforms hold without a second place to edit.
 
 ## Configuration
 
@@ -106,8 +108,11 @@ not available. Nothing else in the dashboard depends on them.
 - It does not edit a subscription. To change one, remove it and add it again.
 - It does not set filters. A subscription's filters are set with `/subscriptions` in Discord, and the page
   keeps them when it lists the subscription.
-- It lists Twitch live subscriptions and the subscriptions of connected accounts (Instagram, TikTok), and
-  changes neither. Staryl answers these with `manageable: false`.
+- It lists the subscriptions of connected accounts (Instagram, TikTok) and does not change them. Staryl
+  answers these with `manageable: false`, since the connection starts in Discord.
+- Twitch live has no limit and no switch of its own. An end-of-stream notification needs a message, as
+  `/subscriptions twitch add` asks. A Twitch live row from a Staryl without the Twitch live routes has no
+  `subscriptionId`, and the page offers no removal for it.
 - The dashboard opens only for a server WolfStar is in. A server with Staryl alone has no dashboard.
 
 ## Adding another external module

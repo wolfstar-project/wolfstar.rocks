@@ -10,22 +10,37 @@
 			<div class="flex flex-col gap-5">
 				<UFormField :label="ts('guild_settings.social.editor.provider')">
 					<USelect
-						v-model="provider"
-						:items="providerItems"
+						v-model="source"
+						:items="sourceItems"
 						class="w-full"
 						:placeholder="ts('guild_settings.social.editor.provider_placeholder')"
 						:aria-label="ts('guild_settings.social.editor.provider')"
 					/>
+					<template v-if="hasDisabledSources" #help>
+						{{ ts("guild_settings.social.editor.disabled_help") }}
+					</template>
 				</UFormField>
 
-				<UFormField :label="ts('guild_settings.social.editor.target')" :help="targetHelp">
+				<UFormField :label="targetLabel" :help="targetHelp">
 					<UInput
 						v-model="draft.target"
 						class="w-full"
 						autocomplete="off"
 						spellcheck="false"
 						:maxlength="state.limits.targetLength"
-						:aria-label="ts('guild_settings.social.editor.target')"
+						:aria-label="targetLabel"
+					/>
+				</UFormField>
+
+				<UFormField
+					v-if="draft.source === 'TwitchLive'"
+					:label="ts('guild_settings.social.twitch.event')"
+				>
+					<URadioGroup
+						v-model="draft.event"
+						:items="eventItems"
+						orientation="horizontal"
+						:aria-label="ts('guild_settings.social.twitch.event')"
 					/>
 				</UFormField>
 
@@ -40,7 +55,8 @@
 
 				<UFormField
 					:label="ts('guild_settings.social.editor.message')"
-					:help="ts('guild_settings.social.editor.message_help')"
+					:help="messageHelp"
+					:required="messageRequired"
 				>
 					<UTextarea
 						v-model="draft.message"
@@ -93,12 +109,8 @@
 </template>
 
 <script setup lang="ts">
-import type {
-	SocialErrorCode,
-	SocialProviderName,
-	SocialState,
-	SocialSubscriptionBody,
-} from "#shared/utils/social";
+import type { SocialErrorCode, SocialState } from "#shared/utils/social";
+import type { SocialDraftRequest, SocialSource } from "~/utils/social";
 
 const open = defineModel<boolean>("open", { required: true });
 
@@ -115,7 +127,7 @@ const {
 }>();
 
 const emit = defineEmits<{
-	save: [body: SocialSubscriptionBody];
+	save: [request: SocialDraftRequest];
 }>();
 
 const { ts } = useI18n();
@@ -132,27 +144,56 @@ watch(
 	{ immediate: true },
 );
 
-const providerItems = computed(() =>
-	addableSocialProviders(state).map((name) => ({
-		icon: SOCIAL_PROVIDER_ICONS[name],
-		label: ts(`guild_settings.social.providers.${name}`),
-		value: name,
-	})),
+const sourceOptions = computed(() => socialSourceOptions(state));
+const hasDisabledSources = computed(() => sourceOptions.value.some((option) => option.disabled));
+
+// A source Staryl has no credentials for stays listed, greyed and said so, so it is not mistaken
+// for one the dashboard forgot.
+const sourceItems = computed(() =>
+	sourceOptions.value.map(({ disabled, source: value }) => {
+		const name = ts(`guild_settings.social.providers.${value}`);
+		return {
+			disabled,
+			icon: SOCIAL_PROVIDER_ICONS[value],
+			label: disabled ? ts("guild_settings.social.editor.not_available", { name }) : name,
+			value,
+		};
+	}),
 );
 
 // The select holds no `null`: nothing picked is `undefined` to it.
-const provider = computed<SocialProviderName | undefined>({
-	get: () => draft.provider ?? undefined,
+const source = computed<SocialSource | undefined>({
+	get: () => draft.source ?? undefined,
 	set: (value) => {
-		draft.provider = value ?? null;
+		draft.source = value ?? null;
 	},
 });
 
+const eventItems = computed(() => [
+	{ label: ts("guild_settings.social.twitch.events.StreamOnline"), value: "StreamOnline" },
+	{ label: ts("guild_settings.social.twitch.events.StreamOffline"), value: "StreamOffline" },
+]);
+
+const targetLabel = computed(() =>
+	draft.source === "TwitchLive"
+		? ts("guild_settings.social.twitch.streamer")
+		: ts("guild_settings.social.editor.target"),
+);
+
 // What the platform takes, so the first try has the right shape.
 const targetHelp = computed(() =>
-	draft.provider === null
+	draft.source === null
 		? ts("guild_settings.social.editor.target_help.none")
-		: ts(`guild_settings.social.editor.target_help.${draft.provider}`),
+		: ts(`guild_settings.social.editor.target_help.${draft.source}`),
+);
+
+const messageRequired = computed(
+	() => draft.source === "TwitchLive" && draft.event === "StreamOffline",
+);
+const messageHelp = computed(() =>
+	messageRequired.value
+		? ts("guild_settings.social.editor.message_required_help")
+		: ts("guild_settings.social.editor.message_help"),
 );
 
 const problem = computed(() => socialDraftProblem(draft, state));
@@ -172,8 +213,8 @@ const problemMessage = computed(() => {
 });
 
 function save() {
-	const body = socialDraftBody(draft);
-	if (problem.value || body === null) return;
-	emit("save", body);
+	const request = socialDraftRequest(draft);
+	if (problem.value || request === null) return;
+	emit("save", request);
 }
 </script>

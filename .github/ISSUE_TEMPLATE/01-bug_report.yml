@@ -1,8 +1,8 @@
 name: Bug Report
 description: File a bug report for the WolfStar.rocks website or related issues.
 title: "[Bug]: "
-labels: ["bug", "need repro"]
-type: bug
+type: Bug
+labels: ["need repro"]
 body:
   - type: markdown
     attributes:
@@ -77,17 +77,6 @@ body:
         - iPhone 16 / iOS 18.4
     validations:
       required: true
-  - type: dropdown
-    id: priority
-    attributes:
-      label: Issue priority
-      description: Please be realistic. If you need to elaborate on your reasoning, use the description fields above.
-      options:
-        - Low (slightly annoying)
-        - Medium (should be fixed soon)
-        - High (immediate attention needed)
-    validations:
-      required: true
   - type: textarea
     id: logs
     attributes:
@@ -99,6 +88,18 @@ body:
     attributes:
       label: Upload screenshots
       description: If applicable, add screenshots to help explain your problem.
+    validations:
+      required: false
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: Select the impact on your work. Maintainers can change it during triage.
+      options:
+        - Urgent
+        - High
+        - Medium
+        - Low
     validations:
       required: false
   - type: checkboxes

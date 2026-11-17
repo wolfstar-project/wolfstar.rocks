@@ -18,12 +18,15 @@ const { mocks } = vi.hoisted(() => {
 		addSocialTwitch: vi.fn(),
 		removeSocialTwitch: vi.fn(),
 		body: undefined as unknown,
+		query: {} as Record<string, unknown>,
+		searchSocialTargets: vi.fn(),
 		params: {} as Record<string, string | undefined>,
 	};
 
 	const globals = globalThis as Record<string, unknown>;
 	globals.defineWrappedResponseHandler = (fn: unknown) => fn;
 	globals.readBody = () => Promise.resolve(mocks.body);
+	globals.getQuery = () => mocks.query;
 	globals.getRouterParam = (_event: unknown, name: string) => mocks.params[name];
 	globals.setResponseStatus = (_event: unknown, status: number) => mocks.status(status);
 	globals.seconds = (n: number) => n;
@@ -46,6 +49,7 @@ vi.mock("#server/utils/social/staryl", () => ({
 	setSocialEnabled: mocks.setSocialEnabled,
 	addSocialTwitch: mocks.addSocialTwitch,
 	removeSocialTwitch: mocks.removeSocialTwitch,
+	searchSocialTargets: mocks.searchSocialTargets,
 }));
 
 vi.mock("evlog", async (importOriginal) => ({
@@ -59,6 +63,7 @@ import getHandler from "#server/api/guilds/[guild]/social/index.get";
 import patchHandler from "#server/api/guilds/[guild]/social/index.patch";
 import deleteHandler from "#server/api/guilds/[guild]/social/subscriptions/[channel]/[source].delete";
 import postHandler from "#server/api/guilds/[guild]/social/subscriptions/index.post";
+import targetsHandler from "#server/api/guilds/[guild]/social/targets.get";
 import twitchDeleteHandler from "#server/api/guilds/[guild]/social/twitch/[channel]/[subscription].delete";
 import twitchPostHandler from "#server/api/guilds/[guild]/social/twitch/index.post";
 
@@ -424,6 +429,36 @@ describe("the Social module's routes", () => {
 				statusCode: 400,
 			});
 			expect(mocks.removeSocialTwitch).not.toHaveBeenCalled();
+		});
+	});
+
+	describe("GET /api/guilds/:guild/social/targets", () => {
+		it("passes the search on to Staryl and answers its suggestions", async () => {
+			mocks.query = { query: " shro ", source: "TwitchLive" };
+			const suggestions = { suggestions: [{ name: "Shroud", value: "shroud" }] };
+			mocks.searchSocialTargets.mockResolvedValue(ok(suggestions));
+
+			await expect(call(targetsHandler)).resolves.toBe(suggestions);
+			expect(mocks.searchSocialTargets).toHaveBeenCalledWith(
+				GUILD,
+				MEMBER,
+				"TwitchLive",
+				"shro",
+			);
+		});
+
+		it.each([
+			["an unknown source", { query: "tom", source: "Myspace" }],
+			["no query", { source: "Bluesky" }],
+			["a query longer than any handle", { query: "b".repeat(101), source: "Bluesky" }],
+		])("refuses %s without asking Staryl", async (_name, query) => {
+			mocks.query = query;
+
+			await expect(call(targetsHandler)).rejects.toMatchObject({
+				data: { code: "invalid" },
+				statusCode: 400,
+			});
+			expect(mocks.searchSocialTargets).not.toHaveBeenCalled();
 		});
 	});
 });

@@ -48,6 +48,9 @@ mockNuxtImport("useGuildData", () => () => ({
 
 mockNuxtImport("useToast", () => () => ({ add: mockToastAdd }));
 
+const mockSuggestions = ref<{ name: string; value: string }[]>([]);
+mockNuxtImport("useSocialTargetSearch", () => () => ({ suggestions: mockSuggestions }));
+
 function subscription(overrides: Partial<SocialSubscription> = {}): SocialSubscription {
 	return {
 		channelId: GENERAL,
@@ -129,6 +132,7 @@ describe("the Social section", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		clearNuxtState();
+		mockSuggestions.value = [];
 		useActiveGuild().selectGuild(GUILD_ID);
 		mockStatus.value = { kind: "loading" };
 		mockSetEnabled.mockImplementation(async (enabled: boolean) => ({
@@ -368,6 +372,19 @@ describe("the Social section", () => {
 				type: "StreamOffline",
 			});
 			expect(mockAddSubscription).not.toHaveBeenCalled();
+		});
+
+		it("lists what the search suggests under the target, which stays free text", async () => {
+			ready();
+			mockSuggestions.value = [{ name: "Bluesky (@bsky.app)", value: "bsky.app" }];
+			const wrapper = await mountSection();
+			await openEditor(wrapper);
+
+			const input = dialog()?.querySelector<HTMLInputElement>("input[list]");
+			const list = input && document.getElementById(input.getAttribute("list") ?? "");
+			const option = list?.querySelector("option");
+			expect(option?.getAttribute("value")).toBe("bsky.app");
+			expect(option?.getAttribute("label")).toBe("Bluesky (@bsky.app)");
 		});
 
 		it("still offers Twitch live once the social subscriptions are full", async () => {

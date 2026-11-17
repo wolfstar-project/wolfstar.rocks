@@ -111,6 +111,26 @@ describe("socialSourceOptions", () => {
 		expect(options.find((option) => option.source === "YouTube")?.blocked).toBeNull();
 	});
 
+	// An older Staryl has one total of 25 every platform shares, not 25 each.
+	it("fills every platform together once an older Staryl's total is reached", () => {
+		const options = socialSourceOptions(
+			state({
+				limits: { ...state().limits, subscriptions: 2 },
+				providers: [
+					{ configured: true, manageable: true, name: "Rss" },
+					{ configured: true, manageable: true, name: "Bluesky" },
+				],
+				subscriptions: [subscription(), subscription({ provider: "Bluesky" })],
+			}),
+		);
+
+		expect(
+			options
+				.filter((option) => option.source !== "TwitchLive")
+				.map((option) => option.blocked),
+		).toStrictEqual(["full", "full"]);
+	});
+
 	// An older Staryl gives no maximum per platform, and none for Twitch live.
 	it("falls back to the total for a platform, and to no limit for Twitch live", () => {
 		const options = socialSourceOptions(state());

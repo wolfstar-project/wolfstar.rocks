@@ -69,7 +69,7 @@ sequenceDiagram
     | Kind             | Means                                                  | The route answers             |
     | ---------------- | ------------------------------------------------------ | ----------------------------- |
     | `not-configured` | The deployment has no URL or no secret for the service | 503, code `unavailable`       |
-    | `unreachable`    | No answer, a 5xx, or a 401 for the dashboard's secret  | 503, code `unavailable`       |
+    | `unreachable`    | No answer, a 5xx, a 401, or a 4xx without a code       | 503, code `unavailable`       |
     | `refused`        | The service said no, with a code of its own            | The service's status and code |
     | `invalid-answer` | The answer does not match the schema                   | 503, code `unavailable`       |
 

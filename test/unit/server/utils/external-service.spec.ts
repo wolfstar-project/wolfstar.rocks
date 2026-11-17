@@ -5,8 +5,18 @@ const { rawMock } = vi.hoisted(() => ({ rawMock: vi.fn() }));
 
 vi.mock("ofetch", () => ({ $fetch: { raw: rawMock } }));
 
+const { spanFailed } = vi.hoisted(() => ({ spanFailed: vi.fn() }));
+
+// As the real one: it runs the call, and marks its span failed when the call throws.
 vi.mock("#server/utils/sentry/metrics", () => ({
-	instrumentServiceCall: (_service: string, _endpoint: string, run: () => unknown) => run(),
+	instrumentServiceCall: async (_service: string, _endpoint: string, run: () => unknown) => {
+		try {
+			return await run();
+		} catch (error) {
+			spanFailed();
+			throw error;
+		}
+	},
 }));
 
 import { callExternalService } from "#server/utils/external-service";
@@ -72,12 +82,13 @@ describe("callExternalService", () => {
 		});
 	});
 
-	it("reads a refusal without a code as an unknown one", async () => {
-		answer(422, "Unprocessable Entity");
+	// A proxy or a wrong path answers a 4xx too. Only the service puts a code in it.
+	it("reads a 4xx without a code as the service being out of reach", async () => {
+		answer(404, "<html>Not Found</html>");
 
 		const result = await callExternalService(service, request);
 
-		expect(result).toMatchObject({ error: { code: "unknown", kind: "refused" } });
+		expect(result).toStrictEqual({ error: { kind: "unreachable", status: 404 }, ok: false });
 	});
 
 	it.each([[500], [503], [401]])(
@@ -97,6 +108,8 @@ describe("callExternalService", () => {
 		const result = await callExternalService(service, request);
 
 		expect(result).toStrictEqual({ error: { kind: "unreachable", status: null }, ok: false });
+		// The span sees the failure, so a timeout does not read as a success in the traces.
+		expect(spanFailed).toHaveBeenCalledOnce();
 	});
 
 	it("refuses an answer of another shape than the schema", async () => {

@@ -4,7 +4,7 @@
  * `docs/guild-api.md`). Nothing of it is in WolfStar's database.
  *
  * The shapes here are that API's. Its answers are parsed with these schemas
- * where they enter the dashboard (`server/utils/staryl/client.ts`), so a
+ * where they enter the dashboard (`server/utils/social/staryl.ts`), so a
  * change of Staryl's that the dashboard does not know fails there, and not in
  * a component.
  */

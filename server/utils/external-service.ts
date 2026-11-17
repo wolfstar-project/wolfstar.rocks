@@ -22,7 +22,7 @@ export interface ExternalService {
 export type ExternalServiceError =
 	/** The deployment has no URL or no secret for the service. */
 	| { kind: "not-configured" }
-	/** No answer, a 5xx, or a 401: the service is down, or the secret is not the one it holds. */
+	/** No answer, a 5xx, a 401, or a 4xx without a code: the service is down, is not what answered, or holds another secret. */
 	| { kind: "unreachable"; status: number | null }
 	/** The service understood the request and said no, with its own code. */
 	| { kind: "refused"; status: number; code: string }
@@ -64,6 +64,8 @@ export async function callExternalService<
 		return { error: { kind: "not-configured" }, ok: false };
 	}
 
+	// The failure of a call that got no answer is turned into a value outside the span, so the
+	// span still records it: a timeout must not read as a success in the traces.
 	const answer = await instrumentServiceCall(service.name, request.endpoint, () =>
 		// ofetch's own `$fetch`: Nitro's is typed for the app's own routes.
 		ofetch
@@ -79,11 +81,10 @@ export async function callExternalService<
 				retry: 0,
 				timeout: REQUEST_TIMEOUT,
 			})
-			.then(
-				(response) => ({ body: response._data, status: response.status }),
-				// The request never got an answer: a timeout, a refused connection, a DNS failure.
-				() => null,
-			),
+			.then((response) => ({ body: response._data, status: response.status })),
+	).catch(
+		// The request never got an answer: a timeout, a refused connection, a DNS failure.
+		() => null,
 	);
 
 	if (answer === null) return { error: { kind: "unreachable", status: null }, ok: false };
@@ -93,10 +94,12 @@ export async function callExternalService<
 		return { error: { kind: "unreachable", status: answer.status }, ok: false };
 	}
 	if (answer.status >= 400) {
-		return {
-			error: { kind: "refused", code: readErrorCode(answer.body), status: answer.status },
-			ok: false,
-		};
+		const code = readErrorCode(answer.body);
+		// A refusal of the service carries its code. A 4xx without one came from something in
+		// between, a proxy or a wrong path: it is an outage to log, not an answer for a member.
+		return code === null
+			? { error: { kind: "unreachable", status: answer.status }, ok: false }
+			: { error: { kind: "refused", code, status: answer.status }, ok: false };
 	}
 
 	const parsed = safeParse(request.schema, answer.body);
@@ -113,7 +116,7 @@ export async function callExternalService<
 }
 
 /** The services answer an error as `{ "error": "<code>" }`. */
-function readErrorCode(body: unknown): string {
+function readErrorCode(body: unknown): string | null {
 	const code = (body as { error?: unknown } | null)?.error;
-	return typeof code === "string" ? code : "unknown";
+	return typeof code === "string" ? code : null;
 }

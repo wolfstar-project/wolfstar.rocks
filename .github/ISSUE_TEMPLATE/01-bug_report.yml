@@ -1,8 +1,8 @@
 name: Bug Report
 description: File a bug report for the WolfStar.rocks website or related issues.
 title: "[Bug]: "
-labels: ["bug", "need repro"]
-type: bug
+type: Bug
+labels: ["need repro"]
 body:
   - type: markdown
     attributes:
@@ -80,14 +80,15 @@ body:
   - type: dropdown
     id: priority
     attributes:
-      label: Issue priority
-      description: Please be realistic. If you need to elaborate on your reasoning, use the description fields above.
+      label: Priority
+      description: Select the impact on your work. Maintainers can change it during triage.
       options:
-        - Low (slightly annoying)
-        - Medium (should be fixed soon)
-        - High (immediate attention needed)
+        - Urgent
+        - High
+        - Medium
+        - Low
     validations:
-      required: true
+      required: false
   - type: textarea
     id: logs
     attributes:

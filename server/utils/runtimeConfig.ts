@@ -42,6 +42,11 @@ export function generateRuntimeConfig() {
 		// the bot's `OAUTH_SECRET` and the name its `OAUTH_COOKIE`. Server-only.
 		botApiOauthSecret: process.env.NUXT_BOT_API_OAUTH_SECRET ?? "",
 		botApiOauthCookie: process.env.NUXT_BOT_API_OAUTH_COOKIE || "WOLFSTAR_AUTH",
+		// Staryl's guild API, which holds the Social module: its root URL and the
+		// secret the two share, Staryl's `GUILD_API_SECRET`. Server-only. Without
+		// either, the module's routes answer 503 and its page says so.
+		starylApiSecret: process.env.NUXT_STARYL_API_SECRET ?? "",
+		starylApiUrl: process.env.NUXT_STARYL_API_URL ?? "",
 		discord: {
 			// The channel of WolfStar's server whose posts the Home's WolfStar thread shows.
 			announcementsChannelId:

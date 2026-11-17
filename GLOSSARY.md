@@ -35,6 +35,7 @@ identifiers" at the end.
 | settings activity   | `AuditEvent`                       | server 1—N audit event         | "Settings activity"   |
 | logging channel     | server settings                    | log event N—1 channel          | "logging channel"     |
 | subscription        | Staryl                             | server 1—N subscription        | "subscription"        |
+| Social              | Staryl's guild API                 | server 1—1 switch              | "Social"              |
 | invite              | Discord OAuth                      | bot 1—N server                 | "Invite"              |
 | sign in             | `better-auth`, Discord OAuth       | account 1—1 Discord user       | "Sign in"             |
 | dashboard access    | `permissions.users`/`.roles` rules | server 1—N rule                | "Dashboard access"    |
@@ -256,9 +257,21 @@ An excluded channel is ignored for logged events.
 ### subscription
 
 **Is:** one Staryl rule: one streamer, feed, or account, sent to one channel, with its own message and
-filters. Managed with Staryl's `add`, `remove`, `reset`, `show`, and `test` commands, or in `/settings`.
+filters. Managed with Staryl's `add`, `remove`, `reset`, `show`, and `test` commands, in `/settings`, or
+in the dashboard's Social module.
 
 **Never:** follow, tracker, watch. "Feed" only names an RSS or Atom feed, never a subscription.
+
+### Social
+
+**Is:** the dashboard module that Staryl holds. Its switch turns Staryl's notifications on or off for a
+server, and its section lists, adds, and removes subscriptions.
+
+**Use for:** the "Social" section and module.
+
+**Casing:** `Social` as the section and module name.
+
+**Never:** Notifications (as the module's name), Feeds, Staryl settings.
 
 ### source
 

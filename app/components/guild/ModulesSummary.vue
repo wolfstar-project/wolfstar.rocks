@@ -61,6 +61,26 @@ const lists = {
 	automessage: useAutoChannels("automessage", activeGuildId),
 };
 
+// Staryl's module: its state is read from Staryl, so it has one more to show than on and off.
+const social = useSocialModule(activeGuildId);
+const socialRow = computed(() => {
+	const status = social.status.value;
+	const enabled = status.kind === "ready" && status.state.enabled;
+	const states = {
+		"loading": "",
+		"not-installed": ts("guild_settings.modules.not_set_up"),
+		"ready": enabled ? ts("guild_settings.modules.on") : ts("guild_settings.modules.off"),
+		"unavailable": ts("guild_settings.modules.unavailable"),
+	} satisfies Record<typeof status.kind, string>;
+	return {
+		enabled,
+		key: "social",
+		labelKey: "dashboard.nav.social",
+		section: "social",
+		state: states[status.kind],
+	};
+});
+
 // The `Modules` flags, then the modules that live in a table of their own:
 // the honeypot is on with its switch and a channel, the join guard and the
 // appeals with their switch, and the lists of channels while they have one.
@@ -115,6 +135,7 @@ const modules = computed(() => {
 			section: slug,
 			state: tc("guild_settings.modules.channel_count", list.rows.value.length),
 		})),
+		socialRow.value,
 	];
 });
 </script>

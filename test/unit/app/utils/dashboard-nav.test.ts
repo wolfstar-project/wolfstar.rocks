@@ -52,6 +52,7 @@ describe("DASHBOARD_NAV", () => {
 			"autodelete",
 			"autopurge",
 			"automessage",
+			"social",
 		]);
 		expect(tools).toStrictEqual(["commands", "access", "logs"]);
 		expect(findDashboardNavItem("commands")?.moduleKey).toBeUndefined();
@@ -65,6 +66,12 @@ describe("DASHBOARD_NAV", () => {
 		expect(findDashboardNavItem("appeals")?.moduleKey).toBe("appealsEnabled");
 		expect(findDashboardNavItem("joinguard")?.moduleKey).toBe("joinGuardEnabled");
 		expect(findDashboardNavItem("honeypot")?.requiredKey).toBe("honeypotChannel");
+	});
+
+	// Staryl holds its switch: the dashboard has no setting to read it from.
+	it("lists Staryl's Social after the modules of WolfStar, without a switch of the settings", () => {
+		expect(findDashboardNavItem("social")?.group).toBe("modules");
+		expect(findDashboardNavItem("social")?.moduleKey).toBeUndefined();
 	});
 
 	it("opens a page for every section, none of them announced only", () => {
@@ -85,6 +92,7 @@ describe("dashboardSkeletonKind", () => {
 		expect(dashboardSkeletonKind("automod")).toBe("table");
 		expect(dashboardSkeletonKind("autodelete")).toBe("table");
 		expect(dashboardSkeletonKind("autopurge")).toBe("table");
+		expect(dashboardSkeletonKind("social")).toBe("table");
 		expect(dashboardSkeletonKind("automessage")).toBe("form");
 		expect(dashboardSkeletonKind("moderation")).toBe("form");
 		expect(dashboardSkeletonKind("roles")).toBe("form");

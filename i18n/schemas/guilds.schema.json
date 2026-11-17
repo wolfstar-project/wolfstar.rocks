@@ -4795,10 +4795,19 @@
 								"channel_placeholder": {
 									"type": "string"
 								},
+								"disabled_help": {
+									"type": "string"
+								},
 								"message": {
 									"type": "string"
 								},
 								"message_help": {
+									"type": "string"
+								},
+								"message_required_help": {
+									"type": "string"
+								},
+								"not_available": {
 									"type": "string"
 								},
 								"provider": {
@@ -4829,6 +4838,9 @@
 											"type": "string"
 										},
 										"TwitchClips": {
+											"type": "string"
+										},
+										"TwitchLive": {
 											"type": "string"
 										},
 										"TwitchVideos": {
@@ -4882,6 +4894,9 @@
 								"limit_reached": {
 									"type": "string"
 								},
+								"message_required": {
+									"type": "string"
+								},
 								"missing_permissions": {
 									"type": "string"
 								},
@@ -4889,6 +4904,12 @@
 									"type": "string"
 								},
 								"provider_not_manageable": {
+									"type": "string"
+								},
+								"send_failed": {
+									"type": "string"
+								},
+								"streamer_not_found": {
 									"type": "string"
 								},
 								"subscription_not_found": {
@@ -4907,6 +4928,9 @@
 									"type": "string"
 								},
 								"target_unsupported": {
+									"type": "string"
+								},
+								"twitch_failed": {
 									"type": "string"
 								},
 								"unavailable": {
@@ -4982,6 +5006,9 @@
 									"type": "string"
 								},
 								"TwitchClips": {
+									"type": "string"
+								},
+								"TwitchLive": {
 									"type": "string"
 								},
 								"TwitchVideos": {

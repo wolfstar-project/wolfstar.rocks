@@ -170,6 +170,20 @@ export const SocialTwitchRemovedSchema = object({
 	twitch: nullable(array(SocialTwitchSubscriptionSchema)),
 });
 
+/** What the target search answers: accounts that match, and what an add takes for each. */
+export const SocialTargetSuggestionsSchema = object({
+	suggestions: array(object({ name: string(), value: string() })),
+});
+export type SocialTargetSuggestion = InferOutput<
+	typeof SocialTargetSuggestionsSchema
+>["suggestions"][number];
+
+/** The query of `GET /api/guilds/:guild/social/targets`. Staryl ignores one under 2 characters. */
+export const SocialTargetQuerySchema = object({
+	source: picklist([...SOCIAL_PROVIDERS, "TwitchLive"]),
+	query: pipe(string(), trim(), maxLength(100)),
+});
+
 /** The longest target and message Staryl takes; its API repeats them in `limits`. */
 const SOCIAL_TARGET_MAXIMUM = 500;
 const SOCIAL_MESSAGE_MAXIMUM = 200;

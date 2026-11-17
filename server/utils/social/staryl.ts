@@ -6,6 +6,7 @@ import {
 	SocialRemovedSchema,
 	SocialStateSchema,
 	SocialSwitchSchema,
+	SocialTargetSuggestionsSchema,
 	SocialTwitchAddedSchema,
 	SocialTwitchRemovedSchema,
 } from "#shared/utils/social";
@@ -101,5 +102,21 @@ export function removeSocialTwitch(
 		method: "DELETE",
 		path: `/guilds/${guildId}/twitch/${channelId}/${subscriptionId}`,
 		schema: SocialTwitchRemovedSchema,
+	});
+}
+
+/** Accounts that match what a member is typing, as the autocomplete of `/subscriptions` offers them. */
+export function searchSocialTargets(
+	guildId: string,
+	actorId: string,
+	source: string,
+	query: string,
+) {
+	const params = new URLSearchParams({ query, source });
+	return callExternalService(staryl(), {
+		actorId,
+		endpoint: "targets.search",
+		path: `/guilds/${guildId}/targets?${params}`,
+		schema: SocialTargetSuggestionsSchema,
 	});
 }

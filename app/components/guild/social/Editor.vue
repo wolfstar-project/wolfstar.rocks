@@ -27,9 +27,19 @@
 						class="w-full"
 						autocomplete="off"
 						spellcheck="false"
+						:list="suggestionsId"
 						:maxlength="state.limits.targetLength"
 						:aria-label="targetLabel"
 					/>
+					<!-- The browser lists these under the field; the target stays free text. -->
+					<datalist :id="suggestionsId">
+						<option
+							v-for="suggestion in suggestions"
+							:key="suggestion.value"
+							:value="suggestion.value"
+							:label="suggestion.name"
+						/>
+					</datalist>
 				</UFormField>
 
 				<UFormField
@@ -132,8 +142,17 @@ const emit = defineEmits<{
 
 const { ts } = useI18n();
 const { guildData } = useGuildData();
+const { activeGuildId } = useActiveGuild();
 
 const draft = reactive(emptySocialDraft());
+
+// What the source has that matches the target as it is typed, as the bot's autocomplete offers it.
+const suggestionsId = useId();
+const { suggestions } = useSocialTargetSearch(
+	activeGuildId,
+	() => draft.source,
+	() => draft.target,
+);
 
 // Every opening starts a new subscription: the dialog adds, it does not edit.
 watch(

@@ -127,6 +127,24 @@ describe("useSocialModule", () => {
 		);
 	});
 
+	// Staryl saved the subscription and could not list them: the add is not to be sent again.
+	it("reads the list again when an add went through without one", async () => {
+		const { addSubscription, state, status } = useSocialModule(GUILD);
+		await vi.waitFor(() => expect(status.value.kind).toBe("ready"));
+
+		writeAnswer = () => ({ subscriptions: null });
+		stored = socialState({ subscriptions: [subscription("5"), subscription("7")] });
+		const result = await addSubscription({
+			channelId: CHANNEL,
+			message: null,
+			provider: "Rss",
+			target: "https://example.com/7.xml",
+		});
+
+		expect(result.ok).toBe(true);
+		await vi.waitFor(() => expect(state.value?.subscriptions).toHaveLength(2));
+	});
+
 	it("hands back the code of a refused add, and leaves the list as it was", async () => {
 		const { addSubscription, state, status } = useSocialModule(GUILD);
 		await vi.waitFor(() => expect(status.value.kind).toBe("ready"));

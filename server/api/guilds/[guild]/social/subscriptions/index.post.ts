@@ -28,7 +28,20 @@ export default defineWrappedResponseHandler(
 			await addSocialSubscription(guild.id, socialActorId(event), body.output),
 		);
 
-		auditSocialSubscription(event, null, subscription);
+		// Staryl answers no subscription when it saved one and could not read it back. The add is
+		// recorded all the same, from what was asked for, under a source that is not known yet.
+		auditSocialSubscription(
+			event,
+			null,
+			subscription ?? {
+				channelId: body.output.channelId,
+				displayName: body.output.target,
+				message: body.output.message ?? null,
+				provider: body.output.provider,
+				sourceId: "unknown",
+				target: body.output.target,
+			},
+		);
 		setResponseStatus(event, 201);
 		return { subscriptions };
 	},

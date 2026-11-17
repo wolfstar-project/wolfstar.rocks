@@ -191,6 +191,29 @@ describe("the Social module's routes", () => {
 			]);
 		});
 
+		// Staryl saved it and could not list the subscriptions: still an add, with no list.
+		it("answers 201 with no list when Staryl could not read one after the add", async () => {
+			mocks.body = body;
+			mocks.addSocialSubscription.mockResolvedValue(
+				ok({ subscription: null, subscriptions: null }),
+			);
+
+			await expect(call(postHandler)).resolves.toStrictEqual({ subscriptions: null });
+
+			expect(mocks.status).toHaveBeenCalledWith(201);
+			// The add went through, so it is recorded, from what was asked for.
+			expect(auditedPatch()).toStrictEqual([
+				{
+					op: "add",
+					path: `/social.${CHANNEL}.unknown`,
+					value: expect.objectContaining({
+						provider: "Rss",
+						target: "https://example.com/feed.xml",
+					}),
+				},
+			]);
+		});
+
 		it("sends a blank message as none", async () => {
 			mocks.body = { ...body, message: "   " };
 			mocks.addSocialSubscription.mockResolvedValue(

@@ -70,6 +70,18 @@ export function useSocialModule(guildId: MaybeRefOrGetter<string | null | undefi
 		}
 	}
 
+	/**
+	 * Shows the list a write answered with. Staryl answers `null` when the write
+	 * went through and it could not read the list after: the list is then read again.
+	 */
+	function showSubscriptions(
+		requestGuildId: string | null,
+		subscriptions: SocialSubscription[] | null,
+	) {
+		if (subscriptions) patchState(requestGuildId, { subscriptions });
+		else if (id.value === requestGuildId) void asyncData.refresh();
+	}
+
 	/** Patches the state, unless the admin opened another server meanwhile. */
 	function patchState(requestGuildId: string | null, patch: Partial<SocialState>) {
 		if (id.value === requestGuildId && state.value) {
@@ -97,20 +109,18 @@ export function useSocialModule(guildId: MaybeRefOrGetter<string | null | undefi
 	}
 
 	/** Follows an account or a feed in a channel. */
-	async function addSubscription(
-		body: SocialSubscriptionBody,
-	): Promise<SocialResult<SocialSubscription[]>> {
+	async function addSubscription(body: SocialSubscriptionBody): Promise<SocialResult> {
 		const requestGuildId = id.value;
 		const result = await run(() =>
-			$fetch<{ subscriptions: SocialSubscription[] }, string, "POST">(
+			$fetch<{ subscriptions: SocialSubscription[] | null }, string, "POST">(
 				`${base.value}/subscriptions`,
 				{ body, method: "POST" },
 			),
 		);
 		if (!result.ok) return result;
 
-		patchState(requestGuildId, { subscriptions: result.value.subscriptions });
-		return { ok: true, value: result.value.subscriptions };
+		showSubscriptions(requestGuildId, result.value.subscriptions);
+		return { ok: true, value: undefined };
 	}
 
 	/** Stops a channel following an account or a feed. One that is already gone is as removed. */
@@ -120,14 +130,14 @@ export function useSocialModule(guildId: MaybeRefOrGetter<string | null | undefi
 		const requestGuildId = id.value;
 		const { channelId, sourceId } = subscription;
 		const result = await run(() =>
-			$fetch<{ subscriptions: SocialSubscription[] }, string, "DELETE">(
+			$fetch<{ subscriptions: SocialSubscription[] | null }, string, "DELETE">(
 				`${base.value}/subscriptions/${channelId}/${sourceId}`,
 				{ method: "DELETE" },
 			),
 		);
 
 		if (result.ok) {
-			patchState(requestGuildId, { subscriptions: result.value.subscriptions });
+			showSubscriptions(requestGuildId, result.value.subscriptions);
 			return { ok: true, value: undefined };
 		}
 		if (result.code === "subscription-not-found" && state.value) {

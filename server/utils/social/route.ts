@@ -90,11 +90,17 @@ export function auditSocialSwitch(event: H3Event, previous: boolean, enabled: bo
 	auditSocialChange(event, { "social.enabled": previous }, { "social.enabled": enabled });
 }
 
+/** What the audit trail keeps of a subscription: what an admin chose, and where it is filed. */
+type AuditedSubscription = Pick<
+	SocialSubscription,
+	"channelId" | "displayName" | "message" | "provider" | "sourceId" | "target"
+>;
+
 /** `before` is `null` for an add, `after` for a remove. */
 export function auditSocialSubscription(
 	event: H3Event,
-	before: SocialSubscription | null,
-	after: SocialSubscription | null,
+	before: AuditedSubscription | null,
+	after: AuditedSubscription | null,
 ): void {
 	const subscription = before ?? after;
 	if (subscription === null) return;
@@ -108,7 +114,7 @@ export function auditSocialSubscription(
 }
 
 // What an admin chose. The health and the dates are Staryl's own, and change on their own.
-function describeSubscription(subscription: SocialSubscription) {
+function describeSubscription(subscription: AuditedSubscription) {
 	return {
 		message: subscription.message,
 		name: subscription.displayName,

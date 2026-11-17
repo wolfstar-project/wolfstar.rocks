@@ -120,16 +120,23 @@ export const SocialSwitchBodySchema = object({ enabled: boolean() });
 /** What the switch answers with: its value, and what it was before the request. */
 export const SocialSwitchSchema = object({ enabled: boolean(), previous: boolean() });
 
-/** What an add answers with: the new subscription, and the ones the server has now. */
+/**
+ * What an add answers with: the new subscription, and the ones the server has
+ * now. Both are `null` when Staryl saved the subscription and then could not
+ * read the list: the add went through, and the list is to be read again.
+ */
 export const SocialAddedSchema = object({
 	subscription: nullable(SocialSubscriptionSchema),
-	subscriptions: array(SocialSubscriptionSchema),
+	subscriptions: nullable(array(SocialSubscriptionSchema)),
 });
 
-/** What a remove answers with: what it removed, and the subscriptions the server has left. */
+/**
+ * What a remove answers with: what it removed, and the subscriptions the
+ * server has left, `null` when Staryl could not read them after the removal.
+ */
 export const SocialRemovedSchema = object({
 	removed: SocialSubscriptionSchema,
-	subscriptions: array(SocialSubscriptionSchema),
+	subscriptions: nullable(array(SocialSubscriptionSchema)),
 });
 
 /** The longest target and message Staryl takes; its API repeats them in `limits`. */

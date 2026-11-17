@@ -80,6 +80,9 @@ sequenceDiagram
 - **Audit every change.** The module has no settings key, so its events are `guild.settings.update` with
   a key of their own: `social.enabled` for the switch, `social.<channel>.<source>` for a subscription.
   The service answers with what the value was before, so a repeat of the same value records nothing.
+- **A write that went through stays a success.** Staryl answers an add or a remove with the new list. If it
+  saved the write and could not read the list, it answers `subscriptions: null`. The composable then reads
+  the list again. It never sends the write again, which would answer `duplicate` or `subscription-not-found`.
 - **Say why there is nothing to configure.** The composable's `status` is `loading`, `unavailable`,
   `not-installed` or `ready`. Only `ready` has a switch. The page and the card show the other three as
   they are, and never as "off".

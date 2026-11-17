@@ -403,6 +403,29 @@ describe("the Social section", () => {
 			expect(dialog()?.textContent).not.toContain("maximum of 0");
 		});
 
+		it("drops a refusal once another source is picked, since it was about the first", async () => {
+			ready();
+			mockAddSubscription.mockResolvedValue({ code: "limit-reached", ok: false });
+			const wrapper = await mountSection();
+			const { draft } = await openEditor(wrapper);
+			Object.assign(draft, { channelId: NEWS, source: "Rss", target: "example.com" });
+			await flushPromises();
+			buttonIn(dialog(), "Add subscription")?.click();
+			await flushPromises();
+			expect(dialog()?.textContent).toContain("RSS or Atom feed subscriptions");
+
+			draft.source = "Bluesky";
+			await flushPromises();
+
+			expect(dialog()?.textContent).not.toContain("its maximum");
+			expect(dialog()?.textContent).not.toContain("Bluesky subscriptions");
+
+			draft.source = "Rss";
+			await flushPromises();
+
+			expect(dialog()?.textContent).toContain("RSS or Atom feed subscriptions");
+		});
+
 		it("still offers Twitch live once the social subscriptions are full", async () => {
 			ready({
 				limits: { messageLength: 200, subscriptions: 1, targetLength: 500, xAccounts: 2 },

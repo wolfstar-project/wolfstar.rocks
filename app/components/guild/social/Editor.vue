@@ -231,6 +231,20 @@ const messageHelp = computed(() =>
 const problem = computed(() => socialDraftProblem(draft, state));
 
 // An empty field shows on its own. The limit does not, so it is said; then what the server refused.
+// The server's answer is about the source it was sent for. Once another source is picked it says
+// nothing about the new one, so it is not shown, nor read with the new one's name and maximum.
+const refusedSource = ref<SocialSource | null>(null);
+watch(
+	() => errorCode,
+	(code) => {
+		refusedSource.value = code ? draft.source : null;
+	},
+	{ immediate: true },
+);
+const serverError = computed(() =>
+	errorCode && refusedSource.value === draft.source ? errorCode : null,
+);
+
 const problemMessage = computed(() => {
 	const maximum = draft.source === null ? null : socialSourceUsage(state, draft.source).maximum;
 	const name = draft.source === null ? "" : sourceName(draft.source);
@@ -241,14 +255,14 @@ const problemMessage = computed(() => {
 			? ts("guild_settings.social.errors.limit_reached_unknown", { name })
 			: ts("guild_settings.social.errors.limit_reached", { maximum, name });
 	if (problem.value === "limit") return limitReached();
-	if (!errorCode) return null;
-	if (errorCode === "limit-reached") return limitReached();
-	if (errorCode === "x-limit-reached") {
+	if (!serverError.value) return null;
+	if (serverError.value === "limit-reached") return limitReached();
+	if (serverError.value === "x-limit-reached") {
 		return ts("guild_settings.social.errors.x_limit_reached", {
 			maximum: state.limits.xAccounts,
 		});
 	}
-	return ts(`guild_settings.social.errors.${errorCode.replaceAll("-", "_")}`);
+	return ts(`guild_settings.social.errors.${serverError.value.replaceAll("-", "_")}`);
 });
 
 function save() {

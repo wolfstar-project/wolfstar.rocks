@@ -65,6 +65,18 @@ describe("useSocialTargetSearch", () => {
 		expect(suggestions.value).toHaveLength(1);
 	});
 
+	it("drops the old source's suggestions as soon as the source changes", async () => {
+		const source = ref<"Bluesky" | "Mastodon">("Bluesky");
+		const { suggestions } = useSocialTargetSearch(GUILD, source, "gargron");
+		await vi.waitFor(() => expect(suggestions.value).toHaveLength(1));
+
+		source.value = "Mastodon";
+		await nextTick();
+
+		// Before the new search answers, nothing of Bluesky is left to pick.
+		expect(suggestions.value).toStrictEqual([]);
+	});
+
 	it("suggests nothing when the search fails", async () => {
 		fails = true;
 		const { suggestions } = useSocialTargetSearch(GUILD, "Bluesky", "bsky");

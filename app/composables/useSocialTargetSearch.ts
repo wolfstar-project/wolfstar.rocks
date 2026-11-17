@@ -24,6 +24,15 @@ export function useSocialTargetSearch(
 	const suggestions = ref<SocialTargetSuggestion[]>([]);
 	let latest = 0;
 
+	// The accounts of one source are no target for another: they go the moment the source changes,
+	// not once the new search answers, so none can be picked in between.
+	watch(
+		() => toValue(source),
+		() => {
+			suggestions.value = [];
+		},
+	);
+
 	watch(
 		[debounced, () => toValue(source), () => toValue(guildId)],
 		async ([value, currentSource, id]) => {

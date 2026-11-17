@@ -1,13 +1,19 @@
 import type { ExternalService } from "#server/utils/external-service";
-import type { SocialSubscriptionBody, SocialTwitchBody } from "#shared/utils/social";
+import type {
+	SocialEditBody,
+	SocialSubscriptionBody,
+	SocialTwitchBody,
+} from "#shared/utils/social";
 import { callExternalService } from "#server/utils/external-service";
 import {
 	SocialAddedSchema,
+	SocialEditedSchema,
 	SocialRemovedSchema,
 	SocialStateSchema,
 	SocialSwitchSchema,
 	SocialTargetSuggestionsSchema,
 	SocialTwitchAddedSchema,
+	SocialTwitchEditedSchema,
 	SocialTwitchRemovedSchema,
 } from "#shared/utils/social";
 
@@ -63,6 +69,23 @@ export function addSocialSubscription(
 	});
 }
 
+/** Moves a subscription to another channel, or changes its message. The account stays. */
+export function editSocialSubscription(
+	guildId: string,
+	actorId: string,
+	key: { channelId: string; sourceId: string },
+	body: SocialEditBody,
+) {
+	return callExternalService(staryl(), {
+		actorId,
+		body,
+		endpoint: "subscriptions.edit",
+		method: "PATCH",
+		path: `/guilds/${guildId}/subscriptions/${key.channelId}/${key.sourceId}`,
+		schema: SocialEditedSchema,
+	});
+}
+
 export function removeSocialSubscription(
 	guildId: string,
 	actorId: string,
@@ -87,6 +110,23 @@ export function addSocialTwitch(guildId: string, actorId: string, body: SocialTw
 		method: "POST",
 		path: `/guilds/${guildId}/twitch`,
 		schema: SocialTwitchAddedSchema,
+	});
+}
+
+/** Moves a Twitch live notification to another channel, or changes its message. */
+export function editSocialTwitch(
+	guildId: string,
+	actorId: string,
+	key: { channelId: string; subscriptionId: string },
+	body: SocialEditBody,
+) {
+	return callExternalService(staryl(), {
+		actorId,
+		body,
+		endpoint: "twitch.edit",
+		method: "PATCH",
+		path: `/guilds/${guildId}/twitch/${key.channelId}/${key.subscriptionId}`,
+		schema: SocialTwitchEditedSchema,
 	});
 }
 

@@ -50,7 +50,7 @@ sequenceDiagram
 | Service client     | `server/utils/external-service.ts`                | `callExternalService()` sends the secret, reads a refusal as a value, parses the answer. It is the same for a service |
 | The module's calls | `server/utils/social/staryl.ts`                   | One function per call of Staryl's API. Reads the URL and the secret from the runtime config                           |
 | Route helpers      | `server/utils/social/route.ts`                    | The `authorize` hook, the mapping of a failure to a status and a code, and the audit events                           |
-| Routes             | `server/api/guilds/[guild]/social/**`             | `GET` and `PATCH` on the module, `POST` and `DELETE` on its subscriptions                                             |
+| Routes             | `server/api/guilds/[guild]/social/**`             | `GET` and `PATCH` on the module, `POST`, `PATCH` and `DELETE` on its subscriptions                                    |
 | Composable         | `app/composables/useSocialModule.ts`              | The state, its `status`, and the calls. Each call answers `{ ok, value }` or `{ ok, code }`                           |
 | Section            | `app/components/guild/settings/Social.vue`        | The page, with the switch in `GuildModuleBanner`                                                                      |
 | Card               | `app/components/guild/ExternalModuleCard.vue`     | The module's card on the Modules page. It is the same for every external module                                       |
@@ -115,7 +115,9 @@ not available. Nothing else in the dashboard depends on them.
 
 ## What Social does not do yet
 
-- It does not edit a subscription. To change one, remove it and add it again.
+- An edit changes a subscription's channel and message only. The account, the source and the Twitch
+  event name the subscription, so changing one of them is a removal and an add. A move is audited as
+  the subscription leaving one channel's key and arriving under the other's.
 - It does not set filters. A subscription's filters are set with `/subscriptions` in Discord, and the page
   keeps them when it lists the subscription.
 - It lists the subscriptions of connected accounts (Instagram, TikTok) and does not change them. Staryl

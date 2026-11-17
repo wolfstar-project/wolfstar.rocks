@@ -158,6 +158,16 @@ export const SocialRemovedSchema = object({
 	subscriptions: nullable(array(SocialSubscriptionSchema)),
 });
 
+/**
+ * What an edit answers with: the subscription before and after it, and the
+ * server's list, `null` when Staryl could not read it after the write.
+ */
+export const SocialEditedSchema = object({
+	previous: SocialSubscriptionSchema,
+	subscription: SocialSubscriptionSchema,
+	subscriptions: nullable(array(SocialSubscriptionSchema)),
+});
+
 /** What a Twitch live add answers with, as a social add does. */
 export const SocialTwitchAddedSchema = object({
 	subscription: nullable(SocialTwitchSubscriptionSchema),
@@ -167,6 +177,13 @@ export const SocialTwitchAddedSchema = object({
 /** What a Twitch live removal answers with, as a social removal does. */
 export const SocialTwitchRemovedSchema = object({
 	removed: SocialTwitchSubscriptionSchema,
+	twitch: nullable(array(SocialTwitchSubscriptionSchema)),
+});
+
+/** What a Twitch live edit answers with, as a social edit does. */
+export const SocialTwitchEditedSchema = object({
+	previous: SocialTwitchSubscriptionSchema,
+	subscription: SocialTwitchSubscriptionSchema,
 	twitch: nullable(array(SocialTwitchSubscriptionSchema)),
 });
 
@@ -202,6 +219,27 @@ export const SocialSubscriptionBodySchema = object({
 	),
 });
 export type SocialSubscriptionBody = InferOutput<typeof SocialSubscriptionBodySchema>;
+
+/**
+ * The body of `PATCH …/social/subscriptions/:channel/:source` and of
+ * `PATCH …/social/twitch/:channel/:subscription`. The account, the source and
+ * the event identify the subscription and stay: those are a removal and an add.
+ * A message left out keeps the saved one, as Staryl reads it. An empty or
+ * `null` message removes it; Staryl refuses that for an offline notification.
+ */
+export const SocialEditBodySchema = object({
+	channelId: pipe(
+		string(),
+		check((value) => isSnowflake(value), "Expected a channel ID"),
+	),
+	message: optional(
+		pipe(
+			nullable(pipe(string(), trim(), maxLength(SOCIAL_MESSAGE_MAXIMUM))),
+			transform((value) => value || null),
+		),
+	),
+});
+export type SocialEditBody = InferOutput<typeof SocialEditBodySchema>;
 
 /** A Twitch login: up to 25 letters, digits and underscores, with or without the @. */
 const TWITCH_LOGIN_PATTERN = /^@?\w{1,25}$/u;

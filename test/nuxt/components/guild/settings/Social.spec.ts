@@ -7,6 +7,7 @@ import { flushPromises } from "@vue/test-utils";
 import { ChannelType } from "discord-api-types/v10";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import SocialSection from "~/components/guild/settings/Social.vue";
+import EditDialog from "~/components/guild/social/EditDialog.vue";
 import Editor from "~/components/guild/social/Editor.vue";
 import { createMockChannel, createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 
@@ -20,12 +21,16 @@ const mockAddSubscription = vi.fn();
 const mockRemoveSubscription = vi.fn();
 const mockAddTwitch = vi.fn();
 const mockRemoveTwitch = vi.fn();
+const mockEditSubscription = vi.fn();
+const mockEditTwitch = vi.fn();
 const mockRefresh = vi.fn();
 const mockToastAdd = vi.fn();
 
 mockNuxtImport("useSocialModule", () => () => ({
 	addSubscription: mockAddSubscription,
 	addTwitch: mockAddTwitch,
+	editSubscription: mockEditSubscription,
+	editTwitch: mockEditTwitch,
 	refresh: mockRefresh,
 	removeSubscription: mockRemoveSubscription,
 	removeTwitch: mockRemoveTwitch,
@@ -122,6 +127,16 @@ function editorDraft(wrapper: Awaited<ReturnType<typeof mountSection>>) {
 	).setupState;
 }
 
+// The edit dialog's fields, set as its channel picker and its textarea would set them.
+function editFields(wrapper: Awaited<ReturnType<typeof mountSection>>) {
+	const editDialog = wrapper.findComponent(EditDialog);
+	return (
+		editDialog.vm.$ as ComponentInternalInstance & {
+			setupState: { channelId: string | null; message: string };
+		}
+	).setupState;
+}
+
 async function openEditor(wrapper: Awaited<ReturnType<typeof mountSection>>) {
 	buttonIn(wrapper.element.parentElement, "Add subscription")?.click();
 	await flushPromises();
@@ -143,6 +158,8 @@ describe("the Social section", () => {
 		mockRemoveSubscription.mockResolvedValue({ ok: true, value: undefined });
 		mockAddTwitch.mockResolvedValue({ ok: true, value: undefined });
 		mockRemoveTwitch.mockResolvedValue({ ok: true, value: undefined });
+		mockEditSubscription.mockResolvedValue({ ok: true, value: undefined });
+		mockEditTwitch.mockResolvedValue({ ok: true, value: undefined });
 	});
 
 	afterEach(() => {
@@ -614,6 +631,108 @@ describe("the Social section", () => {
 					description:
 						"The dashboard could not reach Staryl. Try again in a few minutes.",
 				}),
+			);
+		});
+	});
+
+	describe("editing a subscription", () => {
+		async function openEdit(label: string) {
+			const wrapper = await mountSection();
+			await wrapper.get(`[aria-label="${label}"]`).trigger("click");
+			await flushPromises();
+			return wrapper;
+		}
+
+		it("starts from the saved channel and message, and saves nothing until one changes", async () => {
+			ready({ subscriptions: [subscription({ message: "New post" })] });
+			const wrapper = await openEdit("Edit the subscription to Example feed in #general");
+
+			expect(dialog()?.textContent).toContain("Edit subscription");
+			expect(editFields(wrapper)).toMatchObject({ channelId: GENERAL, message: "New post" });
+			expect(buttonIn(dialog(), "Save changes")?.disabled).toBe(true);
+
+			editFields(wrapper).message = "  Fresh post  ";
+			await flushPromises();
+			buttonIn(dialog(), "Save changes")?.click();
+			await flushPromises();
+
+			expect(mockEditSubscription).toHaveBeenCalledWith(
+				{ channelId: GENERAL, sourceId: "5" },
+				{ channelId: GENERAL, message: "Fresh post" },
+			);
+			expect(mockToastAdd).toHaveBeenCalledWith(
+				expect.objectContaining({
+					description: "Staryl posts Example feed in #general.",
+					title: "Subscription saved",
+				}),
+			);
+		});
+
+		it("moves the subscription to another channel, and removes an emptied message", async () => {
+			ready({ subscriptions: [subscription({ message: "New post" })] });
+			const wrapper = await openEdit("Edit the subscription to Example feed in #general");
+
+			editFields(wrapper).channelId = NEWS;
+			editFields(wrapper).message = "";
+			await flushPromises();
+			buttonIn(dialog(), "Save changes")?.click();
+			await flushPromises();
+
+			expect(mockEditSubscription).toHaveBeenCalledWith(
+				{ channelId: GENERAL, sourceId: "5" },
+				{ channelId: NEWS, message: null },
+			);
+		});
+
+		it("keeps the dialog open and says why Staryl refused", async () => {
+			ready({ subscriptions: [subscription()] });
+			mockEditSubscription.mockResolvedValue({ code: "duplicate", ok: false });
+			const wrapper = await openEdit("Edit the subscription to Example feed in #general");
+
+			editFields(wrapper).channelId = NEWS;
+			await flushPromises();
+			buttonIn(dialog(), "Save changes")?.click();
+			await flushPromises();
+
+			expect(dialog()?.querySelector('[role="alert"]')).not.toBeNull();
+			expect(mockToastAdd).not.toHaveBeenCalled();
+		});
+
+		it("offers no edit for the subscription of a connected account", async () => {
+			ready({ subscriptions: [subscription({ manageable: false, provider: "Instagram" })] });
+			const wrapper = await mountSection();
+
+			expect(wrapper.find('[aria-label^="Edit the subscription"]').exists()).toBe(false);
+		});
+
+		it("keeps the message of an end-of-stream notification", async () => {
+			ready({
+				twitch: [
+					{
+						channelId: NEWS,
+						message: "Thanks for watching",
+						revoked: false,
+						streamerId: "123",
+						streamerName: "CoolStreamer",
+						subscriptionId: "7",
+						type: "StreamOffline",
+					},
+				],
+			});
+			const wrapper = await openEdit("Edit the subscription to CoolStreamer in #news");
+
+			editFields(wrapper).message = "";
+			await flushPromises();
+			expect(buttonIn(dialog(), "Save changes")?.disabled).toBe(true);
+
+			editFields(wrapper).message = "See you";
+			await flushPromises();
+			buttonIn(dialog(), "Save changes")?.click();
+			await flushPromises();
+
+			expect(mockEditTwitch).toHaveBeenCalledWith(
+				{ channelId: NEWS, subscriptionId: "7" },
+				{ channelId: NEWS, message: "See you" },
 			);
 		});
 	});

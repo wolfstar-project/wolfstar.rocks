@@ -4777,6 +4777,30 @@
 							},
 							"additionalProperties": false
 						},
+						"edit": {
+							"type": "object",
+							"properties": {
+								"aria": {
+									"type": "string"
+								},
+								"save": {
+									"type": "string"
+								},
+								"saved_description": {
+									"type": "string"
+								},
+								"saved_title": {
+									"type": "string"
+								},
+								"subtitle": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
 						"editor": {
 							"type": "object",
 							"properties": {

@@ -15,6 +15,8 @@ const { mocks } = vi.hoisted(() => {
 		setSocialEnabled: vi.fn(),
 		addSocialSubscription: vi.fn(),
 		removeSocialSubscription: vi.fn(),
+		editSocialSubscription: vi.fn(),
+		editSocialTwitch: vi.fn(),
 		addSocialTwitch: vi.fn(),
 		removeSocialTwitch: vi.fn(),
 		body: undefined as unknown,
@@ -44,6 +46,8 @@ vi.mock("#server/utils/guilds/manager", () => ({
 
 vi.mock("#server/utils/social/staryl", () => ({
 	addSocialSubscription: mocks.addSocialSubscription,
+	editSocialSubscription: mocks.editSocialSubscription,
+	editSocialTwitch: mocks.editSocialTwitch,
 	readSocialState: mocks.readSocialState,
 	removeSocialSubscription: mocks.removeSocialSubscription,
 	setSocialEnabled: mocks.setSocialEnabled,
@@ -62,9 +66,11 @@ import type { H3Event } from "h3";
 import getHandler from "#server/api/guilds/[guild]/social/index.get";
 import patchHandler from "#server/api/guilds/[guild]/social/index.patch";
 import deleteHandler from "#server/api/guilds/[guild]/social/subscriptions/[channel]/[source].delete";
+import editHandler from "#server/api/guilds/[guild]/social/subscriptions/[channel]/[source].patch";
 import postHandler from "#server/api/guilds/[guild]/social/subscriptions/index.post";
 import targetsHandler from "#server/api/guilds/[guild]/social/targets.get";
 import twitchDeleteHandler from "#server/api/guilds/[guild]/social/twitch/[channel]/[subscription].delete";
+import twitchEditHandler from "#server/api/guilds/[guild]/social/twitch/[channel]/[subscription].patch";
 import twitchPostHandler from "#server/api/guilds/[guild]/social/twitch/index.post";
 
 type Handler = (event: H3Event) => Promise<unknown>;
@@ -327,6 +333,161 @@ describe("the Social module's routes", () => {
 				data: { code: "subscription-not-found" },
 				statusCode: 404,
 			});
+		});
+	});
+
+	describe("PATCH /api/guilds/:guild/social/subscriptions/:channel/:source", () => {
+		const OTHER = "400000000000000002";
+
+		it("changes the message and records it under the same subscription", async () => {
+			mocks.params = { channel: CHANNEL, source: "5" };
+			mocks.body = { channelId: CHANNEL, message: "  Fresh  " };
+			const edited = { ...subscription, message: "Fresh" };
+			mocks.editSocialSubscription.mockResolvedValue(
+				ok({ previous: subscription, subscription: edited, subscriptions: [edited] }),
+			);
+
+			await expect(call(editHandler)).resolves.toStrictEqual({ subscriptions: [edited] });
+
+			expect(mocks.editSocialSubscription).toHaveBeenCalledWith(
+				GUILD,
+				MEMBER,
+				{ channelId: CHANNEL, sourceId: "5" },
+				{ channelId: CHANNEL, message: "Fresh" },
+			);
+			expect(JSON.stringify(auditedPatch())).toContain("Fresh");
+			expect(JSON.stringify(auditedPatch())).toContain(`/social.${CHANNEL}.5`);
+		});
+
+		it("records a move as leaving one channel and arriving in the other", async () => {
+			mocks.params = { channel: CHANNEL, source: "5" };
+			mocks.body = { channelId: OTHER, message: "" };
+			const moved = { ...subscription, channelId: OTHER, message: null };
+			mocks.editSocialSubscription.mockResolvedValue(
+				ok({ previous: subscription, subscription: moved, subscriptions: [moved] }),
+			);
+
+			await call(editHandler);
+
+			expect(mocks.editSocialSubscription).toHaveBeenCalledWith(
+				GUILD,
+				MEMBER,
+				{ channelId: CHANNEL, sourceId: "5" },
+				{ channelId: OTHER, message: null },
+			);
+			expect(auditedPatch()).toStrictEqual(
+				expect.arrayContaining([
+					expect.objectContaining({ op: "remove", path: `/social.${CHANNEL}.5` }),
+					expect.objectContaining({ op: "add", path: `/social.${OTHER}.5` }),
+				]),
+			);
+		});
+
+		it.each([
+			[
+				"a source that climbs the path",
+				{ channel: CHANNEL, source: "../1" },
+				{ channelId: CHANNEL },
+			],
+			[
+				"a channel that is not an ID",
+				{ channel: CHANNEL, source: "5" },
+				{ channelId: "news" },
+			],
+			[
+				"a message over the limit",
+				{ channel: CHANNEL, source: "5" },
+				{ channelId: CHANNEL, message: "x".repeat(201) },
+			],
+		])("refuses %s without asking Staryl", async (_name, params, body) => {
+			mocks.params = params;
+			mocks.body = body;
+
+			await expect(call(editHandler)).rejects.toMatchObject({
+				data: { code: "invalid" },
+				statusCode: 400,
+			});
+			expect(mocks.editSocialSubscription).not.toHaveBeenCalled();
+		});
+
+		it("keeps the saved message when the body leaves it out", async () => {
+			mocks.params = { channel: CHANNEL, source: "5" };
+			mocks.body = { channelId: OTHER };
+			const moved = { ...subscription, channelId: OTHER };
+			mocks.editSocialSubscription.mockResolvedValue(
+				ok({ previous: subscription, subscription: moved, subscriptions: [moved] }),
+			);
+
+			await call(editHandler);
+
+			expect(mocks.editSocialSubscription.mock.calls[0]?.[3]).toStrictEqual({
+				channelId: OTHER,
+			});
+		});
+
+		it("passes on that the new channel already follows the account", async () => {
+			mocks.params = { channel: CHANNEL, source: "5" };
+			mocks.body = { channelId: OTHER };
+			mocks.editSocialSubscription.mockResolvedValue(refused(409, "duplicate"));
+
+			await expect(call(editHandler)).rejects.toMatchObject({
+				data: { code: "duplicate" },
+				statusCode: 409,
+			});
+			expect(mocks.audit).not.toHaveBeenCalled();
+		});
+	});
+
+	describe("PATCH /api/guilds/:guild/social/twitch/:channel/:subscription", () => {
+		const live = {
+			channelId: CHANNEL,
+			message: "Bye",
+			revoked: false,
+			streamerId: "123",
+			streamerName: "CoolStreamer",
+			subscriptionId: "7",
+			type: "StreamOffline" as const,
+		};
+
+		it("changes the message and records the change", async () => {
+			mocks.params = { channel: CHANNEL, subscription: "7" };
+			mocks.body = { channelId: CHANNEL, message: "See you" };
+			const edited = { ...live, message: "See you" };
+			mocks.editSocialTwitch.mockResolvedValue(
+				ok({ previous: live, subscription: edited, twitch: [edited] }),
+			);
+
+			await expect(call(twitchEditHandler)).resolves.toStrictEqual({ twitch: [edited] });
+
+			expect(mocks.editSocialTwitch).toHaveBeenCalledWith(
+				GUILD,
+				MEMBER,
+				{ channelId: CHANNEL, subscriptionId: "7" },
+				{ channelId: CHANNEL, message: "See you" },
+			);
+			expect(JSON.stringify(auditedPatch())).toContain("See you");
+		});
+
+		it("passes on that an end of stream keeps its message", async () => {
+			mocks.params = { channel: CHANNEL, subscription: "7" };
+			mocks.body = { channelId: CHANNEL, message: "" };
+			mocks.editSocialTwitch.mockResolvedValue(refused(422, "message-required"));
+
+			await expect(call(twitchEditHandler)).rejects.toMatchObject({
+				data: { code: "message-required" },
+				statusCode: 422,
+			});
+		});
+
+		it("refuses a subscription that climbs the path, without asking Staryl", async () => {
+			mocks.params = { channel: CHANNEL, subscription: "../7" };
+			mocks.body = { channelId: CHANNEL };
+
+			await expect(call(twitchEditHandler)).rejects.toMatchObject({
+				data: { code: "invalid" },
+				statusCode: 400,
+			});
+			expect(mocks.editSocialTwitch).not.toHaveBeenCalled();
 		});
 	});
 

@@ -65,6 +65,10 @@ registerEndpoint(`${BASE}/subscriptions/${CHANNEL}/5`, {
 	method: "DELETE",
 	handler: () => writeAnswer(),
 });
+registerEndpoint(`${BASE}/subscriptions/${CHANNEL}/5`, {
+	method: "PATCH",
+	handler: () => writeAnswer(),
+});
 
 describe("useSocialModule", () => {
 	beforeEach(() => {
@@ -189,6 +193,38 @@ describe("useSocialModule", () => {
 		};
 		stored = socialState({ subscriptions: [] });
 		const result = await removeSubscription({ channelId: CHANNEL, sourceId: "5" });
+
+		expect(result).toStrictEqual({ code: "subscription-not-found", ok: false });
+		await vi.waitFor(() => expect(state.value?.subscriptions).toStrictEqual([]));
+	});
+
+	it("lists what the server answered an edit with", async () => {
+		const { editSubscription, state, status } = useSocialModule(GUILD);
+		await vi.waitFor(() => expect(status.value.kind).toBe("ready"));
+
+		const edited = { ...subscription("5"), message: "Fresh" };
+		writeAnswer = () => ({ subscriptions: [edited] });
+		const result = await editSubscription(
+			{ channelId: CHANNEL, sourceId: "5" },
+			{ channelId: CHANNEL, message: "Fresh" },
+		);
+
+		expect(result).toStrictEqual({ ok: true, value: undefined });
+		await vi.waitFor(() => expect(state.value?.subscriptions).toStrictEqual([edited]));
+	});
+
+	it("reads the list again when the edited subscription was gone", async () => {
+		const { editSubscription, state, status } = useSocialModule(GUILD);
+		await vi.waitFor(() => expect(status.value.kind).toBe("ready"));
+
+		writeAnswer = () => {
+			throw refusal(404, "subscription-not-found");
+		};
+		stored = socialState({ subscriptions: [] });
+		const result = await editSubscription(
+			{ channelId: CHANNEL, sourceId: "5" },
+			{ channelId: CHANNEL, message: null },
+		);
 
 		expect(result).toStrictEqual({ code: "subscription-not-found", ok: false });
 		await vi.waitFor(() => expect(state.value?.subscriptions).toStrictEqual([]));

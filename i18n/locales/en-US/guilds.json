@@ -1591,6 +1591,14 @@
 				"MissingPermissions": "",
 				"SendFailed": ""
 			},
+			"edit": {
+				"aria": "",
+				"save": "",
+				"saved_description": "",
+				"saved_title": "",
+				"subtitle": "",
+				"title": ""
+			},
 			"editor": {
 				"cancel": "",
 				"channel": "",

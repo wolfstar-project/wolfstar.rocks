@@ -101,20 +101,21 @@ type AuditedSubscription = Pick<
 	"channelId" | "displayName" | "message" | "provider" | "sourceId" | "target"
 >;
 
-/** `before` is `null` for an add, `after` for a remove. */
+/**
+ * `before` is `null` for an add, `after` for a remove. An edit that moves the
+ * subscription files it under its new channel, so it reads as one leaving a
+ * channel and one arriving in the other.
+ */
 export function auditSocialSubscription(
 	event: H3Event,
 	before: AuditedSubscription | null,
 	after: AuditedSubscription | null,
 ): void {
-	const subscription = before ?? after;
-	if (subscription === null) return;
-
-	const key = `social.${subscription.channelId}.${subscription.sourceId}`;
+	const key = (entry: AuditedSubscription) => `social.${entry.channelId}.${entry.sourceId}`;
 	auditSocialChange(
 		event,
-		before === null ? {} : { [key]: describeSubscription(before) },
-		after === null ? {} : { [key]: describeSubscription(after) },
+		before === null ? {} : { [key(before)]: describeSubscription(before) },
+		after === null ? {} : { [key(after)]: describeSubscription(after) },
 	);
 }
 
@@ -134,16 +135,14 @@ type AuditedTwitch = Pick<
 	"channelId" | "message" | "streamerId" | "streamerName" | "subscriptionId" | "type"
 >;
 
-/** `before` is `null` for an add, `after` for a remove. */
+/** `before` is `null` for an add, `after` for a remove. An edit is filed as a subscription's is. */
 export function auditSocialTwitch(
 	event: H3Event,
 	before: AuditedTwitch | null,
 	after: AuditedTwitch | null,
 ): void {
-	const subscription = before ?? after;
-	if (subscription === null) return;
-
-	const key = `social.twitch.${subscription.channelId}.${subscription.subscriptionId ?? "unknown"}`;
+	const key = (entry: AuditedTwitch) =>
+		`social.twitch.${entry.channelId}.${entry.subscriptionId ?? "unknown"}`;
 	const describe = (entry: AuditedTwitch) => ({
 		event: entry.type,
 		message: entry.message,
@@ -151,7 +150,7 @@ export function auditSocialTwitch(
 	});
 	auditSocialChange(
 		event,
-		before === null ? {} : { [key]: describe(before) },
-		after === null ? {} : { [key]: describe(after) },
+		before === null ? {} : { [key(before)]: describe(before) },
+		after === null ? {} : { [key(after)]: describe(after) },
 	);
 }

@@ -113,6 +113,13 @@ export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
 		moduleKey: "modulesAutomessage",
 		slug: "automessage",
 	},
+	// Staryl's module, after WolfStar's: its switch is Staryl's own, so it has no `moduleKey`.
+	{
+		group: "modules",
+		icon: "ic:round-rss-feed",
+		labelKey: "dashboard.nav.social",
+		slug: "social",
+	},
 	{
 		group: "tools",
 		icon: "ic:round-terminal",
@@ -141,7 +148,13 @@ export function findDashboardNavItem(slug: string): DashboardNavItem | undefined
 export type DashboardSkeletonKind = "overview" | "modules" | "table" | "form";
 
 // The sections whose page is a list of rows rather than a form.
-const TABLE_SECTIONS: ReadonlySet<string> = new Set(["automod", "autodelete", "autopurge", "logs"]);
+const TABLE_SECTIONS: ReadonlySet<string> = new Set([
+	"automod",
+	"autodelete",
+	"autopurge",
+	"logs",
+	"social",
+]);
 
 /**
  * Which skeleton stands in for a section while it loads: the overview and the

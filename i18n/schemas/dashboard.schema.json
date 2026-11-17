@@ -544,6 +544,9 @@
 						"roles": {
 							"type": "string"
 						},
+						"social": {
+							"type": "string"
+						},
 						"support_server": {
 							"type": "string"
 						}

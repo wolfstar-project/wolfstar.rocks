@@ -1,0 +1,189 @@
+/**
+ * The Social module: the subscriptions Staryl holds for a server, read and
+ * changed through Staryl's guild API (wolfstar-project/staryl,
+ * `docs/guild-api.md`). Nothing of it is in WolfStar's database.
+ *
+ * The shapes here are that API's. Its answers are parsed with these schemas
+ * where they enter the dashboard (`server/utils/social/staryl.ts`), so a
+ * change of Staryl's that the dashboard does not know fails there, and not in
+ * a component.
+ */
+
+import {
+	array,
+	boolean,
+	check,
+	type InferOutput,
+	maxLength,
+	minLength,
+	nullable,
+	nullish,
+	number,
+	object,
+	picklist,
+	pipe,
+	string,
+	transform,
+	trim,
+} from "valibot";
+import { isSnowflake } from "./snowflake";
+
+/** The platforms Staryl follows, by the name its API gives them (`SocialProviderName`). */
+const SOCIAL_PROVIDERS = [
+	"Rss",
+	"Reddit",
+	"Bluesky",
+	"Mastodon",
+	"YouTube",
+	"TwitchVideos",
+	"TwitchClips",
+	"X",
+	"Instagram",
+	"TikTok",
+] as const;
+export type SocialProviderName = (typeof SOCIAL_PROVIDERS)[number];
+
+/** How a followed account or feed is doing (`describeSourceHealth`, and `unavailable`). */
+const SOCIAL_HEALTHS = [
+	"active",
+	"failing",
+	"rateLimited",
+	"targetUnavailable",
+	"authFailed",
+	"unavailable",
+] as const;
+
+/** Why the last notification of a subscription did not reach its channel. */
+const SOCIAL_DELIVERY_ERRORS = [
+	"GuildUnavailable",
+	"ChannelNotFound",
+	"MissingPermissions",
+	"SendFailed",
+] as const;
+
+const SocialSubscriptionSchema = object({
+	provider: picklist(SOCIAL_PROVIDERS),
+	sourceId: string(),
+	channelId: string(),
+	displayName: string(),
+	/** What was followed, in its canonical form: a feed URL, a handle, a channel ID. */
+	target: string(),
+	message: nullable(string()),
+	/** The filters that are not at their default; they are set with `/subscriptions`. */
+	filters: array(string()),
+	health: picklist(SOCIAL_HEALTHS),
+	deliveryError: nullable(picklist(SOCIAL_DELIVERY_ERRORS)),
+	/** Whether the API adds and removes it: an account its owner connected is listed only. */
+	manageable: boolean(),
+	createdAt: string(),
+	lastCheckedAt: nullable(string()),
+});
+export type SocialSubscription = InferOutput<typeof SocialSubscriptionSchema>;
+
+const SocialTwitchSubscriptionSchema = object({
+	streamerId: string(),
+	streamerName: nullable(string()),
+	channelId: string(),
+	type: picklist(["StreamOnline", "StreamOffline"]),
+	message: nullable(string()),
+	/** Twitch ended it: no notification arrives until it is added again. */
+	revoked: boolean(),
+});
+
+export const SocialStateSchema = object({
+	/** Whether Staryl is in the server. */
+	installed: boolean(),
+	/** The switch of the module: off, Staryl posts nothing in the server. */
+	enabled: boolean(),
+	limits: object({
+		subscriptions: number(),
+		xAccounts: number(),
+		messageLength: number(),
+		targetLength: number(),
+	}),
+	providers: array(
+		object({
+			name: picklist(SOCIAL_PROVIDERS),
+			/** Whether Staryl holds the credentials the platform asks for. */
+			configured: boolean(),
+			manageable: boolean(),
+		}),
+	),
+	subscriptions: array(SocialSubscriptionSchema),
+	twitch: array(SocialTwitchSubscriptionSchema),
+});
+export type SocialState = InferOutput<typeof SocialStateSchema>;
+
+/** The body of `PATCH /api/guilds/:guild/social`. */
+export const SocialSwitchBodySchema = object({ enabled: boolean() });
+
+/** What the switch answers with: its value, and what it was before the request. */
+export const SocialSwitchSchema = object({ enabled: boolean(), previous: boolean() });
+
+/**
+ * What an add answers with: the new subscription, and the ones the server has
+ * now. Both are `null` when Staryl saved the subscription and then could not
+ * read the list: the add went through, and the list is to be read again.
+ */
+export const SocialAddedSchema = object({
+	subscription: nullable(SocialSubscriptionSchema),
+	subscriptions: nullable(array(SocialSubscriptionSchema)),
+});
+
+/**
+ * What a remove answers with: what it removed, and the subscriptions the
+ * server has left, `null` when Staryl could not read them after the removal.
+ */
+export const SocialRemovedSchema = object({
+	removed: SocialSubscriptionSchema,
+	subscriptions: nullable(array(SocialSubscriptionSchema)),
+});
+
+/** The longest target and message Staryl takes; its API repeats them in `limits`. */
+const SOCIAL_TARGET_MAXIMUM = 500;
+const SOCIAL_MESSAGE_MAXIMUM = 200;
+
+/** The body of `POST /api/guilds/:guild/social/subscriptions`. */
+export const SocialSubscriptionBodySchema = object({
+	provider: picklist(SOCIAL_PROVIDERS),
+	target: pipe(string(), trim(), minLength(1), maxLength(SOCIAL_TARGET_MAXIMUM)),
+	channelId: pipe(
+		string(),
+		check((value) => isSnowflake(value), "Expected a channel ID"),
+	),
+	message: pipe(
+		nullish(pipe(string(), trim(), maxLength(SOCIAL_MESSAGE_MAXIMUM))),
+		transform((value) => value || null),
+	),
+});
+export type SocialSubscriptionBody = InferOutput<typeof SocialSubscriptionBodySchema>;
+
+/**
+ * Why a request of the Social module was refused. The first group is Staryl's
+ * own codes; `unavailable` is the dashboard's, for a Staryl it cannot reach or
+ * has no secret for, and `generic` stands for anything else.
+ */
+export const SOCIAL_ERROR_CODES = [
+	"duplicate",
+	"guild-unavailable",
+	"channel-not-found",
+	"channel-not-supported",
+	"missing-permissions",
+	"provider-not-configured",
+	"provider-not-manageable",
+	"limit-reached",
+	"x-limit-reached",
+	"target-invalid",
+	"target-not-found",
+	"target-blocked",
+	"target-unsupported",
+	"target-unreachable",
+	"subscription-not-found",
+	"invalid",
+	"unavailable",
+] as const;
+export type SocialErrorCode = (typeof SOCIAL_ERROR_CODES)[number] | "generic";
+
+export function isSocialErrorCode(value: unknown): value is (typeof SOCIAL_ERROR_CODES)[number] {
+	return (SOCIAL_ERROR_CODES as readonly unknown[]).includes(value);
+}

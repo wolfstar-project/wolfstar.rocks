@@ -82,6 +82,37 @@ export const MODULE_SWITCH_KEYS: readonly ModuleSwitchKey[] = [
 	...OWN_TABLE_MODULE_SWITCHES,
 ];
 
+/**
+ * The modules another service of the WolfStar Project holds. Their switch and
+ * their settings are behind that service's API, never in `GuildData`: the
+ * dashboard reads and writes them through routes of its own, at once, so they
+ * are not counted with the switches above nor staged with them.
+ * `docs/arch/external-modules.md` says how to add one.
+ */
+export const EXTERNAL_GUILD_MODULES = [
+	{
+		descriptionKey: "guild_settings.modules.descriptions.social",
+		icon: "lucide:rss",
+		key: "social",
+		labelKey: "dashboard.nav.social",
+		section: "social",
+		service: "Staryl",
+	},
+] as const satisfies readonly ExternalGuildModuleDefinition[];
+
+/** What an entry of `EXTERNAL_GUILD_MODULES` holds. */
+export interface ExternalGuildModuleDefinition {
+	descriptionKey: string;
+	icon: string;
+	/** The module's name in code, and the segment of its routes: `/api/guilds/:guild/<key>`. */
+	key: string;
+	labelKey: string;
+	/** The section of `/app` that configures it. */
+	section: string;
+	/** The bot that runs the module, as the glossary writes it. */
+	service: "Staryl";
+}
+
 export type GuildModuleFlags = Partial<Record<ModuleSwitchKey, boolean | null | undefined>>;
 
 /** Counts the module switches that are on in `settings`. */

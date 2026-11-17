@@ -154,6 +154,7 @@ const asyncComponentMap: Record<string, ReturnType<typeof defineAsyncComponent>>
 	joinguard: sectionComponent(() => import("~/components/guild/settings/JoinGuard.vue"), "form"),
 	modules: sectionComponent(() => import("~/components/guild/settings/Modules.vue"), "modules"),
 	roles: sectionComponent(() => import("~/components/guild/settings/Roles.vue"), "form"),
+	social: sectionComponent(() => import("~/components/guild/settings/Social.vue"), "table"),
 };
 const comingSoonComponent = defineAsyncComponent(
 	() => import("~/components/dashboard/ComingSoon.vue"),

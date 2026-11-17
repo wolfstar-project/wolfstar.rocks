@@ -200,3 +200,35 @@ export async function instrumentBotApiCall<T>(
 		},
 	);
 }
+
+/**
+ * Wraps a call to an external service, such as Staryl's guild API, in a Sentry
+ * span. A refusal is an answer, so only a call that throws is marked failed.
+ */
+export async function instrumentServiceCall<T>(
+	service: string,
+	endpoint: string,
+	fn: () => Promise<T>,
+): Promise<T> {
+	return Sentry.startSpan(
+		{
+			name: `${service}.api ${endpoint}`,
+			op: "http.client.service",
+			attributes: { "service.endpoint": endpoint, "service.name": service },
+		},
+		async (span) => {
+			try {
+				const result = await fn();
+				span.setStatus({ code: 1, message: "ok" });
+				return result;
+			} catch (error) {
+				span.setStatus({ code: 2, message: "internal_error" });
+				span.setAttribute(
+					"error.type",
+					error instanceof Error ? error.constructor.name : "UnknownError",
+				);
+				throw error;
+			}
+		},
+	);
+}

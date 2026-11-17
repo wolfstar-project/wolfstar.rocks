@@ -57,10 +57,14 @@ export function socialSourceUsage(state: SocialState, source: SocialSource): Soc
 	if (source === "TwitchLive") {
 		return { maximum: state.limits.twitchLive ?? null, used: state.twitch.length };
 	}
-	const provider = state.providers.find((entry) => entry.name === source);
+	const maximum = state.providers.find((entry) => entry.name === source)?.maximum;
+	// An older Staryl gives no maximum per platform, only one total every platform shares: each
+	// counts every subscription against it, so all of them are full together.
+	if (maximum === undefined) {
+		return { maximum: state.limits.subscriptions, used: state.subscriptions.length };
+	}
 	return {
-		// An older Staryl gives no maximum per platform, only its total of 25.
-		maximum: provider?.maximum ?? state.limits.subscriptions,
+		maximum,
 		used: state.subscriptions.filter((subscription) => subscription.provider === source).length,
 	};
 }

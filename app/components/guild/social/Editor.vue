@@ -213,17 +213,23 @@ const problem = computed(() => socialDraftProblem(draft, state));
 
 // An empty field shows on its own. The limit does not, so it is said; then what the server refused.
 const problemMessage = computed(() => {
-	const usage = draft.source === null ? null : socialSourceUsage(state, draft.source);
-	const limit = {
-		maximum: usage?.maximum ?? 0,
-		name: draft.source === null ? "" : sourceName(draft.source),
-	};
-	if (problem.value === "limit") return ts("guild_settings.social.errors.limit_reached", limit);
+	const maximum = draft.source === null ? null : socialSourceUsage(state, draft.source).maximum;
+	const name = draft.source === null ? "" : sourceName(draft.source);
+	// Staryl can refuse a source whose maximum it did not send, as an older one does for Twitch live:
+	// the message then names no number rather than a wrong one.
+	const limitReached = () =>
+		maximum === null
+			? ts("guild_settings.social.errors.limit_reached_unknown", { name })
+			: ts("guild_settings.social.errors.limit_reached", { maximum, name });
+	if (problem.value === "limit") return limitReached();
 	if (!errorCode) return null;
-	return ts(`guild_settings.social.errors.${errorCode.replaceAll("-", "_")}`, {
-		...limit,
-		maximum: errorCode === "x-limit-reached" ? state.limits.xAccounts : limit.maximum,
-	});
+	if (errorCode === "limit-reached") return limitReached();
+	if (errorCode === "x-limit-reached") {
+		return ts("guild_settings.social.errors.x_limit_reached", {
+			maximum: state.limits.xAccounts,
+		});
+	}
+	return ts(`guild_settings.social.errors.${errorCode.replaceAll("-", "_")}`);
 });
 
 function save() {

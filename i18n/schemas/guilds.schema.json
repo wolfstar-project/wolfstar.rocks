@@ -4897,6 +4897,9 @@
 								"limit_reached": {
 									"type": "string"
 								},
+								"limit_reached_unknown": {
+									"type": "string"
+								},
 								"message_required": {
 									"type": "string"
 								},

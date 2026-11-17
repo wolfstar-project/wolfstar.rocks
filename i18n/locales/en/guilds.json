@@ -1631,6 +1631,7 @@
 				"guild_unavailable": "Staryl could not read this server. Check that Staryl is still in it.",
 				"invalid": "Staryl did not accept the request. Reload the page and try again.",
 				"limit_reached": "This server has its maximum of {maximum} {name} subscriptions. Remove one to add another.",
+				"limit_reached_unknown": "This server has the most {name} subscriptions it can have. Remove one to add another.",
 				"message_required": "A notification for the end of a stream needs a message.",
 				"missing_permissions": "Staryl needs View Channel, Send Messages and Embed Links in that channel.",
 				"provider_not_configured": "Staryl cannot read that source right now.",

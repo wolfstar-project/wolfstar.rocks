@@ -1631,6 +1631,7 @@
 				"guild_unavailable": "",
 				"invalid": "",
 				"limit_reached": "",
+				"limit_reached_unknown": "",
 				"message_required": "",
 				"missing_permissions": "",
 				"provider_not_configured": "",

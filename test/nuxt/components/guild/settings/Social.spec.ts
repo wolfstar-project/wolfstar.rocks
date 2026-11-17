@@ -176,7 +176,6 @@ describe("the Social section", () => {
 			const wrapper = await mountSection();
 
 			expect(wrapper.text()).toContain("No subscription yet");
-			expect(wrapper.text()).toContain("No subscription");
 		});
 
 		// Staryl has a limit per source and no total, so the header counts without a maximum.
@@ -368,6 +367,23 @@ describe("the Social section", () => {
 				type: "StreamOffline",
 			});
 			expect(mockAddSubscription).not.toHaveBeenCalled();
+		});
+
+		it("names no number when Staryl refuses a source whose maximum it did not send", async () => {
+			ready();
+			mockAddTwitch.mockResolvedValue({ code: "limit-reached", ok: false });
+			const wrapper = await mountSection();
+			const { draft } = await openEditor(wrapper);
+			Object.assign(draft, { channelId: NEWS, source: "TwitchLive", target: "shroud" });
+			await flushPromises();
+
+			buttonIn(dialog(), "Add subscription")?.click();
+			await flushPromises();
+
+			expect(dialog()?.textContent).toContain(
+				"This server has the most Twitch live subscriptions it can have.",
+			);
+			expect(dialog()?.textContent).not.toContain("maximum of 0");
 		});
 
 		it("still offers Twitch live once the social subscriptions are full", async () => {

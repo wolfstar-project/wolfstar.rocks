@@ -3,6 +3,8 @@ import type {
 	SocialState,
 	SocialSubscription,
 	SocialSubscriptionBody,
+	SocialTwitchBody,
+	SocialTwitchSubscription,
 } from "#shared/utils/social";
 import type { MaybeRefOrGetter } from "vue";
 
@@ -150,10 +152,61 @@ export function useSocialModule(guildId: MaybeRefOrGetter<string | null | undefi
 		return result;
 	}
 
+	/** Shows the Twitch live list a write answered with, or reads it again when there is none. */
+	function showTwitch(requestGuildId: string | null, twitch: SocialTwitchSubscription[] | null) {
+		if (twitch) patchState(requestGuildId, { twitch });
+		else if (id.value === requestGuildId) void asyncData.refresh();
+	}
+
+	/** Notifies a channel when a streamer goes live or offline. */
+	async function addTwitch(body: SocialTwitchBody): Promise<SocialResult> {
+		const requestGuildId = id.value;
+		const result = await run(() =>
+			$fetch<{ twitch: SocialTwitchSubscription[] | null }, string, "POST">(
+				`${base.value}/twitch`,
+				{ body, method: "POST" },
+			),
+		);
+		if (!result.ok) return result;
+
+		showTwitch(requestGuildId, result.value.twitch);
+		return { ok: true, value: undefined };
+	}
+
+	/** Stops a channel's Twitch live notification. One that is already gone is as removed. */
+	async function removeTwitch(
+		subscription: Pick<SocialTwitchSubscription, "channelId"> & { subscriptionId: string },
+	): Promise<SocialResult> {
+		const requestGuildId = id.value;
+		const { channelId, subscriptionId } = subscription;
+		const result = await run(() =>
+			$fetch<{ twitch: SocialTwitchSubscription[] | null }, string, "DELETE">(
+				`${base.value}/twitch/${channelId}/${subscriptionId}`,
+				{ method: "DELETE" },
+			),
+		);
+
+		if (result.ok) {
+			showTwitch(requestGuildId, result.value.twitch);
+			return { ok: true, value: undefined };
+		}
+		if (result.code === "subscription-not-found" && state.value) {
+			patchState(requestGuildId, {
+				twitch: state.value.twitch.filter(
+					(entry) =>
+						entry.channelId !== channelId || entry.subscriptionId !== subscriptionId,
+				),
+			});
+		}
+		return result;
+	}
+
 	return {
 		addSubscription,
+		addTwitch,
 		refresh: asyncData.refresh,
 		removeSubscription,
+		removeTwitch,
 		setEnabled,
 		state,
 		status,

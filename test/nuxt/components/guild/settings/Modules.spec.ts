@@ -51,6 +51,7 @@ const socialReady = (enabled: boolean): SocialModuleStatus => ({
 		providers: [],
 		subscriptions: [],
 		twitch: [],
+		twitchLiveConfigured: true,
 	},
 });
 const mockSocialStatus = ref<SocialModuleStatus>(socialReady(true));

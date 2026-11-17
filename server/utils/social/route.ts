@@ -1,5 +1,9 @@
 import type { ExternalServiceError, ExternalServiceResult } from "#server/utils/external-service";
-import type { SocialErrorCode, SocialSubscription } from "#shared/utils/social";
+import type {
+	SocialErrorCode,
+	SocialSubscription,
+	SocialTwitchSubscription,
+} from "#shared/utils/social";
 import type { H3Event } from "h3";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
 import { authorizeGuildManager, useManagedGuild } from "#server/utils/guilds/manager";
@@ -66,8 +70,9 @@ export function socialActorId(event: H3Event): string {
 
 /**
  * Records a change of the Social module in the audit chain. The module has no
- * settings key: its switch is filed under `social.enabled`, and a subscription
- * under `social.<channel>.<source>`, as a rule is under `automodRule.<name>`.
+ * settings key: its switch is filed under `social.enabled`, a subscription
+ * under `social.<channel>.<source>`, and a Twitch live one under
+ * `social.twitch.<channel>.<subscription>`, as a rule is under `automodRule.<name>`.
  */
 function auditSocialChange(
 	event: H3Event,
@@ -121,4 +126,32 @@ function describeSubscription(subscription: AuditedSubscription) {
 		provider: subscription.provider,
 		target: subscription.target,
 	};
+}
+
+/** What the audit trail keeps of a Twitch live subscription. */
+type AuditedTwitch = Pick<
+	SocialTwitchSubscription,
+	"channelId" | "message" | "streamerId" | "streamerName" | "subscriptionId" | "type"
+>;
+
+/** `before` is `null` for an add, `after` for a remove. */
+export function auditSocialTwitch(
+	event: H3Event,
+	before: AuditedTwitch | null,
+	after: AuditedTwitch | null,
+): void {
+	const subscription = before ?? after;
+	if (subscription === null) return;
+
+	const key = `social.twitch.${subscription.channelId}.${subscription.subscriptionId ?? "unknown"}`;
+	const describe = (entry: AuditedTwitch) => ({
+		event: entry.type,
+		message: entry.message,
+		streamer: entry.streamerName ?? entry.streamerId,
+	});
+	auditSocialChange(
+		event,
+		before === null ? {} : { [key]: describe(before) },
+		after === null ? {} : { [key]: describe(after) },
+	);
 }

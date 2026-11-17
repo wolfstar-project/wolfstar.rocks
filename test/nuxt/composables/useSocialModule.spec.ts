@@ -33,6 +33,7 @@ function socialState(overrides: Partial<SocialState> = {}): SocialState {
 		providers: [{ configured: true, manageable: true, name: "Rss" }],
 		subscriptions: [subscription("5")],
 		twitch: [],
+		twitchLiveConfigured: true,
 		...overrides,
 	};
 }
@@ -55,6 +56,11 @@ registerEndpoint(BASE, {
 });
 registerEndpoint(BASE, { method: "PATCH", handler: () => writeAnswer() });
 registerEndpoint(`${BASE}/subscriptions`, { method: "POST", handler: () => writeAnswer() });
+registerEndpoint(`${BASE}/twitch`, { method: "POST", handler: () => writeAnswer() });
+registerEndpoint(`${BASE}/twitch/${CHANNEL}/7`, {
+	method: "DELETE",
+	handler: () => writeAnswer(),
+});
 registerEndpoint(`${BASE}/subscriptions/${CHANNEL}/5`, {
 	method: "DELETE",
 	handler: () => writeAnswer(),
@@ -186,5 +192,48 @@ describe("useSocialModule", () => {
 
 		expect(result).toStrictEqual({ code: "subscription-not-found", ok: false });
 		await vi.waitFor(() => expect(state.value?.subscriptions).toStrictEqual([]));
+	});
+
+	const live = {
+		channelId: CHANNEL,
+		message: null,
+		revoked: false,
+		streamerId: "123",
+		streamerName: "CoolStreamer",
+		subscriptionId: "7",
+		type: "StreamOnline" as const,
+	};
+
+	it("lists what the server answered a Twitch live add with", async () => {
+		const { addTwitch, state, status } = useSocialModule(GUILD);
+		await vi.waitFor(() => expect(status.value.kind).toBe("ready"));
+
+		writeAnswer = () => ({ twitch: [live] });
+		stored = socialState({ twitch: [live] });
+		const result = await addTwitch({
+			channelId: CHANNEL,
+			message: null,
+			streamer: "coolstreamer",
+			type: "StreamOnline",
+		});
+
+		expect(result.ok).toBe(true);
+		await vi.waitFor(() => expect(state.value?.twitch).toStrictEqual([live]));
+	});
+
+	it("takes a Twitch live subscription that was already gone off the list", async () => {
+		stored = socialState({ twitch: [live] });
+		const { removeTwitch, state, status } = useSocialModule(GUILD);
+		await vi.waitFor(() => expect(state.value?.twitch).toHaveLength(1));
+		expect(status.value.kind).toBe("ready");
+
+		writeAnswer = () => {
+			throw refusal(404, "subscription-not-found");
+		};
+		stored = socialState({ twitch: [] });
+		const result = await removeTwitch({ channelId: CHANNEL, subscriptionId: "7" });
+
+		expect(result).toStrictEqual({ code: "subscription-not-found", ok: false });
+		await vi.waitFor(() => expect(state.value?.twitch).toStrictEqual([]));
 	});
 });

@@ -115,7 +115,8 @@ not available. Nothing else in the dashboard depends on them.
   keeps them when it lists the subscription.
 - It lists the subscriptions of connected accounts (Instagram, TikTok) and does not change them. Staryl
   answers these with `manageable: false`, since the connection starts in Discord.
-- Twitch live has no limit and no switch of its own. An end-of-stream notification needs a message, as
+- Twitch live has a limit of its own (`limits.twitchLive`, 15 by default) but no switch of its own. An
+  older Staryl does not send the limit, and the page then shows none. An end-of-stream notification needs a message, as
   `/subscriptions twitch add` asks. A Twitch live row from a Staryl without the Twitch live routes has no
   `subscriptionId`, and the page offers no removal for it.
 - The dashboard opens only for a server WolfStar is in. A server with Staryl alone has no dashboard.

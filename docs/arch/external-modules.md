@@ -91,7 +91,8 @@ sequenceDiagram
 - **Suggest as the bot does.** The target field lists what Staryl's search finds as the admin types
   (`GET /api/guilds/:guild/social/targets`, `useSocialTargetSearch()`), in a `<datalist>`, so the target
   stays free text: a feed URL has no suggestion. Staryl shares the cache of its Discord autocomplete, and
-  a failed or slow search suggests nothing.
+  a failed or slow search suggests nothing. A Staryl without the search answers 404, which the route reads
+  as no suggestion rather than an outage.
 - **Say why there is nothing to configure.** The composable's `status` is `loading`, `unavailable`,
   `not-installed` or `ready`. Only `ready` has a switch. The page and the card show the other three as
   they are, and never as "off".

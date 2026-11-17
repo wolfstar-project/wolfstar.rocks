@@ -22,15 +22,18 @@ export default defineWrappedResponseHandler(
 		const query = safeParse(SocialTargetQuerySchema, getQuery(event));
 		if (!query.success) throwInvalidSocialRequest();
 
-		return unwrapSocialResult(
-			event,
-			await searchSocialTargets(
-				guild.id,
-				socialActorId(event),
-				query.output.source,
-				query.output.query,
-			),
+		const result = await searchSocialTargets(
+			guild.id,
+			socialActorId(event),
+			query.output.source,
+			query.output.query,
 		);
+		// A Staryl from before the search answers 404 on every keystroke. That is no outage to log:
+		// it has no suggestion, and the target is typed in full as before.
+		if (!result.ok && result.error.kind === "unreachable" && result.error.status === 404) {
+			return { suggestions: [] };
+		}
+		return unwrapSocialResult(event, result);
 	},
 	{
 		auth: true,

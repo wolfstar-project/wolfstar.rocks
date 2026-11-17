@@ -447,6 +447,28 @@ describe("the Social module's routes", () => {
 			);
 		});
 
+		// Staryl before the search route: no suggestion, and nothing logged as an outage.
+		it("answers no suggestion to a Staryl without the search", async () => {
+			mocks.query = { query: "bsky", source: "Bluesky" };
+			mocks.searchSocialTargets.mockResolvedValue({
+				error: { kind: "unreachable", status: 404 },
+				ok: false,
+			});
+
+			await expect(call(targetsHandler)).resolves.toStrictEqual({ suggestions: [] });
+			expect(mocks.logSet).not.toHaveBeenCalled();
+		});
+
+		it("still reports Staryl as unavailable when it is down", async () => {
+			mocks.query = { query: "bsky", source: "Bluesky" };
+			mocks.searchSocialTargets.mockResolvedValue({
+				error: { kind: "unreachable", status: 502 },
+				ok: false,
+			});
+
+			await expect(call(targetsHandler)).rejects.toMatchObject({ statusCode: 503 });
+		});
+
 		it.each([
 			["an unknown source", { query: "tom", source: "Myspace" }],
 			["no query", { source: "Bluesky" }],

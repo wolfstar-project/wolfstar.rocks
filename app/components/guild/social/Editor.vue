@@ -145,19 +145,32 @@ watch(
 );
 
 const sourceOptions = computed(() => socialSourceOptions(state));
-const hasDisabledSources = computed(() => sourceOptions.value.some((option) => option.disabled));
+const hasDisabledSources = computed(() =>
+	sourceOptions.value.some((option) => option.blocked === "unavailable"),
+);
 
-// A source Staryl has no credentials for stays listed, greyed and said so, so it is not mistaken
-// for one the dashboard forgot.
+function sourceName(value: SocialSource): string {
+	return ts(`guild_settings.social.providers.${value}`);
+}
+
+// Each source says how much of it the server uses. One Staryl has no credentials for, or one the
+// server has its maximum of, stays listed and greyed with the reason, so it is not mistaken for one
+// the dashboard forgot.
 const sourceItems = computed(() =>
-	sourceOptions.value.map(({ disabled, source: value }) => {
-		const name = ts(`guild_settings.social.providers.${value}`);
-		return {
-			disabled,
-			icon: SOCIAL_PROVIDER_ICONS[value],
-			label: disabled ? ts("guild_settings.social.editor.not_available", { name }) : name,
-			value,
-		};
+	sourceOptions.value.map(({ blocked, source: value, usage }) => {
+		const name = sourceName(value);
+		let label = name;
+		if (blocked === "unavailable") {
+			label = ts("guild_settings.social.editor.not_available", { name });
+		} else if (usage.maximum !== null) {
+			label = ts(
+				blocked === "full"
+					? "guild_settings.social.editor.source_full"
+					: "guild_settings.social.editor.source_usage",
+				{ maximum: usage.maximum, name, used: usage.used },
+			);
+		}
+		return { disabled: blocked !== null, icon: SOCIAL_PROVIDER_ICONS[value], label, value };
 	}),
 );
 
@@ -200,15 +213,16 @@ const problem = computed(() => socialDraftProblem(draft, state));
 
 // An empty field shows on its own. The limit does not, so it is said; then what the server refused.
 const problemMessage = computed(() => {
-	if (problem.value === "limit") {
-		return ts("guild_settings.social.errors.limit_reached", {
-			maximum: state.limits.subscriptions,
-		});
-	}
+	const usage = draft.source === null ? null : socialSourceUsage(state, draft.source);
+	const limit = {
+		maximum: usage?.maximum ?? 0,
+		name: draft.source === null ? "" : sourceName(draft.source),
+	};
+	if (problem.value === "limit") return ts("guild_settings.social.errors.limit_reached", limit);
 	if (!errorCode) return null;
 	return ts(`guild_settings.social.errors.${errorCode.replaceAll("-", "_")}`, {
-		maximum:
-			errorCode === "x-limit-reached" ? state.limits.xAccounts : state.limits.subscriptions,
+		...limit,
+		maximum: errorCode === "x-limit-reached" ? state.limits.xAccounts : limit.maximum,
 	});
 });
 

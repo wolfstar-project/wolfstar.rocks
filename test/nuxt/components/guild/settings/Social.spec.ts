@@ -171,12 +171,33 @@ describe("the Social section", () => {
 	});
 
 	describe("the list", () => {
-		it("says there is no subscription yet, and counts them against the limit", async () => {
+		it("says there is no subscription yet", async () => {
 			ready();
 			const wrapper = await mountSection();
 
 			expect(wrapper.text()).toContain("No subscription yet");
-			expect(wrapper.text()).toContain("0 / 25 subscriptions");
+			expect(wrapper.text()).toContain("No subscription");
+		});
+
+		// Staryl has a limit per source and no total, so the header counts without a maximum.
+		it("counts the subscriptions and the Twitch live ones together, without a total", async () => {
+			ready({
+				subscriptions: [subscription(), subscription({ sourceId: "6" })],
+				twitch: [
+					{
+						channelId: NEWS,
+						message: null,
+						revoked: false,
+						streamerId: "1",
+						streamerName: "CoolStreamer",
+						type: "StreamOnline",
+					},
+				],
+			});
+			const wrapper = await mountSection();
+
+			expect(wrapper.text()).toContain("3 subscriptions");
+			expect(wrapper.text()).not.toMatch(/\d+ \/ \d+ subscriptions/u);
 		});
 
 		it("lists each subscription with its source, its channel, its message and how it is doing", async () => {
@@ -420,16 +441,41 @@ describe("the Social section", () => {
 			expect(mockToastAdd).not.toHaveBeenCalled();
 		});
 
-		it("hides the add button once the server has its maximum and no Twitch live", async () => {
+		it("hides the add button once every source is full or not on Staryl", async () => {
 			ready({
+				providers: [{ configured: true, manageable: true, maximum: 1, name: "Rss" }],
+				subscriptions: [subscription()],
 				twitchLiveConfigured: false,
-				limits: { messageLength: 200, subscriptions: 1, targetLength: 500, xAccounts: 2 },
+			});
+			const wrapper = await mountSection();
+
+			expect(buttonIn(wrapper.element.parentElement, "Add subscription")).toBeUndefined();
+		});
+
+		it("shows each source's use against its own maximum, and greys out a full one", async () => {
+			ready({
+				limits: {
+					messageLength: 200,
+					subscriptions: 35,
+					targetLength: 500,
+					twitchLive: 15,
+					xAccounts: 2,
+				},
+				providers: [
+					{ configured: true, manageable: true, maximum: 1, name: "Rss" },
+					{ configured: true, manageable: true, maximum: 10, name: "YouTube" },
+				],
 				subscriptions: [subscription()],
 			});
 			const wrapper = await mountSection();
 
-			expect(wrapper.text()).toContain("1 / 1 subscriptions");
-			expect(buttonIn(wrapper.element.parentElement, "Add subscription")).toBeUndefined();
+			const { sourceItems } = await openEditor(wrapper);
+
+			expect(sourceItems.map(({ disabled, label }) => ({ disabled, label }))).toStrictEqual([
+				{ disabled: false, label: "Twitch live · 0 / 15" },
+				{ disabled: true, label: "RSS or Atom feed · 1 / 1, limit reached" },
+				{ disabled: false, label: "YouTube · 0 / 10" },
+			]);
 		});
 	});
 

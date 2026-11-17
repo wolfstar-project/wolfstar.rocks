@@ -1,4 +1,5 @@
 import type {
+	SocialEditBody,
 	SocialErrorCode,
 	SocialState,
 	SocialSubscription,
@@ -125,6 +126,31 @@ export function useSocialModule(guildId: MaybeRefOrGetter<string | null | undefi
 		return { ok: true, value: undefined };
 	}
 
+	/**
+	 * Moves a subscription to another channel or changes its message. One that is gone answers
+	 * `subscription-not-found`, and the list is read again so the page stops showing it.
+	 */
+	async function editSubscription(
+		subscription: Pick<SocialSubscription, "channelId" | "sourceId">,
+		body: SocialEditBody,
+	): Promise<SocialResult> {
+		const requestGuildId = id.value;
+		const { channelId, sourceId } = subscription;
+		const result = await run(() =>
+			$fetch<{ subscriptions: SocialSubscription[] | null }, string, "PATCH">(
+				`${base.value}/subscriptions/${channelId}/${sourceId}`,
+				{ body, method: "PATCH" },
+			),
+		);
+
+		if (result.ok) {
+			showSubscriptions(requestGuildId, result.value.subscriptions);
+			return { ok: true, value: undefined };
+		}
+		if (result.code === "subscription-not-found") showSubscriptions(requestGuildId, null);
+		return result;
+	}
+
 	/** Stops a channel following an account or a feed. One that is already gone is as removed. */
 	async function removeSubscription(
 		subscription: Pick<SocialSubscription, "channelId" | "sourceId">,
@@ -173,6 +199,28 @@ export function useSocialModule(guildId: MaybeRefOrGetter<string | null | undefi
 		return { ok: true, value: undefined };
 	}
 
+	/** Moves a Twitch live notification to another channel or changes its message. */
+	async function editTwitch(
+		subscription: Pick<SocialTwitchSubscription, "channelId"> & { subscriptionId: string },
+		body: SocialEditBody,
+	): Promise<SocialResult> {
+		const requestGuildId = id.value;
+		const { channelId, subscriptionId } = subscription;
+		const result = await run(() =>
+			$fetch<{ twitch: SocialTwitchSubscription[] | null }, string, "PATCH">(
+				`${base.value}/twitch/${channelId}/${subscriptionId}`,
+				{ body, method: "PATCH" },
+			),
+		);
+
+		if (result.ok) {
+			showTwitch(requestGuildId, result.value.twitch);
+			return { ok: true, value: undefined };
+		}
+		if (result.code === "subscription-not-found") showTwitch(requestGuildId, null);
+		return result;
+	}
+
 	/** Stops a channel's Twitch live notification. One that is already gone is as removed. */
 	async function removeTwitch(
 		subscription: Pick<SocialTwitchSubscription, "channelId"> & { subscriptionId: string },
@@ -204,6 +252,8 @@ export function useSocialModule(guildId: MaybeRefOrGetter<string | null | undefi
 	return {
 		addSubscription,
 		addTwitch,
+		editSubscription,
+		editTwitch,
 		refresh: asyncData.refresh,
 		removeSubscription,
 		removeTwitch,

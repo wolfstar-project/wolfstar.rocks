@@ -1,4 +1,5 @@
 import type {
+	SocialEditBody,
 	SocialProviderName,
 	SocialState,
 	SocialSubscription,
@@ -28,6 +29,38 @@ export const SOCIAL_PROVIDER_ICONS: Record<SocialSource, string> = {
  * Twitch live, which Staryl keeps apart because Twitch pushes it through EventSub.
  */
 export type SocialSource = SocialProviderName | "TwitchLive";
+
+/**
+ * A subscription the edit dialog changes. `key` names it to Staryl with its
+ * channel. `name`, `detail` and `icon` show what it follows, which an
+ * edit leaves alone.
+ */
+export interface SocialEditTarget {
+	key: { kind: "social"; sourceId: string } | { kind: "twitch"; subscriptionId: string };
+	channelId: string;
+	message: string | null;
+	name: string;
+	detail: string;
+	icon: string;
+	/** An end-of-stream notification is its message, so it cannot lose it. */
+	messageRequired: boolean;
+}
+
+/**
+ * What the edit dialog sends, or `null` while there is nothing to send: no
+ * channel, a required message left empty, or nothing changed.
+ */
+export function socialEditBody(
+	target: SocialEditTarget,
+	channelId: string | null,
+	message: string,
+): SocialEditBody | null {
+	const trimmed = message.trim();
+	if (channelId === null) return null;
+	if (target.messageRequired && trimmed === "") return null;
+	if (channelId === target.channelId && trimmed === (target.message ?? "")) return null;
+	return { channelId, message: trimmed === "" ? null : trimmed };
+}
 
 /** What the add dialog holds while it is filled in. */
 export interface SocialDraft {

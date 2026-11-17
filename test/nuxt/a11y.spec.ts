@@ -1943,6 +1943,41 @@ describe("component accessibility audits", () => {
 			component.unmount();
 		});
 
+		it("should have no accessibility violations in the edit dialog", async () => {
+			socialState("123456789012345675", {
+				subscriptions: [
+					{
+						channelId: CHANNEL,
+						createdAt: "2026-11-01T10:00:00.000Z",
+						deliveryError: null,
+						displayName: "Example feed",
+						filters: [],
+						health: "active",
+						lastCheckedAt: null,
+						manageable: true,
+						message: "New post",
+						provider: "Rss",
+						sourceId: "5",
+						target: "https://example.com/feed.xml",
+					},
+				],
+			});
+			const component = await mountSuspended(GuildSettingsSocial, {
+				attachTo: document.body,
+			});
+			await vi.waitFor(() => expect(component.findAll("tbody tr")).toHaveLength(1));
+			await component
+				.get('[aria-label^="Edit the subscription to Example feed"]')
+				.trigger("click");
+			await vi.waitFor(() =>
+				expect(document.querySelector('[role="dialog"]')).not.toBeNull(),
+			);
+			const panel = document.querySelector('[role="dialog"]');
+			const results = await runAxe(component, { include: panel ? [panel] : [] });
+			expect(results.violations).toEqual([]);
+			component.unmount();
+		});
+
 		it.each([
 			["on", { enabled: true, kind: "ready", summary: "2 subscriptions" }],
 			["off", { enabled: false, kind: "ready", summary: "No subscription" }],

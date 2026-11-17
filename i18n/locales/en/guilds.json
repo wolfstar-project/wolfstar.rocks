@@ -1591,6 +1591,14 @@
 				"MissingPermissions": "Staryl cannot post in the channel",
 				"SendFailed": "Discord rejected the notification"
 			},
+			"edit": {
+				"aria": "Edit the subscription to {name} in {channel}",
+				"save": "Save changes",
+				"saved_description": "Staryl posts {name} in {channel}.",
+				"saved_title": "Subscription saved",
+				"subtitle": "Change where Staryl posts {name}, and the message above each notification. To follow another account, add a new subscription.",
+				"title": "Edit subscription"
+			},
 			"editor": {
 				"cancel": "Cancel",
 				"channel": "Channel",

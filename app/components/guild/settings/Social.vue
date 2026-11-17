@@ -178,6 +178,20 @@
 										color="neutral"
 										variant="ghost"
 										size="sm"
+										icon="ic:round-edit"
+										:aria-label="
+											ts('guild_settings.social.edit.aria', {
+												channel: channelName(subscription.channelId),
+												name: subscription.displayName,
+											})
+										"
+										@click="openEdit(socialEditTarget(subscription))"
+									/>
+									<UButton
+										v-if="subscription.manageable"
+										color="neutral"
+										variant="ghost"
+										size="sm"
 										icon="ic:round-close"
 										:aria-label="
 											ts('guild_settings.social.remove_aria', {
@@ -240,11 +254,17 @@
 							v-for="entry in status.state.twitch"
 							:key="`${entry.streamerId}:${entry.type}:${entry.channelId}`"
 						>
-							<td class="truncate text-sm font-semibold text-highlighted">
-								{{
-									entry.streamerName ??
-									ts("guild_settings.social.twitch.unknown_streamer")
-								}}
+							<td>
+								<p class="truncate text-sm font-semibold text-highlighted">
+									{{ streamerName(entry) }}
+								</p>
+								<p
+									v-if="entry.message"
+									class="truncate text-xs text-muted"
+									:title="entry.message"
+								>
+									{{ entry.message }}
+								</p>
 							</td>
 							<td class="text-[0.8125rem]">
 								{{ ts(`guild_settings.social.twitch.events.${entry.type}`) }}
@@ -263,6 +283,20 @@
 							</td>
 							<td>
 								<span class="flex items-center justify-end gap-1">
+									<UButton
+										v-if="entry.subscriptionId"
+										color="neutral"
+										variant="ghost"
+										size="sm"
+										icon="ic:round-edit"
+										:aria-label="
+											ts('guild_settings.social.edit.aria', {
+												channel: channelName(entry.channelId),
+												name: streamerName(entry),
+											})
+										"
+										@click="openEditTwitch(entry)"
+									/>
 									<UButton
 										v-if="entry.subscriptionId"
 										color="neutral"
@@ -295,6 +329,15 @@
 			:saving="saving"
 			:error-code="errorCode"
 			@save="add"
+		/>
+
+		<GuildSocialEditDialog
+			v-model:open="editOpen"
+			:editing="editing"
+			:message-length="status.state.limits.messageLength"
+			:saving="saving"
+			:error-code="editErrorCode"
+			@save="saveEdit"
 		/>
 	</template>
 
@@ -331,11 +374,12 @@
 
 <script setup lang="ts">
 import type {
+	SocialEditBody,
 	SocialErrorCode,
 	SocialSubscription,
 	SocialTwitchSubscription,
 } from "#shared/utils/social";
-import type { SocialDraftRequest } from "~/utils/social";
+import type { SocialDraftRequest, SocialEditTarget } from "~/utils/social";
 
 const { tc, ts } = useI18n();
 const toast = useToast();
@@ -345,6 +389,8 @@ const { guildData } = useGuildData();
 const {
 	addSubscription,
 	addTwitch,
+	editSubscription,
+	editTwitch,
 	refresh,
 	removeSubscription,
 	removeTwitch,
@@ -430,6 +476,70 @@ async function add(request: SocialDraftRequest) {
 		}),
 		icon: "heroicons:check",
 		title: ts("guild_settings.social.added_title"),
+	});
+}
+
+const editOpen = ref(false);
+const editing = shallowRef<SocialEditTarget | null>(null);
+const editErrorCode = ref<SocialErrorCode | null>(null);
+
+function socialEditTarget(subscription: SocialSubscription): SocialEditTarget {
+	return {
+		channelId: subscription.channelId,
+		detail: ts(`guild_settings.social.providers.${subscription.provider}`),
+		icon: SOCIAL_PROVIDER_ICONS[subscription.provider],
+		key: { kind: "social", sourceId: subscription.sourceId },
+		message: subscription.message,
+		messageRequired: false,
+		name: subscription.displayName,
+	};
+}
+
+function openEdit(target: SocialEditTarget) {
+	editErrorCode.value = null;
+	editing.value = target;
+	editOpen.value = true;
+}
+
+function openEditTwitch(entry: SocialTwitchSubscription) {
+	// A row from a Staryl without the Twitch live routes has no id, and no button.
+	if (entry.subscriptionId === undefined) return;
+	openEdit({
+		channelId: entry.channelId,
+		detail: ts(`guild_settings.social.twitch.events.${entry.type}`),
+		icon: SOCIAL_PROVIDER_ICONS.TwitchLive,
+		key: { kind: "twitch", subscriptionId: entry.subscriptionId },
+		message: entry.message,
+		messageRequired: entry.type === "StreamOffline",
+		name: streamerName(entry),
+	});
+}
+
+async function saveEdit(body: SocialEditBody) {
+	const target = editing.value;
+	if (!target) return;
+	saving.value = true;
+	editErrorCode.value = null;
+	const { channelId, key } = target;
+	const result =
+		key.kind === "twitch"
+			? await editTwitch({ channelId, subscriptionId: key.subscriptionId }, body)
+			: await editSubscription({ channelId, sourceId: key.sourceId }, body);
+	saving.value = false;
+
+	if (!result.ok) {
+		editErrorCode.value = result.code;
+		return;
+	}
+	editOpen.value = false;
+	toast.add({
+		color: "success",
+		description: ts("guild_settings.social.edit.saved_description", {
+			channel: channelName(body.channelId),
+			name: target.name,
+		}),
+		icon: "heroicons:check",
+		title: ts("guild_settings.social.edit.saved_title"),
 	});
 }
 

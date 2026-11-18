@@ -9,7 +9,7 @@ import {
 	WORKER,
 } from "./config/cloudflare.ts";
 import { cookieControl } from "./config/cookie-control.ts";
-import { currentLocales, datetimeFormats, numberFormats } from "./config/i18n.ts";
+import { currentLocales, datetimeFormats, FALLBACK_LOCALE, numberFormats } from "./config/i18n.ts";
 import { pwa } from "./config/pwa.ts";
 import { LOCALE_BUNDLES_DIR } from "./modules/i18n-locale-bundles.ts";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig.ts";
@@ -851,7 +851,7 @@ export default defineNuxtConfig({
 		locales: currentLocales,
 		// Expanded from base `en` via countryLocaleVariants
 		defaultLocale: "en-US",
-		fallbackLocale: "en-US",
+		fallbackLocale: FALLBACK_LOCALE,
 		strategy: "no_prefix",
 		// The locale is chosen explicitly (profile page / user menu) and persisted in
 		// `wolfstar-settings`; there is no locale prefix to redirect to, so neither

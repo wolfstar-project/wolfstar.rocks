@@ -32,7 +32,17 @@ describe("no_prefix language switch", () => {
 	it("stays on the path the visitor is on, an alias included", () => {
 		const router = createRouter({
 			history: createMemoryHistory(),
-			routes: [{ alias: ["/"], component: {}, name: "wolfstar", path: "/wolfstar" }],
+			routes: [
+				{
+					alias: ["/"],
+					component: {},
+					// What Micro adds to every localized page: without it the
+					// strategy does not know the page and leaves the route as is.
+					meta: { i18n: { locales: ["en-US", "it-IT"], name: "wolfstar" } },
+					name: "wolfstar",
+					path: "/wolfstar",
+				},
+			],
 		});
 		const strategy = createPathStrategy({
 			defaultLocale: "en-US",

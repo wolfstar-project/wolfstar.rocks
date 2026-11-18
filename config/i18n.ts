@@ -118,6 +118,9 @@ export const currentLocales = built.locales;
  */
 export const localeSourceDirs = built.sourceDirs;
 
+/** The locale whose text shows wherever another locale has no translation. */
+export const FALLBACK_LOCALE = "en-US";
+
 const DEFAULT_DATETIME_FORMATS: Record<string, Intl.DateTimeFormatOptions> = {
 	shortDate: {
 		dateStyle: "short",

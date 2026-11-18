@@ -1,6 +1,7 @@
 import type { NuxtPage } from "nuxt/schema";
-import { NoPrefixPathStrategy } from "@i18n-micro/path-strategy/no-prefix";
+import { createPathStrategy } from "@i18n-micro/path-strategy";
 import { describe, expect, it } from "vitest";
+import { createMemoryHistory, createRouter } from "vue-router";
 import { dropLocalizedAliasPages } from "../../../modules/i18n-no-prefix-aliases.ts";
 
 describe("dropLocalizedAliasPages", () => {
@@ -25,28 +26,22 @@ describe("dropLocalizedAliasPages", () => {
 	});
 });
 
-// The patch in `patches/@i18n-micro__path-strategy@1.3.20.patch`: a language
+// The patch in `patches/@i18n-micro__path-strategy@2.1.0.patch`: a language
 // switch never moves away from the current path.
 describe("no_prefix language switch", () => {
 	it("stays on the path the visitor is on, an alias included", () => {
-		const strategy = new NoPrefixPathStrategy({
+		const router = createRouter({
+			history: createMemoryHistory(),
+			routes: [{ alias: ["/"], component: {}, name: "wolfstar", path: "/wolfstar" }],
+		});
+		const strategy = createPathStrategy({
 			defaultLocale: "en-US",
 			locales: [{ code: "en-US" }, { code: "it-IT" }],
+			router,
 			strategy: "no_prefix",
-		} as ConstructorParameters<typeof NoPrefixPathStrategy>[0]);
-		const route = {
-			fullPath: "/?ref=nav#top",
-			hash: "#top",
-			matched: [],
-			meta: {},
-			name: "wolfstar",
-			params: {},
-			path: "/",
-			query: { ref: "nav" },
-			redirectedFrom: undefined,
-		};
+		});
 
-		expect(strategy.switchLocaleRoute("en-US", "it-IT", route, {})).toStrictEqual({
+		expect(strategy.switchLocaleRoute("it-IT", router.resolve("/?ref=nav#top"))).toMatchObject({
 			hash: "#top",
 			path: "/",
 			query: { ref: "nav" },

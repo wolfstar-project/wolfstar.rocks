@@ -65,9 +65,10 @@ function sourceDirsOf(code: string): string[] {
 /**
  * The directories a locale's bundle is built from: the fallback locale's
  * first, so every key the locale leaves untranslated keeps the fallback text.
- * Micro merges the fallback locale itself only one level deep, so a section
- * with one translated key (`dashboard.nav`) would otherwise drop every
- * untranslated key of that section and render the raw key.
+ * Micro 3 merged its own fallback locale only one level deep, so a section
+ * with one translated key (`dashboard.nav`) dropped every untranslated key of
+ * that section and rendered the raw key. Micro 4 merges at every depth; this
+ * layer stays until a check without it confirms the same text.
  */
 function bundleDirsOf(code: string): string[] {
 	return [...new Set([...sourceDirsOf(FALLBACK_LOCALE), ...sourceDirsOf(code)])];

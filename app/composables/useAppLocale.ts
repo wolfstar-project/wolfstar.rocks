@@ -4,12 +4,8 @@ import { isAppLocaleCode } from "~/utils/is-app-locale";
 
 export interface LocaleSelectorDeps {
 	getLocale: () => string;
-	// Nuxt I18n Micro's own type declarations disagree with its runtime
-	// behavior here: `useI18n().switchLocale` is typed as returning `void`,
-	// but the implementation is async and genuinely worth awaiting (it drives
-	// the loaded chunk before resolving). `await` accepts a non-promise value
-	// as already-resolved, so the wider signature stays correct either way.
-	switchLocale: (code: string) => void | Promise<void>;
+	/** Resolves `false` when the locale's dictionary did not apply. */
+	switchLocale: (code: string) => Promise<boolean>;
 	setPreferredLocale: (code: string) => void;
 }
 

@@ -156,7 +156,8 @@ function createProductionWorker() {
 		routes: [{ custom_domain: true, pattern: "wolfstar.rocks" }],
 		vars: {
 			NUXT_OAUTH_DISCORD_CLIENT_ID: requireEnv("NUXT_OAUTH_DISCORD_CLIENT_ID"),
-			NUXT_PUBLIC_API_BASE_URL: "https://api.wolfstar.rocks",
+			// The production bot's API on Railway, which answers this origin only.
+			NUXT_PUBLIC_API_BASE_URL: "https://api.wolfstar.integrations.wolfstar.rocks",
 			NUXT_PUBLIC_ENVIRONMENT: "production",
 			NUXT_PUBLIC_SITE_URL: "https://wolfstar.rocks",
 			...optionalVar("NUXT_PUBLIC_TURNSTILE_SITE_KEY"),

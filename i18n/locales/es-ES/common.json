@@ -6,8 +6,6 @@
 		"skip_to_content": "Saltar al contenido principal"
 	},
 	"blog": {
-		"article_links": "",
-		"back": "",
 		"categories": {
 			"all": "",
 			"announcement": "",
@@ -21,6 +19,14 @@
 			"release": "",
 			"tutorial": ""
 		},
+		"copied": "",
+		"copied_markdown_link_description": "",
+		"copied_page_description": "",
+		"copy_markdown_link": "",
+		"copy_options": "",
+		"copy_page": "",
+		"copy_page_failed": "",
+		"copy_page_failed_description": "",
 		"copy_url": "",
 		"edit_article": "",
 		"empty": {
@@ -31,20 +37,23 @@
 		"feed_changelog": "",
 		"feeds": "",
 		"filter_label": "",
-		"join_support": "",
 		"link_copied": "",
-		"links": "",
+		"link_copied_description": "",
+		"open_in": "",
 		"posts": "",
+		"reading_finished": "",
+		"reading_left": "",
 		"reading_time": "",
+		"release_history": "",
 		"rss": "RSS",
 		"share": "",
-		"star_github": "",
 		"timeline": {
 			"newer": "",
 			"older": "",
 			"view_all": ""
 		},
-		"toc": ""
+		"toc": "",
+		"view_markdown": ""
 	},
 	"changelog": {
 		"description": "",

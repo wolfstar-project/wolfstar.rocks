@@ -71,7 +71,7 @@ describe("blog post page", () => {
 	it("links the category to the posts of that category", async () => {
 		const wrapper = await mountPost();
 
-		expect(wrapper.get('a[href="/blog?category=announcement"]').text()).toBe("Announcement");
+		expect(wrapper.get('a[href="/updates?category=announcement"]').text()).toBe("Announcement");
 	});
 
 	it("links an author who has a page, and names the others", async () => {
@@ -83,10 +83,10 @@ describe("blog post page", () => {
 		expect(wrapper.text()).toContain("RedStar and Staryl");
 	});
 
-	it("links back to the blog and to the post's source", async () => {
+	it("links back to the updates and to the post's source", async () => {
 		const wrapper = await mountPost();
 
-		expect(wrapper.find('a[href="/blog"]').exists()).toBe(true);
+		expect(wrapper.find('a[href="/updates"]').exists()).toBe(true);
 		expect(
 			wrapper
 				.find(

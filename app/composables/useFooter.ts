@@ -38,8 +38,8 @@ export const useFooter = () => {
 				},
 				{
 					class: "link-hover",
-					label: ts("footer.blog"),
-					to: "/blog",
+					label: ts("updates.title"),
+					to: "/updates",
 				},
 				{
 					class: "link-hover",

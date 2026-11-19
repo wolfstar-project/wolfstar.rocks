@@ -1,5 +1,5 @@
 <template>
-	<!-- Links, not tabs: a category is an address (`/blog?category=release`) that can be shared and that opens without JavaScript. -->
+	<!-- Links, not tabs: a category is an address (`/updates?category=release`) that can be shared and that opens without JavaScript. -->
 	<nav :aria-label="ts('blog.filter_label')" class="min-w-0">
 		<ul class="no-scrollbar -mb-px flex overflow-x-auto">
 			<li v-for="link in links" :key="link.value" class="shrink-0">

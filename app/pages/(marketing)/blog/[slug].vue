@@ -11,7 +11,7 @@
 				<p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted">
 					<NuxtLink
 						:to="{
-							path: '/blog',
+							path: '/updates',
 							query: { category: blogCategorySlug(post.category) },
 						}"
 						class="font-medium text-primary hover:text-highlighted focus-visible:outline-2 focus-visible:outline-primary"
@@ -108,7 +108,7 @@
 					class="mt-16 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-default pt-6"
 				>
 					<UButton
-						to="/blog"
+						to="/updates"
 						icon="i-lucide-arrow-left"
 						:label="ts('blog.back')"
 						color="neutral"

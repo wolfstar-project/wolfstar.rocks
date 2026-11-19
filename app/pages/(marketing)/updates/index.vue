@@ -1,13 +1,13 @@
 <template>
 	<UContainer>
 		<UPageHeader
-			:title="ts('blog.title')"
-			:description="ts('blog.description')"
+			:title="ts('updates.title')"
+			:description="ts('updates.description')"
 			:ui="{ root: 'border-none pt-12 pb-10 sm:pt-16', description: 'max-w-xl' }"
 		/>
 
 		<UPageBody class="mt-0 flex flex-col gap-20 space-y-0">
-			<BlogChangelogTimeline v-if="timeline.length" :entries="timeline" />
+			<UpdatesChangelogTimeline v-if="timeline.length" :entries="timeline" />
 
 			<section aria-labelledby="posts-heading" class="flex flex-col gap-10">
 				<div class="flex flex-col gap-4">
@@ -16,7 +16,7 @@
 					</h2>
 
 					<div class="flex items-center justify-between gap-2 border-b border-default">
-						<BlogCategoryNav :links="filters" :active="category" />
+						<UpdatesCategoryNav :links="filters" :active="category" />
 
 						<UDropdownMenu :items="feeds" :content="{ align: 'end' }">
 							<UButton
@@ -32,7 +32,7 @@
 				</div>
 
 				<UBlogPosts v-if="visiblePosts.length" class="gap-y-12 lg:gap-y-14">
-					<BlogPostCard
+					<UpdatesPostCard
 						v-for="(post, index) in visiblePosts"
 						:key="post.path"
 						:post="post"
@@ -70,10 +70,10 @@ const route = useRoute();
 const nuxtApp = useNuxtApp();
 
 useSeoMetadata({
-	description: () => ts("blog.description"),
-	ogImage: { title: ts("blog.title") },
+	description: () => ts("updates.description"),
+	ogImage: { title: ts("updates.title") },
 	shouldOgImage: true,
-	title: () => ts("nav.blog"),
+	title: () => ts("updates.title"),
 });
 
 useHead({

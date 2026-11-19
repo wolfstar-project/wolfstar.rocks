@@ -3,7 +3,7 @@ import { Feed } from "feed";
 import { joinURL } from "ufo";
 
 interface SiteFeedOptions {
-	/** The page the feed belongs to: `/blog` or `/changelog`. */
+	/** Where the feed lives: `blog` for the posts (`/blog/rss.xml`), `changelog` for the entries. */
 	path: string;
 	title: string;
 	description: string;

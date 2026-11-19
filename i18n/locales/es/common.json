@@ -22,7 +22,6 @@
 			"tutorial": ""
 		},
 		"copy_url": "",
-		"description": "",
 		"edit_article": "",
 		"empty": {
 			"description": "",
@@ -45,7 +44,6 @@
 			"older": "",
 			"view_all": ""
 		},
-		"title": "",
 		"toc": ""
 	},
 	"changelog": {
@@ -85,7 +83,6 @@
 		"system": "System"
 	},
 	"footer": {
-		"blog": "Blog",
 		"changelog": "Registro de cambios",
 		"column_links": "Enlaces del pie de página de {label}",
 		"community": "Comunidad",
@@ -129,7 +126,6 @@
 		"advanced_logging": "Registro avanzado",
 		"advanced_logging_description": "Rastrea y registra eventos en tu servidor",
 		"applications": "Aplicaciones",
-		"blog": "Blog",
 		"changelog": "Registro de cambios",
 		"commands": "Comandos",
 		"features": "Funciones",
@@ -155,6 +151,10 @@
 		"progress_by_locale": "Progreso por idioma",
 		"source_locale": "Idioma de origen",
 		"title": "Estado de las traducciones"
+	},
+	"updates": {
+		"description": "",
+		"title": ""
 	},
 	"user_menu": {
 		"report_bug": "Informar de un error",

@@ -22,7 +22,6 @@
 			"tutorial": ""
 		},
 		"copy_url": "",
-		"description": "",
 		"edit_article": "",
 		"empty": {
 			"description": "",
@@ -45,7 +44,6 @@
 			"older": "",
 			"view_all": ""
 		},
-		"title": "",
 		"toc": ""
 	},
 	"changelog": {
@@ -85,7 +83,6 @@
 		"system": ""
 	},
 	"footer": {
-		"blog": "",
 		"changelog": "",
 		"column_links": "",
 		"community": "",
@@ -129,7 +126,6 @@
 		"advanced_logging": "",
 		"advanced_logging_description": "",
 		"applications": "",
-		"blog": "",
 		"changelog": "",
 		"commands": "",
 		"features": "",
@@ -154,6 +150,10 @@
 		"no_data": "",
 		"progress_by_locale": "",
 		"source_locale": "",
+		"title": ""
+	},
+	"updates": {
+		"description": "",
 		"title": ""
 	},
 	"user_menu": {

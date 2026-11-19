@@ -70,9 +70,6 @@
 				"copy_url": {
 					"type": "string"
 				},
-				"description": {
-					"type": "string"
-				},
 				"edit_article": {
 					"type": "string"
 				},
@@ -138,9 +135,6 @@
 						}
 					},
 					"additionalProperties": false
-				},
-				"title": {
-					"type": "string"
 				},
 				"toc": {
 					"type": "string"
@@ -259,9 +253,6 @@
 		"footer": {
 			"type": "object",
 			"properties": {
-				"blog": {
-					"type": "string"
-				},
 				"changelog": {
 					"type": "string"
 				},
@@ -391,9 +382,6 @@
 				"applications": {
 					"type": "string"
 				},
-				"blog": {
-					"type": "string"
-				},
 				"changelog": {
 					"type": "string"
 				},
@@ -464,6 +452,18 @@
 					"type": "string"
 				},
 				"source_locale": {
+					"type": "string"
+				},
+				"title": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"updates": {
+			"type": "object",
+			"properties": {
+				"description": {
 					"type": "string"
 				},
 				"title": {

@@ -1,6 +1,6 @@
 # Blog and changelog
 
-How to publish on [wolfstar.rocks/blog](https://wolfstar.rocks/blog) and
+How to publish on [wolfstar.rocks/updates](https://wolfstar.rocks/updates), where the posts and the changelog are listed, and
 [wolfstar.rocks/changelog](https://wolfstar.rocks/changelog): write a post, add a changelog entry, and make
 their images. It is for whoever looks after the blog. You need this repository checked out and `pnpm install`
 done. Everything else is a Markdown file and a pull request.
@@ -9,13 +9,13 @@ done. Everything else is a Markdown file and a pull request.
 
 Both are Markdown files under `content/`. They answer different questions, and one release often gets both.
 
-|                 | Changelog entry                                             | Post                                                |
-| --------------- | ----------------------------------------------------------- | --------------------------------------------------- |
-| It says         | what changed                                                | why it changed, or where the project is going       |
-| Length          | a few lines                                                 | as long as the story needs                          |
-| File            | `content/changelog/<slug>.md`                               | `content/blog/<slug>.md`                            |
-| Where it shows  | on `/changelog`, and among the latest at the top of `/blog` | its own page, `/blog/<slug>`, and a card on `/blog` |
-| Needs a picture | no                                                          | a cover, see [Images](#images)                      |
+|                 | Changelog entry                                                | Post                                                   |
+| --------------- | -------------------------------------------------------------- | ------------------------------------------------------ |
+| It says         | what changed                                                   | why it changed, or where the project is going          |
+| Length          | a few lines                                                    | as long as the story needs                             |
+| File            | `content/changelog/<slug>.md`                                  | `content/blog/<slug>.md`                               |
+| Where it shows  | on `/changelog`, and among the latest at the top of `/updates` | its own page, `/blog/<slug>`, and a card on `/updates` |
+| Needs a picture | no                                                             | a cover, see [Images](#images)                         |
 
 The words follow the same rules as the rest of the site: [`COPY.md`](../COPY.md) for the voice and the claims
 that may be made, [`GLOSSARY.md`](../GLOSSARY.md) for what things are called ("server", never "guild").
@@ -128,21 +128,21 @@ There is no scheduling: a post without `draft: true` is public as soon as it is 
     retries with backoff instead of giving up.
     ```
 
-2. Run `pnpm dev` and look at `http://localhost:3000/changelog` and at the top of `http://localhost:3000/blog`.
+2. Run `pnpm dev` and look at `http://localhost:3000/changelog` and at the top of `http://localhost:3000/updates`.
 3. Open a pull request titled `docs(blog): <what changed>`.
 
-| Field         | Required | What it does                                                                         |
-| ------------- | -------- | ------------------------------------------------------------------------------------ |
-| `title`       | yes      | What changed, in a few words.                                                        |
-| `description` | yes      | One sentence. It is the text of the entry at the top of `/blog` and in the RSS feed. |
-| `date`        | yes      | The day it shipped, as `2026-08-24`. Entries are listed newest first.                |
-| `kind`        | yes      | `new`, `improved` or `fixed`, in lower case. It becomes the entry's badge.           |
-| `image`       | no       | A screenshot of the change, shown under the title. Not a cover with the title on it. |
-| `authors`     | no       | Who made the change, written as for a post.                                          |
+| Field         | Required | What it does                                                                            |
+| ------------- | -------- | --------------------------------------------------------------------------------------- |
+| `title`       | yes      | What changed, in a few words.                                                           |
+| `description` | yes      | One sentence. It is the text of the entry at the top of `/updates` and in the RSS feed. |
+| `date`        | yes      | The day it shipped, as `2026-08-24`. Entries are listed newest first.                   |
+| `kind`        | yes      | `new`, `improved` or `fixed`, in lower case. It becomes the entry's badge.              |
+| `image`       | no       | A screenshot of the change, shown under the title. Not a cover with the title on it.    |
+| `authors`     | no       | Who made the change, written as for a post.                                             |
 
 An entry has no page of its own. It lives on `/changelog`, and its address is the page plus the file name:
 `homepage-redesign.md` is `/changelog#homepage-redesign`. The eight most recent entries are also the timeline at
-the top of `/blog`.
+the top of `/updates`.
 
 When a post tells the story of the same change, link it from the entry's text with an ordinary Markdown link,
 as `content/changelog/rocks-v2.md` does.
@@ -154,7 +154,7 @@ Every image of the blog is under `public/assets/blog/`, and is written in Markdo
 
 ### The cover of a post
 
-The cover is used twice: as the picture of the post's card on `/blog`, and as the preview a link to the post
+The cover is used twice: as the picture of the post's card on `/updates`, and as the preview a link to the post
 gets on Discord, X and other sites. That is why it carries the title.
 
 Draw it from the post's own frontmatter:
@@ -181,13 +181,13 @@ pnpm blog:cover wolfstar-v7-alpha --force
 You can also make a cover by hand, for example to show a screenshot or numbers as
 `public/assets/blog/wolfstar-v7-alpha.png` does. Keep to these:
 
-| What      | Value                                                                                              |
-| --------- | -------------------------------------------------------------------------------------------------- |
-| Size      | 1600 × 840 px, or 2400 × 1260 px. Other sizes are cropped to fit.                                  |
-| Safe area | Keep text 90 px or more from the left and right edges. The card on `/blog` is 16:9 and crops them. |
-| Format    | JPEG or PNG. Some sites do not show a WebP preview.                                                |
-| Weight    | 300 KB at most. A link preview downloads the file as it is.                                        |
-| File name | The post's file name: `public/assets/blog/<slug>.jpg`.                                             |
+| What      | Value                                                                                                 |
+| --------- | ----------------------------------------------------------------------------------------------------- |
+| Size      | 1600 × 840 px, or 2400 × 1260 px. Other sizes are cropped to fit.                                     |
+| Safe area | Keep text 90 px or more from the left and right edges. The card on `/updates` is 16:9 and crops them. |
+| Format    | JPEG or PNG. Some sites do not show a WebP preview.                                                   |
+| Weight    | 300 KB at most. A link preview downloads the file as it is.                                           |
+| File name | The post's file name: `public/assets/blog/<slug>.jpg`.                                                |
 
 A dark gradient saved as PNG is heavy: the two covers that weighed 3.6 MB each are about 130 KB as JPEG, with no
 visible difference.
@@ -210,13 +210,13 @@ A click on the image opens it larger.
 
 ## Where it is in the code
 
-| What                                                    | Where                                                             |
-| ------------------------------------------------------- | ----------------------------------------------------------------- |
-| The fields and their allowed values                     | `content.config.ts`, `shared/utils/blog.ts`                       |
-| The frontmatter check and the reading time              | `modules/blog-content.ts`, `config/blog-content.ts`               |
-| The pages                                               | `app/pages/(marketing)/blog/`, `app/pages/(marketing)/changelog/` |
-| The RSS feeds, `/blog/rss.xml` and `/changelog/rss.xml` | `server/routes/blog/`, `server/routes/changelog/`                 |
-| The cover                                               | `scripts/blog-cover.ts`                                           |
+| What                                                    | Where                                                   |
+| ------------------------------------------------------- | ------------------------------------------------------- |
+| The fields and their allowed values                     | `content.config.ts`, `shared/utils/blog.ts`             |
+| The frontmatter check and the reading time              | `modules/blog-content.ts`, `config/blog-content.ts`     |
+| The pages                                               | `app/pages/(marketing)/updates/`, `blog/`, `changelog/` |
+| The RSS feeds, `/blog/rss.xml` and `/changelog/rss.xml` | `server/routes/blog/`, `server/routes/changelog/`       |
+| The cover                                               | `scripts/blog-cover.ts`                                 |
 
 To add a category, add it to `BLOG_CATEGORIES` in `shared/utils/blog.ts`, give it its two labels
 (`blog.category.*` and `blog.categories.*` in `i18n/locales/en/common.json`, read in

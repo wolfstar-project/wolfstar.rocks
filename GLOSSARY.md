@@ -41,6 +41,7 @@ identifiers" at the end.
 | dashboard access    | `permissions.users`/`.roles` rules | server 1—N rule                | "Dashboard access"    |
 | command permissions | Discord, per bot command           | command 1—N row (max 100)      | "Discord permissions" |
 | command rules       | the bot's `/commands`              | command 1—1 rule               | "Command rules"       |
+| Updates             | `/updates`                         | lists posts and entries        | "Updates"             |
 | blog post           | `content/blog`                     | blog 1—N post                  | "post"                |
 | changelog entry     | `content/changelog`                | changelog 1—N entry            | "Changelog"           |
 
@@ -353,6 +354,16 @@ permissions too. Rules of a category are only edited in `/commands`.
 
 **Never:** community server, help desk, ticket.
 
+### Updates
+
+**Is:** the page at `/updates` that lists what the WolfStar Project ships: the latest changelog entries, then the
+blog posts. `/blog` redirects there. A post keeps its own page at `/blog/<slug>`.
+
+**Collides with:** Staryl's "social updates", the notifications it posts in a server. "Updates" with a capital
+letter, alone, is the page. Staryl's copy always says "social updates" or "notifications".
+
+**Never:** news, blog (for the page), what's new.
+
 ### blog post
 
 **Is:** a dated piece of writing under `content/blog`, with a page of its own at `/blog/<slug>`. It explains why
@@ -366,7 +377,7 @@ thing itself is a "post", whatever its category.
 ### changelog entry
 
 **Is:** a dated record of one product change under `content/changelog`. It has no page of its own: every entry
-is on `/changelog`, and the latest are the timeline at the top of `/blog`.
+is on `/changelog`, and the latest are the timeline at the top of `/updates`.
 
 **Collides with:** blog post. A changelog entry states what changed. A blog post explains why, or announces a
 direction.

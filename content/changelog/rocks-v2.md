@@ -2,10 +2,7 @@
 title: "wolfstar.rocks v2.0"
 description: "Authentication moved to Better Auth, the dashboard now speaks more than English, and every guild gets a hash-chained audit trail."
 date: "2026-08-20"
-image: /assets/blog/wolfstar-rocks-v2.png
-badge:
-    label: New
-    color: success
+kind: new
 ---
 
 Almost none of the work queued behind v3 needed the new data models, so it shipped on its own:

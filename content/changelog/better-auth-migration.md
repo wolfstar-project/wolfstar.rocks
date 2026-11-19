@@ -2,9 +2,7 @@
 title: "Migrated authentication to Better Auth"
 description: "Replaced the hand-rolled Discord OAuth flow and its custom CSRF state with a single audited auth library."
 date: "2026-07-17"
-badge:
-    label: New
-    color: success
+kind: new
 authors:
     - name: RedStar
       avatar:

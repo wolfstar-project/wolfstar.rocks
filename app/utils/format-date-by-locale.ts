@@ -1,11 +1,15 @@
-export function formatDateByLocale(locale: string, date: string | number | Date) {
+export function formatDateByLocale(
+	locale: string,
+	date: string | number | Date,
+	month: "long" | "short" = "long",
+) {
 	// Pin the calendar day to UTC so the server (UTC host) and the client
 	// (any local time zone) render the same date. Without this, a timestamp
 	// near UTC midnight formats as a different day during hydration in
 	// western time zones, causing a hydration mismatch.
 	return new Date(date).toLocaleDateString(locale, {
 		year: "numeric",
-		month: "long",
+		month,
 		day: "numeric",
 		timeZone: "UTC",
 	});

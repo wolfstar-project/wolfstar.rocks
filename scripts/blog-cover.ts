@@ -6,7 +6,7 @@
  *
  * Reads `title`, `description` and `category` from `content/blog/<slug>.md` and
  * writes `public/assets/blog/<slug>.jpg`. The picture is both the card on
- * `/blog` and the preview a link to the post gets, so it carries the title.
+ * `/updates` and the preview a link to the post gets, so it carries the title.
  * `docs/blog.md` says when to draw a cover by hand instead.
  */
 
@@ -18,7 +18,7 @@ import { Renderer } from "@takumi-rs/core";
 import { readFrontmatter } from "../config/blog-content.ts";
 
 const ROOT = process.cwd();
-/** 1.9:1, the shape link previews use; the 16:9 card on `/blog` crops 3% off each side. */
+/** 1.9:1, the shape link previews use; the 16:9 card on `/updates` crops 3% off each side. */
 const WIDTH = 1600;
 const HEIGHT = 840;
 const JPEG_QUALITY = 92;

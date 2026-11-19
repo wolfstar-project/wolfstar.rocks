@@ -49,8 +49,9 @@ The dashboard is one page now, at [`/app`](/app). Pick a server in the rail on t
 - **Logs**: moderation history, warnings, command history, and the settings activity, which shows who changed which
   setting and when.
 
-On a phone the sections move to a bar at the bottom of the screen. In every section, the changes you have not saved
-wait in one bar until you save or undo them. Links to the old `/guilds/…` pages still work and open the right server and section.
+On a phone the sections move to a bar at the bottom of the screen. Settings you change wait in one bar until you save
+or undo them. Auto-moderation rules and the Auto-Delete, Auto-Purge and Auto-Message channels are the exception: each
+of those changes is saved as soon as you make it. Links to the old `/guilds/…` pages still work and open the right server and section.
 
 Around the dashboard, the whole site was redrawn: the WolfStar and Staryl pages, the [commands](/commands) list, and the
 colour themes, which follow Discord's and include a custom one. The site is also available in Italian, and the

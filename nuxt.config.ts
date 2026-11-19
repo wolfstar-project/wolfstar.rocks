@@ -354,7 +354,7 @@ export default defineNuxtConfig({
 		"/wolfstar": { appLayout: "default", prerender: true, robots: true },
 		// The page that lists the posts and the changelog is `/updates`. Posts keep
 		// their addresses under `/blog/`, and the feed stays `/blog/rss.xml`.
-		"/blog": { redirect: { statusCode: 301, to: "/updates" } },
+		"/blog": { redirect: { statusCode: 301, to: "/updates" }, prerender: false, robots: false },
 		"/updates": { appLayout: "default", prerender: true, robots: true },
 		"/blog/**": { appLayout: "default", prerender: true, robots: true },
 		"/translation-status": { appLayout: "default", prerender: true, robots: true },

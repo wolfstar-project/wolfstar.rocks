@@ -377,7 +377,7 @@ thing itself is a "post", whatever its category.
 ### changelog entry
 
 **Is:** a dated record of one product change under `content/changelog`. It has no page of its own: every entry
-is on `/changelog`, and the latest are the timeline at the top of `/blog`.
+is on `/changelog`, and the latest are the timeline at the top of `/updates`.
 
 **Collides with:** blog post. A changelog entry states what changed. A blog post explains why, or announces a
 direction.

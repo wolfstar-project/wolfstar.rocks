@@ -226,6 +226,7 @@ if (import.meta.server) {
 
 function copyLink() {
 	void copy(url, {
+		description: ts("blog.link_copied_description"),
 		title: ts("blog.link_copied"),
 		icon: "i-lucide-copy-check",
 	});

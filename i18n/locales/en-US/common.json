@@ -20,6 +20,8 @@
 			"tutorial": ""
 		},
 		"copied": "",
+		"copied_markdown_link_description": "",
+		"copied_page_description": "",
 		"copy_markdown_link": "",
 		"copy_options": "",
 		"copy_page": "",
@@ -36,6 +38,7 @@
 		"feeds": "",
 		"filter_label": "",
 		"link_copied": "",
+		"link_copied_description": "",
 		"open_in": "",
 		"posts": "",
 		"reading_finished": "",

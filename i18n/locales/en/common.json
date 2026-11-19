@@ -20,6 +20,8 @@
 			"tutorial": "Tutorial"
 		},
 		"copied": "Copied to clipboard",
+		"copied_markdown_link_description": "The address of the post as Markdown is in your clipboard.",
+		"copied_page_description": "The post is in your clipboard as Markdown.",
 		"copy_markdown_link": "Copy Markdown link",
 		"copy_options": "Open copy options",
 		"copy_page": "Copy page",
@@ -36,6 +38,7 @@
 		"feeds": "RSS feeds",
 		"filter_label": "Post categories",
 		"link_copied": "Link copied to clipboard",
+		"link_copied_description": "The address of the post is in your clipboard.",
 		"open_in": "Open in {name}",
 		"posts": "Posts",
 		"reading_finished": "Finished",

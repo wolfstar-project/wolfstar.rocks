@@ -64,6 +64,12 @@
 				"copied": {
 					"type": "string"
 				},
+				"copied_markdown_link_description": {
+					"type": "string"
+				},
+				"copied_page_description": {
+					"type": "string"
+				},
 				"copy_markdown_link": {
 					"type": "string"
 				},
@@ -110,6 +116,9 @@
 					"type": "string"
 				},
 				"link_copied": {
+					"type": "string"
+				},
+				"link_copied_description": {
 					"type": "string"
 				},
 				"open_in": {

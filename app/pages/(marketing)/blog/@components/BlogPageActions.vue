@@ -74,7 +74,11 @@ async function copyPage() {
 		await writeMarkdown($fetch<string>(markdownPath.value, { responseType: "text" }));
 		pageCopied.value = true;
 		clearPageCopied();
-		toast.add({ icon: "i-lucide-check-circle", title: ts("blog.copied") });
+		toast.add({
+			description: ts("blog.copied_page_description"),
+			icon: "i-lucide-check-circle",
+			title: ts("blog.copied"),
+		});
 	} catch {
 		toast.add({
 			color: "error",
@@ -93,6 +97,7 @@ const items = computed<DropdownMenuItem[]>(() => [
 		label: ts("blog.copy_markdown_link"),
 		onSelect: () => {
 			void copy(markdownUrl.value, {
+				description: ts("blog.copied_markdown_link_description"),
 				icon: "i-lucide-check-circle",
 				title: ts("blog.copied"),
 			});

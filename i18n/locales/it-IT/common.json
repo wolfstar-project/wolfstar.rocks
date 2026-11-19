@@ -20,6 +20,8 @@
 			"tutorial": "Tutorial"
 		},
 		"copied": "Copiato negli appunti",
+		"copied_markdown_link_description": "L'indirizzo del post in Markdown è negli appunti.",
+		"copied_page_description": "Il post è negli appunti in Markdown.",
 		"copy_markdown_link": "Copia il link al Markdown",
 		"copy_options": "Apri le opzioni di copia",
 		"copy_page": "Copia pagina",
@@ -36,6 +38,7 @@
 		"feeds": "Feed RSS",
 		"filter_label": "Categorie dei post",
 		"link_copied": "Link copiato negli appunti",
+		"link_copied_description": "L'indirizzo del post è negli appunti.",
 		"open_in": "Apri in {name}",
 		"posts": "Post",
 		"reading_finished": "Finito",

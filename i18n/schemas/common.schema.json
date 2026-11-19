@@ -22,12 +22,6 @@
 		"blog": {
 			"type": "object",
 			"properties": {
-				"article_links": {
-					"type": "string"
-				},
-				"back": {
-					"type": "string"
-				},
 				"categories": {
 					"type": "object",
 					"properties": {
@@ -67,6 +61,24 @@
 					},
 					"additionalProperties": false
 				},
+				"copied": {
+					"type": "string"
+				},
+				"copy_markdown_link": {
+					"type": "string"
+				},
+				"copy_options": {
+					"type": "string"
+				},
+				"copy_page": {
+					"type": "string"
+				},
+				"copy_page_failed": {
+					"type": "string"
+				},
+				"copy_page_failed_description": {
+					"type": "string"
+				},
 				"copy_url": {
 					"type": "string"
 				},
@@ -97,28 +109,31 @@
 				"filter_label": {
 					"type": "string"
 				},
-				"join_support": {
-					"type": "string"
-				},
 				"link_copied": {
 					"type": "string"
 				},
-				"links": {
+				"open_in": {
 					"type": "string"
 				},
 				"posts": {
 					"type": "string"
 				},
+				"reading_finished": {
+					"type": "string"
+				},
+				"reading_left": {
+					"type": "string"
+				},
 				"reading_time": {
+					"type": "string"
+				},
+				"release_history": {
 					"type": "string"
 				},
 				"rss": {
 					"type": "string"
 				},
 				"share": {
-					"type": "string"
-				},
-				"star_github": {
 					"type": "string"
 				},
 				"timeline": {
@@ -137,6 +152,9 @@
 					"additionalProperties": false
 				},
 				"toc": {
+					"type": "string"
+				},
+				"view_markdown": {
 					"type": "string"
 				}
 			},

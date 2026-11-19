@@ -9,6 +9,8 @@ import {
 	AppHeaderAuthSkeleton,
 	AppLogoMark,
 	AppPreferences,
+	BlogPageActions,
+	BlogReadingProgress,
 	UpdatesCategoryNav,
 	UpdatesChangelogTimeline,
 	UpdatesPostCard,
@@ -689,6 +691,24 @@ describe("component accessibility audits", () => {
 						{ label: "Releases", to: "/updates?category=release", value: "release" },
 					],
 				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("Blog post", () => {
+		it("should have no accessibility violations for the copy page actions", async () => {
+			const component = await mountSuspended(BlogPageActions, {
+				route: "/blog/wolfstar-v7-alpha",
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("should have no accessibility violations for the reading progress", async () => {
+			const component = await mountSuspended(BlogReadingProgress, {
+				props: { readingTime: 4 },
 			});
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);

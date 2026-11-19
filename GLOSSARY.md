@@ -398,14 +398,14 @@ could be meant.
 Routes, TypeScript types, composable names, Prisma models, API paths, and i18n keys keep their existing
 names. A rename costs links, bookmarks, and translations.
 
-| Identifier                                | Why it stays                                          |
-| ----------------------------------------- | ----------------------------------------------------- |
-| `/guilds/*`, `server/api/guilds/**`       | Routes and API paths. User-facing word is "server"    |
-| `/oauth/login`, `/oauth/callback`         | Registered with the Discord application               |
-| `/login`, `/account`                      | `definePageMeta` aliases                              |
-| `guild_card`, `guild_settings` i18n key   | Locale files and Tolgee keys. The value says "server" |
-| `CommandLog`, `AuditEvent`                | Prisma models shared with the bot or hash-chained     |
-| `blog.edit_article`, `blog.article_links` | Locale files and Tolgee keys. The value says "post"   |
+| Identifier                              | Why it stays                                          |
+| --------------------------------------- | ----------------------------------------------------- |
+| `/guilds/*`, `server/api/guilds/**`     | Routes and API paths. User-facing word is "server"    |
+| `/oauth/login`, `/oauth/callback`       | Registered with the Discord application               |
+| `/login`, `/account`                    | `definePageMeta` aliases                              |
+| `guild_card`, `guild_settings` i18n key | Locale files and Tolgee keys. The value says "server" |
+| `CommandLog`, `AuditEvent`              | Prisma models shared with the bot or hash-chained     |
+| `blog.edit_article`                     | Locale file and Tolgee key. The value says "post"     |
 
 ## Open questions
 

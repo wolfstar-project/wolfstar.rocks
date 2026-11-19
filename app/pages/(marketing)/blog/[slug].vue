@@ -16,10 +16,12 @@
 						}"
 						class="font-medium text-primary hover:text-highlighted focus-visible:outline-2 focus-visible:outline-primary"
 					>
-						{{ categoryLabels[post.category] }}
+						{{ categoryTabLabels[post.category] }}
 					</NuxtLink>
 					<span aria-hidden="true">·</span>
-					<time :datetime="post.date">{{ formatDateByLocale(locale, post.date) }}</time>
+					<time :datetime="post.date">{{
+						formatDateByLocale(locale, post.date, "short")
+					}}</time>
 					<template v-if="post.readingTime">
 						<span aria-hidden="true">·</span>
 						<span>{{ ts("blog.reading_time", { minutes: post.readingTime }) }}</span>
@@ -66,16 +68,20 @@
 						</span>
 					</div>
 
-					<UDropdownMenu :items="shareItems" :content="{ align: 'end' }">
-						<UButton
-							icon="i-lucide-share"
-							:aria-label="ts('blog.share')"
-							color="neutral"
-							variant="soft"
-							size="sm"
-							class="pointer-coarse:size-11 pointer-coarse:justify-center"
-						/>
-					</UDropdownMenu>
+					<div class="flex items-center gap-1.5">
+						<BlogPageActions />
+						<UDropdownMenu :items="shareItems" :content="{ align: 'end' }">
+							<UButton
+								icon="i-lucide-share"
+								:aria-label="ts('blog.share')"
+								color="neutral"
+								variant="soft"
+								size="sm"
+								class="pointer-coarse:size-11 pointer-coarse:justify-center"
+								:ui="{ leadingIcon: 'size-3.5' }"
+							/>
+						</UDropdownMenu>
+					</div>
 				</div>
 			</header>
 
@@ -85,18 +91,19 @@
 					:title="ts('blog.toc')"
 					:aria-label="ts('blog.toc')"
 					highlight
+					highlight-variant="circuit"
+					class="lg:backdrop-blur-none"
 				>
-					<template #bottom>
-						<UPageLinks
-							:title="ts('blog.links')"
-							:links="projectLinks"
-							:aria-label="ts('blog.article_links')"
+					<template v-if="post.readingTime" #bottom>
+						<BlogReadingProgress
+							:reading-time="post.readingTime"
+							:target="articleBody"
 						/>
 					</template>
 				</UContentToc>
 			</aside>
 
-			<div class="min-w-0 xl:col-start-2 xl:row-start-2">
+			<div ref="articleBody" class="min-w-0 xl:col-start-2 xl:row-start-2">
 				<!-- A command with its arguments has no space to break at: let it wrap inside its chip rather than run off a phone's screen. -->
 				<ContentRenderer
 					v-if="article.body"
@@ -104,19 +111,8 @@
 					class="[&_:not(pre)>code]:max-w-full [&_:not(pre)>code]:wrap-anywhere"
 				/>
 
-				<div
-					class="mt-16 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-default pt-6"
-				>
+				<div v-if="editUrl" class="mt-16 border-t border-default pt-6">
 					<UButton
-						to="/updates"
-						icon="i-lucide-arrow-left"
-						:label="ts('blog.back')"
-						color="neutral"
-						variant="link"
-						class="px-0 pointer-coarse:min-h-11"
-					/>
-					<UButton
-						v-if="editUrl"
 						:to="editUrl"
 						target="_blank"
 						icon="i-lucide-pen"
@@ -129,9 +125,16 @@
 			</div>
 		</article>
 
-		<div v-if="surround?.some(Boolean)" class="border-t border-default pt-12 pb-24">
+		<section
+			v-if="surround?.some(Boolean)"
+			aria-labelledby="releases-heading"
+			class="flex flex-col gap-6 border-t border-default pt-12 pb-24"
+		>
+			<h2 id="releases-heading" class="text-2xl font-semibold text-highlighted">
+				{{ ts("blog.release_history") }}
+			</h2>
 			<UContentSurround :surround="surround ?? undefined" />
-		</div>
+		</section>
 	</UContainer>
 </template>
 
@@ -141,19 +144,14 @@ import { kebabCase } from "scule";
 
 const { ts } = useI18n();
 const { locale } = useAppLocale();
-const { categoryLabels } = useBlogLabels();
+const { categoryTabLabels } = useBlogLabels();
 const route = useRoute();
 const site = useSiteConfig();
 const { copy } = useClipboard();
 
-const [{ data: article }, { data: surround }] = await Promise.all([
-	useAsyncData(kebabCase(route.path), () => queryCollection("blog").path(route.path).first()),
-	useAsyncData(`${kebabCase(route.path)}-surround`, () =>
-		queryCollectionItemSurroundings("blog", route.path, { fields: ["description"] })
-			.where("draft", "=", false)
-			.order("date", "DESC"),
-	),
-]);
+const { data: article } = await useAsyncData(kebabCase(route.path), () =>
+	queryCollection("blog").path(route.path).first(),
+);
 
 // A draft is for whoever writes it: `pnpm dev` shows it, a deployed site does not.
 if (!article.value || (article.value.draft && !import.meta.dev)) {
@@ -161,6 +159,19 @@ if (!article.value || (article.value.draft && !import.meta.dev)) {
 }
 
 const post = article.value as BlogArticle;
+
+// Releases follow one another, so a release links to the one before and after
+// it. Other posts stand alone.
+const { data: surround } = await useAsyncData(`${kebabCase(route.path)}-surround`, async () =>
+	post.category === "Release"
+		? queryCollectionItemSurroundings("blog", route.path, { fields: ["description"] })
+				.where("draft", "=", false)
+				.where("category", "=", "Release")
+				.order("date", "DESC")
+		: null,
+);
+
+const articleBody = useTemplateRef<HTMLElement>("articleBody");
 const url = `${site.url}${post.path}`;
 
 const tocLinks = computed(() => post.body?.toc?.links ?? []);
@@ -215,6 +226,7 @@ if (import.meta.server) {
 
 function copyLink() {
 	void copy(url, {
+		description: ts("blog.link_copied_description"),
 		title: ts("blog.link_copied"),
 		icon: "i-lucide-copy-check",
 	});
@@ -233,6 +245,14 @@ const shareItems = computed<DropdownMenuItem[]>(() => {
 			to: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
 		},
 		{
+			icon: "i-simple-icons-bluesky",
+			label: "Bluesky",
+			target: "_blank",
+			to: `https://bsky.app/intent/compose?text=${encodeURIComponent(`${post.title}
+
+${url}`)}`,
+		},
+		{
 			icon: "i-simple-icons-x",
 			label: "X",
 			target: "_blank",
@@ -246,19 +266,4 @@ const editUrl = computed(() =>
 		? `https://github.com/wolfstar-project/wolfstar.rocks/edit/main/content/${post.stem}.md`
 		: undefined,
 );
-
-const projectLinks = computed(() => [
-	{
-		icon: "i-lucide-star",
-		label: ts("blog.star_github"),
-		target: "_blank",
-		to: "https://github.com/wolfstar-project/wolfstar.rocks",
-	},
-	{
-		icon: "i-lucide-message-circle",
-		label: ts("blog.join_support"),
-		target: "_blank",
-		to: "https://chat.wolfstar.rocks",
-	},
-]);
 </script>

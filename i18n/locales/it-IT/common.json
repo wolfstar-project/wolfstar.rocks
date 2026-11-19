@@ -6,8 +6,6 @@
 		"skip_to_content": "Vai al contenuto principale"
 	},
 	"blog": {
-		"article_links": "Link del post",
-		"back": "Torna agli aggiornamenti",
 		"categories": {
 			"all": "Tutti",
 			"announcement": "Annunci",
@@ -21,6 +19,14 @@
 			"release": "Versione",
 			"tutorial": "Tutorial"
 		},
+		"copied": "Copiato negli appunti",
+		"copied_markdown_link_description": "L'indirizzo del post in Markdown è negli appunti.",
+		"copied_page_description": "Il post è negli appunti in Markdown.",
+		"copy_markdown_link": "Copia il link al Markdown",
+		"copy_options": "Apri le opzioni di copia",
+		"copy_page": "Copia pagina",
+		"copy_page_failed": "Copia non riuscita",
+		"copy_page_failed_description": "Impossibile caricare la pagina in Markdown. Controlla la connessione e riprova.",
 		"copy_url": "Copia URL",
 		"edit_article": "Modifica questo post",
 		"empty": {
@@ -31,20 +37,23 @@
 		"feed_changelog": "RSS del registro delle modifiche",
 		"feeds": "Feed RSS",
 		"filter_label": "Categorie dei post",
-		"join_support": "Entra nel server di supporto",
 		"link_copied": "Link copiato negli appunti",
-		"links": "Link",
+		"link_copied_description": "L'indirizzo del post è negli appunti.",
+		"open_in": "Apri in {name}",
 		"posts": "Post",
+		"reading_finished": "Finito",
+		"reading_left": "{minutes} min rimasti",
 		"reading_time": "{minutes} min di lettura",
+		"release_history": "Cronologia delle versioni",
 		"rss": "RSS",
 		"share": "Condividi questo post",
-		"star_github": "Metti una stella su GitHub",
 		"timeline": {
 			"newer": "Voci più recenti del registro delle modifiche",
 			"older": "Voci meno recenti del registro delle modifiche",
 			"view_all": "Vedi tutto il registro delle modifiche"
 		},
-		"toc": "Indice"
+		"toc": "In questa pagina",
+		"view_markdown": "Vedi come Markdown"
 	},
 	"changelog": {
 		"description": "Segui ogni versione, miglioramento e correzione del WolfStar Project.",

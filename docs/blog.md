@@ -77,7 +77,8 @@ The category decides which link above the list of posts leads to the post:
 | `Tutorial`     | How to do something with the bots or the dashboard.          |
 | `Article`      | Anything else: how something was built, a look back.         |
 
-A category gets its link once a post uses it, so an unused one is not shown.
+A category gets its link once a post uses it, so an unused one is not shown. A `Release` post also ends with a
+"Release history" that links to the release before it and the one after.
 
 The reading time ("3 min read") is counted from the text when the site is built. Do not write it.
 

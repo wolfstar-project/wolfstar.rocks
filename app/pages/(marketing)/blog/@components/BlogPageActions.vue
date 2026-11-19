@@ -2,7 +2,7 @@
 	<UFieldGroup>
 		<UButton
 			:label="ts('blog.copy_page')"
-			:icon="copied ? 'i-lucide-clipboard-check' : 'i-lucide-clipboard'"
+			:icon="pageCopied ? 'i-lucide-clipboard-check' : 'i-lucide-clipboard'"
 			color="neutral"
 			variant="soft"
 			size="sm"
@@ -36,25 +36,45 @@ const { ts } = useI18n();
 const route = useRoute();
 const site = useSiteConfig();
 const toast = useToast();
-const { copy, copied } = useClipboard();
+const { copy } = useClipboard();
 
 // Every page is also served as Markdown at its own address plus `.md`.
 const markdownPath = computed(() => `${route.path}.md`);
 const markdownUrl = computed(() => `${site.url}${markdownPath.value}`);
 const copying = ref(false);
+const pageCopied = ref(false);
+const { start: clearPageCopied } = useTimeoutFn(() => (pageCopied.value = false), 1500, {
+	immediate: false,
+});
 
 /** What an assistant is asked when the post is opened in it. */
 const question = computed(() =>
 	encodeURIComponent(`Read ${markdownUrl.value} so I can ask questions about it.`),
 );
 
+/**
+ * Safari only lets a page write to the clipboard while it handles the click,
+ * and the Markdown arrives after it. A `ClipboardItem` takes the text as a
+ * promise, so the write starts during the click and is filled in once the
+ * Markdown is in. A browser without `ClipboardItem` gets the text after the
+ * fetch, which it allows.
+ */
+async function writeMarkdown(markdown: Promise<string>) {
+	if (typeof ClipboardItem !== "undefined" && navigator.clipboard?.write) {
+		const blob = markdown.then((text) => new Blob([text], { type: "text/plain" }));
+		await navigator.clipboard.write([new ClipboardItem({ "text/plain": blob })]);
+		return;
+	}
+	await navigator.clipboard.writeText(await markdown);
+}
+
 async function copyPage() {
 	copying.value = true;
 	try {
-		await copy(await $fetch<string>(markdownPath.value, { responseType: "text" }), {
-			icon: "i-lucide-check-circle",
-			title: ts("blog.copied"),
-		});
+		await writeMarkdown($fetch<string>(markdownPath.value, { responseType: "text" }));
+		pageCopied.value = true;
+		clearPageCopied();
+		toast.add({ icon: "i-lucide-check-circle", title: ts("blog.copied") });
 	} catch {
 		toast.add({
 			color: "error",

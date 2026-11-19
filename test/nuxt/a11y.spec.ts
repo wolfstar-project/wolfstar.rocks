@@ -9,6 +9,9 @@ import {
 	AppHeaderAuthSkeleton,
 	AppLogoMark,
 	AppPreferences,
+	BlogCategoryNav,
+	BlogChangelogTimeline,
+	BlogPostCard,
 	ConsentManager,
 	ConsentSettingsDialog,
 
@@ -629,6 +632,66 @@ describe("component accessibility audits", () => {
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
 			});
+		});
+	});
+
+	describe("Blog", () => {
+		it("should have no accessibility violations for the changelog timeline", async () => {
+			const component = await mountSuspended(BlogChangelogTimeline, {
+				props: {
+					entries: [
+						{
+							date: "2026-08-25",
+							description: "Both bot landing pages got a visual pass.",
+							kind: "improved",
+							path: "/changelog/homepage-redesign",
+							title: "Redesigned homepages",
+						},
+						{
+							date: "2026-08-24",
+							description: "The callback page could claim your session was missing.",
+							kind: "fixed",
+							path: "/changelog/oauth-session-fix",
+							title: "Fixed a false session error",
+						},
+					],
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("should have no accessibility violations for a post card", async () => {
+			const component = await mountSuspended(BlogPostCard, {
+				props: {
+					post: {
+						authors: [{ name: "RedStar" }],
+						category: "Release",
+						date: "2026-10-12",
+						description: "Notes, a honeypot channel, and settings export.",
+						image: "/logo.svg",
+						path: "/blog/wolfstar-v7-alpha",
+						readingTime: 3,
+						title: "The alpha is live",
+					},
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("should have no accessibility violations for the category links", async () => {
+			const component = await mountSuspended(BlogCategoryNav, {
+				props: {
+					active: "release",
+					links: [
+						{ label: "All", to: "/blog", value: "all" },
+						{ label: "Releases", to: "/blog?category=release", value: "release" },
+					],
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
 		});
 	});
 

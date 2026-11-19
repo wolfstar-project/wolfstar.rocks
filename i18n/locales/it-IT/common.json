@@ -6,26 +6,58 @@
 		"skip_to_content": "Vai al contenuto principale"
 	},
 	"blog": {
-		"article_links": "Link dell'articolo",
-		"avatar_alt": "Avatar di {name}",
+		"article_links": "Link del post",
 		"back": "Torna al blog",
+		"categories": {
+			"all": "Tutti",
+			"announcement": "Annunci",
+			"article": "Articoli",
+			"release": "Versioni",
+			"tutorial": "Tutorial"
+		},
+		"category": {
+			"announcement": "Annuncio",
+			"article": "Articolo",
+			"release": "Versione",
+			"tutorial": "Tutorial"
+		},
 		"copy_url": "Copia URL",
-		"edit_article": "Modifica questo articolo",
-		"image_alt": "Immagine di {title}",
+		"description": "Cosa è cambiato nel WolfStar Project, e perché.",
+		"edit_article": "Modifica questo post",
+		"empty": {
+			"description": "Un post spiega perché qualcosa è cambiato. Il registro delle modifiche elenca cosa è cambiato.",
+			"title": "Ancora nessun post"
+		},
+		"feed_blog": "RSS del blog",
+		"feed_changelog": "RSS del registro delle modifiche",
+		"feeds": "Feed RSS",
+		"filter_label": "Categorie dei post",
 		"join_support": "Entra nel server di supporto",
 		"link_copied": "Link copiato negli appunti",
 		"links": "Link",
-		"on_platform": "WolfStar su {platform}",
+		"posts": "Post",
+		"reading_time": "{minutes} min di lettura",
 		"rss": "RSS",
+		"share": "Condividi questo post",
 		"star_github": "Metti una stella su GitHub",
+		"timeline": {
+			"newer": "Voci più recenti del registro delle modifiche",
+			"older": "Voci meno recenti del registro delle modifiche",
+			"view_all": "Vedi tutto il registro delle modifiche"
+		},
+		"title": "Il blog di WolfStar",
 		"toc": "Indice"
 	},
 	"changelog": {
-		"back": "Torna al registro delle modifiche",
-		"cover_alt": "Copertina di {title}",
 		"description": "Segui ogni versione, miglioramento e correzione del WolfStar Project.",
-		"empty": "Non è ancora stata pubblicata nessuna versione.",
+		"empty": "Ancora nessuna voce nel registro delle modifiche",
+		"entries": "Voci del registro delle modifiche",
 		"github_releases": "Versioni su GitHub",
+		"kind": {
+			"fixed": "Corretto",
+			"improved": "Migliorato",
+			"new": "Nuovo"
+		},
 		"title": "Registro delle modifiche"
 	},
 	"common": {

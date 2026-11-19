@@ -362,7 +362,21 @@ export default defineNuxtConfig({
 			},
 		},
 		"/changelog": { appLayout: "default", prerender: true, robots: true },
-		"/changelog/**": { appLayout: "default", prerender: true, robots: true },
+		// Every changelog entry had a page of its own until they moved onto
+		// `/changelog`. These four are all the addresses that existed: a new entry
+		// never gets one, so this list does not grow.
+		"/changelog/better-auth-migration": {
+			redirect: { statusCode: 301, to: "/changelog#better-auth-migration" },
+		},
+		"/changelog/homepage-redesign": {
+			redirect: { statusCode: 301, to: "/changelog#homepage-redesign" },
+		},
+		"/changelog/oauth-session-fix": {
+			redirect: { statusCode: 301, to: "/changelog#oauth-session-fix" },
+		},
+		"/changelog/rocks-v2": {
+			redirect: { statusCode: 301, to: "/changelog#rocks-v2" },
+		},
 		// Nuxt Studio admin UI + auth callbacks — SSR-only, never index or prerender.
 		"/_studio": { prerender: false, robots: false },
 		"/_studio/**": { prerender: false, robots: false },
@@ -717,7 +731,6 @@ export default defineNuxtConfig({
 					"https://media.discordapp.net",
 					"https://discord.com",
 					"https://api.iconify.design",
-					"https://ungh.cc", // Changelog page fetches GitHub releases from ungh.cc on client-side navigation
 					"https://wolfstar.rocks", // Better Auth's client calls the configured site URL directly (e.g. /api/auth/get-session), not just relative paths
 					"https://*.wolfstar.rocks",
 					"https://*.ingest.us.sentry.io",

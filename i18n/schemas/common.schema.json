@@ -25,19 +25,79 @@
 				"article_links": {
 					"type": "string"
 				},
-				"avatar_alt": {
-					"type": "string"
-				},
 				"back": {
 					"type": "string"
 				},
+				"categories": {
+					"type": "object",
+					"properties": {
+						"all": {
+							"type": "string"
+						},
+						"announcement": {
+							"type": "string"
+						},
+						"article": {
+							"type": "string"
+						},
+						"release": {
+							"type": "string"
+						},
+						"tutorial": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"category": {
+					"type": "object",
+					"properties": {
+						"announcement": {
+							"type": "string"
+						},
+						"article": {
+							"type": "string"
+						},
+						"release": {
+							"type": "string"
+						},
+						"tutorial": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"copy_url": {
+					"type": "string"
+				},
+				"description": {
 					"type": "string"
 				},
 				"edit_article": {
 					"type": "string"
 				},
-				"image_alt": {
+				"empty": {
+					"type": "object",
+					"properties": {
+						"description": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"feed_blog": {
+					"type": "string"
+				},
+				"feed_changelog": {
+					"type": "string"
+				},
+				"feeds": {
+					"type": "string"
+				},
+				"filter_label": {
 					"type": "string"
 				},
 				"join_support": {
@@ -49,13 +109,37 @@
 				"links": {
 					"type": "string"
 				},
-				"on_platform": {
+				"posts": {
+					"type": "string"
+				},
+				"reading_time": {
 					"type": "string"
 				},
 				"rss": {
 					"type": "string"
 				},
+				"share": {
+					"type": "string"
+				},
 				"star_github": {
+					"type": "string"
+				},
+				"timeline": {
+					"type": "object",
+					"properties": {
+						"newer": {
+							"type": "string"
+						},
+						"older": {
+							"type": "string"
+						},
+						"view_all": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"title": {
 					"type": "string"
 				},
 				"toc": {
@@ -67,20 +151,32 @@
 		"changelog": {
 			"type": "object",
 			"properties": {
-				"back": {
-					"type": "string"
-				},
-				"cover_alt": {
-					"type": "string"
-				},
 				"description": {
 					"type": "string"
 				},
 				"empty": {
 					"type": "string"
 				},
+				"entries": {
+					"type": "string"
+				},
 				"github_releases": {
 					"type": "string"
+				},
+				"kind": {
+					"type": "object",
+					"properties": {
+						"fixed": {
+							"type": "string"
+						},
+						"improved": {
+							"type": "string"
+						},
+						"new": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
 				},
 				"title": {
 					"type": "string"

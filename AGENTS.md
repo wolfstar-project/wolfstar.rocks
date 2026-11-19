@@ -58,6 +58,7 @@ The long-form notes for each area live in [`docs/arch/`](docs/arch/README.md). R
 | Audit events and the hash chain                       | [`docs/arch/audit-logging.md`](docs/arch/audit-logging.md)             |
 | Router View Transitions                               | [`docs/arch/view-transitions.md`](docs/arch/view-transitions.md)       |
 | Color tokens, theme selectors                         | [`docs/arch/design-tokens.md`](docs/arch/design-tokens.md)             |
+| Blog posts, changelog entries and their images        | [`docs/blog.md`](docs/blog.md)                                         |
 | Social, and any module held by another service        | [`docs/arch/external-modules.md`](docs/arch/external-modules.md)       |
 
 ## Traps
@@ -87,6 +88,7 @@ A forbidden-pattern test enforces the greppable subset of these traps in `test/u
 pnpm dev                         # Development server (http://localhost:3000)
 pnpm dev:pwa                     # Development server with local PWA behavior enabled
 pnpm build                       # Production build
+pnpm blog:cover <slug>           # Draw a blog post's cover from its frontmatter (docs/blog.md)
 pnpm build:test                  # Test-mode production build through vite-plus
 pnpm generate                    # Static generation
 pnpm preview                     # Preview production build locally

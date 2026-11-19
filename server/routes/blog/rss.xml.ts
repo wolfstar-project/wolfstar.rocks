@@ -1,51 +1,28 @@
-import type { H3Event } from "h3";
 import { queryCollection } from "@nuxt/content/server";
-import { Feed } from "feed";
 import { joinURL } from "ufo";
 
-export default defineEventHandler(async (event: H3Event) => {
-	const site = getSiteConfig(event);
-	const baseUrl = (
-		site.url ??
-		process.env.NUXT_PUBLIC_SITE_URL ??
-		"https://wolfstar.rocks"
-	).replace(/\/$/, "");
-	const siteUrl = joinURL(baseUrl, "blog");
-
-	const feed = new Feed({
-		title: "The WolfStar Blog",
+export default defineEventHandler(async (event) => {
+	const { baseUrl, feed } = createSiteFeed(event, {
 		description: "News and updates about WolfStar, Staryl, and the WolfStar Project network.",
-		id: siteUrl,
-		link: siteUrl,
-		language: "en",
-		image: joinURL(baseUrl, "logo.svg"),
-		favicon: joinURL(baseUrl, "favicon.svg"),
-		copyright: `Copyright © ${new Date().getFullYear()} WolfStar Project`,
-		feedLinks: {
-			rss: `${siteUrl}/rss.xml`,
-		},
+		path: "blog",
+		title: "The WolfStar Blog",
 	});
 
-	const articles = await queryCollection(event, "blog")
+	const posts = await queryCollection(event, "blog")
 		.where("draft", "=", false)
 		.order("date", "DESC")
 		.all();
 
-	for (const article of articles) {
-		if (article.path === "/blog") {
-			continue;
-		}
-
+	for (const post of posts) {
 		feed.addItem({
-			link: joinURL(baseUrl, article.path),
-			image: article.image ? joinURL(baseUrl, article.image) : undefined,
-			title: article.title,
-			date: new Date(article.date),
-			description: article.description,
-			category: [{ name: article.category }],
+			category: [{ name: post.category }],
+			date: new Date(post.date),
+			description: post.description,
+			image: post.image ? joinURL(baseUrl, post.image) : undefined,
+			link: joinURL(baseUrl, post.path),
+			title: post.title,
 		});
 	}
 
-	appendHeader(event, "Content-Type", "application/xml");
-	return feed.rss2();
+	return sendFeed(event, feed);
 });

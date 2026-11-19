@@ -6,26 +6,58 @@
 		"skip_to_content": "Skip to main content"
 	},
 	"blog": {
-		"article_links": "Article links",
-		"avatar_alt": "{name} avatar",
+		"article_links": "Post links",
 		"back": "Back to blog",
+		"categories": {
+			"all": "All",
+			"announcement": "Announcements",
+			"article": "Articles",
+			"release": "Releases",
+			"tutorial": "Tutorials"
+		},
+		"category": {
+			"announcement": "Announcement",
+			"article": "Article",
+			"release": "Release",
+			"tutorial": "Tutorial"
+		},
 		"copy_url": "Copy URL",
-		"edit_article": "Edit this article",
-		"image_alt": "{title} image",
+		"description": "What changed across the WolfStar Project, and why.",
+		"edit_article": "Edit this post",
+		"empty": {
+			"description": "A post explains why something changed. The changelog lists what changed.",
+			"title": "No posts yet"
+		},
+		"feed_blog": "Blog RSS",
+		"feed_changelog": "Changelog RSS",
+		"feeds": "RSS feeds",
+		"filter_label": "Post categories",
 		"join_support": "Join Support Server",
 		"link_copied": "Link copied to clipboard",
 		"links": "Links",
-		"on_platform": "WolfStar on {platform}",
+		"posts": "Posts",
+		"reading_time": "{minutes} min read",
 		"rss": "RSS",
+		"share": "Share this post",
 		"star_github": "Star on GitHub",
+		"timeline": {
+			"newer": "Newer changelog entries",
+			"older": "Older changelog entries",
+			"view_all": "View full changelog"
+		},
+		"title": "The WolfStar Blog",
 		"toc": "Table of Contents"
 	},
 	"changelog": {
-		"back": "Back to changelog",
-		"cover_alt": "{title} cover",
 		"description": "Track every release, improvement, and fix across the WolfStar Project.",
-		"empty": "No releases have been published yet.",
+		"empty": "No changelog entries yet",
+		"entries": "Changelog entries",
 		"github_releases": "GitHub Releases",
+		"kind": {
+			"fixed": "Fixed",
+			"improved": "Improved",
+			"new": "New"
+		},
 		"title": "Changelog"
 	},
 	"common": {

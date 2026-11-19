@@ -5,7 +5,7 @@ date: 2024-02-25
 tags:
     - edits
 category: Announcement
-image: /assets/blog/wolfstar-v7.png
+image: /assets/blog/wolfstar-v7.jpg
 authors:
     - name: RedStar
       avatar:

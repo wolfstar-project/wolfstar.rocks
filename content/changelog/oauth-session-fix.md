@@ -2,9 +2,7 @@
 title: 'Fixed a false "session not found" error'
 description: "The OAuth callback page could briefly claim your session was missing even though sign-in had just succeeded."
 date: "2026-08-24"
-badge:
-    label: Fixed
-    color: warning
+kind: fixed
 ---
 
 Sessions are read from an eventually-consistent store, so the callback page could race the write and show a false

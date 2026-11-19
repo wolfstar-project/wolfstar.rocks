@@ -10,8 +10,7 @@ tags:
     - staryl
 authors:
     - name: RedStar
-      avatar:
-          src: https://github.com/RedStar071.png
+      username: RedStar071
       to: https://x.com/redstar071
 ---
 

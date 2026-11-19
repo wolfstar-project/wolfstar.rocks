@@ -36,9 +36,8 @@ that may be made, [`GLOSSARY.md`](../GLOSSARY.md) for what things are called ("s
     image: /assets/blog/wolfstar-v7-alpha.png
     authors:
         - name: RedStar
+          username: RedStar071
           to: https://x.com/redstar071
-          avatar:
-              src: https://github.com/RedStar071.png
     ---
 
     The WolfStar v7 alpha is live.
@@ -60,10 +59,15 @@ that may be made, [`GLOSSARY.md`](../GLOSSARY.md) for what things are called ("s
 | `description` | yes      | One sentence. It is under the title, on the card (two lines at most), in search results and in the RSS feed. |
 | `date`        | yes      | The day it is published, as `2026-10-12`. Posts are listed newest first.                                     |
 | `category`    | yes      | `Release`, `Announcement`, `Tutorial` or `Article`, written exactly so. See below.                           |
-| `authors`     | yes      | One or more. `name` is required. `to` links the name, `avatar.src` is the picture next to it.                |
+| `authors`     | yes      | One or more. Each needs a `name` or a GitHub `username`. See below.                                          |
 | `image`       | no       | The cover, as a path under `public/`: `/assets/blog/<slug>.jpg`.                                             |
 | `draft`       | no       | `true` keeps the post out of the list, the feed and the links between posts.                                 |
 | `tags`        | no       | A list of words. Nothing on the site shows them today.                                                       |
+
+An author with a GitHub `username` gets the name, the picture and the profile link of that account, read from
+[ungh.cc](https://ungh.cc) when the site is built. A field the author sets wins: `to` links the name elsewhere,
+for example to X, and `avatar.src` replaces the picture. If ungh does not answer, the picture is
+`github.com/<username>.png` and the name is the username, so set `name` to be sure of it.
 
 An author can also carry `twitter`, their handle on X without the `@`. When a reader shares the post on X, the
 text credits that handle.

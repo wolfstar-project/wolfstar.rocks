@@ -4,7 +4,9 @@ import { BLOG_CATEGORIES, CHANGELOG_KINDS } from "./shared/utils/blog.ts";
 // docs/blog.md is the guide to these fields for whoever writes the content.
 
 const Author = z.object({
-	name: z.string(),
+	// Filled from the GitHub account of `username` when missing (config/blog-authors.ts).
+	name: z.string().optional(),
+	username: z.string().optional(),
 	description: z.string().optional(),
 	to: z.string().optional(),
 	twitter: z.string().optional(),

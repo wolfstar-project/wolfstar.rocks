@@ -1,5 +1,6 @@
 import { parse as parseYaml } from "yaml";
 import { BLOG_CATEGORIES, CHANGELOG_KINDS } from "../shared/utils/blog.ts";
+import { isGitHubLogin } from "./blog-authors.ts";
 
 /**
  * Nuxt Content stores a frontmatter value whatever its collection schema says:
@@ -24,7 +25,10 @@ function isAuthorList(value: unknown): boolean {
 		Array.isArray(value) &&
 		value.length > 0 &&
 		value.every(
-			(author) => typeof author === "object" && author !== null && isText(author.name),
+			(author) =>
+				typeof author === "object" &&
+				author !== null &&
+				(isText(author.name) || isGitHubLogin(author.username)),
 		)
 	);
 }
@@ -51,7 +55,9 @@ export function frontmatterProblems(
 			problems.push(`\`category\` must be one of: ${oneOf(BLOG_CATEGORIES)}.`);
 		}
 		if (!isAuthorList(frontmatter.authors)) {
-			problems.push("`authors` needs at least one author with a `name`.");
+			problems.push(
+				"`authors` needs at least one author with a `name` or a GitHub `username`.",
+			);
 		}
 	} else if (!CHANGELOG_KINDS.includes(frontmatter.kind as (typeof CHANGELOG_KINDS)[number])) {
 		problems.push(`\`kind\` must be one of: ${oneOf(CHANGELOG_KINDS)}.`);

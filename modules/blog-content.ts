@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { defineNuxtModule, useLogger } from "nuxt/kit";
+import { createAuthorResolver, type FrontmatterAuthor } from "../config/blog-authors.ts";
 import { fileProblems, frontmatterProblems } from "../config/blog-content.ts";
 import { readingMinutes } from "../shared/utils/blog.ts";
 
@@ -32,6 +33,9 @@ function contentProblems(rootDir: string): string[] {
  * saved, as an error in the log: a throw from the file watcher would restart
  * the whole server.
  *
+ * An author with a GitHub `username` gets that account's name, avatar and
+ * profile link when the file is parsed (`config/blog-authors.ts`).
+ *
  * The reading time lets a list of posts show "4 min read" without loading every
  * body to count its words. Nuxt Content keeps only the fields its collection
  * schema names: `readingTime` is declared in `content.config.ts`.
@@ -42,8 +46,9 @@ export default defineNuxtModule({
 	},
 	setup(_, nuxt) {
 		const logger = useLogger(MODULE_NAME);
+		const resolveAuthors = createAuthorResolver();
 
-		nuxt.hook("content:file:afterParse", ({ collection, content, file }) => {
+		nuxt.hook("content:file:afterParse", async ({ collection, content, file }) => {
 			if (nuxt.options.dev) {
 				const problems = frontmatterProblems(collection.name, content);
 				if (problems.length > 0) {
@@ -54,6 +59,13 @@ export default defineNuxtModule({
 
 			if (collection.name === "blog") {
 				content.readingTime = readingMinutes(file.body);
+			}
+
+			if (
+				(collection.name === "blog" || collection.name === "changelog") &&
+				Array.isArray(content.authors)
+			) {
+				content.authors = await resolveAuthors(content.authors as FrontmatterAuthor[]);
 			}
 		});
 

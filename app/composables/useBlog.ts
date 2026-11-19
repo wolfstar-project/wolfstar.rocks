@@ -18,9 +18,23 @@ export function useBlog() {
 					"readingTime",
 				)
 				.order("date", "DESC")
-				.all(),
+				.all()
+				.then((posts) =>
+					posts.map((post) => ({ ...post, authors: post.authors.map(authorWithName) })),
+				),
 		{ default: () => [] },
 	);
+}
+
+/**
+ * The build fills an author's name from their GitHub account
+ * (`config/blog-authors.ts`), so a name is always stored. The schema still
+ * allows a frontmatter without one, which the username stands in for.
+ */
+function authorWithName<T extends { name?: string; username?: string }>(
+	author: T,
+): T & { name: string } {
+	return { ...author, name: author.name ?? author.username ?? "" };
 }
 
 const CHANGELOG_KIND_COLORS = {

@@ -1,6 +1,11 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { defineNuxtModule, useLogger } from "nuxt/kit";
+import {
+	AuthorNameError,
+	createAuthorResolver,
+	type FrontmatterAuthor,
+} from "../config/blog-authors.ts";
 import { fileProblems, frontmatterProblems } from "../config/blog-content.ts";
 import { readingMinutes } from "../shared/utils/blog.ts";
 
@@ -32,6 +37,10 @@ function contentProblems(rootDir: string): string[] {
  * saved, as an error in the log: a throw from the file watcher would restart
  * the whole server.
  *
+ * An author with a GitHub `username` gets that account's name, avatar and
+ * profile link when the file is parsed (`config/blog-authors.ts`). An author
+ * with neither a `name` nor an answer from ungh stops the build.
+ *
  * The reading time lets a list of posts show "4 min read" without loading every
  * body to count its words. Nuxt Content keeps only the fields its collection
  * schema names: `readingTime` is declared in `content.config.ts`.
@@ -42,8 +51,11 @@ export default defineNuxtModule({
 	},
 	setup(_, nuxt) {
 		const logger = useLogger(MODULE_NAME);
+		const resolveAuthors = createAuthorResolver();
+		// Files whose authors have no name to show, which stop a build.
+		const unnamed = new Set<string>();
 
-		nuxt.hook("content:file:afterParse", ({ collection, content, file }) => {
+		nuxt.hook("content:file:afterParse", async ({ collection, content, file }) => {
 			if (nuxt.options.dev) {
 				const problems = frontmatterProblems(collection.name, content);
 				if (problems.length > 0) {
@@ -55,10 +67,32 @@ export default defineNuxtModule({
 			if (collection.name === "blog") {
 				content.readingTime = readingMinutes(file.body);
 			}
+
+			if (
+				(collection.name === "blog" || collection.name === "changelog") &&
+				Array.isArray(content.authors)
+			) {
+				const path = relative(nuxt.options.rootDir, file.path).replaceAll("\\", "/");
+				try {
+					content.authors = await resolveAuthors(content.authors as FrontmatterAuthor[]);
+					unnamed.delete(path);
+				} catch (error) {
+					if (!(error instanceof AuthorNameError)) throw error;
+					// Nuxt Content then leaves the file out and caches nothing for it.
+					unnamed.add(path);
+					logger.error(`${path}: ${error.message}`);
+					throw error;
+				}
+			}
 		});
 
 		nuxt.hook("build:before", () => {
 			if (nuxt.options.dev) return;
+			if (unnamed.size > 0) {
+				throw new Error(
+					`[${MODULE_NAME}] The authors of ${[...unnamed].join(", ")} have no name to show (see docs/blog.md).`,
+				);
+			}
 			const problems = contentProblems(nuxt.options.rootDir);
 			if (problems.length === 0) return;
 			throw new Error(

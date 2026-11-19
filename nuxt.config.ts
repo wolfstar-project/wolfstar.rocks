@@ -661,7 +661,14 @@ export default defineNuxtConfig({
 	},
 
 	image: {
-		domains: ["cdn.discordapp.com", "media.discordapp.net", "cdn.wolfstar.rocks"],
+		domains: [
+			"cdn.discordapp.com",
+			"media.discordapp.net",
+			"cdn.wolfstar.rocks",
+			// Blog authors' avatars, from their GitHub accounts.
+			"avatars.githubusercontent.com",
+			"github.com",
+		],
 		format: ["webp", "jpeg", "jpg", "png", "svg"],
 	},
 

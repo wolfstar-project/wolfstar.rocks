@@ -67,7 +67,8 @@ that may be made, [`GLOSSARY.md`](../GLOSSARY.md) for what things are called ("s
 An author with a GitHub `username` gets the name, the picture and the profile link of that account, read from
 [ungh.cc](https://ungh.cc) when the site is built. A field the author sets wins: `to` links the name elsewhere,
 for example to X, and `avatar.src` replaces the picture. If ungh does not answer, the picture is
-`github.com/<username>.png` and the name is the username, so set `name` to be sure of it.
+`github.com/<username>.png`, which is the same picture. The name has no such stand-in: an author without a `name`
+is left out of the site, and the build stops, until ungh answers again. Set `name` so that never happens.
 
 An author can also carry `twitter`, their handle on X without the `@`. When a reader shares the post on X, the
 text credits that handle.

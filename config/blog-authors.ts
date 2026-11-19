@@ -45,8 +45,13 @@ export function isGitHubLogin(value: unknown): value is string {
 
 /**
  * An author as the pages draw it. What the frontmatter sets wins; the account
- * fills the rest. Without an answer from ungh, the avatar is the one GitHub
- * serves at `github.com/<username>.png` and the name is the username.
+ * fills the rest.
+ *
+ * Nuxt Content keeps what this returns until the file changes, so it never
+ * returns a stand-in that loses something. Without an answer from ungh, the
+ * avatar is `github.com/<username>.png`, which GitHub redirects to the same
+ * picture. A name has no such stand-in: an author without one throws, so the
+ * file is parsed again, and asks ungh again, the next time.
  */
 export async function resolveAuthor(
 	author: FrontmatterAuthor,
@@ -63,9 +68,22 @@ export async function resolveAuthor(
 		avatar: author.avatar?.src
 			? author.avatar
 			: { src: user?.avatar ?? `https://github.com/${username}.png` },
-		name: author.name || user?.name || username,
+		name: author.name || user?.name || missingName(username),
 		to: author.to ?? `https://github.com/${username}`,
 	};
+}
+
+export class AuthorNameError extends Error {
+	constructor(username: string) {
+		super(
+			`The author ${username} has no \`name\`, and ungh.cc did not answer with the one of their GitHub account. Add a \`name\`, or try again once ungh.cc answers.`,
+		);
+		this.name = "AuthorNameError";
+	}
+}
+
+function missingName(username: string): never {
+	throw new AuthorNameError(username);
 }
 
 /** Resolves a list of authors, asking ungh once per account. */
@@ -77,7 +95,11 @@ export function createAuthorResolver(
 		const key = username.toLowerCase();
 		let account = accounts.get(key);
 		if (!account) {
-			account = fetchUser(username);
+			// A failed lookup is not kept: the next file asks again.
+			account = fetchUser(username).then((user) => {
+				if (!user) accounts.delete(key);
+				return user;
+			});
 			accounts.set(key, account);
 		}
 		return account;

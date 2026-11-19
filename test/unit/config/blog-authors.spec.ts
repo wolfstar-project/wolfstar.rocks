@@ -1,5 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
-import { createAuthorResolver, isGitHubLogin, resolveAuthor } from "../../../config/blog-authors";
+import {
+	AuthorNameError,
+	createAuthorResolver,
+	isGitHubLogin,
+	resolveAuthor,
+} from "../../../config/blog-authors";
 
 const account = { avatar: "https://avatars.githubusercontent.com/u/76824516?v=4", name: "RedStar" };
 
@@ -37,11 +42,20 @@ describe("resolveAuthor", () => {
 		expect(fetchUser).not.toHaveBeenCalled();
 	});
 
-	it("falls back to GitHub's own avatar and the username when ungh does not answer", async () => {
-		const author = await resolveAuthor({ username: "RedStar071" }, async () => undefined);
+	it("takes GitHub's own avatar of a named author when ungh does not answer", async () => {
+		const author = await resolveAuthor(
+			{ name: "RedStar", username: "RedStar071" },
+			async () => undefined,
+		);
 
 		expect(author.avatar).toEqual({ src: "https://github.com/RedStar071.png" });
-		expect(author.name).toBe("RedStar071");
+		expect(author.name).toBe("RedStar");
+	});
+
+	it("refuses an author without a name when ungh does not answer", async () => {
+		await expect(
+			resolveAuthor({ username: "RedStar071" }, async () => undefined),
+		).rejects.toThrow(AuthorNameError);
 	});
 
 	it("leaves an author without a valid username as written", async () => {
@@ -62,6 +76,20 @@ describe("createAuthorResolver", () => {
 		await resolveAuthors([{ username: "redstar071" }, { username: "RedStar071" }]);
 
 		expect(fetchUser).toHaveBeenCalledTimes(1);
+	});
+
+	it("asks again for an account ungh did not answer for", async () => {
+		const fetchUser = vi
+			.fn<() => Promise<typeof account | undefined>>()
+			.mockResolvedValueOnce(undefined)
+			.mockResolvedValue(account);
+		const resolveAuthors = createAuthorResolver(fetchUser);
+
+		await expect(resolveAuthors([{ username: "RedStar071" }])).rejects.toThrow(AuthorNameError);
+		const [author] = await resolveAuthors([{ username: "RedStar071" }]);
+
+		expect(fetchUser).toHaveBeenCalledTimes(2);
+		expect(author?.name).toBe("RedStar");
 	});
 });
 

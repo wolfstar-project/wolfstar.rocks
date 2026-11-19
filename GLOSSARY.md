@@ -41,6 +41,8 @@ identifiers" at the end.
 | dashboard access    | `permissions.users`/`.roles` rules | server 1—N rule                | "Dashboard access"    |
 | command permissions | Discord, per bot command           | command 1—N row (max 100)      | "Discord permissions" |
 | command rules       | the bot's `/commands`              | command 1—1 rule               | "Command rules"       |
+| blog post           | `content/blog`                     | blog 1—N post                  | "post"                |
+| changelog entry     | `content/changelog`                | changelog 1—N entry            | "Changelog"           |
 
 Collisions
 
@@ -351,12 +353,23 @@ permissions too. Rules of a category are only edited in `/commands`.
 
 **Never:** community server, help desk, ticket.
 
+### blog post
+
+**Is:** a dated piece of writing under `content/blog`, with a page of its own at `/blog/<slug>`. It explains why
+something changed, or announces a direction.
+
+**Collides with:** changelog entry, below. And with `Article`, one of the four categories a post can have: the
+thing itself is a "post", whatever its category.
+
+**Never:** article (for the content type), news, story.
+
 ### changelog entry
 
-**Is:** a dated record of one product change under `content/changelog`.
+**Is:** a dated record of one product change under `content/changelog`. It has no page of its own: every entry
+is on `/changelog`, and the latest are the timeline at the top of `/blog`.
 
-**Collides with:** blog post. A changelog entry states what changed. A blog post (`content/blog`) explains why,
-or announces a direction.
+**Collides with:** blog post. A changelog entry states what changed. A blog post explains why, or announces a
+direction.
 
 **Never:** release note (as a content type), news.
 
@@ -374,13 +387,14 @@ could be meant.
 Routes, TypeScript types, composable names, Prisma models, API paths, and i18n keys keep their existing
 names. A rename costs links, bookmarks, and translations.
 
-| Identifier                              | Why it stays                                          |
-| --------------------------------------- | ----------------------------------------------------- |
-| `/guilds/*`, `server/api/guilds/**`     | Routes and API paths. User-facing word is "server"    |
-| `/oauth/login`, `/oauth/callback`       | Registered with the Discord application               |
-| `/login`, `/account`                    | `definePageMeta` aliases                              |
-| `guild_card`, `guild_settings` i18n key | Locale files and Tolgee keys. The value says "server" |
-| `CommandLog`, `AuditEvent`              | Prisma models shared with the bot or hash-chained     |
+| Identifier                                | Why it stays                                          |
+| ----------------------------------------- | ----------------------------------------------------- |
+| `/guilds/*`, `server/api/guilds/**`       | Routes and API paths. User-facing word is "server"    |
+| `/oauth/login`, `/oauth/callback`         | Registered with the Discord application               |
+| `/login`, `/account`                      | `definePageMeta` aliases                              |
+| `guild_card`, `guild_settings` i18n key   | Locale files and Tolgee keys. The value says "server" |
+| `CommandLog`, `AuditEvent`                | Prisma models shared with the bot or hash-chained     |
+| `blog.edit_article`, `blog.article_links` | Locale files and Tolgee keys. The value says "post"   |
 
 ## Open questions
 

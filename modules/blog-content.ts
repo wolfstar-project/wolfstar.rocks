@@ -1,22 +1,40 @@
-import { relative } from "node:path";
+import { readdirSync, readFileSync } from "node:fs";
+import { join, relative } from "node:path";
 import { defineNuxtModule, useLogger } from "nuxt/kit";
-import { frontmatterProblems } from "../config/blog-content.ts";
+import { fileProblems, frontmatterProblems } from "../config/blog-content.ts";
 import { readingMinutes } from "../shared/utils/blog.ts";
 
 const MODULE_NAME = "wolfstar:blog-content";
+const CHECKED_COLLECTIONS = ["blog", "changelog"] as const;
+
+/** Every problem of the posts and changelog entries, one line per file. */
+function contentProblems(rootDir: string): string[] {
+	const problems: string[] = [];
+	for (const collection of CHECKED_COLLECTIONS) {
+		const dir = join(rootDir, "content", collection);
+		for (const name of readdirSync(dir).filter((file) => file.endsWith(".md"))) {
+			const found = fileProblems(collection, readFileSync(join(dir, name), "utf8"));
+			if (found.length > 0) {
+				problems.push(`content/${collection}/${name}: ${found.join(" ")}`);
+			}
+		}
+	}
+	return problems;
+}
 
 /**
- * Reads every blog post and changelog entry as Nuxt Content parses it.
+ * Checks every blog post and changelog entry, and stores each post's reading time.
  *
- * It reports a frontmatter the pages cannot draw, and a build stops on it.
- * The report is an error in the log and not a thrown one: Nuxt Content would
- * drop the file with a warning and build the site without it, and under
- * `nuxt dev` a throw from the file watcher restarts the whole server.
+ * A build reads the files themselves and stops on a frontmatter the pages
+ * cannot draw. It does not rely on Nuxt Content's parse hook for that: a file
+ * whose content is in Nuxt Content's cache, which a `pnpm dev` session fills,
+ * is never parsed again. Under `nuxt dev` the hook reports a file as it is
+ * saved, as an error in the log: a throw from the file watcher would restart
+ * the whole server.
  *
- * It also stores each post's reading time next to it, so a list of posts shows
- * "4 min read" without loading every body to count its words. Nuxt Content
- * keeps only the fields its collection schema names: `readingTime` is declared
- * in `content.config.ts`.
+ * The reading time lets a list of posts show "4 min read" without loading every
+ * body to count its words. Nuxt Content keeps only the fields its collection
+ * schema names: `readingTime` is declared in `content.config.ts`.
  */
 export default defineNuxtModule({
 	meta: {
@@ -24,15 +42,14 @@ export default defineNuxtModule({
 	},
 	setup(_, nuxt) {
 		const logger = useLogger(MODULE_NAME);
-		const refused: string[] = [];
 
 		nuxt.hook("content:file:afterParse", ({ collection, content, file }) => {
-			const problems = frontmatterProblems(collection.name, content);
-			if (problems.length > 0) {
-				const path = relative(nuxt.options.rootDir, file.path).replaceAll("\\", "/");
-				const message = `${path}: ${problems.join(" ")} See docs/blog.md.`;
-				refused.push(message);
-				logger.error(message);
+			if (nuxt.options.dev) {
+				const problems = frontmatterProblems(collection.name, content);
+				if (problems.length > 0) {
+					const path = relative(nuxt.options.rootDir, file.path).replaceAll("\\", "/");
+					logger.error(`${path}: ${problems.join(" ")} See docs/blog.md.`);
+				}
 			}
 
 			if (collection.name === "blog") {
@@ -40,11 +57,12 @@ export default defineNuxtModule({
 			}
 		});
 
-		// Nuxt Content has parsed every file by now: it does so on `modules:done`.
 		nuxt.hook("build:before", () => {
-			if (nuxt.options.dev || refused.length === 0) return;
+			if (nuxt.options.dev) return;
+			const problems = contentProblems(nuxt.options.rootDir);
+			if (problems.length === 0) return;
 			throw new Error(
-				`[${MODULE_NAME}] The frontmatter of ${refused.length} content file(s) has to be fixed first:\n${refused.join("\n")}`,
+				`[${MODULE_NAME}] The frontmatter of ${problems.length} content file(s) has to be fixed first (see docs/blog.md):\n${problems.join("\n")}`,
 			);
 		});
 	},

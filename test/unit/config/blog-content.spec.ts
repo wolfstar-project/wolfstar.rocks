@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { frontmatterProblems } from "../../../config/blog-content";
+import { fileProblems, frontmatterProblems } from "../../../config/blog-content";
 
 const post = {
 	authors: [{ name: "RedStar" }],
@@ -57,5 +57,38 @@ describe("frontmatterProblems", () => {
 
 	it("leaves the other collections alone", () => {
 		expect(frontmatterProblems("landing", {})).toEqual([]);
+	});
+});
+
+describe("fileProblems", () => {
+	const source = [
+		"---",
+		"title: WolfStar v7 alpha",
+		"description: The v7 alpha is live.",
+		"date: 2026-10-12",
+		"category: Release",
+		"authors:",
+		"    - name: RedStar",
+		"---",
+		"",
+		"Body.",
+	].join("\n");
+
+	it("reads the frontmatter of a post as it is written", () => {
+		expect(fileProblems("blog", source)).toEqual([]);
+	});
+
+	it("refuses a post whose category is written in lower case", () => {
+		expect(fileProblems("blog", source.replace("Release", "release"))).toEqual([
+			"`category` must be one of: Release, Announcement, Tutorial, Article.",
+		]);
+	});
+
+	it("refuses a file without frontmatter", () => {
+		expect(fileProblems("changelog", "Just a body.")).toEqual(["The file has no frontmatter."]);
+	});
+
+	it("refuses a frontmatter that is not YAML", () => {
+		expect(fileProblems("blog", "---\ntitle: [unclosed\n---\n")[0]).toContain("not valid YAML");
 	});
 });

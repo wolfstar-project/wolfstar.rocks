@@ -9,9 +9,9 @@ import {
 	AppHeaderAuthSkeleton,
 	AppLogoMark,
 	AppPreferences,
-	BlogCategoryNav,
-	BlogChangelogTimeline,
-	BlogPostCard,
+	UpdatesCategoryNav,
+	UpdatesChangelogTimeline,
+	UpdatesPostCard,
 	ConsentManager,
 	ConsentSettingsDialog,
 
@@ -635,9 +635,9 @@ describe("component accessibility audits", () => {
 		});
 	});
 
-	describe("Blog", () => {
+	describe("Updates", () => {
 		it("should have no accessibility violations for the changelog timeline", async () => {
-			const component = await mountSuspended(BlogChangelogTimeline, {
+			const component = await mountSuspended(UpdatesChangelogTimeline, {
 				props: {
 					entries: [
 						{
@@ -662,7 +662,7 @@ describe("component accessibility audits", () => {
 		});
 
 		it("should have no accessibility violations for a post card", async () => {
-			const component = await mountSuspended(BlogPostCard, {
+			const component = await mountSuspended(UpdatesPostCard, {
 				props: {
 					post: {
 						authors: [{ name: "RedStar" }],
@@ -681,12 +681,12 @@ describe("component accessibility audits", () => {
 		});
 
 		it("should have no accessibility violations for the category links", async () => {
-			const component = await mountSuspended(BlogCategoryNav, {
+			const component = await mountSuspended(UpdatesCategoryNav, {
 				props: {
 					active: "release",
 					links: [
-						{ label: "All", to: "/blog", value: "all" },
-						{ label: "Releases", to: "/blog?category=release", value: "release" },
+						{ label: "All", to: "/updates", value: "all" },
+						{ label: "Releases", to: "/updates?category=release", value: "release" },
 					],
 				},
 			});

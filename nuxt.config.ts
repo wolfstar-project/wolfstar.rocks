@@ -352,7 +352,10 @@ export default defineNuxtConfig({
 		"/staryl": { appLayout: "default", prerender: true, robots: true },
 		"/terms": { appLayout: "default", prerender: true, robots: true },
 		"/wolfstar": { appLayout: "default", prerender: true, robots: true },
-		"/blog": { appLayout: "default", prerender: true, robots: true },
+		// The page that lists the posts and the changelog is `/updates`. Posts keep
+		// their addresses under `/blog/`, and the feed stays `/blog/rss.xml`.
+		"/blog": { redirect: { statusCode: 301, to: "/updates" } },
+		"/updates": { appLayout: "default", prerender: true, robots: true },
 		"/blog/**": { appLayout: "default", prerender: true, robots: true },
 		"/translation-status": { appLayout: "default", prerender: true, robots: true },
 		// lunaria status.json — always revalidate so the app sees fresh progress

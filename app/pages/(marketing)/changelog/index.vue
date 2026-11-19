@@ -22,9 +22,9 @@
 						class="pointer-coarse:min-h-11"
 					/>
 					<UButton
-						to="/blog"
+						to="/updates"
 						icon="i-lucide-newspaper"
-						:label="ts('nav.blog')"
+						:label="ts('updates.title')"
 						variant="ghost"
 						color="neutral"
 						class="pointer-coarse:min-h-11"

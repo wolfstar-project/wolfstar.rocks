@@ -126,7 +126,7 @@ function markup({ category, description, title }: Frontmatter): string {
 		<h1 class="title" style="font-size: ${titleSize(title)}px">${escapeHtml(title)}</h1>
 		${description ? `<p class="description">${escapeHtml(description)}</p>` : ""}
 	</div>
-	<div class="site">wolfstar.rocks/blog</div>
+	<div class="site">wolfstar.rocks/updates</div>
 </div>`;
 }
 

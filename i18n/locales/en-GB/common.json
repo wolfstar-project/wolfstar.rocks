@@ -22,7 +22,6 @@
 			"tutorial": ""
 		},
 		"copy_url": "",
-		"description": "",
 		"edit_article": "",
 		"empty": {
 			"description": "",
@@ -45,7 +44,6 @@
 			"older": "",
 			"view_all": ""
 		},
-		"title": "",
 		"toc": ""
 	},
 	"changelog": {
@@ -85,7 +83,6 @@
 		"system": "System"
 	},
 	"footer": {
-		"blog": "Blog",
 		"changelog": "Changelog",
 		"column_links": "Footer {label} links",
 		"community": "Community",
@@ -129,7 +126,6 @@
 		"advanced_logging": "Advanced Logging",
 		"advanced_logging_description": "Track and log events in your server",
 		"applications": "Applications",
-		"blog": "Blog",
 		"changelog": "Changelog",
 		"commands": "Commands",
 		"features": "Features",
@@ -155,6 +151,10 @@
 		"progress_by_locale": "Progress by locale",
 		"source_locale": "Source locale",
 		"title": "Translation Status"
+	},
+	"updates": {
+		"description": "",
+		"title": ""
 	},
 	"user_menu": {
 		"report_bug": "Report a Bug",

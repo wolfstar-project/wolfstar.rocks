@@ -7,7 +7,7 @@
 	},
 	"blog": {
 		"article_links": "Link del post",
-		"back": "Torna al blog",
+		"back": "Torna agli aggiornamenti",
 		"categories": {
 			"all": "Tutti",
 			"announcement": "Annunci",
@@ -22,7 +22,6 @@
 			"tutorial": "Tutorial"
 		},
 		"copy_url": "Copia URL",
-		"description": "Cosa è cambiato nel WolfStar Project, e perché.",
 		"edit_article": "Modifica questo post",
 		"empty": {
 			"description": "Un post spiega perché qualcosa è cambiato. Il registro delle modifiche elenca cosa è cambiato.",
@@ -45,7 +44,6 @@
 			"older": "Voci meno recenti del registro delle modifiche",
 			"view_all": "Vedi tutto il registro delle modifiche"
 		},
-		"title": "Il blog di WolfStar",
 		"toc": "Indice"
 	},
 	"changelog": {
@@ -85,7 +83,6 @@
 		"system": "Sistema"
 	},
 	"footer": {
-		"blog": "Blog",
 		"changelog": "Registro delle modifiche",
 		"column_links": "Link del piè di pagina {label}",
 		"community": "Community",
@@ -129,7 +126,6 @@
 		"advanced_logging": "Logging avanzato",
 		"advanced_logging_description": "Traccia e registra gli eventi nel tuo server",
 		"applications": "Applicazioni",
-		"blog": "Blog",
 		"changelog": "Registro delle modifiche",
 		"commands": "Comandi",
 		"features": "Funzionalità",
@@ -155,6 +151,10 @@
 		"progress_by_locale": "Progresso per lingua",
 		"source_locale": "Lingua di origine",
 		"title": "Stato delle traduzioni"
+	},
+	"updates": {
+		"description": "Cosa è cambiato nel WolfStar Project, e perché.",
+		"title": "Aggiornamenti"
 	},
 	"user_menu": {
 		"report_bug": "Segnala un bug",

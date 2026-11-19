@@ -36,7 +36,7 @@ export function readingMinutes(markdown: string): number {
 	return Math.max(1, Math.round(words / WORDS_PER_MINUTE));
 }
 
-/** `/blog?category=release` for `Release`. */
+/** `/updates?category=release` for `Release`. */
 export function blogCategorySlug(category: string): string {
 	return category.toLowerCase();
 }

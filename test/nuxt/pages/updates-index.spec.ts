@@ -1,7 +1,7 @@
 import type { VueWrapper } from "@vue/test-utils";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import BlogIndex from "~/pages/(marketing)/blog/index.vue";
+import UpdatesIndex from "~/pages/(marketing)/updates/index.vue";
 
 const alphaPost = {
 	path: "/blog/wolfstar-v7-alpha",
@@ -54,8 +54,8 @@ mockNuxtImport("queryCollection", () => queryCollectionMock);
 // read them instead of asking for the content again.
 const mounted: VueWrapper[] = [];
 
-async function mountBlog(route = "/blog") {
-	const wrapper = await mountSuspended(BlogIndex, { route });
+async function mountUpdates(route = "/updates") {
+	const wrapper = await mountSuspended(UpdatesIndex, { route });
 	mounted.push(wrapper);
 	return wrapper;
 }
@@ -67,7 +67,7 @@ function categoryLinks(wrapper: VueWrapper) {
 		.map((link) => link.text());
 }
 
-describe("blog page", () => {
+describe("updates page", () => {
 	beforeEach(() => {
 		content.blog = [alphaPost, proposalPost];
 		content.changelog = [redesignEntry];
@@ -78,7 +78,7 @@ describe("blog page", () => {
 	});
 
 	it("lists each post with its category, date and reading time", async () => {
-		const wrapper = await mountBlog();
+		const wrapper = await mountUpdates();
 
 		const card = wrapper.get(`a[href="${alphaPost.path}"]`).element.closest("article");
 		expect(card?.textContent).toContain("The alpha is live");
@@ -89,14 +89,14 @@ describe("blog page", () => {
 	});
 
 	it("leaves the reading time out of a post that has none", async () => {
-		const wrapper = await mountBlog();
+		const wrapper = await mountUpdates();
 
 		const card = wrapper.get(`a[href="${proposalPost.path}"]`).element.closest("article");
 		expect(card?.textContent).not.toContain("min read");
 	});
 
 	it("links a changelog entry to its place on the changelog page", async () => {
-		const wrapper = await mountBlog();
+		const wrapper = await mountUpdates();
 
 		const entry = wrapper.get('a[href="/changelog#homepage-redesign"]');
 		expect(entry.text()).toContain("Redesigned homepages");
@@ -106,20 +106,20 @@ describe("blog page", () => {
 	it("leaves the changelog out when it has no entry", async () => {
 		content.changelog = [];
 
-		const wrapper = await mountBlog();
+		const wrapper = await mountUpdates();
 
 		expect(wrapper.find("#changelog-heading").exists()).toBe(false);
 		expect(wrapper.text()).toContain("The alpha is live");
 	});
 
 	it("offers only the categories a post uses", async () => {
-		const wrapper = await mountBlog();
+		const wrapper = await mountUpdates();
 
 		expect(categoryLinks(wrapper)).toEqual(["All", "Releases", "Announcements"]);
 	});
 
 	it("lists only the posts of the category in the address", async () => {
-		const wrapper = await mountBlog("/blog?category=announcement");
+		const wrapper = await mountUpdates("/updates?category=announcement");
 
 		expect(wrapper.text()).toContain("A network of single-purpose bots");
 		expect(wrapper.text()).not.toContain("The alpha is live");
@@ -127,7 +127,7 @@ describe("blog page", () => {
 	});
 
 	it("lists every post when no post uses the category in the address", async () => {
-		const wrapper = await mountBlog("/blog?category=tutorial");
+		const wrapper = await mountUpdates("/updates?category=tutorial");
 
 		expect(wrapper.text()).toContain("The alpha is live");
 		expect(wrapper.text()).toContain("A network of single-purpose bots");
@@ -137,7 +137,7 @@ describe("blog page", () => {
 	it("points to the changelog when there is no post", async () => {
 		content.blog = [];
 
-		const wrapper = await mountBlog();
+		const wrapper = await mountUpdates();
 
 		expect(wrapper.text()).toContain("No posts yet");
 		expect(wrapper.findAll('a[href="/changelog"]').length).toBeGreaterThan(0);

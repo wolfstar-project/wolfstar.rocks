@@ -22,6 +22,15 @@ describe("isAllowedDomain", () => {
 		}
 	});
 
+	it("should return true for the bot APIs of production and beta", () => {
+		expect(isAllowedDomain("https://api.wolfstar.integrations.wolfstar.rocks/commands")).toBe(
+			true,
+		);
+		expect(
+			isAllowedDomain("https://api.wolfstar.beta.integrations.wolfstar.rocks/commands"),
+		).toBe(true);
+	});
+
 	it("should return false for disallowed domains", () => {
 		expect(isAllowedDomain("https://evil.com/api")).toBe(false);
 		expect(isAllowedDomain("https://google.com")).toBe(false);
@@ -120,10 +129,5 @@ describe("constants", () => {
 
 	it("should have a storage base key", () => {
 		expect(FETCH_CACHE_STORAGE_BASE).toBe("fetch-cache");
-	});
-
-	it("should have known allowed domains", () => {
-		expect(FETCH_CACHE_ALLOWED_DOMAINS).toContain("wolfstar.rocks");
-		expect(FETCH_CACHE_ALLOWED_DOMAINS).toContain("api.wolfstar.rocks");
 	});
 });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fileProblems, frontmatterProblems } from "../../../config/blog-content";
+import { fileProblems, frontmatterProblems, readFrontmatter } from "../../../config/blog-content";
 
 const post = {
 	authors: [{ name: "RedStar" }],
@@ -90,5 +90,30 @@ describe("fileProblems", () => {
 
 	it("refuses a frontmatter that is not YAML", () => {
 		expect(fileProblems("blog", "---\ntitle: [unclosed\n---\n")[0]).toContain("not valid YAML");
+	});
+});
+
+describe("readFrontmatter", () => {
+	it("reads a folded title as one line of text", () => {
+		const source =
+			"---\ntitle: >-\n    A title that is folded\n    over two lines\ncategory: Release\n---\nBody.";
+
+		expect(readFrontmatter(source).fields?.title).toBe("A title that is folded over two lines");
+	});
+
+	it("leaves a trailing comment out of the value", () => {
+		const source = "---\ntitle: WolfStar v7 alpha # the cover reads this\n---\nBody.";
+
+		expect(readFrontmatter(source).fields?.title).toBe("WolfStar v7 alpha");
+	});
+
+	it("reads quoted values without their quotes", () => {
+		const source =
+			'---\ntitle: \'Fixed a false "session not found" error\'\ndescription: "It\'s back"\n---\n';
+
+		expect(readFrontmatter(source).fields).toEqual({
+			description: "It's back",
+			title: 'Fixed a false "session not found" error',
+		});
 	});
 });

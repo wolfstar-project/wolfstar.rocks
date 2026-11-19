@@ -15,6 +15,7 @@ import { join } from "node:path";
 import process from "node:process";
 import { parseArgs } from "node:util";
 import { Renderer } from "@takumi-rs/core";
+import { readFrontmatter } from "../config/blog-content.ts";
 
 const ROOT = process.cwd();
 /** 1.9:1, the shape link previews use; the 16:9 card on `/blog` crops 3% off each side. */
@@ -80,32 +81,25 @@ interface Frontmatter {
 	category: string;
 }
 
-/** The value of a top-level `key: value` line, without the quotes YAML allows around it. */
-function readField(frontmatter: string, key: string): string {
-	const value = new RegExp(`^${key}:[ \\t]*(.+)$`, "m").exec(frontmatter)?.[1]?.trim() ?? "";
-	const quote = value[0];
-	if ((quote === '"' || quote === "'") && value.endsWith(quote) && value.length > 1) {
-		const inner = value.slice(1, -1);
-		return quote === "'" ? inner.replaceAll("''", "'") : inner.replaceAll('\\"', '"');
-	}
-	return value;
+function text(value: unknown): string {
+	return typeof value === "string" ? value.trim() : "";
 }
 
-function readFrontmatter(file: string): Frontmatter {
-	const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---/.exec(readFileSync(file, "utf8"))?.[1];
-	if (frontmatter === undefined) {
-		throw new Error(`${file} has no frontmatter.`);
+function readCoverText(file: string): Frontmatter {
+	const { fields, problem } = readFrontmatter(readFileSync(file, "utf8"));
+	if (!fields) {
+		throw new Error(`${file}: ${problem}`);
 	}
 
-	const fields = {
-		category: readField(frontmatter, "category"),
-		description: readField(frontmatter, "description"),
-		title: readField(frontmatter, "title"),
+	const cover = {
+		category: text(fields.category),
+		description: text(fields.description),
+		title: text(fields.title),
 	};
-	if (!fields.title) {
+	if (!cover.title) {
 		throw new Error(`${file} has no title to put on the cover.`);
 	}
-	return fields;
+	return cover;
 }
 
 function escapeHtml(text: string): string {
@@ -170,7 +164,7 @@ async function main() {
 		);
 	}
 
-	const cover = await renderer.render(markup(readFrontmatter(post)), {
+	const cover = await renderer.render(markup(readCoverText(post)), {
 		css: [STYLES],
 		dithering: "ordered-bayer",
 		format: "jpeg",

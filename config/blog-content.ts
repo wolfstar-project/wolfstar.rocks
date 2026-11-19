@@ -62,25 +62,38 @@ export function frontmatterProblems(
 
 const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---/;
 
+type FrontmatterResult =
+	| { fields: Record<string, unknown>; problem?: never }
+	| { fields?: never; problem: string };
+
+/**
+ * The fields of a Markdown file's frontmatter, read as YAML, so a folded
+ * `title: >-` or a trailing `# comment` reads as Nuxt Content reads it.
+ */
+export function readFrontmatter(source: string): FrontmatterResult {
+	const block = FRONTMATTER.exec(source)?.[1];
+	if (block === undefined) return { problem: "The file has no frontmatter." };
+
+	let fields: unknown;
+	try {
+		fields = parseYaml(block);
+	} catch (error) {
+		return {
+			problem: `The frontmatter is not valid YAML: ${error instanceof Error ? error.message : error}`,
+		};
+	}
+	if (typeof fields !== "object" || fields === null || Array.isArray(fields)) {
+		return { problem: "The frontmatter is not a list of fields." };
+	}
+	return { fields: fields as Record<string, unknown> };
+}
+
 /**
  * What is wrong with one Markdown file of `content/blog` or `content/changelog`,
  * read from its source. The build checks the files themselves rather than what
  * Nuxt Content parsed: a file it already holds in its cache is never parsed again.
  */
 export function fileProblems(collection: string, source: string): string[] {
-	const block = FRONTMATTER.exec(source)?.[1];
-	if (block === undefined) return ["The file has no frontmatter."];
-
-	let frontmatter: unknown;
-	try {
-		frontmatter = parseYaml(block);
-	} catch (error) {
-		return [
-			`The frontmatter is not valid YAML: ${error instanceof Error ? error.message : error}`,
-		];
-	}
-	if (typeof frontmatter !== "object" || frontmatter === null || Array.isArray(frontmatter)) {
-		return ["The frontmatter is not a list of fields."];
-	}
-	return frontmatterProblems(collection, frontmatter as Record<string, unknown>);
+	const { fields, problem } = readFrontmatter(source);
+	return fields ? frontmatterProblems(collection, fields) : [problem];
 }

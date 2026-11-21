@@ -65,7 +65,7 @@ export default defineNitroPlugin((nitroApp) => {
 
 	nitroApp.hooks.hook("request", (event) => {
 		if (!isEvent(event)) return;
-		const url = hyperdriveConnectionString(event.context.cloudflare);
+		const url = hyperdriveConnectionString(event.req.runtime?.cloudflare);
 		if (url === undefined) return;
 		// No check of the contract against the database: on a client per request it
 		// would add three round trips to each one. `contract-pin.spec.ts` holds the

@@ -17,7 +17,9 @@ function* walkAtComponents(dir: string, inComponents = false): Generator<string>
 		if (entry.isDirectory()) {
 			yield* walkAtComponents(full, inComponents || entry.name === "@components");
 		} else if (inComponents && entry.name.endsWith(".vue")) {
-			yield full;
+			// Forward slashes on Windows too: the path ends up inside an `import`
+			// statement, where a backslash starts an escape sequence.
+			yield full.replaceAll("\\", "/");
 		}
 	}
 }

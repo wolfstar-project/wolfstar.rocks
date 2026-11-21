@@ -1,5 +1,6 @@
 import type { GuildData } from "#server/database";
 import type { ComponentInternalInstance } from "vue";
+import type { SocialModuleStatus } from "~/composables/useSocialModule";
 import { GUILD_MODULES } from "#shared/utils/guild-modules";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -40,6 +41,29 @@ mockNuxtImport("useToast", () => () => ({
 	add: mockToastAdd,
 }));
 
+// Staryl holds the Social module, so its state comes from Staryl and not from the settings.
+const socialReady = (enabled: boolean): SocialModuleStatus => ({
+	kind: "ready",
+	state: {
+		enabled,
+		installed: true,
+		limits: { messageLength: 200, subscriptions: 25, targetLength: 500, xAccounts: 2 },
+		providers: [],
+		subscriptions: [],
+		twitch: [],
+		twitchLiveConfigured: true,
+	},
+});
+const mockSocialStatus = ref<SocialModuleStatus>(socialReady(true));
+const mockSetSocialEnabled = vi.fn();
+const mockRefreshSocial = vi.fn();
+
+mockNuxtImport("useSocialModule", () => () => ({
+	refresh: mockRefreshSocial,
+	setEnabled: mockSetSocialEnabled,
+	status: mockSocialStatus,
+}));
+
 interface ModulesSetupState {
 	state: Record<string, boolean>;
 	enabledCount: number;
@@ -57,6 +81,8 @@ describe("modules guild settings", () => {
 		vi.clearAllMocks();
 		mockGuildSettings.value = createInitialGuildSettings();
 		mockOriginalGuildSettings.value = createInitialGuildSettings();
+		mockSocialStatus.value = socialReady(true);
+		mockSetSocialEnabled.mockResolvedValue({ ok: true, value: false });
 
 		if (import.meta.client) {
 			clearNuxtState();
@@ -74,11 +100,96 @@ describe("modules guild settings", () => {
 		// Moderation, Roles and the Events are on; the honeypot is set up in
 		// Discord and the three lists of channels have no switch, so they always
 		// open; a module that is off has to be enabled first, and the appeals and
-		// the join guard are off until their switch is on.
-		expect(buttonsLabelled("Configure")).toHaveLength(7);
+		// the join guard are off until their switch is on. Staryl's Social opens too.
+		expect(buttonsLabelled("Configure")).toHaveLength(8);
 		expect(buttonsLabelled("Enable first")).toHaveLength(GUILD_MODULES.length - 3 + 2);
-		// The flags of `Modules`, the honeypot, the appeals, the join guard and the three Auto-* modules.
-		expect(wrapper.findAll('[aria-label^="Toggle "]')).toHaveLength(GUILD_MODULES.length + 6);
+		// The flags of `Modules`, the honeypot, the appeals, the join guard, the three Auto-* modules
+		// and Staryl's Social.
+		expect(wrapper.findAll('[aria-label^="Toggle "]')).toHaveLength(GUILD_MODULES.length + 7);
+	});
+
+	describe("Staryl's Social", () => {
+		it("is shown apart, and not counted with the switches of WolfStar", async () => {
+			mockSocialStatus.value = socialReady(false);
+			const wrapper = await mountSuspended(Modules);
+			await nextTick();
+
+			const social = wrapper.get('[aria-label="Toggle Social"]');
+			expect(social.attributes("aria-checked")).toBe("false");
+			expect(wrapper.text()).toContain("No subscription");
+			// Off, it takes nothing from the count, which is of the staged switches.
+			expect(wrapper.text()).toContain(`/ ${MODULE_SWITCH_KEYS.length} enabled`);
+		});
+
+		it("saves a flip of its switch at once", async () => {
+			const wrapper = await mountSuspended(Modules);
+			await nextTick();
+
+			await wrapper.get('[aria-label="Toggle Social"]').trigger("click");
+
+			expect(mockSetSocialEnabled).toHaveBeenCalledWith(false);
+		});
+
+		it("is left alone by Disable all, which stages WolfStar's switches", async () => {
+			const wrapper = await mountSuspended(Modules);
+			await nextTick();
+
+			const disableAll = wrapper
+				.findAll("button")
+				.find((button) => button.text() === "Disable all");
+			await disableAll?.trigger("click");
+			await nextTick();
+
+			expect(mockSetSocialEnabled).not.toHaveBeenCalled();
+			expect(wrapper.get('[aria-label="Toggle Social"]').attributes("aria-checked")).toBe(
+				"true",
+			);
+		});
+
+		it("says why a flip did not go through", async () => {
+			mockSetSocialEnabled.mockResolvedValue({ code: "unavailable", ok: false });
+			const wrapper = await mountSuspended(Modules);
+			await nextTick();
+
+			await wrapper.get('[aria-label="Toggle Social"]').trigger("click");
+
+			await vi.waitFor(() =>
+				expect(mockToastAdd).toHaveBeenCalledWith(
+					expect.objectContaining({
+						color: "error",
+						description:
+							"The dashboard could not reach Staryl. Try again in a few minutes.",
+					}),
+				),
+			);
+		});
+
+		it("offers Staryl's invite, and no switch, where Staryl is not in the server", async () => {
+			mockSocialStatus.value = { kind: "not-installed" };
+			const wrapper = await mountSuspended(Modules);
+			await nextTick();
+
+			expect(wrapper.find('[aria-label="Toggle Social"]').exists()).toBe(false);
+			expect(wrapper.text()).toContain("Staryl is not in this server");
+			const invite = wrapper.findAll("a").find((link) => link.text() === "Invite Staryl");
+			expect(invite?.attributes("href")).toBe(useInvites().Staryl);
+		});
+
+		it("says Social is not available when Staryl cannot be reached, and tries again", async () => {
+			mockSocialStatus.value = { kind: "unavailable" };
+			const wrapper = await mountSuspended(Modules);
+			await nextTick();
+
+			expect(wrapper.find('[aria-label="Toggle Social"]').exists()).toBe(false);
+			expect(wrapper.text()).toContain("Not available");
+
+			const retry = wrapper
+				.findAll("button")
+				.find((button) => button.text() === "Retry Social");
+			await retry?.trigger("click");
+
+			expect(mockRefreshSocial).toHaveBeenCalledOnce();
+		});
 	});
 
 	it("tells whether the honeypot is set up, from its channel", async () => {

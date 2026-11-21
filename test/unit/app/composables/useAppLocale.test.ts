@@ -91,6 +91,7 @@ describe("createLocaleSelector", () => {
 			const settle = code === "de-DE" ? older.promise : newer.promise;
 			return settle.then(() => {
 				currentLocale = code;
+				return true;
 			});
 		});
 		const setPreferredLocale = vi.fn();
@@ -122,6 +123,7 @@ describe("createLocaleSelector", () => {
 		const switchLocale = vi.fn((code: string) =>
 			(code === "de-DE" ? older.promise : newer.promise).then(() => {
 				currentLocale = code;
+				return true;
 			}),
 		);
 		const setPreferredLocale = vi.fn();
@@ -157,8 +159,9 @@ describe("createLocaleSelector", () => {
 			code === "de-DE"
 				? older.promise.then(() => {
 						currentLocale = code;
+						return true;
 					})
-				: newer.promise,
+				: newer.promise.then(() => false),
 		);
 		const setPreferredLocale = vi.fn();
 		const selectLocale = createLocaleSelector({

@@ -1,3 +1,9 @@
+import type { BLOG_CATEGORIES, CHANGELOG_KINDS } from "#shared/utils/blog";
+
+export type BlogCategory = (typeof BLOG_CATEGORIES)[number];
+
+export type ChangelogKind = (typeof CHANGELOG_KINDS)[number];
+
 interface BlogAuthor {
 	name: string;
 	description?: string;
@@ -9,17 +15,23 @@ interface BlogAuthor {
 	};
 }
 
-export interface BlogArticle {
+/** What a list of posts needs of each one: no body. */
+export interface BlogPostSummary {
 	path: string;
-	stem?: string;
 	title: string;
 	description: string;
 	date: string;
 	image?: string;
-	category: "Release" | "Tutorial" | "Announcement" | "Article";
+	category: BlogCategory;
+	authors: BlogAuthor[];
+	/** Whole minutes, written at build time by `modules/blog-content.ts`. */
+	readingTime?: number;
+}
+
+export interface BlogArticle extends BlogPostSummary {
+	stem?: string;
 	tags: string[];
 	draft: boolean;
-	authors: BlogAuthor[];
 	body?: {
 		toc?: {
 			links: Array<{
@@ -34,4 +46,13 @@ export interface BlogArticle {
 			}>;
 		};
 	};
+}
+
+/** What the blog's timeline needs of a changelog entry: no body. */
+export interface ChangelogEntrySummary {
+	path: string;
+	title: string;
+	description: string;
+	date: string;
+	kind: ChangelogKind;
 }

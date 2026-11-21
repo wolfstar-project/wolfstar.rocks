@@ -139,12 +139,42 @@
 			</section>
 		</div>
 	</GuildSettingsForm>
+
+	<!-- Staryl's modules: their switch is Staryl's, so it saves at once and is not counted above. -->
+	<section class="flex flex-col gap-4" :aria-labelledby="externalHeadingId">
+		<div>
+			<h2 :id="externalHeadingId" class="text-[1.0625rem] font-semibold">
+				{{ ts("guild_settings.modules.staryl_title") }}
+			</h2>
+			<p class="mt-1 text-[0.8125rem] text-muted">
+				{{ ts("guild_settings.modules.staryl_subtitle") }}
+			</p>
+		</div>
+		<div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+			<GuildExternalModuleCard
+				v-for="module in EXTERNAL_GUILD_MODULES"
+				:key="module.key"
+				:icon="module.icon"
+				:title="ts(module.labelKey)"
+				:description="ts(module.descriptionKey)"
+				:service="module.service"
+				:status="externalStatus[module.key]"
+				:busy="externalBusy"
+				@toggle="toggleExternal(module.key, $event)"
+				@configure="goToSection(module.section)"
+				@retry="social.refresh()"
+			/>
+		</div>
+	</section>
 </template>
 
 <script setup lang="ts">
 import type { GuildModuleDefinition, GuildModuleEntry } from "#shared/utils/guild-modules";
+import type { ExternalModuleCardStatus } from "~/components/guild/ExternalModuleCard.vue";
 import type { AutoChannelSlug } from "~/composables/useAutoChannels";
 const { tc, ts } = useI18n();
+const toast = useToast();
+const invites = useInvites();
 const { goToSection } = useDashboardNavigation();
 const { guildSettings } = useGuildSettings();
 
@@ -286,5 +316,49 @@ function setAll(enabled: boolean) {
 	for (const key of MODULE_SWITCH_KEYS) {
 		state[key] = enabled;
 	}
+}
+
+// The modules another service holds. Each key of the registry has its composable here.
+const externalHeadingId = useId();
+const social = useSocialModule(activeGuildId);
+
+const externalStatus = computed<
+	Record<(typeof EXTERNAL_GUILD_MODULES)[number]["key"], ExternalModuleCardStatus>
+>(() => {
+	const status = social.status.value;
+	return {
+		social:
+			status.kind === "ready"
+				? {
+						kind: "ready",
+						enabled: status.state.enabled,
+						summary: tc(
+							"guild_settings.modules.subscription_count",
+							status.state.subscriptions.length + status.state.twitch.length,
+						),
+					}
+				: status.kind === "not-installed"
+					? { kind: "not-installed", inviteUrl: invites.Staryl }
+					: status,
+	};
+});
+
+const externalBusy = ref(false);
+
+async function toggleExternal(
+	_key: (typeof EXTERNAL_GUILD_MODULES)[number]["key"],
+	enabled: boolean,
+) {
+	externalBusy.value = true;
+	const result = await social.setEnabled(enabled);
+	externalBusy.value = false;
+	if (result.ok) return;
+
+	toast.add({
+		color: "error",
+		description: ts(`guild_settings.social.errors.${result.code.replaceAll("-", "_")}`),
+		icon: "heroicons:x-circle",
+		title: ts("guild_settings.save_failed"),
+	});
 }
 </script>

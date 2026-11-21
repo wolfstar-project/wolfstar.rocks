@@ -9,6 +9,11 @@ import {
 	AppHeaderAuthSkeleton,
 	AppLogoMark,
 	AppPreferences,
+	BlogPageActions,
+	BlogReadingProgress,
+	UpdatesCategoryNav,
+	UpdatesChangelogTimeline,
+	UpdatesPostCard,
 	ConsentManager,
 	ConsentSettingsDialog,
 
@@ -74,6 +79,7 @@ import {
 	GuildLogsCaseDetail,
 	GuildMemberPicker,
 	GuildReviewQueue,
+	GuildExternalModuleCard,
 	GuildServerRail,
 	GuildSettingsAccess,
 	GuildSettingsAppeals,
@@ -89,6 +95,7 @@ import {
 	GuildSettingsModeration,
 	GuildModerationWarnThresholds,
 	GuildSettingsSection,
+	GuildSettingsSocial,
 	GuildSetupWizard,
 	GuildSettingsToggleRow,
 	IconsApp,
@@ -627,6 +634,84 @@ describe("component accessibility audits", () => {
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
 			});
+		});
+	});
+
+	describe("Updates", () => {
+		it("should have no accessibility violations for the changelog timeline", async () => {
+			const component = await mountSuspended(UpdatesChangelogTimeline, {
+				props: {
+					entries: [
+						{
+							date: "2026-08-25",
+							description: "Both bot landing pages got a visual pass.",
+							kind: "improved",
+							path: "/changelog/homepage-redesign",
+							title: "Redesigned homepages",
+						},
+						{
+							date: "2026-08-24",
+							description: "The callback page could claim your session was missing.",
+							kind: "fixed",
+							path: "/changelog/oauth-session-fix",
+							title: "Fixed a false session error",
+						},
+					],
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("should have no accessibility violations for a post card", async () => {
+			const component = await mountSuspended(UpdatesPostCard, {
+				props: {
+					post: {
+						authors: [{ name: "RedStar" }],
+						category: "Release",
+						date: "2026-10-12",
+						description: "Notes, a honeypot channel, and settings export.",
+						image: "/logo.svg",
+						path: "/blog/wolfstar-v7-alpha",
+						readingTime: 3,
+						title: "The alpha is live",
+					},
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("should have no accessibility violations for the category links", async () => {
+			const component = await mountSuspended(UpdatesCategoryNav, {
+				props: {
+					active: "release",
+					links: [
+						{ label: "All", to: "/updates", value: "all" },
+						{ label: "Releases", to: "/updates?category=release", value: "release" },
+					],
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("Blog post", () => {
+		it("should have no accessibility violations for the copy page actions", async () => {
+			const component = await mountSuspended(BlogPageActions, {
+				route: "/blog/wolfstar-v7-alpha",
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("should have no accessibility violations for the reading progress", async () => {
+			const component = await mountSuspended(BlogReadingProgress, {
+				props: { readingTime: 4 },
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
 		});
 	});
 
@@ -1841,6 +1926,165 @@ describe("component accessibility audits", () => {
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
 		});
+	});
+
+	describe("the Social module", () => {
+		const CHANNEL = "234567890123456789";
+
+		// Each state has a server of its own: the answer of one is kept under its ID.
+		function socialState(guildId: string, state: Record<string, unknown>) {
+			registerEndpoint(`/api/guilds/${guildId}/social`, {
+				method: "GET",
+				handler: () => ({
+					enabled: true,
+					installed: true,
+					limits: {
+						messageLength: 200,
+						subscriptions: 25,
+						targetLength: 500,
+						xAccounts: 2,
+					},
+					providers: [{ configured: true, manageable: true, name: "Rss" }],
+					subscriptions: [],
+					twitch: [],
+					...state,
+				}),
+			});
+			useActiveGuild().selectGuild(guildId);
+			useGuildData().setGuildData(createMockOauthFlattenedGuild({ id: guildId }));
+		}
+
+		it("should have no accessibility violations on its subscriptions", async () => {
+			socialState("123456789012345671", {
+				subscriptions: [
+					{
+						channelId: CHANNEL,
+						createdAt: "2026-11-01T10:00:00.000Z",
+						deliveryError: "MissingPermissions",
+						displayName: "Example feed",
+						filters: [],
+						health: "active",
+						lastCheckedAt: null,
+						manageable: true,
+						message: "New post",
+						provider: "Rss",
+						sourceId: "5",
+						target: "https://example.com/feed.xml",
+					},
+				],
+				twitch: [
+					{
+						channelId: CHANNEL,
+						message: null,
+						revoked: false,
+						streamerId: "123",
+						streamerName: "CoolStreamer",
+						type: "StreamOnline",
+					},
+				],
+			});
+			const component = await mountSuspended(GuildSettingsSocial);
+			await vi.waitFor(() => expect(component.findAll("tbody tr")).toHaveLength(2));
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("should have no accessibility violations with no subscription", async () => {
+			socialState("123456789012345672", {});
+			const component = await mountSuspended(GuildSettingsSocial);
+			await vi.waitFor(() => expect(component.text()).toContain("No subscription yet"));
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("should have no accessibility violations where Staryl is not in the server", async () => {
+			socialState("123456789012345673", { installed: false });
+			const component = await mountSuspended(GuildSettingsSocial);
+			await vi.waitFor(() =>
+				expect(component.text()).toContain("Staryl is not in this server"),
+			);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("should have no accessibility violations in the add dialog", async () => {
+			socialState("123456789012345674", {});
+			const component = await mountSuspended(GuildSettingsSocial, {
+				attachTo: document.body,
+			});
+			await vi.waitFor(() => expect(component.text()).toContain("No subscription yet"));
+			const add = component
+				.findAll("button")
+				.find((button) => button.text() === "Add subscription");
+			await add?.trigger("click");
+			await vi.waitFor(() =>
+				expect(document.querySelector('[role="dialog"]')).not.toBeNull(),
+			);
+			const panel = document.querySelector('[role="dialog"]');
+			const results = await runAxe(component, { include: panel ? [panel] : [] });
+			expect(results.violations).toEqual([]);
+			component.unmount();
+		});
+
+		it("should have no accessibility violations in the edit dialog", async () => {
+			socialState("123456789012345675", {
+				subscriptions: [
+					{
+						channelId: CHANNEL,
+						createdAt: "2026-11-01T10:00:00.000Z",
+						deliveryError: null,
+						displayName: "Example feed",
+						filters: [],
+						health: "active",
+						lastCheckedAt: null,
+						manageable: true,
+						message: "New post",
+						provider: "Rss",
+						sourceId: "5",
+						target: "https://example.com/feed.xml",
+					},
+				],
+			});
+			const component = await mountSuspended(GuildSettingsSocial, {
+				attachTo: document.body,
+			});
+			await vi.waitFor(() => expect(component.findAll("tbody tr")).toHaveLength(1));
+			await component
+				.get('[aria-label^="Edit the subscription to Example feed"]')
+				.trigger("click");
+			await vi.waitFor(() =>
+				expect(document.querySelector('[role="dialog"]')).not.toBeNull(),
+			);
+			const panel = document.querySelector('[role="dialog"]');
+			const results = await runAxe(component, { include: panel ? [panel] : [] });
+			expect(results.violations).toEqual([]);
+			component.unmount();
+		});
+
+		it.each([
+			["on", { enabled: true, kind: "ready", summary: "2 subscriptions" }],
+			["off", { enabled: false, kind: "ready", summary: "No subscription" }],
+			[
+				"not in the server",
+				{ inviteUrl: "https://discord.com/oauth2", kind: "not-installed" },
+			],
+			["not available", { kind: "unavailable" }],
+		] as const)(
+			"should have no accessibility violations on its module card when %s",
+			async (_name, status) => {
+				const component = await mountSuspended(GuildExternalModuleCard, {
+					props: {
+						description: "Staryl posts a notification in a channel.",
+						icon: "lucide:rss",
+						service: "Staryl",
+						status,
+						title: "Social",
+					},
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			},
+		);
 	});
 
 	describe("GuildReviewQueue", () => {

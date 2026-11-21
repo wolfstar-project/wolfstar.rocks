@@ -6,26 +6,65 @@
 		"skip_to_content": "Vai al contenuto principale"
 	},
 	"blog": {
-		"article_links": "Link dell'articolo",
-		"avatar_alt": "Avatar di {name}",
-		"back": "Torna al blog",
+		"categories": {
+			"all": "Tutti",
+			"announcement": "Annunci",
+			"article": "Articoli",
+			"release": "Versioni",
+			"tutorial": "Tutorial"
+		},
+		"category": {
+			"announcement": "Annuncio",
+			"article": "Articolo",
+			"release": "Versione",
+			"tutorial": "Tutorial"
+		},
+		"copied": "Copiato negli appunti",
+		"copied_markdown_link_description": "L'indirizzo del post in Markdown è negli appunti.",
+		"copied_page_description": "Il post è negli appunti in Markdown.",
+		"copy_markdown_link": "Copia il link al Markdown",
+		"copy_options": "Apri le opzioni di copia",
+		"copy_page": "Copia pagina",
+		"copy_page_failed": "Copia non riuscita",
+		"copy_page_failed_description": "Impossibile caricare la pagina in Markdown. Controlla la connessione e riprova.",
 		"copy_url": "Copia URL",
-		"edit_article": "Modifica questo articolo",
-		"image_alt": "Immagine di {title}",
-		"join_support": "Entra nel server di supporto",
+		"edit_article": "Modifica questo post",
+		"empty": {
+			"description": "Un post spiega perché qualcosa è cambiato. Il registro delle modifiche elenca cosa è cambiato.",
+			"title": "Ancora nessun post"
+		},
+		"feed_blog": "RSS del blog",
+		"feed_changelog": "RSS del registro delle modifiche",
+		"feeds": "Feed RSS",
+		"filter_label": "Categorie dei post",
 		"link_copied": "Link copiato negli appunti",
-		"links": "Link",
-		"on_platform": "WolfStar su {platform}",
+		"link_copied_description": "L'indirizzo del post è negli appunti.",
+		"open_in": "Apri in {name}",
+		"posts": "Post",
+		"reading_finished": "Finito",
+		"reading_left": "{minutes} min rimasti",
+		"reading_time": "{minutes} min di lettura",
+		"release_history": "Cronologia delle versioni",
 		"rss": "RSS",
-		"star_github": "Metti una stella su GitHub",
-		"toc": "Indice"
+		"share": "Condividi questo post",
+		"timeline": {
+			"newer": "Voci più recenti del registro delle modifiche",
+			"older": "Voci meno recenti del registro delle modifiche",
+			"view_all": "Vedi tutto il registro delle modifiche"
+		},
+		"toc": "In questa pagina",
+		"view_markdown": "Vedi come Markdown"
 	},
 	"changelog": {
-		"back": "Torna al registro delle modifiche",
-		"cover_alt": "Copertina di {title}",
 		"description": "Segui ogni versione, miglioramento e correzione del WolfStar Project.",
-		"empty": "Non è ancora stata pubblicata nessuna versione.",
+		"empty": "Ancora nessuna voce nel registro delle modifiche",
+		"entries": "Voci del registro delle modifiche",
 		"github_releases": "Versioni su GitHub",
+		"kind": {
+			"fixed": "Corretto",
+			"improved": "Migliorato",
+			"new": "Nuovo"
+		},
 		"title": "Registro delle modifiche"
 	},
 	"common": {
@@ -53,7 +92,6 @@
 		"system": "Sistema"
 	},
 	"footer": {
-		"blog": "Blog",
 		"changelog": "Registro delle modifiche",
 		"column_links": "Link del piè di pagina {label}",
 		"community": "Community",
@@ -97,7 +135,6 @@
 		"advanced_logging": "Logging avanzato",
 		"advanced_logging_description": "Traccia e registra gli eventi nel tuo server",
 		"applications": "Applicazioni",
-		"blog": "Blog",
 		"changelog": "Registro delle modifiche",
 		"commands": "Comandi",
 		"features": "Funzionalità",
@@ -123,6 +160,10 @@
 		"progress_by_locale": "Progresso per lingua",
 		"source_locale": "Lingua di origine",
 		"title": "Stato delle traduzioni"
+	},
+	"updates": {
+		"description": "Cosa è cambiato nel WolfStar Project, e perché.",
+		"title": "Aggiornamenti"
 	},
 	"user_menu": {
 		"report_bug": "Segnala un bug",

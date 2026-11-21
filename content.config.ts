@@ -1,7 +1,12 @@
 import { defineContentConfig, defineCollection, z } from "@nuxt/content";
+import { BLOG_CATEGORIES, CHANGELOG_KINDS } from "./shared/utils/blog.ts";
+
+// docs/blog.md is the guide to these fields for whoever writes the content.
 
 const Author = z.object({
-	name: z.string(),
+	// Filled from the GitHub account of `username` when missing (config/blog-authors.ts).
+	name: z.string().optional(),
+	username: z.string().optional(),
 	description: z.string().optional(),
 	to: z.string().optional(),
 	twitter: z.string().optional(),
@@ -13,56 +18,30 @@ const Author = z.object({
 		.optional(),
 });
 
-const PageHero = z.object({
-	title: z.string(),
-	description: z.string(),
-	head: z
-		.object({
-			title: z.string().optional(),
-			description: z.string().optional(),
-		})
-		.optional(),
-});
-
-const ChangelogBadge = z.object({
-	label: z.string(),
-	color: z
-		.enum(["primary", "secondary", "neutral", "error", "warning", "success", "info"])
-		.optional(),
-});
-
 export default defineContentConfig({
 	collections: {
 		blog: defineCollection({
 			type: "page",
-			source: "blog/*",
+			source: "blog/*.md",
 			schema: z.object({
 				image: z.string().optional(),
 				authors: z.array(Author),
 				date: z.string(),
 				draft: z.boolean().default(false),
-				category: z.enum(["Release", "Tutorial", "Announcement", "Article"]),
+				category: z.enum(BLOG_CATEGORIES),
 				tags: z.array(z.string()).default([]),
+				// Written by modules/blog-content.ts, never in the frontmatter.
+				readingTime: z.number().optional(),
 			}),
 		}),
-		landing: defineCollection({
+		changelog: defineCollection({
 			type: "page",
-			source: [{ include: "blog.yml" }],
-			schema: PageHero,
-		}),
-		changelogHero: defineCollection({
-			type: "page",
-			source: [{ include: "changelog.yml" }],
-			schema: PageHero,
-		}),
-		changelogVersions: defineCollection({
-			type: "page",
-			source: "changelog/*",
+			source: "changelog/*.md",
 			schema: z.object({
 				description: z.string(),
 				date: z.string(),
+				kind: z.enum(CHANGELOG_KINDS),
 				image: z.string().optional(),
-				badge: ChangelogBadge.optional(),
 				authors: z.array(Author).default([]),
 			}),
 		}),

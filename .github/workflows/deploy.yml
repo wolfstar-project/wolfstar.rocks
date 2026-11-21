@@ -14,7 +14,7 @@ permissions: {}
 jobs:
   production:
     name: 🚀 Deploy to Cloudflare Workers
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 60
     if: github.repository == 'wolfstar-project/wolfstar.rocks'
     environment: release
@@ -28,7 +28,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: voidzero-dev/setup-vp@143f5f385f39b1b753ffed1a01ad443811855c8b # v1.16.1
+      - uses: voidzero-dev/setup-vp@cab1ab9eaff52d4857875f4f2c016e36af8f2c76 # v1.22.0
         with:
           node-version: lts/*
           cache: true
@@ -148,7 +148,7 @@ jobs:
     name: 📈 Promote the version to 100%
     needs: production
     if: needs.production.outputs.rollout == 'gradual'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 10
     environment: release-promote
     permissions: {}

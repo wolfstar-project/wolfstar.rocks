@@ -6,26 +6,65 @@
 		"skip_to_content": "Skip to main content"
 	},
 	"blog": {
-		"article_links": "",
-		"avatar_alt": "",
-		"back": "",
+		"categories": {
+			"all": "",
+			"announcement": "",
+			"article": "",
+			"release": "",
+			"tutorial": ""
+		},
+		"category": {
+			"announcement": "",
+			"article": "",
+			"release": "",
+			"tutorial": ""
+		},
+		"copied": "",
+		"copied_markdown_link_description": "",
+		"copied_page_description": "",
+		"copy_markdown_link": "",
+		"copy_options": "",
+		"copy_page": "",
+		"copy_page_failed": "",
+		"copy_page_failed_description": "",
 		"copy_url": "",
 		"edit_article": "",
-		"image_alt": "",
-		"join_support": "",
+		"empty": {
+			"description": "",
+			"title": ""
+		},
+		"feed_blog": "",
+		"feed_changelog": "",
+		"feeds": "",
+		"filter_label": "",
 		"link_copied": "",
-		"links": "",
-		"on_platform": "",
+		"link_copied_description": "",
+		"open_in": "",
+		"posts": "",
+		"reading_finished": "",
+		"reading_left": "",
+		"reading_time": "",
+		"release_history": "",
 		"rss": "RSS",
-		"star_github": "",
-		"toc": ""
+		"share": "",
+		"timeline": {
+			"newer": "",
+			"older": "",
+			"view_all": ""
+		},
+		"toc": "",
+		"view_markdown": ""
 	},
 	"changelog": {
-		"back": "",
-		"cover_alt": "",
 		"description": "",
 		"empty": "",
+		"entries": "",
 		"github_releases": "",
+		"kind": {
+			"fixed": "",
+			"improved": "",
+			"new": ""
+		},
 		"title": ""
 	},
 	"common": {
@@ -53,7 +92,6 @@
 		"system": "System"
 	},
 	"footer": {
-		"blog": "Blog",
 		"changelog": "Changelog",
 		"column_links": "Footer {label} links",
 		"community": "Community",
@@ -97,7 +135,6 @@
 		"advanced_logging": "Advanced Logging",
 		"advanced_logging_description": "Track and log events in your server",
 		"applications": "Applications",
-		"blog": "Blog",
 		"changelog": "Changelog",
 		"commands": "Commands",
 		"features": "Features",
@@ -123,6 +160,10 @@
 		"progress_by_locale": "Progress by locale",
 		"source_locale": "Source locale",
 		"title": "Translation Status"
+	},
+	"updates": {
+		"description": "",
+		"title": ""
 	},
 	"user_menu": {
 		"report_bug": "Report a Bug",

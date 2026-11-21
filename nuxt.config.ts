@@ -9,7 +9,7 @@ import {
 	WORKER,
 } from "./config/cloudflare.ts";
 import { cookieControl } from "./config/cookie-control.ts";
-import { currentLocales, datetimeFormats, numberFormats } from "./config/i18n.ts";
+import { currentLocales, datetimeFormats, FALLBACK_LOCALE, numberFormats } from "./config/i18n.ts";
 import { pwa } from "./config/pwa.ts";
 import { LOCALE_BUNDLES_DIR } from "./modules/i18n-locale-bundles.ts";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig.ts";
@@ -352,7 +352,10 @@ export default defineNuxtConfig({
 		"/staryl": { appLayout: "default", prerender: true, robots: true },
 		"/terms": { appLayout: "default", prerender: true, robots: true },
 		"/wolfstar": { appLayout: "default", prerender: true, robots: true },
-		"/blog": { appLayout: "default", prerender: true, robots: true },
+		// The page that lists the posts and the changelog is `/updates`. Posts keep
+		// their addresses under `/blog/`, and the feed stays `/blog/rss.xml`.
+		"/blog": { redirect: { statusCode: 301, to: "/updates" }, prerender: false, robots: false },
+		"/updates": { appLayout: "default", prerender: true, robots: true },
 		"/blog/**": { appLayout: "default", prerender: true, robots: true },
 		"/translation-status": { appLayout: "default", prerender: true, robots: true },
 		// lunaria status.json — always revalidate so the app sees fresh progress
@@ -362,7 +365,21 @@ export default defineNuxtConfig({
 			},
 		},
 		"/changelog": { appLayout: "default", prerender: true, robots: true },
-		"/changelog/**": { appLayout: "default", prerender: true, robots: true },
+		// Every changelog entry had a page of its own until they moved onto
+		// `/changelog`. These four are all the addresses that existed: a new entry
+		// never gets one, so this list does not grow.
+		"/changelog/better-auth-migration": {
+			redirect: { statusCode: 301, to: "/changelog#better-auth-migration" },
+		},
+		"/changelog/homepage-redesign": {
+			redirect: { statusCode: 301, to: "/changelog#homepage-redesign" },
+		},
+		"/changelog/oauth-session-fix": {
+			redirect: { statusCode: 301, to: "/changelog#oauth-session-fix" },
+		},
+		"/changelog/rocks-v2": {
+			redirect: { statusCode: 301, to: "/changelog#rocks-v2" },
+		},
 		// Nuxt Studio admin UI + auth callbacks — SSR-only, never index or prerender.
 		"/_studio": { prerender: false, robots: false },
 		"/_studio/**": { prerender: false, robots: false },
@@ -644,7 +661,14 @@ export default defineNuxtConfig({
 	},
 
 	image: {
-		domains: ["cdn.discordapp.com", "media.discordapp.net", "cdn.wolfstar.rocks"],
+		domains: [
+			"cdn.discordapp.com",
+			"media.discordapp.net",
+			"cdn.wolfstar.rocks",
+			// Blog authors' avatars, from their GitHub accounts.
+			"avatars.githubusercontent.com",
+			"github.com",
+		],
 		format: ["webp", "jpeg", "jpg", "png", "svg"],
 	},
 
@@ -717,7 +741,6 @@ export default defineNuxtConfig({
 					"https://media.discordapp.net",
 					"https://discord.com",
 					"https://api.iconify.design",
-					"https://ungh.cc", // Changelog page fetches GitHub releases from ungh.cc on client-side navigation
 					"https://wolfstar.rocks", // Better Auth's client calls the configured site URL directly (e.g. /api/auth/get-session), not just relative paths
 					"https://*.wolfstar.rocks",
 					"https://*.ingest.us.sentry.io",
@@ -851,7 +874,7 @@ export default defineNuxtConfig({
 		locales: currentLocales,
 		// Expanded from base `en` via countryLocaleVariants
 		defaultLocale: "en-US",
-		fallbackLocale: "en-US",
+		fallbackLocale: FALLBACK_LOCALE,
 		strategy: "no_prefix",
 		// The locale is chosen explicitly (profile page / user menu) and persisted in
 		// `wolfstar-settings`; there is no locale prefix to redirect to, so neither

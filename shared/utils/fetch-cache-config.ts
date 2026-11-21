@@ -10,9 +10,9 @@
  */
 export const FETCH_CACHE_ALLOWED_DOMAINS = [
 	"wolfstar.rocks",
-	"api.wolfstar.rocks",
+	"api.wolfstar.integrations.wolfstar.rocks",
 	"beta.wolfstar.rocks",
-	"api.beta.wolfstar.rocks",
+	"api.wolfstar.beta.integrations.wolfstar.rocks",
 	"localhost:8282",
 ];
 

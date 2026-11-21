@@ -17,6 +17,7 @@ fail silently. These files carry the reasons.
 | [Audit logging](audit-logging.md)                 | Read before adding an audit event or touching the hash chain.                    |
 | [View Transitions](view-transitions.md)           | Read before changing router transitions or page-level motion.                    |
 | [Design token discipline](design-tokens.md)       | Read before writing component styles or theme CSS.                               |
+| [External modules](external-modules.md)           | Read before adding a module held by another service, or changing Social.         |
 
 ## Keeping these notes honest
 

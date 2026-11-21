@@ -35,11 +35,15 @@ identifiers" at the end.
 | settings activity   | `AuditEvent`                       | server 1—N audit event         | "Settings activity"   |
 | logging channel     | server settings                    | log event N—1 channel          | "logging channel"     |
 | subscription        | Staryl                             | server 1—N subscription        | "subscription"        |
+| Social              | Staryl's guild API                 | server 1—1 switch              | "Social"              |
 | invite              | Discord OAuth                      | bot 1—N server                 | "Invite"              |
 | sign in             | `better-auth`, Discord OAuth       | account 1—1 Discord user       | "Sign in"             |
 | dashboard access    | `permissions.users`/`.roles` rules | server 1—N rule                | "Dashboard access"    |
 | command permissions | Discord, per bot command           | command 1—N row (max 100)      | "Discord permissions" |
 | command rules       | the bot's `/commands`              | command 1—1 rule               | "Command rules"       |
+| Updates             | `/updates`                         | lists posts and entries        | "Updates"             |
+| blog post           | `content/blog`                     | blog 1—N post                  | "post"                |
+| changelog entry     | `content/changelog`                | changelog 1—N entry            | "Changelog"           |
 
 Collisions
 
@@ -256,9 +260,21 @@ An excluded channel is ignored for logged events.
 ### subscription
 
 **Is:** one Staryl rule: one streamer, feed, or account, sent to one channel, with its own message and
-filters. Managed with Staryl's `add`, `remove`, `reset`, `show`, and `test` commands, or in `/settings`.
+filters. Managed with Staryl's `add`, `remove`, `reset`, `show`, and `test` commands, in `/settings`, or
+in the dashboard's Social module.
 
 **Never:** follow, tracker, watch. "Feed" only names an RSS or Atom feed, never a subscription.
+
+### Social
+
+**Is:** the dashboard module that Staryl holds. Its switch turns Staryl's notifications on or off for a
+server, and its section lists, adds, and removes subscriptions.
+
+**Use for:** the "Social" section and module.
+
+**Casing:** `Social` as the section and module name.
+
+**Never:** Notifications (as the module's name), Feeds, Staryl settings.
 
 ### source
 
@@ -338,12 +354,33 @@ permissions too. Rules of a category are only edited in `/commands`.
 
 **Never:** community server, help desk, ticket.
 
+### Updates
+
+**Is:** the page at `/updates` that lists what the WolfStar Project ships: the latest changelog entries, then the
+blog posts. `/blog` redirects there. A post keeps its own page at `/blog/<slug>`.
+
+**Collides with:** Staryl's "social updates", the notifications it posts in a server. "Updates" with a capital
+letter, alone, is the page. Staryl's copy always says "social updates" or "notifications".
+
+**Never:** news, blog (for the page), what's new.
+
+### blog post
+
+**Is:** a dated piece of writing under `content/blog`, with a page of its own at `/blog/<slug>`. It explains why
+something changed, or announces a direction.
+
+**Collides with:** changelog entry, below. And with `Article`, one of the four categories a post can have: the
+thing itself is a "post", whatever its category.
+
+**Never:** article (for the content type), news, story.
+
 ### changelog entry
 
-**Is:** a dated record of one product change under `content/changelog`.
+**Is:** a dated record of one product change under `content/changelog`. It has no page of its own: every entry
+is on `/changelog`, and the latest are the timeline at the top of `/updates`.
 
-**Collides with:** blog post. A changelog entry states what changed. A blog post (`content/blog`) explains why,
-or announces a direction.
+**Collides with:** blog post. A changelog entry states what changed. A blog post explains why, or announces a
+direction.
 
 **Never:** release note (as a content type), news.
 
@@ -368,6 +405,7 @@ names. A rename costs links, bookmarks, and translations.
 | `/login`, `/account`                    | `definePageMeta` aliases                              |
 | `guild_card`, `guild_settings` i18n key | Locale files and Tolgee keys. The value says "server" |
 | `CommandLog`, `AuditEvent`              | Prisma models shared with the bot or hash-chained     |
+| `blog.edit_article`                     | Locale file and Tolgee key. The value says "post"     |
 
 ## Open questions
 

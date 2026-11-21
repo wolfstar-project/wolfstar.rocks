@@ -6,6 +6,7 @@ const MARKETING_PATHS = [
 	"/terms",
 	"/commands",
 	"/blog",
+	"/updates",
 	"/changelog",
 	"/translation-status",
 ] as const;

@@ -34,6 +34,7 @@ These exact strings. Do not paraphrase them per page. The "Where" column names t
 | Primary actions      | Invite WolfStar · Invite Staryl · Ask in support · View source · Sign in to dashboard · Browse commands                                             | `marketing.*.hero.*`, `marketing.*.cta.*`                                                                                                                  |
 | Per-bot summary      | WolfStar combines configurable moderation, server event logging, and dashboard-managed settings.                                                    | `marketing.other_apps.wolfstar_description`                                                                                                                |
 | Per-bot summary      | Staryl brings Twitch, feed, and social account notifications into Discord.                                                                          | `marketing.other_apps.staryl_description`                                                                                                                  |
+| Blog name            | The WolfStar Blog (WolfStar Blog after a post's title)                                                                                              | the RSS feed's title (`server/routes/blog/rss.xml.ts`), the title of a post's page (`blog/[slug].vue`), Staryl's feed preview                              |
 
 ### The product in four lengths
 

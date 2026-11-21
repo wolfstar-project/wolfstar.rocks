@@ -1,0 +1,9 @@
+---
+title: "Redesigned homepages for WolfStar and Staryl"
+description: "Both bot landing pages got a visual pass, and Discord embed previews now share one consistent theme."
+date: "2026-08-25"
+kind: improved
+---
+
+The WolfStar and Staryl homepages moved to a shared, more polished layout, and every embedded Discord preview across the
+site now follows the same light/dark theming rules instead of drifting per-component.

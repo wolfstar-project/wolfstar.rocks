@@ -108,6 +108,21 @@ describe("i18n-locale-bundles module", () => {
 		expect(readBundle("es-419")).toEqual({ nav: { home: "Inicio", blog: "Blog" } });
 	});
 
+	it("keeps the fallback locale's text for a nested key the locale leaves untranslated", async () => {
+		writeLocaleFile("en", FIRST_FEATURE, {
+			dashboard: { nav: { honeypot: "Honeypot", modules: "Modules" } },
+		});
+		writeLocaleFile("it-IT", FIRST_FEATURE, {
+			dashboard: { nav: { honeypot: "", modules: "Moduli" } },
+		});
+
+		await runModule(createNuxt().nuxt);
+
+		expect(readBundle("it-IT")).toMatchObject({
+			dashboard: { nav: { honeypot: "Honeypot", modules: "Moduli" } },
+		});
+	});
+
 	it("drops bundles left behind by a removed locale", async () => {
 		mkdirSync(outDir, { recursive: true });
 		writeFileSync(join(outDir, "zz-ZZ.json"), "{}", "utf8");
@@ -123,7 +138,8 @@ describe("i18n-locale-bundles module", () => {
 		writeLocaleFile("es-419", FIRST_FEATURE, { nav: { home: "" } });
 		const { nuxt, watchers } = createNuxt();
 		await runModule(nuxt);
-		expect(readBundle("es-ES")).toEqual({});
+		// Untranslated everywhere in Spanish: the en-US text stands in.
+		expect(readBundle("es-ES")).toEqual({ nav: { home: "home-en-US" } });
 		expect(nuxt.options.watch).toHaveLength(1);
 
 		writeFileSync(path, JSON.stringify({ nav: { home: "Inicio" } }), "utf8");
@@ -131,6 +147,19 @@ describe("i18n-locale-bundles module", () => {
 
 		expect(readBundle("es-ES")).toEqual({ nav: { home: "Inicio" } });
 		expect(readBundle("es-419")).toEqual({ nav: { home: "Inicio" } });
+	});
+
+	it("rebuilds every locale when the fallback locale's source changes in dev", async () => {
+		writeLocaleFile("it-IT", FIRST_FEATURE, { nav: { home: "" } });
+		const path = writeLocaleFile("en", FIRST_FEATURE, { nav: { home: "Home" } });
+		const { nuxt, watchers } = createNuxt();
+		await runModule(nuxt);
+
+		writeFileSync(path, JSON.stringify({ nav: { home: "Start" } }), "utf8");
+		writeLocaleFile("en-US", FIRST_FEATURE, { nav: { home: "" } });
+		for (const watcher of watchers) watcher("change", path);
+
+		expect(readBundle("it-IT")).toEqual({ nav: { home: "Start" } });
 	});
 
 	it("registers no watcher outside dev", async () => {

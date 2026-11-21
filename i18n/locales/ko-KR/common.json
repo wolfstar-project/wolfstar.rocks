@@ -6,26 +6,65 @@
 		"skip_to_content": ""
 	},
 	"blog": {
-		"article_links": "",
-		"avatar_alt": "",
-		"back": "",
+		"categories": {
+			"all": "",
+			"announcement": "",
+			"article": "",
+			"release": "",
+			"tutorial": ""
+		},
+		"category": {
+			"announcement": "",
+			"article": "",
+			"release": "",
+			"tutorial": ""
+		},
+		"copied": "",
+		"copied_markdown_link_description": "",
+		"copied_page_description": "",
+		"copy_markdown_link": "",
+		"copy_options": "",
+		"copy_page": "",
+		"copy_page_failed": "",
+		"copy_page_failed_description": "",
 		"copy_url": "",
 		"edit_article": "",
-		"image_alt": "",
-		"join_support": "",
+		"empty": {
+			"description": "",
+			"title": ""
+		},
+		"feed_blog": "",
+		"feed_changelog": "",
+		"feeds": "",
+		"filter_label": "",
 		"link_copied": "",
-		"links": "",
-		"on_platform": "",
+		"link_copied_description": "",
+		"open_in": "",
+		"posts": "",
+		"reading_finished": "",
+		"reading_left": "",
+		"reading_time": "",
+		"release_history": "",
 		"rss": "",
-		"star_github": "",
-		"toc": ""
+		"share": "",
+		"timeline": {
+			"newer": "",
+			"older": "",
+			"view_all": ""
+		},
+		"toc": "",
+		"view_markdown": ""
 	},
 	"changelog": {
-		"back": "",
-		"cover_alt": "",
 		"description": "",
 		"empty": "",
+		"entries": "",
 		"github_releases": "",
+		"kind": {
+			"fixed": "",
+			"improved": "",
+			"new": ""
+		},
 		"title": ""
 	},
 	"common": {
@@ -53,7 +92,6 @@
 		"system": ""
 	},
 	"footer": {
-		"blog": "",
 		"changelog": "",
 		"column_links": "",
 		"community": "",
@@ -97,7 +135,6 @@
 		"advanced_logging": "",
 		"advanced_logging_description": "",
 		"applications": "",
-		"blog": "",
 		"changelog": "",
 		"commands": "",
 		"features": "",
@@ -122,6 +159,10 @@
 		"no_data": "",
 		"progress_by_locale": "",
 		"source_locale": "",
+		"title": ""
+	},
+	"updates": {
+		"description": "",
 		"title": ""
 	},
 	"user_menu": {

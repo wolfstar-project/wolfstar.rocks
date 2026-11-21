@@ -6,11 +6,10 @@ tags:
     - release
     - dashboard
 category: Release
-image: /assets/blog/wolfstar-rocks-v2.png
+image: /assets/blog/wolfstar-rocks-v2.jpg
 authors:
     - name: RedStar
-      avatar:
-          src: https://github.com/RedStar071.png
+      username: RedStar071
       to: https://x.com/redstar071
 ---
 

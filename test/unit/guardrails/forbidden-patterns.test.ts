@@ -358,6 +358,28 @@ const RULES: Rule[] = [
 		bad: 'import postgres from "@prisma/orm-postgres/runtime";',
 		good: 'import { db } from "#server/database/prisma";',
 	},
+	{
+		id: "social-routes-check-the-member",
+		reason: "Staryl's secret acts for every server and Staryl checks no member, so the authorize hook of a Social route is the only gate between a signed-in member and another server's subscriptions. Pass `authorize: authorizeSocialManager`. See docs/arch/external-modules.md.",
+		roots: ["server/api/guilds/[guild]/social"],
+		extensions: [".ts"],
+		violations: (source) =>
+			/\bauthorize:\s*authorizeSocialManager\b/.test(stripComments(source))
+				? []
+				: ["a route without the authorizeSocialManager hook"],
+		bad: "export default defineWrappedResponseHandler(async () => readState(), { auth: true });",
+		good: "export default defineWrappedResponseHandler(async () => readState(), {\n\tauth: true,\n\tauthorize: authorizeSocialManager,\n});",
+	},
+	{
+		id: "staryl-secret-stays-on-the-server",
+		reason: "starylApiSecret acts for every server in Staryl. It is a server-only key of the runtime config: read in app/ or shared/, it would be an empty string at best and a leaked secret if it ever moved under `public`. Call the dashboard's own /api/guilds/:guild/social routes instead.",
+		roots: ["app", "shared"],
+		extensions: [".ts", ".vue"],
+		violations: (source) =>
+			matches(stripComments(source), /\bstarylApi(?:Secret|Url)\b/, "Staryl's API settings"),
+		bad: "const { starylApiSecret } = useRuntimeConfig();",
+		good: 'const state = await $fetch("/api/guilds/1/social");',
+	},
 ];
 
 describe("forbidden patterns", () => {

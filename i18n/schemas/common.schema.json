@@ -22,13 +22,67 @@
 		"blog": {
 			"type": "object",
 			"properties": {
-				"article_links": {
+				"categories": {
+					"type": "object",
+					"properties": {
+						"all": {
+							"type": "string"
+						},
+						"announcement": {
+							"type": "string"
+						},
+						"article": {
+							"type": "string"
+						},
+						"release": {
+							"type": "string"
+						},
+						"tutorial": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"category": {
+					"type": "object",
+					"properties": {
+						"announcement": {
+							"type": "string"
+						},
+						"article": {
+							"type": "string"
+						},
+						"release": {
+							"type": "string"
+						},
+						"tutorial": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"copied": {
 					"type": "string"
 				},
-				"avatar_alt": {
+				"copied_markdown_link_description": {
 					"type": "string"
 				},
-				"back": {
+				"copied_page_description": {
+					"type": "string"
+				},
+				"copy_markdown_link": {
+					"type": "string"
+				},
+				"copy_options": {
+					"type": "string"
+				},
+				"copy_page": {
+					"type": "string"
+				},
+				"copy_page_failed": {
+					"type": "string"
+				},
+				"copy_page_failed_description": {
 					"type": "string"
 				},
 				"copy_url": {
@@ -37,28 +91,79 @@
 				"edit_article": {
 					"type": "string"
 				},
-				"image_alt": {
+				"empty": {
+					"type": "object",
+					"properties": {
+						"description": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"feed_blog": {
 					"type": "string"
 				},
-				"join_support": {
+				"feed_changelog": {
+					"type": "string"
+				},
+				"feeds": {
+					"type": "string"
+				},
+				"filter_label": {
 					"type": "string"
 				},
 				"link_copied": {
 					"type": "string"
 				},
-				"links": {
+				"link_copied_description": {
 					"type": "string"
 				},
-				"on_platform": {
+				"open_in": {
+					"type": "string"
+				},
+				"posts": {
+					"type": "string"
+				},
+				"reading_finished": {
+					"type": "string"
+				},
+				"reading_left": {
+					"type": "string"
+				},
+				"reading_time": {
+					"type": "string"
+				},
+				"release_history": {
 					"type": "string"
 				},
 				"rss": {
 					"type": "string"
 				},
-				"star_github": {
+				"share": {
 					"type": "string"
 				},
+				"timeline": {
+					"type": "object",
+					"properties": {
+						"newer": {
+							"type": "string"
+						},
+						"older": {
+							"type": "string"
+						},
+						"view_all": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"toc": {
+					"type": "string"
+				},
+				"view_markdown": {
 					"type": "string"
 				}
 			},
@@ -67,20 +172,32 @@
 		"changelog": {
 			"type": "object",
 			"properties": {
-				"back": {
-					"type": "string"
-				},
-				"cover_alt": {
-					"type": "string"
-				},
 				"description": {
 					"type": "string"
 				},
 				"empty": {
 					"type": "string"
 				},
+				"entries": {
+					"type": "string"
+				},
 				"github_releases": {
 					"type": "string"
+				},
+				"kind": {
+					"type": "object",
+					"properties": {
+						"fixed": {
+							"type": "string"
+						},
+						"improved": {
+							"type": "string"
+						},
+						"new": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
 				},
 				"title": {
 					"type": "string"
@@ -163,9 +280,6 @@
 		"footer": {
 			"type": "object",
 			"properties": {
-				"blog": {
-					"type": "string"
-				},
 				"changelog": {
 					"type": "string"
 				},
@@ -295,9 +409,6 @@
 				"applications": {
 					"type": "string"
 				},
-				"blog": {
-					"type": "string"
-				},
 				"changelog": {
 					"type": "string"
 				},
@@ -368,6 +479,18 @@
 					"type": "string"
 				},
 				"source_locale": {
+					"type": "string"
+				},
+				"title": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"updates": {
+			"type": "object",
+			"properties": {
+				"description": {
 					"type": "string"
 				},
 				"title": {

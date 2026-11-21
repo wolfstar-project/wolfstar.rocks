@@ -4251,6 +4251,9 @@
 								},
 								"roles": {
 									"type": "string"
+								},
+								"social": {
+									"type": "string"
 								}
 							},
 							"additionalProperties": false
@@ -4276,7 +4279,13 @@
 						"inactive_hint": {
 							"type": "string"
 						},
+						"invite": {
+							"type": "string"
+						},
 						"manage": {
+							"type": "string"
+						},
+						"not_in_server": {
 							"type": "string"
 						},
 						"not_set_up": {
@@ -4288,7 +4297,19 @@
 						"on": {
 							"type": "string"
 						},
+						"retry": {
+							"type": "string"
+						},
 						"set_up": {
+							"type": "string"
+						},
+						"staryl_subtitle": {
+							"type": "string"
+						},
+						"staryl_title": {
+							"type": "string"
+						},
+						"subscription_count": {
 							"type": "string"
 						},
 						"subtitle": {
@@ -4301,6 +4322,9 @@
 							"type": "string"
 						},
 						"toggle_aria": {
+							"type": "string"
+						},
+						"unavailable": {
 							"type": "string"
 						}
 					},
@@ -4697,6 +4721,423 @@
 							"type": "string"
 						},
 						"title": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"social": {
+					"type": "object",
+					"properties": {
+						"add": {
+							"type": "string"
+						},
+						"added_description": {
+							"type": "string"
+						},
+						"added_title": {
+							"type": "string"
+						},
+						"columns": {
+							"type": "object",
+							"properties": {
+								"actions": {
+									"type": "string"
+								},
+								"channel": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								},
+								"provider": {
+									"type": "string"
+								},
+								"status": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"delivery_errors": {
+							"type": "object",
+							"properties": {
+								"ChannelNotFound": {
+									"type": "string"
+								},
+								"GuildUnavailable": {
+									"type": "string"
+								},
+								"MissingPermissions": {
+									"type": "string"
+								},
+								"SendFailed": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"edit": {
+							"type": "object",
+							"properties": {
+								"aria": {
+									"type": "string"
+								},
+								"save": {
+									"type": "string"
+								},
+								"saved_description": {
+									"type": "string"
+								},
+								"saved_title": {
+									"type": "string"
+								},
+								"subtitle": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"editor": {
+							"type": "object",
+							"properties": {
+								"cancel": {
+									"type": "string"
+								},
+								"channel": {
+									"type": "string"
+								},
+								"channel_help": {
+									"type": "string"
+								},
+								"channel_placeholder": {
+									"type": "string"
+								},
+								"disabled_help": {
+									"type": "string"
+								},
+								"message": {
+									"type": "string"
+								},
+								"message_help": {
+									"type": "string"
+								},
+								"message_required_help": {
+									"type": "string"
+								},
+								"not_available": {
+									"type": "string"
+								},
+								"provider": {
+									"type": "string"
+								},
+								"provider_placeholder": {
+									"type": "string"
+								},
+								"source_full": {
+									"type": "string"
+								},
+								"source_usage": {
+									"type": "string"
+								},
+								"subtitle": {
+									"type": "string"
+								},
+								"target": {
+									"type": "string"
+								},
+								"target_help": {
+									"type": "object",
+									"properties": {
+										"Bluesky": {
+											"type": "string"
+										},
+										"Mastodon": {
+											"type": "string"
+										},
+										"Reddit": {
+											"type": "string"
+										},
+										"Rss": {
+											"type": "string"
+										},
+										"TwitchClips": {
+											"type": "string"
+										},
+										"TwitchLive": {
+											"type": "string"
+										},
+										"TwitchVideos": {
+											"type": "string"
+										},
+										"X": {
+											"type": "string"
+										},
+										"YouTube": {
+											"type": "string"
+										},
+										"none": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"empty_body": {
+							"type": "string"
+						},
+						"empty_title": {
+							"type": "string"
+						},
+						"errors": {
+							"type": "object",
+							"properties": {
+								"channel_not_found": {
+									"type": "string"
+								},
+								"channel_not_supported": {
+									"type": "string"
+								},
+								"duplicate": {
+									"type": "string"
+								},
+								"generic": {
+									"type": "string"
+								},
+								"guild_unavailable": {
+									"type": "string"
+								},
+								"invalid": {
+									"type": "string"
+								},
+								"limit_reached": {
+									"type": "string"
+								},
+								"limit_reached_unknown": {
+									"type": "string"
+								},
+								"message_required": {
+									"type": "string"
+								},
+								"missing_permissions": {
+									"type": "string"
+								},
+								"provider_not_configured": {
+									"type": "string"
+								},
+								"provider_not_manageable": {
+									"type": "string"
+								},
+								"send_failed": {
+									"type": "string"
+								},
+								"streamer_not_found": {
+									"type": "string"
+								},
+								"subscription_not_found": {
+									"type": "string"
+								},
+								"target_blocked": {
+									"type": "string"
+								},
+								"target_invalid": {
+									"type": "string"
+								},
+								"target_not_found": {
+									"type": "string"
+								},
+								"target_unreachable": {
+									"type": "string"
+								},
+								"target_unsupported": {
+									"type": "string"
+								},
+								"twitch_failed": {
+									"type": "string"
+								},
+								"unavailable": {
+									"type": "string"
+								},
+								"x_limit_reached": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"footnote": {
+							"type": "string"
+						},
+						"health": {
+							"type": "object",
+							"properties": {
+								"active": {
+									"type": "string"
+								},
+								"authFailed": {
+									"type": "string"
+								},
+								"failing": {
+									"type": "string"
+								},
+								"rateLimited": {
+									"type": "string"
+								},
+								"targetUnavailable": {
+									"type": "string"
+								},
+								"unavailable": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"invite": {
+							"type": "string"
+						},
+						"managed_in_discord": {
+							"type": "string"
+						},
+						"module_hint": {
+							"type": "string"
+						},
+						"not_installed_body": {
+							"type": "string"
+						},
+						"not_installed_title": {
+							"type": "string"
+						},
+						"providers": {
+							"type": "object",
+							"properties": {
+								"Bluesky": {
+									"type": "string"
+								},
+								"Instagram": {
+									"type": "string"
+								},
+								"Mastodon": {
+									"type": "string"
+								},
+								"Reddit": {
+									"type": "string"
+								},
+								"Rss": {
+									"type": "string"
+								},
+								"TikTok": {
+									"type": "string"
+								},
+								"TwitchClips": {
+									"type": "string"
+								},
+								"TwitchLive": {
+									"type": "string"
+								},
+								"TwitchVideos": {
+									"type": "string"
+								},
+								"X": {
+									"type": "string"
+								},
+								"YouTube": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"remove": {
+							"type": "string"
+						},
+						"remove_aria": {
+							"type": "string"
+						},
+						"remove_description": {
+							"type": "string"
+						},
+						"remove_title": {
+							"type": "string"
+						},
+						"removed_description": {
+							"type": "string"
+						},
+						"removed_title": {
+							"type": "string"
+						},
+						"retry": {
+							"type": "string"
+						},
+						"subscriptions_title": {
+							"type": "string"
+						},
+						"subtitle": {
+							"type": "string"
+						},
+						"switched_off_description": {
+							"type": "string"
+						},
+						"switched_off_title": {
+							"type": "string"
+						},
+						"switched_on_description": {
+							"type": "string"
+						},
+						"switched_on_title": {
+							"type": "string"
+						},
+						"table_aria": {
+							"type": "string"
+						},
+						"twitch": {
+							"type": "object",
+							"properties": {
+								"event": {
+									"type": "string"
+								},
+								"events": {
+									"type": "object",
+									"properties": {
+										"StreamOffline": {
+											"type": "string"
+										},
+										"StreamOnline": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"footnote": {
+									"type": "string"
+								},
+								"revoked": {
+									"type": "string"
+								},
+								"streamer": {
+									"type": "string"
+								},
+								"table_aria": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"unknown_streamer": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"unavailable_body": {
+							"type": "string"
+						},
+						"unavailable_title": {
 							"type": "string"
 						}
 					},

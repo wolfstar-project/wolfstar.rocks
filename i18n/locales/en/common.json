@@ -6,26 +6,65 @@
 		"skip_to_content": "Skip to main content"
 	},
 	"blog": {
-		"article_links": "Article links",
-		"avatar_alt": "{name} avatar",
-		"back": "Back to blog",
+		"categories": {
+			"all": "All",
+			"announcement": "Announcements",
+			"article": "Articles",
+			"release": "Releases",
+			"tutorial": "Tutorials"
+		},
+		"category": {
+			"announcement": "Announcement",
+			"article": "Article",
+			"release": "Release",
+			"tutorial": "Tutorial"
+		},
+		"copied": "Copied to clipboard",
+		"copied_markdown_link_description": "The address of the post as Markdown is in your clipboard.",
+		"copied_page_description": "The post is in your clipboard as Markdown.",
+		"copy_markdown_link": "Copy Markdown link",
+		"copy_options": "Open copy options",
+		"copy_page": "Copy page",
+		"copy_page_failed": "Copy failed",
+		"copy_page_failed_description": "Could not load the page as Markdown. Check your connection and try again.",
 		"copy_url": "Copy URL",
-		"edit_article": "Edit this article",
-		"image_alt": "{title} image",
-		"join_support": "Join Support Server",
+		"edit_article": "Edit this post",
+		"empty": {
+			"description": "A post explains why something changed. The changelog lists what changed.",
+			"title": "No posts yet"
+		},
+		"feed_blog": "Blog RSS",
+		"feed_changelog": "Changelog RSS",
+		"feeds": "RSS feeds",
+		"filter_label": "Post categories",
 		"link_copied": "Link copied to clipboard",
-		"links": "Links",
-		"on_platform": "WolfStar on {platform}",
+		"link_copied_description": "The address of the post is in your clipboard.",
+		"open_in": "Open in {name}",
+		"posts": "Posts",
+		"reading_finished": "Finished",
+		"reading_left": "{minutes} min left",
+		"reading_time": "{minutes} min read",
+		"release_history": "Release history",
 		"rss": "RSS",
-		"star_github": "Star on GitHub",
-		"toc": "Table of Contents"
+		"share": "Share this post",
+		"timeline": {
+			"newer": "Newer changelog entries",
+			"older": "Older changelog entries",
+			"view_all": "View full changelog"
+		},
+		"toc": "On this page",
+		"view_markdown": "View as Markdown"
 	},
 	"changelog": {
-		"back": "Back to changelog",
-		"cover_alt": "{title} cover",
 		"description": "Track every release, improvement, and fix across the WolfStar Project.",
-		"empty": "No releases have been published yet.",
+		"empty": "No changelog entries yet",
+		"entries": "Changelog entries",
 		"github_releases": "GitHub Releases",
+		"kind": {
+			"fixed": "Fixed",
+			"improved": "Improved",
+			"new": "New"
+		},
 		"title": "Changelog"
 	},
 	"common": {
@@ -53,7 +92,6 @@
 		"system": "System"
 	},
 	"footer": {
-		"blog": "Blog",
 		"changelog": "Changelog",
 		"column_links": "Footer {label} links",
 		"community": "Community",
@@ -97,7 +135,6 @@
 		"advanced_logging": "Advanced Logging",
 		"advanced_logging_description": "Track and log events in your server",
 		"applications": "Applications",
-		"blog": "Blog",
 		"changelog": "Changelog",
 		"commands": "Commands",
 		"features": "Features",
@@ -123,6 +160,10 @@
 		"progress_by_locale": "Progress by locale",
 		"source_locale": "Source locale",
 		"title": "Translation Status"
+	},
+	"updates": {
+		"description": "What changed across the WolfStar Project, and why.",
+		"title": "Updates"
 	},
 	"user_menu": {
 		"report_bug": "Report a Bug",

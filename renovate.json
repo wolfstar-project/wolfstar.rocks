@@ -22,11 +22,6 @@
 			"enabled": false
 		},
 		{
-			"description": "nuxt-i18n-micro 3.30.2 and later register no route for \"/\" in the component tests: usePhoneScreen, the phone dashboard layout and the commands editor fail. Remove this rule after the cause is fixed.",
-			"matchPackageNames": ["nuxt-i18n-micro", "@i18n-micro/path-strategy"],
-			"enabled": false
-		},
-		{
 			"description": "vue-tsc 3.3.14 reports false type errors in v-else-if chains and a nullable ref in two templates. Remove this rule after a fixed release.",
 			"matchPackageNames": ["vue-tsc"],
 			"enabled": false

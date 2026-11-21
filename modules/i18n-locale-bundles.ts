@@ -6,7 +6,7 @@ import {
 	mergeLocaleMessages,
 	parseLocaleMessages,
 } from "../config/i18n-empty-placeholders.ts";
-import { localeFeatureFiles, localeSourceDirs } from "../config/i18n.ts";
+import { FALLBACK_LOCALE, localeFeatureFiles, localeSourceDirs } from "../config/i18n.ts";
 
 /**
  * Nuxt I18n Micro loads exactly one global message file per locale
@@ -20,8 +20,8 @@ import { localeFeatureFiles, localeSourceDirs } from "../config/i18n.ts";
  * to `i18n/.locales-build/{locale}.json`, which is what `i18n.translationDir`
  * points at. Empty-string placeholders are dropped per source file *before*
  * merging, so an untranslated key in a variant keeps the base translation
- * instead of blanking it, and a key missing everywhere falls back to
- * `fallbackLocale` at runtime.
+ * instead of blanking it. Every bundle starts from the `FALLBACK_LOCALE`
+ * sources, so a key the locale leaves untranslated keeps the en-US text.
  */
 const MODULE_NAME = "wolfstar:i18n-locale-bundles";
 const SOURCE_DIR = "i18n/locales";
@@ -43,12 +43,7 @@ function readFeatureFile(sourceDir: string, dir: string, feature: string): Local
 	return parseLocaleMessages(raw.replace(BOM_RE, ""), path, MODULE_NAME);
 }
 
-export function buildLocaleBundle(sourceDir: string, code: string): LocaleMessages {
-	const dirs = localeSourceDirs[code];
-	if (!dirs) {
-		throw new Error(`[${MODULE_NAME}] locale "${code}" has no source directories configured.`);
-	}
-
+function readLayers(sourceDir: string, dirs: readonly string[]): LocaleMessages[] {
 	const layers: LocaleMessages[] = [];
 	for (const dir of dirs) {
 		for (const feature of localeFeatureFiles) {
@@ -56,14 +51,40 @@ export function buildLocaleBundle(sourceDir: string, code: string): LocaleMessag
 			if (messages) layers.push(messages);
 		}
 	}
+	return layers;
+}
 
-	if (layers.length === 0) {
+function sourceDirsOf(code: string): string[] {
+	const dirs = localeSourceDirs[code];
+	if (!dirs) {
+		throw new Error(`[${MODULE_NAME}] locale "${code}" has no source directories configured.`);
+	}
+	return dirs;
+}
+
+/**
+ * The directories a locale's bundle is built from: the fallback locale's
+ * first, so every key the locale leaves untranslated keeps the fallback text.
+ * Micro 3 merged its own fallback locale only one level deep, so a section
+ * with one translated key (`dashboard.nav`) dropped every untranslated key of
+ * that section and rendered the raw key. Micro 4 merges at every depth; this
+ * layer stays until a check without it confirms the same text.
+ */
+function bundleDirsOf(code: string): string[] {
+	return [...new Set([...sourceDirsOf(FALLBACK_LOCALE), ...sourceDirsOf(code)])];
+}
+
+export function buildLocaleBundle(sourceDir: string, code: string): LocaleMessages {
+	const dirs = sourceDirsOf(code);
+	const own = readLayers(sourceDir, dirs);
+	if (own.length === 0) {
 		throw new Error(
 			`[${MODULE_NAME}] locale "${code}" resolved to no message files under ${join(sourceDir, dirs[0] ?? code)}.`,
 		);
 	}
 
-	return mergeLocaleMessages(...layers);
+	const fallbackDirs = bundleDirsOf(code).filter((dir) => !dirs.includes(dir));
+	return mergeLocaleMessages(...readLayers(sourceDir, fallbackDirs), ...own);
 }
 
 function writeLocaleBundle(sourceDir: string, outDir: string, code: string): void {
@@ -76,9 +97,7 @@ function writeLocaleBundle(sourceDir: string, outDir: string, code: string): voi
 
 /** Locale codes whose bundle includes the given `i18n/locales/` directory. */
 function localesUsingDir(dir: string): string[] {
-	return Object.entries(localeSourceDirs)
-		.filter(([, dirs]) => dirs.includes(dir))
-		.map(([code]) => code);
+	return Object.keys(localeSourceDirs).filter((code) => bundleDirsOf(code).includes(dir));
 }
 
 export default defineNuxtModule({

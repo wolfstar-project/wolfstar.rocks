@@ -3,6 +3,9 @@ import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { createError, useLogger } from "evlog";
 import { serverFetch } from "nuxt/server";
 
+// `serverFetch` forwards the caller's `cookie` and `authorization` headers by
+// default, so the channels route checks the same member. `json()` is typed
+// with that route's response.
 async function fetchGuildChannels(event: H3Event, guildId: string) {
 	const response = await serverFetch(event, `/api/guilds/${guildId}/channels`);
 	if (!response.ok) {
@@ -44,8 +47,7 @@ export default defineWrappedResponseHandler(
 		}
 		log.set({ channel: { id: channelId } });
 
-		// In process: Nitro v3 gives server code no global `$fetch`. The session
-		// cookie is forwarded, so the route checks the same member.
+		// In process: Nitro v3 gives server code no global `$fetch`.
 		const channels = await fetchGuildChannels(event, guildId).catch((error) => {
 			log.error(error);
 			throw createError({
@@ -56,7 +58,7 @@ export default defineWrappedResponseHandler(
 			});
 		});
 
-		const channel = channels.find((channel: any) => channel.id === channelId) ?? null;
+		const channel = channels.find((channel) => channel.id === channelId) ?? null;
 
 		if (isNullOrUndefined(channel)) {
 			throw createError({

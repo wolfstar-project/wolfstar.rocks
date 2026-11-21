@@ -6,7 +6,9 @@ import {
 	parseJoinGuardInput,
 	throwJoinGuardQueueError,
 } from "#server/utils/join-guard/route";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { JoinGuardModeratorRequestBodySchema } from "#shared/schemas/join-guard";
+import { readBody, setResponseStatus } from "nuxt/server";
 
 /**
  * `POST /api/guilds/:guild/joinguard/requests`: asks the bot to verify or kick

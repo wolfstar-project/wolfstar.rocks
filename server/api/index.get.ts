@@ -1,3 +1,5 @@
+import { defineEventHandler } from "nitro/h3";
+import { getQuery } from "nuxt/server";
 export default defineEventHandler((event) => {
 	const query = getQuery(event);
 	if (!query.test) {

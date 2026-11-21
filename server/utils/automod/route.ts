@@ -1,11 +1,11 @@
 import type { AutoModerationRule } from "#shared/utils/automod-rules";
-import type { H3Event } from "h3";
+import type { H3Event } from "nitro/h3";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
 import { AutoModerationRuleError } from "#server/utils/automod/rules";
 import { authorizeGuildManager, useManagedGuild } from "#server/utils/guilds/manager";
 import { guildSettingsUpdate } from "#shared/audit/actions";
 import { useLogger, withAuditMethods } from "evlog";
-import { createError as createH3Error } from "h3";
+import { createError as createH3Error } from "nuxt/server";
 
 /**
  * `authorize` hook of the auto-moderation rule routes: resolves the guild of

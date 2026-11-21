@@ -1,9 +1,5 @@
 import type { WolfCommand } from "#shared/types/discord";
-
-// `fetchCommands` is injected by Nitro's auto-imports from `server/utils/discord/index.ts`.
-// Importing it directly would pull that Nitro-dependent module into the shared/node type
-// contexts, so declare only its signature here.
-declare const fetchCommands: () => Promise<WolfCommand[]>;
+import { fetchCommands } from "#server/utils/discord/index";
 
 function getNameSpaceDetails(name: string): readonly [string | null, string] {
 	const index = name.indexOf(".");

@@ -1,6 +1,7 @@
 import { resolveActor } from "#server/utils/audit/actor-bridge";
 import { auditEnricher } from "evlog";
 import { createUserAgentEnricher, createTraceContextEnricher } from "evlog/enrichers";
+import { definePlugin as defineNitroPlugin } from "nitro";
 
 export default defineNitroPlugin((nitroApp) => {
 	const enrichers = [

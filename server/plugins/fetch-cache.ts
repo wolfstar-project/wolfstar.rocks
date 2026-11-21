@@ -7,7 +7,9 @@ import {
 	isCacheEntryStale,
 } from "#shared/utils/fetch-cache-config";
 import { log } from "evlog";
-import { type H3Event, isEvent } from "h3";
+import { definePlugin as defineNitroPlugin } from "nitro";
+import { type H3Event, isEvent } from "nitro/h3";
+import { useKV as useStorage } from "nitro/kv";
 import { $fetch } from "ofetch";
 
 /**

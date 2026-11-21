@@ -2,9 +2,15 @@ import type { DashboardAuditEntry } from "#shared/types/audit-log";
 import { db } from "#server/database/prisma";
 import { patchToChanges } from "#server/utils/audit/patch-to-changes";
 import { fallbackMember, resolveGuildMembers } from "#server/utils/audit/resolve-members";
+import { getGuild, getCurrentMember, canManage } from "#server/utils/discord/index";
+import { containsPattern } from "#server/utils/like-pattern";
+import { getGuildParam } from "#server/utils/shared";
+import { asTimestampString, timestampStringToUtcIso } from "#server/utils/timestamp-string";
+import { defineWrappedCachedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { DASHBOARD_AUDIT_ACTIONS } from "#shared/audit/actions";
 import { DashboardActivityQuerySchema } from "#shared/schemas";
 import { createError, useLogger } from "evlog";
+import { getValidatedQuery, getRequestURL } from "nuxt/server";
 import { parse } from "valibot";
 
 export default defineWrappedCachedResponseHandler(

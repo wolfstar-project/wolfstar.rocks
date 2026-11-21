@@ -1,6 +1,7 @@
 import { authorizeAutoModerationManager } from "#server/utils/automod/route";
 import { readAutoModerationRules } from "#server/utils/automod/rules";
 import { useManagedGuild } from "#server/utils/guilds/manager";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 
 /** `GET /api/guilds/:guild/automod/rules`: the auto-moderation rules of a guild, oldest first. */
 export default defineWrappedResponseHandler(

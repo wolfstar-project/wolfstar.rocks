@@ -1,5 +1,6 @@
 import { refreshSessionTokens } from "#server/utils/oauth-tokens";
-import { isEvent } from "h3";
+import { definePlugin as defineNitroPlugin } from "nitro";
+import { isEvent } from "nitro/h3";
 
 export default defineNitroPlugin((nitroApp) => {
 	nitroApp.hooks.hook("request", async (event) => {

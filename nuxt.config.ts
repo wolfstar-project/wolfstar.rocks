@@ -11,8 +11,8 @@ import {
 import { cookieControl } from "./config/cookie-control.ts";
 import { currentLocales, datetimeFormats, FALLBACK_LOCALE, numberFormats } from "./config/i18n.ts";
 import { pwa } from "./config/pwa.ts";
+import { generateRuntimeConfig } from "./config/runtime.ts";
 import { LOCALE_BUNDLES_DIR } from "./modules/i18n-locale-bundles.ts";
-import { generateRuntimeConfig } from "./server/utils/runtimeConfig.ts";
 
 applyWorkerEnv();
 
@@ -425,19 +425,19 @@ export default defineNuxtConfig({
 
 	compatibilityDate: "2025-09-20",
 
-	// Nuxt 5 builds the server with Nitro v3 and h3 v2. Everything under server/
-	// is still Nitro v2 code: h3 v1 helpers, auto-imports (also from the
-	// subdirectories of server/utils), `nitropack/runtime` and the v2 config.
-	// This layer keeps it running until server/ moves to `nuxt/server`; Nuxt 6
-	// removes it.
-	nitroLegacy: true,
+	// @storybook-vue/nuxt points `vue` at its full build, which imports the template
+	// compiler. Without `runtimeCompiler`, a Nuxt 5 build swaps that compiler for
+	// a mock, and Storybook's build fails on the missing `compile` export.
+	vue: { runtimeCompiler: isStorybook },
+
+	nitroLegacy: false,
 
 	nitro: {
 		...(isCloudflareBuild
 			? {
 					cloudflare: { deployConfig: true, nodeCompat: true, wrangler: WORKER },
 					// A Worker refuses I/O across requests, so the database client is made
-					// per request and found through `useEvent()` (server/database/prisma.ts).
+					// per request and found through `useRequest()` (server/database/prisma.ts).
 					experimental: { asyncContext: true },
 				}
 			: {}),

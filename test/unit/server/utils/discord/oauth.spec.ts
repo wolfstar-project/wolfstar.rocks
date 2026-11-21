@@ -127,3 +127,20 @@ describe("fetchGuildMemberWithRetry", () => {
 		expect(result).toEqual(mockMember);
 	});
 });
+
+// Mock the explicit server imports at the same boundaries as the former globals.
+vi.mock("#server/utils/shared", () => ({
+	useApi: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "useApi") as (...args: unknown[]) => unknown)(...args),
+}));
+vi.mock("#server/utils/sentry/metrics", () => ({
+	instrumentDiscordApiCall: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "instrumentDiscordApiCall") as (...args: unknown[]) => unknown)(
+			...args,
+		),
+}));
+vi.mock("#server/utils/errors", () => ({
+	get errors() {
+		return Reflect.get(globalThis, "errors");
+	},
+}));

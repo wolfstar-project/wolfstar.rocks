@@ -1,5 +1,5 @@
 import type { JoinGuardModeratorRequestBody, JoinGuardRule } from "#shared/utils/join-guard";
-import type { H3Event } from "h3";
+import type { H3Event } from "nitro/h3";
 import type { GenericSchema, InferOutput } from "valibot";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
 import { authorizeGuildManager, useManagedGuild } from "#server/utils/guilds/manager";
@@ -8,7 +8,7 @@ import { JoinGuardRuleError } from "#server/utils/join-guard/rules";
 import { guildSettingsUpdate } from "#shared/audit/actions";
 import { isSnowflake } from "#shared/utils/snowflake";
 import { useLogger, withAuditMethods } from "evlog";
-import { createError as createH3Error, getRouterParam } from "h3";
+import { createError as createH3Error, getRouterParam } from "nuxt/server";
 import { getDotPath, safeParse } from "valibot";
 
 /**

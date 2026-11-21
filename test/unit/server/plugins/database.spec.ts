@@ -131,3 +131,9 @@ describe("the database plugin on Cloudflare Workers", () => {
 		expect(mocks.createDatabase).not.toHaveBeenCalled();
 	});
 });
+
+// Mock the explicit server imports at the same boundaries as the former globals.
+vi.mock("nitro", () => ({
+	definePlugin: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "defineNitroPlugin") as (...args: unknown[]) => unknown)(...args),
+}));

@@ -1,5 +1,8 @@
 import { invalidateGuildCache, shouldRefreshCurrentUserCache } from "#server/utils/discord/cache";
+import { getCurrentUser, transformOauthGuildsAndUser } from "#server/utils/discord/index";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { createError, useLogger } from "evlog";
+import { setResponseHeader } from "nitro/h3";
 
 export default defineWrappedResponseHandler(
 	async (event) => {

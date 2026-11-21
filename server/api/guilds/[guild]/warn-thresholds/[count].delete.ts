@@ -6,6 +6,8 @@ import {
 	readCountParam,
 	throwWarnThresholdError,
 } from "#server/utils/warn-thresholds";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
+import { setResponseStatus } from "nuxt/server";
 
 /** `DELETE /api/guilds/:guild/warn-thresholds/:count`: removes what happens at a number of warnings. */
 export default defineWrappedResponseHandler(

@@ -1,10 +1,12 @@
 import { writeSettingsTransaction } from "#server/database";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
 import { authorizeGuildManager, useManagedGuild } from "#server/utils/guilds/manager";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { guildAccessLegacyRemoved, guildSettingsAccessDenied } from "#shared/audit/actions";
 import { LegacyRemovalSchema } from "#shared/schemas";
 import { stripLegacyNodes } from "#shared/utils/dashboard-access";
 import { createError, useLogger, withAuditMethods } from "evlog";
+import { readValidatedBody } from "nuxt/server";
 import { parse } from "valibot";
 
 /**

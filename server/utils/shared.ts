@@ -1,11 +1,12 @@
-import type { H3Event } from "h3";
 import { canWaitOnOtherRequests } from "#server/utils/keyed-lock";
 import { runtimeConfig } from "#server/utils/runtimeConfig";
 import { API } from "@discordjs/core/http-only";
 import { REST } from "@discordjs/rest";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { isNullishOrEmpty } from "@sapphire/utilities/isNullOrUndefinedOrEmpty";
-import { createError, getRouterParam } from "h3";
+import { useRequest } from "nitro/context";
+import { H3Event } from "nitro/h3";
+import { createError, getRouterParam } from "nuxt/server";
 
 export function useApi(rest?: REST) {
 	rest ??= useRest();
@@ -38,12 +39,12 @@ function useRest() {
 	// request on Cloudflare Workers cannot wait on when another request made
 	// them (see `canWaitOnOtherRequests()`): there each request gets its own,
 	// without the timers that sweep its buckets.
-	const event = useEvent();
-	event.context.discordRest ??= new REST({
+	const context = new H3Event(useRequest()).context;
+	context.discordRest ??= new REST({
 		handlerSweepInterval: 0,
 		hashSweepInterval: 0,
 	}).setToken(token);
-	return event.context.discordRest;
+	return context.discordRest;
 }
 
 export function getGuildParam(event: H3Event) {

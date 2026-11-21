@@ -64,13 +64,13 @@ minimumReleaseAgeExclude:
     - unrouting@0.3.2
 
 overrides:
-    # Nuxt 4.6.4 resolves `devServer.host` to `{}` when no host is set, and
-    # @nuxt/cli 4.0.1 crashes on it (`options.hostname.toLowerCase is not a function`).
-    # 4.0.3 ignores the malformed value. Drop this once nuxt ships a cli >= 4.0.3.
-    "@nuxt/cli": 4.0.3
     # Keep a single discord-api-types instance; two copies make structurally
     # identical Discord payload types nominally incompatible during typecheck
     discord-api-types: 0.38.58
+    # @nuxt/content imports h3 only in its server runtime, which Nuxt 5's
+    # `nitroLegacy.h3` resolves to its h3 v1 shim whatever the version. Its types
+    # must name h3 v2's event, the one server code hands it.
+    "@nuxt/content>h3": ^2.0.8
     # Keep one unhead version (Nuxt 4.x still ships unhead/legacy) so Nitro cannot link the
     # server bundle to a different traced package copy that omits legacy.mjs.
     "@unhead/vue": 3.4.3
@@ -93,11 +93,16 @@ shellEmulator: true
 # `@i18n-micro/path-strategy`: with the `no_prefix` strategy a language switch
 # keeps the current path. Upstream navigates to the page by name, which turned
 # an alias such as "/" into "/wolfstar" (see modules/i18n-no-prefix-aliases.ts).
-# nitropack: a cached function shares the call already running for a key with
-# the callers that come meanwhile. On Cloudflare Workers the runtime cancels
-# those callers as hung, so there the patch lets each call run on its own (see
-# docs/arch/cloudflare-workers.md).
+# ocache (the cache under Nitro v3): a cached function shares the call already
+# running for a key with the callers that come meanwhile. On Cloudflare Workers
+# the runtime cancels those callers as hung, so there the patch lets each call
+# run on its own (see docs/arch/cloudflare-workers.md).
+# nuxt-i18n-micro: in production it reads the dictionaries from `public/` one
+# level above its own file, but Nitro v3 bundles it deeper below `server/`, so
+# server-rendered pages showed raw keys. The patch walks up to the `public/`
+# that holds them.
 patchedDependencies:
     "@i18n-micro/path-strategy@2.1.0": patches/@i18n-micro__path-strategy@2.1.0.patch
-    nitropack@2.13.6: patches/nitropack@2.13.6.patch
+    nuxt-i18n-micro@4.1.3: patches/nuxt-i18n-micro@4.1.3.patch
+    ocache@0.3.2: patches/ocache@0.3.2.patch
     prisma-orm-extension-typed-json: patches/prisma-orm-extension-typed-json.patch

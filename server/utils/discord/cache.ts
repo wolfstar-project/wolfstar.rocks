@@ -1,5 +1,7 @@
 import type { APIGuild } from "discord-api-types/v10";
-import type { H3Event } from "h3";
+import type { H3Event } from "nitro/h3";
+import { useKV as useStorage } from "nitro/kv";
+import { getQuery } from "nuxt/server";
 
 export const CURRENT_USER_CACHE_NAME = "getCurrentUser";
 export const GUILD_CACHE_NAME = "getGuild";

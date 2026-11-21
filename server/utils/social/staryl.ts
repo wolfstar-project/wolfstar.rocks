@@ -16,6 +16,7 @@ import {
 	SocialTwitchEditedSchema,
 	SocialTwitchRemovedSchema,
 } from "#shared/utils/social";
+import { useRuntimeConfig } from "nuxt/server";
 
 /**
  * Staryl's guild API, which holds the Social module's switch and

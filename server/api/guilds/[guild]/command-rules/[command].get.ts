@@ -1,6 +1,7 @@
 import { readFreshSettings } from "#server/database";
 import { getCommandRuleParam } from "#server/utils/command-rules/command";
 import { authorizeGuildManager, useManagedGuild } from "#server/utils/guilds/manager";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { readCommandRuleState } from "#shared/utils/command-rules";
 
 /**

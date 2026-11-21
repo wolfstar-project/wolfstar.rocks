@@ -6,6 +6,8 @@ import {
 } from "#server/utils/auto-channels/route";
 import { clearAutoChannel } from "#server/utils/auto-channels/write";
 import { useManagedGuild } from "#server/utils/guilds/manager";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
+import { setResponseStatus } from "nuxt/server";
 
 /** `DELETE /api/guilds/:guild/autopurge/:channel`: stops purging a channel. */
 export default defineWrappedResponseHandler(

@@ -13,11 +13,13 @@ import {
 	planConfigurationImport,
 	summarizeConfigurationPlan,
 } from "#server/utils/settings-transfer/plan";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { guildSettingsUpdate } from "#shared/audit/actions";
 import { ConfigurationImportSchema } from "#shared/schemas";
 import { MaximumAutoModerationRules } from "#shared/utils/automod-rules";
 import { getNoticesDigest } from "#shared/utils/settings-transfer";
 import { createError, useLogger, withAuditMethods } from "evlog";
+import { readValidatedBody } from "nuxt/server";
 import { parse } from "valibot";
 
 /**

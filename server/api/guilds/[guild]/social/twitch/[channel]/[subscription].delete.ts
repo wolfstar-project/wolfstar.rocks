@@ -7,7 +7,9 @@ import {
 	unwrapSocialResult,
 } from "#server/utils/social/route";
 import { removeSocialTwitch } from "#server/utils/social/staryl";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { isSnowflake } from "#shared/utils/snowflake";
+import { getRouterParam } from "nuxt/server";
 
 /** Staryl's ID of a shared Twitch subscription: a number, not a snowflake. */
 const SUBSCRIPTION_ID_PATTERN = /^\d{1,19}$/u;

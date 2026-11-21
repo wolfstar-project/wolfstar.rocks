@@ -22,12 +22,11 @@ registerEndpoint(`${BASE}/checkpoints`, {
 });
 
 // h3's `readBody` needs Node's `Buffer`, which the browser has not: the body
-// is read off the request stream the stub keeps on the event.
+// is read off the web request the event carries.
 registerEndpoint(`${BASE}/requests`, {
 	method: "POST",
 	handler: async (event) => {
-		const stream = (event as unknown as { _requestBody?: ReadableStream })._requestBody;
-		posted.push(await new Response(stream).json());
+		posted.push(await event.req.json());
 		return { id: "req-1" };
 	},
 });

@@ -6,6 +6,8 @@ import {
 	throwJoinGuardRuleError,
 } from "#server/utils/join-guard/route";
 import { deleteJoinGuardRule } from "#server/utils/join-guard/rules";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
+import { setResponseStatus } from "nuxt/server";
 
 /**
  * `DELETE /api/guilds/:guild/joinguard/rules/:rule`: deletes a rule. The rows

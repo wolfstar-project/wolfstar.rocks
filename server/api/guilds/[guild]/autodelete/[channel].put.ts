@@ -7,7 +7,9 @@ import {
 } from "#server/utils/auto-channels/route";
 import { assertGuildTextChannel, setAutoDelete } from "#server/utils/auto-channels/write";
 import { useManagedGuild } from "#server/utils/guilds/manager";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { parseAutoDeleteData } from "#shared/utils/auto-channels";
+import { readBody, setResponseStatus } from "nuxt/server";
 
 /**
  * `PUT /api/guilds/:guild/autodelete/:channel`: sets the automatic deletion of a channel: `delay` in seconds, `allow` and `bots`. It answers

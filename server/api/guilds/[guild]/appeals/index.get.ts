@@ -2,6 +2,8 @@ import { readAppealQueue } from "#server/utils/appeals/queue";
 import { parseAppealQueueQuery } from "#server/utils/appeals/queue-route";
 import { authorizeAppealFormManager } from "#server/utils/appeals/route";
 import { useManagedGuild } from "#server/utils/guilds/manager";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
+import { getQuery } from "nuxt/server";
 
 /**
  * `GET /api/guilds/:guild/appeals?status=pending|accepted|denied|all&limit=&offset=`:

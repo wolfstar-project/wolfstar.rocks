@@ -14,13 +14,12 @@ import type {
 	APIGuildMember,
 	RESTAPIPartialCurrentUserGuild,
 } from "discord-api-types/v10";
-import type { H3Event } from "nitro/h3";
+import type { H3Event } from "h3";
 import {
 	readProposedPermissionNodes,
 	readSettings,
 	readSettingsPermissionNodes,
 } from "#server/database";
-import { flattenGuild } from "#server/utils/ApiTransformers";
 import { accessSubject } from "#server/utils/dashboard-access";
 import { hasAdminPermissions } from "#server/utils/discord/admin";
 import {
@@ -36,11 +35,6 @@ import {
 	fetchCurrentUserAndGuildsWithRetry,
 	fetchGuildMemberWithRetry,
 } from "#server/utils/discord/oauth";
-import { errors } from "#server/utils/errors";
-import { guildNameToAcronym } from "#server/utils/guildNameToAcronym";
-import { mapWithConcurrency } from "#server/utils/mapWithConcurrency";
-import { instrumentDiscordApiCall, instrumentBotApiCall } from "#server/utils/sentry/metrics";
-import { useApi } from "#server/utils/shared";
 import { PermissionsBits } from "#shared/utils/bits";
 import { resolveAccess } from "#shared/utils/dashboard-access";
 import { hours } from "#shared/utils/times";
@@ -58,10 +52,6 @@ import {
 	PermissionFlagsBits,
 } from "discord-api-types/v10";
 import { createError } from "evlog";
-import { defineCachedFunction } from "nitro/cache";
-import { useRuntimeConfig } from "nuxt/server";
-// Nitro v3 gives server code no global `$fetch`.
-import { $fetch } from "ofetch";
 
 async function getUserIdFromEvent(event: H3Event): Promise<string> {
 	const session = await getUserSession(event);

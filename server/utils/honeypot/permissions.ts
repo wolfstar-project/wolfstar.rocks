@@ -2,7 +2,6 @@ import type { HoneypotAction, ReadonlyGuildData } from "#server/database/setting
 import type { APIGuild, APIGuildMember, APIOverwrite } from "discord-api-types/v10";
 import { applicationId } from "#server/utils/command-permissions/discord";
 import { memberChannelPermissions } from "#server/utils/discord/admin";
-import { useApi } from "#server/utils/shared";
 import { ChannelType, PermissionFlagsBits } from "discord-api-types/v10";
 import { createError } from "evlog";
 

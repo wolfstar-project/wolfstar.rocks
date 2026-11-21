@@ -7,9 +7,7 @@ import {
 	throwInvalidWarnThresholdBody,
 	throwWarnThresholdError,
 } from "#server/utils/warn-thresholds";
-import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { parseWarnThresholdData } from "#shared/utils/warn-thresholds";
-import { readBody, setResponseStatus } from "nuxt/server";
 
 /**
  * `PUT /api/guilds/:guild/warn-thresholds/:count`: sets what happens at a number of warnings: `action`, `duration`

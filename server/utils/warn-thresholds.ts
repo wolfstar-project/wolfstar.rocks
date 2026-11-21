@@ -1,5 +1,5 @@
 import type { Snowflake } from "discord-api-types/v10";
-import type { H3Event } from "nitro/h3";
+import type { H3Event } from "h3";
 import { db } from "#server/database/prisma";
 import { notifyGuildSettingsUpdate } from "#server/database/settings/notify";
 import {
@@ -18,8 +18,7 @@ import {
 	type WarnThresholdData,
 } from "#shared/utils/warn-thresholds";
 import { useLogger, withAuditMethods } from "evlog";
-import { getRouterParam } from "nuxt/server";
-import { createError as createH3Error } from "nuxt/server";
+import { createError as createH3Error } from "h3";
 
 /**
  * `authorize` hook of the warning threshold routes: who asks has to manage the

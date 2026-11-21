@@ -1,7 +1,7 @@
 import type { VueWrapper } from "@vue/test-utils";
 import type { NuxtError } from "nuxt/app";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
-import { createError } from "nuxt/app";
+import { createError } from "h3";
 import { describe, expect, it } from "vitest";
 import ErrorPage from "~/components/ErrorPage.vue";
 

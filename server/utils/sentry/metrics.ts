@@ -1,6 +1,5 @@
 import * as Sentry from "@sentry/nuxt";
-import { H3Event } from "nitro/h3";
-import { getRequestURL } from "nuxt/server";
+import { H3Event } from "h3";
 
 const CACHE_ADDRESS = "nitro:fs-lite";
 
@@ -9,7 +8,7 @@ const CACHE_ADDRESS = "nitro:fs-lite";
  * numeric IDs) with :id placeholders to keep metric cardinality bounded.
  */
 function getMetricRoute(event: H3Event): string {
-	const { method } = event.req;
+	const { method } = event.node.req;
 	const { pathname } = getRequestURL(event);
 	const normalized = pathname
 		.replace(/\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi, "/:id")
@@ -130,7 +129,7 @@ export async function instrumentDiscordApiCall<T>(
 export async function withApiMetrics<T>(event: H3Event, fn: () => Promise<T>): Promise<T> {
 	const startTime = Date.now();
 	const route = getMetricRoute(event);
-	const { method } = event.req;
+	const method = event.node.req.method ?? "unknown";
 
 	return Sentry.startSpan(
 		{

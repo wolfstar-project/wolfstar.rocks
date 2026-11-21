@@ -5,8 +5,6 @@ import {
 	readJoinGuardVerifyPage,
 	throwJoinGuardVerifyError,
 } from "#server/utils/join-guard/verify";
-import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
-import { setResponseHeader } from "nitro/h3";
 
 /**
  * `GET /api/verify/:guild`: what the verification page of a guild shows.

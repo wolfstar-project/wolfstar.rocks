@@ -1,5 +1,5 @@
 import type { AppealDecision, AppealQueueFilter } from "#shared/utils/appeal-queue";
-import type { H3Event } from "nitro/h3";
+import type { H3Event } from "h3";
 import { AppealQueueError } from "#server/utils/appeals/queue-error";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
 import { useManagedGuild } from "#server/utils/guilds/manager";
@@ -7,7 +7,7 @@ import { guildSettingsAccessDenied, guildSettingsUpdate } from "#shared/audit/ac
 import { AppealQueueQuerySchema } from "#shared/schemas/appeal-queue";
 import { isAppealDecision, MaximumAppealDecisionReasonLength } from "#shared/utils/appeal-queue";
 import { useLogger, withAuditMethods } from "evlog";
-import { createError as createH3Error } from "nuxt/server";
+import { createError as createH3Error } from "h3";
 import { getDotPath, safeParse } from "valibot";
 
 /**

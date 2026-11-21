@@ -96,9 +96,3 @@ describe("rememberGuildProbe", () => {
 		expect(run).toHaveBeenCalledTimes(2);
 	});
 });
-
-// Mock the explicit server imports at the same boundaries as the former globals.
-vi.mock("nitro/kv", () => ({
-	useKV: (...args: unknown[]) =>
-		(Reflect.get(globalThis, "useStorage") as (...args: unknown[]) => unknown)(...args),
-}));

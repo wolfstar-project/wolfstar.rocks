@@ -6,8 +6,6 @@ import { type DrainContext, auditOnly, signed } from "evlog";
 import { createFsDrain } from "evlog/fs";
 import { createDrainPipeline } from "evlog/pipeline";
 import { createSentryDrain } from "evlog/sentry";
-import { definePlugin as defineNitroPlugin } from "nitro";
-import { useRuntimeConfig } from "nuxt/server";
 
 const AUDIT_DIR = join(process.cwd(), ".audit");
 const AUDIT_HEAD_FILE = join(AUDIT_DIR, "head");

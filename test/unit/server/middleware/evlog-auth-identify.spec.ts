@@ -32,10 +32,3 @@ describe("the evlog actor middleware", () => {
 		expect(mocks.identify).not.toHaveBeenCalled();
 	});
 });
-
-// Mock the explicit server imports at the same boundaries as the former globals.
-vi.mock("nitro/h3", async (importOriginal) => ({
-	...(await importOriginal<Record<string, unknown>>()),
-	defineEventHandler: (...args: unknown[]) =>
-		(Reflect.get(globalThis, "defineEventHandler") as (...args: unknown[]) => unknown)(...args),
-}));

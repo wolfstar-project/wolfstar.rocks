@@ -1,11 +1,9 @@
-import type { AuditableLogger } from "evlog";
+import type { H3Event } from "h3";
 import { createDatabase } from "#server/database/prisma";
 import {
 	forgetRequestDatabase,
 	rememberRequestDatabase,
 } from "#server/utils/audit/request-database";
-import { definePlugin as defineNitroPlugin } from "nitro";
-import { type H3Event, isEvent } from "nitro/h3";
 import { runtime } from "std-env";
 import { CLOUDFLARE_BINDINGS } from "~~/config/cloudflare";
 
@@ -64,7 +62,6 @@ export default defineNitroPlugin((nitroApp) => {
 	if (runtime !== "workerd") return;
 
 	nitroApp.hooks.hook("request", (event) => {
-		if (!isEvent(event)) return;
 		const url = hyperdriveConnectionString(event.context.cloudflare);
 		if (url === undefined) return;
 		const database = createDatabase(url, 0);
@@ -81,21 +78,10 @@ export default defineNitroPlugin((nitroApp) => {
 	// A request is done with its client once it has answered, unless it logged
 	// an audit event: the drain still writes that one with it, and lets it go
 	// itself (`evlog-drain.ts`). Anything else would keep it past its request.
-	nitroApp.hooks.hook("response", (_response, event) => {
-		if (!isEvent(event)) return;
+	nitroApp.hooks.hook("afterResponse", (event) => {
 		const requestId = event.context.databaseRequestId;
 		if (typeof requestId !== "string") return;
 		const logger = event.context.log as { getContext?: () => { audit?: unknown } } | undefined;
 		if (logger?.getContext?.().audit === undefined) forgetRequestDatabase(requestId);
 	});
 });
-
-// h3 v2 types an undeclared key of the context as `unknown`.
-declare module "h3" {
-	interface H3EventContext {
-		/** The request's logger, which evlog sets from its own `request` hook. */
-		log?: AuditableLogger;
-		/** The ID of the request, when evlog has not given it one yet. */
-		requestId?: string;
-	}
-}

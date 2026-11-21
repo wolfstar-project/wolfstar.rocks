@@ -5,11 +5,8 @@ import {
 	loadPermissionSets,
 } from "#server/utils/command-permissions/discord";
 import { memberPermissions } from "#server/utils/discord/admin";
-import { fetchCommands } from "#server/utils/discord/index";
 import { hasCommandPermissionsScope } from "#server/utils/discord/token-scopes";
 import { authorizeGuildManager, useManagedGuild } from "#server/utils/guilds/manager";
-import { useApi } from "#server/utils/shared";
-import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { snapshotOf } from "#shared/utils/command-permissions";
 import { PermissionFlagsBits } from "discord-api-types/v10";
 

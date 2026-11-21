@@ -100,7 +100,7 @@ export function useSocialModule(guildId: MaybeRefOrGetter<string | null | undefi
 	async function setEnabled(enabled: boolean): Promise<SocialResult<boolean>> {
 		const requestGuildId = id.value;
 		const result = await run(() =>
-			$fetch<{ enabled: boolean }>(base.value, {
+			$fetch<{ enabled: boolean }, string, "PATCH">(base.value, {
 				body: { enabled },
 				method: "PATCH",
 			}),
@@ -115,10 +115,10 @@ export function useSocialModule(guildId: MaybeRefOrGetter<string | null | undefi
 	async function addSubscription(body: SocialSubscriptionBody): Promise<SocialResult> {
 		const requestGuildId = id.value;
 		const result = await run(() =>
-			$fetch<{ subscriptions: SocialSubscription[] | null }>(`${base.value}/subscriptions`, {
-				body,
-				method: "POST",
-			}),
+			$fetch<{ subscriptions: SocialSubscription[] | null }, string, "POST">(
+				`${base.value}/subscriptions`,
+				{ body, method: "POST" },
+			),
 		);
 		if (!result.ok) return result;
 
@@ -137,7 +137,7 @@ export function useSocialModule(guildId: MaybeRefOrGetter<string | null | undefi
 		const requestGuildId = id.value;
 		const { channelId, sourceId } = subscription;
 		const result = await run(() =>
-			$fetch<{ subscriptions: SocialSubscription[] | null }>(
+			$fetch<{ subscriptions: SocialSubscription[] | null }, string, "PATCH">(
 				`${base.value}/subscriptions/${channelId}/${sourceId}`,
 				{ body, method: "PATCH" },
 			),
@@ -158,7 +158,7 @@ export function useSocialModule(guildId: MaybeRefOrGetter<string | null | undefi
 		const requestGuildId = id.value;
 		const { channelId, sourceId } = subscription;
 		const result = await run(() =>
-			$fetch<{ subscriptions: SocialSubscription[] | null }>(
+			$fetch<{ subscriptions: SocialSubscription[] | null }, string, "DELETE">(
 				`${base.value}/subscriptions/${channelId}/${sourceId}`,
 				{ method: "DELETE" },
 			),
@@ -188,10 +188,10 @@ export function useSocialModule(guildId: MaybeRefOrGetter<string | null | undefi
 	async function addTwitch(body: SocialTwitchBody): Promise<SocialResult> {
 		const requestGuildId = id.value;
 		const result = await run(() =>
-			$fetch<{ twitch: SocialTwitchSubscription[] | null }>(`${base.value}/twitch`, {
-				body,
-				method: "POST",
-			}),
+			$fetch<{ twitch: SocialTwitchSubscription[] | null }, string, "POST">(
+				`${base.value}/twitch`,
+				{ body, method: "POST" },
+			),
 		);
 		if (!result.ok) return result;
 
@@ -207,7 +207,7 @@ export function useSocialModule(guildId: MaybeRefOrGetter<string | null | undefi
 		const requestGuildId = id.value;
 		const { channelId, subscriptionId } = subscription;
 		const result = await run(() =>
-			$fetch<{ twitch: SocialTwitchSubscription[] | null }>(
+			$fetch<{ twitch: SocialTwitchSubscription[] | null }, string, "PATCH">(
 				`${base.value}/twitch/${channelId}/${subscriptionId}`,
 				{ body, method: "PATCH" },
 			),
@@ -228,7 +228,7 @@ export function useSocialModule(guildId: MaybeRefOrGetter<string | null | undefi
 		const requestGuildId = id.value;
 		const { channelId, subscriptionId } = subscription;
 		const result = await run(() =>
-			$fetch<{ twitch: SocialTwitchSubscription[] | null }>(
+			$fetch<{ twitch: SocialTwitchSubscription[] | null }, string, "DELETE">(
 				`${base.value}/twitch/${channelId}/${subscriptionId}`,
 				{ method: "DELETE" },
 			),

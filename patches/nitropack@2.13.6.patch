@@ -1,0 +1,41 @@
+diff --git a/dist/runtime/internal/cache.mjs b/dist/runtime/internal/cache.mjs
+index ecbf53c..4460c4c 100644
+--- a/dist/runtime/internal/cache.mjs
++++ b/dist/runtime/internal/cache.mjs
+@@ -21,6 +21,10 @@ function defaultCacheOptions() {
+ export function defineCachedFunction(fn, opts = {}) {
+   opts = { ...defaultCacheOptions(), ...opts };
+   const pending = {};
++  // A Cloudflare Worker cancels a request as hung once its own code has nothing
++  // left to run, though the request it waits on is still working: there each
++  // call resolves on its own instead of waiting for one already running.
++  const sharesPending = globalThis.navigator?.userAgent !== "Cloudflare-Workers";
+   const group = opts.group || "nitro/functions";
+   const name = opts.name || fn.name || "_";
+   const integrity = opts.integrity || hash([fn, opts]);
+@@ -43,7 +47,8 @@ export function defineCachedFunction(fn, opts = {}) {
+     }
+     const expired = shouldInvalidateCache || entry.integrity !== integrity || ttl && Date.now() - (entry.mtime || 0) > ttl || validate(entry) === false;
+     const _resolve = async () => {
+-      const isPending = pending[key];
++      const isPending = sharesPending ? pending[key] : void 0;
++      let promise = isPending;
+       if (!isPending) {
+         if (entry.value !== void 0 && (opts.staleMaxAge || 0) >= 0 && opts.swr === false) {
+           entry.value = void 0;
+@@ -51,10 +56,13 @@ export function defineCachedFunction(fn, opts = {}) {
+           entry.mtime = void 0;
+           entry.expires = void 0;
+         }
+-        pending[key] = Promise.resolve(resolver());
++        promise = Promise.resolve(resolver());
++        if (sharesPending) {
++          pending[key] = promise;
++        }
+       }
+       try {
+-        entry.value = await pending[key];
++        entry.value = await promise;
+       } catch (error) {
+         if (!isPending) {
+           delete pending[key];

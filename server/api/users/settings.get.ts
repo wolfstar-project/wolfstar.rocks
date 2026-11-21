@@ -1,7 +1,5 @@
 import type { UserSettings } from "#shared/schemas";
 import { db } from "#server/database/prisma";
-import { getCurrentUser } from "#server/utils/discord/index";
-import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { useLogger } from "evlog";
 
 /**

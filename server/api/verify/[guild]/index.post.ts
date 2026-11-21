@@ -3,10 +3,8 @@ import {
 	submitJoinGuardVerification,
 	throwJoinGuardVerifyError,
 } from "#server/utils/join-guard/verify";
-import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { JoinGuardVerifyBodySchema } from "#shared/schemas/join-guard";
 import { useLogger } from "evlog";
-import { readBody, setResponseStatus } from "nuxt/server";
 
 /**
  * `POST /api/verify/:guild` (signed in): lets the member who waits at the

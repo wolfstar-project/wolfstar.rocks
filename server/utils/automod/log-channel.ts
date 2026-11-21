@@ -1,7 +1,6 @@
 import type { APIChannel, APIGuild, APIGuildMember } from "discord-api-types/v10";
 import { applicationId } from "#server/utils/command-permissions/discord";
 import { memberChannelPermissions } from "#server/utils/discord/admin";
-import { useApi } from "#server/utils/shared";
 import { DiscordAPIError } from "@discordjs/rest";
 import { ChannelType, PermissionFlagsBits, RESTJSONErrorCodes } from "discord-api-types/v10";
 

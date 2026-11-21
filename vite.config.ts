@@ -571,8 +571,10 @@ export default defineConfig({
 										},
 									},
 									vue: { runtimeCompiler: true },
+									// Off for Vitest browser: VTU emit capture breaks with viteEnvironmentApi.
 									experimental: {
 										payloadExtraction: false,
+										viteEnvironmentApi: false,
 									},
 									pwa: { pwaAssets: { disabled: true } },
 									sentry: { enabled: false },

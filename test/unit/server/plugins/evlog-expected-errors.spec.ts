@@ -1,6 +1,5 @@
 import { createError as createEvlogError } from "evlog";
 import { createError as createH3Error } from "h3";
-import { createError as createNuxtError } from "nuxt/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => {
@@ -20,7 +19,7 @@ const mocks = vi.hoisted(() => {
 	return { hooks };
 });
 
-await import("~~/server/early-plugins/evlog-expected-errors");
+await import("~~/server/plugins/evlog-expected-errors");
 
 /** What h3 hands Nitro's `error` hook for a thrown error that is not already an h3 error. */
 function asNormalized(error: Error) {
@@ -54,12 +53,6 @@ describe("the level of the errors the app means", () => {
 		).toBe("warn");
 	});
 
-	it("logs a refusal made with nuxt/server at warn", () => {
-		expect(
-			levelAfter(asNormalized(createNuxtError({ status: 404, message: "Not found" }))),
-		).toBe("warn");
-	});
-
 	it("keeps the error level for a server failure", () => {
 		expect(levelAfter(asNormalized(createEvlogError({ message: "broke", status: 500 })))).toBe(
 			undefined,
@@ -80,9 +73,3 @@ describe("the level of the errors the app means", () => {
 		}).not.toThrow();
 	});
 });
-
-// Mock the explicit server imports at the same boundaries as the former globals.
-vi.mock("nitro", () => ({
-	definePlugin: (...args: unknown[]) =>
-		(Reflect.get(globalThis, "defineNitroPlugin") as (...args: unknown[]) => unknown)(...args),
-}));

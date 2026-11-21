@@ -68,9 +68,3 @@ describe("matchAny", () => {
 		await expect(matchAny(["*"], "anything")).resolves.toBe(true);
 	});
 });
-
-// Mock the explicit server imports at the same boundaries as the former globals.
-vi.mock("#server/utils/discord/index", () => ({
-	fetchCommands: (...args: unknown[]) =>
-		(Reflect.get(globalThis, "fetchCommands") as (...args: unknown[]) => unknown)(...args),
-}));

@@ -7,9 +7,7 @@ import {
 } from "#server/utils/auto-channels/route";
 import { assertGuildTextChannel, setAutoMessage } from "#server/utils/auto-channels/write";
 import { useManagedGuild } from "#server/utils/guilds/manager";
-import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { parseAutoMessageData } from "#shared/utils/auto-channels";
-import { readBody, setResponseStatus } from "nuxt/server";
 
 /**
  * `PUT /api/guilds/:guild/automessage/:channel`: sets the automatic message of a channel: `content`, `interval` in seconds and `mentions`. It answers

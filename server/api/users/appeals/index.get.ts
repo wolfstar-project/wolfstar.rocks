@@ -1,10 +1,6 @@
 import type { MyAppealGuild } from "#shared/utils/my-appeals";
-import { getCurrentUser, getGuild } from "#server/utils/discord/index";
 import { readMyAppeals } from "#server/utils/my-appeals/list";
-import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { MyAppealsQuerySchema } from "#shared/schemas/my-appeals";
-import { setResponseHeader } from "nitro/h3";
-import { getValidatedQuery } from "nuxt/server";
 import { parse } from "valibot";
 
 /**

@@ -37,7 +37,7 @@ registerEndpoint(`/api/guilds/${GUILD_ID}/settings/import`, {
 	method: "POST",
 	handler: async (event: H3Event) => {
 		requests += 1;
-		lastBody = (await event.req.json()) as Record<string, unknown>;
+		lastBody = (await event.web?.request?.json()) as Record<string, unknown>;
 		return answer;
 	},
 });

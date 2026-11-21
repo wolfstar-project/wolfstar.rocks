@@ -55,7 +55,7 @@ mockNuxtImport("useGuildData", () => () => ({
 // stub hands the handler the web request, whose body reads as it is.
 let lastBody: Record<string, unknown> | undefined;
 async function readSentBody(event: H3Event): Promise<Record<string, unknown>> {
-	lastBody = (await event.req.json()) as Record<string, unknown>;
+	lastBody = (await event.web?.request?.json()) as Record<string, unknown>;
 	return lastBody;
 }
 function lastPutBody(): Record<string, unknown> | undefined {

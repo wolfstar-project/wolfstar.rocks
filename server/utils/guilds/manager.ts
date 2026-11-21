@@ -1,7 +1,5 @@
 import type { APIGuild, APIGuildMember } from "discord-api-types/v10";
-import type { H3Event } from "nitro/h3";
-import { getGuild, getCurrentMember, canManage } from "#server/utils/discord/index";
-import { getGuildParam } from "#server/utils/shared";
+import type { H3Event } from "h3";
 import { guildSettingsAccessDenied } from "#shared/audit/actions";
 import { createError, useLogger, withAuditMethods } from "evlog";
 

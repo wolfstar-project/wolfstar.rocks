@@ -1,4 +1,5 @@
 import type { CachedFetchEntry, CachedFetchResult } from "#shared/utils/fetch-cache-config";
+import type { H3Event } from "h3";
 import {
 	FETCH_CACHE_DEFAULT_TTL,
 	FETCH_CACHE_STORAGE_BASE,
@@ -7,9 +8,6 @@ import {
 	isCacheEntryStale,
 } from "#shared/utils/fetch-cache-config";
 import { log } from "evlog";
-import { definePlugin as defineNitroPlugin } from "nitro";
-import { type H3Event, isEvent } from "nitro/h3";
-import { useKV as useStorage } from "nitro/kv";
 import { $fetch } from "ofetch";
 
 /**
@@ -164,7 +162,6 @@ export default defineNitroPlugin((nitroApp) => {
 
 	// Attach to event context for access in composables via useRequestEvent()
 	nitroApp.hooks.hook("request", (event) => {
-		if (!isEvent(event)) return;
 		event.context.cachedFetch = createCachedFetch(event);
 	});
 });

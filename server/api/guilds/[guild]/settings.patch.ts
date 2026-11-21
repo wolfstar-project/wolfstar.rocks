@@ -6,17 +6,13 @@ import {
 	assertCanEditDashboardAccess,
 	assertKeepsDashboardAccess,
 } from "#server/utils/dashboard-access";
-import { getGuild, getCurrentMember, canManage } from "#server/utils/discord/index";
 import { assertHoneypotIsUsable } from "#server/utils/honeypot/permissions";
 import { assertJoinGuardRolesManageable } from "#server/utils/join-guard/roles";
 import { assertJoinGuardRolesDiffer } from "#server/utils/join-guard/settings";
-import { getGuildParam } from "#server/utils/shared";
-import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { guildSettingsAccessDenied, guildSettingsUpdate } from "#shared/audit/actions";
 import { SettingsUpdateSchema } from "#shared/schemas";
 import { isNullOrUndefined, isNullishOrEmpty } from "@sapphire/utilities";
 import { createError, useLogger, withAuditMethods } from "evlog";
-import { readValidatedBody } from "nuxt/server";
 import { parse } from "valibot";
 
 export default defineWrappedResponseHandler(

@@ -1,4 +1,4 @@
-import type { H3Event } from "nitro/h3";
+import type { H3Event } from "h3";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
 import {
 	applicationId,
@@ -7,11 +7,8 @@ import {
 } from "#server/utils/command-permissions/discord";
 import { checkEditorRequirements } from "#server/utils/command-permissions/requirements";
 import { commandPermissionsRest } from "#server/utils/command-permissions/rest";
-import { getCurrentToken } from "#server/utils/discord/index";
 import { hasCommandPermissionsScope } from "#server/utils/discord/token-scopes";
 import { authorizeGuildManager, useManagedGuild } from "#server/utils/guilds/manager";
-import { useApi } from "#server/utils/shared";
-import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import {
 	guildCommandPermissionsAccessDenied,
 	guildCommandPermissionsUpdate,
@@ -28,7 +25,6 @@ import { isSnowflake } from "#shared/utils/snowflake";
 import { DiscordAPIError, RateLimitError } from "@discordjs/rest";
 import { ApplicationCommandPermissionType } from "discord-api-types/v10";
 import { createError, useLogger, withAuditMethods } from "evlog";
-import { getRouterParam, readValidatedBody } from "nuxt/server";
 import { parse } from "valibot";
 
 const APP_DEFAULT_NAME = "app default";

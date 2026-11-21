@@ -1,12 +1,9 @@
 import type { UserSettings } from "#shared/schemas";
 import { db } from "#server/database/prisma";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
-import { getCurrentUser } from "#server/utils/discord/index";
-import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { userSettingsUpdate } from "#shared/audit/actions";
 import { UserSettingsUpdateSchema } from "#shared/schemas";
 import { useLogger, withAuditMethods } from "evlog";
-import { readValidatedBody } from "nuxt/server";
 import { parse } from "valibot";
 
 /**

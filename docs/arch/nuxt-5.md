@@ -30,3 +30,4 @@ The app runs on the Nuxt 5 nightly (`nuxt: npm:nuxt-nightly@5x`). Nuxt 5 builds 
 
 - `patches/nuxt-studio@1.8.2.patch` corrects the module’s media utility import. The published path leaves the package directory. The patch uses `./runtime/utils/media.js`, which Node can resolve without jiti.
 - YAML’s Node export is CommonJS. `nuxt.config.ts` aliases `yaml` to its published ESM build under `browser/`. This keeps `require()` out of the development module runner.
+- Nuxt’s Vite client environment declares the application entry. Storybook removes that input so its builder can emit `iframe.html`. Keep the environment’s manifest settings for Nuxt’s asset hooks.

@@ -15,6 +15,12 @@ const config = {
 		backgrounds: false,
 	},
 	async viteFinal(newConfig) {
+		// Nuxt 5's client entry overrides Storybook's iframe entry after the configs merge.
+		const clientBuild = newConfig.environments?.client?.build;
+		if (clientBuild) {
+			delete clientBuild.rolldownOptions?.input;
+			delete clientBuild.rollupOptions?.input;
+		}
 		newConfig.plugins ??= [];
 
 		// Nuxt's `createClientOnly` HOC (applied to every `.client.vue` component)

@@ -431,6 +431,8 @@ export default defineNuxtConfig({
 	vue: { runtimeCompiler: isStorybook },
 
 	nitroLegacy: false,
+	// YAML's default Node entry is CommonJS. Its ESM build also works in the server runner.
+	alias: { yaml: resolve("./node_modules/yaml/browser/index.js") },
 
 	nitro: {
 		...(isCloudflareBuild

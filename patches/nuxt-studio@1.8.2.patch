@@ -1,0 +1,13 @@
+diff --git a/dist/module/module.mjs b/dist/module/module.mjs
+index c45fb027a0c52c51a21c1daf77d27d9b0ab958e5..755a2ce99e8b527f98dcc91183c01e1f664548ba 100644
+--- a/dist/module/module.mjs
++++ b/dist/module/module.mjs
+@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
+ import { defu } from 'defu';
+ import fsDriver from 'unstorage/drivers/fs';
+ import { createStorage } from 'unstorage';
+-import { mediaItemFieldsFromKey } from '../../../dist/module/runtime/utils/media.js';
++import { mediaItemFieldsFromKey } from './runtime/utils/media.js';
+ import { readFile } from 'node:fs/promises';
+ 
+ const version = "1.8.2";

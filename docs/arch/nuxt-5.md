@@ -27,3 +27,6 @@ The app runs on the Nuxt 5 nightly (`nuxt: npm:nuxt-nightly@5x`). Nuxt 5 builds 
 - `config/runtime.ts` generates build-time defaults for Nuxt and Sentry. `server/utils/runtimeConfig.ts` reads runtime overrides through `nuxt/server`. Never import runtime server helpers into the build-time generator.
 - Native `defineCachedHandler` returns a serialized `Response`. The wrapper retains its resolver’s body type for typed API callers. Authorization stays outside the cache and runs on every hit.
 - Native async context exposes `useRequest()` from `nitro/context`. `new H3Event(useRequest()).context` reads the request’s shared context for database and Discord clients.
+
+- `patches/nuxt-studio@1.8.2.patch` corrects the module’s media utility import. The published path leaves the package directory. The patch uses `./runtime/utils/media.js`, which Node can resolve without jiti.
+- YAML’s Node export is CommonJS. `nuxt.config.ts` aliases `yaml` to its published ESM build under `browser/`. This keeps `require()` out of the development module runner.

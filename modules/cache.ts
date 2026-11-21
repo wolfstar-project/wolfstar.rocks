@@ -30,8 +30,15 @@ export default defineNuxtModule({
 		nuxt.hook("nitro:config", (nitroConfig) => {
 			// A Worker has no file system to keep the `fsLite` mounts on, so each one
 			// moves to Workers KV, whole: the cache next to the fetch cache, and the
-			// rate limiters in a namespace of their own. Skew protection mounts its
-			// own from `skewProtection.storage` (nuxt.config.ts).
+			// rate limiters in a namespace of their own.
+			//
+			// Skew protection mounts `skewProtection.storage` (nuxt.config.ts) too,
+			// although only its build reads that store. On a Worker the mount would
+			// bundle unstorage v2's `fs-lite`, whose module calls `randomUUID()` at
+			// load: workerd refuses that in the global scope, and the Worker does not
+			// start. Nothing on the Worker reads the mount, so it goes.
+			delete nitroConfig.storage?.["skew-protection"];
+			delete nitroConfig.kv?.["skew-protection"];
 			nitroConfig.kv = {
 				...nitroConfig.kv,
 				"cache": cloudflareKVMount(CLOUDFLARE_BINDINGS.cache, "cache"),

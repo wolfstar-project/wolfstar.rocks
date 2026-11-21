@@ -1,5 +1,5 @@
 import type { CommandRule, CommandRuleSaved } from "#shared/utils/command-rules";
-import type { H3Event } from "nitro/h3";
+import type { H3Event } from "h3";
 import { writeSettingsTransaction } from "#server/database";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
 import { findRuledCommand, getCommandRuleParam } from "#server/utils/command-rules/command";
@@ -8,7 +8,6 @@ import {
 	commandRuleConflict,
 } from "#server/utils/command-rules/write";
 import { authorizeGuildManager, useManagedGuild } from "#server/utils/guilds/manager";
-import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { guildSettingsAccessDenied, guildSettingsUpdate } from "#shared/audit/actions";
 import { CommandRulePutSchema } from "#shared/schemas/command-rules";
 import {
@@ -22,7 +21,6 @@ import {
 	type CommandRuleSettings,
 } from "#shared/utils/command-rules";
 import { createError, useLogger, withAuditMethods } from "evlog";
-import { readValidatedBody } from "nuxt/server";
 import { parse } from "valibot";
 
 function ruleOf(settings: CommandRuleSettings, command: string, guildId: string): CommandRule {

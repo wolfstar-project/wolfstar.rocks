@@ -1,10 +1,5 @@
-import { flattenRole } from "#server/utils/ApiTransformers";
-import { getGuild, getCurrentMember, canManage } from "#server/utils/discord/index";
-import { useApi, getGuildParam } from "#server/utils/shared";
-import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { createError, useLogger } from "evlog";
-import { getRouterParam } from "nuxt/server";
 
 export default defineWrappedResponseHandler(
 	async (event) => {

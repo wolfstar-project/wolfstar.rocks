@@ -14,7 +14,6 @@ import {
 	upsertAutoMessage,
 } from "#server/database/settings/messages/storage";
 import { notifyGuildSettingsUpdate } from "#server/database/settings/notify";
-import { getGuildChannels } from "#server/utils/discord/index";
 import { createKeyedLock } from "#server/utils/keyed-lock";
 import {
 	MAXIMUM_AUTO_DELETES,

@@ -103,22 +103,3 @@ describe("POST /api/guilds/:guild/appeals/:appeal/decision", () => {
 		expect(mocks.audit).not.toHaveBeenCalled();
 	});
 });
-
-// Mock the explicit server imports at the same boundaries as the former globals.
-vi.mock("#server/utils/wrappedEventHandler", () => ({
-	defineWrappedResponseHandler: (...args: unknown[]) =>
-		(
-			Reflect.get(globalThis, "defineWrappedResponseHandler") as (
-				...args: unknown[]
-			) => unknown
-		)(...args),
-}));
-vi.mock("nuxt/server", async (importOriginal) => ({
-	...(await importOriginal<Record<string, unknown>>()),
-	getRouterParam: (...args: unknown[]) =>
-		(Reflect.get(globalThis, "getRouterParam") as (...args: unknown[]) => unknown)(...args),
-	readBody: (...args: unknown[]) =>
-		(Reflect.get(globalThis, "readBody") as (...args: unknown[]) => unknown)(...args),
-	setResponseStatus: (...args: unknown[]) =>
-		(Reflect.get(globalThis, "setResponseStatus") as (...args: unknown[]) => unknown)(...args),
-}));

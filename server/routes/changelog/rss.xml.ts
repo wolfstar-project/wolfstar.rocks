@@ -1,6 +1,4 @@
-import { createSiteFeed, sendFeed } from "#server/utils/site-feed";
 import { queryCollection } from "@nuxt/content/server";
-import { defineEventHandler } from "nitro/h3";
 import { joinURL } from "ufo";
 
 export default defineEventHandler(async (event) => {

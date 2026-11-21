@@ -1,4 +1,3 @@
-import { mockEvent } from "h3";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => {
@@ -29,14 +28,7 @@ const { findRequestDatabase, forgetRequestDatabase } =
 	await import("#server/utils/audit/request-database");
 
 const onRequest = () => mocks.hooks.request![0]!;
-const onResponse = () => mocks.hooks.response![0]!;
-
-/** A request with this context, as Nitro hands its hooks one. */
-function requestEvent(context: Record<string, unknown>, headers?: HeadersInit) {
-	const event = mockEvent("/", { headers });
-	Object.assign(event.context, context);
-	return event;
-}
+const afterResponse = () => mocks.hooks.afterResponse![0]!;
 
 describe("the database plugin on Cloudflare Workers", () => {
 	beforeEach(() => {
@@ -44,9 +36,11 @@ describe("the database plugin on Cloudflare Workers", () => {
 	});
 
 	it("gives a request its own client from the Hyperdrive binding", () => {
-		const event = requestEvent({
-			cloudflare: { env: { HYPERDRIVE: { connectionString: "postgres://hyperdrive" } } },
-		});
+		const event = {
+			context: {
+				cloudflare: { env: { HYPERDRIVE: { connectionString: "postgres://hyperdrive" } } },
+			} as Record<string, unknown>,
+		};
 
 		onRequest()(event);
 
@@ -57,12 +51,12 @@ describe("the database plugin on Cloudflare Workers", () => {
 	// h3 reports a thrown error outside the request's async context, where the
 	// audit drain cannot read `db`: it finds the client by the request's ID.
 	it("remembers the client by the ID evlog gives the request", () => {
-		const event = requestEvent(
-			{
+		const event = {
+			context: {
 				cloudflare: { env: { HYPERDRIVE: { connectionString: "postgres://hyperdrive" } } },
-			},
-			{ "cf-ray": "8f1c2d3e4f5a6b7c-MXP" },
-		);
+			} as Record<string, unknown>,
+			headers: new Headers({ "cf-ray": "8f1c2d3e4f5a6b7c-MXP" }),
+		};
 
 		onRequest()(event);
 
@@ -75,10 +69,13 @@ describe("the database plugin on Cloudflare Workers", () => {
 	// evlog's hook may run first, without a ray: the key is the ID its logger
 	// already holds, not one of this plugin's own.
 	it("keys the client by the ID evlog's logger already holds", () => {
-		const event = requestEvent({
-			cloudflare: { env: { HYPERDRIVE: { connectionString: "postgres://hyperdrive" } } },
-			log: { getContext: () => ({ requestId: "evlog-id" }) },
-		});
+		const event = {
+			context: {
+				cloudflare: { env: { HYPERDRIVE: { connectionString: "postgres://hyperdrive" } } },
+				log: { getContext: () => ({ requestId: "evlog-id" }) },
+			} as Record<string, unknown>,
+			headers: new Headers(),
+		};
 
 		onRequest()(event);
 
@@ -87,9 +84,12 @@ describe("the database plugin on Cloudflare Workers", () => {
 	});
 
 	it("sets the ID evlog will take when it runs after and there is no ray", () => {
-		const event = requestEvent({
-			cloudflare: { env: { HYPERDRIVE: { connectionString: "postgres://hyperdrive" } } },
-		});
+		const event = {
+			context: {
+				cloudflare: { env: { HYPERDRIVE: { connectionString: "postgres://hyperdrive" } } },
+			} as Record<string, unknown>,
+			headers: new Headers(),
+		};
 
 		onRequest()(event);
 
@@ -102,18 +102,20 @@ describe("the database plugin on Cloudflare Workers", () => {
 	// The client must not outlive its request: it is let go once the request
 	// has answered, unless the drain still has an audit event to write with it.
 	it("lets the client go when the request ends, unless an audit event waits", () => {
-		const request = (audit?: object) =>
-			requestEvent({
+		const request = (audit?: object) => ({
+			context: {
 				cloudflare: { env: { HYPERDRIVE: { connectionString: "postgres://hyperdrive" } } },
 				log: { getContext: () => ({ requestId: audit ? "audited" : "plain", audit }) },
-			});
+			} as Record<string, unknown>,
+			headers: new Headers(),
+		});
 		const plain = request();
 		const audited = request({ action: "guild.settings.access_denied" });
 
 		onRequest()(plain);
 		onRequest()(audited);
-		onResponse()(new Response(), plain);
-		onResponse()(new Response(), audited);
+		afterResponse()(plain);
+		afterResponse()(audited);
 
 		expect(findRequestDatabase("plain")).toBeUndefined();
 		expect(findRequestDatabase("audited")).toBe(audited.context.database);
@@ -124,16 +126,10 @@ describe("the database plugin on Cloudflare Workers", () => {
 	// the icons) carry no Cloudflare bindings. Throwing there stopped Nitro from
 	// running the request hooks after this one, evlog's among them.
 	it("leaves an internal sub-request without bindings alone instead of throwing", () => {
-		const event = requestEvent({});
+		const event = { context: {} as Record<string, unknown> };
 
 		expect(() => onRequest()(event)).not.toThrow();
 		expect(event.context.database).toBeUndefined();
 		expect(mocks.createDatabase).not.toHaveBeenCalled();
 	});
 });
-
-// Mock the explicit server imports at the same boundaries as the former globals.
-vi.mock("nitro", () => ({
-	definePlugin: (...args: unknown[]) =>
-		(Reflect.get(globalThis, "defineNitroPlugin") as (...args: unknown[]) => unknown)(...args),
-}));

@@ -1,11 +1,11 @@
 import type { AppealForm } from "#shared/utils/appeal-forms";
-import type { H3Event } from "nitro/h3";
+import type { H3Event } from "h3";
 import { AppealFormError } from "#server/utils/appeals/forms";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
 import { authorizeGuildManager, useManagedGuild } from "#server/utils/guilds/manager";
 import { guildSettingsUpdate } from "#shared/audit/actions";
 import { useLogger, withAuditMethods } from "evlog";
-import { createError as createH3Error } from "nuxt/server";
+import { createError as createH3Error } from "h3";
 
 /**
  * `authorize` hook of the appeal form routes: resolves the guild of the path

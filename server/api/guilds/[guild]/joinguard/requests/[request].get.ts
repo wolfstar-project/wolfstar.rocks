@@ -6,8 +6,6 @@ import {
 	readJoinGuardRowParam,
 	throwJoinGuardQueueError,
 } from "#server/utils/join-guard/route";
-import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
-import { setResponseHeader } from "nitro/h3";
 
 /**
  * `GET /api/guilds/:guild/joinguard/requests/:request`: whether the bot has

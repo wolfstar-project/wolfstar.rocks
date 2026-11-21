@@ -77,22 +77,3 @@ describe("users/settings.patch - audit", () => {
 		);
 	});
 });
-
-// Mock the explicit server imports at the same boundaries as the former globals.
-vi.mock("#server/utils/wrappedEventHandler", () => ({
-	defineWrappedResponseHandler: (...args: unknown[]) =>
-		(
-			Reflect.get(globalThis, "defineWrappedResponseHandler") as (
-				...args: unknown[]
-			) => unknown
-		)(...args),
-}));
-vi.mock("nuxt/server", async (importOriginal) => ({
-	...(await importOriginal<Record<string, unknown>>()),
-	readValidatedBody: (...args: unknown[]) =>
-		(Reflect.get(globalThis, "readValidatedBody") as (...args: unknown[]) => unknown)(...args),
-}));
-vi.mock("#server/utils/discord/index", () => ({
-	getCurrentUser: (...args: unknown[]) =>
-		(Reflect.get(globalThis, "getCurrentUser") as (...args: unknown[]) => unknown)(...args),
-}));

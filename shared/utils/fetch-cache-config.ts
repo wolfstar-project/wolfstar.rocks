@@ -1,5 +1,3 @@
-import type { FetchOptions } from "nuxt/app";
-
 /**
  * Configuration for the stale-while-revalidate fetch cache.
  *
@@ -100,6 +98,6 @@ export interface CachedFetchResult<T> {
  */
 export type CachedFetchFunction = <T = unknown>(
 	url: string,
-	options?: FetchOptions,
+	options?: Parameters<typeof $fetch>[1],
 	ttl?: number,
 ) => Promise<CachedFetchResult<T>>;

@@ -140,10 +140,3 @@ describe("botApiFetch", () => {
 		expect(fetchMock).not.toHaveBeenCalled();
 	});
 });
-
-// Mock the explicit server imports at the same boundaries as the former globals.
-vi.mock("nuxt/server", async (importOriginal) => ({
-	...(await importOriginal<Record<string, unknown>>()),
-	useRuntimeConfig: (...args: unknown[]) =>
-		(Reflect.get(globalThis, "useRuntimeConfig") as (...args: unknown[]) => unknown)(...args),
-}));

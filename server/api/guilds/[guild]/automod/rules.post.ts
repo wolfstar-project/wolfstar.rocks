@@ -9,9 +9,7 @@ import {
 import { createAutoModerationRule } from "#server/utils/automod/rules";
 import { parseAutoModerationRulePatch } from "#server/utils/automod/validation";
 import { useManagedGuild } from "#server/utils/guilds/manager";
-import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { isAutoModerationRuleType } from "#shared/utils/automod-rules";
-import { readBody, setResponseStatus } from "nuxt/server";
 
 /**
  * `POST /api/guilds/:guild/automod/rules`: creates a rule. The body has the

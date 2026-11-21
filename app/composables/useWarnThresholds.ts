@@ -88,7 +88,7 @@ export function useWarnThresholds(guildId: MaybeRefOrGetter<string | null | unde
 	): Promise<WarnThresholdResult<WarnThreshold>> {
 		const requestGuildId = id.value;
 		const result = await run(() =>
-			$fetch<WarnThreshold>(`${base.value}/${count}`, { body, method: "PUT" }),
+			$fetch<WarnThreshold, string, "PUT">(`${base.value}/${count}`, { body, method: "PUT" }),
 		);
 		if (result.ok) {
 			patch(requestGuildId, (current) => [

@@ -1,9 +1,6 @@
 import type { AppealPage } from "#shared/utils/my-appeals";
 import { botApiFetch } from "#server/utils/bot-api/session";
-import { getCurrentUser } from "#server/utils/discord/index";
 import { readAppealGuildParam, throwBotRefusal } from "#server/utils/my-appeals/route";
-import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
-import { setResponseHeader } from "nitro/h3";
 
 /**
  * `GET /api/users/appeals/:guild`: the page of a server for the member, as the

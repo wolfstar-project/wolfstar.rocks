@@ -7,9 +7,7 @@ import {
 	unwrapSocialResult,
 } from "#server/utils/social/route";
 import { setSocialEnabled } from "#server/utils/social/staryl";
-import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { SocialSwitchBodySchema } from "#shared/utils/social";
-import { readBody } from "nuxt/server";
 import { safeParse } from "valibot";
 
 /**

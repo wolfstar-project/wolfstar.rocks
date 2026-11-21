@@ -56,7 +56,7 @@ function rule(lists: Record<string, string[]> = {}, command = "archive") {
 // h3's `readBody` needs Node's `Buffer`, which the browser runner lacks; the
 // stub hands the handler the web request, whose body reads as it is.
 async function readSentBody(event: H3Event): Promise<Record<string, unknown>> {
-	return (await event.req.json()) as Record<string, unknown>;
+	return (await event.web?.request?.json()) as Record<string, unknown>;
 }
 
 let stored = { command: "archive", enabled: true, onlyAllowed: false, rule: rule(), revision: 1 };

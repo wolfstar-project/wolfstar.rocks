@@ -37,7 +37,6 @@ import type {
 	Locale,
 	RESTGetAPIGuildChannelsResult,
 } from "discord-api-types/v10";
-import { guildNameToAcronym } from "#server/utils/guildNameToAcronym";
 import { DiscordSnowflake } from "@sapphire/snowflake";
 import { ChannelType, GuildFeature } from "discord-api-types/v10";
 import { createError, log } from "evlog";

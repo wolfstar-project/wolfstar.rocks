@@ -7,9 +7,7 @@ import {
 } from "#server/utils/auto-channels/route";
 import { assertGuildTextChannel, setAutoPurge } from "#server/utils/auto-channels/write";
 import { useManagedGuild } from "#server/utils/guilds/manager";
-import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { parseAutoPurgeData } from "#shared/utils/auto-channels";
-import { readBody, setResponseStatus } from "nuxt/server";
 
 /**
  * `PUT /api/guilds/:guild/autopurge/:channel`: sets the purge of a channel: `interval` in seconds, `filter` and its `value`. It answers

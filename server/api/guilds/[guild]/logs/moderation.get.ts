@@ -8,11 +8,6 @@ import type { ResultType } from "@prisma/orm-postgres/components/runtime";
 import type { APIGuildMember } from "discord-api-types/v10";
 import { db } from "#server/database/prisma";
 import { fallbackMember, resolveGuildMembers } from "#server/utils/audit/resolve-members";
-import { getGuild, getCurrentMember, canManage } from "#server/utils/discord/index";
-import { containsPattern } from "#server/utils/like-pattern";
-import { getGuildParam } from "#server/utils/shared";
-import { timestampStringToUtcIso, asTimestampString } from "#server/utils/timestamp-string";
-import { defineWrappedCachedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { ModerationLogQuerySchema } from "#shared/schemas";
 import {
 	decodeModerationRecord,
@@ -25,7 +20,6 @@ import {
 import { parseModerationCaseExtra } from "#shared/utils/moderation-case";
 import { and, or } from "@prisma/orm-postgres/orm-client";
 import { createError, useLogger } from "evlog";
-import { getValidatedQuery, getRequestURL } from "nuxt/server";
 import { parse } from "valibot";
 
 type ModerationRow = ResultType<typeof db.orm.public.ModerationAction>;

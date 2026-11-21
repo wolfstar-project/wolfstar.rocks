@@ -1,4 +1,4 @@
-import type { H3Event } from "nitro/h3";
+import type { H3Event } from "h3";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
 import { guildSettingsAccessDenied, guildSettingsUpdate } from "#shared/audit/actions";
 import { useLogger, withAuditMethods } from "evlog";

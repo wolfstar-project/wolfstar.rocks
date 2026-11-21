@@ -7,9 +7,7 @@ import {
 	unwrapSocialResult,
 } from "#server/utils/social/route";
 import { removeSocialSubscription } from "#server/utils/social/staryl";
-import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { isSnowflake } from "#shared/utils/snowflake";
-import { getRouterParam } from "nuxt/server";
 
 /** Staryl's ID of a followed account or feed: a number, not a snowflake. */
 const SOURCE_ID_PATTERN = /^\d{1,19}$/u;

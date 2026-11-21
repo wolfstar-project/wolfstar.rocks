@@ -2,8 +2,6 @@ import {
 	OAUTH_PROVIDER_CALLBACK_PATH,
 	resolveOAuthProviderCallbackRedirect,
 } from "#server/utils/oauth-callback";
-import { defineEventHandler } from "nitro/h3";
-import { getRequestURL, sendRedirect } from "nuxt/server";
 
 /**
  * Hands Discord's OAuth response over to Better Auth.

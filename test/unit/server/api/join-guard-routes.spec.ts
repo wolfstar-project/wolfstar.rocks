@@ -242,27 +242,3 @@ describe("the routes of the verification page", () => {
 		});
 	});
 });
-
-// Mock the explicit server imports at the same boundaries as the former globals.
-vi.mock("#server/utils/wrappedEventHandler", () => ({
-	defineWrappedResponseHandler: (...args: unknown[]) =>
-		(
-			Reflect.get(globalThis, "defineWrappedResponseHandler") as (
-				...args: unknown[]
-			) => unknown
-		)(...args),
-}));
-vi.mock("nuxt/server", async (importOriginal) => ({
-	...(await importOriginal<Record<string, unknown>>()),
-	readBody: (...args: unknown[]) =>
-		(Reflect.get(globalThis, "readBody") as (...args: unknown[]) => unknown)(...args),
-	getQuery: (...args: unknown[]) =>
-		(Reflect.get(globalThis, "getQuery") as (...args: unknown[]) => unknown)(...args),
-	setResponseStatus: (...args: unknown[]) =>
-		(Reflect.get(globalThis, "setResponseStatus") as (...args: unknown[]) => unknown)(...args),
-}));
-vi.mock("nitro/h3", async (importOriginal) => ({
-	...(await importOriginal<Record<string, unknown>>()),
-	setResponseHeader: (...args: unknown[]) =>
-		(Reflect.get(globalThis, "setResponseHeader") as (...args: unknown[]) => unknown)(...args),
-}));

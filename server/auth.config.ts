@@ -10,7 +10,6 @@ import { resolveDiscordRedirectURI } from "#server/utils/oauth-callback.ts";
 import { runtimeConfig } from "#server/utils/runtimeConfig.ts";
 import { defineServerAuth } from "@nuxtjs/better-auth/config";
 import { createAuthMiddleware } from "better-auth/api";
-import { useKV as useStorage } from "nitro/kv";
 import { isDevelopment } from "std-env";
 
 // Adapts the Nitro/unstorage mount to better-auth's SecondaryStorage shape so

@@ -1,10 +1,10 @@
 import type { AppealSubmissionAnswers, AppealSubmitError } from "#shared/utils/my-appeals";
-import type { H3Event } from "nitro/h3";
+import type { H3Event } from "h3";
 import { isRowId } from "#server/database/settings/ids";
 import { AppealSubmitErrors, BuiltInAppealFormPath } from "#shared/utils/my-appeals";
 import { isSnowflake } from "#shared/utils/snowflake";
 import { isObject } from "@sapphire/utilities";
-import { createError as createH3Error, getRouterParam } from "nuxt/server";
+import { createError as createH3Error, getRouterParam } from "h3";
 
 /** The most answers an appeal carries: a form has five questions, the rest is noise. */
 export const MaximumAppealSubmissionAnswers = 25;

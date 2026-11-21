@@ -24,7 +24,7 @@ const mockRefresh = vi.fn();
 registerEndpoint(`${window.location.origin}/api/auth/sign-in/social`, {
 	method: "POST",
 	handler: async (event) => {
-		mockSignIn(await event.req.json());
+		mockSignIn(await event.web?.request?.json());
 		return { redirect: false };
 	},
 });

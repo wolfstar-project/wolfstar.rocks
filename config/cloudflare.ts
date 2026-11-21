@@ -1,6 +1,4 @@
-import type { PresetOptions } from "nitro/types";
-
-type WranglerConfig = NonNullable<NonNullable<PresetOptions["cloudflare"]>["wrangler"]>;
+import type { WranglerConfig } from "nitropack/presets/cloudflare/types";
 import { provider } from "std-env";
 
 /**

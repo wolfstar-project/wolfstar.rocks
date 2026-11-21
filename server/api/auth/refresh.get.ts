@@ -1,5 +1,4 @@
 import { refreshSessionTokens } from "#server/utils/oauth-tokens";
-import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 
 export default defineWrappedResponseHandler(
 	async (event) => {

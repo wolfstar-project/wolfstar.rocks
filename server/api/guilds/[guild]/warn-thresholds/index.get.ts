@@ -1,6 +1,5 @@
 import { useManagedGuild } from "#server/utils/guilds/manager";
 import { authorizeWarnThresholdManager, readWarnThresholds } from "#server/utils/warn-thresholds";
-import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 
 /** `GET /api/guilds/:guild/warn-thresholds`: the server's own warning thresholds, by their number of warnings. */
 export default defineWrappedResponseHandler(

@@ -1,10 +1,7 @@
 import type { DiscordAPIError } from "@discordjs/rest";
 import type { APIUser, RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
-import type { H3Event } from "nitro/h3";
-import { errors } from "#server/utils/errors";
+import type { H3Event } from "h3";
 import { type DiscordAccessToken, refreshSessionTokens } from "#server/utils/oauth-tokens";
-import { instrumentDiscordApiCall } from "#server/utils/sentry/metrics";
-import { useApi } from "#server/utils/shared";
 import { REST } from "@discordjs/rest";
 import { createError } from "evlog";
 

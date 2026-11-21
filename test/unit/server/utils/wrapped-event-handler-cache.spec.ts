@@ -1,4 +1,4 @@
-import type { H3Event } from "h3";
+import { type H3Event, mockEvent } from "h3";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
@@ -107,11 +107,9 @@ vi.mock("nuxt-skew-protection/server", () => ({
 import { defineWrappedCachedResponseHandler } from "#server/utils/wrappedEventHandler";
 
 function makeEvent(guildId: string): H3Event {
-	return {
-		context: { params: { guild: guildId } },
-		node: { req: { method: "GET", socket: {} } },
-		headers: new Headers(),
-	} as unknown as H3Event;
+	const event = mockEvent(`/api/guilds/${guildId}/logs`);
+	event.context.params = { guild: guildId };
+	return event;
 }
 
 const managerSession = { user: { id: "manager-user" } };

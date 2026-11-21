@@ -52,6 +52,8 @@ import {
 	PermissionFlagsBits,
 } from "discord-api-types/v10";
 import { createError } from "evlog";
+// Nitro v3 gives server code no global `$fetch`.
+import { $fetch } from "ofetch";
 
 async function getUserIdFromEvent(event: H3Event): Promise<string> {
 	const session = await getUserSession(event);

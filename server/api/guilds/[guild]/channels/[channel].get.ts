@@ -1,5 +1,15 @@
+import type { H3Event } from "h3";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { createError, useLogger } from "evlog";
+import { serverFetch } from "nuxt/server";
+
+async function fetchGuildChannels(event: H3Event, guildId: string) {
+	const response = await serverFetch(event, `/api/guilds/${guildId}/channels`);
+	if (!response.ok) {
+		throw new Error(`The channels route answered ${response.status}`);
+	}
+	return response.json();
+}
 
 export default defineWrappedResponseHandler(
 	async (event) => {
@@ -34,12 +44,9 @@ export default defineWrappedResponseHandler(
 		}
 		log.set({ channel: { id: channelId } });
 
-		const channels = await $fetch<ReturnType<typeof flattenGuildChannel>[]>(
-			`/api/guilds/${guildId}/channels`,
-			{
-				headers: event.headers,
-			},
-		).catch((error) => {
+		// In process: Nitro v3 gives server code no global `$fetch`. The session
+		// cookie is forwarded, so the route checks the same member.
+		const channels = await fetchGuildChannels(event, guildId).catch((error) => {
 			log.error(error);
 			throw createError({
 				message: "Failed to fetch channels",

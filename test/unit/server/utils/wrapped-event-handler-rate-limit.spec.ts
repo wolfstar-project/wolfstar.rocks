@@ -1,4 +1,4 @@
-import type { H3Event } from "h3";
+import { type H3Event, mockEvent } from "h3";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
@@ -92,11 +92,7 @@ vi.mock("nuxt-skew-protection/server", () => ({
 import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 
 function makeEvent(): H3Event {
-	return {
-		node: { req: { method: "GET", socket: {} } },
-		context: {},
-		headers: new Headers(),
-	} as unknown as H3Event;
+	return mockEvent("/api/test");
 }
 
 async function flushMicrotasks(times = 20) {
@@ -282,7 +278,10 @@ describe("rate-limit reservations under concurrency", () => {
 		const eventFor = (guild: string) => {
 			g.getRequestURL = () => new URL(`http://localhost/api/guilds/${guild}/members`);
 			const event = makeEvent();
-			event.context = { matchedRoute: { path: "/api/guilds/:guild/members" } };
+			event.context.matchedRoute = {
+				route: "/api/guilds/:guild/members",
+				handler: () => null,
+			};
 			return event;
 		};
 

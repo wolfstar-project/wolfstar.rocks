@@ -53,7 +53,7 @@ registerEndpoint(`/api/guilds/${GUILD}/appeals`, {
 registerEndpoint(`/api/guilds/${GUILD}/appeals/1/decision`, {
 	method: "POST",
 	handler: async (event: H3Event) => {
-		lastBody = await event.web?.request?.json();
+		lastBody = await event.req.json();
 		return decisionAnswer();
 	},
 });

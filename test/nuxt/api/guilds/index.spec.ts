@@ -54,7 +54,7 @@ registerEndpoint(GUILD_URL, {
 
 		const { shouldSerialize } = getQuery(event);
 
-		if (shouldSerialize === true || shouldSerialize === "true" || shouldSerialize === "1") {
+		if (shouldSerialize === "true" || shouldSerialize === "1") {
 			// Simulates the `transformGuild` path
 			return {
 				...FIXTURE_GUILD,

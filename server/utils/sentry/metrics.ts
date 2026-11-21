@@ -8,7 +8,7 @@ const CACHE_ADDRESS = "nitro:fs-lite";
  * numeric IDs) with :id placeholders to keep metric cardinality bounded.
  */
 function getMetricRoute(event: H3Event): string {
-	const { method } = event.node.req;
+	const { method } = event.req;
 	const { pathname } = getRequestURL(event);
 	const normalized = pathname
 		.replace(/\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi, "/:id")
@@ -129,7 +129,7 @@ export async function instrumentDiscordApiCall<T>(
 export async function withApiMetrics<T>(event: H3Event, fn: () => Promise<T>): Promise<T> {
 	const startTime = Date.now();
 	const route = getMetricRoute(event);
-	const method = event.node.req.method ?? "unknown";
+	const { method } = event.req;
 
 	return Sentry.startSpan(
 		{

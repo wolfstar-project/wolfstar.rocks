@@ -337,10 +337,10 @@ export default defineNuxtConfig({
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
 		// Deprecated: the page moved into `/app` (server list) and the preferences
 		// dialog (theme/locale/motion). Kept as permanent redirects for old links.
-		"/profile": { redirect: { to: "/app", statusCode: 301 }, prerender: false, robots: false },
-		"/account": { redirect: { to: "/app", statusCode: 301 }, prerender: false, robots: false },
+		"/profile": { redirect: { to: "/app", status: 301 }, prerender: false, robots: false },
+		"/account": { redirect: { to: "/app", status: 301 }, prerender: false, robots: false },
 		"/starly": { appLayout: "default", robots: true },
-		"/wolfstar-v7": { redirect: { statusCode: 301, to: "/blog/wolfstar-v7" } },
+		"/wolfstar-v7": { redirect: { status: 301, to: "/blog/wolfstar-v7" }, prerender: false },
 
 		// Static pages
 		// The beta bot's commands change with each image it runs, so its Worker
@@ -354,7 +354,7 @@ export default defineNuxtConfig({
 		"/wolfstar": { appLayout: "default", prerender: true, robots: true },
 		// The page that lists the posts and the changelog is `/updates`. Posts keep
 		// their addresses under `/blog/`, and the feed stays `/blog/rss.xml`.
-		"/blog": { redirect: { statusCode: 301, to: "/updates" }, prerender: false, robots: false },
+		"/blog": { redirect: { status: 301, to: "/updates" }, prerender: false, robots: false },
 		"/updates": { appLayout: "default", prerender: true, robots: true },
 		"/blog/**": { appLayout: "default", prerender: true, robots: true },
 		"/translation-status": { appLayout: "default", prerender: true, robots: true },
@@ -369,16 +369,20 @@ export default defineNuxtConfig({
 		// `/changelog`. These four are all the addresses that existed: a new entry
 		// never gets one, so this list does not grow.
 		"/changelog/better-auth-migration": {
-			redirect: { statusCode: 301, to: "/changelog#better-auth-migration" },
+			redirect: { status: 301, to: "/changelog#better-auth-migration" },
+			prerender: false,
 		},
 		"/changelog/homepage-redesign": {
-			redirect: { statusCode: 301, to: "/changelog#homepage-redesign" },
+			redirect: { status: 301, to: "/changelog#homepage-redesign" },
+			prerender: false,
 		},
 		"/changelog/oauth-session-fix": {
-			redirect: { statusCode: 301, to: "/changelog#oauth-session-fix" },
+			redirect: { status: 301, to: "/changelog#oauth-session-fix" },
+			prerender: false,
 		},
 		"/changelog/rocks-v2": {
-			redirect: { statusCode: 301, to: "/changelog#rocks-v2" },
+			redirect: { status: 301, to: "/changelog#rocks-v2" },
+			prerender: false,
 		},
 		// Nuxt Studio admin UI + auth callbacks — SSR-only, never index or prerender.
 		"/_studio": { prerender: false, robots: false },
@@ -411,11 +415,7 @@ export default defineNuxtConfig({
 	experimental: {
 		clientNodeCompat: true,
 		typescriptPlugin: true,
-		viteEnvironmentApi: !isStorybook,
 		checkOutdatedBuildInterval: 5 * 60 * 1000, // 5 minutes
-		// v5 drops Nitro auto-imports; everything under server/ still relies on
-		// them (defineEventHandler, createError, useRuntimeConfig, own utils, …).
-		nitroAutoImports: true,
 		// Unknown paths 404 before the Vue app, plugins and middleware are created;
 		// with inlineErrorRendering the branded error.vue still renders the page.
 		early404: true,
@@ -425,6 +425,13 @@ export default defineNuxtConfig({
 
 	compatibilityDate: "2025-09-20",
 
+	// Nuxt 5 builds the server with Nitro v3 and h3 v2. Everything under server/
+	// is still Nitro v2 code: h3 v1 helpers, auto-imports (also from the
+	// subdirectories of server/utils), `nitropack/runtime` and the v2 config.
+	// This layer keeps it running until server/ moves to `nuxt/server`; Nuxt 6
+	// removes it.
+	nitroLegacy: true,
+
 	nitro: {
 		...(isCloudflareBuild
 			? {
@@ -432,14 +439,17 @@ export default defineNuxtConfig({
 					// A Worker refuses I/O across requests, so the database client is made
 					// per request and found through `useEvent()` (server/database/prisma.ts).
 					experimental: { asyncContext: true },
-					// Sentry's SDK for Workers, in place of the Node one that
-					// `sentry.server.config.ts` sets up.
-					plugins: [resolve("./server/cloudflare/sentry.ts")],
 				}
 			: {}),
-		future: {
-			nativeSWR: true,
-		},
+		// Nitro v3 runs the plugins one after another, waiting for each, and the
+		// ones listed here come before every module's. The expected errors plugin
+		// must set the level before evlog's own `error` hook emits the event.
+		plugins: [
+			resolve("./server/early-plugins/evlog-expected-errors.ts"),
+			// Sentry's SDK for Workers, in place of the Node one that
+			// `sentry.server.config.ts` sets up.
+			...(isCloudflareBuild ? [resolve("./server/cloudflare/sentry.ts")] : []),
+		],
 		// The bot API only allows the production origin, so a browser on
 		// localhost cannot call it directly. In development `$api` goes through
 		// this same-origin path instead (see `app/plugins/api.ts`).
@@ -449,8 +459,8 @@ export default defineNuxtConfig({
 				changeOrigin: true,
 			},
 		},
-		esbuild: {
-			options: {
+		oxc: {
+			transform: {
 				target: "es2024",
 			},
 		},
@@ -464,10 +474,10 @@ export default defineNuxtConfig({
 				baseURL: "/avatars",
 			},
 		],
-		rollupConfig: {
+		rolldownConfig: {
 			external: process.env.NITRO_PRESET !== "node-server" ? ["pg-native"] : undefined,
 		},
-		storage: {
+		kv: {
 			"fetch-cache": {
 				base: "./.cache/fetch",
 				driver: "fsLite",
@@ -486,7 +496,8 @@ export default defineNuxtConfig({
 		// replace) true in Playwright bundles. Prefer isTest so VITEST-only
 		// runners (CI `vp test`) still get a true replace without waiting on NODE_ENV.
 		replace: {
-			"import.meta.test": isTest,
+			// Nitro v3 takes the replacement as source text.
+			"import.meta.test": JSON.stringify(isTest),
 		},
 	},
 
@@ -572,6 +583,11 @@ export default defineNuxtConfig({
 			// Typed $fetch (routeTypedFetch) pulls server handlers into this
 			// project, so it needs @nuxt/content's collection augmentations too.
 			include: ["../test/unit/shared/**/*.ts", "./content/types.d.ts"],
+		},
+		// Nuxt 5 writes the server project itself, without the collection
+		// augmentations that `queryCollection()` in server routes needs.
+		serverTsConfig: {
+			include: ["./content/types.d.ts"],
 		},
 		nodeTsConfig: {
 			compilerOptions: {

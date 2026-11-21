@@ -2,7 +2,6 @@ import type { Contract, Models } from "#server/database/generated/prisma/contrac
 import contractJson from "#server/database/generated/prisma/contract.json" with { type: "json" };
 import { lints } from "@prisma/orm-postgres/family-runtime";
 import postgres from "@prisma/orm-postgres/runtime";
-import { useEvent } from "nitropack/runtime";
 import { typedRuntimeDescriptor } from "prisma-orm-extension-typed-json/runtime";
 import { runtime } from "std-env";
 

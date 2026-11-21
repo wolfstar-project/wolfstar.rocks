@@ -4,7 +4,8 @@ import {
 	forgetRequestDatabase,
 	rememberRequestDatabase,
 } from "#server/utils/audit/request-database";
-import { type H3Event, isEvent } from "h3";
+import { definePlugin as defineNitroPlugin } from "nitro";
+import { type H3Event, isEvent } from "nitro/h3";
 import { runtime } from "std-env";
 import { CLOUDFLARE_BINDINGS } from "~~/config/cloudflare";
 

@@ -1,6 +1,7 @@
 import type { BetterAuthInstance } from "evlog/better-auth";
 import { useLogger } from "evlog";
 import { createAuthMiddleware } from "evlog/better-auth";
+import { defineEventHandler } from "nitro/h3";
 
 /**
  * Auto-identifies the request actor from the Better Auth session on every

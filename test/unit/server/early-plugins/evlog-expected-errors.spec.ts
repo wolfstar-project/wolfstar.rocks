@@ -1,5 +1,6 @@
 import { createError as createEvlogError } from "evlog";
 import { createError as createH3Error } from "h3";
+import { createError as createNuxtError } from "nuxt/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => {
@@ -53,6 +54,12 @@ describe("the level of the errors the app means", () => {
 		).toBe("warn");
 	});
 
+	it("logs a refusal made with nuxt/server at warn", () => {
+		expect(
+			levelAfter(asNormalized(createNuxtError({ status: 404, message: "Not found" }))),
+		).toBe("warn");
+	});
+
 	it("keeps the error level for a server failure", () => {
 		expect(levelAfter(asNormalized(createEvlogError({ message: "broke", status: 500 })))).toBe(
 			undefined,
@@ -73,3 +80,9 @@ describe("the level of the errors the app means", () => {
 		}).not.toThrow();
 	});
 });
+
+// Mock the explicit server imports at the same boundaries as the former globals.
+vi.mock("nitro", () => ({
+	definePlugin: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "defineNitroPlugin") as (...args: unknown[]) => unknown)(...args),
+}));

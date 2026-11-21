@@ -270,3 +270,31 @@ describe("defineWrappedCachedResponseHandler cache/auth ordering", () => {
 		expect(getKey(makeEvent("guild-1"))).not.toBe(getKey(makeEvent("guild-2")));
 	});
 });
+
+// Mock the explicit server imports at the same boundaries as the former globals.
+vi.mock("nitro/kv", () => ({
+	useKV: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "useStorage") as (...args: unknown[]) => unknown)(...args),
+}));
+vi.mock("nuxt/server", async (importOriginal) => ({
+	...(await importOriginal<Record<string, unknown>>()),
+	getRequestIP: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "getRequestIP") as (...args: unknown[]) => unknown)(...args),
+	getRequestURL: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "getRequestURL") as (...args: unknown[]) => unknown)(...args),
+}));
+vi.mock("nitro/h3", async (importOriginal) => ({
+	...(await importOriginal<Record<string, unknown>>()),
+	setResponseHeader: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "setResponseHeader") as (...args: unknown[]) => unknown)(...args),
+	defineEventHandler: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "defineEventHandler") as (...args: unknown[]) => unknown)(...args),
+}));
+vi.mock("nitro/cache", () => ({
+	defineCachedHandler: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "cachedEventHandler") as (...args: unknown[]) => unknown)(...args),
+}));
+vi.mock("#server/utils/shared", () => ({
+	omit: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "omit") as (...args: unknown[]) => unknown)(...args),
+}));

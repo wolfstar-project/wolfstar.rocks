@@ -305,3 +305,9 @@ describe("assertGuildTextChannel", () => {
 		);
 	});
 });
+
+// Mock the explicit server imports at the same boundaries as the former globals.
+vi.mock("#server/utils/discord/index", () => ({
+	getGuildChannels: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "getGuildChannels") as (...args: unknown[]) => unknown)(...args),
+}));

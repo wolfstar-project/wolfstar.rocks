@@ -1,5 +1,6 @@
 import * as Sentry from "@sentry/nuxt";
-import { H3Event } from "h3";
+import { H3Event } from "nitro/h3";
+import { getRequestURL } from "nuxt/server";
 
 const CACHE_ADDRESS = "nitro:fs-lite";
 

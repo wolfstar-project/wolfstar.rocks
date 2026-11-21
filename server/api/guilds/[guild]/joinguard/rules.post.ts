@@ -6,7 +6,9 @@ import {
 	throwJoinGuardRuleError,
 } from "#server/utils/join-guard/route";
 import { createJoinGuardRule } from "#server/utils/join-guard/rules";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { JoinGuardRuleFieldsSchema } from "#shared/schemas/join-guard";
+import { readBody, setResponseStatus } from "nuxt/server";
 
 /**
  * `POST /api/guilds/:guild/joinguard/rules`: creates a rule. The body is a

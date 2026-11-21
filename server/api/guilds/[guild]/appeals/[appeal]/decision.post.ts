@@ -7,6 +7,8 @@ import {
 } from "#server/utils/appeals/queue-route";
 import { authorizeAppealFormManager } from "#server/utils/appeals/route";
 import { useManagedGuild } from "#server/utils/guilds/manager";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
+import { getRouterParam, readBody, setResponseStatus } from "nuxt/server";
 
 /**
  * `POST /api/guilds/:guild/appeals/:appeal/decision`: asks the bot to approve or

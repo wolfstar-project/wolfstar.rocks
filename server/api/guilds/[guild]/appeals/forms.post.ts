@@ -7,6 +7,8 @@ import {
 } from "#server/utils/appeals/route";
 import { parseAppealFormPatch } from "#server/utils/appeals/validation";
 import { useManagedGuild } from "#server/utils/guilds/manager";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
+import { readBody, setResponseStatus } from "nuxt/server";
 
 /**
  * `POST /api/guilds/:guild/appeals/forms`: creates a form. The body has the

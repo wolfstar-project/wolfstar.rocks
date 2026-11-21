@@ -1,6 +1,8 @@
-import type { H3Event } from "h3";
+import type { H3Event } from "nitro/h3";
+import { fetchCommands } from "#server/utils/discord/index";
 import { CommandRuleNameSchema } from "#shared/schemas/command-rules";
 import { createError } from "evlog";
+import { getRouterParam } from "nuxt/server";
 import { safeParse } from "valibot";
 
 /** The command of the path of a command rules route, by the bot's piece name, or `*`. */

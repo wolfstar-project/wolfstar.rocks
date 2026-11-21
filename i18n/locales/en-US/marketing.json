@@ -2,40 +2,40 @@
 	"$schema": "../../schemas/marketing.schema.json",
 	"marketing": {
 		"commands": {
-			"categories_heading": "",
-			"category_count": "",
-			"details_label": "",
-			"empty_description": "",
-			"empty_title": "",
-			"examples": "",
-			"explained_usage": "",
-			"extended_help": "",
-			"guarded": "",
-			"loading": "",
-			"no_description": "",
-			"no_details": "",
-			"permission_administrator": "",
-			"permission_moderator": "",
-			"permission_staff": "",
-			"possible_formats": "",
-			"properties_label": "",
-			"refresh": "",
-			"refresh_label": "",
-			"reminder": "",
-			"results": "",
-			"search_clear": "",
-			"search_heading": "",
-			"search_label": "",
-			"search_placeholder": "",
-			"server_only": "",
-			"subtitle_highlight": "",
-			"subtitle_lead": "",
-			"subtitle_tail": "",
-			"title": "",
-			"try_again": "",
-			"unavailable_description": "",
-			"unavailable_title": "",
-			"usage": ""
+			"categories_heading": "Command categories",
+			"category_count": "No commands | 1 command | {count} commands",
+			"details_label": "{command} command details",
+			"empty_description": "Try adjusting your search or browse other categories.",
+			"empty_title": "No commands found",
+			"examples": "Examples",
+			"explained_usage": "Explained Usage",
+			"extended_help": "Extended Help",
+			"guarded": "Cannot be disabled",
+			"loading": "Loading commands",
+			"no_description": "No description yet",
+			"no_details": "No usage notes are documented for this command yet.",
+			"permission_administrator": "Administrators only",
+			"permission_moderator": "Moderators & admins only",
+			"permission_staff": "Staff only",
+			"possible_formats": "Possible Formats",
+			"properties_label": "Command properties",
+			"refresh": "Refresh",
+			"refresh_label": "Refresh commands list",
+			"reminder": "Reminder",
+			"results": "No commands found | 1 command found | {count} commands found",
+			"search_clear": "Clear search",
+			"search_heading": "Search commands",
+			"search_label": "Search for commands by name or description",
+			"search_placeholder": "Search commands...",
+			"server_only": "Server only",
+			"subtitle_highlight": "Powerful moderation",
+			"subtitle_lead": "Browse and search through all available bot commands.",
+			"subtitle_tail": "at your fingertips.",
+			"title": "WolfStar Commands",
+			"try_again": "Try Again",
+			"unavailable_description": "Couldn't load commands right now. Try refreshing.",
+			"unavailable_title": "No commands available",
+			"usage": "Command Usage"
 		},
 		"other_apps": {
 			"also_from": "Also from WolfStar Project",
@@ -43,48 +43,44 @@
 			"eyebrow": "Other Apps",
 			"invite": "Invite {app}",
 			"logo_alt": "{app} logo",
-			"staryl_description": "Staryl brings Twitch, feed, and social account notifications into Discord.",
+			"staryl_description": "Staryl brings Twitch live and offline notifications into Discord.",
 			"title": "Two apps, one project.",
 			"wolfstar_description": "WolfStar combines configurable moderation, server event logging, and dashboard-managed settings."
 		},
 		"staryl": {
 			"commands": {
-				"description": "Use Staryl’s commands to send Twitch, feed, and social account notifications to the right channel.",
+				"description": "Use Staryl’s Twitch subscription commands to send live and offline stream notifications to the right channel.",
 				"eyebrow": "Command flow preview",
-				"title": "Configure notifications with Staryl."
+				"title": "Configure Twitch notifications with Staryl."
 			},
 			"cta": {
 				"ask_in_support": "Ask in support",
 				"eyebrow": "Staryl for Discord",
 				"invite": "Invite Staryl",
 				"subtitle": "Invite Staryl now, or join the support server if you want to ask a question first.",
-				"title": "Bring your streamers, feeds, and accounts into your server."
+				"title": "Bring your streamers into your server."
 			},
 			"features": {
 				"command_hint": "With {command}",
-				"description": "A live alert with the stream's title, game and preview, an offline note in your own words, a card for each new article or post, and a test whenever you want to check the channel.",
+				"description": "A live alert with the stream's title, game and preview, an offline note in your own words, and a test whenever you want to check the channel.",
 				"eyebrow": "What lands in the channel",
-				"feed_body": "An RSS or Atom subscription posts each new item. The title links to the item, above its summary and a button to read it. Keywords choose which items reach the channel.",
-				"feed_title": "New article",
 				"live_body": "The stream's title links to the channel, next to the game and its box art, above a preview of the stream and a button to watch.",
 				"live_title": "Going live",
 				"next": "Next notification",
-				"notifications_description": "Each subscription sends one streamer, feed, or account to one channel. Pick a kind to see what lands there.",
-				"notifications_title": "Notifications",
+				"notifications_description": "Each subscription sends one streamer's live or offline update to one channel. Pick a kind to see what lands there.",
+				"notifications_title": "Twitch notifications",
 				"offline_body": "An offline subscription posts the message you wrote for it, with the time the stream ended. Offline subscriptions need that message.",
 				"offline_message": "Stella's stream is over, thanks for watching!",
 				"offline_title": "Stream over",
 				"ping_body": "Give the subscription a message and it goes above the notification. Mention a role in it and Staryl pings that role, as long as the role can be mentioned.",
 				"ping_role": "Stream Pings",
 				"ping_title": "Ping a role",
-				"post_body": "A Bluesky, Mastodon, or X subscription posts each new post of the account, with its text and a button to view it. You can leave out replies and reposts.",
-				"post_title": "New post",
 				"previous": "Previous notification",
 				"test_body": "A test goes through the same path as a real notification, so a missing permission shows up now and not at the next stream. It says it is a test.",
 				"test_notice": "this is a preview requested by a server administrator, not a real stream update.",
 				"test_notice_label": "Test notification",
 				"test_title": "Test it",
-				"title": "One message per update, in your channel."
+				"title": "One message per stream, in your channel."
 			},
 			"hero": {
 				"brief_aria": "Staryl capability summary",
@@ -93,31 +89,23 @@
 				"kicker": "Open-source social notifications",
 				"release": "Release v{version}",
 				"routing_term": "Routing",
-				"routing_value": "One streamer, feed, or account to one channel per subscription",
+				"routing_value": "One streamer, one channel, one alert type per subscription",
 				"see_work": "See Staryl work",
 				"setup_term": "Setup",
 				"setup_value": "Runs on {command}, no dashboard needed",
 				"sources_term": "Sources",
-				"sources_value": "Twitch, RSS and Atom feeds, Bluesky, Mastodon, and X",
-				"subtitle": "Staryl posts a message in the channel you choose when a Twitch streamer goes live, a feed publishes, or an account posts. Set it up from Discord.",
+				"sources_value": "Twitch live and offline alerts today, more sources planned",
+				"subtitle": "Staryl posts a message in the channel you choose when a Twitch streamer goes live or offline. Set it up with one command.",
 				"title": "Social updates, where your server already is.",
 				"view_source": "View source"
 			},
 			"notification": {
 				"box_art_alt": "",
-				"feed_body": "A proposal for the WolfStar network of independent single-purpose bots.",
-				"feed_footer": "Staryl Feed Notifications",
-				"feed_header": "New in {name}",
-				"feed_read": "Read",
 				"footer": "Staryl Twitch Notifications",
 				"game": "Software and Game Development",
 				"game_label": "Game",
 				"live_header": "{name} is now live on Twitch!",
 				"message": "Stella is live, come say hi!",
-				"post_body": "Tonight's stream starts an hour early. Bring your questions about the new overlay.",
-				"post_footer": "Staryl Bluesky Notifications",
-				"post_header": "New post by {name}",
-				"post_view": "View post",
 				"preview_alt": "The stream's preview: a code editor and the streamer's webcam.",
 				"stream_title": "Fixing bugs live, come hang out",
 				"test_title": "Test notification",
@@ -126,62 +114,599 @@
 			},
 			"proof": {
 				"eyebrow": "What Staryl does",
-				"step_1_body": "Choose a Twitch streamer, an RSS or Atom feed, or a Bluesky, Mastodon, or X account.",
+				"step_1_body": "Choose the streamer. Twitch is the only source today, and more sources are planned.",
 				"step_1_title": "Pick the source",
-				"step_2_body": "Each subscription sends its updates to one channel, with its own message. Feeds and accounts can also filter by keyword.",
+				"step_2_body": "Each subscription sends one streamer's live or offline notification to one channel.",
 				"step_2_title": "Route the update",
 				"step_3_body": "A server team adds, removes, shows, resets, and tests subscriptions with Staryl's slash commands. No dashboard is needed.",
 				"step_3_title": "Manage it together",
 				"title": "From source to server, in one hop."
 			},
 			"seo": {
-				"description": "Staryl is an open-source Discord app from the WolfStar Project that posts Twitch, feed, and social account notifications in the channel you choose.",
+				"description": "Staryl is an open-source Discord app from the WolfStar Project that posts Twitch live and offline notifications in the channel you choose.",
 				"title": "Staryl"
 			},
 			"setup": {
+				"add_body": "The streamer, the channel, live or offline, and an optional message, required for offline notifications.",
+				"add_title": "Add a notification",
 				"eyebrow": "No dashboard needed",
-				"general_body": "How many notifications the server has, and where to go next.",
-				"general_title": "General",
-				"index_label": "The /settings menu",
+				"index_label": "The /setup menu",
+				"manage_body": "Review the server's notifications, remove the ones you pick, or reset them all.",
+				"manage_title": "Manage notifications",
+				"overview_body": "How many notifications the server has, and where to go next.",
+				"overview_title": "Overview",
+				"pages_count": "4 pages",
 				"see_commands": "See the commands",
-				"sources_body": "Each other source has its own section. Pick a subscription to see its target, message, and filters. Then edit the message, send a test, or remove it.",
-				"sources_title": "Feeds and accounts",
-				"status_body": "Each subscription shows whether it works. If the last post failed, the menu says why, such as a missing permission in the channel.",
-				"status_title": "Delivery status",
-				"subtitle": "Run {command} and Staryl opens its menu in the channel, for the member who opened it. The command needs the Manage Server permission.",
-				"title": "Set it up from Discord.",
-				"twitch_body": "Add a live or offline notification, remove the ones you pick, reset them all, or send a test.",
-				"twitch_title": "Twitch live"
+				"subtitle": "Run {command} and Staryl opens its menu in the channel, for the administrator who opened it. Four pages cover everything a subscription needs.",
+				"test_body": "Send a preview through the real delivery path, to check the channel and the bot's permissions.",
+				"test_title": "Test notifications",
+				"title": "Set it up from Discord."
 			},
 			"showcase": {
-				"add_description": "Add Twitch notifications to a channel.",
+				"add_description": "Add a new Twitch subscription for a streamer.",
 				"add_response": "✅ Success! Whenever stella goes live, I will post a new message in #staryl-notifications.",
-				"bluesky_add_response": "✅ Success! Whenever Stella publishes something, I will post it in #staryl-notifications.",
-				"channel_topic": "Configure notifications with Staryl.",
+				"channel_topic": "Configure Twitch stream notifications with Staryl.",
 				"composer_placeholder": "Message #{channel}",
-				"remove_description": "Remove Twitch notifications from a channel.",
+				"remove_description": "Remove a Twitch subscription for a streamer.",
 				"remove_response": "✅ Success! I will no longer post messages to #staryl-notifications whenever stella goes live.",
-				"reset_description": "Remove Twitch subscriptions; optionally filter by streamer or event.",
+				"reset_description": "Remove all Twitch subscriptions from this server.",
 				"reset_response": "✅ Success! 3 subscriptions have been removed from this server.",
-				"rss_add_response": "✅ Success! Whenever The WolfStar Blog publishes something, I will post it in #staryl-notifications.",
 				"search_placeholder": "Search WolfStar HQ",
-				"settings_count": "Current notifications:",
-				"settings_description": "Manage this server’s Twitch and social notification settings.",
-				"settings_heading": "Server settings",
-				"settings_hint": "Choose Twitch or a social provider below. Each subscription keeps its own Discord channel, message and filters.",
-				"settings_intro": "Manage Twitch live notifications and subscriptions to feeds, videos and social accounts.",
-				"settings_placeholder": "Choose what you want to configure",
-				"show_description": "List Twitch subscriptions; optionally filter by streamer or event.",
+				"setup_count": "Current notifications:",
+				"setup_description": "Open the interactive setup menu for this server.",
+				"setup_heading": "Staryl setup",
+				"setup_hint": "Use the menu below to add, manage, or test a notification.",
+				"setup_intro": "Configure Twitch notifications for this server from one place.",
+				"setup_placeholder": "Choose what you want to configure",
+				"show_description": "Show all Twitch subscriptions for this server.",
 				"show_embed_offline": "lory — #staryl-notifications → Offline",
 				"show_embed_online": "stella — #staryl-notifications → Live",
 				"show_embed_title": "Twitch Subscriptions",
-				"social_add_description": "Add notifications from this provider to a channel.",
-				"test_description": "Send a test notification for the selected Twitch event.",
+				"test_description": "Send a test notification to check that an existing subscription works.",
 				"test_response": "✅ Sent! Check #staryl-notifications — that is exactly what the notification will look like.",
 				"timestamp": "Today at 15:49"
 			}
 		},
 		"wolfstar": {
+			"commands_catalogue": {
+				"archive_create": {
+					"description": "Save the messages a member sent in the last 14 days.",
+					"reply": "History `a1b2c3` of <@baddie> saved, with 42 messages.",
+					"tooltip": "Archive Create"
+				},
+				"archive_list": {
+					"description": "List the latest message histories.",
+					"reply": "- `a1b2c3`: <@baddie>, 42 messages, today by <@stella>",
+					"tooltip": "Archive List"
+				},
+				"archive_show": {
+					"description": "Get the file of a message history.",
+					"reply": "📎 `history-a1b2c3.txt`",
+					"tooltip": "Archive Show"
+				},
+				"autodelete_disable": {
+					"description": "Stop deleting the messages of a channel.",
+					"reply": "The messages of <#selfies> are no longer deleted.",
+					"tooltip": "Autodelete Disable"
+				},
+				"autodelete_enable": {
+					"description": "Delete the messages sent in a channel, at once or a delay after.",
+					"reply": "The messages sent in <#selfies> are deleted after 1 hour, but the ones that are pinned meanwhile.\n**Kept:** Messages with images",
+					"tooltip": "Autodelete Enable"
+				},
+				"autodelete_list": {
+					"description": "List the channels whose messages are deleted.",
+					"reply": "<#selfies> · 1 hour\n-# Kept: Messages with images",
+					"title": "Channels with deleted messages (1)",
+					"tooltip": "Autodelete List"
+				},
+				"automessage_disable": {
+					"description": "Stop sending the message of a channel.",
+					"reply": "I no longer send a message in <#general>.",
+					"tooltip": "Automessage Disable"
+				},
+				"automessage_enable": {
+					"description": "Send a message in a channel every interval. You write the message after this.",
+					"reply": "I send the message in <#general> every 6 hours, the first time in 6 hours. When the last message of the channel is still mine, I skip it.",
+					"tooltip": "Automessage Enable"
+				},
+				"automessage_list": {
+					"description": "List the channels that get a message.",
+					"reply": "<#general> · every 6 hours · next in 2 hours\n-# `Read the rules in #rules before posting!`",
+					"title": "Automatic messages (1)",
+					"tooltip": "Automessage List"
+				},
+				"automod_add": {
+					"description": "Add an entry to the list of a rule: a word, an allowed link or an allowed invite",
+					"reply": "**ID:** `r2` · **Type:** `Words`\n**Status**\n✅ Enabled\n-# Added `free nitro` to **Bad Words**.",
+					"select": "Configuration panel",
+					"title": "Bad Words",
+					"tooltip": "Automod Add"
+				},
+				"automod_create": {
+					"description": "Create an auto-moderation rule",
+					"reply": "**ID:** `r1` · **Type:** `Invites`\n**Status**\n✅ Enabled\n-# Created the rule. It only counts the infractions for now: set what it does in the moderation response.",
+					"select": "Configuration panel",
+					"title": "No Invites",
+					"tooltip": "Automod Create"
+				},
+				"automod_delete": {
+					"description": "Delete an auto-moderation rule",
+					"reply": "Deleted the rule **No Invites**.",
+					"tooltip": "Automod Delete"
+				},
+				"automod_edit": {
+					"description": "Edit an auto-moderation rule",
+					"reply": "**ID:** `r1` · **Type:** `Invites`\n**Status**\n✅ Enabled\n-# Successfully edited the rule **No Invites**.",
+					"select": "Configuration panel",
+					"title": "No Invites",
+					"tooltip": "Automod Edit"
+				},
+				"automod_ignore": {
+					"description": "Exempt a role or a channel from a rule, or stop exempting it",
+					"reply": "**ID:** `r1` · **Type:** `Invites`\n**Status**\n✅ Enabled\n-# **No Invites** no longer applies to <#partners>.",
+					"select": "Configuration panel",
+					"title": "No Invites",
+					"tooltip": "Automod Ignore"
+				},
+				"automod_list": {
+					"description": "Open the panel of the auto-moderation rules of this server",
+					"reply": "Pick a rule to configure it, or create one.\n- ✅ **No Invites** · Invites\n- ✅ **Bad Words** · Words\n- **Caps Lock** · Capitals",
+					"select": "Select a rule",
+					"title": "Auto-moderation rules [3/25]",
+					"tooltip": "Automod List"
+				},
+				"automod_remove": {
+					"description": "Remove an entry from the list of a rule",
+					"reply": "**ID:** `r2` · **Type:** `Words`\n**Status**\n✅ Enabled\n-# Removed `free nitro` from **Bad Words**.",
+					"select": "Configuration panel",
+					"title": "Bad Words",
+					"tooltip": "Automod Remove"
+				},
+				"automod_show": {
+					"description": "Open the configuration panel of an auto-moderation rule",
+					"reply": "**ID:** `r1` · **Type:** `Invites`\n**Status**\n✅ Enabled",
+					"select": "Configuration panel",
+					"title": "No Invites",
+					"tooltip": "Automod Show"
+				},
+				"autopurge_disable": {
+					"description": "Stop purging a channel.",
+					"reply": "<#memes> is no longer purged.",
+					"tooltip": "Autopurge Disable"
+				},
+				"autopurge_enable": {
+					"description": "Purge a channel every interval, of every message or of the ones a filter looks for.",
+					"reply": "<#memes> is purged every 1 day, the first time in 1 day.\n**Deletes:** Every message",
+					"tooltip": "Autopurge Enable"
+				},
+				"autopurge_list": {
+					"description": "List the channels that are purged.",
+					"reply": "<#memes> · every 1 day · next in 5 hours\n-# Every message",
+					"title": "Purged channels (1)",
+					"tooltip": "Autopurge List"
+				},
+				"ban_remove": {
+					"description": "Unban somebody from this server.",
+					"reason": "Appeal accepted",
+					"tooltip": "Ban Remove"
+				},
+				"commands": {
+					"description": "Browse and search what I can do.",
+					"reply": "Select a category to view commands.",
+					"select": "Select a category",
+					"title": "All Commands",
+					"tooltip": "Commands"
+				},
+				"dehoist": {
+					"description": "Shoot everyone with the Dehoistinator 3000",
+					"reply": "3 members were dehoisted",
+					"title": "Finished dehoisting 412 members",
+					"tooltip": "Dehoist"
+				},
+				"honeypot_disable": {
+					"description": "Stop catching who writes in the honeypot channel.",
+					"reply": "✅ <#honeypot> is no longer a honeypot channel, nobody is caught for writing there. I did not delete it.",
+					"tooltip": "Honeypot Disable"
+				},
+				"honeypot_edit": {
+					"description": "Change what the honeypot does.",
+					"reply": "✅ The honeypot was updated.\n**Honeypot Channel**: <#honeypot>\n**Honeypot Action**: Ban\n**Honeypot Logs Channel**: <#mod-logs>\n**Tell Who Is Caught**: Enabled",
+					"title": "Honeypot",
+					"tooltip": "Honeypot Edit"
+				},
+				"honeypot_setup": {
+					"description": "Make a channel the honeypot: who writes there is caught. I create the channel when none is given.",
+					"reply": "✅ <#honeypot> is the honeypot channel now: I act on whoever writes there, but the moderators.\n**Honeypot Action**: Softban\n**Honeypot Logs Channel**: <#mod-logs>",
+					"title": "Honeypot",
+					"tooltip": "Honeypot Setup"
+				},
+				"honeypot_show": {
+					"description": "Show how the honeypot is set up.",
+					"reply": "**Honeypot Channel**: <#honeypot>\n**Honeypot Action**: Softban\n**Honeypot Logs Channel**: <#mod-logs>\n**Tell Who Is Caught**: Enabled\n**Warning in the Channel**: Enabled\n**Random Channel Name**: Disabled",
+					"title": "Honeypot",
+					"tooltip": "Honeypot Show"
+				},
+				"lockdown": {
+					"description": "Manage the lockdown of a channel, a thread or the whole server.",
+					"reply": "Updated the lockdown of the channel <#general> for <@everyone>.",
+					"tooltip": "Lockdown"
+				},
+				"mute_create": {
+					"description": "Prepare the mute system.",
+					"reply": "Successfully executed the command.",
+					"tooltip": "Mute Create"
+				},
+				"mute_remove": {
+					"description": "Remove the scotch tape from a user.",
+					"reason": "Served the mute",
+					"tooltip": "Mute Remove"
+				},
+				"note": {
+					"description": "Add a note to a member, which they are never told about.",
+					"reason": "Asked about the raid in DMs",
+					"tooltip": "Note"
+				},
+				"permission_nodes_add": {
+					"description": "Add a command to a permission node.",
+					"reply": "✅ Successfully added the command to the permission node.",
+					"tooltip": "Permission Nodes Add"
+				},
+				"permission_nodes_remove": {
+					"description": "Remove a command from a permission node.",
+					"reply": "✅ Successfully removed the command from the permission node.",
+					"tooltip": "Permission Nodes Remove"
+				},
+				"permission_nodes_reset": {
+					"description": "Remove every command from a permission node.",
+					"reply": "✅ Successfully removed all commands from the permission node.",
+					"tooltip": "Permission Nodes Reset"
+				},
+				"permission_nodes_show": {
+					"description": "Show the permission nodes.",
+					"reply": "Permissions for: **Moderators**\n**Allow**: `ban` and `kick`\n**Deny**: None",
+					"tooltip": "Permission Nodes Show"
+				},
+				"permissions": {
+					"description": "Get the user's permissions",
+					"reply": "**Kick Members**, **Ban Members**, **Manage Messages**, View Channels, and Send Messages",
+					"title": "Permissions for stella (266624760782258186)",
+					"tooltip": "Permissions"
+				},
+				"prune_age": {
+					"description": "Delete the messages newer than a duration, up to 14 days.",
+					"reply": "Successfully deleted 25 messages from 50.",
+					"tooltip": "Prune Age"
+				},
+				"prune_any": {
+					"description": "Delete the latest messages, up to 1000, or the ones that match several filters.",
+					"reply": "Successfully deleted 25 messages from 50.",
+					"tooltip": "Prune Any"
+				},
+				"prune_attachments": {
+					"description": "Delete the messages that have attachments.",
+					"reply": "Successfully deleted 25 messages from 50.",
+					"tooltip": "Prune Attachments"
+				},
+				"prune_author": {
+					"description": "Delete the messages of a user, or yours when none is given.",
+					"reply": "Successfully deleted 25 messages from 50.",
+					"tooltip": "Prune Author"
+				},
+				"prune_bots": {
+					"description": "Delete the messages sent by bots.",
+					"reply": "Successfully deleted 25 messages from 50.",
+					"tooltip": "Prune Bots"
+				},
+				"prune_embeds": {
+					"description": "Delete the messages that have embeds.",
+					"reply": "Successfully deleted 25 messages from 50.",
+					"tooltip": "Prune Embeds"
+				},
+				"prune_endswith": {
+					"description": "Delete the messages that end with a text.",
+					"reply": "Successfully deleted 25 messages from 50.",
+					"tooltip": "Prune Endswith"
+				},
+				"prune_humans": {
+					"description": "Delete the messages sent by humans.",
+					"reply": "Successfully deleted 25 messages from 50.",
+					"tooltip": "Prune Humans"
+				},
+				"prune_images": {
+					"description": "Delete the messages that have images.",
+					"reply": "Successfully deleted 25 messages from 50.",
+					"tooltip": "Prune Images"
+				},
+				"prune_includes": {
+					"description": "Delete the messages that contain a text.",
+					"reply": "Successfully deleted 25 messages from 50.",
+					"tooltip": "Prune Includes"
+				},
+				"prune_invites": {
+					"description": "Delete the messages that contain invite links.",
+					"reply": "Successfully deleted 25 messages from 50.",
+					"tooltip": "Prune Invites"
+				},
+				"prune_links": {
+					"description": "Delete the messages that contain any link.",
+					"reply": "Successfully deleted 25 messages from 50.",
+					"tooltip": "Prune Links"
+				},
+				"prune_match": {
+					"description": "Delete the messages that match a regular expression.",
+					"reply": "Successfully deleted 25 messages from 50.",
+					"tooltip": "Prune Match"
+				},
+				"prune_mentions": {
+					"description": "Delete the messages that mention a user, a role or a channel.",
+					"reply": "Successfully deleted 25 messages from 50.",
+					"tooltip": "Prune Mentions"
+				},
+				"prune_pins": {
+					"description": "Delete the pinned messages, which every other subcommand keeps.",
+					"reply": "Successfully deleted 25 messages from 50.",
+					"tooltip": "Prune Pins"
+				},
+				"prune_startswith": {
+					"description": "Delete the messages that start with a text.",
+					"reply": "Successfully deleted 25 messages from 50.",
+					"tooltip": "Prune Startswith"
+				},
+				"prune_you": {
+					"description": "Delete my messages.",
+					"reply": "Successfully deleted 25 messages from 50.",
+					"tooltip": "Prune You"
+				},
+				"reasons_add": {
+					"description": "Define a reason, written in the reason option of a moderation command by its alias.",
+					"reply": "The reason `spam` was defined. Write it in the reason option of a moderation command.",
+					"tooltip": "Reasons Add"
+				},
+				"reasons_list": {
+					"description": "List the predefined reasons of the server.",
+					"reply": "Predefined reasons (2/50):\n- `spam`: Spamming messages or links\n- `nsfw`: Posting NSFW content outside NSFW channels",
+					"tooltip": "Reasons List"
+				},
+				"reasons_remove": {
+					"description": "Remove a predefined reason.",
+					"reply": "The reason `spam` was removed.",
+					"tooltip": "Reasons Remove"
+				},
+				"report": {
+					"description": "Report a member to the moderators of this server.",
+					"reply": "Thank you, your report was sent to the moderators. Only they can see it.",
+					"tooltip": "Report"
+				},
+				"reports_block": {
+					"description": "Stop a member from sending reports.",
+					"reply": "<@baddie> cannot send reports anymore.",
+					"tooltip": "Reports Block"
+				},
+				"reports_history": {
+					"description": "List the latest reports, of everybody or about one user.",
+					"reply": "`#12` 5 minutes ago · <@baddie> · **Open**\n-# By <@louduser>: Sending scam links in DMs",
+					"title": "Latest reports",
+					"tooltip": "Reports History"
+				},
+				"reports_unblock": {
+					"description": "Let a member send reports again.",
+					"reply": "<@baddie> can send reports again.",
+					"tooltip": "Reports Unblock"
+				},
+				"restrict_attachment": {
+					"description": "Restrict a user from sending attachments in all channels.",
+					"reason": "Posting gore images",
+					"tooltip": "Restrict Attachment"
+				},
+				"restrict_embed": {
+					"description": "Restrict a user from attaching embeds in all channels.",
+					"reason": "Embedding scam links",
+					"tooltip": "Restrict Embed"
+				},
+				"restrict_emoji": {
+					"description": "Restrict a user from using external emojis in all channels.",
+					"reason": "Flooding with external emojis",
+					"tooltip": "Restrict Emoji"
+				},
+				"restrict_reaction": {
+					"description": "Restrict a user from reacting to messages in all channels.",
+					"reason": "Reacting with slurs",
+					"tooltip": "Restrict Reaction"
+				},
+				"restrict_voice": {
+					"description": "Restrict a user from joining any voice channel.",
+					"reason": "Earrape in the voice channels",
+					"tooltip": "Restrict Voice"
+				},
+				"role_add": {
+					"description": "Adds a role to a user.",
+					"reason": "Event winner",
+					"tooltip": "Role Add"
+				},
+				"role_remove": {
+					"description": "Removes a role from a user",
+					"reason": "Event is over",
+					"tooltip": "Role Remove"
+				},
+				"role_rules_add": {
+					"description": "Set the roles a member needs to get a role.",
+					"reply": "Done: <@Verified Gamer> ← has <@Verified>, not <@Muted>. The members get or lose the role the next time their roles change.",
+					"tooltip": "Role Rules Add"
+				},
+				"role_rules_list": {
+					"description": "List the role rules of the server.",
+					"reply": "Role rules (1/25):\n- <@Verified Gamer> ← has <@Verified>, not <@Muted>",
+					"tooltip": "Role Rules List"
+				},
+				"role_rules_remove": {
+					"description": "Remove the rule of a role, the members keep it.",
+					"reply": "The rule of <@Verified Gamer> was removed, the members keep the role.",
+					"tooltip": "Role Rules Remove"
+				},
+				"roles_browse": {
+					"button": "Pick a role",
+					"description": "Browse the roles of this server, and pick one to see it.",
+					"reply": "WolfStar HQ · 6 roles\n-# Page 1 of 1 • 6 roles",
+					"title": "🏷️ Roles",
+					"tooltip": "Roles Browse"
+				},
+				"roles_claim": {
+					"description": "Claim a public role.",
+					"reply": "The following roles have been added to your profile: `Announcements`",
+					"tooltip": "Roles Claim"
+				},
+				"roles_list": {
+					"description": "List the public roles of this server.",
+					"reply": "Announcements\nEvents\nGiveaways",
+					"title": "List of public roles",
+					"tooltip": "Roles List"
+				},
+				"roles_unclaim": {
+					"description": "Give up a public role.",
+					"reply": "The following roles have been removed from your profile: `Announcements`",
+					"tooltip": "Roles Unclaim"
+				},
+				"setnickname": {
+					"description": "Change the nickname of a user.",
+					"reason": "Hoisting with symbols",
+					"tooltip": "Setnickname"
+				},
+				"settings_user": {
+					"button": "Disable",
+					"description": "Open your own settings.",
+					"reply": "These settings are yours, they are the same in every server.\n**Moderation direct messages**\n✅ Enabled\n-# Whether I send you a direct message when a moderator takes an action on you, or the auto-moderation does.",
+					"title": "Your settings",
+					"tooltip": "Settings User"
+				},
+				"softban": {
+					"description": "Hit somebody with the ban hammer, destroying all their messages for some days, and unban it.",
+					"reason": "Compromised account posting scam links",
+					"tooltip": "Softban"
+				},
+				"sticky_nickname": {
+					"description": "Show the sticky nickname of a user.",
+					"reply": "Sticky nickname of **baddie**: Please Rename Me",
+					"tooltip": "Sticky Nickname"
+				},
+				"sticky_roles_add": {
+					"description": "Add a sticky role to a user.",
+					"reply": "Successfully added the specified role as sticky to baddie.",
+					"tooltip": "Sticky Roles Add"
+				},
+				"sticky_roles_remove": {
+					"description": "Remove a sticky role from a user.",
+					"reply": "Successfully removed the specified role from baddie.",
+					"tooltip": "Sticky Roles Remove"
+				},
+				"sticky_roles_reset": {
+					"description": "Remove every sticky role from a user.",
+					"reply": "Successfully removed all sticky roles from baddie.",
+					"tooltip": "Sticky Roles Reset"
+				},
+				"sticky_roles_show": {
+					"description": "Show the sticky roles of a user.",
+					"reply": "Sticky Role(s) for **baddie**: `Muted` and `Restricted`.",
+					"tooltip": "Sticky Roles Show"
+				},
+				"timeout_remove": {
+					"description": "Remove a time out from a user.",
+					"reason": "Calmed down",
+					"tooltip": "Timeout Remove"
+				},
+				"unrestrict_attachment": {
+					"description": "Remove the attachment restriction from one or more users.",
+					"reason": "Restriction lifted",
+					"tooltip": "Unrestrict Attachment"
+				},
+				"unrestrict_embed": {
+					"description": "Remove the embed restriction from one or more users.",
+					"reason": "Restriction lifted",
+					"tooltip": "Unrestrict Embed"
+				},
+				"unrestrict_emoji": {
+					"description": "Remove the external emoji restriction from one or more users.",
+					"reason": "Restriction lifted",
+					"tooltip": "Unrestrict Emoji"
+				},
+				"unrestrict_reaction": {
+					"description": "Remove the reaction restriction from one or more users.",
+					"reason": "Restriction lifted",
+					"tooltip": "Unrestrict Reaction"
+				},
+				"unrestrict_voice": {
+					"description": "Remove the voice restriction from one or more users.",
+					"reason": "Restriction lifted",
+					"tooltip": "Unrestrict Voice"
+				},
+				"vmute_add": {
+					"description": "Throw somebody's microphone out the window.",
+					"reason": "Mic spam",
+					"tooltip": "Vmute Add"
+				},
+				"vmute_remove": {
+					"description": "Get somebody's microphone back so they can talk.",
+					"reason": "Fixed their mic",
+					"tooltip": "Vmute Remove"
+				},
+				"voicekick": {
+					"description": "Hit somebody with the 👢 for singing so bad and loud.",
+					"reason": "Earrape in the voice channel",
+					"tooltip": "Voicekick"
+				},
+				"warn_remove": {
+					"description": "Remove the last warning of somebody.",
+					"reason": "Warned by mistake",
+					"tooltip": "Warn Remove"
+				},
+				"warn_thresholds_add": {
+					"description": "Set the action taken when a member reaches a number of warnings.",
+					"reply": "Done: 3 warnings within 7 days → Mute for 1 hour.",
+					"tooltip": "Warn Thresholds Add"
+				},
+				"warn_thresholds_list": {
+					"description": "List the thresholds of warnings of the server.",
+					"reply": "Thresholds of warnings (2/10):\n- 3 warnings within 7 days → Timeout for 1 hour\n- 5 warnings → Ban",
+					"tooltip": "Warn Thresholds List"
+				},
+				"warn_thresholds_remove": {
+					"description": "Remove the action of a number of warnings.",
+					"reply": "The action of 3 warnings was removed.",
+					"tooltip": "Warn Thresholds Remove"
+				},
+				"whois_channel": {
+					"description": "Get information about a channel.",
+					"footer": "ID: 1012345678901234567",
+					"reply": "<#general>\n**Type:** Text\n**Created:** 2 years ago\n**Category:** Community\n**Position:** 3",
+					"title": "general",
+					"tooltip": "Whois Channel"
+				},
+				"whois_emoji": {
+					"description": "Get information about an emoji.",
+					"reply": "**Type:** Static custom emoji\n**ID:** 1043562833905987685\n**Created:** 1 year ago\n**Belongs to this server**\n**Added by:** <@stella>",
+					"title": ":wolfwave:",
+					"tooltip": "Whois Emoji"
+				},
+				"whois_role": {
+					"description": "Get information about a role.",
+					"reply": "Name: **Moderators**\nColor: **#5865f2**\nHoisted: **Yes**\nPosition: **12**\nMentionable: **No**\n**Permissions**\n+ Kick Members\n+ Ban Members\n+ Manage Messages",
+					"title": "Moderators [1012345678901234500]",
+					"tooltip": "Whois Role"
+				},
+				"whois_server": {
+					"description": "Get information about this server.",
+					"reply": "**Members**\n• **1,284** member(s)\n• Owner: **stella**\n**Channels**\n• **24** Text, **4** Voice, **6** categories.\n**Other**\n• Roles: **15**\n• Verification Level: **Medium**",
+					"title": "WolfStar HQ [1012345678901234000]",
+					"tooltip": "Whois Server"
+				},
+				"whois_user": {
+					"description": "Get information about a user.",
+					"footer": "ID: 773291045528043520",
+					"reply": "**baddie** - <@baddie>\n**Joined**\nToday at 13:40 (12 minutes ago)\n**Created At**\n2 days ago\n**Roles [1]**\n<@Member>",
+					"title": "baddie",
+					"tooltip": "Whois User"
+				}
+			},
 			"commands": {
 				"description": "Type a slash command, move through autocomplete with the keyboard, and submit it to see WolfStar’s response.",
 				"eyebrow": "Try the command flow",
@@ -233,7 +758,7 @@
 				"action_voice_kick": "Voice Kick",
 				"action_voice_mute": "Voice Mute",
 				"action_warning": "Warning",
-				"button_reset": "",
+				"button_reset": "Reset",
 				"channel_create_action": "Channel Created",
 				"channel_create_title": "channel creation",
 				"channel_create_tooltip": "Channel Create",
@@ -243,7 +768,7 @@
 				"channel_update_action": "Channel Updated",
 				"channel_update_title": "channel updates",
 				"channel_update_tooltip": "Channel Update",
-				"cmd_ban_description": "",
+				"cmd_ban_description": "Hit somebody with the ban hammer.",
 				"cmd_ban_tooltip": "Ban",
 				"cmd_case_archive_description": "Archive a moderation case.",
 				"cmd_case_archive_tooltip": "Archive Case",
@@ -255,19 +780,19 @@
 				"cmd_case_list_tooltip": "List Cases",
 				"cmd_case_view_description": "Retrieve a moderation case's information.",
 				"cmd_case_view_tooltip": "View Case",
-				"cmd_kick_description": "",
+				"cmd_kick_description": "Hit somebody with the 👢.",
 				"cmd_kick_tooltip": "Kick",
-				"cmd_mute_description": "",
+				"cmd_mute_description": "Mute a user in all text and voice channels.",
 				"cmd_mute_tooltip": "Mute",
-				"cmd_settings_export_description": "",
-				"cmd_settings_export_tooltip": "",
-				"cmd_settings_menu_description": "",
-				"cmd_settings_menu_tooltip": "",
-				"cmd_slowmode_description": "",
-				"cmd_slowmode_tooltip": "",
-				"cmd_timeout_description": "",
-				"cmd_timeout_tooltip": "",
-				"cmd_warn_description": "",
+				"cmd_settings_export_description": "Export the settings and the auto-moderation rules of the server to a file.",
+				"cmd_settings_export_tooltip": "Export Settings",
+				"cmd_settings_menu_description": "Open the settings menu of the server.",
+				"cmd_settings_menu_tooltip": "Settings Menu",
+				"cmd_slowmode_description": "Set the channel's slowmode value in seconds.",
+				"cmd_slowmode_tooltip": "Slowmode",
+				"cmd_timeout_description": "Time out a user.",
+				"cmd_timeout_tooltip": "Timeout",
+				"cmd_warn_description": "File a warning to somebody.",
 				"cmd_warn_tooltip": "Warn",
 				"embed_case": "Case {id}",
 				"label_account_created": "Account Created",
@@ -293,32 +818,32 @@
 				"member_leave_action": "User Left",
 				"member_leave_title": "member leaves",
 				"member_leave_tooltip": "Member Leave",
-				"menu_expires": "",
-				"menu_heading": "",
-				"menu_intro": "",
-				"menu_language": "",
-				"menu_reset_description": "",
-				"menu_reset_title": "",
-				"menu_time_zone": "",
-				"menu_updates_channel": "",
+				"menu_expires": "This menu closes {time} if it is not used.",
+				"menu_heading": "Core Configurations",
+				"menu_intro": "Select a module to configure the settings of {guild}.",
+				"menu_language": "Language",
+				"menu_reset_description": "Resets the settings of this module to their defaults.",
+				"menu_reset_title": "Reset Configurations",
+				"menu_time_zone": "Time Zone",
+				"menu_updates_channel": "Updates Channel",
 				"message_delete_action": "Message Deleted",
 				"message_delete_title": "message deletions",
 				"message_delete_tooltip": "Message Delete",
 				"message_edit_action": "Message Edited",
 				"message_edit_title": "message edits",
 				"message_edit_tooltip": "Message Edit",
-				"reason_excessive_noise": "",
-				"reason_flooding": "",
-				"reason_ignoring_warnings": "",
-				"reason_repeated_infractions": "",
+				"reason_excessive_noise": "excessive noise",
+				"reason_flooding": "flooding the chat",
+				"reason_ignoring_warnings": "ignoring warnings",
+				"reason_repeated_infractions": "repeated infractions",
 				"reply_case_archived": "Successfully archived case {id}.",
 				"reply_case_deleted": "Successfully deleted case {id}.",
 				"reply_case_edited": "Successfully edited case {id}.",
-				"reply_moderation": "",
-				"reply_moderation_reason": "",
+				"reply_moderation": "Created case {id} | {user}.",
+				"reply_moderation_reason": "With the reason of: {reason}",
 				"reply_no_cases": "There are no moderation cases with the selected filters.",
-				"reply_settings_exported": "",
-				"reply_slowmode_set": "",
+				"reply_settings_exported": "Here is the configuration of the server: {settings} settings and {rules} auto-moderation rules. Roles, channels and users are not in it, and neither are the exempt roles and channels of the rules.",
+				"reply_slowmode_set": "The cooldown for this channel has been set to {duration}.",
 				"role_create_action": "Role Created",
 				"role_create_title": "role creation",
 				"role_create_tooltip": "Role Create",
@@ -328,7 +853,7 @@
 				"role_update_action": "Role Updated",
 				"role_update_title": "role updates",
 				"role_update_tooltip": "Role Update",
-				"select_placeholder": "",
+				"select_placeholder": "Select a module",
 				"text_edited_message": "Edited message",
 				"text_message_deleted": "This message has been deleted",
 				"text_name_changed": "Name changed from #old-general to #general",
@@ -337,9 +862,9 @@
 				"text_spam": "spam",
 				"text_text_channel": "Text Channel",
 				"text_warning": "Warning",
-				"value_in_fifteen_minutes": "",
+				"value_in_fifteen_minutes": "in 15 minutes",
 				"value_not_set": "Not Set",
-				"value_ten_seconds": ""
+				"value_ten_seconds": "10 seconds"
 			},
 			"hero": {
 				"automod_term": "AutoMod",
@@ -376,13 +901,13 @@
 				"title": "Home"
 			},
 			"showcase": {
-				"act_on": "WolfStar can act on {subject}",
 				"action_alert_body": "send a message notifying the user of their infraction.",
 				"action_alert_label": "Alert the user:",
 				"action_delete_body": "delete the message that triggered the infraction, keeping your channels clean.",
 				"action_delete_label": "Delete the message:",
 				"action_log_body": "send a message to the moderation log channel for moderators to see.",
 				"action_log_label": "Post moderation log:",
+				"act_on": "WolfStar can act on {subject}",
 				"alert": "Dear {user}, {reason}",
 				"automod_actions_intro": "For each infraction, WolfStar can:",
 				"automod_attachments_alert": "file attachments aren't allowed in this channel.",
@@ -467,545 +992,6 @@
 				"server_suffix": "— WolfStar HQ",
 				"suite_for": "A complete suite for {subject}",
 				"suite_subject": "moderation logs"
-			},
-			"commands_catalogue": {
-				"archive_create": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"archive_list": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"archive_show": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"autodelete_disable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"autodelete_enable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"autodelete_list": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"automessage_disable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"automessage_enable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"automessage_list": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"autopurge_disable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"autopurge_enable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"autopurge_list": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"automod_add": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
-				},
-				"automod_create": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
-				},
-				"automod_delete": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"automod_edit": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
-				},
-				"automod_ignore": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
-				},
-				"automod_list": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
-				},
-				"automod_remove": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
-				},
-				"automod_show": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
-				},
-				"ban_remove": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"softban": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"note": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"setnickname": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"voicekick": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"role_add": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"role_remove": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"warn_remove": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"mute_remove": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"timeout_remove": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"vmute_add": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"vmute_remove": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"restrict_attachment": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"restrict_embed": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"restrict_emoji": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"restrict_reaction": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"restrict_voice": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"unrestrict_attachment": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"unrestrict_embed": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"unrestrict_emoji": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"unrestrict_reaction": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"unrestrict_voice": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"commands": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
-				},
-				"dehoist": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"honeypot_disable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"honeypot_edit": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"honeypot_setup": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"honeypot_show": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"lockdown": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"mute_create": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"permission_nodes_add": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"permission_nodes_remove": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"permission_nodes_reset": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"permission_nodes_show": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"permissions": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"prune_age": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_any": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_attachments": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_author": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_bots": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_embeds": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_endswith": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_humans": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_images": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_includes": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_invites": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_links": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_match": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_mentions": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_pins": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_startswith": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_you": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"reasons_add": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"reasons_list": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"reasons_remove": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"report": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"reports_block": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"reports_history": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"reports_unblock": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"role_rules_add": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"role_rules_list": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"role_rules_remove": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"roles_browse": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"button": ""
-				},
-				"roles_claim": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"roles_list": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"roles_unclaim": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"settings_user": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"button": ""
-				},
-				"sticky_nickname": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"sticky_roles_add": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"sticky_roles_remove": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"sticky_roles_reset": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"sticky_roles_show": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"warn_thresholds_add": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"warn_thresholds_list": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"warn_thresholds_remove": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"whois_channel": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"footer": ""
-				},
-				"whois_emoji": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"whois_role": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"whois_server": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"whois_user": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"footer": ""
-				}
 			}
 		}
 	}

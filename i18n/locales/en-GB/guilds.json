@@ -1,13 +1,22 @@
 {
 	"$schema": "../../schemas/guilds.schema.json",
 	"guild_card": {
-		"invite_bot_aria": "Invite WolfStar bot to {name}"
+		"invite_aria": "Invite bot to {name}",
+		"invite_bot": "Invite Bot",
+		"invite_bot_aria": "Invite WolfStar bot to {name}",
+		"manage_aria": "Manage {name}",
+		"manage_server": "Manage Server",
+		"manage_server_aria": "Manage {name} server settings",
+		"members_online": "Members online",
+		"no_permission": "No Permission",
+		"no_permission_aria": "{name} - No permission",
+		"total_members": "Total members: {count}"
 	},
 	"guild_member_picker": {
 		"add": "",
+		"added": "",
 		"add_member": "",
 		"add_to": "",
-		"added": "",
 		"dialog_description": "",
 		"dialog_title": "",
 		"not_in_server": "",
@@ -58,11 +67,11 @@
 			"legacy_remove": "",
 			"legacy_remove_cancel": "",
 			"legacy_remove_confirm_label": "",
+			"legacy_removed": "",
 			"legacy_remove_description": "",
 			"legacy_remove_failed": "",
 			"legacy_remove_submit": "",
 			"legacy_remove_title": "",
-			"legacy_removed": "",
 			"legacy_subtitle": "",
 			"legacy_title": "",
 			"members_allowed": "",
@@ -127,9 +136,9 @@
 				"options": "",
 				"options_help": "",
 				"placeholder": "",
-				"question_title": "",
 				"questions": "",
 				"questions_help": "",
+				"question_title": "",
 				"remove_aria": "",
 				"remove_option_aria": "",
 				"required": "",
@@ -293,8 +302,8 @@
 				"more_failed": "",
 				"no_review": "",
 				"retry": "",
-				"show_more": "",
 				"showing": "",
+				"show_more": "",
 				"status": {
 					"accepted": "",
 					"denied": "",
@@ -438,9 +447,9 @@
 			"nothing_kept": "",
 			"remove": "",
 			"remove_aria": "",
+			"removed_description": "",
 			"remove_description": "",
 			"remove_title": "",
-			"removed_description": "",
 			"restart_body": "",
 			"restart_title": "",
 			"saved_description": "",
@@ -462,9 +471,9 @@
 			"next": "",
 			"remove": "",
 			"remove_aria": "",
+			"removed_description": "",
 			"remove_description": "",
 			"remove_title": "",
-			"removed_description": "",
 			"saved_description": "",
 			"subtitle": ""
 		},
@@ -517,6 +526,8 @@
 					"cancel": "",
 					"create": "",
 					"create_title": "",
+					"discard": "",
+					"discard_prompt": "",
 					"duration": "",
 					"duration_unit_aria": "",
 					"edit_title": "",
@@ -534,6 +545,7 @@
 					"hard_action_help": "",
 					"ignored_channels": "",
 					"ignored_roles": "",
+					"keep_editing": "",
 					"list_placeholder": "",
 					"log_channel": "",
 					"log_channel_default": "",
@@ -554,10 +566,7 @@
 					"threshold_duration": "",
 					"threshold_maximum": "",
 					"type": "",
-					"type_locked": "",
-					"discard_prompt": "",
-					"keep_editing": "",
-					"discard": ""
+					"type_locked": ""
 				},
 				"empty_description": "",
 				"empty_title": "",
@@ -633,11 +642,11 @@
 					"description": "",
 					"name": ""
 				},
-				"Links": {
+				"LinksCooldown": {
 					"description": "",
 					"name": ""
 				},
-				"LinksCooldown": {
+				"Links": {
 					"description": "",
 					"name": ""
 				},
@@ -677,11 +686,11 @@
 					"description": "",
 					"name": ""
 				},
-				"Stickers": {
+				"StickersCooldown": {
 					"description": "",
 					"name": ""
 				},
-				"StickersCooldown": {
+				"Stickers": {
 					"description": "",
 					"name": ""
 				},
@@ -695,114 +704,114 @@
 				}
 			},
 			"words_editor": {
-				"title": "",
-				"help": "",
-				"add_heading": "",
-				"edit_heading": "",
-				"letters": "",
-				"letters_placeholder": "",
-				"letters_help": "",
 				"add": "",
-				"save_edit": "",
-				"cancel_edit": "",
-				"mode": {
-					"legend": "",
-					"whole": "",
-					"whole_example": "",
-					"continues": "",
-					"continues_example": "",
-					"prefixed": "",
-					"prefixed_example": "",
-					"anywhere": "",
-					"anywhere_example": ""
-				},
-				"tolerance": {
-					"title": "",
-					"help": ""
+				"add_heading": "",
+				"advanced": {
+					"field": "",
+					"help": "",
+					"not_simple": "",
+					"toggle": ""
 				},
 				"alternatives": {
-					"toggle": "",
+					"characters": "",
+					"characters_placeholder": "",
+					"empty": "",
+					"example": "",
 					"help": "",
 					"letter": "",
 					"letter_option": "",
-					"characters": "",
-					"characters_placeholder": "",
-					"example": "",
-					"empty": "",
-					"summary": "",
-					"remove": ""
-				},
-				"advanced": {
-					"toggle": "",
-					"help": "",
-					"field": "",
-					"not_simple": ""
-				},
-				"preview": {
-					"title": "",
-					"field": "",
-					"placeholder": "",
-					"limit": "",
-					"caught": "",
-					"caught_none": "",
-					"running": "",
-					"timeout": "",
-					"error": "",
-					"empty": "",
-					"examples": "",
-					"example_caught": "",
-					"example_passes": "",
-					"kinds": {
-						"plain": "",
-						"repeated": "",
-						"separated": "",
-						"continues": "",
-						"prefixed": "",
-						"inside": ""
-					}
-				},
-				"list": {
-					"heading": "",
-					"search": "",
-					"empty": "",
-					"empty_search": "",
-					"edit": "",
 					"remove": "",
-					"removed": "",
-					"added": "",
-					"updated": "",
-					"covered": "",
-					"modes": {
-						"whole": "",
-						"continues": "",
-						"prefixed": "",
-						"anywhere": ""
-					}
+					"summary": "",
+					"toggle": ""
 				},
+				"cancel_edit": "",
+				"edit_heading": "",
+				"help": "",
 				"import": {
-					"open": "",
+					"cancel": "",
+					"confirm": "",
 					"export": "",
 					"field": "",
 					"file": "",
-					"confirm": "",
-					"cancel": "",
+					"file_error": "",
+					"open": "",
 					"result": "",
-					"skipped_line": "",
-					"file_error": ""
+					"skipped_line": ""
 				},
-				"problems": {
+				"letters": "",
+				"letters_help": "",
+				"letters_placeholder": "",
+				"list": {
+					"added": "",
+					"covered": "",
+					"edit": "",
 					"empty": "",
-					"tooShort": "",
-					"tooLong": "",
-					"duplicate": "",
-					"brackets": "",
-					"listFull": "",
-					"edgeWildcard": "",
-					"letterBrackets": ""
+					"empty_search": "",
+					"heading": "",
+					"modes": {
+						"anywhere": "",
+						"continues": "",
+						"prefixed": "",
+						"whole": ""
+					},
+					"remove": "",
+					"removed": "",
+					"search": "",
+					"updated": ""
+				},
+				"mode": {
+					"anywhere": "",
+					"anywhere_example": "",
+					"continues": "",
+					"continues_example": "",
+					"legend": "",
+					"prefixed": "",
+					"prefixed_example": "",
+					"whole": "",
+					"whole_example": ""
 				},
 				"notes": {
 					"innerWildcard": "",
 					"normalized": ""
+				},
+				"preview": {
+					"caught": "",
+					"caught_none": "",
+					"empty": "",
+					"error": "",
+					"example_caught": "",
+					"example_passes": "",
+					"examples": "",
+					"field": "",
+					"kinds": {
+						"continues": "",
+						"inside": "",
+						"plain": "",
+						"prefixed": "",
+						"repeated": "",
+						"separated": ""
+					},
+					"limit": "",
+					"placeholder": "",
+					"running": "",
+					"timeout": "",
+					"title": ""
+				},
+				"problems": {
+					"brackets": "",
+					"duplicate": "",
+					"edgeWildcard": "",
+					"empty": "",
+					"letterBrackets": "",
+					"listFull": "",
+					"tooLong": "",
+					"tooShort": ""
+				},
+				"save_edit": "",
+				"title": "",
+				"tolerance": {
+					"help": "",
+					"title": ""
 				}
 			}
 		},
@@ -819,9 +828,9 @@
 			"footnote": "",
 			"remove": "",
 			"remove_aria": "",
+			"removed_description": "",
 			"remove_description": "",
 			"remove_title": "",
-			"removed_description": "",
 			"saved_description": "",
 			"schedules_title": "",
 			"subtitle": "",
@@ -837,13 +846,13 @@
 				"mixed": "",
 				"no_logs_selected": "",
 				"remove_channel": "",
-				"select_group": "",
-				"select_log": "",
-				"select_logs": "",
 				"selected_count": "",
+				"select_group": "",
 				"selection_help": "",
 				"selection_label": "",
-				"selection_region": ""
+				"selection_region": "",
+				"select_log": "",
+				"select_logs": ""
 			},
 			"delivery": {
 				"edit_style": {
@@ -854,7 +863,7 @@
 				},
 				"title": ""
 			},
-			"excluded_channels": "",
+			"excluded_channels": "Excluded Channels",
 			"excluded_channels_help": "Select channels that should be ignored for specific logging events. Messages and events in these channels won't be logged.",
 			"form_aria": "Channel settings form",
 			"groups": {
@@ -866,17 +875,17 @@
 				"roles": "",
 				"server": ""
 			},
-			"ignore_dialog_title": "",
 			"ignored_count": "",
+			"ignore_dialog_title": "",
 			"logging_channels": "Logging Channels",
 			"logging_channels_help": "Select which channels should receive specific log events. Leave empty to disable logging for that event.",
 			"module_hint": "",
-			"not_logged": "",
 			"nothing_ignored": "",
+			"not_logged": "",
 			"routed_count": "",
 			"search_text_channels": "",
 			"subtitle": "Choose where WolfStar posts logs and which channels to ignore.",
-			"title": ""
+			"title": "Channel Settings"
 		},
 		"command_rules": {
 			"allowed_channels": "",
@@ -950,13 +959,13 @@
 				"open_aria": "",
 				"retry": "",
 				"save": "",
-				"save_failed_description": "",
-				"save_failed_title": "",
 				"saved_description": "",
 				"saved_description_discord": "",
 				"saved_every_description": "",
 				"saved_every_description_discord": "",
 				"saved_title": "",
+				"save_failed_description": "",
+				"save_failed_title": "",
 				"summary_discord": "",
 				"summary_off": "",
 				"title": ""
@@ -985,12 +994,125 @@
 			"on": "",
 			"reset": "Reset",
 			"save_failed": "Could not save command settings. {message}",
-			"subtitle": "Choose which commands to enable or disable on your server. Click a command for its rules.",
+			"subtitle": "Choose which commands to enable or disable on your server",
 			"title": "Commands"
+		},
+		"events": {
+			"channels_page_link": "the Channels page",
+			"form_aria": "Events settings form",
+			"message_events": "Message Events",
+			"message_events_help": "These events track message activity. The required channels vary by event type and can be configured on {channelsPage}.",
+			"moderation_events": "Moderation Events",
+			"moderation_events_help": "These events involve moderation actions. Please set up a Moderation Logs channel on {channelsPage}.",
+			"subtitle": "Configure which events should be logged and tracked",
+			"title": "Event Settings",
+			"toggle_aria": "Toggle {title}"
+		},
+		"filter": {
+			"capitals": {
+				"filter_label": "Filter {state}",
+				"form_aria": "Capital letters filter settings form",
+				"maximum": "Maximum uppercase characters",
+				"minimum": "Minimum characters",
+				"save_failed": "Couldn't save capitals filter settings. {message}",
+				"title": "Capital Letters Filter",
+				"toggle": "Toggle capitals filter",
+				"toggle_help": "Blocks messages with too many uppercase characters."
+			},
+			"common": {
+				"actions": {
+					"ban": "Ban",
+					"kick": "Kick",
+					"mute": "Mute",
+					"none": "None",
+					"softban": "Softban",
+					"warning": "Warning"
+				},
+				"alerts": "Alerts",
+				"alerts_help": "Posts an alert in the channel where the violation occurred.",
+				"delete_message": "Delete Message",
+				"delete_message_help": "Deletes the message that triggered the filter.",
+				"disabled": "Disabled",
+				"duration": "Duration",
+				"duration_help": "How long the mute or ban lasts",
+				"enabled": "Enabled",
+				"hard_action": "Hard Action",
+				"hard_action_description": "What happens when a member exceeds the limit",
+				"logging": "Logging",
+				"logging_help": "Sends a log message to the configured moderation log channel.",
+				"options": "Options",
+				"punishments": "Punishments",
+				"select_action_aria": "Select punishment action",
+				"soft_actions": "Soft Actions",
+				"threshold": "Threshold",
+				"threshold_duration": "Time window (seconds)",
+				"threshold_maximum": "Violations before punishment"
+			},
+			"invites": {
+				"filter_label": "Filter {state}",
+				"form_aria": "Invite link filter settings form",
+				"save_failed": "Couldn't save invite filter settings. {message}",
+				"title": "Invite Link Filter",
+				"toggle": "Toggle invite filter",
+				"toggle_help": "Blocks Discord invite links posted in chat."
+			},
+			"lines": {
+				"filter_label": "Filter {state}",
+				"form_aria": "New line filter settings form",
+				"maximum": "Maximum lines",
+				"maximum_help": "Maximum amount of new lines in a message before filter is applied",
+				"save_failed": "Couldn't save new line filter settings. {message}",
+				"title": "Line Spam Filter",
+				"toggle": "Toggle new line filter",
+				"toggle_help": "Blocks messages with too many new lines."
+			},
+			"links": {
+				"add_link": "Add allowed link",
+				"add_link_placeholder": "e.g. example.com",
+				"allowed_links": "Allowed Links",
+				"filter_label": "Filter {state}",
+				"form_aria": "Link filter settings form",
+				"remove_link": "Remove {link}",
+				"save_failed": "Couldn't save link filter settings. {message}",
+				"title": "Link Filter",
+				"toggle": "Toggle link filter",
+				"toggle_help": "Blocks messages containing links."
+			},
+			"messages": {
+				"filter_label": "Filter {state}",
+				"form_aria": "Message duplication filter settings form",
+				"save_failed": "Couldn't save message duplication filter settings. {message}",
+				"title": "Message Duplication Filter",
+				"toggle": "Toggle message duplication filter",
+				"toggle_help": "Blocks repeated identical messages."
+			},
+			"reactions": {
+				"filter_label": "Filter {state}",
+				"form_aria": "Reaction filter settings form",
+				"save_failed": "Couldn't save reaction filter settings. {message}",
+				"title": "Reaction Filter",
+				"toggle": "Toggle reaction filter",
+				"toggle_help": "Blocks specific emoji reactions."
+			},
+			"word": {
+				"add_placeholder": "e.g. badword",
+				"add_word": "Add filtered word",
+				"alerts_toggle": "Toggle alerts soft action",
+				"delete_toggle": "Toggle delete soft action",
+				"filtered_words": "Filtered Words",
+				"filter_label": "Filter {state}",
+				"form_aria": "Word filter settings form",
+				"logging_toggle": "Toggle logging soft action",
+				"remove_word": "Remove {word}",
+				"save_failed": "Couldn't save word filter settings. {message}",
+				"title": "Word Filter",
+				"toggle": "Toggle word filter",
+				"toggle_help": "Blocks messages containing specific words or phrases."
+			}
 		},
 		"general": {
 			"copy_server_id": "Copy Server ID",
-			"form_aria": "General server settings form",
+			"form_aria": "General guild settings form",
 			"language": "Language",
 			"language_aria": "Select bot language",
 			"language_description": "The language WolfStar uses for responses in this server.",
@@ -1001,12 +1123,16 @@
 			"mod_actions_title": "",
 			"mod_actions_total": "",
 			"need_help": "Need Help?",
-			"no_activity": "",
-			"no_activity_description": "",
+			"no_activity": "No settings changes yet",
+			"no_activity_description": "Changes you make to this server's settings will appear here so you can track who changed what.",
 			"no_activity_yet": "",
 			"no_activity_yet_description": "",
 			"overview_subtitle": "",
 			"overview_title": "",
+			"prefix": "Prefix",
+			"prefix_aria": "Bot command prefix",
+			"prefix_description": "The prefix used to trigger WolfStar commands in this server.",
+			"prefix_placeholder": "Select a command prefix",
 			"recent_activity": "Recent Activity",
 			"save_failed_message": "Couldn't save general settings. {message}",
 			"server_id_copied_description": "The server ID has been copied to your clipboard.",
@@ -1015,6 +1141,7 @@
 			"server_info_description": "Your server at a glance. Adjust settings below or explore sections in the sidebar.",
 			"server_stats_aria": "Server statistics",
 			"stat_cases": "",
+			"stat_categories": "Categories",
 			"stat_categories_note": "",
 			"stat_channels": "",
 			"stat_commands": "",
@@ -1024,6 +1151,8 @@
 			"stat_open_reports": "",
 			"stat_open_reports_note": "",
 			"stat_roles": "Roles",
+			"stat_text_channels": "Text Channels",
+			"stat_voice_channels": "Voice Channels",
 			"subtitle": "Configure basic server settings for WolfStar.",
 			"time_zone": "",
 			"time_zone_description": "",
@@ -1035,20 +1164,20 @@
 				"confirm": "",
 				"description": "",
 				"export": "",
-				"export_failed": "",
 				"exported": "",
+				"export_failed": "",
 				"import": "",
-				"import_failed": "",
 				"imported": "",
+				"import_failed": "",
 				"issues_aria": "",
 				"nothing": "",
 				"notice_no_equivalent": "",
 				"notice_reaction_filter": "",
 				"notice_rule_adjusted": "",
 				"notice_rule_failed": "",
+				"notices_description": "",
 				"notice_setting_failed": "",
 				"notice_setting_failed_bot": "",
-				"notices_description": "",
 				"notices_heading": "",
 				"refused_description": "",
 				"refused_title": "",
@@ -1071,7 +1200,6 @@
 		},
 		"honeypot": {
 			"action_help": "",
-			"action_title": "",
 			"actions": {
 				"ban": "",
 				"ban_help": "",
@@ -1080,6 +1208,7 @@
 				"softban": "",
 				"softban_help": ""
 			},
+			"action_title": "",
 			"behaviour_title": "",
 			"catching": "",
 			"channel_help": "",
@@ -1129,15 +1258,15 @@
 				"minimum_trust": "",
 				"no_channel": "",
 				"no_pending_role": "",
-				"no_verified_role": "",
 				"note": "",
+				"no_verified_role": "",
 				"pending_role": "",
 				"pending_role_help": "",
 				"post_button": "",
-				"post_failed_title": "",
-				"post_needs_channel": "",
 				"posted_description": "",
 				"posted_title": "",
+				"post_failed_title": "",
+				"post_needs_channel": "",
 				"shared_bans": "",
 				"shared_bans_help": "",
 				"switch": "",
@@ -1228,9 +1357,9 @@
 				"NotWaiting": "",
 				"Refused": "",
 				"RoleNotManageable": "",
+				"unknown": "",
 				"UnknownChannel": "",
-				"UnknownGuild": "",
-				"unknown": ""
+				"UnknownGuild": ""
 			},
 			"form_aria": "",
 			"members_stopped": "",
@@ -1282,9 +1411,9 @@
 				"kick_aria": "",
 				"kick_confirm": "",
 				"kick_description": "",
-				"kick_title": "",
 				"kicked_description": "",
 				"kicked_title": "",
+				"kick_title": "",
 				"list_aria": "",
 				"load_failed": "",
 				"load_more": "",
@@ -1398,8 +1527,8 @@
 			"module_hint": "",
 			"responses_help": "",
 			"responses_title": "",
-			"subtitle": "",
-			"title": ""
+			"subtitle": "Configure how WolfStar handles moderation actions like bans, kicks, and mutes.",
+			"title": "Punishment Settings"
 		},
 		"modules": {
 			"active_hint": "",
@@ -1415,32 +1544,24 @@
 				"honeypot": "",
 				"joinguard": "",
 				"moderation": "",
-				"roles": "",
-				"social": ""
+				"roles": ""
 			},
 			"disable_all": "",
 			"enable_all": "",
-			"enable_first": "",
 			"enabled_count": "",
+			"enable_first": "",
 			"form_aria": "",
 			"hint": "",
 			"inactive_hint": "",
-			"invite": "",
 			"manage": "",
-			"not_in_server": "",
 			"not_set_up": "",
 			"off": "",
 			"on": "",
-			"retry": "",
 			"set_up": "",
-			"staryl_subtitle": "",
-			"staryl_title": "",
-			"subscription_count": "",
 			"subtitle": "",
 			"summary_aria": "",
 			"title": "",
-			"toggle_aria": "",
-			"unavailable": ""
+			"toggle_aria": ""
 		},
 		"mute": {
 			"as_role": "",
@@ -1574,145 +1695,6 @@
 			"steps_aria": "",
 			"title": ""
 		},
-		"social": {
-			"add": "",
-			"added_description": "",
-			"added_title": "",
-			"columns": {
-				"actions": "",
-				"channel": "",
-				"name": "",
-				"provider": "",
-				"status": ""
-			},
-			"delivery_errors": {
-				"ChannelNotFound": "",
-				"GuildUnavailable": "",
-				"MissingPermissions": "",
-				"SendFailed": ""
-			},
-			"edit": {
-				"aria": "",
-				"save": "",
-				"saved_description": "",
-				"saved_title": "",
-				"subtitle": "",
-				"title": ""
-			},
-			"editor": {
-				"cancel": "",
-				"channel": "",
-				"channel_help": "",
-				"channel_placeholder": "",
-				"disabled_help": "",
-				"message": "",
-				"message_help": "",
-				"message_required_help": "",
-				"not_available": "",
-				"provider": "",
-				"provider_placeholder": "",
-				"source_full": "",
-				"source_usage": "",
-				"subtitle": "",
-				"target": "",
-				"target_help": {
-					"Bluesky": "",
-					"Mastodon": "",
-					"Reddit": "",
-					"Rss": "",
-					"TwitchClips": "",
-					"TwitchLive": "",
-					"TwitchVideos": "",
-					"X": "",
-					"YouTube": "",
-					"none": ""
-				},
-				"title": ""
-			},
-			"empty_body": "",
-			"empty_title": "",
-			"errors": {
-				"channel_not_found": "",
-				"channel_not_supported": "",
-				"duplicate": "",
-				"generic": "",
-				"guild_unavailable": "",
-				"invalid": "",
-				"limit_reached": "",
-				"limit_reached_unknown": "",
-				"message_required": "",
-				"missing_permissions": "",
-				"provider_not_configured": "",
-				"provider_not_manageable": "",
-				"send_failed": "",
-				"streamer_not_found": "",
-				"subscription_not_found": "",
-				"target_blocked": "",
-				"target_invalid": "",
-				"target_not_found": "",
-				"target_unreachable": "",
-				"target_unsupported": "",
-				"twitch_failed": "",
-				"unavailable": "",
-				"x_limit_reached": ""
-			},
-			"footnote": "",
-			"health": {
-				"active": "",
-				"authFailed": "",
-				"failing": "",
-				"rateLimited": "",
-				"targetUnavailable": "",
-				"unavailable": ""
-			},
-			"invite": "",
-			"managed_in_discord": "",
-			"module_hint": "",
-			"not_installed_body": "",
-			"not_installed_title": "",
-			"providers": {
-				"Bluesky": "",
-				"Instagram": "",
-				"Mastodon": "",
-				"Reddit": "",
-				"Rss": "",
-				"TikTok": "",
-				"TwitchClips": "",
-				"TwitchLive": "",
-				"TwitchVideos": "",
-				"X": "",
-				"YouTube": ""
-			},
-			"remove": "",
-			"remove_aria": "",
-			"remove_description": "",
-			"remove_title": "",
-			"removed_description": "",
-			"removed_title": "",
-			"retry": "",
-			"subscriptions_title": "",
-			"subtitle": "",
-			"switched_off_description": "",
-			"switched_off_title": "",
-			"switched_on_description": "",
-			"switched_on_title": "",
-			"table_aria": "",
-			"twitch": {
-				"event": "",
-				"events": {
-					"StreamOffline": "",
-					"StreamOnline": ""
-				},
-				"footnote": "",
-				"revoked": "",
-				"streamer": "",
-				"table_aria": "",
-				"title": "",
-				"unknown_streamer": ""
-			},
-			"unavailable_body": "",
-			"unavailable_title": ""
-		},
 		"toggle_aria": "Toggle {title}",
 		"warn_thresholds": {
 			"add": "",
@@ -1749,10 +1731,10 @@
 			"permanent_hint": "",
 			"remove": "",
 			"remove_aria": "",
+			"removed_description": "",
 			"remove_description": "",
 			"remove_last_description": "",
 			"remove_title": "",
-			"removed_description": "",
 			"replace": "",
 			"saved_description": "",
 			"table_aria": "",
@@ -1817,9 +1799,129 @@
 				"description": "",
 				"name": ""
 			},
+			"channelsIgnoreAll": {
+				"description": "Channels excluded from all types of logging.",
+				"name": "All logs"
+			},
+			"channelsIgnoreMessageDelete": {
+				"description": "Channels excluded from deleted-message logging.",
+				"name": "Message delete logs"
+			},
+			"channelsIgnoreMessageEdit": {
+				"description": "Channels excluded from edited-message logging.",
+				"name": "Message edit logs"
+			},
+			"channelsIgnoreReactionAdd": {
+				"description": "Channels excluded from reaction logging.",
+				"name": "Reaction add logs"
+			},
+			"channelsLogsChannelCreate": {
+				"description": "Receives a log message when a new channel is created.",
+				"name": "Channel Create Logs"
+			},
+			"channelsLogsChannelDelete": {
+				"description": "Receives a log message when a channel is deleted.",
+				"name": "Channel Delete Logs"
+			},
+			"channelsLogsChannelUpdate": {
+				"description": "Receives a log message when any channel is updated, including the changes made.",
+				"name": "Channel Update Logs"
+			},
+			"channelsLogsEmojiCreate": {
+				"description": "Receives a log message when a new emoji is created.",
+				"name": "Emoji Create Logs"
+			},
+			"channelsLogsEmojiDelete": {
+				"description": "Receives a log message when an emoji is deleted.",
+				"name": "Emoji Delete Logs"
+			},
+			"channelsLogsEmojiUpdate": {
+				"description": "Receives a log message when an emoji is updated, including the changes made.",
+				"name": "Emoji Update Logs"
+			},
+			"channelsLogsImage": {
+				"description": "Receives re-uploaded copies of images posted in the server.",
+				"name": "Image Logs"
+			},
+			"channelsLogsMemberAdd": {
+				"description": "Receives a log message when a member joins the server.",
+				"name": "Member Add Logs"
+			},
+			"channelsLogsMemberNicknameUpdate": {
+				"description": "Receives a log message when a member changes their nickname.",
+				"name": "Member Nickname Update Logs"
+			},
+			"channelsLogsMemberRemove": {
+				"description": "Receives a log message when a member leaves, is kicked, or is banned.",
+				"name": "Member Remove Logs"
+			},
+			"channelsLogsMemberRolesUpdate": {
+				"description": "Receives a log message when a member gains or loses a role.",
+				"name": "Member Role Logs"
+			},
+			"channelsLogsMemberUsernameUpdate": {
+				"description": "Receives a log message when a member changes their username.",
+				"name": "Member Username Update Logs"
+			},
+			"channelsLogsMessageDelete": {
+				"description": "Receives a log message when a message is deleted.",
+				"name": "Message Delete Logs"
+			},
+			"channelsLogsMessageDeleteNsfw": {
+				"description": "Receives a log message when a message from an NSFW channel is deleted.",
+				"name": "NSFW Message Delete Logs"
+			},
+			"channelsLogsMessageUpdate": {
+				"description": "Receives a log message when a message is edited.",
+				"name": "Message Update Logs"
+			},
+			"channelsLogsMessageUpdateNsfw": {
+				"description": "Receives a log message when a message from an NSFW channel is edited.",
+				"name": "NSFW Message Update Logs"
+			},
+			"channelsLogsModeration": {
+				"description": "Receives all moderation case logs. Required for moderation events to work.",
+				"name": "Moderation Logs"
+			},
+			"channelsLogsPrune": {
+				"description": "Receives a log message when messages are bulk-deleted (pruned).",
+				"name": "Prune Logs"
+			},
+			"channelsLogsReaction": {
+				"description": "Receives a log message when a reaction is added to a message.",
+				"name": "Reaction Logs"
+			},
+			"channelsLogsRoleCreate": {
+				"description": "Receives a log message when a new role is created.",
+				"name": "Role Create Logs"
+			},
+			"channelsLogsRoleDelete": {
+				"description": "Receives a log message when a role is deleted.",
+				"name": "Role Delete Logs"
+			},
+			"channelsLogsRoleUpdate": {
+				"description": "Receives a log message when a role is updated, including the changes made.",
+				"name": "Role Update Logs"
+			},
+			"channelsLogsServerUpdate": {
+				"description": "Receives a log message when the server settings are updated, including the changes made.",
+				"name": "Server Update Logs"
+			},
 			"commandsDisabledChannels": {
 				"description": "",
 				"name": ""
+			},
+			"eventsBanAdd": {
+				"description": "An anonymous moderation log is posted when a member is banned.",
+				"title": "Ban Added"
+			},
+			"eventsBanRemove": {
+				"description": "An anonymous moderation log is posted when a member is unbanned.",
+				"title": "Ban Revoked"
+			},
+			"eventsTwemojiReactions": {
+				"description": "When a member reacts with a Twemoji, the reaction is sent to the Reaction Logs channel.",
+				"title": "Twemoji Reactions"
 			},
 			"honeypotAction": {
 				"description": "",
@@ -2005,6 +2107,30 @@
 				"description": "",
 				"name": ""
 			},
+			"messagesIgnoreChannels": {
+				"description": "Channels excluded from message-delete, message-edit, and reaction-add logging.",
+				"name": "Message Delete, Edit and Reaction Add logs"
+			},
+			"messagesModerationAutoDelete": {
+				"description": "Deletes the command message to keep the moderator anonymous.",
+				"name": "Hide Message"
+			},
+			"messagesModerationDm": {
+				"description": "Sends the punished member a DM with the reason and duration.",
+				"name": "Message User"
+			},
+			"messagesModerationMessageDisplay": {
+				"description": "Posts a confirmation message after a punishment is applied.",
+				"name": "Send Punishment Response"
+			},
+			"messagesModerationReasonDisplay": {
+				"description": "Includes the reason in the punishment response message.",
+				"name": "Show Reason"
+			},
+			"messagesModeratorNameDisplay": {
+				"description": "Includes the moderator's name in the DM sent to the punished member.",
+				"name": "Show Mod Name"
+			},
 			"messagesResponseBan": {
 				"description": "",
 				"name": ""
@@ -2087,11 +2213,13 @@
 			},
 			"rolesAdmin": {
 				"description": "The administrator roles. Administrators have access to all moderation and management commands. Defaults to anyone with the \"Manage Server\" permission.",
-				"name": "Administrator"
+				"name": "Administrator",
+				"tooltip": "The administrator roles. Administrators have access to all moderation and management commands. Defaults to anyone with the \"Manage Server\" permission."
 			},
 			"rolesInitial": {
 				"description": "",
-				"name": "Initial"
+				"name": "Initial",
+				"tooltip": "The initial role, if configured, is assigned to users as soon as they join."
 			},
 			"rolesInitialHumans": {
 				"description": "",
@@ -2103,39 +2231,48 @@
 			},
 			"rolesModerator": {
 				"description": "The moderator roles. Moderators have access to almost all moderation commands. Defaults to anyone who can ban members",
-				"name": "Moderator"
+				"name": "Moderator",
+				"tooltip": "The moderator roles. Moderators have access to almost all moderation commands. Defaults to anyone who can ban members"
 			},
 			"rolesMuted": {
 				"description": "The muted role, if configured, is assigned to muted users. If no muted role is set, you are prompted to create one.",
-				"name": "Muted"
+				"name": "Muted",
+				"tooltip": "The muted role, if configured, is assigned to muted users. If no muted role is set, you are prompted to create one."
 			},
 			"rolesPublic": {
 				"description": "The public roles. These can be claimed by any user using the \"roles\" command.",
-				"name": "Public Roles"
+				"name": "Public Roles",
+				"tooltip": "The public roles. These can be claimed by any user using the \"roles\" command."
 			},
 			"rolesRemoveInitial": {
 				"description": "",
-				"name": "Remove Initial"
+				"name": "Remove Initial",
+				"tooltip": "When enabled, claiming a public role automatically removes the initial role."
 			},
 			"rolesRestrictedAttachment": {
 				"description": "Assigned to members who are restricted from uploading attachments.",
-				"name": "Restricted Attachment"
+				"name": "Restricted Attachment",
+				"tooltip": "Assigned to members who are restricted from uploading attachments."
 			},
 			"rolesRestrictedEmbed": {
 				"description": "Assigned to members who are restricted from embedding links.",
-				"name": "Restricted Embed"
+				"name": "Restricted Embed",
+				"tooltip": "Assigned to members who are restricted from embedding links."
 			},
 			"rolesRestrictedEmoji": {
 				"description": "Assigned to members who are restricted from using external emojis.",
-				"name": "Restricted Emoji"
+				"name": "Restricted Emoji",
+				"tooltip": "Assigned to members who are restricted from using external emojis."
 			},
 			"rolesRestrictedReaction": {
 				"description": "Assigned to members whose reactions are restricted.",
-				"name": "Restricted Reaction"
+				"name": "Restricted Reaction",
+				"tooltip": "Assigned to members whose reactions are restricted."
 			},
 			"rolesRestrictedVoice": {
 				"description": "Assigned to members who are restricted from joining voice channels.",
-				"name": "Restricted Voice"
+				"name": "Restricted Voice",
+				"tooltip": "Assigned to members who are restricted from joining voice channels."
 			}
 		}
 	},
@@ -2202,9 +2339,9 @@
 		"unknown_title": "",
 		"waiting": {
 			"below_minimum": "",
-			"check_again": "",
 			"body": "",
 			"captcha_first": "",
+			"check_again": "",
 			"connections": "",
 			"link_accounts": "",
 			"sending": "",

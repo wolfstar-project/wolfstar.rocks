@@ -6,65 +6,26 @@
 		"skip_to_content": "Saltar al contenido principal"
 	},
 	"blog": {
-		"categories": {
-			"all": "",
-			"announcement": "",
-			"article": "",
-			"release": "",
-			"tutorial": ""
-		},
-		"category": {
-			"announcement": "",
-			"article": "",
-			"release": "",
-			"tutorial": ""
-		},
-		"copied": "",
-		"copied_markdown_link_description": "",
-		"copied_page_description": "",
-		"copy_markdown_link": "",
-		"copy_options": "",
-		"copy_page": "",
-		"copy_page_failed": "",
-		"copy_page_failed_description": "",
+		"article_links": "",
+		"avatar_alt": "",
+		"back": "",
 		"copy_url": "",
 		"edit_article": "",
-		"empty": {
-			"description": "",
-			"title": ""
-		},
-		"feed_blog": "",
-		"feed_changelog": "",
-		"feeds": "",
-		"filter_label": "",
+		"image_alt": "",
+		"join_support": "",
 		"link_copied": "",
-		"link_copied_description": "",
-		"open_in": "",
-		"posts": "",
-		"reading_finished": "",
-		"reading_left": "",
-		"reading_time": "",
-		"release_history": "",
+		"links": "",
+		"on_platform": "",
 		"rss": "RSS",
-		"share": "",
-		"timeline": {
-			"newer": "",
-			"older": "",
-			"view_all": ""
-		},
-		"toc": "",
-		"view_markdown": ""
+		"star_github": "",
+		"toc": ""
 	},
 	"changelog": {
+		"back": "",
+		"cover_alt": "",
 		"description": "",
 		"empty": "",
-		"entries": "",
 		"github_releases": "",
-		"kind": {
-			"fixed": "",
-			"improved": "",
-			"new": ""
-		},
 		"title": ""
 	},
 	"common": {
@@ -92,6 +53,7 @@
 		"system": "System"
 	},
 	"footer": {
+		"blog": "Blog",
 		"changelog": "Registro de cambios",
 		"column_links": "Enlaces del pie de página de {label}",
 		"community": "Comunidad",
@@ -105,6 +67,8 @@
 		"other_apps": "Otras apps",
 		"powered_by_cloudflare": "Con tecnología de Cloudflare",
 		"powered_by_cloudflare_aria": "Con tecnología de Cloudflare - se abre en una pestaña nueva",
+		"powered_by_netlify": "Con tecnología de Netlify",
+		"powered_by_netlify_aria": "Con tecnología de Netlify - se abre en una pestaña nueva",
 		"privacy": "Política de privacidad",
 		"product": "Producto",
 		"site_footer": "Pie de página del sitio",
@@ -120,6 +84,7 @@
 		"brand": "WolfStar",
 		"dashboard": "",
 		"home": "Inicio de {name}",
+		"profile": "Perfil",
 		"settings": "Settings",
 		"sign_in": "Iniciar sesión",
 		"sign_in_discord": "Iniciar sesión con Discord",
@@ -135,6 +100,7 @@
 		"advanced_logging": "Registro avanzado",
 		"advanced_logging_description": "Rastrea y registra eventos en tu servidor",
 		"applications": "Aplicaciones",
+		"blog": "Blog",
 		"changelog": "Registro de cambios",
 		"commands": "Comandos",
 		"features": "Funciones",
@@ -161,12 +127,13 @@
 		"source_locale": "Idioma de origen",
 		"title": "Estado de las traducciones"
 	},
-	"updates": {
-		"description": "",
-		"title": ""
-	},
 	"user_menu": {
+		"account_menu": "Menú de cuenta de usuario",
+		"avatar_alt": "Avatar de {name}",
+		"avatar_fallback": "Avatar de usuario",
+		"profile": "Perfil",
 		"report_bug": "Informar de un error",
-		"sign_out": "Cerrar sesión"
+		"sign_out": "Cerrar sesión",
+		"user_menu_for": "Menú de usuario de {name}"
 	}
 }

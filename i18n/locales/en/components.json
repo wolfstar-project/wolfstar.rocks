@@ -24,16 +24,11 @@
 		"version_name": "Site version"
 	},
 	"discord": {
-		"avatar": {
-			"label": "{name}'s avatar"
-		},
 		"channel_info": {
 			"back": "Back to channel",
 			"create_thread": "Create Thread",
 			"label": "Channel information for #{name}",
 			"members_in": "Members in #{name}",
-			"no_results": "We searched far and wide.",
-			"no_results_hint": "Unfortunately, no results were found.",
 			"no_threads": "There are no threads.",
 			"sections": "Channel information sections",
 			"tabs": {
@@ -44,8 +39,7 @@
 				"pins": "Pins",
 				"threads": "Threads"
 			},
-			"text_channel": "Text Channel",
-			"threads_hint": "Stay focused on a conversation with a thread - a temporary text channel."
+			"text_channel": "Text Channel"
 		},
 		"chat": {
 			"messages_in": "Messages in {channel}"
@@ -69,11 +63,14 @@
 			"titled": "Embed: {title}"
 		},
 		"header": {
-			"online_count": "{count} Online",
+			"hide_members": "Hide member list",
+			"notifications": "Notification settings",
 			"open_info": "Open channel info for #{name}",
+			"pins": "Pinned messages",
 			"search": "Search {name}",
 			"search_plain": "Search",
-			"show_members": "Show member list"
+			"show_members": "Show member list",
+			"threads": "Threads"
 		},
 		"launcher": {
 			"apps": "Apps",
@@ -103,15 +100,12 @@
 		},
 		"member_list": {
 			"app": "Application",
-			"dnd": "Do Not Disturb",
-			"idle": "Idle",
 			"label": "Server members",
 			"offline": "Offline",
 			"online": "Online",
 			"verified_app": "Verified application"
 		},
 		"message": {
-			"app_badge": "Application badge",
 			"dismiss": "Dismiss message",
 			"dismiss_aria": "Dismiss ephemeral message",
 			"ephemeral_notice": "Ephemeral message notice",
@@ -128,7 +122,6 @@
 			"placeholder": "Make a selection"
 		},
 		"suggestions": {
-			"app_commands": "{app} commands",
 			"for_prefix": "Slash command suggestions for {prefix}",
 			"frequently_used": "Frequently Used",
 			"listbox": "Slash command suggestions",
@@ -144,7 +137,7 @@
 	"feedback": {
 		"description": "Report a bug or share your thoughts with the WolfStar team.",
 		"email": "Email",
-		"email_placeholder": "your@email.com",
+		"email_placeholder": "your{'@'}email.com",
 		"message": "Message",
 		"message_placeholder": "What happened? What did you expect to happen?",
 		"name": "Name",
@@ -181,7 +174,7 @@
 		"pick_channel": "Select Channel",
 		"pick_role": "Select Role",
 		"remove_option": "Remove {name}",
-		"search": "Search…",
+		"search": "Search...",
 		"seconds": "Seconds",
 		"unknown_channel": "Unknown channel",
 		"unknown_role": "Unknown role"

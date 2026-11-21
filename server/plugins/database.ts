@@ -65,7 +65,7 @@ export default defineNitroPlugin((nitroApp) => {
 
 	nitroApp.hooks.hook("request", (event) => {
 		if (!isEvent(event)) return;
-		const url = hyperdriveConnectionString(event.context.cloudflare);
+		const url = hyperdriveConnectionString(event.req.runtime?.cloudflare);
 		if (url === undefined) return;
 		const database = createDatabase(url, 0);
 		event.context.database = database;

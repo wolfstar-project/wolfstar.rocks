@@ -7,7 +7,9 @@ import {
 	unwrapSocialResult,
 } from "#server/utils/social/route";
 import { addSocialTwitch } from "#server/utils/social/staryl";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { SocialTwitchBodySchema } from "#shared/utils/social";
+import { readBody, setResponseStatus } from "nuxt/server";
 import { safeParse } from "valibot";
 
 /**

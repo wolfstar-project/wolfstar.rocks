@@ -8,7 +8,9 @@ import {
 	throwJoinGuardRuleError,
 } from "#server/utils/join-guard/route";
 import { updateJoinGuardRule } from "#server/utils/join-guard/rules";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { JoinGuardRulePatchSchema } from "#shared/schemas/join-guard";
+import { readBody } from "nuxt/server";
 
 /**
  * `PATCH /api/guilds/:guild/joinguard/rules/:rule`: edits a rule. The body has

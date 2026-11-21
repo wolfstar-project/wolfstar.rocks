@@ -6,6 +6,8 @@ import {
 	throwJoinGuardQueueError,
 } from "#server/utils/join-guard/route";
 import { readVerifyMemberId } from "#server/utils/join-guard/verify";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
+import { setResponseHeader } from "nitro/h3";
 
 /**
  * `GET /api/verify/:guild/requests/:request` (signed in): whether the bot has

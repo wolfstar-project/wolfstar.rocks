@@ -185,3 +185,42 @@ describe("index.get - cached getGuildChannels and readSettings deduplication", (
 		});
 	});
 });
+
+// Mock the explicit server imports at the same boundaries as the former globals.
+vi.mock("#server/utils/wrappedEventHandler", () => ({
+	defineWrappedResponseHandler: (...args: unknown[]) =>
+		(
+			Reflect.get(globalThis, "defineWrappedResponseHandler") as (
+				...args: unknown[]
+			) => unknown
+		)(...args),
+}));
+vi.mock("#server/utils/shared", () => ({
+	getGuildParam: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "getGuildParam") as (...args: unknown[]) => unknown)(...args),
+}));
+vi.mock("#server/utils/discord/index", () => ({
+	getGuild: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "getGuild") as (...args: unknown[]) => unknown)(...args),
+	resolveGuildForRequest: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "resolveGuildForRequest") as (...args: unknown[]) => unknown)(
+			...args,
+		),
+	getCurrentMember: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "getCurrentMember") as (...args: unknown[]) => unknown)(...args),
+	canManage: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "canManage") as (...args: unknown[]) => unknown)(...args),
+	getGuildChannels: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "getGuildChannels") as (...args: unknown[]) => unknown)(...args),
+	transformGuild: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "transformGuild") as (...args: unknown[]) => unknown)(...args),
+}));
+vi.mock("#server/utils/ApiTransformers", () => ({
+	flattenGuild: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "flattenGuild") as (...args: unknown[]) => unknown)(...args),
+}));
+vi.mock("nuxt/server", async (importOriginal) => ({
+	...(await importOriginal<Record<string, unknown>>()),
+	getValidatedQuery: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "getValidatedQuery") as (...args: unknown[]) => unknown)(...args),
+}));

@@ -217,3 +217,9 @@ describe("assertHoneypotIsUsable", () => {
 		).rejects.toMatchObject({ status: 422 });
 	});
 });
+
+// Mock the explicit server imports at the same boundaries as the former globals.
+vi.mock("#server/utils/shared", () => ({
+	useApi: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "useApi") as (...args: unknown[]) => unknown)(...args),
+}));

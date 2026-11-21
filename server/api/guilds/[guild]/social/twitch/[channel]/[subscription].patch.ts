@@ -7,8 +7,10 @@ import {
 	unwrapSocialResult,
 } from "#server/utils/social/route";
 import { editSocialTwitch } from "#server/utils/social/staryl";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { isSnowflake } from "#shared/utils/snowflake";
 import { SocialEditBodySchema } from "#shared/utils/social";
+import { getRouterParam, readBody } from "nuxt/server";
 import { safeParse } from "valibot";
 
 /** Staryl's ID of a shared Twitch subscription: a number, not a snowflake. */

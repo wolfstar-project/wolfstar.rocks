@@ -22,12 +22,6 @@ const { mocks } = vi.hoisted(() => {
 	return { mocks };
 });
 
-vi.mock("h3", async (importOriginal) => ({
-	...(await importOriginal<typeof import("h3")>()),
-	getRouterParam: (_event: unknown, name: string) =>
-		name === "guild" ? "100000000000000009" : "builtin",
-}));
-
 vi.mock("#server/utils/bot-api/session", () => ({ botApiFetch: mocks.botApiFetch }));
 
 vi.mock("evlog", async (importOriginal) => ({
@@ -100,3 +94,26 @@ describe("POST /api/users/appeals/:guild/:form", () => {
 		expect(mocks.audit).not.toHaveBeenCalled();
 	});
 });
+
+// Mock the explicit server imports at the same boundaries as the former globals.
+vi.mock("#server/utils/wrappedEventHandler", () => ({
+	defineWrappedResponseHandler: (...args: unknown[]) =>
+		(
+			Reflect.get(globalThis, "defineWrappedResponseHandler") as (
+				...args: unknown[]
+			) => unknown
+		)(...args),
+}));
+vi.mock("nuxt/server", async (importOriginal) => ({
+	...(await importOriginal<Record<string, unknown>>()),
+	getRouterParam: (_event: unknown, name: string) =>
+		name === "guild" ? "100000000000000009" : "builtin",
+	readBody: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "readBody") as (...args: unknown[]) => unknown)(...args),
+	setResponseStatus: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "setResponseStatus") as (...args: unknown[]) => unknown)(...args),
+}));
+vi.mock("#server/utils/discord/index", () => ({
+	getCurrentUser: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "getCurrentUser") as (...args: unknown[]) => unknown)(...args),
+}));

@@ -1,5 +1,3 @@
-import type { AnyServerRouteMethod } from "nuxt/app";
-
 /**
  * Get the cachedFetch function from the current request context.
  *
@@ -33,10 +31,10 @@ export function useCachedFetch(): CachedFetchFunction {
 	if (import.meta.client) {
 		return async <T = unknown>(
 			url: string,
-			options: Parameters<typeof $fetch>[1] = {},
+			options: Parameters<CachedFetchFunction>[1] = {},
 			_ttl?: number,
 		): Promise<CachedFetchResult<T>> => {
-			const data = (await $fetch<T, string, AnyServerRouteMethod>(url, options)) as T;
+			const data = (await $fetch<T>(url, options)) as T;
 			return { cachedAt: null, data, isStale: false };
 		};
 	}
@@ -54,10 +52,10 @@ export function useCachedFetch(): CachedFetchFunction {
 	// (shouldn't happen in normal operation)
 	return async <T = unknown>(
 		url: string,
-		options: Parameters<typeof $fetch>[1] = {},
+		options: Parameters<CachedFetchFunction>[1] = {},
 		_ttl?: number,
 	): Promise<CachedFetchResult<T>> => {
-		const data = (await $fetch<T, string, AnyServerRouteMethod>(url, options)) as T;
+		const data = (await $fetch<T>(url, options)) as T;
 		return { cachedAt: null, data, isStale: false };
 	};
 }

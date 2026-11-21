@@ -65,7 +65,7 @@ registerEndpoint(`/api/users/appeals/${GUILD}`, { method: "GET", handler: () => 
 registerEndpoint(`/api/users/appeals/${GUILD}/builtin`, {
 	method: "POST",
 	handler: async (event: H3Event) => {
-		lastBody = await event.web?.request?.json();
+		lastBody = await event.req.json();
 		return submitAnswer();
 	},
 });

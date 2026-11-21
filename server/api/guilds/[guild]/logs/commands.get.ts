@@ -1,9 +1,15 @@
 import type { CommandLogEntry } from "#shared/types/command-log";
 import { db } from "#server/database/prisma";
 import { fallbackMember, resolveGuildMembers } from "#server/utils/audit/resolve-members";
+import { getGuild, getCurrentMember, canManage } from "#server/utils/discord/index";
+import { containsPattern } from "#server/utils/like-pattern";
+import { getGuildParam } from "#server/utils/shared";
+import { asTimestampString, timestampStringToUtcIso } from "#server/utils/timestamp-string";
+import { defineWrappedCachedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { CommandLogQuerySchema } from "#shared/schemas";
 import { or } from "@prisma/orm-postgres/orm-client";
 import { useLogger } from "evlog";
+import { createError, getValidatedQuery, getRequestURL } from "nuxt/server";
 import { parse } from "valibot";
 
 export default defineWrappedCachedResponseHandler(

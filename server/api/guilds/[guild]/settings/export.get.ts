@@ -3,7 +3,9 @@ import { authorizeAutoModerationManager } from "#server/utils/automod/route";
 import { readAutoModerationRules } from "#server/utils/automod/rules";
 import { useManagedGuild } from "#server/utils/guilds/manager";
 import { createConfigurationFile } from "#server/utils/settings-transfer/format";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { ConfigurationFileName } from "#shared/utils/settings-transfer";
+import { setHeader } from "nitro/h3";
 
 /**
  * `GET /api/guilds/:guild/settings/export`: the settings that do not depend on

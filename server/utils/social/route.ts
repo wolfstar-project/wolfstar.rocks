@@ -4,13 +4,13 @@ import type {
 	SocialSubscription,
 	SocialTwitchSubscription,
 } from "#shared/utils/social";
-import type { H3Event } from "h3";
+import type { H3Event } from "nitro/h3";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
 import { authorizeGuildManager, useManagedGuild } from "#server/utils/guilds/manager";
 import { guildSettingsUpdate } from "#shared/audit/actions";
 import { isSocialErrorCode } from "#shared/utils/social";
 import { useLogger, withAuditMethods } from "evlog";
-import { createError as createH3Error } from "h3";
+import { createError as createH3Error } from "nuxt/server";
 
 /**
  * `authorize` hook of the Social module's routes: who asks has to manage the

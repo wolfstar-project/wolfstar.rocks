@@ -118,7 +118,7 @@ import {
 	UChart,
 } from "#components";
 import { mountSuspended, registerEndpoint } from "@nuxt/test-utils/runtime";
-import { createError } from "h3";
+import { createError } from "nuxt/app";
 import { describe, expect, it, vi } from "vitest";
 import VerifyPage from "~/pages/verify/[guild].vue";
 import { moderationActivityChart } from "~/utils/moderation-activity";

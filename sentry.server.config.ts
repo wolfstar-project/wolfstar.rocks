@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/nuxt";
 import { isDevelopment } from "std-env";
 import { isCloudflareBuild } from "./config/cloudflare";
-import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
+import { generateRuntimeConfig } from "./config/runtime.ts";
 import { SERVER_DATA_COLLECTION } from "./server/utils/sentry/data-collection";
 import { dropExpectedHttpErrors } from "./server/utils/sentry/expected-errors";
 

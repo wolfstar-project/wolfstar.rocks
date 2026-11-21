@@ -24,16 +24,11 @@
 		"version_name": ""
 	},
 	"discord": {
-		"avatar": {
-			"label": ""
-		},
 		"channel_info": {
 			"back": "",
 			"create_thread": "",
 			"label": "",
 			"members_in": "",
-			"no_results": "",
-			"no_results_hint": "",
 			"no_threads": "",
 			"sections": "",
 			"tabs": {
@@ -44,8 +39,7 @@
 				"pins": "",
 				"threads": ""
 			},
-			"text_channel": "",
-			"threads_hint": ""
+			"text_channel": ""
 		},
 		"chat": {
 			"messages_in": ""
@@ -69,11 +63,14 @@
 			"titled": ""
 		},
 		"header": {
-			"online_count": "",
+			"hide_members": "",
+			"notifications": "",
 			"open_info": "",
+			"pins": "",
 			"search": "",
 			"search_plain": "",
-			"show_members": ""
+			"show_members": "",
+			"threads": ""
 		},
 		"launcher": {
 			"apps": "",
@@ -103,15 +100,12 @@
 		},
 		"member_list": {
 			"app": "",
-			"dnd": "",
-			"idle": "",
 			"label": "",
 			"offline": "",
 			"online": "",
 			"verified_app": ""
 		},
 		"message": {
-			"app_badge": "",
 			"dismiss": "",
 			"dismiss_aria": "",
 			"ephemeral_notice": "",
@@ -128,7 +122,6 @@
 			"placeholder": ""
 		},
 		"suggestions": {
-			"app_commands": "",
 			"for_prefix": "",
 			"frequently_used": "",
 			"listbox": "",
@@ -144,7 +137,7 @@
 	"feedback": {
 		"description": "Informa de un error o comparte tus opiniones con el equipo de WolfStar.",
 		"email": "Correo electrónico",
-		"email_placeholder": "tu@email.com",
+		"email_placeholder": "tu{'@'}email.com",
 		"message": "Mensaje",
 		"message_placeholder": "Cuéntanos qué piensas...",
 		"name": "Nombre",

@@ -6,65 +6,26 @@
 		"skip_to_content": "Skip to main content"
 	},
 	"blog": {
-		"categories": {
-			"all": "",
-			"announcement": "",
-			"article": "",
-			"release": "",
-			"tutorial": ""
-		},
-		"category": {
-			"announcement": "",
-			"article": "",
-			"release": "",
-			"tutorial": ""
-		},
-		"copied": "",
-		"copied_markdown_link_description": "",
-		"copied_page_description": "",
-		"copy_markdown_link": "",
-		"copy_options": "",
-		"copy_page": "",
-		"copy_page_failed": "",
-		"copy_page_failed_description": "",
+		"article_links": "",
+		"avatar_alt": "",
+		"back": "",
 		"copy_url": "",
 		"edit_article": "",
-		"empty": {
-			"description": "",
-			"title": ""
-		},
-		"feed_blog": "",
-		"feed_changelog": "",
-		"feeds": "",
-		"filter_label": "",
+		"image_alt": "",
+		"join_support": "",
 		"link_copied": "",
-		"link_copied_description": "",
-		"open_in": "",
-		"posts": "",
-		"reading_finished": "",
-		"reading_left": "",
-		"reading_time": "",
-		"release_history": "",
+		"links": "",
+		"on_platform": "",
 		"rss": "RSS",
-		"share": "",
-		"timeline": {
-			"newer": "",
-			"older": "",
-			"view_all": ""
-		},
-		"toc": "",
-		"view_markdown": ""
+		"star_github": "",
+		"toc": ""
 	},
 	"changelog": {
+		"back": "",
+		"cover_alt": "",
 		"description": "",
 		"empty": "",
-		"entries": "",
 		"github_releases": "",
-		"kind": {
-			"fixed": "",
-			"improved": "",
-			"new": ""
-		},
 		"title": ""
 	},
 	"common": {
@@ -92,6 +53,7 @@
 		"system": "System"
 	},
 	"footer": {
+		"blog": "Blog",
 		"changelog": "Changelog",
 		"column_links": "Footer {label} links",
 		"community": "Community",
@@ -105,6 +67,8 @@
 		"other_apps": "Other Apps",
 		"powered_by_cloudflare": "Powered by Cloudflare",
 		"powered_by_cloudflare_aria": "Powered by Cloudflare - opens in new tab",
+		"powered_by_netlify": "Powered by Netlify",
+		"powered_by_netlify_aria": "Powered by Netlify - opens in new tab",
 		"privacy": "Privacy Policy",
 		"product": "Product",
 		"site_footer": "Site footer",
@@ -120,6 +84,7 @@
 		"brand": "WolfStar",
 		"dashboard": "",
 		"home": "{name} home",
+		"profile": "Profile",
 		"settings": "Settings",
 		"sign_in": "Sign in",
 		"sign_in_discord": "Sign in with Discord",
@@ -135,6 +100,7 @@
 		"advanced_logging": "Advanced Logging",
 		"advanced_logging_description": "Track and log events in your server",
 		"applications": "Applications",
+		"blog": "Blog",
 		"changelog": "Changelog",
 		"commands": "Commands",
 		"features": "Features",
@@ -161,12 +127,13 @@
 		"source_locale": "Source locale",
 		"title": "Translation Status"
 	},
-	"updates": {
-		"description": "",
-		"title": ""
-	},
 	"user_menu": {
+		"account_menu": "User account menu",
+		"avatar_alt": "{name}'s avatar",
+		"avatar_fallback": "User avatar",
+		"profile": "Profile",
 		"report_bug": "Report a Bug",
-		"sign_out": "Sign out"
+		"sign_out": "Sign out",
+		"user_menu_for": "User menu for {name}"
 	}
 }

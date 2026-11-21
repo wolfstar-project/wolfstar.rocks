@@ -6,65 +6,26 @@
 		"skip_to_content": "Vai al contenuto principale"
 	},
 	"blog": {
-		"categories": {
-			"all": "Tutti",
-			"announcement": "Annunci",
-			"article": "Articoli",
-			"release": "Versioni",
-			"tutorial": "Tutorial"
-		},
-		"category": {
-			"announcement": "Annuncio",
-			"article": "Articolo",
-			"release": "Versione",
-			"tutorial": "Tutorial"
-		},
-		"copied": "Copiato negli appunti",
-		"copied_markdown_link_description": "L'indirizzo del post in Markdown è negli appunti.",
-		"copied_page_description": "Il post è negli appunti in Markdown.",
-		"copy_markdown_link": "Copia il link al Markdown",
-		"copy_options": "Apri le opzioni di copia",
-		"copy_page": "Copia pagina",
-		"copy_page_failed": "Copia non riuscita",
-		"copy_page_failed_description": "Impossibile caricare la pagina in Markdown. Controlla la connessione e riprova.",
+		"article_links": "Link dell'articolo",
+		"avatar_alt": "Avatar di {name}",
+		"back": "Torna al blog",
 		"copy_url": "Copia URL",
-		"edit_article": "Modifica questo post",
-		"empty": {
-			"description": "Un post spiega perché qualcosa è cambiato. Il registro delle modifiche elenca cosa è cambiato.",
-			"title": "Ancora nessun post"
-		},
-		"feed_blog": "RSS del blog",
-		"feed_changelog": "RSS del registro delle modifiche",
-		"feeds": "Feed RSS",
-		"filter_label": "Categorie dei post",
+		"edit_article": "Modifica questo articolo",
+		"image_alt": "Immagine di {title}",
+		"join_support": "Entra nel server di supporto",
 		"link_copied": "Link copiato negli appunti",
-		"link_copied_description": "L'indirizzo del post è negli appunti.",
-		"open_in": "Apri in {name}",
-		"posts": "Post",
-		"reading_finished": "Finito",
-		"reading_left": "{minutes} min rimasti",
-		"reading_time": "{minutes} min di lettura",
-		"release_history": "Cronologia delle versioni",
+		"links": "Link",
+		"on_platform": "WolfStar su {platform}",
 		"rss": "RSS",
-		"share": "Condividi questo post",
-		"timeline": {
-			"newer": "Voci più recenti del registro delle modifiche",
-			"older": "Voci meno recenti del registro delle modifiche",
-			"view_all": "Vedi tutto il registro delle modifiche"
-		},
-		"toc": "In questa pagina",
-		"view_markdown": "Vedi come Markdown"
+		"star_github": "Metti una stella su GitHub",
+		"toc": "Indice"
 	},
 	"changelog": {
+		"back": "Torna al registro delle modifiche",
+		"cover_alt": "Copertina di {title}",
 		"description": "Segui ogni versione, miglioramento e correzione del WolfStar Project.",
-		"empty": "Ancora nessuna voce nel registro delle modifiche",
-		"entries": "Voci del registro delle modifiche",
+		"empty": "Non è ancora stata pubblicata nessuna versione.",
 		"github_releases": "Versioni su GitHub",
-		"kind": {
-			"fixed": "Corretto",
-			"improved": "Migliorato",
-			"new": "Nuovo"
-		},
 		"title": "Registro delle modifiche"
 	},
 	"common": {
@@ -76,22 +37,23 @@
 		"disabled": "Disattivato",
 		"enabled": "Attivato",
 		"error": "Errore",
-		"experimental": "Sperimentale",
+		"experimental": "Experimental",
 		"language": "Lingua",
 		"learn_more": "Scopri di più",
 		"light": "Chiaro",
 		"loading": "Caricamento...",
-		"midnight": "Mezzanotte",
-		"midnight_experimental": "Mezzanotte (sperimentale)",
+		"midnight": "Midnight",
+		"midnight_experimental": "Midnight (experimental)",
 		"na": "N/D",
 		"none": "Nessuno",
 		"please_try_again": "Riprova.",
 		"retry": "Riprova",
 		"save_failed": "Salvataggio non riuscito",
 		"search": "Cerca...",
-		"system": "Sistema"
+		"system": "System"
 	},
 	"footer": {
+		"blog": "Blog",
 		"changelog": "Registro delle modifiche",
 		"column_links": "Link del piè di pagina {label}",
 		"community": "Community",
@@ -105,6 +67,8 @@
 		"other_apps": "Altre app",
 		"powered_by_cloudflare": "Con tecnologia Cloudflare",
 		"powered_by_cloudflare_aria": "Con tecnologia Cloudflare - si apre in una nuova scheda",
+		"powered_by_netlify": "Con tecnologia Netlify",
+		"powered_by_netlify_aria": "Con tecnologia Netlify - si apre in una nuova scheda",
 		"privacy": "Informativa sulla privacy",
 		"product": "Prodotto",
 		"site_footer": "Piè di pagina del sito",
@@ -120,7 +84,8 @@
 		"brand": "WolfStar",
 		"dashboard": "Dashboard",
 		"home": "Home di {name}",
-		"settings": "Impostazioni",
+		"profile": "Profilo",
+		"settings": "Settings",
 		"sign_in": "Accedi",
 		"sign_in_discord": "Accedi con Discord",
 		"sign_out": "Esci",
@@ -135,6 +100,7 @@
 		"advanced_logging": "Logging avanzato",
 		"advanced_logging_description": "Traccia e registra gli eventi nel tuo server",
 		"applications": "Applicazioni",
+		"blog": "Blog",
 		"changelog": "Registro delle modifiche",
 		"commands": "Comandi",
 		"features": "Funzionalità",
@@ -161,12 +127,13 @@
 		"source_locale": "Lingua di origine",
 		"title": "Stato delle traduzioni"
 	},
-	"updates": {
-		"description": "Cosa è cambiato nel WolfStar Project, e perché.",
-		"title": "Aggiornamenti"
-	},
 	"user_menu": {
+		"account_menu": "Menu account utente",
+		"avatar_alt": "Avatar di {name}",
+		"avatar_fallback": "Avatar utente",
+		"profile": "Profilo",
 		"report_bug": "Segnala un bug",
-		"sign_out": "Esci"
+		"sign_out": "Esci",
+		"user_menu_for": "Menu utente di {name}"
 	}
 }

@@ -43,48 +43,44 @@
 			"eyebrow": "Altre app",
 			"invite": "Invita {app}",
 			"logo_alt": "Logo di {app}",
-			"staryl_description": "",
+			"staryl_description": "Staryl porta su Discord le notifiche di live iniziata e terminata su Twitch.",
 			"title": "Due app, un solo progetto.",
 			"wolfstar_description": "WolfStar unisce moderazione configurabile, registrazione degli eventi del server e impostazioni gestite dalla dashboard."
 		},
 		"staryl": {
 			"commands": {
-				"description": "",
+				"description": "Usa i comandi di iscrizione Twitch di Staryl per inviare le notifiche di live iniziata e terminata nel canale giusto.",
 				"eyebrow": "Anteprima dei comandi",
-				"title": ""
+				"title": "Configura le notifiche di Twitch con Staryl."
 			},
 			"cta": {
 				"ask_in_support": "Chiedi nel supporto",
 				"eyebrow": "Staryl per Discord",
 				"invite": "Invita Staryl",
 				"subtitle": "Invita Staryl ora, oppure entra nel server di supporto se prima vuoi fare una domanda.",
-				"title": ""
+				"title": "Porta i tuoi streamer nel tuo server."
 			},
 			"features": {
 				"command_hint": "Con {command}",
-				"description": "",
+				"description": "Un avviso di live con titolo, gioco e anteprima, un messaggio di fine live scritto da te e una prova quando vuoi controllare il canale.",
 				"eyebrow": "Cosa arriva nel canale",
-				"feed_body": "",
-				"feed_title": "",
 				"live_body": "Il titolo della live porta al canale, accanto al gioco e alla sua copertina, sopra l'anteprima della live e un pulsante per guardarla.",
 				"live_title": "Inizio della live",
 				"next": "Notifica successiva",
-				"notifications_description": "",
-				"notifications_title": "",
+				"notifications_description": "Ogni iscrizione manda l'inizio o la fine della live di uno streamer in un canale. Scegli un tipo per vedere cosa arriva.",
+				"notifications_title": "Notifiche di Twitch",
 				"offline_body": "Un'iscrizione di fine live pubblica il messaggio che hai scritto, con l'ora in cui la live è finita. Per queste iscrizioni il messaggio è obbligatorio.",
 				"offline_message": "La live di Stella è finita, grazie per averla guardata!",
 				"offline_title": "Fine della live",
 				"ping_body": "Dai un messaggio all'iscrizione e compare sopra la notifica. Se ci menzioni un ruolo, Staryl lo pinga, purché il ruolo si possa menzionare.",
 				"ping_role": "Stream Pings",
 				"ping_title": "Menziona un ruolo",
-				"post_body": "",
-				"post_title": "",
 				"previous": "Notifica precedente",
 				"test_body": "Una prova fa lo stesso percorso di una notifica vera, così un permesso mancante salta fuori ora e non alla prossima live. È segnata come prova.",
 				"test_notice": "è un'anteprima chiesta da un amministratore del server, non un vero aggiornamento della live.",
 				"test_notice_label": "Notifica di prova",
 				"test_title": "Provala",
-				"title": ""
+				"title": "Un messaggio per ogni live, nel tuo canale."
 			},
 			"hero": {
 				"brief_aria": "Riepilogo delle funzioni di Staryl",
@@ -93,31 +89,23 @@
 				"kicker": "Notifiche social open source",
 				"release": "Versione v{version}",
 				"routing_term": "Instradamento",
-				"routing_value": "",
+				"routing_value": "Un streamer, un canale, un tipo di avviso per iscrizione",
 				"see_work": "Guarda Staryl in azione",
 				"setup_term": "Configurazione",
 				"setup_value": "Funziona con {command}, senza bisogno di dashboard",
 				"sources_term": "Fonti",
-				"sources_value": "",
-				"subtitle": "",
+				"sources_value": "Oggi avvisi di live iniziata e terminata su Twitch, altre fonti in programma",
+				"subtitle": "Staryl pubblica un messaggio nel canale che scegli quando uno streamer di Twitch va in live o la termina. Si configura con un solo comando.",
 				"title": "Gli aggiornamenti social, dove il tuo server già si trova.",
 				"view_source": "Vedi il codice"
 			},
 			"notification": {
 				"box_art_alt": "",
-				"feed_body": "",
-				"feed_footer": "",
-				"feed_header": "",
-				"feed_read": "",
 				"footer": "Staryl Twitch Notifications",
 				"game": "Software and Game Development",
 				"game_label": "Gioco",
 				"live_header": "{name} è in live su Twitch!",
 				"message": "Stella è in live, passate a salutare!",
-				"post_body": "",
-				"post_footer": "",
-				"post_header": "",
-				"post_view": "",
 				"preview_alt": "L'anteprima della live: un editor di codice e la webcam dello streamer.",
 				"stream_title": "Bug fixing in diretta, venite a fare un salto",
 				"test_title": "Notifica di prova",
@@ -126,62 +114,599 @@
 			},
 			"proof": {
 				"eyebrow": "Cosa fa Staryl",
-				"step_1_body": "",
+				"step_1_body": "Scegli lo streamer. Oggi l'unica fonte è Twitch, e altre sono in programma.",
 				"step_1_title": "Scegli la fonte",
-				"step_2_body": "",
+				"step_2_body": "Ogni iscrizione invia la notifica di live iniziata o terminata di uno streamer in un canale.",
 				"step_2_title": "Instrada l'aggiornamento",
 				"step_3_body": "Il team del server aggiunge, rimuove, mostra, azzera e prova le iscrizioni con i comandi slash di Staryl. Non serve nessuna dashboard.",
 				"step_3_title": "Gestitelo insieme",
 				"title": "Dalla fonte al server, in un solo passaggio."
 			},
 			"seo": {
-				"description": "",
+				"description": "Staryl è un'app Discord open source del WolfStar Project che pubblica le notifiche di live iniziata e terminata su Twitch nel canale che scegli.",
 				"title": "Staryl"
 			},
 			"setup": {
+				"add_body": "Lo streamer, il canale, inizio o fine della live e un messaggio facoltativo, obbligatorio per le notifiche di fine live.",
+				"add_title": "Aggiungi una notifica",
 				"eyebrow": "Nessuna dashboard",
-				"general_body": "",
-				"general_title": "",
-				"index_label": "",
+				"index_label": "Il menu /setup",
+				"manage_body": "Rivedi le notifiche del server, rimuovi quelle che scegli o azzerale tutte.",
+				"manage_title": "Gestisci le notifiche",
+				"overview_body": "Quante notifiche ha il server, e dove andare dopo.",
+				"overview_title": "Panoramica",
+				"pages_count": "4 pagine",
 				"see_commands": "Guarda i comandi",
-				"sources_body": "",
-				"sources_title": "",
-				"status_body": "",
-				"status_title": "",
-				"subtitle": "",
-				"title": "Si configura da Discord.",
-				"twitch_body": "",
-				"twitch_title": ""
+				"subtitle": "Esegui {command} e Staryl apre il suo menu nel canale, per l'amministratore che l'ha aperto. Quattro pagine coprono tutto quello che serve a un'iscrizione.",
+				"test_body": "Manda un'anteprima per il vero percorso di consegna, per controllare il canale e i permessi del bot.",
+				"test_title": "Prova le notifiche",
+				"title": "Si configura da Discord."
 			},
 			"showcase": {
-				"add_description": "",
+				"add_description": "Aggiungi una nuova iscrizione Twitch per uno streamer.",
 				"add_response": "✅ Fatto! Ogni volta che stella va in live, pubblicherò un nuovo messaggio in #staryl-notifications.",
-				"bluesky_add_response": "",
-				"channel_topic": "",
+				"channel_topic": "Configura le notifiche delle live di Twitch con Staryl.",
 				"composer_placeholder": "Messaggio in #{channel}",
-				"remove_description": "",
+				"remove_description": "Rimuovi un'iscrizione Twitch per uno streamer.",
 				"remove_response": "✅ Fatto! Non pubblicherò più messaggi in #staryl-notifications quando stella va in live.",
-				"reset_description": "",
+				"reset_description": "Rimuovi tutte le iscrizioni Twitch da questo server.",
 				"reset_response": "✅ Fatto! 3 iscrizioni sono state rimosse da questo server.",
-				"rss_add_response": "",
 				"search_placeholder": "Cerca in WolfStar HQ",
-				"settings_count": "",
-				"settings_description": "",
-				"settings_heading": "",
-				"settings_hint": "",
-				"settings_intro": "",
-				"settings_placeholder": "",
-				"show_description": "",
+				"setup_count": "Notifiche attuali:",
+				"setup_description": "Apri il menu interattivo di configurazione di questo server.",
+				"setup_heading": "Configurazione di Staryl",
+				"setup_hint": "Usa il menu qui sotto per aggiungere, gestire o provare una notifica.",
+				"setup_intro": "Configura da un unico posto le notifiche Twitch di questo server.",
+				"setup_placeholder": "Scegli cosa vuoi configurare",
+				"show_description": "Mostra tutte le iscrizioni Twitch di questo server.",
 				"show_embed_offline": "lory — #staryl-notifications → Offline",
 				"show_embed_online": "stella — #staryl-notifications → In live",
 				"show_embed_title": "Iscrizioni Twitch",
-				"social_add_description": "",
-				"test_description": "",
+				"test_description": "Invia una notifica di prova per verificare che un'iscrizione esistente funzioni.",
 				"test_response": "✅ Inviata! Controlla #staryl-notifications: la notifica avrà esattamente questo aspetto.",
 				"timestamp": "Oggi alle 15:49"
 			}
 		},
 		"wolfstar": {
+			"commands_catalogue": {
+				"archive_create": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"archive_list": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"archive_show": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"autodelete_disable": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"autodelete_enable": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"autodelete_list": {
+					"description": "",
+					"reply": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"automessage_disable": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"automessage_enable": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"automessage_list": {
+					"description": "",
+					"reply": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"automod_add": {
+					"description": "",
+					"reply": "",
+					"select": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"automod_create": {
+					"description": "",
+					"reply": "",
+					"select": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"automod_delete": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"automod_edit": {
+					"description": "",
+					"reply": "",
+					"select": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"automod_ignore": {
+					"description": "",
+					"reply": "",
+					"select": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"automod_list": {
+					"description": "",
+					"reply": "",
+					"select": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"automod_remove": {
+					"description": "",
+					"reply": "",
+					"select": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"automod_show": {
+					"description": "",
+					"reply": "",
+					"select": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"autopurge_disable": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"autopurge_enable": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"autopurge_list": {
+					"description": "",
+					"reply": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"ban_remove": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"commands": {
+					"description": "",
+					"reply": "",
+					"select": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"dehoist": {
+					"description": "",
+					"reply": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"honeypot_disable": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"honeypot_edit": {
+					"description": "",
+					"reply": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"honeypot_setup": {
+					"description": "",
+					"reply": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"honeypot_show": {
+					"description": "",
+					"reply": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"lockdown": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"mute_create": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"mute_remove": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"note": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"permission_nodes_add": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"permission_nodes_remove": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"permission_nodes_reset": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"permission_nodes_show": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"permissions": {
+					"description": "",
+					"reply": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"prune_age": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"prune_any": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"prune_attachments": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"prune_author": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"prune_bots": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"prune_embeds": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"prune_endswith": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"prune_humans": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"prune_images": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"prune_includes": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"prune_invites": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"prune_links": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"prune_match": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"prune_mentions": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"prune_pins": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"prune_startswith": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"prune_you": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"reasons_add": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"reasons_list": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"reasons_remove": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"report": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"reports_block": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"reports_history": {
+					"description": "",
+					"reply": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"reports_unblock": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"restrict_attachment": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"restrict_embed": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"restrict_emoji": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"restrict_reaction": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"restrict_voice": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"role_add": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"role_remove": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"role_rules_add": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"role_rules_list": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"role_rules_remove": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"roles_browse": {
+					"button": "",
+					"description": "",
+					"reply": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"roles_claim": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"roles_list": {
+					"description": "",
+					"reply": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"roles_unclaim": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"setnickname": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"settings_user": {
+					"button": "",
+					"description": "",
+					"reply": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"softban": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"sticky_nickname": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"sticky_roles_add": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"sticky_roles_remove": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"sticky_roles_reset": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"sticky_roles_show": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"timeout_remove": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"unrestrict_attachment": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"unrestrict_embed": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"unrestrict_emoji": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"unrestrict_reaction": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"unrestrict_voice": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"vmute_add": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"vmute_remove": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"voicekick": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"warn_remove": {
+					"description": "",
+					"reason": "",
+					"tooltip": ""
+				},
+				"warn_thresholds_add": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"warn_thresholds_list": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"warn_thresholds_remove": {
+					"description": "",
+					"reply": "",
+					"tooltip": ""
+				},
+				"whois_channel": {
+					"description": "",
+					"footer": "",
+					"reply": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"whois_emoji": {
+					"description": "",
+					"reply": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"whois_role": {
+					"description": "",
+					"reply": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"whois_server": {
+					"description": "",
+					"reply": "",
+					"title": "",
+					"tooltip": ""
+				},
+				"whois_user": {
+					"description": "",
+					"footer": "",
+					"reply": "",
+					"title": "",
+					"tooltip": ""
+				}
+			},
 			"commands": {
 				"description": "Scrivi un comando slash, muoviti tra i suggerimenti con la tastiera e invialo per vedere la risposta di WolfStar.",
 				"eyebrow": "Prova i comandi",
@@ -376,13 +901,13 @@
 				"title": "Home"
 			},
 			"showcase": {
-				"act_on": "WolfStar può intervenire in caso di {subject}",
 				"action_alert_body": "inviare un messaggio che avvisa l'utente dell'infrazione.",
 				"action_alert_label": "Avvisare l'utente:",
 				"action_delete_body": "eliminare il messaggio che ha causato l'infrazione, mantenendo puliti i tuoi canali.",
 				"action_delete_label": "Eliminare il messaggio:",
 				"action_log_body": "inviare un messaggio nel canale dei log di moderazione, visibile ai moderatori.",
 				"action_log_label": "Pubblicare un log di moderazione:",
+				"act_on": "WolfStar può intervenire in caso di {subject}",
 				"alert": "Ciao {user}, {reason}",
 				"automod_actions_intro": "A ogni infrazione, WolfStar può:",
 				"automod_attachments_alert": "gli allegati non sono consentiti in questo canale.",
@@ -467,545 +992,6 @@
 				"server_suffix": "— WolfStar HQ",
 				"suite_for": "Una suite completa per {subject}",
 				"suite_subject": "i log di moderazione"
-			},
-			"commands_catalogue": {
-				"archive_create": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"archive_list": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"archive_show": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"autodelete_disable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"autodelete_enable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"autodelete_list": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"automessage_disable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"automessage_enable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"automessage_list": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"autopurge_disable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"autopurge_enable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"autopurge_list": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"automod_add": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
-				},
-				"automod_create": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
-				},
-				"automod_delete": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"automod_edit": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
-				},
-				"automod_ignore": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
-				},
-				"automod_list": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
-				},
-				"automod_remove": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
-				},
-				"automod_show": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
-				},
-				"ban_remove": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"softban": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"note": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"setnickname": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"voicekick": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"role_add": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"role_remove": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"warn_remove": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"mute_remove": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"timeout_remove": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"vmute_add": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"vmute_remove": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"restrict_attachment": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"restrict_embed": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"restrict_emoji": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"restrict_reaction": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"restrict_voice": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"unrestrict_attachment": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"unrestrict_embed": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"unrestrict_emoji": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"unrestrict_reaction": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"unrestrict_voice": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
-				},
-				"commands": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
-				},
-				"dehoist": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"honeypot_disable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"honeypot_edit": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"honeypot_setup": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"honeypot_show": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"lockdown": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"mute_create": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"permission_nodes_add": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"permission_nodes_remove": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"permission_nodes_reset": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"permission_nodes_show": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"permissions": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"prune_age": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_any": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_attachments": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_author": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_bots": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_embeds": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_endswith": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_humans": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_images": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_includes": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_invites": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_links": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_match": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_mentions": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_pins": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_startswith": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"prune_you": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"reasons_add": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"reasons_list": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"reasons_remove": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"report": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"reports_block": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"reports_history": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"reports_unblock": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"role_rules_add": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"role_rules_list": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"role_rules_remove": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"roles_browse": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"button": ""
-				},
-				"roles_claim": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"roles_list": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"roles_unclaim": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"settings_user": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"button": ""
-				},
-				"sticky_nickname": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"sticky_roles_add": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"sticky_roles_remove": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"sticky_roles_reset": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"sticky_roles_show": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"warn_thresholds_add": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"warn_thresholds_list": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"warn_thresholds_remove": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
-				},
-				"whois_channel": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"footer": ""
-				},
-				"whois_emoji": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"whois_role": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"whois_server": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
-				},
-				"whois_user": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"footer": ""
-				}
 			}
 		}
 	}

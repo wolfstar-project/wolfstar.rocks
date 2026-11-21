@@ -1,7 +1,9 @@
 import { refreshSessionTokens } from "#server/utils/oauth-tokens";
+import { isEvent } from "h3";
 
 export default defineNitroPlugin((nitroApp) => {
 	nitroApp.hooks.hook("request", async (event) => {
+		if (!isEvent(event)) return;
 		event.context.$authorization = {
 			resolveServerTokens: async () => {
 				return refreshSessionTokens(event);

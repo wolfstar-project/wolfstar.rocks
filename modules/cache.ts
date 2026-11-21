@@ -32,8 +32,8 @@ export default defineNuxtModule({
 			// moves to Workers KV, whole: the cache next to the fetch cache, and the
 			// rate limiters in a namespace of their own. Skew protection mounts its
 			// own from `skewProtection.storage` (nuxt.config.ts).
-			nitroConfig.storage = {
-				...nitroConfig.storage,
+			nitroConfig.kv = {
+				...nitroConfig.kv,
 				"cache": cloudflareKVMount(CLOUDFLARE_BINDINGS.cache, "cache"),
 				[FETCH_CACHE_STORAGE_BASE]: cloudflareKVMount(
 					CLOUDFLARE_BINDINGS.cache,

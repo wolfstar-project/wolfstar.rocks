@@ -19,7 +19,7 @@ const mocks = vi.hoisted(() => {
 	return { hooks };
 });
 
-await import("~~/server/plugins/evlog-expected-errors");
+await import("~~/server/early-plugins/evlog-expected-errors");
 
 /** What h3 hands Nitro's `error` hook for a thrown error that is not already an h3 error. */
 function asNormalized(error: Error) {

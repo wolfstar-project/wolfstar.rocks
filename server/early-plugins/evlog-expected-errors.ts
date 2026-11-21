@@ -1,5 +1,5 @@
 import { EvlogError } from "evlog";
-import { isError } from "h3";
+import { type H3EventContext, getEventContext, isError } from "h3";
 import { EXPECTED_HTTP_STATUSES } from "~~/server/utils/sentry/expected-errors";
 
 /**
@@ -21,12 +21,13 @@ function isRefusal(error: unknown): boolean {
  * that ends in an error at error, so every 409 from the skew guard, 429 from
  * the rate limiter and 404 for an unknown route became a Worker issue.
  *
- * The hook is registered synchronously, so it runs before evlog's own `error`
- * hook, which evlog registers once its configuration has loaded and which
- * emits the event.
+ * evlog's own `error` hook emits the event, so this one must run first. Nitro
+ * v3 runs the plugins in order and waits for each: `nuxt.config.ts` lists this
+ * one in `nitro.plugins`, ahead of evlog's, which is why it is not in
+ * `server/plugins/`.
  */
 export default defineNitroPlugin((nitroApp) => {
 	nitroApp.hooks.hook("error", (error, { event }) => {
-		if (event && isRefusal(error)) event.context.log?.setLevel("warn");
+		if (event && isRefusal(error)) getEventContext<H3EventContext>(event).log?.setLevel("warn");
 	});
 });

@@ -36,7 +36,7 @@ jobs:
           sfw: true
 
       - name: 🧪 Run Chromatic Visual and Accessibility Tests
-        uses: chromaui/action@2b75e3340bcec86b4ae38c6a10f14831114e8137 # v18.14.3
+        uses: chromaui/action@b46fae7df99a74cc2201b00cb59ec498c3346530 # v18.15.0
         with:
           buildCommand: vp run build-storybook
           outputDir: storybook-static

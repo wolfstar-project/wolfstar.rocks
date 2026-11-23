@@ -41,6 +41,12 @@ import { DiscordSnowflake } from "@sapphire/snowflake";
 import { ChannelType, GuildFeature } from "discord-api-types/v10";
 import { createError, log } from "evlog";
 
+type FlattenedGuildChannelUnion = Exclude<
+	FlattenedAnyChannel,
+	FlattenedDMChannel | FlattenedGroupDMChannel
+>;
+type FlattenedListedGuildChannel = Exclude<FlattenedGuildChannelUnion, FlattenedThreadChannel>;
+
 // #region Guild
 
 export function flattenGuild(
@@ -100,9 +106,7 @@ export function flattenGuild(
 		vanityURLCode: guild.vanity_url_code,
 		verificationLevel: guild.verification_level,
 		verified: guild.features.includes(GuildFeature.Verified),
-		channels: Array.isArray(guild.channels)
-			? guild.channels.map((channel) => flattenGuildChannel(channel as any))
-			: [],
+		channels: Array.isArray(guild.channels) ? flattenGuildChannels(guild.channels) : [],
 		emojis: Array.isArray(guild.emojis)
 			? guild.emojis.map((emoji) => flattenGuildEmoji(guild.id, emoji))
 			: [],
@@ -165,8 +169,11 @@ export function flattenGuildChannel(channel: APIGuildCategoryChannel): Flattened
 export function flattenGuildChannel(channel: APIGuildForumChannel): FlattenedForumChannel;
 export function flattenGuildChannel(channel: APIGuildMediaChannel): FlattenedMediaChannel;
 export function flattenGuildChannel(
+	channel: APIGuildChannel<GuildChannelType>,
+): FlattenedListedGuildChannel;
+export function flattenGuildChannel(
 	channel: APIGuildChannel<GuildChannelType> | APIThreadChannel,
-): Exclude<FlattenedAnyChannel, FlattenedDMChannel | FlattenedGroupDMChannel> {
+): FlattenedGuildChannelUnion {
 	switch (channel.type) {
 		case ChannelType.GuildAnnouncement: {
 			return flattenChannelAnnouncement(channel as APINewsChannel);
@@ -202,6 +209,45 @@ export function flattenGuildChannel(
 			});
 		}
 	}
+}
+
+// Discord's channel list never holds threads, so only these types are kept.
+const LISTED_CHANNEL_TYPES: ReadonlySet<ChannelType> = new Set([
+	ChannelType.GuildAnnouncement,
+	ChannelType.GuildText,
+	ChannelType.GuildVoice,
+	ChannelType.GuildStageVoice,
+	ChannelType.GuildCategory,
+	ChannelType.GuildForum,
+	ChannelType.GuildMedia,
+]);
+
+function isListedGuildChannel(
+	channel: RESTGetAPIGuildChannelsResult[number],
+): channel is APIGuildChannel<GuildChannelType> {
+	return LISTED_CHANNEL_TYPES.has(channel.type);
+}
+
+/**
+ * Flattens a guild's channel list, leaving out the channel types the dashboard
+ * has no shape for (such as a Student Hub's directory, type 20) instead of
+ * failing the whole guild over one channel.
+ */
+export function flattenGuildChannels(
+	channels: RESTGetAPIGuildChannelsResult,
+): FlattenedListedGuildChannel[] {
+	const flattened: FlattenedListedGuildChannel[] = [];
+	for (const channel of channels) {
+		if (isListedGuildChannel(channel)) {
+			flattened.push(flattenGuildChannel(channel));
+		} else {
+			log.warn(
+				"flattenGuildChannels",
+				`skipped channel ${channel.id} of unsupported type ${channel.type}`,
+			);
+		}
+	}
+	return flattened;
 }
 
 function flattenChannelCategory(channel: APIGuildCategoryChannel): FlattenedCategoryChannel {

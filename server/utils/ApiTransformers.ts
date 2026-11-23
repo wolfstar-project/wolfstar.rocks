@@ -212,20 +212,24 @@ export function flattenGuildChannel(
 }
 
 // Discord's channel list never holds threads, so only these types are kept.
-const LISTED_CHANNEL_TYPES: ReadonlySet<ChannelType> = new Set([
-	ChannelType.GuildAnnouncement,
-	ChannelType.GuildText,
-	ChannelType.GuildVoice,
-	ChannelType.GuildStageVoice,
-	ChannelType.GuildCategory,
-	ChannelType.GuildForum,
-	ChannelType.GuildMedia,
-]);
-
+// A switch rather than a module-scope Set, so no enum member is read at load.
 function isListedGuildChannel(
 	channel: RESTGetAPIGuildChannelsResult[number],
 ): channel is APIGuildChannel<GuildChannelType> {
-	return LISTED_CHANNEL_TYPES.has(channel.type);
+	switch (channel.type) {
+		case ChannelType.GuildAnnouncement:
+		case ChannelType.GuildText:
+		case ChannelType.GuildVoice:
+		case ChannelType.GuildStageVoice:
+		case ChannelType.GuildCategory:
+		case ChannelType.GuildForum:
+		case ChannelType.GuildMedia: {
+			return true;
+		}
+		default: {
+			return false;
+		}
+	}
 }
 
 /**

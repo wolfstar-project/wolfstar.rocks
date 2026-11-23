@@ -72,6 +72,20 @@ describe("tolgee-pull-remap", () => {
 		);
 	});
 
+	it("fails and writes nothing when the source locale export is malformed", () => {
+		const namespaces = ["common", "auth", "dashboard", "guilds", "profile", "components"];
+		stagePull("en", namespaces);
+		stagePull("it", namespaces);
+		writeJson(join(cwd, "i18n/.tolgee-pull/en/auth.json"), "{ not json");
+
+		const result = runRemap();
+
+		expect(result.status).toBe(1);
+		expect(result.stderr).toContain("en/auth.json");
+		expect(readFileSync(join(cwd, "i18n/locales/it-IT/common.json"), "utf8")).toBe(SENTINEL);
+		expect(existsSync(join(cwd, "i18n/.tolgee-pull/en/auth.json"))).toBe(true);
+	});
+
 	it("fails and writes nothing when an active namespace is missing from a language", () => {
 		stagePull("en", ["common", "auth", "dashboard", "guilds", "profile", "components"]);
 		stagePull("it", ["common", "auth", "dashboard", "guilds", "profile"]);

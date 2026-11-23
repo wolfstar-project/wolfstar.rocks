@@ -100,9 +100,7 @@ const mirrors: Record<string, string> = { en: "en-US", es: "es-ES" };
 const writes: { dest: string; content: Buffer }[] = [];
 for (const tag of mappedTags) {
 	const localDir = config.tolgeeToLocal[tag];
-	// The source locale is validated above with the others but never written:
-	// overwriting it with the platform's older copy would revert new keys.
-	if (!localDir || localDir === REFERENCE_LOCALE) continue;
+	if (!localDir) continue;
 	for (const ns of namespaces) {
 		let content: Buffer;
 		try {
@@ -119,6 +117,9 @@ for (const tag of mappedTags) {
 			console.error(`Staging directory preserved for inspection: ${pullRoot}`);
 			process.exit(1);
 		}
+		// The source locale is parsed and validated like the others, but never
+		// written: overwriting it with the platform's older copy reverts new keys.
+		if (localDir === REFERENCE_LOCALE) continue;
 		writes.push({ dest: join(localesRoot, localDir, `${ns}.json`), content });
 		// Keep en-US / es-ES mirrors in sync with base dirs when present.
 		const mirrorDir = mirrors[localDir];

@@ -9,6 +9,7 @@ import {
 import { notifyGuildSettingsUpdate } from "#server/database/settings/notify";
 import { fetchGuildData, writeGuildData } from "#server/database/settings/storage";
 import { canWaitOnOtherRequests } from "#server/utils/keyed-lock";
+import { readSharedCache, usesSharedCache, writeSharedCache } from "#server/utils/shared-cache";
 import { Collection } from "@discordjs/collection";
 import { AsyncQueue } from "@sapphire/async-queue";
 
@@ -25,8 +26,10 @@ export const SETTINGS_CACHE_MAX_AGE = 15_000;
 const cachedAt = new Map<string, number>();
 
 function cacheSettings(id: string, data: GuildData) {
+	const at = Date.now();
 	cache.set(id, data);
-	cachedAt.set(id, Date.now());
+	cachedAt.set(id, at);
+	shareSettings(id, data, at);
 }
 /**
  * How many writes each guild had in this process: a read that started before
@@ -50,7 +53,52 @@ export function serializeSettings(data: ReadonlyGuildData, space?: string | numb
 export function readSettings(guildId: string): Awaitable<ReadonlyGuildData> {
 	const cached = cache.get(guildId);
 	const age = Date.now() - (cachedAt.get(guildId) ?? 0);
-	return cached && age < SETTINGS_CACHE_MAX_AGE ? cached : processFetch(guildId);
+	if (cached && age < SETTINGS_CACHE_MAX_AGE) return cached;
+	return usesSharedCache() ? readSharedSettings(guildId) : processFetch(guildId);
+}
+
+/** What the shared cache keeps of a guild's settings. */
+interface SharedSettings {
+	data: GuildData;
+	/** Whether the read found no rows, see {@linkcode isGuildUnconfigured}. */
+	unconfigured: boolean;
+}
+
+function settingsCacheKey(guildId: string) {
+	return `settings:guild:${guildId}`;
+}
+
+/**
+ * On Workers, reads the copy another isolate read or wrote within
+ * {@linkcode SETTINGS_CACHE_MAX_AGE} before going to the database: the
+ * isolates are many, and each one's memory sees few of a guild's requests. A
+ * copy keeps the time it was read, so it is not served for longer than one
+ * cached in memory.
+ */
+async function readSharedSettings(id: string): Promise<ReadonlyGuildData> {
+	const writesBefore = writeCounts.get(id) ?? 0;
+	const entry = await readSharedCache<SharedSettings>(
+		settingsCacheKey(id),
+		SETTINGS_CACHE_MAX_AGE,
+	);
+	if (entry === null) return processFetch(id);
+
+	const data = Object.assign(Object.create(null), entry.value.data) as GuildData;
+	// As in `fetch()`: a copy read while this process wrote may be older than that write.
+	if ((writeCounts.get(id) ?? 0) === writesBefore) {
+		if (entry.value.unconfigured) unconfigured.add(id);
+		else unconfigured.delete(id);
+		cache.set(id, data);
+		cachedAt.set(id, entry.at);
+	}
+	getSettingsContext(data);
+	return data;
+}
+
+function shareSettings(id: string, data: GuildData, at: number) {
+	if (!usesSharedCache()) return;
+	const value: SharedSettings = { data, unconfigured: unconfigured.has(id) };
+	writeSharedCache(settingsCacheKey(id), { at, value }, SETTINGS_CACHE_MAX_AGE);
 }
 
 /**

@@ -66,7 +66,9 @@ const recentGuildProbes = new Map<string, { expires: number; probe: Promise<Guil
  * there may not wait on a promise another request started, but it may read
  * what that request found. They are kept for less time than the shared copy,
  * since `invalidateGuildCache()` reaches only the isolate it runs in: after
- * the bot is invited, the other isolates learn of it within this time.
+ * the bot is invited, the other isolates of the same location learn of it
+ * within this time. In another location Workers KV may still serve the copy
+ * from before the invite, until it is {@linkcode GUILD_PROBE_TTL_MS} old.
  */
 const SETTLED_GUILD_PROBE_TTL_MS = 10_000;
 const settledGuildProbes = new Map<string, { expires: number; probe: GuildProbe }>();
@@ -87,7 +89,7 @@ function rememberInvalidation(guildId: string) {
 /** Whether a probe made at `at` predates this isolate's last invalidation of its guild. */
 export function isGuildProbeInvalidated(guildId: string, at: number): boolean {
 	const invalidation = guildProbeInvalidations.get(guildId);
-	return invalidation !== undefined && at <= invalidation.at;
+	return invalidation !== undefined && at < invalidation.at;
 }
 
 function sweep<V extends { expires: number }>(entries: Map<string, V>, now: number) {

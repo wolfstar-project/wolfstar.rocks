@@ -112,6 +112,28 @@ describe("readSettings on Cloudflare Workers", () => {
 		);
 	});
 
+	it("answers the written settings when a write overtook the shared read", async () => {
+		const id = guildId();
+		mockFetchGuildData.mockResolvedValue({ id, language: "it-IT" });
+		mockWriteGuildData.mockResolvedValue(undefined);
+		let release: (value: unknown) => void = () => {};
+		vi.stubGlobal("useStorage", () => ({
+			getItem: () =>
+				new Promise((resolve) => {
+					release = resolve;
+				}),
+			setItem: async () => undefined,
+		}));
+
+		const reading = readSettings(id);
+		const transaction = await writeSettingsTransaction(id);
+		await transaction.write({ language: "fr" }).submit();
+		transaction.dispose();
+		release({ at: Date.now(), value: { data: { id, language: "de" }, unconfigured: false } });
+
+		expect((await reading).language).toBe("fr");
+	});
+
 	it("reads the database when the storage fails", async () => {
 		const id = guildId();
 		vi.stubGlobal("useStorage", () => ({

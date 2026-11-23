@@ -83,14 +83,17 @@ async function readSharedSettings(id: string): Promise<ReadonlyGuildData> {
 	);
 	if (entry === null) return processFetch(id);
 
-	const data = Object.assign(Object.create(null), entry.value.data) as GuildData;
-	// As in `fetch()`: a copy read while this process wrote may be older than that write.
-	if ((writeCounts.get(id) ?? 0) === writesBefore) {
-		if (entry.value.unconfigured) unconfigured.add(id);
-		else unconfigured.delete(id);
-		cache.set(id, data);
-		cachedAt.set(id, entry.at);
+	// A copy read while this process wrote may be older than that write: the
+	// written settings are answered instead, as the write cached them.
+	if ((writeCounts.get(id) ?? 0) !== writesBefore) {
+		return cache.get(id) ?? processFetch(id, true);
 	}
+
+	const data = Object.assign(Object.create(null), entry.value.data) as GuildData;
+	if (entry.value.unconfigured) unconfigured.add(id);
+	else unconfigured.delete(id);
+	cache.set(id, data);
+	cachedAt.set(id, entry.at);
 	getSettingsContext(data);
 	return data;
 }

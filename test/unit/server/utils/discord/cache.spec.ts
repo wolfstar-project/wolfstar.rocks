@@ -168,6 +168,16 @@ describe("rememberGuildProbe on Cloudflare Workers", () => {
 		expect(run).toHaveBeenCalledOnce();
 	});
 
+	it("keeps a probe asked for in the same millisecond as the invalidation before it", async () => {
+		await invalidateGuildCache("200000000000000006");
+		const run = vi.fn().mockResolvedValue({ ...present, at: Date.now() });
+
+		await rememberGuildProbe("200000000000000006", run);
+		await rememberGuildProbe("200000000000000006", run);
+
+		expect(run).toHaveBeenCalledOnce();
+	});
+
 	it("forgets what it found when the guild cache is invalidated", async () => {
 		const run = vi.fn().mockResolvedValue({ ...present, at: Date.now() });
 

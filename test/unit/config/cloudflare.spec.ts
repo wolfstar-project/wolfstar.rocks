@@ -67,6 +67,22 @@ describe("the Worker a build deploys to", () => {
 		});
 	});
 
+	// Both databases are on Railway in US West, behind a Hyperdrive each: run
+	// near the visitor, every query crossed the ocean.
+	it.each(["production", "beta"])(
+		"runs the %s Worker next to the database, not next to the visitor",
+		async (target) => {
+			vi.stubEnv("CLOUDFLARE_WORKER", target);
+			const { WORKER, DEPLOYED_WORKER } = await import("../../../config/cloudflare");
+
+			expect(WORKER).toHaveProperty("placement", { region: "aws:us-west-1" });
+			// An environment inherits the top level's placement unless it sets its own.
+			expect(DEPLOYED_WORKER).toSatisfy(
+				(worker) => worker === WORKER || !Object.hasOwn(worker ?? {}, "placement"),
+			);
+		},
+	);
+
 	// Production's bindings and domains belong to production builds only.
 	it("leaves production's bindings and domains out of the beta build", async () => {
 		vi.stubEnv("CLOUDFLARE_WORKER", "beta");

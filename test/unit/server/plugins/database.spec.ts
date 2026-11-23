@@ -44,7 +44,10 @@ describe("the database plugin on Cloudflare Workers", () => {
 
 		onRequest()(event);
 
-		expect(mocks.createDatabase).toHaveBeenCalledWith("postgres://hyperdrive", 0);
+		expect(mocks.createDatabase).toHaveBeenCalledWith("postgres://hyperdrive", {
+			idleTimeoutMillis: 0,
+			verifyMarker: false,
+		});
 		expect(event.context.database).toStrictEqual({ url: "postgres://hyperdrive" });
 	});
 

@@ -121,8 +121,8 @@ class Transaction {
 	 * under that lock: the queue of this process orders nothing against the
 	 * other instances of the dashboard, nor on Workers.
 	 */
-	public async reload(orm: Parameters<typeof fetchGuildData>[0]) {
-		const stored = await fetchGuildData(orm, this.settings.id);
+	public async reload(source: Parameters<typeof fetchGuildData>[0]) {
+		const stored = await fetchGuildData(source, this.settings.id);
 		if (stored !== null) Object.assign(this.settings, stored);
 	}
 
@@ -262,7 +262,7 @@ async function processFetch(id: string, fresh = false): Promise<ReadonlyGuildDat
 async function fetch(id: string): Promise<GuildData> {
 	const writesBefore = writeCounts.get(id) ?? 0;
 	// A guild without rows reads as the defaults; its rows are created by the first write:
-	const stored = await fetchGuildData(db.orm, id);
+	const stored = await fetchGuildData(db, id);
 	const data =
 		stored ??
 		(Object.assign(Object.create(null), getDefaultGuildSettings(), { id }) as GuildData);

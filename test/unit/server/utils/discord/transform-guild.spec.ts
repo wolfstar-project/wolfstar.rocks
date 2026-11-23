@@ -267,6 +267,24 @@ describe("the bot's membership probe on Cloudflare Workers", () => {
 		expect(result.wolfstarIsIn).toBe(true);
 	});
 
+	it("does not share an answer that a refresh overtook", async () => {
+		let finish: (guild: unknown) => void = () => {};
+		mockGuildsGet.mockReturnValue(
+			new Promise((resolve) => {
+				finish = resolve;
+			}),
+		);
+
+		const stale = transformGuild(userId, oauthGuild, { includeChannels: false });
+		await vi.waitFor(() => expect(mockGuildsGet).toHaveBeenCalledOnce());
+		await new Promise((resolve) => setTimeout(resolve, 2));
+		await invalidateGuildCache("guild-456");
+		finish(mockApiGuild);
+		await stale;
+
+		expect(stored.has(probeKey)).toBe(false);
+	});
+
 	it("shares nothing when Discord fails", async () => {
 		mockGuildsGet.mockRejectedValue(Object.assign(new Error("Bad Gateway"), { status: 502 }));
 

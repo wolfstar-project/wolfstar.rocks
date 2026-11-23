@@ -150,6 +150,24 @@ describe("rememberGuildProbe on Cloudflare Workers", () => {
 		expect(run).toHaveBeenCalledTimes(2);
 	});
 
+	it("does not keep a probe that an invalidation overtook", async () => {
+		const at = Date.now();
+		let finish: (probe: GuildProbe) => void = () => {};
+		const slow = new Promise<GuildProbe>((resolve) => {
+			finish = resolve;
+		});
+		const stale = rememberGuildProbe("200000000000000005", () => slow);
+
+		vi.advanceTimersByTime(100);
+		await invalidateGuildCache("200000000000000005");
+		finish({ at, confirmedAbsent: true, guild: null, live: true });
+		await stale;
+
+		const run = vi.fn().mockResolvedValue({ ...present, at: Date.now() });
+		await rememberGuildProbe("200000000000000005", run);
+		expect(run).toHaveBeenCalledOnce();
+	});
+
 	it("forgets what it found when the guild cache is invalidated", async () => {
 		const run = vi.fn().mockResolvedValue({ ...present, at: Date.now() });
 

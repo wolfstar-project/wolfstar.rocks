@@ -109,7 +109,9 @@ export function rememberGuildProbe(
 		const settled = settledGuildProbes.get(guildId);
 		if (settled && settled.expires > now) return Promise.resolve(settled.probe);
 		return run().then((probe) => {
-			if (probe.live) {
+			// A probe that started before an invalidation may answer after it, with
+			// what the guild was before the bot was invited: it is not kept.
+			if (probe.live && !isGuildProbeInvalidated(guildId, probe.at ?? now)) {
 				sweep(settledGuildProbes, now);
 				const expires = Math.min(
 					(probe.at ?? now) + GUILD_PROBE_TTL_MS,

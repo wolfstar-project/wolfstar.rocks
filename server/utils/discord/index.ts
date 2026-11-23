@@ -454,12 +454,14 @@ function probeBotGuildMembership(guildId: string): Promise<GuildProbe> {
 		if (shared !== null) return shared;
 
 		try {
-			const guild = await fetchBotGuildFromDiscord(guildId);
+			// The answer is dated from when it was asked for, so a refresh made while
+			// the request was out counts as newer than it.
 			const at = Date.now();
+			const guild = await fetchBotGuildFromDiscord(guildId);
 			if (guild === null) {
 				await removePersistedGuild(guildId);
 			}
-			if (usesSharedCache()) {
+			if (usesSharedCache() && !isGuildProbeInvalidated(guildId, at)) {
 				writeSharedCache(
 					buildGuildProbeKey(guildId),
 					{ at, value: guild },

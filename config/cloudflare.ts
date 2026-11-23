@@ -71,6 +71,32 @@ const OBSERVABILITY = {
 	traces: { enabled: true },
 };
 
+/**
+ * Where the Worker runs: next to the database, not next to the visitor. Both
+ * Postgres databases, production's and beta's, are on Railway in its US West
+ * region (California), and each one reaches the Worker through a Hyperdrive
+ * whose pool sits next to it. Run near the visitor, as by default, every query
+ * of a request crossed the distance between the two: about 190 ms in Sentry,
+ * on the simplest select, and a dashboard request makes several queries in a
+ * row. Run in the data center nearest `aws:us-west-1`, the Worker pays that
+ * distance once, on the request, and a few milliseconds on each query.
+ *
+ * Placement moves the Worker's own code only: the static assets and the
+ * prerendered pages are still served from the visitor's data center. Change
+ * the region if the database moves. The `beta` environment inherits it.
+ */
+const WORKER_PLACEMENT = { region: "aws:us-west-1" };
+
+/**
+ * Adds {@link WORKER_PLACEMENT} to a Worker's configuration. Nitro's copy of
+ * Wrangler's types predates placement by region and only knows `mode`, and
+ * Nitro writes the object to `wrangler.json` as given, so the block is added
+ * after `satisfies` has checked the rest.
+ */
+function placeNearDatabase<Worker extends WranglerConfig>(worker: Worker): Worker {
+	return Object.assign({}, worker, { placement: WORKER_PLACEMENT });
+}
+
 /** What every Worker sets the same way. */
 const WORKER_DEFAULTS = {
 	// Workers drop a continuation that another request resolves once that
@@ -132,7 +158,7 @@ const PRODUCTION_WORKER_NAME = "wolfstar-rocks";
  * Turnstile site key is a public repository variable of the deploy workflow.
  */
 function createProductionWorker() {
-	return {
+	return placeNearDatabase({
 		...WORKER_DEFAULTS,
 		d1_databases: [
 			{
@@ -163,7 +189,7 @@ function createProductionWorker() {
 			...optionalVar("NUXT_PUBLIC_TURNSTILE_SITE_KEY"),
 			SENTRY_DSN,
 		},
-	} satisfies WranglerConfig;
+	} satisfies WranglerConfig);
 }
 
 /**
@@ -227,10 +253,10 @@ const BETA_ENVIRONMENT = {
  * `wrangler.json` as given, so it is added apart from the literal that
  * `satisfies` checks.
  */
-const BETA_BUILD = {
+const BETA_BUILD = placeNearDatabase({
 	...({ ...WORKER_DEFAULTS, name: PRODUCTION_WORKER_NAME } satisfies WranglerConfig),
 	env: { beta: BETA_ENVIRONMENT },
-};
+});
 
 const PRODUCTION_WORKER = workerTarget === "production" ? createProductionWorker() : undefined;
 

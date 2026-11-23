@@ -6,6 +6,7 @@ import type {
 	StickyRole,
 } from "#server/database/settings/types";
 import type { Snowflake } from "discord-api-types/v10";
+import contractJson from "#server/database/generated/prisma/contract.json" with { type: "json" };
 import {
 	Columns,
 	Tables,
@@ -25,7 +26,6 @@ const ColumnsByKey: Record<StoredKey, Column> = Columns;
  * terminals every one of them shares.
  */
 interface TableCollection {
-	first(criteria: { id: bigint }): PromiseLike<Record<string, unknown> | null>;
 	upsert(input: {
 		create: Record<string, unknown>;
 		update: Record<string, unknown>;
@@ -72,35 +72,146 @@ function toColumn(kind: ColumnKind, value: unknown): unknown {
 	}
 }
 
+/** Where a table and its columns are in the database, as the contract names them. */
+interface StorageNames {
+	table: string;
+	columns: Record<string, string>;
+}
+
+function storageNames(name: TableName): StorageNames {
+	const model = contractJson.domain.namespaces.public.models[name];
+	return {
+		table: model.storage.table,
+		columns: Object.fromEntries(
+			Object.entries(model.storage.fields).map(([field, { column }]) => [field, column]),
+		),
+	};
+}
+
+const StorageByTable = new Map<TableName, StorageNames>(
+	Tables.map((name) => [name, storageNames(name)]),
+);
+
+function storageOf(name: TableName): StorageNames {
+	const storage = StorageByTable.get(name);
+	if (!storage) throw new Error(`[settings] the contract has no table for ${name}`);
+	return storage;
+}
+
+/** The alias under which the read selects a setting, and the one that tells whether a table has a row. */
+const settingAlias = (index: number) => `s${index}`;
+const rowAlias = (index: number) => `r${index}`;
+
+type Plan = Parameters<DatabaseTransaction["query"]>[0];
+type FieldScope = Record<string, Record<string, unknown>>;
+interface Operators {
+	eq(left: unknown, right: unknown): unknown;
+}
+
 /**
- * Reads the settings of a guild.
- * @param orm The ORM surface to read through, `db.orm` or a transaction's `tx.orm`.
+ * The SQL builder of a table, narrowed to the calls the read of the settings
+ * makes: the joined tables and the selected columns are only known from
+ * {@link Tables} and {@link Columns} at run time, so the typed builder cannot
+ * follow them.
+ */
+interface SettingsQueryBuilder {
+	outerLeftJoin(
+		other: unknown,
+		on: (fields: FieldScope, fns: Operators) => unknown,
+	): SettingsQueryBuilder;
+	select(alias: string, pick: (fields: FieldScope) => unknown): SettingsQueryBuilder;
+	where(predicate: (fields: FieldScope, fns: Operators) => unknown): SettingsQueryBuilder;
+	limit(count: number): SettingsQueryBuilder;
+	build(): Plan;
+}
+
+/** What the settings are read through: the client, or an open transaction. */
+export type SettingsSource = Database | DatabaseTransaction;
+
+function sqlTable(source: SettingsSource, name: TableName): SettingsQueryBuilder {
+	return source.sql.public[
+		storageOf(name).table as keyof Database["sql"]["public"]
+	] as unknown as SettingsQueryBuilder;
+}
+
+/**
+ * One query for every settings table: the `Guild` row, joined on its ID to the
+ * row of each other table when there is one. Reading them one query each held
+ * a connection per table, more than a Worker may open at once, so the reads
+ * waited for each other.
+ */
+function settingsPlan(source: SettingsSource, key: bigint): Plan {
+	const [root, ...joined] = Tables;
+	let query = sqlTable(source, root);
+	const rootTable = storageOf(root).table;
+	for (const name of joined) {
+		const { table: other } = storageOf(name);
+		query = query.outerLeftJoin(sqlTable(source, name), (fields, fns) =>
+			fns.eq(fields[rootTable]?.id, fields[other]?.id),
+		);
+	}
+
+	Tables.forEach((name, index) => {
+		const { table: tableName } = storageOf(name);
+		query = query.select(rowAlias(index), (fields) => fields[tableName]?.id);
+	});
+	StoredKeys.forEach((settingKey, index) => {
+		const { table: tableName, column } = ColumnsByKey[settingKey];
+		const storage = storageOf(tableName);
+		const storageColumn = storage.columns[column] ?? column;
+		query = query.select(
+			settingAlias(index),
+			(fields) => fields[storage.table]?.[storageColumn],
+		);
+	});
+
+	return query
+		.where((fields, fns) => fns.eq(fields[rootTable]?.id, key))
+		.limit(1)
+		.build();
+}
+
+async function queryRows(source: SettingsSource, plan: Plan): Promise<Record<string, unknown>[]> {
+	const runtime = (source as Partial<Database>).runtime;
+	const rows: unknown =
+		typeof runtime === "function"
+			? await (source as Database).runtime().query(plan)
+			: await (source as DatabaseTransaction).query(plan);
+	return rows as Record<string, unknown>[];
+}
+
+/**
+ * Reads the settings of a guild, in two queries sent together: one for the
+ * settings tables, one for the sticky roles.
+ * @param source The client to read through, `db` or a transaction's `tx`.
  * @param id The guild's ID.
  * @returns The settings, or `null` when the guild has no `Guild` row yet.
  */
-export async function fetchGuildData(orm: Orm, id: Snowflake): Promise<GuildData | null> {
+export async function fetchGuildData(
+	source: SettingsSource,
+	id: Snowflake,
+): Promise<GuildData | null> {
 	const key = BigInt(id);
 	const [rows, stickyRoles] = await Promise.all([
-		Promise.all(Tables.map((name) => table(orm, name).first({ id: key }))),
-		orm.public.StickyRole.where({ guildId: key }).all(),
+		queryRows(source, settingsPlan(source, key)),
+		source.orm.public.StickyRole.where({ guildId: key }).all(),
 	]);
 
-	const [guild] = rows;
-	if (guild === null || guild === undefined) return null;
+	const [row] = rows;
+	if (row === undefined) return null;
 
 	const data = Object.assign(Object.create(null), getDefaultGuildSettings(), {
 		id,
 	}) as GuildData;
-	const byTable = new Map<TableName, Record<string, unknown> | null>(
-		Tables.map((name, index) => [name, rows[index] ?? null]),
+	const hasRow = new Map<TableName, boolean>(
+		Tables.map((name, index) => [name, row[rowAlias(index)] != null]),
 	);
-	for (const settingKey of StoredKeys) {
-		const { table: tableName, column, kind } = ColumnsByKey[settingKey];
-		const row = byTable.get(tableName);
+	StoredKeys.forEach((settingKey, index) => {
+		const { table: tableName, kind } = ColumnsByKey[settingKey];
 		// A missing row keeps the default values for every key the table stores:
-		if (!row) continue;
-		Reflect.set(data, settingKey, toSetting(kind, row[column]));
-	}
+		if (!hasRow.get(tableName)) return;
+		Reflect.set(data, settingKey, toSetting(kind, row[settingAlias(index)]));
+	});
 
 	data.stickyRoles = stickyRoles.map(
 		(entry) =>

@@ -73,7 +73,7 @@ export async function applyConfigurationImport(
 		// The settings were read before the lock of the rules was taken, and
 		// another import may have written since: read under it, the plan is made
 		// from what the database has now.
-		await transaction.reload(orm);
+		await transaction.reload(tx);
 
 		// The rules of a file are held to the limit when it is read; the ones added to the rules of the guild are held
 		// to it now, since the guild may have gained rules meanwhile:

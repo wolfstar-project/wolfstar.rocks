@@ -27,6 +27,17 @@
 			"enabled": false
 		},
 		{
+			"description": "The browser tests run in the Playwright container image (ci.yml), which ships one browser build. Bumping @playwright/test without the image fails every browser test, so they move together.",
+			"groupName": "playwright",
+			"groupSlug": "playwright",
+			"matchPackageNames": [
+				"@playwright/test",
+				"playwright",
+				"playwright-core",
+				"mcr.microsoft.com/playwright"
+			]
+		},
+		{
 			"extends": ["packages:test"],
 			"matchPackageNames": ["c8", "happy-dom", "jsdom"],
 			"groupName": "test packages"

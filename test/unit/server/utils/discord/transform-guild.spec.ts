@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // All Nuxt server auto-import globals that discord.ts uses at module-init time
 // (defineCachedFunction / hours) must be present before the module is evaluated.
@@ -96,6 +96,7 @@ vi.mock("#server/utils/discord/cache", async (importOriginal) => ({
 
 import type { RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
 import { transformGuild } from "#server/utils/discord";
+import { invalidateGuildCache } from "#server/utils/discord/cache";
 
 const userId = "user-123";
 
@@ -189,5 +190,106 @@ describe("transformGuild", () => {
 
 		expect(result.wolfstarIsIn).toBe(true);
 		expect(mockGuildsGet).toHaveBeenCalled();
+	});
+});
+
+describe("the bot's membership probe on Cloudflare Workers", () => {
+	const probeKey = "discord:guild-probe:guild-456";
+	const stored = new Map<string, unknown>();
+
+	beforeEach(() => {
+		vi.clearAllMocks();
+		guildCache.clear();
+		stored.clear();
+		vi.stubGlobal("navigator", { userAgent: "Cloudflare-Workers" });
+		vi.stubGlobal("useStorage", () => ({
+			getItem: async (key: string) => stored.get(key) ?? null,
+			setItem: async (key: string, value: unknown) => {
+				stored.set(key, value);
+			},
+			removeItem: async (key: string) => {
+				stored.delete(key);
+			},
+		}));
+	});
+
+	afterEach(() => {
+		vi.unstubAllGlobals();
+	});
+
+	it("answers with the probe another isolate shared, without asking Discord", async () => {
+		stored.set(probeKey, { at: Date.now() - 30_000, value: mockApiGuild });
+
+		const result = await transformGuild(userId, oauthGuild, { includeChannels: false });
+
+		expect(mockGuildsGet).not.toHaveBeenCalled();
+		expect(result.wolfstarIsIn).toBe(true);
+	});
+
+	it("answers that the bot is absent from a shared probe", async () => {
+		stored.set(probeKey, { at: Date.now(), value: null });
+
+		const result = await transformGuild(userId, oauthGuild, { includeChannels: false });
+
+		expect(mockGuildsGet).not.toHaveBeenCalled();
+		expect(result.wolfstarIsIn).toBe(false);
+	});
+
+	it("asks Discord once the shared probe is older than its window, and shares the answer", async () => {
+		stored.set(probeKey, { at: Date.now() - 61_000, value: null });
+		mockGuildsGet.mockResolvedValue(mockApiGuild);
+
+		const result = await transformGuild(userId, oauthGuild, { includeChannels: false });
+
+		expect(mockGuildsGet).toHaveBeenCalledOnce();
+		expect(result.wolfstarIsIn).toBe(true);
+		await vi.waitFor(() => expect(stored.get(probeKey)).toMatchObject({ value: mockApiGuild }));
+	});
+
+	it("shares that the bot is absent when Discord answers 404", async () => {
+		mockGuildsGet.mockRejectedValue(Object.assign(new Error("Unknown Guild"), { status: 404 }));
+
+		const result = await transformGuild(userId, oauthGuild, { includeChannels: false });
+
+		expect(result.wolfstarIsIn).toBe(false);
+		await vi.waitFor(() => expect(stored.get(probeKey)).toMatchObject({ value: null }));
+	});
+
+	it("asks Discord again after the guild cache was invalidated here", async () => {
+		stored.set(probeKey, { at: Date.now() - 1_000, value: null });
+		await invalidateGuildCache("guild-456");
+		stored.set(probeKey, { at: Date.now() - 1_000, value: null });
+		mockGuildsGet.mockResolvedValue(mockApiGuild);
+
+		const result = await transformGuild(userId, oauthGuild, { includeChannels: false });
+
+		expect(mockGuildsGet).toHaveBeenCalledOnce();
+		expect(result.wolfstarIsIn).toBe(true);
+	});
+
+	it("does not share an answer that a refresh overtook", async () => {
+		let finish: (guild: unknown) => void = () => {};
+		mockGuildsGet.mockReturnValue(
+			new Promise((resolve) => {
+				finish = resolve;
+			}),
+		);
+
+		const stale = transformGuild(userId, oauthGuild, { includeChannels: false });
+		await vi.waitFor(() => expect(mockGuildsGet).toHaveBeenCalledOnce());
+		await new Promise((resolve) => setTimeout(resolve, 2));
+		await invalidateGuildCache("guild-456");
+		finish(mockApiGuild);
+		await stale;
+
+		expect(stored.has(probeKey)).toBe(false);
+	});
+
+	it("shares nothing when Discord fails", async () => {
+		mockGuildsGet.mockRejectedValue(Object.assign(new Error("Bad Gateway"), { status: 502 }));
+
+		await transformGuild(userId, oauthGuild, { includeChannels: false });
+
+		expect(stored.has(probeKey)).toBe(false);
 	});
 });

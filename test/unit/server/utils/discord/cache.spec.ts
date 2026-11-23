@@ -1,7 +1,7 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const { mockRemoveItem } = vi.hoisted(() => {
-	const mockRemoveItem = vi.fn();
+	const mockRemoveItem = vi.fn(() => Promise.resolve());
 	(globalThis as Record<string, unknown>).useStorage = () => ({
 		removeItem: mockRemoveItem,
 	});
@@ -41,6 +41,12 @@ describe("invalidateGuildCache", () => {
 			"/cache:nitro/functions:getGuild:guild:123456789012345678.json",
 		);
 	});
+
+	it("removes the probe the Worker's isolates share", async () => {
+		await invalidateGuildCache("123456789012345678");
+
+		expect(mockRemoveItem).toHaveBeenCalledWith("discord:guild-probe:123456789012345678");
+	});
 });
 
 describe("rememberGuildProbe", () => {
@@ -70,7 +76,7 @@ describe("rememberGuildProbe", () => {
 		const run = vi.fn().mockResolvedValue(absent);
 
 		await rememberGuildProbe("100000000000000002", run);
-		vi.advanceTimersByTime(31_000);
+		vi.advanceTimersByTime(61_000);
 		await rememberGuildProbe("100000000000000002", run);
 
 		expect(run).toHaveBeenCalledTimes(2);
@@ -92,6 +98,92 @@ describe("rememberGuildProbe", () => {
 		await rememberGuildProbe("100000000000000004", run);
 		await invalidateGuildCache("100000000000000004");
 		await rememberGuildProbe("100000000000000004", run);
+
+		expect(run).toHaveBeenCalledTimes(2);
+	});
+});
+
+describe("rememberGuildProbe on Cloudflare Workers", () => {
+	const present: GuildProbe = { at: 0, confirmedAbsent: false, guild: null, live: true };
+	const fallback: GuildProbe = { confirmedAbsent: false, guild: null, live: false };
+
+	beforeEach(() => {
+		vi.useFakeTimers();
+		vi.clearAllMocks();
+		vi.stubGlobal("navigator", { userAgent: "Cloudflare-Workers" });
+	});
+
+	afterEach(() => {
+		vi.unstubAllGlobals();
+		vi.useRealTimers();
+	});
+
+	it("answers again with what a finished probe found, for a few seconds", async () => {
+		const run = vi.fn().mockResolvedValue({ ...present, at: Date.now() });
+
+		await rememberGuildProbe("200000000000000001", run);
+		vi.advanceTimersByTime(9_000);
+		await rememberGuildProbe("200000000000000001", run);
+		expect(run).toHaveBeenCalledOnce();
+
+		vi.advanceTimersByTime(2_000);
+		await rememberGuildProbe("200000000000000001", run);
+		expect(run).toHaveBeenCalledTimes(2);
+	});
+
+	it("does not keep a shared answer past its own window", async () => {
+		const run = vi.fn().mockResolvedValue({ ...present, at: Date.now() - 55_000 });
+
+		await rememberGuildProbe("200000000000000002", run);
+		vi.advanceTimersByTime(6_000);
+		await rememberGuildProbe("200000000000000002", run);
+
+		expect(run).toHaveBeenCalledTimes(2);
+	});
+
+	it("does not keep a probe that fell back to the stored entry", async () => {
+		const run = vi.fn().mockResolvedValue(fallback);
+
+		await rememberGuildProbe("200000000000000003", run);
+		await rememberGuildProbe("200000000000000003", run);
+
+		expect(run).toHaveBeenCalledTimes(2);
+	});
+
+	it("does not keep a probe that an invalidation overtook", async () => {
+		const at = Date.now();
+		let finish: (probe: GuildProbe) => void = () => {};
+		const slow = new Promise<GuildProbe>((resolve) => {
+			finish = resolve;
+		});
+		const stale = rememberGuildProbe("200000000000000005", () => slow);
+
+		vi.advanceTimersByTime(100);
+		await invalidateGuildCache("200000000000000005");
+		finish({ at, confirmedAbsent: true, guild: null, live: true });
+		await stale;
+
+		const run = vi.fn().mockResolvedValue({ ...present, at: Date.now() });
+		await rememberGuildProbe("200000000000000005", run);
+		expect(run).toHaveBeenCalledOnce();
+	});
+
+	it("keeps a probe asked for in the same millisecond as the invalidation before it", async () => {
+		await invalidateGuildCache("200000000000000006");
+		const run = vi.fn().mockResolvedValue({ ...present, at: Date.now() });
+
+		await rememberGuildProbe("200000000000000006", run);
+		await rememberGuildProbe("200000000000000006", run);
+
+		expect(run).toHaveBeenCalledOnce();
+	});
+
+	it("forgets what it found when the guild cache is invalidated", async () => {
+		const run = vi.fn().mockResolvedValue({ ...present, at: Date.now() });
+
+		await rememberGuildProbe("200000000000000004", run);
+		await invalidateGuildCache("200000000000000004");
+		await rememberGuildProbe("200000000000000004", run);
 
 		expect(run).toHaveBeenCalledTimes(2);
 	});

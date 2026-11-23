@@ -23,9 +23,12 @@ import {
 import { accessSubject } from "#server/utils/dashboard-access";
 import { hasAdminPermissions } from "#server/utils/discord/admin";
 import {
+	buildGuildProbeKey,
 	CURRENT_USER_CACHE_NAME,
 	GUILD_CACHE_NAME,
+	GUILD_PROBE_TTL_MS,
 	invalidateGuildCache,
+	isGuildProbeInvalidated,
 	rememberGuildProbe,
 	removePersistedGuild,
 	shouldRefreshCurrentUserCache,
@@ -35,6 +38,7 @@ import {
 	fetchCurrentUserAndGuildsWithRetry,
 	fetchGuildMemberWithRetry,
 } from "#server/utils/discord/oauth";
+import { readSharedCache, usesSharedCache, writeSharedCache } from "#server/utils/shared-cache";
 import { PermissionsBits } from "#shared/utils/bits";
 import { resolveAccess } from "#shared/utils/dashboard-access";
 import { hours } from "#shared/utils/times";
@@ -440,17 +444,31 @@ export const getGuild = defineCachedFunction(
  * Live-probes bot guild membership. Returns `confirmedAbsent: true` only when
  * Discord responds 404 (bot not in guild), and then drops the stored
  * `getGuild` entry. On transient probe failures, falls back to that entry so
- * a valid cache is not discarded. A live answer is shared for a few seconds
- * (`rememberGuildProbe()`).
+ * a valid cache is not discarded. A live answer is shared for a minute
+ * (`rememberGuildProbe()`), and on Workers, where each isolate's memory is
+ * shared by few requests, through the `cache` storage too.
  */
 function probeBotGuildMembership(guildId: string): Promise<GuildProbe> {
 	return rememberGuildProbe(guildId, async () => {
+		const shared = await readSharedGuildProbe(guildId);
+		if (shared !== null) return shared;
+
 		try {
+			// The answer is dated from when it was asked for, so a refresh made while
+			// the request was out counts as newer than it.
+			const at = Date.now();
 			const guild = await fetchBotGuildFromDiscord(guildId);
 			if (guild === null) {
 				await removePersistedGuild(guildId);
 			}
-			return { confirmedAbsent: guild === null, guild, live: true };
+			if (usesSharedCache() && !isGuildProbeInvalidated(guildId, at)) {
+				writeSharedCache(
+					buildGuildProbeKey(guildId),
+					{ at, value: guild },
+					GUILD_PROBE_TTL_MS,
+				);
+			}
+			return { at, confirmedAbsent: guild === null, guild, live: true };
 		} catch (error) {
 			console.warn(
 				`[discord] Live guild probe failed for ${guildId}, falling back to cache`,
@@ -462,6 +480,17 @@ function probeBotGuildMembership(guildId: string): Promise<GuildProbe> {
 			return { confirmedAbsent: false, guild, live: false };
 		}
 	});
+}
+
+/** The live probe another isolate of the Worker made within its window. */
+async function readSharedGuildProbe(guildId: string): Promise<GuildProbe | null> {
+	if (!usesSharedCache()) return null;
+	const entry = await readSharedCache<APIGuild | null>(
+		buildGuildProbeKey(guildId),
+		GUILD_PROBE_TTL_MS,
+	);
+	if (entry === null || isGuildProbeInvalidated(guildId, entry.at)) return null;
+	return { at: entry.at, confirmedAbsent: entry.value === null, guild: entry.value, live: true };
 }
 
 export async function resolveGuildForRequest(event: H3Event, guildId: string) {

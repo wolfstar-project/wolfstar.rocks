@@ -49,7 +49,7 @@
 		"test:perf:prebuilt": "LH_PERF=1 ./scripts/lighthouse.sh",
 		"test:unit": "TEST=1 vp test --project unit",
 		"tolgee:ensure-languages": "node scripts/tolgee-ensure-languages.mjs",
-		"tolgee:pull": "tolgee pull && node scripts/tolgee-pull-remap.ts",
+		"tolgee:pull": "tolgee pull && node scripts/tolgee-pull-remap.ts && node scripts/compare-translations.ts --fix",
 		"tolgee:push": "node scripts/tolgee-push-prepare.ts && tolgee push",
 		"typecheck": "stale-dep && nuxt typecheck"
 	},

@@ -64,7 +64,10 @@ export default defineNitroPlugin((nitroApp) => {
 	nitroApp.hooks.hook("request", (event) => {
 		const url = hyperdriveConnectionString(event.context.cloudflare);
 		if (url === undefined) return;
-		const database = createDatabase(url, 0);
+		// No check of the contract against the database: on a client per request it
+		// would add three round trips to each one. `contract-pin.spec.ts` holds the
+		// contract to the one the bot migrated the database to instead.
+		const database = createDatabase(url, { idleTimeoutMillis: 0, verifyMarker: false });
 		event.context.database = database;
 
 		// The audit drain finds the client by the ID evlog gives the request

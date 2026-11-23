@@ -13,7 +13,11 @@ import { runtime } from "std-env";
  * (wolfstar-project/wolfstar, V7): the same contract, the typed-JSON extension
  * for the columns that hold structured values, and the lint middleware.
  */
-export function createDatabase(url: string | undefined, idleTimeoutMillis?: number) {
+export function createDatabase(
+	url: string | undefined,
+	options: { idleTimeoutMillis?: number; verifyMarker?: false } = {},
+) {
+	const { idleTimeoutMillis, verifyMarker } = options;
 	return postgres<Contract>({
 		// `undefined`, never `""`: the factory connects lazily and accepts a missing
 		// URL (it only throws once a query needs a connection), but it rejects an
@@ -25,6 +29,10 @@ export function createDatabase(url: string | undefined, idleTimeoutMillis?: numb
 		// Refuses a `DELETE` or an `UPDATE` without a `WHERE` before it reaches the database:
 		middleware: [lints()],
 		...(idleTimeoutMillis === undefined ? {} : { poolOptions: { idleTimeoutMillis } }),
+		// By default the first query of a client waits for three others that check the database
+		// against the contract (`information_schema.tables`, `information_schema.columns` and
+		// `prisma_contract.marker`). A client per request pays them on every request:
+		...(verifyMarker === undefined ? {} : { verifyMarker }),
 	});
 }
 

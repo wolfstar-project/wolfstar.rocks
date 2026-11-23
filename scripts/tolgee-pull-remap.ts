@@ -2,6 +2,11 @@
  * Remap Tolgee pull output (short language tags) into Nuxt locale directories.
  *
  * Reads i18n/.tolgee-pull/{tag}/{namespace}.json → i18n/locales/{nuxtLocale}/{namespace}.json
+ *
+ * The source locale (`en`, and its `en-US` mirror) is push-only: the repository
+ * is its source of truth and the platform copy lags behind until the next push,
+ * so a pull never writes it. Run `scripts/compare-translations.ts --fix` after
+ * this script to reshape every other locale onto the source key set.
  */
 import {
 	existsSync,
@@ -14,6 +19,7 @@ import {
 } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
+import { REFERENCE_LOCALE } from "./utils/i18n-locale-files.ts";
 import { normalizeTolgeeDictionary, withLocaleSchemaPointer } from "./utils/tolgee-dictionary.ts";
 import { planPullNamespaces } from "./utils/tolgee-namespaces.ts";
 
@@ -94,7 +100,9 @@ const mirrors: Record<string, string> = { en: "en-US", es: "es-ES" };
 const writes: { dest: string; content: Buffer }[] = [];
 for (const tag of mappedTags) {
 	const localDir = config.tolgeeToLocal[tag];
-	if (!localDir) continue;
+	// The source locale is validated above with the others but never written:
+	// overwriting it with the platform's older copy would revert new keys.
+	if (!localDir || localDir === REFERENCE_LOCALE) continue;
 	for (const ns of namespaces) {
 		let content: Buffer;
 		try {
@@ -189,4 +197,6 @@ for (const backup of backups.values()) {
 }
 
 rmSync(pullRoot, { recursive: true, force: true });
-console.log(`Remapped ${writes.length} locale files into i18n/locales/`);
+console.log(
+	`Remapped ${writes.length} locale files into i18n/locales/ (source locale ${REFERENCE_LOCALE} left untouched)`,
+);

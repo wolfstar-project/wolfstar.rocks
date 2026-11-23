@@ -40,21 +40,28 @@ function createSql(rows: Partial<Record<TableName, Row>>) {
 		},
 	);
 	const fns = { eq: (left: unknown, right: unknown) => ({ left, right }) };
-	const queries: { joins: number; selects: Map<string, string> }[] = [];
+	interface RecordedQuery {
+		joins: unknown[];
+		selects: Map<string, string>;
+		where: unknown;
+	}
+	const queries: RecordedQuery[] = [];
 
 	const builder = () => {
-		const query = { joins: 0, selects: new Map<string, string>() };
+		const query: RecordedQuery = { joins: [], selects: new Map<string, string>(), where: null };
 		const chain = {
 			outerLeftJoin(_other: unknown, on: (f: unknown, o: typeof fns) => unknown) {
-				on(fields, fns);
-				query.joins += 1;
+				query.joins.push(on(fields, fns));
 				return chain;
 			},
 			select(alias: string, pick: (f: unknown) => string) {
 				query.selects.set(alias, pick(fields));
 				return chain;
 			},
-			where: () => chain,
+			where(predicate: (f: unknown, o: typeof fns) => unknown) {
+				query.where = predicate(fields, fns);
+				return chain;
+			},
 			limit: () => chain,
 			build() {
 				queries.push(query);
@@ -124,7 +131,12 @@ describe("fetchGuildData", () => {
 		const { db, query, queries } = createOrm({ Guild: { id: BigInt(GUILD_ID) } });
 		await fetchGuildData(db, GUILD_ID);
 		expect(query).toHaveBeenCalledOnce();
-		expect(queries[0]?.joins).toBe(Tables.length - 1);
+		const tableName = (name: TableName) =>
+			contractJson.domain.namespaces.public.models[name].storage.table;
+		expect(queries[0]?.joins).toStrictEqual(
+			Tables.slice(1).map((name) => ({ left: "Guild.id", right: `${tableName(name)}.id` })),
+		);
+		expect(queries[0]?.where).toStrictEqual({ left: "Guild.id", right: BigInt(GUILD_ID) });
 	});
 
 	it("flattens the tables into GuildData and converts BIGINT to strings", async () => {

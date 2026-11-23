@@ -35,6 +35,8 @@ describe("tolgee-pull-remap", () => {
 		cwd = mkdtempSync(join(tmpdir(), "tolgee-remap-"));
 		writeJson(join(cwd, "i18n/locales/en/errors.json"), SENTINEL);
 		writeJson(join(cwd, "i18n/locales/en/common.json"), SENTINEL);
+		writeJson(join(cwd, "i18n/locales/it-IT/errors.json"), SENTINEL);
+		writeJson(join(cwd, "i18n/locales/it-IT/common.json"), SENTINEL);
 	});
 
 	afterEach(() => {
@@ -42,15 +44,46 @@ describe("tolgee-pull-remap", () => {
 	});
 
 	it("remaps pulled namespaces and leaves unpushed ones untouched", () => {
-		stagePull("en", ["common", "auth", "dashboard", "guilds", "profile", "components"]);
+		stagePull("it", ["common", "auth", "dashboard", "guilds", "profile", "components"]);
 
 		const result = runRemap();
 
 		expect(result.status).toBe(0);
-		expect(readFileSync(join(cwd, "i18n/locales/en/errors.json"), "utf8")).toBe(SENTINEL);
-		expect(readFileSync(join(cwd, "i18n/locales/en/common.json"), "utf8")).toContain(
+		expect(readFileSync(join(cwd, "i18n/locales/it-IT/errors.json"), "utf8")).toBe(SENTINEL);
+		expect(readFileSync(join(cwd, "i18n/locales/it-IT/common.json"), "utf8")).toContain(
 			"translated",
 		);
+	});
+
+	it("never overwrites the source locale or its en-US mirror", () => {
+		writeJson(join(cwd, "i18n/locales/en-US/common.json"), SENTINEL);
+		const namespaces = ["common", "auth", "dashboard", "guilds", "profile", "components"];
+		stagePull("en", namespaces);
+		stagePull("it", namespaces);
+
+		const result = runRemap();
+
+		expect(result.status).toBe(0);
+		expect(readFileSync(join(cwd, "i18n/locales/en/common.json"), "utf8")).toBe(SENTINEL);
+		expect(readFileSync(join(cwd, "i18n/locales/en-US/common.json"), "utf8")).toBe(SENTINEL);
+		expect(existsSync(join(cwd, "i18n/locales/en/auth.json"))).toBe(false);
+		expect(readFileSync(join(cwd, "i18n/locales/it-IT/common.json"), "utf8")).toContain(
+			"translated",
+		);
+	});
+
+	it("fails and writes nothing when the source locale export is malformed", () => {
+		const namespaces = ["common", "auth", "dashboard", "guilds", "profile", "components"];
+		stagePull("en", namespaces);
+		stagePull("it", namespaces);
+		writeJson(join(cwd, "i18n/.tolgee-pull/en/auth.json"), "{ not json");
+
+		const result = runRemap();
+
+		expect(result.status).toBe(1);
+		expect(result.stderr).toContain("en/auth.json");
+		expect(readFileSync(join(cwd, "i18n/locales/it-IT/common.json"), "utf8")).toBe(SENTINEL);
+		expect(existsSync(join(cwd, "i18n/.tolgee-pull/en/auth.json"))).toBe(true);
 	});
 
 	it("fails and writes nothing when an active namespace is missing from a language", () => {
@@ -61,8 +94,8 @@ describe("tolgee-pull-remap", () => {
 
 		expect(result.status).toBe(1);
 		expect(result.stderr).toContain("it/components.json");
-		expect(readFileSync(join(cwd, "i18n/locales/en/common.json"), "utf8")).toBe(SENTINEL);
-		expect(existsSync(join(cwd, "i18n/locales/it"))).toBe(false);
+		expect(readFileSync(join(cwd, "i18n/locales/it-IT/common.json"), "utf8")).toBe(SENTINEL);
+		expect(existsSync(join(cwd, "i18n/locales/it-IT/auth.json"))).toBe(false);
 	});
 
 	it("fails and writes nothing when a language was pulled with no namespaces", () => {

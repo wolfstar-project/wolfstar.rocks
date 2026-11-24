@@ -1,5 +1,6 @@
 import { createCipheriv, randomBytes } from "node:crypto";
 import { createError } from "evlog";
+import { useRuntimeConfig } from "nuxt/server";
 import { $fetch as ofetch } from "ofetch";
 import { instrumentBotApiCall } from "~~/server/utils/sentry/metrics";
 

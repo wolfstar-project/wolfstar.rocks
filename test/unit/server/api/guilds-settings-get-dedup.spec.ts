@@ -88,3 +88,29 @@ describe("settings.get - readSettings deduplication", () => {
 		expect(result).toBe(expected);
 	});
 });
+
+// Mock the explicit server imports at the same boundaries as the former globals.
+vi.mock("#server/utils/wrappedEventHandler", () => ({
+	defineWrappedResponseHandler: (...args: unknown[]) =>
+		(
+			Reflect.get(globalThis, "defineWrappedResponseHandler") as (
+				...args: unknown[]
+			) => unknown
+		)(...args),
+}));
+vi.mock("#server/utils/shared", () => ({
+	getGuildParam: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "getGuildParam") as (...args: unknown[]) => unknown)(...args),
+}));
+vi.mock("#server/utils/discord/index", () => ({
+	getGuild: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "getGuild") as (...args: unknown[]) => unknown)(...args),
+	resolveGuildForRequest: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "resolveGuildForRequest") as (...args: unknown[]) => unknown)(
+			...args,
+		),
+	getCurrentMember: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "getCurrentMember") as (...args: unknown[]) => unknown)(...args),
+	canManage: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "canManage") as (...args: unknown[]) => unknown)(...args),
+}));

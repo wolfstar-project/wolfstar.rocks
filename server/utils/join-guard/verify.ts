@@ -8,7 +8,7 @@ import type {
 	JoinGuardVerifyState,
 } from "#shared/utils/join-guard";
 import type { APIConnection, APIUser, Snowflake } from "discord-api-types/v10";
-import type { H3Event } from "h3";
+import type { H3Event } from "nitro/h3";
 import { db } from "#server/database/prisma";
 import { readFreshSettings } from "#server/database/settings/functions";
 import {
@@ -30,7 +30,7 @@ import { useApi } from "#server/utils/shared";
 import { guildIconURL } from "#shared/utils/discord";
 import { JoinGuardConnectionsScope, JoinGuardMinimumTrustLevels } from "#shared/utils/join-guard";
 import { REST } from "@discordjs/rest";
-import { createError as createH3Error } from "h3";
+import { createError as createH3Error } from "nuxt/server";
 
 /** Why the verification page refuses to let a member pass, to answer with. */
 export type JoinGuardVerifyErrorCode =

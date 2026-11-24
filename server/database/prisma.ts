@@ -2,7 +2,8 @@ import type { Contract, Models } from "#server/database/generated/prisma/contrac
 import contractJson from "#server/database/generated/prisma/contract.json" with { type: "json" };
 import { lints } from "@prisma/orm-postgres/family-runtime";
 import postgres from "@prisma/orm-postgres/runtime";
-import { useEvent } from "nitropack/runtime";
+import { useRequest } from "nitro/context";
+import { H3Event } from "nitro/h3";
 import { typedRuntimeDescriptor } from "prisma-orm-extension-typed-json/runtime";
 import { runtime } from "std-env";
 
@@ -49,11 +50,11 @@ declare module "h3" {
  * Cloudflare Workers refuse I/O across requests: a connection opened while
  * serving one request cannot be used by the next. There each request gets its
  * own client, which `server/plugins/database.ts` makes from the Hyperdrive
- * binding and keeps on the event, and which `useEvent()` finds here through
+ * binding and keeps on the event, and which `useRequest()` finds here through
  * Nitro's async context.
  */
 function requestDatabase(): Database {
-	const { database } = useEvent().context;
+	const { database } = new H3Event(useRequest()).context;
 	if (!database) {
 		throw new Error(
 			"[database] the request has no database client: it carries no Hyperdrive binding, as a request made with the global $fetch does not (use event.$fetch)",

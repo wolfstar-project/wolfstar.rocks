@@ -22,7 +22,7 @@ describe("parseTracesSampleRate", () => {
 	});
 
 	async function loadParser() {
-		const { parseTracesSampleRate } = await import("#server/utils/runtimeConfig");
+		const { parseTracesSampleRate } = await import("../../../config/runtime");
 		return parseTracesSampleRate;
 	}
 
@@ -85,19 +85,19 @@ describe("generateRuntimeConfig sentry sampling", () => {
 
 	it("reads the documented variable into public.sentry.tracesSampleRate", async () => {
 		vi.stubEnv("NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE", "0.5");
-		const { generateRuntimeConfig } = await import("#server/utils/runtimeConfig");
+		const { generateRuntimeConfig } = await import("../../../config/runtime");
 		expect(generateRuntimeConfig().public.sentry.tracesSampleRate).toBe(0.5);
 	});
 
 	it("honors an explicit zero rate", async () => {
 		vi.stubEnv("NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE", "0");
-		const { generateRuntimeConfig } = await import("#server/utils/runtimeConfig");
+		const { generateRuntimeConfig } = await import("../../../config/runtime");
 		expect(generateRuntimeConfig().public.sentry.tracesSampleRate).toBe(0);
 	});
 
 	it("uses the default when the variable is unset", async () => {
 		vi.stubEnv("NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE", undefined);
-		const { generateRuntimeConfig } = await import("#server/utils/runtimeConfig");
+		const { generateRuntimeConfig } = await import("../../../config/runtime");
 		expect(generateRuntimeConfig().public.sentry.tracesSampleRate).toBe(0.2);
 	});
 });

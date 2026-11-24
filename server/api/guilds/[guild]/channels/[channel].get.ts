@@ -1,5 +1,22 @@
+import type { H3Event } from "nitro/h3";
+import { getGuild, getCurrentMember, canManage } from "#server/utils/discord/index";
+import { getGuildParam } from "#server/utils/shared";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { createError, useLogger } from "evlog";
+import { getRouterParam } from "nuxt/server";
+import { serverFetch } from "nuxt/server";
+
+// `serverFetch` forwards the caller's `cookie` and `authorization` headers by
+// default, so the channels route checks the same member. `json()` is typed
+// with that route's response.
+async function fetchGuildChannels(event: H3Event, guildId: string) {
+	const response = await serverFetch(event, `/api/guilds/${guildId}/channels`);
+	if (!response.ok) {
+		throw new Error(`The channels route answered ${response.status}`);
+	}
+	return response.json();
+}
 
 export default defineWrappedResponseHandler(
 	async (event) => {
@@ -34,12 +51,8 @@ export default defineWrappedResponseHandler(
 		}
 		log.set({ channel: { id: channelId } });
 
-		const channels = await $fetch<ReturnType<typeof flattenGuildChannel>[]>(
-			`/api/guilds/${guildId}/channels`,
-			{
-				headers: event.headers,
-			},
-		).catch((error) => {
+		// In process: Nitro v3 gives server code no global `$fetch`.
+		const channels = await fetchGuildChannels(event, guildId).catch((error) => {
 			log.error(error);
 			throw createError({
 				message: "Failed to fetch channels",
@@ -49,7 +62,7 @@ export default defineWrappedResponseHandler(
 			});
 		});
 
-		const channel = channels.find((channel: any) => channel.id === channelId) ?? null;
+		const channel = channels.find((channel) => channel.id === channelId) ?? null;
 
 		if (isNullOrUndefined(channel)) {
 			throw createError({

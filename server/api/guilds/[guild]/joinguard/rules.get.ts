@@ -2,6 +2,7 @@ import type { JoinGuardRulesResponse } from "#shared/utils/join-guard";
 import { useManagedGuild } from "#server/utils/guilds/manager";
 import { authorizeJoinGuardManager } from "#server/utils/join-guard/route";
 import { readJoinGuardRules } from "#server/utils/join-guard/rules";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 
 /** `GET /api/guilds/:guild/joinguard/rules`: the rules of the join guard of a guild, oldest first. */
 export default defineWrappedResponseHandler(

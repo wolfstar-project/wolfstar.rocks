@@ -1,3 +1,4 @@
+import { createMemoryStorage, defineCachedFunction } from "ocache";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const { mockRemoveItem } = vi.hoisted(() => {
@@ -15,6 +16,32 @@ import {
 	rememberGuildProbe,
 } from "#server/utils/discord/cache";
 
+/**
+ * The key a cached function of Nitro v3 (group `nitro/functions`) stores its
+ * entry under, read back from a real ocache store rather than spelled out.
+ */
+async function storedKey(name: string, key: string): Promise<string> {
+	const storage = createMemoryStorage();
+	const keys: string[] = [];
+	const cached = defineCachedFunction(async () => "value", {
+		name,
+		group: "nitro/functions",
+		getKey: () => key,
+		maxAge: 60,
+		storage: {
+			get: (entryKey) => storage.get(entryKey),
+			set: (entryKey, value, options) => {
+				keys.push(entryKey);
+				return storage.set(entryKey, value, options);
+			},
+		},
+	});
+	await cached();
+	const [stored] = keys;
+	if (stored === undefined) throw new Error("ocache stored no entry");
+	return stored;
+}
+
 describe("invalidateCurrentUserCache", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
@@ -24,7 +51,7 @@ describe("invalidateCurrentUserCache", () => {
 		await invalidateCurrentUserCache("123456789012345678");
 
 		expect(mockRemoveItem).toHaveBeenCalledWith(
-			"/cache:nitro/functions:getCurrentUser:123456789012345678.json",
+			await storedKey("getCurrentUser", "123456789012345678"),
 		);
 	});
 });
@@ -38,7 +65,7 @@ describe("invalidateGuildCache", () => {
 		await invalidateGuildCache("123456789012345678");
 
 		expect(mockRemoveItem).toHaveBeenCalledWith(
-			"/cache:nitro/functions:getGuild:guild:123456789012345678.json",
+			await storedKey("getGuild", "guild:123456789012345678"),
 		);
 	});
 
@@ -188,3 +215,9 @@ describe("rememberGuildProbe on Cloudflare Workers", () => {
 		expect(run).toHaveBeenCalledTimes(2);
 	});
 });
+
+// Mock the explicit server imports at the same boundaries as the former globals.
+vi.mock("nitro/kv", () => ({
+	useKV: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "useStorage") as (...args: unknown[]) => unknown)(...args),
+}));

@@ -1,3 +1,7 @@
+import { useRequest } from "nitro/context";
+import { H3Event } from "nitro/h3";
+import { useKV as useStorage } from "nitro/kv";
+
 /**
  * A value kept in the `cache` storage for every isolate of the Worker to read,
  * with the time it was taken from its source. Its reader decides from that
@@ -65,7 +69,7 @@ export function writeSharedCache<T>(key: string, entry: SharedCacheEntry<T>, max
 
 function keepAlive(promise: Promise<unknown>) {
 	try {
-		useEvent().waitUntil?.(promise);
+		new H3Event(useRequest()).waitUntil(promise);
 	} catch {
 		// Outside a request (or a unit test) there is no event to keep it alive:
 		// the write runs on its own.

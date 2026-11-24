@@ -5,6 +5,8 @@ import {
 } from "#server/utils/automod/route";
 import { deleteAutoModerationRule } from "#server/utils/automod/rules";
 import { useManagedGuild } from "#server/utils/guilds/manager";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
+import { getRouterParam, setResponseStatus } from "nuxt/server";
 
 /** `DELETE /api/guilds/:guild/automod/rules/:rule`: deletes a rule. */
 export default defineWrappedResponseHandler(

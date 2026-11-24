@@ -9,6 +9,7 @@ const config: KnipConfig = {
 				"service-worker/sw.ts",
 				/** Loaded by path on a Worker: Nitro's `plugins` and `modules/cache.ts` */
 				"server/cloudflare/sentry.ts",
+				"server/early-plugins/*.ts",
 				"shared/utils/storage/cloudflare-kv-fallback.ts",
 				"taze.config.ts",
 				"modules/**/*.ts",
@@ -31,6 +32,9 @@ const config: KnipConfig = {
 				"server/auth.config.ts",
 				/** Ambient H3EventContext augmentation, never imported directly */
 				"shared/types/auth.d.ts",
+				/** Nuxt 5 declares the server auto-imports here; knip's Nuxt plugin still
+				 * reads only Nuxt 4's `.nuxt/types/nitro-imports.d.ts`. */
+				".nuxt/types/server-imports.d.ts",
 			],
 			project: [
 				/** css/mdx/prisma are handled by registered compilers, so include them here */
@@ -54,6 +58,14 @@ const config: KnipConfig = {
 			// parts and variants this app does not use yet.
 			ignore: ["vendor/**", "app/components/ui/**"],
 			ignoreDependencies: [
+				/** Nuxt 4.7 no longer installs DevTools; `devtools.enabled` in nuxt.config.ts loads it */
+				"@nuxt/devtools",
+				/** Nuxt's Nitro v3 integration, which `.nuxt/types/server-imports.d.ts` names */
+				"@nuxt/nitro-v3-server",
+				/** Modules whose server auto-imports `.nuxt/types/server-imports.d.ts` names */
+				"@nuxtjs/mdc",
+				"@nuxtjs/sitemap",
+				"nuxt-ai-ready",
 				"@iconify-json/*",
 				"@commitlint/cli",
 				"puppeteer",
@@ -81,7 +93,6 @@ const config: KnipConfig = {
 
 				/** Used in the app but not imported directly */
 				"@nuxt/icon",
-				"nuxt-security",
 
 				/** Used in the test */
 				"axe-core",

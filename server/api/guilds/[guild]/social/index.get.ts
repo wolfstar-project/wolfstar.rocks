@@ -5,6 +5,7 @@ import {
 	unwrapSocialResult,
 } from "#server/utils/social/route";
 import { readSocialState } from "#server/utils/social/staryl";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 
 /**
  * `GET /api/guilds/:guild/social`: the Social module of a server, as Staryl

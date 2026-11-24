@@ -9,6 +9,8 @@ import {
 	type ApplicationProfile,
 } from "#server/utils/announcements";
 import { runtimeConfig } from "#server/utils/runtimeConfig";
+import { useApi } from "#server/utils/shared";
+import { defineWrappedCachedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { useLogger } from "evlog";
 
 /**

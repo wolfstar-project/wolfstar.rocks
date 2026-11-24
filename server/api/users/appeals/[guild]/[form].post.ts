@@ -1,4 +1,5 @@
 import { botApiFetch } from "#server/utils/bot-api/session";
+import { getCurrentUser } from "#server/utils/discord/index";
 import { auditAppealDenied, auditAppealSent } from "#server/utils/my-appeals/audit";
 import {
 	parseAppealSubmission,
@@ -7,6 +8,8 @@ import {
 	throwBotRefusal,
 	throwInvalidAppealSubmission,
 } from "#server/utils/my-appeals/route";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
+import { readBody, setResponseStatus } from "nuxt/server";
 
 /**
  * `POST /api/users/appeals/:guild/:form`: sends the member's appeal of a case

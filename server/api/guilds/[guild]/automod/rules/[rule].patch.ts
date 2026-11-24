@@ -10,7 +10,9 @@ import {
 import { updateAutoModerationRule } from "#server/utils/automod/rules";
 import { parseAutoModerationRulePatch } from "#server/utils/automod/validation";
 import { useManagedGuild } from "#server/utils/guilds/manager";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { isSnowflake } from "#shared/utils/snowflake";
+import { getRouterParam, readBody } from "nuxt/server";
 
 /**
  * `PATCH /api/guilds/:guild/automod/rules/:rule`: edits a rule. The body has

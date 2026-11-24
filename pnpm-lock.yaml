@@ -59,7 +59,7 @@ overrides:
 
 patchedDependencies:
   '@i18n-micro/path-strategy@2.1.0': 55e3f259a3c3963862856707a3f1be9a6322036d103a205130eef9c19ff23bb1
-  '@nuxt/test-utils@4.4.0': fdaa57fe26afc4f4f08048e50c1500e9c931e9ce8f0fa78cca59690fb401b80c
+  '@nuxt/test-utils@4.4.0': 5c6e9381cfd89a37ff12c6ba5ac9e1c765a744791492fba99fe52730e86b06cc
   nuxt-i18n-micro@4.1.3: 3e15676c6a5a72d9dcdbb492f5a00fd2a3549c41dff8f1e74132e02d871be251
   nuxt-studio@1.8.2: 4277d31bab9ebc1bb1543793883aeffd5673c7595f2a33ecd30329e55dac11c9
   ocache@0.3.2: 912bde292109b09b0200244d7b1823ddd950e5215c69eec5f22c214692def278
@@ -270,7 +270,7 @@ importers:
         version: 1.1.5(@electric-sql/pglite@0.3.15)(@libsql/client@0.17.4)(@netlify/blobs@10.7.9)(@nuxt/schema@4.7.0)(@parcel/watcher@2.5.6)(@vitest/expect@4.1.11)(@voidzero-dev/vite-plus-core@0.3.3)(aws4fetch@1.0.20)(confbox@0.3.2)(db0@0.3.4)(dotenv@17.4.2)(drizzle-orm@0.41.0)(encoding@0.1.13)(esbuild@0.28.2)(giget@3.3.0)(ioredis@5.11.1)(jiti@2.7.0)(mlly@1.8.2)(mysql2@3.15.3)(rolldown@1.3.2)(rollup@4.68.8)(srvx@1.0.8)(supports-color@10.2.2)(typescript-native-bridge@6.0.3-bridge.19.tsgo.7.0.2)(vitest@4.1.11)(vue@3.5.46)(webpack@5.112.2)
       '@nuxt/test-utils':
         specifier: 4.4.0
-        version: 4.4.0(patch_hash=fdaa57fe26afc4f4f08048e50c1500e9c931e9ce8f0fa78cca59690fb401b80c)(@nuxt/schema@4.7.0)(@oxc-project/types@0.158.0)(@playwright/test@1.65.0)(@vitest/ui@4.1.11)(@voidzero-dev/vite-plus-core@0.3.3)(@vue/test-utils@2.5.1)(confbox@0.3.2)(dotenv@17.4.2)(esbuild@0.28.2)(giget@3.3.0)(h3@2.0.8)(jiti@2.7.0)(jsdom@31.0.1)(mlly@1.8.2)(nuxt@4.7.0)(oxc-parser@0.154.0)(playwright-core@1.65.0)(rolldown@1.3.2)(rollup@4.68.8)(vitest@4.1.11)(vue@3.5.46)(webpack@5.112.2)
+        version: 4.4.0(patch_hash=5c6e9381cfd89a37ff12c6ba5ac9e1c765a744791492fba99fe52730e86b06cc)(@nuxt/schema@4.7.0)(@oxc-project/types@0.158.0)(@playwright/test@1.65.0)(@vitest/ui@4.1.11)(@voidzero-dev/vite-plus-core@0.3.3)(@vue/test-utils@2.5.1)(confbox@0.3.2)(dotenv@17.4.2)(esbuild@0.28.2)(giget@3.3.0)(h3@2.0.8)(jiti@2.7.0)(jsdom@31.0.1)(mlly@1.8.2)(nuxt@4.7.0)(oxc-parser@0.154.0)(playwright-core@1.65.0)(rolldown@1.3.2)(rollup@4.68.8)(vitest@4.1.11)(vue@3.5.46)(webpack@5.112.2)
       '@sapphire/bitfield':
         specifier: 1.2.4
         version: 1.2.4
@@ -18329,7 +18329,7 @@ snapshots:
       rc9: 3.1.0
       std-env: 4.3.0
 
-  '@nuxt/test-utils@4.4.0(patch_hash=fdaa57fe26afc4f4f08048e50c1500e9c931e9ce8f0fa78cca59690fb401b80c)(@nuxt/schema@4.7.0)(@oxc-project/types@0.158.0)(@playwright/test@1.65.0)(@vitest/ui@4.1.11)(@voidzero-dev/vite-plus-core@0.3.3)(@vue/test-utils@2.5.1)(confbox@0.3.2)(dotenv@17.4.2)(esbuild@0.28.2)(giget@3.3.0)(h3@2.0.8)(jiti@2.7.0)(jsdom@31.0.1)(mlly@1.8.2)(nuxt@4.7.0)(oxc-parser@0.154.0)(playwright-core@1.65.0)(rolldown@1.3.2)(rollup@4.68.8)(vitest@4.1.11)(vue@3.5.46)(webpack@5.112.2)':
+  '@nuxt/test-utils@4.4.0(patch_hash=5c6e9381cfd89a37ff12c6ba5ac9e1c765a744791492fba99fe52730e86b06cc)(@nuxt/schema@4.7.0)(@oxc-project/types@0.158.0)(@playwright/test@1.65.0)(@vitest/ui@4.1.11)(@voidzero-dev/vite-plus-core@0.3.3)(@vue/test-utils@2.5.1)(confbox@0.3.2)(dotenv@17.4.2)(esbuild@0.28.2)(giget@3.3.0)(h3@2.0.8)(jiti@2.7.0)(jsdom@31.0.1)(mlly@1.8.2)(nuxt@4.7.0)(oxc-parser@0.154.0)(playwright-core@1.65.0)(rolldown@1.3.2)(rollup@4.68.8)(vitest@4.1.11)(vue@3.5.46)(webpack@5.112.2)':
     dependencies:
       '@clack/prompts': 1.8.1
       '@nuxt/devtools-kit': 3.4.4(@nuxt/schema@4.7.0)(@voidzero-dev/vite-plus-core@0.3.3)(confbox@0.3.2)(dotenv@17.4.2)(giget@3.3.0)(jiti@2.7.0)(magic-string@1.4.5)(mlly@1.8.2)(oxc-parser@0.154.0)(rolldown@1.3.2)(unplugin@3.7.0)
@@ -18714,7 +18714,7 @@ snapshots:
       ufo: 1.6.4
       zod: 4.6.7
     optionalDependencies:
-      '@nuxt/test-utils': 4.4.0(patch_hash=fdaa57fe26afc4f4f08048e50c1500e9c931e9ce8f0fa78cca59690fb401b80c)(@nuxt/schema@4.7.0)(@oxc-project/types@0.158.0)(@playwright/test@1.65.0)(@vitest/ui@4.1.11)(@voidzero-dev/vite-plus-core@0.3.3)(@vue/test-utils@2.5.1)(confbox@0.3.2)(dotenv@17.4.2)(esbuild@0.28.2)(giget@3.3.0)(h3@2.0.8)(jiti@2.7.0)(jsdom@31.0.1)(mlly@1.8.2)(nuxt@4.7.0)(oxc-parser@0.154.0)(playwright-core@1.65.0)(rolldown@1.3.2)(rollup@4.68.8)(vitest@4.1.11)(vue@3.5.46)(webpack@5.112.2)
+      '@nuxt/test-utils': 4.4.0(patch_hash=5c6e9381cfd89a37ff12c6ba5ac9e1c765a744791492fba99fe52730e86b06cc)(@nuxt/schema@4.7.0)(@oxc-project/types@0.158.0)(@playwright/test@1.65.0)(@vitest/ui@4.1.11)(@voidzero-dev/vite-plus-core@0.3.3)(@vue/test-utils@2.5.1)(confbox@0.3.2)(dotenv@17.4.2)(esbuild@0.28.2)(giget@3.3.0)(h3@2.0.8)(jiti@2.7.0)(jsdom@31.0.1)(mlly@1.8.2)(nuxt@4.7.0)(oxc-parser@0.154.0)(playwright-core@1.65.0)(rolldown@1.3.2)(rollup@4.68.8)(vitest@4.1.11)(vue@3.5.46)(webpack@5.112.2)
     transitivePeerDependencies:
       - '@nuxt/schema'
       - confbox
@@ -31418,7 +31418,7 @@ snapshots:
 
   vitest-environment-nuxt@2.0.0(@nuxt/schema@4.7.0)(@oxc-project/types@0.158.0)(@playwright/test@1.65.0)(@vitest/ui@4.1.11)(@voidzero-dev/vite-plus-core@0.3.3)(@vue/test-utils@2.5.1)(confbox@0.3.2)(dotenv@17.4.2)(esbuild@0.28.2)(giget@3.3.0)(h3@2.0.8)(jiti@2.7.0)(jsdom@31.0.1)(mlly@1.8.2)(nuxt@4.7.0)(oxc-parser@0.154.0)(playwright-core@1.65.0)(rolldown@1.3.2)(rollup@4.68.8)(vitest@4.1.11)(vue@3.5.46)(webpack@5.112.2):
     dependencies:
-      '@nuxt/test-utils': 4.4.0(patch_hash=fdaa57fe26afc4f4f08048e50c1500e9c931e9ce8f0fa78cca59690fb401b80c)(@nuxt/schema@4.7.0)(@oxc-project/types@0.158.0)(@playwright/test@1.65.0)(@vitest/ui@4.1.11)(@voidzero-dev/vite-plus-core@0.3.3)(@vue/test-utils@2.5.1)(confbox@0.3.2)(dotenv@17.4.2)(esbuild@0.28.2)(giget@3.3.0)(h3@2.0.8)(jiti@2.7.0)(jsdom@31.0.1)(mlly@1.8.2)(nuxt@4.7.0)(oxc-parser@0.154.0)(playwright-core@1.65.0)(rolldown@1.3.2)(rollup@4.68.8)(vitest@4.1.11)(vue@3.5.46)(webpack@5.112.2)
+      '@nuxt/test-utils': 4.4.0(patch_hash=5c6e9381cfd89a37ff12c6ba5ac9e1c765a744791492fba99fe52730e86b06cc)(@nuxt/schema@4.7.0)(@oxc-project/types@0.158.0)(@playwright/test@1.65.0)(@vitest/ui@4.1.11)(@voidzero-dev/vite-plus-core@0.3.3)(@vue/test-utils@2.5.1)(confbox@0.3.2)(dotenv@17.4.2)(esbuild@0.28.2)(giget@3.3.0)(h3@2.0.8)(jiti@2.7.0)(jsdom@31.0.1)(mlly@1.8.2)(nuxt@4.7.0)(oxc-parser@0.154.0)(playwright-core@1.65.0)(rolldown@1.3.2)(rollup@4.68.8)(vitest@4.1.11)(vue@3.5.46)(webpack@5.112.2)
     transitivePeerDependencies:
       - '@cucumber/cucumber'
       - '@farmfe/core'

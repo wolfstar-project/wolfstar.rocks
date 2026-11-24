@@ -2,20 +2,38 @@ import type { APIGuild } from "discord-api-types/v10";
 import type { H3Event } from "nitro/h3";
 import { useKV as useStorage } from "nitro/kv";
 import { getQuery } from "nuxt/server";
+import { resolveCacheKeys } from "ocache";
 
 export const CURRENT_USER_CACHE_NAME = "getCurrentUser";
 export const GUILD_CACHE_NAME = "getGuild";
 
-function buildCurrentUserCacheKey(userId: string): string {
-	return `/cache:nitro/functions:${CURRENT_USER_CACHE_NAME}:${userId}.json`;
+/**
+ * Nitro v3 stores a cached function's entries under keys that ocache builds
+ * from its group, its name and the key of the call (the group is escaped and
+ * hashed, so a key spelled by hand would miss the entry). The keys are read
+ * from ocache itself, as the storage of Nitro's `kv` cache driver holds them.
+ */
+const CACHED_FUNCTION_GROUP = "nitro/functions";
+
+async function cachedFunctionKeys(name: string, key: string): Promise<string[]> {
+	return resolveCacheKeys({ options: { group: CACHED_FUNCTION_GROUP, name, getKey: () => key } });
 }
 
-function buildGuildCacheKey(guildId: string): string {
-	return `/cache:nitro/functions:${GUILD_CACHE_NAME}:guild:${guildId}.json`;
+function currentUserCacheKeys(userId: string): Promise<string[]> {
+	return cachedFunctionKeys(CURRENT_USER_CACHE_NAME, userId);
+}
+
+function guildCacheKeys(guildId: string): Promise<string[]> {
+	return cachedFunctionKeys(GUILD_CACHE_NAME, `guild:${guildId}`);
+}
+
+async function removeKeys(keys: string[]): Promise<void> {
+	const storage = useStorage();
+	await Promise.all(keys.map((key) => storage.removeItem(key)));
 }
 
 export async function invalidateCurrentUserCache(userId: string): Promise<void> {
-	await useStorage().removeItem(buildCurrentUserCacheKey(userId));
+	await removeKeys(await currentUserCacheKeys(userId));
 }
 
 /**
@@ -40,7 +58,7 @@ export async function invalidateGuildCache(guildId: string): Promise<void> {
 
 /** Drops only the stored `getGuild` entry; a remembered probe stays. */
 export async function removePersistedGuild(guildId: string): Promise<void> {
-	await useStorage().removeItem(buildGuildCacheKey(guildId));
+	await removeKeys(await guildCacheKeys(guildId));
 }
 
 export interface GuildProbe {

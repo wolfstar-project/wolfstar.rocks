@@ -479,6 +479,13 @@ export default defineNuxtConfig({
 		rolldownConfig: {
 			external: process.env.NITRO_PRESET !== "node-server" ? ["pg-native"] : undefined,
 		},
+		// Cached functions keep their entries in the KV storage everywhere, as on
+		// Nitro v2: the Worker's `cache` mount is Workers KV, and elsewhere the
+		// entries sit in memory where `invalidateGuildCache()` and
+		// `invalidateCurrentUserCache()` (server/utils/discord/cache.ts) can still
+		// remove them. Without a `cache` mount Nitro v3 would pick its own memory
+		// store, which nothing outside the cached function can reach.
+		cache: { driver: "kv" },
 		kv: {
 			"fetch-cache": {
 				base: "./.cache/fetch",

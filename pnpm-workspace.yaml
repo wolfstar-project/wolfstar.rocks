@@ -60,7 +60,7 @@ minimumReleaseAgeExclude:
     - unhead
     - "@voidzero-dev/*"
     - vite-plus
-    - nitropack@2.13.6
+    - nitropack@2.13.6 || 2.14.0
     - unrouting@0.3.2
 
 overrides:
@@ -101,7 +101,12 @@ shellEmulator: true
 # level above its own file, but Nitro v3 bundles it deeper below `server/`, so
 # server-rendered pages showed raw keys. The patch walks up to the `public/`
 # that holds them.
+# @nuxt/test-utils: it picks the h3 of `registerEndpoint` from
+# `@nuxt/nitro-server`, Nitro v2's, but Nuxt 4.7 builds with Nitro v3 once the
+# app depends on `nitro`. The patch looks for `nitro` from the app first, so the
+# stubbed endpoints get h3 v2's event, as the server code does.
 patchedDependencies:
+    "@nuxt/test-utils@4.4.0": patches/@nuxt__test-utils@4.4.0.patch
     nuxt-studio@1.8.2: patches/nuxt-studio@1.8.2.patch
     "@i18n-micro/path-strategy@2.1.0": patches/@i18n-micro__path-strategy@2.1.0.patch
     nuxt-i18n-micro@4.1.3: patches/nuxt-i18n-micro@4.1.3.patch

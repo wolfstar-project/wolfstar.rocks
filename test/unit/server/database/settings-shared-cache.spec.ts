@@ -5,6 +5,11 @@ const { mockFetchGuildData, mockWriteGuildData } = vi.hoisted(() => ({
 	mockWriteGuildData: vi.fn(),
 }));
 
+// Mock the explicit server imports at the same boundaries as the former globals.
+vi.mock("nitro/kv", () => ({
+	useKV: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "useStorage") as (...args: unknown[]) => unknown)(...args),
+}));
 vi.mock("#server/database/prisma", () => ({ db: { orm: {} } }));
 vi.mock("#server/database/settings/storage", () => ({
 	fetchGuildData: mockFetchGuildData,

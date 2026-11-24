@@ -295,6 +295,10 @@ describe("the bot's membership probe on Cloudflare Workers", () => {
 });
 
 // Mock the explicit server imports at the same boundaries as the former globals.
+vi.mock("nitro/kv", () => ({
+	useKV: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "useStorage") as (...args: unknown[]) => unknown)(...args),
+}));
 vi.mock("nitro/cache", () => ({
 	defineCachedFunction: (...args: unknown[]) =>
 		(Reflect.get(globalThis, "defineCachedFunction") as (...args: unknown[]) => unknown)(

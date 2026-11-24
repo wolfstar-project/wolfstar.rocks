@@ -58,10 +58,10 @@ const config: KnipConfig = {
 			// parts and variants this app does not use yet.
 			ignore: ["vendor/**", "app/components/ui/**"],
 			ignoreDependencies: [
-				/** `nuxt` is an alias of the Nuxt 5 nightly, which knip resolves to these names */
-				"nuxt-nightly",
-				"@nuxt/schema-nightly",
-				"@nuxt/nitro-server-nightly",
+				/** Nuxt 4.7 no longer installs DevTools; `devtools.enabled` in nuxt.config.ts loads it */
+				"@nuxt/devtools",
+				/** Nuxt's Nitro v3 integration, which `.nuxt/types/server-imports.d.ts` names */
+				"@nuxt/nitro-v3-server",
 				/** Modules whose server auto-imports `.nuxt/types/server-imports.d.ts` names */
 				"@nuxtjs/mdc",
 				"@nuxtjs/sitemap",

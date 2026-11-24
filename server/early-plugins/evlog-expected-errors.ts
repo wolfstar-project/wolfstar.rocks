@@ -1,7 +1,7 @@
 import { EvlogError } from "evlog";
 import { definePlugin as defineNitroPlugin } from "nitro";
 import { type H3EventContext, getEventContext, isError } from "nitro/h3";
-import { NuxtError } from "nuxt/server";
+import { isNuxtError } from "nuxt/server";
 import { EXPECTED_HTTP_STATUSES } from "~~/server/utils/sentry/expected-errors";
 
 /**
@@ -16,9 +16,7 @@ import { EXPECTED_HTTP_STATUSES } from "~~/server/utils/sentry/expected-errors";
 function isRefusal(error: unknown): boolean {
 	if (!isError(error) || !EXPECTED_HTTP_STATUSES.has(error.statusCode)) return false;
 	return (
-		error.unhandled !== true ||
-		EvlogError.isEvlogError(error.cause) ||
-		error.cause instanceof NuxtError
+		error.unhandled !== true || EvlogError.isEvlogError(error.cause) || isNuxtError(error.cause)
 	);
 }
 

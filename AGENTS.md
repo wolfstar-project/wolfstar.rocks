@@ -78,6 +78,7 @@ Each line is a rule that has failed in production or fails silently. The linked 
 - **View Transitions.** OAuth pages and any page that redirects on mount set `definePageMeta({ viewTransition: false })`. Do not add a `view-transition-name` to a shared element without a per-page uniqueness audit. ([view-transitions](docs/arch/view-transitions.md))
 - **Color.** No hardcoded color literals in components, pages, or layouts. Theme-conditional CSS uses the `theme-light` and `theme-dark` variants, never a bare `[data-theme]` selector. Only one DaisyUI theme declares `default: true`. ([design-tokens](docs/arch/design-tokens.md))
 - **External modules.** Social is Staryl's: the dashboard reads and writes it through Staryl's API, never Staryl's database, and only from a server route. Staryl's secret acts for every server, so each of those routes takes an `authorize` hook built with `authorizeGuildManager()`. Its switch and its subscriptions are not keys of `GuildData`: never stage them, and never count them with `MODULE_SWITCH_KEYS`. ([external-modules](docs/arch/external-modules.md))
+- **Runtime config.** `runtimeConfig` is declared in `nuxt.config.ts`, and a key is set by the `NUXT_*` variable named after its path, at run time. Read it with `useRuntimeConfig()` inside the function that uses it; never at module scope, never from `process.env` in app or server code, and never through a module that re-exports it. ([nuxt-5](docs/arch/nuxt-5.md))
 - **Components.** No reactive state at module scope. Assign guild settings changes with `setGuildDataChange()`, never an `as any` cast. ([vue-components](docs/arch/vue-components.md))
 
 A forbidden-pattern test enforces the greppable subset of these traps in `test/unit/guardrails/forbidden-patterns.test.ts`. Add a rule there when a new trap can be matched by text.
@@ -214,7 +215,7 @@ Commit messages must follow Conventional Commits: `<type>(<scope>): <subject>`
 
 - Client source maps are hidden via `sourcemap.client: "hidden"` and uploaded to Sentry through `@sentry/nuxt`.
 - Keep `sentry.sourcemaps.filesToDeleteAfterUpload` in `nuxt.config.ts` whenever changing source-map or build-output behavior so uploaded `.map` files are removed from `.output/**/public` and hidden deploy output directories.
-- Sentry runtime configuration lives in `sentry.client.config.ts`, `sentry.server.config.ts`, and `server/utils/runtimeConfig.ts`; keep DSNs and sampling in runtime config, not hardcoded values.
+- Sentry runtime configuration lives in `sentry.client.config.ts`, `sentry.server.config.ts`, and `server/cloudflare/sentry.ts`; keep DSNs and sampling in runtime config (`public.sentry`), not hardcoded values, and read the sample rate through `parseTracesSampleRate()`.
 - `sentry.server.config.ts`'s `Sentry.init` `beforeSend` drops events for expected `createError()` HTTP statuses (400/401/403/404/409/429). It distinguishes deliberate application errors from h3-normalized upstream failures (e.g. an ofetch `FetchError` from the bot API) via h3's `unhandled` flag on the `__h3_error__`-marked exception — only `unhandled: false` (deliberate) errors are filtered, so unexpected upstream failures still reach Sentry.
 
 <!-- nuxt-skill-hub:start -->

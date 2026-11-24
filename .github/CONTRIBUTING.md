@@ -93,7 +93,8 @@ WolfStar.rocks is built for Discord server administrators and bot users who need
     Required variables:
     - `DATABASE_URL` - PostgreSQL connection string
     - `NUXT_OAUTH_DISCORD_CLIENT_ID` - Discord OAuth client ID
-    - `NUXT_OAUTH_DISCORD_CLIENT_SECRET` - Discord OAuth client secret
+    - `NUXT_DISCORD_CLIENT_SECRET` - Discord OAuth client secret
+    - `NUXT_DISCORD_BOT_TOKEN` - The bot's token, for reading guilds, roles and channels
     - `NUXT_BETTER_AUTH_SECRET` - Random 32+ character string
 
 4. Set up the database:

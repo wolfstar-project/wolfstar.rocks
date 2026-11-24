@@ -11,12 +11,18 @@ import {
 import { cookieControl } from "./config/cookie-control.ts";
 import { currentLocales, datetimeFormats, FALLBACK_LOCALE, numberFormats } from "./config/i18n.ts";
 import { pwa } from "./config/pwa.ts";
-import { generateRuntimeConfig } from "./config/runtime.ts";
 import { LOCALE_BUNDLES_DIR } from "./modules/i18n-locale-bundles.ts";
+import { DEFAULT_TRACES_SAMPLE_RATE } from "./shared/utils/sentry-sample-rate.ts";
 
 applyWorkerEnv();
 
-const runtimeConfig = generateRuntimeConfig();
+// Build options of the Sentry module: they upload the source maps, and never
+// reach the runtime config, so the token stays out of the server bundle.
+const sentryBuild = {
+	authToken: process.env.SENTRY_AUTH_TOKEN,
+	org: process.env.SENTRY_ORG,
+	project: process.env.SENTRY_PROJECT,
+};
 const isStorybook = process.env.STORYBOOK === "true" || process.env.VITEST_STORYBOOK === "true";
 // Opt-in: only the deploy workflows keep the assets of past deploys, in a store
 // they carry from one deploy to the next (see `skewProtection` below).
@@ -269,8 +275,76 @@ export default defineNuxtConfig({
 		failOnError: true,
 	},
 
-	// Runtime configuration
-	runtimeConfig,
+	// Runtime configuration. Every key is overridden at run time by the env var
+	// named after its path (`NUXT_` + the path in SCREAMING_SNAKE_CASE, with
+	// `public` included), on Node and on the Worker alike, so values are not read
+	// from `process.env` here. Only a key whose variable has another name reads
+	// it, and only as the default the build bakes in. Read the values with
+	// `useRuntimeConfig()` where they are used, never at module scope.
+	runtimeConfig: {
+		// The bridge to the bot's own API, which the member's appeals go through:
+		// the dashboard mints the session cookie the API reads, so the secret is
+		// the bot's `OAUTH_SECRET` and the name its `OAUTH_COOKIE`.
+		// `NUXT_BOT_API_OAUTH_SECRET`, `NUXT_BOT_API_OAUTH_COOKIE`.
+		botApiOauthSecret: "",
+		botApiOauthCookie: "WOLFSTAR_AUTH",
+		// Staryl's guild API, which holds the Social module: its root URL and the
+		// secret the two share, Staryl's `GUILD_API_SECRET`. Without either, the
+		// module's routes answer 503 and its page says so.
+		// `NUXT_STARYL_API_SECRET`, `NUXT_STARYL_API_URL`.
+		starylApiSecret: "",
+		starylApiUrl: "",
+		discord: {
+			// The channel of WolfStar's server whose posts the Home's WolfStar thread
+			// shows. `NUXT_DISCORD_ANNOUNCEMENTS_CHANNEL_ID`.
+			announcementsChannelId: "890648971712802906",
+			// Secrets: `NUXT_DISCORD_BOT_TOKEN`, `NUXT_DISCORD_CLIENT_SECRET`.
+			botToken: "",
+			clientSecret: "",
+			// Public: the deploy workflows and the beta Worker's `vars` name it
+			// `NUXT_OAUTH_DISCORD_CLIENT_ID`. `NUXT_DISCORD_CLIENT_ID` at run time.
+			clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID ?? "",
+		},
+		public: {
+			// `NUXT_PUBLIC_API_BASE_URL`.
+			apiBaseUrl: "",
+			// The same application id as `discord.clientId`. `NUXT_PUBLIC_CLIENT_ID`.
+			clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID ?? "",
+			// `NUXT_PUBLIC_ENVIRONMENT`, which the beta Worker sets to `beta`.
+			environment: process.env.NODE_ENV ?? "production",
+			// Declared so `NUXT_PUBLIC_SITE_URL` can override it at runtime: Nuxt only
+			// applies env overrides to keys that already exist in runtimeConfig.
+			// @nuxtjs/better-auth reads this first when resolving Better Auth's
+			// `baseURL`, which is what OAuth callback URLs are built from — without it
+			// the base URL is inferred per request and Discord callbacks drift between
+			// the apex domain, deploy previews, and platform-generated hostnames.
+			siteUrl: "",
+			// The public key of the Turnstile widget of the verification page
+			// (`/verify/<guild>`); empty when the site has no Turnstile set up.
+			// `NUXT_PUBLIC_TURNSTILE_SITE_KEY`.
+			turnstileSiteKey: "",
+			sentry: {
+				// `SENTRY_DSN` at build, `NUXT_PUBLIC_SENTRY_DSN` at run time.
+				dsn: process.env.SENTRY_DSN ?? "",
+				// `NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE`, from 0 to 1. Read it through
+				// `parseTracesSampleRate()`: an env override can be any value.
+				tracesSampleRate: DEFAULT_TRACES_SAMPLE_RATE,
+			},
+		},
+		// The secret the verification page checks a Turnstile token with
+		// (`siteverify`). Server only: it never reaches the client, nor a log.
+		// `NUXT_TURNSTILE_SECRET_KEY`.
+		turnstileSecretKey: "",
+		// Consumed by `server/auth.config.ts`. Cookie attributes are deliberately
+		// absent: Better Auth owns them, and forcing `sameSite: "strict"` would drop
+		// the OAuth state cookie on the cross-site redirect back from Discord.
+		session: {
+			maxAge: 60 * 60 * 24 * 7, // 1 week
+			// Must differ per deployment that shares a cookie domain.
+			// `NUXT_SESSION_COOKIE_NAME`.
+			cookieName: "wolfstar-session",
+		},
+	},
 
 	routeRules: {
 		// API routes — only cache public, non-authenticated proxy routes.
@@ -394,7 +468,7 @@ export default defineNuxtConfig({
 		// Only a build that uploads the maps to Sentry makes them: without a token
 		// the Sentry plugin is off, and with it the deletion of the maps after the
 		// upload, so they would be served with the site.
-		client: runtimeConfig.sentry.authToken ? "hidden" : false,
+		client: sentryBuild.authToken ? "hidden" : false,
 		// Rollup collapsing the server maps is the other half of the bundling time
 		// on Workers Builds, and nothing uploads them for the Worker.
 		server: !isCloudflareBuild,
@@ -839,7 +913,7 @@ export default defineNuxtConfig({
 	},
 
 	sentry: {
-		...runtimeConfig.sentry,
+		...sentryBuild,
 		// A Worker gets the Cloudflare SDK from `server/cloudflare/sentry.ts`, so
 		// the Node one is not imported into its entry.
 		autoInjectServerSentry: isCloudflareBuild ? undefined : "top-level-import",
@@ -850,7 +924,7 @@ export default defineNuxtConfig({
 			// Without a token nothing is uploaded, yet the plugins still regenerate
 			// every chunk's source map to inject debug ids: that was most of the
 			// server bundling time, enough to time out a Workers build.
-			disable: !runtimeConfig.sentry.authToken,
+			disable: !sentryBuild.authToken,
 			filesToDeleteAfterUpload: [".*/**/public/**/*.map", ".output/**/public/**/*.map"],
 		},
 	},

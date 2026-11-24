@@ -1,4 +1,5 @@
 import { SERVER_DATA_COLLECTION } from "#server/utils/sentry/data-collection";
+import { parseTracesSampleRate } from "#shared/utils/sentry-sample-rate";
 import { sentryCloudflareNitroPlugin } from "@sentry/nuxt/module/plugins";
 import { useRuntimeConfig } from "nuxt/server";
 import { dropExpectedHttpErrors } from "~~/server/utils/sentry/expected-errors";
@@ -17,6 +18,6 @@ export default sentryCloudflareNitroPlugin(() => {
 		environment,
 		// Same-origin API calls, as on Node.
 		tracePropagationTargets: [/^\/api\//],
-		tracesSampleRate: sentry.tracesSampleRate,
+		tracesSampleRate: parseTracesSampleRate(sentry.tracesSampleRate),
 	};
 });

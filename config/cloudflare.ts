@@ -278,9 +278,10 @@ export const DEPLOYED_WORKER =
 /**
  * Fills the env with the Worker's own `vars` on the Workers build, leaving any
  * value already set. The site's public values then come from one place, so the
- * prerendered pages and the Worker agree. Call it before the runtime config is
- * generated, which reads the env when `nuxt.config.ts` loads: a Nuxt module
- * would run too late.
+ * prerendered pages and the Worker agree. Call it before `runtimeConfig` is
+ * declared: its build-time defaults read the env when `nuxt.config.ts` loads,
+ * and the prerender applies the `NUXT_*` overrides from it. A Nuxt module would
+ * run too late.
  */
 export function applyWorkerEnv() {
 	if (!DEPLOYED_WORKER) return;

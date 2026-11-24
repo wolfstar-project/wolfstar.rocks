@@ -4,10 +4,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 /**
  * Sentry trace-sample-rate configuration (plan 007).
  *
- * One environment variable — NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE — is
- * checked AND read; the value must be a finite number in [0, 1]. Zero is a
- * valid explicit "no tracing" choice, so truthiness-based parsing must never
- * come back.
+ * One environment variable — NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE — overrides
+ * `public.sentry.tracesSampleRate` at run time, as whatever Nuxt parses it to,
+ * so the reader accepts numbers and strings alike; the value must be a finite
+ * number in [0, 1]. Zero is a valid explicit "no tracing" choice, so
+ * truthiness-based parsing must never come back.
  */
 
 describe("parseTracesSampleRate", () => {
@@ -22,7 +23,8 @@ describe("parseTracesSampleRate", () => {
 	});
 
 	async function loadParser() {
-		const { parseTracesSampleRate } = await import("../../../config/runtime");
+		const { parseTracesSampleRate } =
+			await import("../../../../shared/utils/sentry-sample-rate");
 		return parseTracesSampleRate;
 	}
 
@@ -43,6 +45,20 @@ describe("parseTracesSampleRate", () => {
 		const parse = await loadParser();
 		expect(parse("1")).toBe(1);
 		expect(parse("0.35")).toBe(0.35);
+	});
+
+	it("accepts the numbers Nuxt parses an env override into", async () => {
+		const parse = await loadParser();
+		expect(parse(0)).toBe(0);
+		expect(parse(0.5)).toBe(0.5);
+		expect(parse(null)).toBe(0.2);
+		expect(console.warn).not.toHaveBeenCalled();
+	});
+
+	it("falls back with a warning for values of another type", async () => {
+		const parse = await loadParser();
+		expect(parse(true)).toBe(0.2);
+		expect(console.warn).toHaveBeenCalled();
 	});
 
 	it("falls back with a warning for non-numeric input", async () => {
@@ -69,35 +85,5 @@ describe("parseTracesSampleRate", () => {
 		const parse = await loadParser();
 		expect(parse("Infinity")).toBe(0.2);
 		expect(console.warn).toHaveBeenCalled();
-	});
-});
-
-describe("generateRuntimeConfig sentry sampling", () => {
-	beforeEach(() => {
-		vi.resetModules();
-		vi.spyOn(console, "warn").mockImplementation(() => undefined);
-	});
-
-	afterEach(() => {
-		vi.unstubAllEnvs();
-		vi.restoreAllMocks();
-	});
-
-	it("reads the documented variable into public.sentry.tracesSampleRate", async () => {
-		vi.stubEnv("NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE", "0.5");
-		const { generateRuntimeConfig } = await import("../../../config/runtime");
-		expect(generateRuntimeConfig().public.sentry.tracesSampleRate).toBe(0.5);
-	});
-
-	it("honors an explicit zero rate", async () => {
-		vi.stubEnv("NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE", "0");
-		const { generateRuntimeConfig } = await import("../../../config/runtime");
-		expect(generateRuntimeConfig().public.sentry.tracesSampleRate).toBe(0);
-	});
-
-	it("uses the default when the variable is unset", async () => {
-		vi.stubEnv("NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE", undefined);
-		const { generateRuntimeConfig } = await import("../../../config/runtime");
-		expect(generateRuntimeConfig().public.sentry.tracesSampleRate).toBe(0.2);
 	});
 });

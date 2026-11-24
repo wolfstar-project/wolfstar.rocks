@@ -1,12 +1,11 @@
 import { canWaitOnOtherRequests } from "#server/utils/keyed-lock";
-import { runtimeConfig } from "#server/utils/runtimeConfig";
 import { API } from "@discordjs/core/http-only";
 import { REST } from "@discordjs/rest";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { isNullishOrEmpty } from "@sapphire/utilities/isNullOrUndefinedOrEmpty";
 import { useRequest } from "nitro/context";
 import { H3Event } from "nitro/h3";
-import { createError, getRouterParam } from "nuxt/server";
+import { createError, getRouterParam, useRuntimeConfig } from "nuxt/server";
 
 export function useApi(rest?: REST) {
 	rest ??= useRest();
@@ -26,9 +25,9 @@ declare module "h3" {
 let sharedRest: REST | undefined;
 
 function useRest() {
-	const token = runtimeConfig.discord.botToken;
+	const token = useRuntimeConfig().discord.botToken;
 	if (!token) {
-		throw new Error("'NUXT_OAUTH_DISCORD_BOT_TOKEN' env is not defined");
+		throw new Error("'NUXT_DISCORD_BOT_TOKEN' env is not defined");
 	}
 	if (canWaitOnOtherRequests()) {
 		sharedRest ??= new REST().setToken(token);

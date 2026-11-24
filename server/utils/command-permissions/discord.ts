@@ -1,9 +1,9 @@
 import type { Overwrite } from "#shared/utils/command-permissions";
 import type { API } from "@discordjs/core/http-only";
-import { runtimeConfig } from "#server/utils/runtimeConfig";
 import { DiscordAPIError } from "@discordjs/rest";
 import { ApplicationCommandType, RESTJSONErrorCodes } from "discord-api-types/v10";
 import { createError } from "evlog";
+import { useRuntimeConfig } from "nuxt/server";
 
 /** A chat input command as Discord registered it for the bot, globally or in this server. */
 export interface DiscordCommand {
@@ -14,7 +14,7 @@ export interface DiscordCommand {
 
 /** The bot's application id: the OAuth client is the bot's own application. */
 export function applicationId(): string {
-	const id = runtimeConfig.discord.clientId;
+	const id = useRuntimeConfig().discord.clientId;
 	if (!id) {
 		throw createError({
 			message: "The Discord application is not configured",

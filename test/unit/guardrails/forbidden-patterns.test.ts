@@ -226,6 +226,25 @@ const RULES: Rule[] = [
 		good: "const url = runtimeConfig.public.siteUrl;",
 	},
 	{
+		id: "runtime-config-through-use-runtime-config",
+		reason: "runtimeConfig is declared in nuxt.config.ts and each key is overridden at run time by the NUXT_* variable named after its path. Reading process.env, or a module that captures the config once, misses those overrides on the Worker.",
+		roots: ["app", "server", "shared"],
+		extensions: [".ts", ".vue"],
+		violations: (source) => {
+			const code = stripComments(source);
+			return [
+				...matches(code, /process\.env\.NUXT_\w+/, "process.env.NUXT_*"),
+				...matches(
+					code,
+					/from\s+["'][^"']*(?:utils\/runtimeConfig|config\/runtime)(?:\.ts)?["']/,
+					"runtime config module",
+				),
+			];
+		},
+		bad: "const url = process.env.NUXT_PUBLIC_SITE_URL;",
+		good: "const url = useRuntimeConfig().public.siteUrl;",
+	},
+	{
 		id: "no-nuxt-auth-utils",
 		reason: "nuxt-auth-utils was removed in the better-auth migration (#297). Import session state from useUserSession() and types from #nuxt-better-auth, never from #auth-utils.",
 		roots: ["app", "server", "shared", "modules", "config"],

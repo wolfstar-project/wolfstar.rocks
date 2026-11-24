@@ -50,7 +50,10 @@ vi.mock("#server/utils/join-guard/turnstile", () => ({
 	verifyTurnstileToken: mocks.verifyTurnstileToken,
 }));
 vi.mock("#server/utils/oauth-tokens", () => ({ refreshSessionTokens: mocks.refreshSessionTokens }));
-vi.mock("#server/utils/runtimeConfig", () => ({ runtimeConfig: mocks.runtimeConfig }));
+vi.mock("nuxt/server", async (importOriginal) => ({
+	...(await importOriginal<typeof import("nuxt/server")>()),
+	useRuntimeConfig: () => mocks.runtimeConfig,
+}));
 vi.mock("#server/utils/shared", () => ({
 	// With a REST client the API is the member's own; without one, the bot's.
 	useApi: (rest?: unknown) =>

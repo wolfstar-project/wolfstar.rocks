@@ -1,3 +1,4 @@
+import { parseTracesSampleRate } from "#shared/utils/sentry-sample-rate";
 import * as Sentry from "@sentry/nuxt";
 import { isDevelopment } from "std-env";
 import { CONSENT_COOKIE_IDS, readConsentedIds, readDocumentCookie } from "~/utils/consent";
@@ -53,7 +54,11 @@ if (sentry.dsn) {
 		// We recommend adjusting this value in production
 		// Learn more at
 		// https://docs.sentry.io/platforms/javascript/configuration/options/#traces-sample-rate
-		tracesSampleRate: marketingPage ? 0 : isDevelopment ? 1 : sentry.tracesSampleRate,
+		tracesSampleRate: marketingPage
+			? 0
+			: isDevelopment
+				? 1
+				: parseTracesSampleRate(sentry.tracesSampleRate),
 
 		// Define what the valid targets for trace propagation are
 		// Learn more at

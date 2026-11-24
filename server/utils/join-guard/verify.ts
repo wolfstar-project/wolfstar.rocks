@@ -25,12 +25,11 @@ import { errors } from "#server/utils/errors";
 import { measureJoinGuardTrust, type JoinGuardTrustResult } from "#server/utils/join-guard/trust";
 import { verifyTurnstileToken } from "#server/utils/join-guard/turnstile";
 import { refreshSessionTokens } from "#server/utils/oauth-tokens";
-import { runtimeConfig } from "#server/utils/runtimeConfig";
 import { useApi } from "#server/utils/shared";
 import { guildIconURL } from "#shared/utils/discord";
 import { JoinGuardConnectionsScope, JoinGuardMinimumTrustLevels } from "#shared/utils/join-guard";
 import { REST } from "@discordjs/rest";
-import { createError as createH3Error } from "nuxt/server";
+import { createError as createH3Error, useRuntimeConfig } from "nuxt/server";
 
 /** Why the verification page refuses to let a member pass, to answer with. */
 export type JoinGuardVerifyErrorCode =
@@ -331,7 +330,7 @@ export async function readJoinGuardVerifyPage(
 		minimumTrust: minimumTrustOf(settings),
 		trust: null,
 		needsConnections: false,
-		captchaSiteKey: checks.captcha ? runtimeConfig.public.turnstileSiteKey || null : null,
+		captchaSiteKey: checks.captcha ? useRuntimeConfig().public.turnstileSiteKey || null : null,
 	};
 	if (!botPresent || !isCheckpointOn(settings)) return page;
 
@@ -356,7 +355,7 @@ export async function readJoinGuardVerifyPage(
  * no Turnstile secret refuses rather than skipping the check.
  */
 async function assertCaptcha(token: string | undefined): Promise<void> {
-	const secret = runtimeConfig.turnstileSecretKey;
+	const secret = useRuntimeConfig().turnstileSecretKey;
 	if (!secret) throw new JoinGuardVerifyError("captchaUnavailable");
 
 	const result = await verifyTurnstileToken(secret, token);

@@ -1,6 +1,7 @@
 import type { H3Event } from "nitro/h3";
 import { Feed } from "feed";
 import { setResponseHeader } from "nitro/h3";
+import { useRuntimeConfig } from "nuxt/server";
 import { joinURL } from "ufo";
 
 interface SiteFeedOptions {
@@ -19,7 +20,7 @@ export function createSiteFeed(event: H3Event, { description, path, title }: Sit
 	const site = getSiteConfig(event);
 	const baseUrl = (
 		site.url ??
-		process.env.NUXT_PUBLIC_SITE_URL ??
+		(useRuntimeConfig().public.siteUrl || undefined) ??
 		"https://wolfstar.rocks"
 	).replace(/\/$/, "");
 	const link = joinURL(baseUrl, path);

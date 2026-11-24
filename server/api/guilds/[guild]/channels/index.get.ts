@@ -33,7 +33,7 @@ export default defineWrappedResponseHandler(
 		});
 
 		log.set({ result: { channelCount: channels.length } });
-		return channels.map((channel) => flattenGuildChannel(channel as any));
+		return flattenGuildChannels(channels);
 	},
 	{
 		auth: true,

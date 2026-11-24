@@ -87,7 +87,7 @@ describe("applyConfigurationImport and the rules a file of the bot before V7 add
 		mocks.rulesNow = [];
 		await applyConfigurationImport(guild, readLegacyFile([]));
 
-		expect(mocks.reload).toHaveBeenCalledWith(mocks.lockTransaction.orm);
+		expect(mocks.reload).toHaveBeenCalledWith(mocks.lockTransaction);
 		expect(mocks.reload.mock.invocationCallOrder[0]).toBeLessThan(
 			mocks.submit.mock.invocationCallOrder[0]!,
 		);

@@ -19,8 +19,8 @@ export function applicationId(): string {
 		throw createError({
 			message: "The Discord application is not configured",
 			status: 500,
-			why: "NUXT_OAUTH_DISCORD_CLIENT_ID is not set",
-			fix: "Set NUXT_OAUTH_DISCORD_CLIENT_ID to the bot's application id",
+			why: "discord.clientId is empty in the runtime config",
+			fix: "Set NUXT_DISCORD_CLIENT_ID at run time, or NUXT_OAUTH_DISCORD_CLIENT_ID for the build, to the bot's application id",
 		});
 	}
 	return id;

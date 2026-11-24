@@ -45,9 +45,12 @@ export default defineNuxtPlugin({
 			manifest.value = meta;
 		});
 
-		if (!buildId) return;
+		// Storybook's build turns the module off, so neither its runtime config nor
+		// `useSkewProtection()` exists there.
+		const skewConfig = runtimeConfig.public.skewProtection;
+		if (!buildId || !skewConfig) return;
 
-		const cookieConfig = runtimeConfig.public.skewProtection?.cookie;
+		const cookieConfig = skewConfig.cookie;
 		if (typeof cookieConfig === "object") {
 			const { name, options } = resolveSkewCookie(cookieConfig);
 			const versionCookie = useCookie<string | null>(name, options);

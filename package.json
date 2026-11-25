@@ -126,7 +126,7 @@
 		"@sapphire/bitfield": "1.2.4",
 		"@sapphire/snowflake": "3.5.5",
 		"@sapphire/time-utilities": "1.7.14",
-		"@sapphire/utilities": "3.18.3",
+		"@sapphire/utilities": "4.0.0",
 		"@shelve/cli": "5.3.0",
 		"@storybook-vue/nuxt": "catalog:storybook",
 		"@storybook/addon-a11y": "catalog:storybook",

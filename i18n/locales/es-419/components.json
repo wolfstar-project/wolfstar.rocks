@@ -144,7 +144,7 @@
 	"feedback": {
 		"description": "Reporta un error o comparte tus comentarios con el equipo de WolfStar.",
 		"email": "Correo electrónico",
-		"email_placeholder": "tu{'@'}correo.com",
+		"email_placeholder": "",
 		"message": "Mensaje",
 		"message_placeholder": "¿Qué pasó? ¿Qué esperabas que pasara?",
 		"name": "Nombre",
@@ -181,7 +181,7 @@
 		"pick_channel": "Seleccionar canal",
 		"pick_role": "Selecciona un rol",
 		"remove_option": "Eliminar {name}",
-		"search": "Buscar...",
+		"search": "",
 		"seconds": "Segundos",
 		"unknown_channel": "Canal desconocido",
 		"unknown_role": "Rol desconocido"

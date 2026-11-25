@@ -854,7 +854,7 @@
 				},
 				"title": "Entrega"
 			},
-			"excluded_channels": "Canales excluidos",
+			"excluded_channels": "",
 			"excluded_channels_help": "Selecciona los canales que deben ignorarse para eventos de registro específicos. Los mensajes y eventos de estos canales no se registrarán.",
 			"form_aria": "Formulario de configuración del canal",
 			"groups": {
@@ -876,7 +876,7 @@
 			"routed_count": "{routed} de {total} enrutados",
 			"search_text_channels": "Buscar canales de texto…",
 			"subtitle": "Elige dónde WolfStar publica los registros y qué canales ignorar.",
-			"title": "Configuración del canal"
+			"title": ""
 		},
 		"command_rules": {
 			"allowed_channels": "Solo en",
@@ -985,12 +985,12 @@
 			"on": "Activado",
 			"reset": "Restablecer",
 			"save_failed": "No se pudo guardar la configuración de comandos. {message}",
-			"subtitle": "Elige qué comandos habilitar o deshabilitar en tu servidor",
+			"subtitle": "",
 			"title": "Comandos"
 		},
 		"general": {
 			"copy_server_id": "Copiar ID del servidor",
-			"form_aria": "Formulario de configuración general del gremio",
+			"form_aria": "",
 			"language": "Idioma",
 			"language_aria": "Seleccionar idioma del bot",
 			"language_description": "El idioma que WolfStar usa para responder en este servidor.",
@@ -1001,8 +1001,8 @@
 			"mod_actions_title": "Acciones de moderación · últimos 7 días",
 			"mod_actions_total": "{count} en total",
 			"need_help": "¿Necesitas ayuda?",
-			"no_activity": "Aún no hay cambios en la configuración",
-			"no_activity_description": "Los cambios que hagas en la configuración de este servidor aparecerán aquí para que puedas saber quién cambió qué.",
+			"no_activity": "",
+			"no_activity_description": "",
 			"no_activity_yet": "Aún no hay actividad",
 			"no_activity_yet_description": "Todavía no se ha cambiado nada en este servidor. Activa un módulo y todos los cambios realizados desde el panel aparecerán aquí.",
 			"overview_subtitle": "WolfStar en {name}, directamente desde la base de datos compartida.",
@@ -1398,8 +1398,8 @@
 			"module_hint": "Desactivar esto hará que WolfStar rechace los comandos de moderación, como /ban y /warn. Aun así, se puede cambiar la configuración que aparece a continuación.",
 			"responses_help": "Lo que WolfStar responde en el canal en lugar de su propia línea. Escribe {placeholders} donde corresponda cada uno. Deja una respuesta vacía para usar la propia línea de WolfStar.",
 			"responses_title": "Respuestas de comandos",
-			"subtitle": "Configura cómo WolfStar gestiona las acciones de moderación, como los bloqueos, las expulsiones y los silenciamientos.",
-			"title": "Configuración de sanciones"
+			"subtitle": "",
+			"title": ""
 		},
 		"modules": {
 			"active_hint": "El módulo está activo en este servidor.",
@@ -1743,7 +1743,7 @@
 			"help": "Lo que WolfStar hace con un miembro que alcanza cierta cantidad de advertencias activas, asignadas con /warn. Volver a establecer una cantidad reemplaza la anterior.",
 			"limit": "Un servidor puede tener como máximo {maximum} umbrales. Elimina uno para agregar otro.",
 			"load_failed": "No se pudieron cargar los umbrales de advertencia.",
-			"no_muted_role": "Este servidor no tiene un rol de silenciado, por lo que no se puede aplicar este silenciamiento. Configura uno en Roles o elige una duración permitida para una suspensión temporal.",
+			"no_muted_role": "",
 			"period_hint": "0 cuenta todas las advertencias activas",
 			"permanent": "Permanente",
 			"permanent_hint": "0 es permanente",
@@ -2038,7 +2038,7 @@
 				"name": "Confirmar una segunda acción"
 			},
 			"moderationDefaultWarnThresholds": {
-				"description": "Mientras el servidor no tenga sus propios umbrales de advertencias, 3 advertencias silencian durante 30 minutos, 5 expulsan y 7 bloquean. Los que se agreguen en Umbrales de advertencias a continuación, o con /warn-thresholds add, los reemplazan.",
+				"description": "",
 				"name": "Umbrales de advertencia predeterminados"
 			},
 			"moderationDehoist": {

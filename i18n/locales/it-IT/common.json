@@ -7,63 +7,63 @@
 	},
 	"blog": {
 		"categories": {
-			"all": "",
-			"announcement": "",
-			"article": "",
-			"release": "",
-			"tutorial": ""
+			"all": "Tutti",
+			"announcement": "Annunci",
+			"article": "Articoli",
+			"release": "Versioni",
+			"tutorial": "Tutorial"
 		},
 		"category": {
-			"announcement": "",
-			"article": "",
-			"release": "",
-			"tutorial": ""
+			"announcement": "Annuncio",
+			"article": "Articolo",
+			"release": "Versione",
+			"tutorial": "Tutorial"
 		},
-		"copied": "",
-		"copied_markdown_link_description": "",
-		"copied_page_description": "",
-		"copy_markdown_link": "",
-		"copy_options": "",
-		"copy_page": "",
-		"copy_page_failed": "",
-		"copy_page_failed_description": "",
+		"copied": "Copiato negli appunti",
+		"copied_markdown_link_description": "L'indirizzo del post in Markdown è negli appunti.",
+		"copied_page_description": "Il post è negli appunti in Markdown.",
+		"copy_markdown_link": "Copia il link al Markdown",
+		"copy_options": "Apri le opzioni di copia",
+		"copy_page": "Copia pagina",
+		"copy_page_failed": "Copia non riuscita",
+		"copy_page_failed_description": "Impossibile caricare la pagina in Markdown. Controlla la connessione e riprova.",
 		"copy_url": "Copia URL",
-		"edit_article": "Modifica questo articolo",
+		"edit_article": "Modifica questo post",
 		"empty": {
-			"description": "",
-			"title": ""
+			"description": "Un post spiega perché qualcosa è cambiato. Il registro delle modifiche elenca cosa è cambiato.",
+			"title": "Ancora nessun post"
 		},
-		"feed_blog": "",
-		"feed_changelog": "",
-		"feeds": "",
-		"filter_label": "",
+		"feed_blog": "RSS del blog",
+		"feed_changelog": "RSS del registro delle modifiche",
+		"feeds": "Feed RSS",
+		"filter_label": "Categorie dei post",
 		"link_copied": "Link copiato negli appunti",
-		"link_copied_description": "",
-		"open_in": "",
-		"posts": "",
-		"reading_finished": "",
-		"reading_left": "",
-		"reading_time": "",
-		"release_history": "",
+		"link_copied_description": "L'indirizzo del post è negli appunti.",
+		"open_in": "Apri in {name}",
+		"posts": "Post",
+		"reading_finished": "Finito",
+		"reading_left": "{minutes} min rimasti",
+		"reading_time": "{minutes} min di lettura",
+		"release_history": "Cronologia delle versioni",
 		"rss": "RSS",
-		"share": "",
+		"share": "Condividi questo post",
 		"timeline": {
-			"newer": "",
-			"older": "",
-			"view_all": ""
+			"newer": "Voci più recenti del registro delle modifiche",
+			"older": "Voci meno recenti del registro delle modifiche",
+			"view_all": "Vedi tutto il registro delle modifiche"
 		},
-		"toc": "Indice",
-		"view_markdown": ""
+		"toc": "In questa pagina",
+		"view_markdown": "Vedi come Markdown"
 	},
 	"changelog": {
 		"description": "Segui ogni versione, miglioramento e correzione del WolfStar Project.",
-		"empty": "Non è ancora stata pubblicata nessuna versione.",
-		"entries": "",
+		"empty": "Ancora nessuna voce nel registro delle modifiche",
+		"entries": "Voci del registro delle modifiche",
 		"github_releases": "Versioni su GitHub",
 		"kind": {
-			"fixed": "",
-			"improved": "",
-			"new": ""
+			"fixed": "Corretto",
+			"improved": "Migliorato",
+			"new": "Nuovo"
 		},
 		"title": "Registro delle modifiche"
 	},
@@ -76,20 +76,20 @@
 		"disabled": "Disattivato",
 		"enabled": "Attivato",
 		"error": "Errore",
-		"experimental": "Experimental",
+		"experimental": "Sperimentale",
 		"language": "Lingua",
 		"learn_more": "Scopri di più",
 		"light": "Chiaro",
 		"loading": "Caricamento...",
-		"midnight": "Midnight",
-		"midnight_experimental": "Midnight (experimental)",
+		"midnight": "Mezzanotte",
+		"midnight_experimental": "Mezzanotte (sperimentale)",
 		"na": "N/D",
 		"none": "Nessuno",
 		"please_try_again": "Riprova.",
 		"retry": "Riprova",
 		"save_failed": "Salvataggio non riuscito",
 		"search": "Cerca...",
-		"system": "System"
+		"system": "Sistema"
 	},
 	"footer": {
 		"changelog": "Registro delle modifiche",
@@ -120,7 +120,7 @@
 		"brand": "WolfStar",
 		"dashboard": "Dashboard",
 		"home": "Home di {name}",
-		"settings": "Settings",
+		"settings": "Impostazioni",
 		"sign_in": "Accedi",
 		"sign_in_discord": "Accedi con Discord",
 		"sign_out": "Esci",
@@ -162,8 +162,8 @@
 		"title": "Stato delle traduzioni"
 	},
 	"updates": {
-		"description": "",
-		"title": ""
+		"description": "Cosa è cambiato nel WolfStar Project, e perché.",
+		"title": "Aggiornamenti"
 	},
 	"user_menu": {
 		"report_bug": "Segnala un bug",

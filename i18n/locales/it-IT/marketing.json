@@ -43,34 +43,34 @@
 			"eyebrow": "Altre app",
 			"invite": "Invita {app}",
 			"logo_alt": "Logo di {app}",
-			"staryl_description": "Staryl porta su Discord le notifiche di live iniziata e terminata su Twitch.",
+			"staryl_description": "",
 			"title": "Due app, un solo progetto.",
 			"wolfstar_description": "WolfStar unisce moderazione configurabile, registrazione degli eventi del server e impostazioni gestite dalla dashboard."
 		},
 		"staryl": {
 			"commands": {
-				"description": "Usa i comandi di iscrizione Twitch di Staryl per inviare le notifiche di live iniziata e terminata nel canale giusto.",
+				"description": "",
 				"eyebrow": "Anteprima dei comandi",
-				"title": "Configura le notifiche di Twitch con Staryl."
+				"title": ""
 			},
 			"cta": {
 				"ask_in_support": "Chiedi nel supporto",
 				"eyebrow": "Staryl per Discord",
 				"invite": "Invita Staryl",
 				"subtitle": "Invita Staryl ora, oppure entra nel server di supporto se prima vuoi fare una domanda.",
-				"title": "Porta i tuoi streamer nel tuo server."
+				"title": ""
 			},
 			"features": {
 				"command_hint": "Con {command}",
-				"description": "Un avviso di live con titolo, gioco e anteprima, un messaggio di fine live scritto da te e una prova quando vuoi controllare il canale.",
+				"description": "",
 				"eyebrow": "Cosa arriva nel canale",
 				"feed_body": "",
 				"feed_title": "",
 				"live_body": "Il titolo della live porta al canale, accanto al gioco e alla sua copertina, sopra l'anteprima della live e un pulsante per guardarla.",
 				"live_title": "Inizio della live",
 				"next": "Notifica successiva",
-				"notifications_description": "Ogni iscrizione manda l'inizio o la fine della live di uno streamer in un canale. Scegli un tipo per vedere cosa arriva.",
-				"notifications_title": "Notifiche di Twitch",
+				"notifications_description": "",
+				"notifications_title": "",
 				"offline_body": "Un'iscrizione di fine live pubblica il messaggio che hai scritto, con l'ora in cui la live è finita. Per queste iscrizioni il messaggio è obbligatorio.",
 				"offline_message": "La live di Stella è finita, grazie per averla guardata!",
 				"offline_title": "Fine della live",
@@ -84,7 +84,7 @@
 				"test_notice": "è un'anteprima chiesta da un amministratore del server, non un vero aggiornamento della live.",
 				"test_notice_label": "Notifica di prova",
 				"test_title": "Provala",
-				"title": "Un messaggio per ogni live, nel tuo canale."
+				"title": ""
 			},
 			"hero": {
 				"brief_aria": "Riepilogo delle funzioni di Staryl",
@@ -93,13 +93,13 @@
 				"kicker": "Notifiche social open source",
 				"release": "Versione v{version}",
 				"routing_term": "Instradamento",
-				"routing_value": "Un streamer, un canale, un tipo di avviso per iscrizione",
+				"routing_value": "",
 				"see_work": "Guarda Staryl in azione",
 				"setup_term": "Configurazione",
 				"setup_value": "Funziona con {command}, senza bisogno di dashboard",
 				"sources_term": "Fonti",
-				"sources_value": "Oggi avvisi di live iniziata e terminata su Twitch, altre fonti in programma",
-				"subtitle": "Staryl pubblica un messaggio nel canale che scegli quando uno streamer di Twitch va in live o la termina. Si configura con un solo comando.",
+				"sources_value": "",
+				"subtitle": "",
 				"title": "Gli aggiornamenti social, dove il tuo server già si trova.",
 				"view_source": "Vedi il codice"
 			},
@@ -126,42 +126,42 @@
 			},
 			"proof": {
 				"eyebrow": "Cosa fa Staryl",
-				"step_1_body": "Scegli lo streamer. Oggi l'unica fonte è Twitch, e altre sono in programma.",
+				"step_1_body": "",
 				"step_1_title": "Scegli la fonte",
-				"step_2_body": "Ogni iscrizione invia la notifica di live iniziata o terminata di uno streamer in un canale.",
+				"step_2_body": "",
 				"step_2_title": "Instrada l'aggiornamento",
 				"step_3_body": "Il team del server aggiunge, rimuove, mostra, azzera e prova le iscrizioni con i comandi slash di Staryl. Non serve nessuna dashboard.",
 				"step_3_title": "Gestitelo insieme",
 				"title": "Dalla fonte al server, in un solo passaggio."
 			},
 			"seo": {
-				"description": "Staryl è un'app Discord open source del WolfStar Project che pubblica le notifiche di live iniziata e terminata su Twitch nel canale che scegli.",
+				"description": "",
 				"title": "Staryl"
 			},
 			"setup": {
 				"eyebrow": "Nessuna dashboard",
 				"general_body": "",
 				"general_title": "",
-				"index_label": "Il menu /setup",
+				"index_label": "",
 				"see_commands": "Guarda i comandi",
 				"sources_body": "",
 				"sources_title": "",
 				"status_body": "",
 				"status_title": "",
-				"subtitle": "Esegui {command} e Staryl apre il suo menu nel canale, per l'amministratore che l'ha aperto. Quattro pagine coprono tutto quello che serve a un'iscrizione.",
+				"subtitle": "",
 				"title": "Si configura da Discord.",
 				"twitch_body": "",
 				"twitch_title": ""
 			},
 			"showcase": {
-				"add_description": "Aggiungi una nuova iscrizione Twitch per uno streamer.",
+				"add_description": "",
 				"add_response": "✅ Fatto! Ogni volta che stella va in live, pubblicherò un nuovo messaggio in #staryl-notifications.",
 				"bluesky_add_response": "",
-				"channel_topic": "Configura le notifiche delle live di Twitch con Staryl.",
+				"channel_topic": "",
 				"composer_placeholder": "Messaggio in #{channel}",
-				"remove_description": "Rimuovi un'iscrizione Twitch per uno streamer.",
+				"remove_description": "",
 				"remove_response": "✅ Fatto! Non pubblicherò più messaggi in #staryl-notifications quando stella va in live.",
-				"reset_description": "Rimuovi tutte le iscrizioni Twitch da questo server.",
+				"reset_description": "",
 				"reset_response": "✅ Fatto! 3 iscrizioni sono state rimosse da questo server.",
 				"rss_add_response": "",
 				"search_placeholder": "Cerca in WolfStar HQ",
@@ -171,12 +171,12 @@
 				"settings_hint": "",
 				"settings_intro": "",
 				"settings_placeholder": "",
-				"show_description": "Mostra tutte le iscrizioni Twitch di questo server.",
+				"show_description": "",
 				"show_embed_offline": "lory — #staryl-notifications → Offline",
 				"show_embed_online": "stella — #staryl-notifications → In live",
 				"show_embed_title": "Iscrizioni Twitch",
 				"social_add_description": "",
-				"test_description": "Invia una notifica di prova per verificare che un'iscrizione esistente funzioni.",
+				"test_description": "",
 				"test_response": "✅ Inviata! Controlla #staryl-notifications: la notifica avrà esattamente questo aspetto.",
 				"timestamp": "Oggi alle 15:49"
 			}

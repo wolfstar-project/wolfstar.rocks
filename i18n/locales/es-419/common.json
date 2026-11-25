@@ -28,7 +28,7 @@
 		"copy_page_failed": "",
 		"copy_page_failed_description": "",
 		"copy_url": "Copiar URL",
-		"edit_article": "Editar este artículo",
+		"edit_article": "",
 		"empty": {
 			"description": "",
 			"title": ""
@@ -52,12 +52,12 @@
 			"older": "",
 			"view_all": ""
 		},
-		"toc": "Tabla de contenido",
+		"toc": "",
 		"view_markdown": ""
 	},
 	"changelog": {
 		"description": "Sigue cada lanzamiento, mejora y corrección del Proyecto WolfStar.",
-		"empty": "Aún no se ha publicado ninguna versión.",
+		"empty": "",
 		"entries": "",
 		"github_releases": "Versiones de GitHub",
 		"kind": {
@@ -150,7 +150,7 @@
 		"wolfstar_description": "Moderación, con registro documental"
 	},
 	"nuxtSiteConfig": {
-		"description": "WolfStar ofrece a los equipos de moderación de Discord un AutoMod configurable, historiales de moderación y comandos con búsqueda y un panel único para la configuración del servidor.",
+		"description": "",
 		"name": "WolfStar"
 	},
 	"translation_status": {

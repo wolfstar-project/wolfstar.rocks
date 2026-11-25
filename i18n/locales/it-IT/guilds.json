@@ -854,7 +854,7 @@
 				},
 				"title": ""
 			},
-			"excluded_channels": "Canali esclusi",
+			"excluded_channels": "Canali ignorati",
 			"excluded_channels_help": "Canali esclusi da tipi specifici di registro.",
 			"form_aria": "Modulo impostazioni canali",
 			"groups": {
@@ -876,7 +876,7 @@
 			"routed_count": "{routed} di {total} instradati",
 			"search_text_channels": "Cerca canali testuali…",
 			"subtitle": "Scegli dove WolfStar pubblica i log e quali canali ignorare.",
-			"title": "Impostazioni canali"
+			"title": "Log degli eventi"
 		},
 		"command_rules": {
 			"allowed_channels": "Solo in",
@@ -985,7 +985,7 @@
 			"on": "Attivo",
 			"reset": "Reimposta",
 			"save_failed": "Impossibile salvare le impostazioni dei comandi. {message}",
-			"subtitle": "Scegli quali comandi abilitare o disabilitare sul tuo server",
+			"subtitle": "Scegli quali comandi abilitare o disabilitare sul tuo server. Fai clic su un comando per le sue regole, in WolfStar e su Discord.",
 			"title": "Comandi"
 		},
 		"general": {
@@ -1001,8 +1001,8 @@
 			"mod_actions_title": "Azioni di moderazione · ultimi 7 giorni",
 			"mod_actions_total": "{count} in totale",
 			"need_help": "Hai bisogno di aiuto?",
-			"no_activity": "Nessuna modifica alle impostazioni ancora",
-			"no_activity_description": "Le modifiche alle impostazioni appariranno qui.",
+			"no_activity": "Nessuna attività recente",
+			"no_activity_description": "Su questo server non è cambiato niente negli ultimi {count} giorni. Le modifiche fatte dalla dashboard compariranno qui.",
 			"no_activity_yet": "Ancora nessuna attività",
 			"no_activity_yet_description": "Su questo server non è ancora stato modificato niente. Attiva un modulo e ogni modifica fatta dalla dashboard comparirà qui.",
 			"overview_subtitle": "WolfStar su {name}, direttamente dal database condiviso.",
@@ -1398,8 +1398,8 @@
 			"module_hint": "Disattivandolo WolfStar rifiuta i comandi di moderazione, come /ban e /warn. Le impostazioni qui sotto si possono comunque cambiare.",
 			"responses_help": "",
 			"responses_title": "",
-			"subtitle": "Configura come WolfStar gestisce le azioni di moderazione come ban, espulsioni e silenziamenti.",
-			"title": "Impostazioni sanzioni"
+			"subtitle": "Dove vengono registrati i casi, quali azioni manuali ne aprono uno e come vengono esaminate le segnalazioni dei membri.",
+			"title": "Moderazione"
 		},
 		"modules": {
 			"active_hint": "Il modulo è attivo su questo server.",

@@ -854,7 +854,7 @@
 				},
 				"title": ""
 			},
-			"excluded_channels": "Canales excluidos",
+			"excluded_channels": "",
 			"excluded_channels_help": "Canales omitidos por tipos específicos de registro.",
 			"form_aria": "Formulario de configuración de canales",
 			"groups": {
@@ -876,7 +876,7 @@
 			"routed_count": "",
 			"search_text_channels": "",
 			"subtitle": "Elige dónde publica WolfStar los registros y qué canales ignorar.",
-			"title": "Configuración de canales"
+			"title": ""
 		},
 		"command_rules": {
 			"allowed_channels": "",
@@ -1001,8 +1001,8 @@
 			"mod_actions_title": "",
 			"mod_actions_total": "",
 			"need_help": "¿Necesitas ayuda?",
-			"no_activity": "Aún no hay cambios en la configuración",
-			"no_activity_description": "Los cambios de configuración aparecerán aquí.",
+			"no_activity": "",
+			"no_activity_description": "",
 			"no_activity_yet": "",
 			"no_activity_yet_description": "",
 			"overview_subtitle": "",
@@ -1398,8 +1398,8 @@
 			"module_hint": "",
 			"responses_help": "",
 			"responses_title": "",
-			"subtitle": "Configura cómo gestiona WolfStar las acciones de moderación como baneos, expulsiones y silencios.",
-			"title": "Configuración de sanciones"
+			"subtitle": "",
+			"title": ""
 		},
 		"modules": {
 			"active_hint": "",

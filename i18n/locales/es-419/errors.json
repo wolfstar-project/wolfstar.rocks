@@ -13,7 +13,7 @@
 		"server_error_title": "Error del servidor",
 		"if_persists": "Si esto persiste, contacta con soporte.",
 		"retrying": "Reintentando...",
-		"session_expired_description": "Tu sesión expiró. Vuelve a iniciar sesión.",
+		"session_expired_description": "",
 		"access_denied_description": "No tienes permiso para acceder a este recurso.",
 		"too_many_requests_description": "Has realizado demasiadas solicitudes. Espera un momento antes de volver a intentarlo.",
 		"request_timeout_description": "La solicitud tardó demasiado en completarse.",

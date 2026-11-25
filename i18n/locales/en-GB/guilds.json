@@ -854,7 +854,7 @@
 				},
 				"title": ""
 			},
-			"excluded_channels": "Excluded Channels",
+			"excluded_channels": "",
 			"excluded_channels_help": "Select channels that should be ignored for specific logging events. Messages and events in these channels won't be logged.",
 			"form_aria": "Channel settings form",
 			"groups": {
@@ -876,7 +876,7 @@
 			"routed_count": "",
 			"search_text_channels": "",
 			"subtitle": "Choose where WolfStar posts logs and which channels to ignore.",
-			"title": "Channel Settings"
+			"title": ""
 		},
 		"command_rules": {
 			"allowed_channels": "",
@@ -985,12 +985,12 @@
 			"on": "",
 			"reset": "Reset",
 			"save_failed": "Could not save command settings. {message}",
-			"subtitle": "Choose which commands to enable or disable on your server",
+			"subtitle": "Choose which commands to enable or disable on your server. Click a command for its rules.",
 			"title": "Commands"
 		},
 		"general": {
 			"copy_server_id": "Copy Server ID",
-			"form_aria": "General guild settings form",
+			"form_aria": "General server settings form",
 			"language": "Language",
 			"language_aria": "Select bot language",
 			"language_description": "The language WolfStar uses for responses in this server.",
@@ -1001,8 +1001,8 @@
 			"mod_actions_title": "",
 			"mod_actions_total": "",
 			"need_help": "Need Help?",
-			"no_activity": "No settings changes yet",
-			"no_activity_description": "Changes you make to this server's settings will appear here so you can track who changed what.",
+			"no_activity": "",
+			"no_activity_description": "",
 			"no_activity_yet": "",
 			"no_activity_yet_description": "",
 			"overview_subtitle": "",
@@ -1398,8 +1398,8 @@
 			"module_hint": "",
 			"responses_help": "",
 			"responses_title": "",
-			"subtitle": "Configure how WolfStar handles moderation actions like bans, kicks, and mutes.",
-			"title": "Punishment Settings"
+			"subtitle": "",
+			"title": ""
 		},
 		"modules": {
 			"active_hint": "",

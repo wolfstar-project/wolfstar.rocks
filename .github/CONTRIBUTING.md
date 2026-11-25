@@ -63,7 +63,7 @@ WolfStar.rocks is built for Discord server administrators and bot users who need
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) 24+ (LTS)
-- [pnpm](https://pnpm.io/) 10+ (required - not npm or yarn)
+- [pnpm](https://pnpm.io/) 12+ (required - not npm or yarn)
 - [PostgreSQL](https://www.postgresql.org/) 14+
 - [Discord Application](https://discord.com/developers/applications/) (for OAuth)
 

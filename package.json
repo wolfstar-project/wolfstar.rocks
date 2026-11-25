@@ -173,9 +173,9 @@
 	},
 	"engines": {
 		"node": "^24.15.0 || >=26.0.0",
-		"pnpm": ">=10"
+		"pnpm": ">=12"
 	},
-	"packageManager": "pnpm@11.28.11",
+	"packageManager": "pnpm@12.23.0",
 	"msw": {
 		"workerDirectory": [
 			".storybook/.public"

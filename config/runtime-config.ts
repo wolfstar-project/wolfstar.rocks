@@ -31,8 +31,13 @@ export function requiredStringWithBuildDefault(buildValue: string | undefined) {
 }
 
 /** A string with a default, which its `NUXT_*` variable may override. */
-function optionalString(fallback = "") {
+export function optionalString(fallback = "") {
 	return toStandardJsonSchema(v.optional(v.string(), fallback));
+}
+
+/** A number with a default. */
+export function optionalNumber(fallback: number) {
+	return toStandardJsonSchema(v.optional(v.number(), fallback));
 }
 
 /** A whole number with a default. */

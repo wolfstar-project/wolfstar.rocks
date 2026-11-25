@@ -50,6 +50,24 @@ export default defineNuxtModule({
 		if (!rc.appSecret) {
 			rc.appSecret = appSecret;
 		}
+		// The Discord credentials are required by the runtime config schema, so a
+		// server built without them does not start. A test build talks to no
+		// Discord, so it gets placeholders; a CI build that deploys does not, so a
+		// deploy without them still fails.
+		if (isTest) {
+			const discord = (rc.discord ??= {}) as Record<string, unknown>;
+			const placeholders = {
+				botToken: "test-bot-token",
+				clientId: "0",
+				clientSecret: "test-client-secret",
+			};
+			for (const [key, value] of Object.entries(placeholders)) {
+				discord[key] ||= value;
+			}
+			const publicConfig = (rc.public ??= {}) as Record<string, unknown>;
+			publicConfig.clientId ||= placeholders.clientId;
+		}
+
 		const options = nuxt.options as unknown as {
 			ogImage?: { security?: { strict?: boolean } };
 		};

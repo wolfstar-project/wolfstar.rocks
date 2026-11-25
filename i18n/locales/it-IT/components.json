@@ -144,7 +144,7 @@
 	"feedback": {
 		"description": "Segnala un bug o condividi i tuoi pensieri con il team di WolfStar.",
 		"email": "Email",
-		"email_placeholder": "tua@email.com",
+		"email_placeholder": "tua{'@'}email.com",
 		"message": "Messaggio",
 		"message_placeholder": "Raccontaci cosa ne pensi...",
 		"name": "Nome",
@@ -159,7 +159,7 @@
 	},
 	"pwa": {
 		"dismiss": "Chiudi",
-		"install": "Installa",
+		"install": "Install",
 		"install_app": "Installa app",
 		"reload": "Ricarica",
 		"update_available": "Aggiornamento disponibile"

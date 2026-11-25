@@ -10,7 +10,8 @@ import {
 type Schema =
 	| ReturnType<typeof requiredString>
 	| ReturnType<typeof optionalInteger>
-	| ReturnType<typeof optionalNumber>;
+	| ReturnType<typeof optionalNumber>
+	| ReturnType<typeof optionalString>;
 
 // Nuxt reads a runtime config schema the same two ways: its JSON Schema for the
 // type and the default, and a validation of `undefined` to tell required keys.

@@ -11,6 +11,11 @@ import {
 import { cookieControl } from "./config/cookie-control.ts";
 import { currentLocales, datetimeFormats, FALLBACK_LOCALE, numberFormats } from "./config/i18n.ts";
 import { pwa } from "./config/pwa.ts";
+import {
+	optionalInteger,
+	requiredString,
+	requiredStringWithBuildDefault,
+} from "./config/runtime-config.ts";
 import { LOCALE_BUNDLES_DIR } from "./modules/i18n-locale-bundles.ts";
 import { DEFAULT_TRACES_SAMPLE_RATE } from "./shared/utils/sentry-sample-rate.ts";
 
@@ -281,6 +286,11 @@ export default defineNuxtConfig({
 	// from `process.env` here. Only a key whose variable has another name reads
 	// it, and only as the default the build bakes in. Read the values with
 	// `useRuntimeConfig()` where they are used, never at module scope.
+	// With `compatibilityVersion: 5` every key is typed by its default, and its
+	// `NUXT_*` variable is read as that type when the server starts. The keys
+	// declared with a schema (`config/runtime-config.ts`) are also required, or
+	// typed more narrowly: a missing or wrong value stops the server with
+	// `NUXT_E8014`, which lists every problem at once.
 	runtimeConfig: {
 		// The bridge to the bot's own API, which the member's appeals go through:
 		// the dashboard mints the session cookie the API reads, so the secret is
@@ -298,18 +308,20 @@ export default defineNuxtConfig({
 			// The channel of WolfStar's server whose posts the Home's WolfStar thread
 			// shows. `NUXT_DISCORD_ANNOUNCEMENTS_CHANNEL_ID`.
 			announcementsChannelId: "890648971712802906",
-			// Secrets: `NUXT_DISCORD_BOT_TOKEN`, `NUXT_DISCORD_CLIENT_SECRET`.
-			botToken: "",
-			clientSecret: "",
+			// Secrets: `NUXT_DISCORD_BOT_TOKEN`, `NUXT_DISCORD_CLIENT_SECRET`. Required:
+			// without them the server does not start (`NUXT_E8014`).
+			botToken: requiredString(),
+			clientSecret: requiredString(),
 			// Public: the deploy workflows and the beta Worker's `vars` name it
 			// `NUXT_OAUTH_DISCORD_CLIENT_ID`. `NUXT_DISCORD_CLIENT_ID` at run time.
-			clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID ?? "",
+			// Required when the build had none.
+			clientId: requiredStringWithBuildDefault(process.env.NUXT_OAUTH_DISCORD_CLIENT_ID),
 		},
 		public: {
 			// `NUXT_PUBLIC_API_BASE_URL`.
 			apiBaseUrl: "",
 			// The same application id as `discord.clientId`. `NUXT_PUBLIC_CLIENT_ID`.
-			clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID ?? "",
+			clientId: requiredStringWithBuildDefault(process.env.NUXT_OAUTH_DISCORD_CLIENT_ID),
 			// `NUXT_PUBLIC_ENVIRONMENT`, which the beta Worker sets to `beta`.
 			environment: process.env.NODE_ENV ?? "production",
 			// Declared so `NUXT_PUBLIC_SITE_URL` can override it at runtime: Nuxt only
@@ -339,7 +351,8 @@ export default defineNuxtConfig({
 		// absent: Better Auth owns them, and forcing `sameSite: "strict"` would drop
 		// the OAuth state cookie on the cross-site redirect back from Discord.
 		session: {
-			maxAge: 60 * 60 * 24 * 7, // 1 week
+			// A whole number of seconds, 1 week. `NUXT_SESSION_MAX_AGE`.
+			maxAge: optionalInteger(60 * 60 * 24 * 7),
 			// Must differ per deployment that shares a cookie domain.
 			// `NUXT_SESSION_COOKIE_NAME`.
 			cookieName: "wolfstar-session",

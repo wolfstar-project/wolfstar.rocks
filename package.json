@@ -137,6 +137,7 @@
 		"@takumi-rs/wasm": "2.20.0",
 		"@tolgee/cli": "2.21.0",
 		"@types/node": "26.6.6",
+		"@valibot/to-json-schema": "^1.7.1",
 		"@vitest/ui": "catalog:vite-plus",
 		"changelogen": "0.6.2",
 		"cz-conventional-changelog": "3.3.0",

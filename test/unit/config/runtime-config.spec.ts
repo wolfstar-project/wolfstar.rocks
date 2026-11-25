@@ -1,11 +1,16 @@
 import { describe, expect, it } from "vitest";
 import {
 	optionalInteger,
+	optionalNumber,
+	optionalString,
 	requiredString,
 	requiredStringWithBuildDefault,
 } from "../../../config/runtime-config";
 
-type Schema = ReturnType<typeof requiredString> | ReturnType<typeof optionalInteger>;
+type Schema =
+	| ReturnType<typeof requiredString>
+	| ReturnType<typeof optionalInteger>
+	| ReturnType<typeof optionalNumber>;
 
 // Nuxt reads a runtime config schema the same two ways: its JSON Schema for the
 // type and the default, and a validation of `undefined` to tell required keys.
@@ -45,5 +50,22 @@ describe("runtime config schemas", () => {
 
 		expect(required).toBe(false);
 		expect(json).toMatchObject({ default: 60, type: "integer" });
+	});
+
+	it("describes an optional string with its default, empty when none is given", () => {
+		expect(describeSchema(optionalString())).toMatchObject({
+			json: { default: "", type: "string" },
+			required: false,
+		});
+		expect(describeSchema(optionalString("WOLFSTAR_AUTH")).json).toMatchObject({
+			default: "WOLFSTAR_AUTH",
+		});
+	});
+
+	it("describes a number with its default", () => {
+		expect(describeSchema(optionalNumber(0.2))).toMatchObject({
+			json: { default: 0.2, type: "number" },
+			required: false,
+		});
 	});
 });

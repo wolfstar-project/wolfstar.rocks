@@ -22,11 +22,18 @@ const authSecondaryStorage = createAuthSecondaryStorage(useStorage("wolfstar:aut
 // anything set here — so declaring them only creates config that looks live.
 export default defineServerAuth((ctx) => {
 	const cookieDomain = resolveAuthCookieDomain(ctx.runtimeConfig.public.siteUrl);
+	// The Discord credentials are required by the runtime config schema, and a
+	// prerender throws when it reads a required value its build has no variable
+	// for (`NUXT_E8015`). A prerendered page never signs anyone in, and the
+	// builds that prerender do not hold the Worker's secrets, so it reads none.
+	const discord = import.meta.prerender
+		? { clientId: "", clientSecret: "" }
+		: ctx.runtimeConfig.discord;
 	return {
 		socialProviders: {
 			discord: createDiscordProviderOptions({
-				clientId: ctx.runtimeConfig.discord.clientId,
-				clientSecret: ctx.runtimeConfig.discord.clientSecret,
+				clientId: discord.clientId,
+				clientSecret: discord.clientSecret,
 				// Same origin the module resolves `baseURL` from, so the redirect URI
 				// sent to Discord and the one replayed during the token exchange can
 				// never disagree. `requestOrigin` is only reached when no explicit

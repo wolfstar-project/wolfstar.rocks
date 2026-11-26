@@ -35,6 +35,48 @@
 				</template>
 			</p>
 		</div>
+		<div class="ob-actions">
+			<UButton
+				color="neutral"
+				variant="ghost"
+				size="sm"
+				icon="ic:round-arrow-upward"
+				:disabled="disabled || first"
+				:aria-label="
+					ts('guild_settings.onboarding.stages.move_up_aria', { name: stage.name })
+				"
+				@click="emit('move', -1)"
+			/>
+			<UButton
+				color="neutral"
+				variant="ghost"
+				size="sm"
+				icon="ic:round-arrow-downward"
+				:disabled="disabled || last"
+				:aria-label="
+					ts('guild_settings.onboarding.stages.move_down_aria', { name: stage.name })
+				"
+				@click="emit('move', 1)"
+			/>
+			<UButton
+				color="neutral"
+				variant="outline"
+				size="sm"
+				:disabled="disabled"
+				:aria-label="ts('guild_settings.onboarding.stages.edit_aria', { name: stage.name })"
+				@click="emit('edit')"
+			>
+				{{ ts("guild_settings.onboarding.stages.edit") }}
+			</UButton>
+			<USwitch
+				:model-value="stage.enabled"
+				:disabled="disabled"
+				:aria-label="
+					ts('guild_settings.onboarding.stages.toggle_aria', { name: stage.name })
+				"
+				@update:model-value="emit('toggle', $event)"
+			/>
+		</div>
 	</article>
 </template>
 
@@ -42,15 +84,33 @@
 import type { OnboardingCounts, OnboardingStage } from "#shared/utils/onboarding";
 /**
  * A stage as the section lists it: its place in the sequence, its name,
- * whether the bot can run it, what it asks and what a failure costs, and how
- * many members passed it this week.
+ * whether the bot can run it, what it asks and what a failure costs, how many
+ * members passed it this week, and its buttons. Two buttons move it, so the
+ * order changes with a keyboard as it does with a pointer.
  */
-const { stage, status } = defineProps<{
+const {
+	stage,
+	status,
+	first = false,
+	last = false,
+	disabled = false,
+} = defineProps<{
 	stage: OnboardingStage;
 	/** Its place in the sequence, from 1. */
 	number: number;
 	status: "ready" | "blocked" | "off";
 	counts: OnboardingCounts;
+	/** Whether it is the first, or the last, of the sequence: it does not move further. */
+	first?: boolean;
+	last?: boolean;
+	/** A write is in flight, or the page must reload before the next one. */
+	disabled?: boolean;
+}>();
+
+const emit = defineEmits<{
+	toggle: [enabled: boolean];
+	edit: [];
+	move: [direction: -1 | 1];
 }>();
 
 const { ts, tc } = useI18n();
@@ -74,8 +134,13 @@ const statusLabel = computed(() => ts(STATUS_KEYS[status]));
 <style scoped>
 @reference "@/assets/css/main.css";
 
+/* The buttons go under the stage on a phone, and beside it from `sm`. */
 .ob-stage {
-	@apply grid grid-cols-[1.75rem_minmax(0,1fr)] items-start gap-3 py-3.5;
+	@apply grid grid-cols-[1.75rem_minmax(0,1fr)] items-start gap-3 py-3.5 sm:grid-cols-[1.75rem_minmax(0,1fr)_auto];
+}
+
+.ob-actions {
+	@apply col-start-2 flex items-center gap-1.5 sm:col-start-3;
 }
 
 .ob-stage--off .ob-number,

@@ -51,12 +51,13 @@
 			</span>
 		</GuildModuleBanner>
 
+		<GuildOnboardingConflict v-if="onboarding.conflict.value" :onboarding="onboarding" />
 		<GuildOnboardingBlockers v-if="state.blockers.length > 0" :state="state" />
-		<GuildOnboardingStages :state="state" />
+		<GuildOnboardingStages :state="state" :onboarding="onboarding" />
 
 		<div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
 			<GuildOnboardingMessage :channel-id="state.messageChannelId" />
-			<GuildOnboardingLogChannel :channel-id="state.logChannelId" />
+			<GuildOnboardingLogChannel :channel-id="state.logChannelId" :onboarding="onboarding" />
 		</div>
 	</template>
 </template>
@@ -72,7 +73,8 @@ const { ts, tc } = useI18n();
 const text = useOnboardingText();
 const { activeGuildId } = useActiveGuild();
 
-const { refresh, state, status } = useOnboarding(activeGuildId);
+const onboarding = useOnboarding(activeGuildId);
+const { refresh, state, status } = onboarding;
 
 const isLoading = computed(
 	() => (status.value === "idle" || status.value === "pending") && state.value === null,

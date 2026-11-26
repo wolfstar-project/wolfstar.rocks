@@ -3,6 +3,8 @@ import { mockNuxtImport, mountSuspended, registerEndpoint } from "@nuxt/test-uti
 import { ChannelType } from "discord-api-types/v10";
 import { createError } from "h3";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { nextTick } from "vue";
+import LogChannel from "~/components/guild/onboarding/LogChannel.vue";
 import OnboardingSection from "~/components/guild/settings/Onboarding.vue";
 import {
 	createMockChannel,
@@ -151,7 +153,7 @@ describe("GuildSettingsOnboarding", () => {
 		const wrapper = await mountSection();
 
 		await vi.waitFor(() => expect(wrapper.text()).toContain("WolfStar posted it in #verify."));
-		expect(wrapper.text()).toContain("#mod-log");
+		expect(wrapper.text()).toContain("mod-log");
 	});
 
 	it("says how to post the message when the bot posted none", async () => {
@@ -164,6 +166,127 @@ describe("GuildSettingsOnboarding", () => {
 		);
 		expect(wrapper.text()).toContain("No log channel");
 		expect(wrapper.text()).toContain("No stage yet");
+	});
+
+	it("moves a stage down with its button, and sends the new order", async () => {
+		let server = createMockOnboardingState({
+			revision: 3,
+			stages: [
+				createMockOnboardingStage({ id: "1" }),
+				createMockOnboardingStage({ id: "2", name: "Server rules", position: 1 }),
+			],
+		});
+		answer = () => server;
+		const orders: unknown[] = [];
+		registerEndpoint(`/api/guilds/${guildId}/onboarding/stages/order`, {
+			handler: async (event) => {
+				const body = (await event.req.json()) as { order: string[]; revision: number };
+				orders.push(body);
+				server = {
+					...server,
+					revision: server.revision + 1,
+					stages: body.order.flatMap((id, position) => {
+						const stage = server.stages.find((entry) => entry.id === id);
+						return stage ? [{ ...stage, position }] : [];
+					}),
+				};
+				return server;
+			},
+			method: "PUT",
+		});
+
+		const wrapper = await mountSection();
+		await vi.waitFor(() => expect(wrapper.findAll("h4")).toHaveLength(2));
+		expect(
+			wrapper.get('[aria-label="Move stage Are you human? up"]').attributes("disabled"),
+		).toBeDefined();
+
+		await wrapper.get('[aria-label="Move stage Are you human? down"]').trigger("click");
+
+		await vi.waitFor(() =>
+			expect(wrapper.findAll("h4").map((name) => name.text())).toStrictEqual([
+				"Server rules",
+				"Are you human?",
+			]),
+		);
+		expect(orders).toStrictEqual([{ order: ["2", "1"], revision: 3 }]);
+	});
+
+	it("explains a conflict, stops the writes, and lets the administrator reload", async () => {
+		let server = createMockOnboardingState({
+			revision: 3,
+			stages: [createMockOnboardingStage({ id: "1" })],
+		});
+		answer = () => server;
+		registerEndpoint(`/api/guilds/${guildId}/onboarding/stages/1`, {
+			handler: () => {
+				throw createError({ data: { code: "conflict" }, statusCode: 409 });
+			},
+			method: "PATCH",
+		});
+
+		const wrapper = await mountSection();
+		await vi.waitFor(() => expect(wrapper.find("h4").exists()).toBe(true));
+		// Another administrator renames the stage from the bot's panel.
+		server = {
+			...server,
+			revision: 4,
+			stages: [createMockOnboardingStage({ id: "1", name: "Renamed elsewhere" })],
+		};
+
+		await wrapper
+			.get('[aria-label="Turn the stage Are you human? on or off"]')
+			.trigger("click");
+
+		await vi.waitFor(() =>
+			expect(wrapper.text()).toContain(
+				"Another administrator changed the onboarding while this page was open.",
+			),
+		);
+		expect(wrapper.text()).toContain("Your change was not saved.");
+		expect(wrapper.find("h4").text()).toBe("Are you human?");
+		expect(
+			wrapper.get('[aria-label="Edit stage Are you human?"]').attributes("disabled"),
+		).toBeDefined();
+
+		const reload = wrapper
+			.findAll("button")
+			.find((button) => button.text() === "Reload onboarding");
+		await reload?.trigger("click");
+
+		await vi.waitFor(() => expect(wrapper.find("h4").text()).toBe("Renamed elsewhere"));
+		expect(wrapper.text()).not.toContain("Another administrator changed the onboarding");
+		expect(
+			wrapper.get('[aria-label="Edit stage Renamed elsewhere"]').attributes("disabled"),
+		).toBeUndefined();
+	});
+
+	it("names the permissions WolfStar lacks when the log channel is refused", async () => {
+		answer = () => createMockOnboardingState({ logChannelId: null });
+		registerEndpoint(`/api/guilds/${guildId}/onboarding`, {
+			handler: () => {
+				throw createError({
+					data: { code: "logPermissions", missing: ["ViewChannel", "SendMessages"] },
+					statusCode: 422,
+				});
+			},
+			method: "PATCH",
+		});
+
+		const wrapper = await mountSection();
+		await vi.waitFor(() => expect(wrapper.text()).toContain("Log channel"));
+		const card = wrapper.findComponent(LogChannel);
+		// The picker's list is a popover: its model is set as picking a channel sets it.
+		card.findComponent({ name: "SelectChannel" }).vm.$emit("update:modelValue", MOD_LOG);
+		await nextTick();
+
+		await card.get("form").trigger("submit");
+
+		await vi.waitFor(() =>
+			expect(card.text()).toContain(
+				"WolfStar cannot post in #mod-log: it lacks View Channel and Send Messages. The log channel was not changed.",
+			),
+		);
 	});
 
 	it("offers to try again when the onboarding cannot be read", async () => {

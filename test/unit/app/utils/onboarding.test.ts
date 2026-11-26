@@ -5,6 +5,8 @@ import {
 	onboardingBlockerLine,
 	onboardingStageChips,
 	onboardingVerdictHint,
+	onboardingWriteErrorMessage,
+	readOnboardingWriteError,
 	type OnboardingNames,
 	type OnboardingText,
 } from "~/utils/onboarding";
@@ -221,5 +223,83 @@ describe("onboardingVerdictHint", () => {
 		[{ kind: "ready" }, "Every stage that is on can run."],
 	] as const)("reads %o", (verdict, expected) => {
 		expect(onboardingVerdictHint(verdict, text)).toBe(expected);
+	});
+});
+
+function fetchError(data: Record<string, unknown>) {
+	return { data: { data }, statusCode: 400 };
+}
+
+describe("readOnboardingWriteError", () => {
+	it.each(["conflict", "limit", "nameTaken", "unknown", "invalid", "logChannel", "role"])(
+		"reads the code %s",
+		(code) => {
+			expect(readOnboardingWriteError(fetchError({ code }))).toStrictEqual({ code });
+		},
+	);
+
+	it("reads the problem of a stage the bot could not run", () => {
+		const error = readOnboardingWriteError(fetchError({ code: "stage", problem: "answers" }));
+
+		expect(error).toStrictEqual({ code: "stage", problem: "answers" });
+	});
+
+	it("reads the permissions the bot lacks in the log channel", () => {
+		const error = readOnboardingWriteError(
+			fetchError({ code: "logPermissions", missing: ["ViewChannel", "SendMessages"] }),
+		);
+
+		expect(error).toStrictEqual({
+			code: "logPermissions",
+			missing: ["ViewChannel", "SendMessages"],
+		});
+	});
+
+	it.each([
+		["a failed connection", new TypeError("Failed to fetch")],
+		["a code it does not know", fetchError({ code: "teapot" })],
+		["a stage problem it does not know", fetchError({ code: "stage", problem: "colour" })],
+		["nothing", null],
+	])("reads %s as a generic failure", (_label, error) => {
+		expect(readOnboardingWriteError(error)).toStrictEqual({ code: "generic" });
+	});
+});
+
+describe("onboardingWriteErrorMessage", () => {
+	it("says which permissions the bot lacks in the channel that was picked", () => {
+		const message = onboardingWriteErrorMessage(
+			{ code: "logPermissions", missing: ["SendMessages", "EmbedLinks"] },
+			{ logChannelId: "300" },
+			text,
+			names,
+		);
+
+		expect(message).toBe(
+			"WolfStar cannot post in #mod-log: it lacks Send Messages and Embed Links. The log channel was not changed.",
+		);
+	});
+
+	it("says the problem of a stage as the editor does", () => {
+		const message = onboardingWriteErrorMessage(
+			{ code: "stage", problem: "question" },
+			{ logChannelId: null },
+			text,
+			names,
+		);
+
+		expect(message).toBe("Write the question, 200 characters at most.");
+	});
+
+	it("says a conflict asks for a reload", () => {
+		const message = onboardingWriteErrorMessage(
+			{ code: "conflict" },
+			{ logChannelId: null },
+			text,
+			names,
+		);
+
+		expect(message).toBe(
+			"Another administrator changed the onboarding. Reload it, then try again.",
+		);
 	});
 });

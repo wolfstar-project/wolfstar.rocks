@@ -1,8 +1,10 @@
 import type {
 	OnboardingBlocker,
 	OnboardingStage,
+	OnboardingStageProblem,
 	OnboardingVerdict,
 } from "#shared/utils/onboarding";
+import { ONBOARDING_PROBLEM_KEYS } from "./onboarding-stage-draft";
 
 /**
  * The words of the Onboarding section, built from a stage, a blocker or a
@@ -284,4 +286,100 @@ export function onboardingChannelName(
 	names: OnboardingNames,
 ): string {
 	return channelName(id, text, names);
+}
+
+// -----------------------------------------------------------------------------
+// The writes
+// -----------------------------------------------------------------------------
+
+/**
+ * Why a write was refused. `conflict` is the one the page acts on: another
+ * administrator, or the bot's panel, changed the onboarding since it was read.
+ */
+export type OnboardingWriteError =
+	| { code: "conflict" | "limit" | "nameTaken" | "unknown" | "invalid" | "generic" }
+	| { code: "logChannel" | "role" }
+	| { code: "stage"; problem: OnboardingStageProblem }
+	| { code: "logPermissions"; missing: string[] };
+
+const PLAIN_ERROR_CODES = new Set([
+	"conflict",
+	"limit",
+	"nameTaken",
+	"unknown",
+	"invalid",
+	"logChannel",
+	"role",
+] as const);
+
+type PlainErrorCode = typeof PLAIN_ERROR_CODES extends Set<infer Code> ? Code : never;
+
+function isPlainErrorCode(code: unknown): code is PlainErrorCode {
+	return typeof code === "string" && (PLAIN_ERROR_CODES as Set<string>).has(code);
+}
+
+function isStageProblem(problem: unknown): problem is OnboardingStageProblem {
+	return typeof problem === "string" && problem in ONBOARDING_PROBLEM_KEYS;
+}
+
+/**
+ * Reads why a route refused a write from the error `$fetch` threw: the route
+ * puts `{ code, … }` in its error's `data`, which ofetch hands on as the
+ * `data.data` of its `FetchError`. Anything else is `generic`: the network,
+ * or a failure the page has no words for.
+ */
+export function readOnboardingWriteError(error: unknown): OnboardingWriteError {
+	const data = (error as { data?: { data?: Record<string, unknown> } } | null)?.data?.data;
+	const code = data?.code;
+
+	if (isPlainErrorCode(code)) return { code };
+	if (code === "stage" && isStageProblem(data?.problem)) {
+		return { code: "stage", problem: data.problem };
+	}
+	if (code === "logPermissions" && Array.isArray(data?.missing)) {
+		return {
+			code: "logPermissions",
+			missing: data.missing.filter((name): name is string => typeof name === "string"),
+		};
+	}
+	return { code: "generic" };
+}
+
+/** A refused write in a sentence the administrator can act on. */
+export function onboardingWriteErrorMessage(
+	error: OnboardingWriteError,
+	context: { logChannelId: string | null },
+	text: OnboardingText,
+	names: OnboardingNames,
+): string {
+	switch (error.code) {
+		case "conflict":
+			return text.ts("guild_settings.onboarding.errors.conflict");
+		case "limit":
+			return text.ts("guild_settings.onboarding.errors.limit");
+		case "nameTaken":
+			return text.ts("guild_settings.onboarding.errors.nameTaken");
+		case "unknown":
+			return text.ts("guild_settings.onboarding.errors.unknown");
+		case "invalid":
+			return text.ts("guild_settings.onboarding.errors.invalid");
+		case "generic":
+			return text.ts("guild_settings.onboarding.errors.generic");
+		case "logChannel":
+			return text.ts("guild_settings.onboarding.errors.logChannel");
+		case "role":
+			return text.ts("guild_settings.onboarding.errors.role");
+		case "stage":
+			return text.ts(ONBOARDING_PROBLEM_KEYS[error.problem]);
+		case "logPermissions":
+			return text.ts("guild_settings.onboarding.errors.logPermissions", {
+				channel:
+					context.logChannelId === null
+						? text.ts("guild_settings.onboarding.unknown_channel")
+						: channelName(context.logChannelId, text, names),
+				permissions: text.list(
+					error.missing.map((permission) => permissionName(permission, text)),
+				),
+			});
+	}
 }

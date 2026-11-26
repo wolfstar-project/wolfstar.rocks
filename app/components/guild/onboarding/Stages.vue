@@ -146,6 +146,11 @@ function statusOf(stage: OnboardingStage): "ready" | "blocked" | "off" {
 
 const editorOpen = ref(false);
 const editedStage = ref<OnboardingStage | null>(null);
+// The revision the editor opened on: its save, and a delete it asks for, are
+// sent with it, so a draft never overwrites a change it did not show.
+const editedRevision = ref(0);
+// A stage is deleted from its editor only, so the confirm takes its revision.
+const deleteRevision = ref(0);
 const editorError = ref<string | null>(null);
 const stageToDelete = ref<OnboardingStage | null>(null);
 const saving = ref(false);
@@ -162,6 +167,7 @@ watch(locked, (isLocked, wasLocked) => {
 
 function openEditor(stage: OnboardingStage | null) {
 	editedStage.value = stage;
+	editedRevision.value = state.revision;
 	editorError.value = null;
 	editorOpen.value = true;
 }
@@ -195,8 +201,8 @@ async function saveStage(body: OnboardingStageInput) {
 	editorError.value = null;
 	const target = editedStage.value;
 	const result = target
-		? await onboarding.updateStage(target.id, body)
-		: await onboarding.createStage(body);
+		? await onboarding.updateStage(target.id, body, editedRevision.value)
+		: await onboarding.createStage(body, editedRevision.value);
 	saving.value = false;
 
 	if (!result.ok) {
@@ -242,6 +248,7 @@ async function moveStage(stage: OnboardingStage, index: number, direction: -1 | 
 function askDeleteFromEditor() {
 	const stage = editedStage.value;
 	editorOpen.value = false;
+	deleteRevision.value = editedRevision.value;
 	stageToDelete.value = stage;
 }
 
@@ -250,7 +257,7 @@ async function confirmDelete() {
 	if (!stage) return;
 
 	saving.value = true;
-	const result = await onboarding.deleteStage(stage.id);
+	const result = await onboarding.deleteStage(stage.id, deleteRevision.value);
 	saving.value = false;
 	stageToDelete.value = null;
 

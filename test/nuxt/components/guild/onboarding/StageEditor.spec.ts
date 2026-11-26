@@ -180,6 +180,17 @@ describe("GuildOnboardingStageEditor", () => {
 		expect(choices.some((label) => label?.startsWith("Captcha"))).toBe(false);
 	});
 
+	it("saves a stage the bot's panel gave the captcha, keeping it", async () => {
+		const wrapper = await mountEditor({
+			stage: createMockOnboardingStage({ challenge: "Captcha", name: "Captcha check" }),
+		});
+
+		button("Save stage").click();
+
+		await vi.waitFor(() => expect(lastSaved(wrapper)).toBeDefined());
+		expect(lastSaved(wrapper)).toMatchObject({ challenge: "Captcha", name: "Captcha check" });
+	});
+
 	it("shows why the server refused the last save", async () => {
 		await mountEditor({
 			errorMessage: "Another stage has that name, whatever its case. Pick another name.",

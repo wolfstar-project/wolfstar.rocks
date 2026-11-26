@@ -230,6 +230,55 @@ describe("GuildSettingsOnboarding", () => {
 		expect(orders).toStrictEqual([{ order: ["2", "1"], revision: 3 }]);
 	});
 
+	it("saves an open editor with the revision it opened on, even after the page read again", async () => {
+		let server = createMockOnboardingState({
+			revision: 3,
+			stages: [createMockOnboardingStage({ id: "1" })],
+		});
+		answer = () => server;
+		const sent: unknown[] = [];
+		registerEndpoint(`/api/guilds/${guildId}/onboarding/stages/1`, {
+			handler: async (event) => {
+				const body = (await event.req.json()) as { revision: number };
+				sent.push(body.revision);
+				if (body.revision !== server.revision) {
+					throw createError({ data: { code: "conflict" }, statusCode: 409 });
+				}
+				return server;
+			},
+			method: "PATCH",
+		});
+
+		const wrapper = await mountSection();
+		await vi.waitFor(() => expect(wrapper.find("h4").exists()).toBe(true));
+		await wrapper.get('[aria-label="Edit stage Are you human?"]').trigger("click");
+		await vi.waitFor(() =>
+			expect(document.querySelector('[role="dialog"] form')).not.toBeNull(),
+		);
+
+		// Another administrator renames the stage; the page reads it behind the editor.
+		server = {
+			...server,
+			revision: 4,
+			stages: [createMockOnboardingStage({ id: "1", name: "Renamed elsewhere" })],
+		};
+		await refreshNuxtData();
+		await vi.waitFor(() => expect(wrapper.find("h4").text()).toBe("Renamed elsewhere"));
+
+		const save = [...document.querySelectorAll<HTMLButtonElement>("button")].find(
+			(button) => button.textContent?.trim() === "Save stage",
+		);
+		save?.click();
+
+		await vi.waitFor(() => expect(sent).toStrictEqual([3]));
+		await vi.waitFor(() =>
+			expect(wrapper.text()).toContain(
+				"Another administrator changed the onboarding while this page was open.",
+			),
+		);
+		wrapper.unmount();
+	});
+
 	it("explains a conflict, stops the writes, and lets the administrator reload", async () => {
 		let server = createMockOnboardingState({
 			revision: 3,

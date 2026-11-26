@@ -47,18 +47,20 @@ export async function fetchOnboardingDiscordFacts(
 	guild: APIGuild,
 ): Promise<OnboardingDiscordFacts> {
 	const api = useApi();
-	const hasCommunity = guild.features.includes(GuildFeature.Community);
-	const [roles, channels, bot, onboarding] = await Promise.all([
+	const [live, roles, channels, bot] = await Promise.all([
+		api.guilds.get(guild.id),
 		api.guilds.getRoles(guild.id),
 		api.guilds.getChannels(guild.id),
 		api.guilds.getMember(guild.id, applicationId()),
-		// Discord has no onboarding to read for a server without Community.
-		hasCommunity ? api.guilds.getOnboarding(guild.id) : null,
 	]);
+	// Discord has no onboarding to read for a server without Community.
+	const onboarding = live.features.includes(GuildFeature.Community)
+		? await api.guilds.getOnboarding(guild.id)
+		: null;
 	return {
 		bot,
 		channels,
-		guild: { ...guild, roles },
+		guild: { ...guild, features: live.features, roles },
 		nativeOnboarding: onboarding?.enabled === true,
 	};
 }

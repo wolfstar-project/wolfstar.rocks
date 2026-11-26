@@ -71,25 +71,32 @@ export function useOnboarding(guildId: MaybeRefOrGetter<string | null | undefine
 		}
 	}
 
-	function createStage(stage: OnboardingStageInput) {
-		const body: OnboardingStageCreateBody = { revision: revision(), stage };
+	// A write sends the revision the administrator saw. The editor passes the
+	// one it opened on: the page may read again behind it, and the draft would
+	// otherwise be sent with a revision it never saw.
+	function createStage(stage: OnboardingStageInput, readRevision = revision()) {
+		const body: OnboardingStageCreateBody = { revision: readRevision, stage };
 		return write(() =>
 			$fetch<OnboardingState>(`${base.value}/stages`, { body, method: "POST" }),
 		);
 	}
 
-	function updateStage(stageId: string, stage: Partial<OnboardingStageInput>) {
-		const body: OnboardingStagePatchBody = { revision: revision(), stage };
+	function updateStage(
+		stageId: string,
+		stage: Partial<OnboardingStageInput>,
+		readRevision = revision(),
+	) {
+		const body: OnboardingStagePatchBody = { revision: readRevision, stage };
 		return write(() =>
 			$fetch<OnboardingState>(`${base.value}/stages/${stageId}`, { body, method: "PATCH" }),
 		);
 	}
 
-	function deleteStage(stageId: string) {
+	function deleteStage(stageId: string, readRevision = revision()) {
 		return write(() =>
 			$fetch<OnboardingState>(`${base.value}/stages/${stageId}`, {
 				method: "DELETE",
-				query: { revision: revision() },
+				query: { revision: readRevision },
 			}),
 		);
 	}

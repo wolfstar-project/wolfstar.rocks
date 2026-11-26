@@ -1,15 +1,30 @@
 import type { OnboardingRecord } from "#server/utils/onboarding/store";
 import type { OnboardingStage } from "#shared/utils/onboarding";
 import type { APIGuild, APIGuildMember } from "discord-api-types/v10";
+import { GuildFeature, PermissionFlagsBits } from "discord-api-types/v10";
+import { describe, expect, it, vi } from "vitest";
+
+const discordApi = vi.hoisted(() => ({
+	get: vi.fn(),
+	getChannels: vi.fn(),
+	getMember: vi.fn(),
+	getOnboarding: vi.fn(),
+	getRoles: vi.fn(),
+}));
+
+vi.mock("#server/utils/shared", () => ({ useApi: () => ({ guilds: discordApi }) }));
+vi.mock("#server/utils/command-permissions/discord", () => ({
+	applicationId: () => "200000000000000000",
+}));
+
 import {
 	canGiveOnboardingRole,
 	checkOnboardingLogChannel,
+	fetchOnboardingDiscordFacts,
 	onboardingReadinessInput,
 	type OnboardingDiscordFacts,
 } from "#server/utils/onboarding/discord";
 import { onboardingReadiness } from "#shared/utils/onboarding";
-import { GuildFeature, PermissionFlagsBits } from "discord-api-types/v10";
-import { describe, expect, it } from "vitest";
 
 const GUILD_ID = "100000000000000000";
 const BOT_ID = "200000000000000000";
@@ -105,6 +120,38 @@ function makeRecord(overrides: Partial<OnboardingRecord> = {}): OnboardingRecord
 function blockers(record: OnboardingRecord, discord: OnboardingDiscordFacts) {
 	return onboardingReadiness(onboardingReadinessInput(record, discord));
 }
+
+describe("fetchOnboardingDiscordFacts", () => {
+	it("reads Community from Discord now, not from the cached server", async () => {
+		const cached = { features: [], id: GUILD_ID, roles: [] } as unknown as APIGuild;
+		const live = { ...facts().guild, features: [GuildFeature.Community] };
+		discordApi.get.mockResolvedValue(live);
+		discordApi.getChannels.mockResolvedValue([]);
+		discordApi.getMember.mockResolvedValue(facts().bot);
+		discordApi.getRoles.mockResolvedValue(live.roles);
+		discordApi.getOnboarding.mockResolvedValue({ enabled: true });
+
+		const result = await fetchOnboardingDiscordFacts(cached);
+
+		expect(result.guild.features).toStrictEqual([GuildFeature.Community]);
+		expect(result.guild.roles).toStrictEqual(live.roles);
+		expect(result.nativeOnboarding).toBe(true);
+	});
+
+	it("asks for no onboarding in a server that has no Community", async () => {
+		const live = { ...facts().guild, features: [] };
+		discordApi.get.mockResolvedValue(live);
+		discordApi.getChannels.mockResolvedValue([]);
+		discordApi.getMember.mockResolvedValue(facts().bot);
+		discordApi.getRoles.mockResolvedValue(live.roles);
+		discordApi.getOnboarding.mockClear();
+
+		const result = await fetchOnboardingDiscordFacts(live);
+
+		expect(result.nativeOnboarding).toBe(false);
+		expect(discordApi.getOnboarding).not.toHaveBeenCalled();
+	});
+});
 
 describe("checkOnboardingLogChannel", () => {
 	it("passes a text channel where the bot sees, writes and embeds", () => {

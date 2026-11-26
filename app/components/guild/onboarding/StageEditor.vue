@@ -354,7 +354,11 @@ const failureItems = computed(() => [
 	},
 ]);
 
-const parsed = computed(() => parseOnboardingStage(onboardingDraftToInput(draft.value)));
+const parsed = computed(() =>
+	parseOnboardingStage(onboardingDraftToInput(draft.value), {
+		keepsCaptcha: stage?.challenge === "Captcha",
+	}),
+);
 
 const shownProblem = computed(() => {
 	if (triedToSave.value && !parsed.value.ok) {

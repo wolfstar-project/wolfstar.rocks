@@ -84,7 +84,10 @@ export function updateOnboardingStage(
 		const before = current.stages.find((stage) => stage.id === stageId);
 		if (!before) return refuse({ code: "unknown" });
 
-		const parsed = parseOnboardingStage({ ...inputOf(before), ...patch });
+		const parsed = parseOnboardingStage(
+			{ ...inputOf(before), ...patch },
+			{ keepsCaptcha: before.challenge === "Captcha" },
+		);
 		if (!parsed.ok) return refuse({ code: "stage", problem: parsed.problem });
 		if (nameTaken(current, parsed.value.name, stageId)) return refuse({ code: "nameTaken" });
 

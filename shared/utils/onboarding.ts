@@ -145,13 +145,22 @@ function parseQuestion(input: OnboardingStageInput): QuestionParse {
  * the name and the answers are trimmed, and the fields a challenge or a
  * failure action does not use are emptied, so a stored stage never carries
  * the question of a challenge it no longer has.
+ *
+ * The dashboard never gives a stage the captcha, which no page serves yet.
+ * `keepsCaptcha` reads a stage that already has it, from the bot's panel, so
+ * it can still be edited and switched off.
  */
-export function parseOnboardingStage(input: OnboardingStageInput): OnboardingStageParse {
+export function parseOnboardingStage(
+	input: OnboardingStageInput,
+	options: { keepsCaptcha?: boolean } = {},
+): OnboardingStageParse {
 	const name = input.name.trim();
 	if (name.length === 0 || name.length > OnboardingLimits.stageName) {
 		return { ok: false, problem: "name" };
 	}
-	if (input.challenge === "Captcha") return { ok: false, problem: "captcha" };
+	if (input.challenge === "Captcha" && options.keepsCaptcha !== true) {
+		return { ok: false, problem: "captcha" };
+	}
 
 	const question = parseQuestion(input);
 	if (!question.ok) return question;

@@ -63,13 +63,20 @@ function toColumns(stage: Partial<OnboardingStageInput>) {
 	return { ...rest, ...(roleId === undefined ? {} : { roleId: toBigInt(roleId) }) };
 }
 
-/** Reads the onboarding of a guild; one that has no row yet is off, at revision 0, with no stage. */
+/**
+ * Reads the onboarding of a guild; one that has no row yet is off, at revision
+ * 0, with no stage.
+ *
+ * The revision is read first and the stages after it, one query after the
+ * other: a write that commits in between raises the revision, so what this
+ * answers is never older than its revision, and a write sent with it is
+ * refused rather than overwriting what it did not see. The two queries in
+ * parallel could pair stale stages with the newer revision.
+ */
 async function readRecord(orm: Orm, guildId: Snowflake): Promise<OnboardingRecord> {
 	const id = BigInt(guildId);
-	const [row, stages] = await Promise.all([
-		orm.public.GuildOnboarding.first({ id }),
-		orm.public.GuildOnboardingStage.where({ guildId: id }).all(),
-	]);
+	const row = await orm.public.GuildOnboarding.first({ id });
+	const stages = await orm.public.GuildOnboardingStage.where({ guildId: id }).all();
 	return {
 		enabled: row?.enabled ?? false,
 		logChannelId: toSnowflake(row?.logChannelId ?? null),
@@ -200,9 +207,11 @@ function addGroup(
 }
 
 /**
- * Counts the passes and the failures of the last 7 days, and the members who
- * wait at a stage now, however long ago they started it. The rows of a
- * deleted stage count in the week, and in no stage.
+ * Counts the passes and the failures of the last 7 days, by when they
+ * happened, and the members who wait at a stage now, however long ago they
+ * started it. A stage can have no time limit, so a member who started weeks
+ * ago and passed today counts this week. The rows of a deleted stage count in
+ * the week, and in no stage.
  */
 async function countWeek(guildId: Snowflake, now: number): Promise<OnboardingWeek> {
 	const id = BigInt(guildId);
@@ -212,7 +221,7 @@ async function countWeek(guildId: Snowflake, now: number): Promise<OnboardingWee
 	const [resolved, waiting] = await Promise.all([
 		verifications
 			.where({ guildId: id })
-			.where((row) => row.createdAt.gte(since))
+			.where((row) => row.resolvedAt.gte(since))
 			.groupBy("stageId", "status")
 			.aggregate((aggregate) => ({ total: aggregate.count() })),
 		verifications

@@ -168,6 +168,28 @@ describe("updateOnboardingStage", () => {
 		expect(taken).toStrictEqual({ error: { code: "nameTaken" }, ok: false });
 	});
 
+	it("switches off a stage the bot's panel gave the captcha", async () => {
+		const { store, record } = createMemoryOnboardingStore({
+			stages: [{ ...makeStage("4", "Captcha check", 0), challenge: "Captcha" }],
+		});
+
+		const result = await updateOnboardingStage(store, GUILD_ID, 0, "4", { enabled: false });
+
+		expect(result.ok).toBe(true);
+		expect(record().stages[0]).toMatchObject({ challenge: "Captcha", enabled: false });
+	});
+
+	it("refuses to give a stage the captcha", async () => {
+		const { store, record } = threeStages();
+
+		const result = await updateOnboardingStage(store, GUILD_ID, 7, "1", {
+			challenge: "Captcha",
+		});
+
+		expect(result).toStrictEqual({ error: { code: "stage", problem: "captcha" }, ok: false });
+		expect(record().stages[0]?.challenge).toBe("Button");
+	});
+
 	it("refuses a stage that is gone", async () => {
 		const { store } = threeStages();
 

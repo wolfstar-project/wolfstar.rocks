@@ -105,6 +105,15 @@ describe("parseOnboardingStage", () => {
 		expect(parseOnboardingStage(makeInput(overrides))).toStrictEqual({ ok: false, problem });
 	});
 
+	it("keeps the captcha of a stage that already has it", () => {
+		const stage = makeInput({ challenge: "Captcha", enabled: false });
+
+		expect(parseOnboardingStage(stage, { keepsCaptcha: true })).toStrictEqual({
+			ok: true,
+			value: stage,
+		});
+	});
+
 	it("accepts no time limit", () => {
 		expect(parseOnboardingStage(makeInput({ timeLimit: 0 })).ok).toBe(true);
 	});

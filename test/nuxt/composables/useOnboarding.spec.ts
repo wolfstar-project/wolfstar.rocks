@@ -182,6 +182,20 @@ describe("useOnboarding", () => {
 		expect(server.stages[0]?.enabled).toBe(true);
 	});
 
+	it("sends the revision a draft was opened on, and refuses it once the onboarding moved on", async () => {
+		const onboarding = await openOnboarding();
+		// The page reads again behind the editor, which was opened at revision 4.
+		server = { ...server, revision: 5 };
+		await onboarding.refresh();
+		await vi.waitFor(() => expect(onboarding.state.value?.revision).toBe(5));
+
+		const result = await onboarding.updateStage("1", { name: "Old draft" }, 4);
+
+		expect(bodies).toStrictEqual([{ revision: 4, stage: { name: "Old draft" } }]);
+		expect(result).toStrictEqual({ error: { code: "conflict" }, ok: false });
+		expect(onboarding.conflict.value).toBe(true);
+	});
+
 	it("ends the conflict by reading the onboarding again", async () => {
 		const onboarding = await openOnboarding();
 		server = { ...server, logChannelId: "777", revision: 5 };

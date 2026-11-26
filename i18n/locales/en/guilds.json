@@ -1457,7 +1457,7 @@
 				"log_missing_title": "The log channel no longer exists.",
 				"log_permissions_fix": "Give WolfStar those permissions in that channel, or pick another one.",
 				"log_permissions_title": "WolfStar cannot post in {channel}: it lacks {permissions}.",
-				"message_fix": "Post it from WolfStar's onboarding panel in Discord. Members press its button to start a stage.",
+				"message_fix": "Run /settings onboarding in Discord and post it. Members press its button to start a stage.",
 				"message_title": "WolfStar has no verification message in this server.",
 				"native_fix": "In Discord, open Server Settings, then Onboarding, and turn it on.",
 				"native_title": "{stages} waits for Discord's onboarding, which is off in this server. | {stages} waits for Discord's onboarding, which is off in this server. | {stages} wait for Discord's onboarding, which is off in this server.",
@@ -1564,8 +1564,8 @@
 				"title": "Log channel"
 			},
 			"message": {
-				"missing": "WolfStar has not posted it. Post it from WolfStar's onboarding panel in Discord.",
-				"posted": "WolfStar posted it in {channel}. To move it, use WolfStar's onboarding panel in Discord.",
+				"missing": "WolfStar has not posted it. Run /settings onboarding in Discord and post it.",
+				"posted": "WolfStar posted it in {channel}. To move it, run /settings onboarding in Discord.",
 				"title": "Verification message"
 			},
 			"passed_badge": "{count} passed this week | 1 passed this week | {count} passed this week",

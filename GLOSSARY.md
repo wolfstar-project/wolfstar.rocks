@@ -218,7 +218,7 @@ captcha on WolfStar.rocks.
 ### verification message
 
 **Is:** the message WolfStar posts in a channel, with the button a member presses to start a stage. WolfStar
-owns it: only its panel in Discord posts or moves it.
+owns it: only its panel in Discord, `/settings onboarding`, posts or moves it.
 
 **Use for:** "Verification message" in the Onboarding section.
 

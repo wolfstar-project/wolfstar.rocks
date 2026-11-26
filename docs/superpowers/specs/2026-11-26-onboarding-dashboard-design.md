@@ -100,8 +100,8 @@ Slug `onboarding`, in the modules group of the sidebar, after Join Guard. In ord
    and what to do. Examples:
     - "Stage 2 waits for Discord's onboarding, and this server has no Community. In Discord, open Server
       Settings, then Enable Community."
-    - "WolfStar has no verification message in this server. Post it from WolfStar's onboarding panel in
-      Discord."
+    - "WolfStar has no verification message in this server. Run `/settings onboarding` in Discord and
+      post it."
     - "WolfStar cannot give @Member: the role is above its own."
     - "WolfStar cannot send messages in #mod-log."
 4. **Stages.** "N / 5" and "New stage". One row per stage, in order: number, name, switch, chips (when,

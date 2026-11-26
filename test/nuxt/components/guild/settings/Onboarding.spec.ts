@@ -179,7 +179,7 @@ describe("GuildSettingsOnboarding", () => {
 
 		await vi.waitFor(() =>
 			expect(wrapper.text()).toContain(
-				"WolfStar has not posted it. Post it from WolfStar's onboarding panel in Discord.",
+				"WolfStar has not posted it. Run /settings onboarding in Discord and post it.",
 			),
 		);
 		expect(wrapper.text()).toContain("No log channel");

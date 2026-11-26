@@ -1415,6 +1415,7 @@
 				"honeypot": "A channel no member has a reason to write in: WolfStar acts on the spam bots that do.",
 				"joinguard": "Check the accounts that join, and hold, kick or ban the look-alike ones.",
 				"moderation": "Manual moderation actions and their case history.",
+				"onboarding": "Ask every new member to pass a sequence of challenges before they are in.",
 				"roles": "Role automation: initial roles and sticky roles.",
 				"social": "Staryl posts a notification in a channel when an account or a feed has something new."
 			},
@@ -1549,6 +1550,7 @@
 				"role": "WolfStar cannot give that role: it is above its own, or another app manages it. Pick another role.",
 				"unknown": "This stage no longer exists. Reload the onboarding."
 			},
+			"form_aria": "Onboarding switch form",
 			"load_failed": "Couldn't load the onboarding. Check your connection and try again.",
 			"loading_aria": "Loading the onboarding",
 			"log": {
@@ -1617,9 +1619,8 @@
 				"toggle_aria": "Turn the stage {name} on or off"
 			},
 			"stages_badge": "No stage | {on} of 1 stage on | {on} of {count} stages on",
-			"state_off": "Off",
-			"state_on": "On",
 			"subtitle": "What a new member must pass before they are in: a sequence of stages, each with a challenge. WolfStar runs them in Discord as members join.",
+			"switch_aria": "Turn Onboarding on or off",
 			"title": "Onboarding",
 			"unknown_channel": "deleted-channel",
 			"unknown_role": "deleted role",

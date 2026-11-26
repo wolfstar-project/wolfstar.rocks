@@ -21,6 +21,7 @@ export const Tables = [
 	"GuildLogs",
 	"GuildLogsOptions",
 	"GuildModeration",
+	"GuildOnboarding",
 	"GuildPermissions",
 	"GuildReports",
 	"GuildRoles",
@@ -157,6 +158,11 @@ export const Columns = {
 		joinGuardSharedBans: ["sharedBans", "value"],
 		joinGuardAllowedUsers: ["allowedUsers", "snowflakes"],
 		joinGuardAllowedRoles: ["allowedRoles", "snowflakes"],
+	}),
+	// The stages and the log channel of the onboarding are written at once by
+	// routes of their own, against a revision: only its switch is a setting.
+	...columns("GuildOnboarding", {
+		onboardingEnabled: ["enabled", "value"],
 	}),
 	...columns("GuildLogs", {
 		logsMemberAdd: ["memberAdd", "snowflake"],

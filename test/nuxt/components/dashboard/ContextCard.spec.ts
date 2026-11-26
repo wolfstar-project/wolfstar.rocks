@@ -36,7 +36,7 @@ describe("DashboardContextCard", () => {
 		const wrapper = await mountSuspended(DashboardContextCard, { route: "/?screen=page" });
 
 		expect(wrapper.text()).toContain("WolfStar HQ");
-		expect(wrapper.text()).toContain("2 of 10 modules on");
+		expect(wrapper.text()).toContain("2 of 11 modules on");
 	});
 
 	it("says the honeypot is off while it has no channel, its switch on", async () => {

@@ -1547,6 +1547,9 @@ describe("component accessibility audits", () => {
 					roles: [createMockRole({ id: ROLE_ID, name: "Member" })],
 				}),
 			);
+			useGuildSettings().setGuildSettings(
+				createMockGuildData(GUILD_ID, { onboardingEnabled: true }),
+			);
 		}
 
 		it("GuildSettingsOnboarding has no accessibility violations with stages and blockers", async () => {

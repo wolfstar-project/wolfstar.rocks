@@ -65,7 +65,7 @@ model GuildOnboardingStage {                  // at most 5 per guild, run in `po
   maxAttempts    Int     @default(3) @map("max_attempts")    // 1 to 5
   timeLimit      Int     @default(600) @map("time_limit")    // seconds, 0 = none, else 60 to 86400
   roleId         BigInt? @map("role_id")      // given when the member passes
-  failureAction  OnboardingFailureAction @default(None) @map("failure_action") // None | Kick | Timeout
+  failureAction  OnboardingFailureAction @default("None") @map("failure_action") // None | Kick | Timeout
   failureTimeout Int?    @map("failure_timeout")             // Timeout only, seconds, 60 to 2419200
   createdAt      TimestampString(3) @default(now()) @map("created_at")
 }
@@ -100,7 +100,8 @@ Slug `onboarding`, in the modules group of the sidebar, after Join Guard. In ord
    and what to do. Examples:
     - "Stage 2 waits for Discord's onboarding, and this server has no Community. In Discord, open Server
       Settings, then Enable Community."
-    - "WolfStar has no verification message in this server. Run `/conf` in Discord and post it."
+    - "WolfStar has no verification message in this server. Post it from WolfStar's onboarding panel in
+      Discord."
     - "WolfStar cannot give @Member: the role is above its own."
     - "WolfStar cannot send messages in #mod-log."
 4. **Stages.** "N / 5" and "New stage". One row per stage, in order: number, name, switch, chips (when,

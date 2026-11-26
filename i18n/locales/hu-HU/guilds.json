@@ -1415,6 +1415,7 @@
 				"honeypot": "",
 				"joinguard": "",
 				"moderation": "",
+				"onboarding": "",
 				"roles": "",
 				"social": ""
 			},
@@ -1549,6 +1550,7 @@
 				"role": "",
 				"unknown": ""
 			},
+			"form_aria": "",
 			"load_failed": "",
 			"loading_aria": "",
 			"log": {
@@ -1617,9 +1619,8 @@
 				"toggle_aria": ""
 			},
 			"stages_badge": "",
-			"state_off": "",
-			"state_on": "",
 			"subtitle": "",
+			"switch_aria": "",
 			"title": "",
 			"unknown_channel": "",
 			"unknown_role": "",

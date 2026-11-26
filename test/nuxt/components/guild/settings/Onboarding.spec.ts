@@ -11,6 +11,7 @@ import {
 	createMockOauthFlattenedGuild,
 	createMockRole,
 } from "~~/test/mocks/discord";
+import { createMockGuildData } from "~~/test/mocks/guildData";
 import { createMockOnboardingStage, createMockOnboardingState } from "~~/test/mocks/onboarding";
 
 const GUILD_ID = "123456789012345678";
@@ -37,8 +38,11 @@ let answer: () => OnboardingState = () => createMockOnboardingState();
 let guildNumber = 0;
 let guildId = GUILD_ID;
 
-async function mountSection() {
+async function mountSection(settings: { onboardingEnabled?: boolean } = {}) {
 	useActiveGuild().selectGuild(guildId);
+	useGuildSettings().setGuildSettings(
+		createMockGuildData(guildId, { onboardingEnabled: true, ...settings }),
+	);
 	const wrapper = await mountSuspended(OnboardingSection);
 	return wrapper;
 }
@@ -76,6 +80,20 @@ describe("GuildSettingsOnboarding", () => {
 		await vi.waitFor(() => expect(wrapper.text()).toContain("2 of 3 stages on"));
 		expect(wrapper.text()).toContain("148 passed this week");
 		expect(wrapper.text()).toContain("Every stage that is on can run.");
+	});
+
+	it("says the onboarding is off while its switch is, whatever the stages", async () => {
+		answer = () => createMockOnboardingState({ stages: [createMockOnboardingStage()] });
+
+		const wrapper = await mountSection({ onboardingEnabled: false });
+
+		await vi.waitFor(() => expect(wrapper.find("h4").exists()).toBe(true));
+		expect(wrapper.text()).toContain(
+			"Onboarding is off. New members get in with no challenge.",
+		);
+		expect(
+			wrapper.get('[aria-label="Turn Onboarding on or off"]').attributes("aria-checked"),
+		).toBe("false");
 	});
 
 	it("lists a stage with what it asks, its role, what a failure costs and its week", async () => {

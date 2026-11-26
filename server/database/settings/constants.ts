@@ -40,6 +40,7 @@ export function getDefaultGuildSettings(): DefaultGuildData {
 			honeypotRecentDelete: false,
 			honeypotChaosName: false,
 			honeypotEnsureDeletion: false,
+			onboardingEnabled: false,
 			joinGuardEnabled: false,
 			joinGuardLogChannel: null,
 			joinGuardDirectMessage: true,

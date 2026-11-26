@@ -28,7 +28,7 @@ export interface OnboardingNames {
 }
 
 /** The tones of the design's tags; the colours are the theme's tokens. */
-export type OnboardingTone = "error" | "warning" | "neutral";
+type OnboardingTone = "error" | "warning" | "neutral";
 
 export interface OnboardingChip {
 	text: string;

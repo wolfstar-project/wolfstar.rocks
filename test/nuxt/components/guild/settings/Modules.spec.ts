@@ -99,13 +99,14 @@ describe("modules guild settings", () => {
 
 		// Moderation, Roles and the Events are on; the honeypot is set up in
 		// Discord and the three lists of channels have no switch, so they always
-		// open; a module that is off has to be enabled first, and the appeals and
-		// the join guard are off until their switch is on. Staryl's Social opens too.
+		// open; a module that is off has to be enabled first, and the appeals, the
+		// join guard and the onboarding are off until their switch is on. Staryl's
+		// Social opens too.
 		expect(buttonsLabelled("Configure")).toHaveLength(8);
-		expect(buttonsLabelled("Enable first")).toHaveLength(GUILD_MODULES.length - 3 + 2);
-		// The flags of `Modules`, the honeypot, the appeals, the join guard, the three Auto-* modules
-		// and Staryl's Social.
-		expect(wrapper.findAll('[aria-label^="Toggle "]')).toHaveLength(GUILD_MODULES.length + 7);
+		expect(buttonsLabelled("Enable first")).toHaveLength(GUILD_MODULES.length - 3 + 3);
+		// The flags of `Modules`, the honeypot, the appeals, the join guard, the
+		// onboarding, the three Auto-* modules and Staryl's Social.
+		expect(wrapper.findAll('[aria-label^="Toggle "]')).toHaveLength(GUILD_MODULES.length + 8);
 	});
 
 	describe("Staryl's Social", () => {
@@ -280,7 +281,7 @@ describe("modules guild settings", () => {
 		expect(state.modulesLogs).toBe(true);
 		expect(enabledCount).toBe(7);
 		// The flags of `Modules`, and the switches of the modules with a table of their own.
-		expect(wrapper.text()).toContain("7 / 10 enabled");
+		expect(wrapper.text()).toContain("7 / 11 enabled");
 	});
 
 	it("enables and disables every module at once", async () => {
@@ -297,7 +298,7 @@ describe("modules guild settings", () => {
 
 		await enableAll!.trigger("click");
 		await nextTick();
-		expect(getSetupState(wrapper).enabledCount).toBe(GUILD_MODULES.length + 6);
+		expect(getSetupState(wrapper).enabledCount).toBe(GUILD_MODULES.length + 7);
 
 		await disableAll!.trigger("click");
 		await nextTick();

@@ -57,6 +57,7 @@ describe("guild modules registry", () => {
 			"modulesHoneypot",
 			"appealsEnabled",
 			"joinGuardEnabled",
+			"onboardingEnabled",
 			"modulesAutodelete",
 			"modulesAutopurge",
 			"modulesAutomessage",

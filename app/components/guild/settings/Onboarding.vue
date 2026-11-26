@@ -36,20 +36,25 @@
 	</div>
 
 	<template v-else-if="state">
-		<GuildModuleBanner
-			icon="ic:round-checklist"
-			:title="ts('guild_settings.onboarding.title')"
-			:hint="verdictHint"
-			:on="state.enabled"
+		<GuildSettingsForm
+			:schema="schema"
+			:state="form"
+			:map-to-guild-data="mapToGuildData"
+			:aria-label="ts('guild_settings.onboarding.form_aria')"
+			@error="onError"
 		>
-			<span class="ob-state" :class="{ 'ob-state--on': state.enabled }">
-				{{
-					state.enabled
-						? ts("guild_settings.onboarding.state_on")
-						: ts("guild_settings.onboarding.state_off")
-				}}
-			</span>
-		</GuildModuleBanner>
+			<GuildModuleBanner
+				icon="ic:round-checklist"
+				:title="ts('guild_settings.onboarding.title')"
+				:hint="verdictHint"
+				:on="form.onboardingEnabled"
+			>
+				<USwitch
+					v-model="form.onboardingEnabled"
+					:aria-label="ts('guild_settings.onboarding.switch_aria')"
+				/>
+			</GuildModuleBanner>
+		</GuildSettingsForm>
 
 		<GuildOnboardingConflict v-if="onboarding.conflict.value" :onboarding="onboarding" />
 		<GuildOnboardingBlockers v-if="state.blockers.length > 0" :state="state" />
@@ -66,12 +71,21 @@
 import { onboardingVerdict } from "#shared/utils/onboarding";
 /**
  * The Onboarding section: what a new member must pass before they are in.
- * The stages and the log channel are written at once, each write against the
+ * The module's switch is staged with the save bar, like every module's. The
+ * stages and the log channel are written at once, each write against the
  * revision the page read, so an edit never overwrites a newer one.
  */
 const { ts, tc } = useI18n();
 const text = useOnboardingText();
 const { activeGuildId } = useActiveGuild();
+
+// The switch is a setting: what the banner says follows it as it is staged.
+const {
+	mapToGuildData,
+	onError,
+	schema,
+	state: form,
+} = useSettingsForm({ toggles: ["onboardingEnabled"] });
 
 const onboarding = useOnboarding(activeGuildId);
 const { refresh, state, status } = onboarding;
@@ -86,7 +100,12 @@ const enabledCount = computed(
 );
 
 const verdictHint = computed(() =>
-	state.value ? onboardingVerdictHint(onboardingVerdict(state.value), text) : "",
+	state.value
+		? onboardingVerdictHint(
+				onboardingVerdict({ ...state.value, enabled: form.onboardingEnabled === true }),
+				text,
+			)
+		: "",
 );
 </script>
 
@@ -96,16 +115,6 @@ const verdictHint = computed(() =>
 /* The design system's soft badge: a blurple tint, the count in monospace. */
 .ob-badge {
 	@apply inline-flex h-6.5 items-center rounded-full bg-primary/15 px-2.5 font-mono text-xs font-semibold text-primary theme-light:text-default;
-}
-
-.ob-state {
-	@apply inline-flex h-6.5 shrink-0 items-center rounded-full px-2.5 text-xs font-semibold text-muted;
-	background-color: var(--console-active);
-}
-
-.ob-state--on {
-	@apply text-highlighted;
-	background-color: color-mix(in oklab, var(--color-success) 16%, transparent);
 }
 
 .ob-empty {

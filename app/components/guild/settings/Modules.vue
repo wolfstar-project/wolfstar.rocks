@@ -244,6 +244,14 @@ const moduleCards: AnyModuleCard[] = [
 		section: "joinguard",
 	},
 	{
+		descriptionKey: "guild_settings.modules.descriptions.onboarding",
+		icon: "lucide:list-checks",
+		key: "onboardingEnabled",
+		kind: "switch",
+		labelKey: "dashboard.nav.onboarding",
+		section: "onboarding",
+	},
+	{
 		descriptionKey: "guild_settings.modules.descriptions.appeals",
 		icon: "lucide:scale",
 		key: "appealsEnabled",

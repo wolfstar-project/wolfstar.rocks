@@ -1446,6 +1446,100 @@
 			"as_role": "",
 			"as_timeout": ""
 		},
+		"onboarding": {
+			"blockers": {
+				"captcha_fix": "",
+				"captcha_title": "",
+				"community_fix": "",
+				"community_title": "",
+				"log_missing_fix": "",
+				"log_missing_title": "",
+				"log_permissions_fix": "",
+				"log_permissions_title": "",
+				"message_fix": "",
+				"message_title": "",
+				"native_fix": "",
+				"native_title": "",
+				"permission_fix": "",
+				"permission_title": "",
+				"role_missing_fix": "",
+				"role_missing_title": "",
+				"role_unmanageable_fix": "",
+				"role_unmanageable_title": "",
+				"stage": "",
+				"title": ""
+			},
+			"chips": {
+				"challenge": {
+					"Button": "",
+					"Captcha": "",
+					"Emoji": "",
+					"Question": ""
+				},
+				"failure_kick": "",
+				"failure_none": "",
+				"failure_timeout": "",
+				"role": "",
+				"trigger": {
+					"Join": "",
+					"NativeOnboarding": ""
+				}
+			},
+			"duration": {
+				"days": "",
+				"hours": "",
+				"minutes": ""
+			},
+			"load_failed": "",
+			"loading_aria": "",
+			"log": {
+				"help": "",
+				"none": "",
+				"title": ""
+			},
+			"message": {
+				"missing": "",
+				"posted": "",
+				"title": ""
+			},
+			"passed_badge": "",
+			"permissions": {
+				"EmbedLinks": "",
+				"KickMembers": "",
+				"ManageRoles": "",
+				"ModerateMembers": "",
+				"SendMessages": "",
+				"ViewChannel": ""
+			},
+			"retry": "",
+			"stages": {
+				"count": "",
+				"empty_description": "",
+				"empty_title": "",
+				"help": "",
+				"stats": "",
+				"stats_waiting": "",
+				"status": {
+					"blocked": "",
+					"off": "",
+					"ready": ""
+				},
+				"title": ""
+			},
+			"stages_badge": "",
+			"state_off": "",
+			"state_on": "",
+			"subtitle": "",
+			"title": "",
+			"unknown_channel": "",
+			"unknown_role": "",
+			"verdict": {
+				"blocked": "",
+				"empty": "",
+				"off": "",
+				"ready": ""
+			}
+		},
 		"please_try_again": "Por favor, inténtalo de nuevo.",
 		"reports": {
 			"queue": {

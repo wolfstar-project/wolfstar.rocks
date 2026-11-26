@@ -1446,6 +1446,100 @@
 			"as_role": "With this duration, the mute gives the muted role.",
 			"as_timeout": "With this duration, the mute is a Discord timeout."
 		},
+		"onboarding": {
+			"blockers": {
+				"captcha_fix": "Pick another challenge for it, or turn it off.",
+				"captcha_title": "{stages} uses the captcha challenge, which is in development. | {stages} uses the captcha challenge, which is in development. | {stages} use the captcha challenge, which is in development.",
+				"community_fix": "In Discord, open Server Settings, then Enable Community. Then turn on Onboarding there.",
+				"community_title": "{stages} waits for Discord's onboarding, and this server has no Community. | {stages} waits for Discord's onboarding, and this server has no Community. | {stages} wait for Discord's onboarding, and this server has no Community.",
+				"log_missing_fix": "Pick another log channel, or none.",
+				"log_missing_title": "The log channel no longer exists.",
+				"log_permissions_fix": "Give WolfStar those permissions in that channel, or pick another one.",
+				"log_permissions_title": "WolfStar cannot post in {channel}: it lacks {permissions}.",
+				"message_fix": "Post it from WolfStar's onboarding panel in Discord. Members press its button to start a stage.",
+				"message_title": "WolfStar has no verification message in this server.",
+				"native_fix": "In Discord, open Server Settings, then Onboarding, and turn it on.",
+				"native_title": "{stages} waits for Discord's onboarding, which is off in this server. | {stages} waits for Discord's onboarding, which is off in this server. | {stages} wait for Discord's onboarding, which is off in this server.",
+				"permission_fix": "In Discord, open Server Settings, then Roles, and give WolfStar's role {permission}.",
+				"permission_title": "WolfStar lacks {permission}, which {stages} needs. | WolfStar lacks {permission}, which {stages} needs. | WolfStar lacks {permission}, which {stages} need.",
+				"role_missing_fix": "Edit the stage and pick another role, or none.",
+				"role_missing_title": "{stage} gives a role that no longer exists.",
+				"role_unmanageable_fix": "In Discord, move WolfStar's role above {role}, or pick another role for the stage.",
+				"role_unmanageable_title": "WolfStar cannot give {role} in {stage}: the role is above its own, or another app manages it.",
+				"stage": "Stage {number} “{name}”",
+				"title": "What is blocked"
+			},
+			"chips": {
+				"challenge": {
+					"Button": "Button",
+					"Captcha": "Captcha",
+					"Emoji": "Emoji",
+					"Question": "Question"
+				},
+				"failure_kick": "Kick on failure",
+				"failure_none": "Nothing on failure",
+				"failure_timeout": "Timeout {duration} on failure",
+				"role": "Gives {role}",
+				"trigger": {
+					"Join": "On join",
+					"NativeOnboarding": "After Discord's onboarding"
+				}
+			},
+			"duration": {
+				"days": "{count} days | 1 day | {count} days",
+				"hours": "{count} h | 1 h | {count} h",
+				"minutes": "{count} min | 1 min | {count} min"
+			},
+			"load_failed": "Couldn't load the onboarding. Check your connection and try again.",
+			"loading_aria": "Loading the onboarding",
+			"log": {
+				"help": "Every pass, failure and action WolfStar takes.",
+				"none": "No log channel",
+				"title": "Log channel"
+			},
+			"message": {
+				"missing": "WolfStar has not posted it. Post it from WolfStar's onboarding panel in Discord.",
+				"posted": "WolfStar posted it in {channel}. To move it, use WolfStar's onboarding panel in Discord.",
+				"title": "Verification message"
+			},
+			"passed_badge": "{count} passed this week | 1 passed this week | {count} passed this week",
+			"permissions": {
+				"EmbedLinks": "Embed Links",
+				"KickMembers": "Kick Members",
+				"ManageRoles": "Manage Roles",
+				"ModerateMembers": "Timeout Members",
+				"SendMessages": "Send Messages",
+				"ViewChannel": "View Channel"
+			},
+			"retry": "Try again",
+			"stages": {
+				"count": "{count} / {max}",
+				"empty_description": "A stage is one challenge a new member must pass: a button, an emoji, or a question. Stages run in order.",
+				"empty_title": "No stage yet",
+				"help": "Stages run in order. A member starts a stage after they passed every stage before it.",
+				"stats": "{passed} passed · {failed} failed this week",
+				"stats_waiting": "{count} waiting now | 1 waiting now | {count} waiting now",
+				"status": {
+					"blocked": "Blocked",
+					"off": "Off",
+					"ready": "Ready"
+				},
+				"title": "Stages"
+			},
+			"stages_badge": "No stage | {on} of 1 stage on | {on} of {count} stages on",
+			"state_off": "Off",
+			"state_on": "On",
+			"subtitle": "What a new member must pass before they are in: a sequence of stages, each with a challenge. WolfStar runs them in Discord as members join.",
+			"title": "Onboarding",
+			"unknown_channel": "deleted-channel",
+			"unknown_role": "deleted role",
+			"verdict": {
+				"blocked": "No stage is blocked. | 1 stage is blocked. Members stop there until it is fixed. | {count} stages are blocked. Members stop there until they are fixed.",
+				"empty": "No stage is on. New members get in with no challenge.",
+				"off": "Onboarding is off. New members get in with no challenge.",
+				"ready": "Every stage that is on can run."
+			}
+		},
 		"please_try_again": "Please try again.",
 		"reports": {
 			"queue": {

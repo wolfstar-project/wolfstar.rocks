@@ -1,11 +1,11 @@
 <template>
 	<section
-		class="console-card flex items-center gap-3.5 border-l-[3px]"
+		class="console-card flex items-center gap-3.5 border-l-[3px] transition-[border-color] duration-(--motion-base) ease-console"
 		:class="on ? 'border-l-primary' : 'border-l-base-content/20'"
 		:aria-labelledby="headingId"
 	>
 		<span
-			class="flex size-11 shrink-0 items-center justify-center rounded-lg"
+			class="flex size-11 shrink-0 items-center justify-center rounded-lg transition-colors duration-(--motion-base) ease-console"
 			:class="on ? 'bg-primary/15 text-primary' : 'bg-base-content/8 text-muted'"
 			aria-hidden="true"
 		>

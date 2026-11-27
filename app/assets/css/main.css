@@ -196,6 +196,12 @@
 	:root {
 		--animate-accordion-down: accordion-down 0.2s ease-out;
 		--animate-accordion-up: accordion-up 0.2s ease-out;
+
+		/* The console's three tempos: a hover or a press, a state that changes
+		   in place, and a section that enters. */
+		--motion-fast: 120ms;
+		--motion-base: 180ms;
+		--motion-enter: 260ms;
 		--branding-wolfstar: oklch(63% 0.2502 28.13);
 		--branding-staryl: oklch(0.5873 0.0204 272.13);
 
@@ -489,6 +495,9 @@
 }
 
 @theme {
+	/* The dashboard console moves on one curve: a quick start that settles.
+	   `ease-console` in a class, `var(--ease-console)` in a rule. */
+	--ease-console: cubic-bezier(0.22, 1, 0.36, 1);
 	--font-geist: "Geist", ui-sans-serif, system-ui, sans-serif;
 	--default-font-family: var(--font-geist);
 	--color-branding-wolfstar: var(--branding-wolfstar);
@@ -509,5 +518,28 @@
 	::backdrop,
 	::file-selector-button {
 		border-color: var(--color-base-200, currentColor);
+	}
+}
+
+/*
+ * The dashboard console (`.console`, the root of `layouts/dashboard.vue`).
+ * In the base layer on purpose: a utility class or a component's own rule
+ * outranks these, so a control with a transition of its own keeps it.
+ */
+@layer base {
+	/* Every control eases between its states instead of snapping. */
+	.console :where(button, a, [role="tab"], [role="option"], [role="menuitem"]) {
+		transition-duration: var(--motion-fast);
+		transition-property: color, background-color, border-color, opacity;
+		transition-timing-function: var(--ease-console);
+	}
+
+	/* A title breaks into even lines and a description leaves no word alone. */
+	.console :where(h1, h2, h3) {
+		text-wrap: balance;
+	}
+
+	.console :where(p) {
+		text-wrap: pretty;
 	}
 }

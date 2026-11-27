@@ -70,24 +70,24 @@ async function readJoinedAt(guildId: Snowflake, userId: Snowflake): Promise<numb
 	}
 }
 
-/** The `Captcha` stage a member waits at in a guild, read fresh from the database. */
+/**
+ * The `Captcha` stage a member waits at in a guild, read fresh from the
+ * database. Discord is asked when the member joined only when a row could be
+ * served: the page of a member who waits at no `Captcha` stage asks it nothing.
+ */
 async function readCaptchaWait(
 	guildId: Snowflake,
 	userId: Snowflake,
 	now: number,
 ): Promise<OnboardingCaptchaWait | null> {
-	const [record, rows, joinedAt] = await Promise.all([
+	const [record, rows] = await Promise.all([
 		onboardingStore.read(guildId),
 		fetchWaitingOnboardingRows(db.orm, guildId, userId),
-		readJoinedAt(guildId, userId),
 	]);
-	return findOnboardingCaptchaWait({
-		enabled: record.enabled,
-		joinedAt,
-		now,
-		rows,
-		stages: record.stages,
-	});
+	const input = { enabled: record.enabled, now, rows, stages: record.stages };
+	// The join time only takes rows away, so with every row there is none to serve, there is none with it either.
+	if (findOnboardingCaptchaWait({ ...input, joinedAt: null }) === null) return null;
+	return findOnboardingCaptchaWait({ ...input, joinedAt: await readJoinedAt(guildId, userId) });
 }
 
 /**

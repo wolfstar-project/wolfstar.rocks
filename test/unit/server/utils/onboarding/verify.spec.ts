@@ -95,6 +95,13 @@ describe("readOnboardingCaptchaPrompt", () => {
 		});
 	});
 
+	it("asks Discord nothing when the member waits at no Captcha stage", async () => {
+		mocks.fetchWaitingOnboardingRows.mockResolvedValue([]);
+
+		expect(await readOnboardingCaptchaPrompt(GUILD, MEMBER, NOW)).toBe(null);
+		expect(mocks.getMember).not.toHaveBeenCalled();
+	});
+
 	it("shows nothing for a row of a stay before the member joined again", async () => {
 		mocks.getMember.mockResolvedValue({
 			joined_at: new Date(row.createdAt + 5000).toISOString(),

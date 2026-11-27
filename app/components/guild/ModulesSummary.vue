@@ -20,7 +20,7 @@
 			<li v-for="module in modules" :key="module.key">
 				<button type="button" class="module-row" @click="goToSection(module.section)">
 					<span
-						class="size-2 shrink-0 rounded-full transition-colors duration-(--motion-base)"
+						class="size-2 shrink-0 rounded-full transition-colors duration-(--motion-base) ease-console"
 						:class="module.enabled ? 'bg-success' : 'bg-base-content/40'"
 						aria-hidden="true"
 					></span>

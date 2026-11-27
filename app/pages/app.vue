@@ -327,8 +327,9 @@ useSeoMeta({
 }
 
 /* A section's blocks rise in one after the other, the first four apart and the
-   rest together: the page is readable before the last one lands. */
-.console-section > :deep(*) {
+   rest together: the page is readable before the last one lands. A skeleton
+   that stands in while a section's code loads stays still. */
+.console-section > :deep(:not([aria-busy="true"])) {
 	animation: console-section-in var(--motion-enter) var(--ease-console) backwards;
 }
 

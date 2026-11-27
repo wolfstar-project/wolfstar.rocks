@@ -267,7 +267,7 @@ The dashboard console moves on one curve and three tempos, declared in `app/asse
 - Animate `transform`, `scale` and `opacity`. Never animate a size or a position.
 - Name the properties. Never write `transition: all`.
 - Do not add a looping animation to an element that is not live.
-- Reduced motion needs no extra rule: `utilities.css` shortens every transition and animation.
+- Reduced motion needs no rule of its own: `utilities.css` shortens every transition and animation and drops their delays.
 
 ## Shapes
 

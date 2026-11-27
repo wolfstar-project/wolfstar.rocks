@@ -86,7 +86,7 @@ export default {
 			"btn", // DaisyUI button base class
 			// Every button gives a little under the pointer. `scale` is its own
 			// property, so it is named: a list with `transform` alone misses it.
-			"transition-[color,background-color,border-color,box-shadow,scale] duration-(--motion-fast) ease-console not-disabled:active:scale-[0.97]",
+			"transition-[color,background-color,border-color,box-shadow,scale] duration-(--motion-fast) ease-console not-disabled:not-aria-disabled:active:scale-[0.97]",
 			//	'inline-flex items-center',
 			//	'disabled:cursor-not-allowed aria-disabled:cursor-not-allowed',
 			//	'disabled:opacity-75 aria-disabled:opacity-75'

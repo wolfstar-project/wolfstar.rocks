@@ -66,7 +66,7 @@
 			>
 				<dt class="truncate text-xs font-semibold text-toned">{{ stat.label }}</dt>
 				<dd class="mt-1 font-mono text-xl font-bold tabular-nums">{{ stat.value }}</dd>
-				<dd class="mt-0.5 min-h-4 truncate text-xs" :class="stat.noteClass ?? 'text-muted'">
+				<dd class="mt-0.5 min-h-4 text-xs" :class="stat.noteClass ?? 'text-muted'">
 					{{ stat.note }}
 				</dd>
 			</div>

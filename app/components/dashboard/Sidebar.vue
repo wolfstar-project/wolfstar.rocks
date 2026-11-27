@@ -106,7 +106,7 @@
 								>
 									<UIcon
 										:name="item.icon"
-										class="size-4.5 shrink-0 transition-colors duration-(--motion-fast)"
+										class="size-4.5 shrink-0 transition-colors duration-(--motion-fast) ease-console"
 										:class="item.current ? 'text-primary' : 'text-muted'"
 										aria-hidden="true"
 									/>

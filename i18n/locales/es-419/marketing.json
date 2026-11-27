@@ -2,106 +2,106 @@
 	"$schema": "../../schemas/marketing.schema.json",
 	"marketing": {
 		"commands": {
-			"categories_heading": "",
-			"category_count": "",
-			"details_label": "",
-			"empty_description": "",
-			"empty_title": "",
-			"examples": "",
-			"explained_usage": "",
-			"extended_help": "",
-			"guarded": "",
-			"loading": "",
-			"no_description": "",
-			"no_details": "",
-			"permission_administrator": "",
-			"permission_moderator": "",
-			"permission_staff": "",
-			"possible_formats": "",
-			"properties_label": "",
-			"refresh": "",
-			"refresh_label": "",
-			"reminder": "",
-			"results": "",
-			"search_clear": "",
-			"search_heading": "",
-			"search_label": "",
-			"search_placeholder": "",
-			"server_only": "",
-			"subtitle_highlight": "",
-			"subtitle_lead": "",
-			"subtitle_tail": "",
-			"title": "",
-			"try_again": "",
-			"unavailable_description": "",
-			"unavailable_title": "",
-			"usage": ""
+			"categories_heading": "Categorías de comandos",
+			"category_count": "Sin comandos | 1 comando | {count} comandos",
+			"details_label": "Detalles del comando {command}",
+			"empty_description": "Intenta ajustar tu búsqueda o explora otras categorías.",
+			"empty_title": "No se encontraron comandos",
+			"examples": "Ejemplos",
+			"explained_usage": "Uso explicado",
+			"extended_help": "Ayuda ampliada",
+			"guarded": "No se puede desactivar",
+			"loading": "Cargando comandos",
+			"no_description": "Sin descripción aún",
+			"no_details": "Aún no se han documentado notas de uso para este comando.",
+			"permission_administrator": "Solo administradores",
+			"permission_moderator": "Solo moderadores y administradores",
+			"permission_staff": "Solo personal",
+			"possible_formats": "Formatos posibles",
+			"properties_label": "Propiedades del comando",
+			"refresh": "Actualizar",
+			"refresh_label": "Actualizar lista de comandos",
+			"reminder": "Recordatorio",
+			"results": "No se encontraron comandos | Se encontró 1 comando | Se encontraron {count} comandos",
+			"search_clear": "Borrar búsqueda",
+			"search_heading": "Buscar comandos",
+			"search_label": "Buscar comandos por nombre o descripción",
+			"search_placeholder": "Buscar comandos...",
+			"server_only": "Solo servidor",
+			"subtitle_highlight": "Moderación potente",
+			"subtitle_lead": "Explora y busca entre todos los comandos de bot disponibles.",
+			"subtitle_tail": "al alcance de tu mano.",
+			"title": "Comandos de WolfStar",
+			"try_again": "Intentar de nuevo",
+			"unavailable_description": "No se pudieron cargar los comandos en este momento. Intenta actualizar la página.",
+			"unavailable_title": "No hay comandos disponibles",
+			"usage": "Uso de comandos"
 		},
 		"other_apps": {
-			"also_from": "",
-			"explore": "",
-			"eyebrow": "",
-			"invite": "",
-			"logo_alt": "",
+			"also_from": "También de WolfStar Project",
+			"explore": "Explora {app}",
+			"eyebrow": "Otras apps",
+			"invite": "Invitar a {app}",
+			"logo_alt": "Logo de {app}",
 			"staryl_description": "",
 			"title": "",
-			"wolfstar_description": ""
+			"wolfstar_description": "WolfStar combina moderación configurable, registro de eventos del servidor y ajustes administrados desde el panel."
 		},
 		"staryl": {
 			"commands": {
 				"description": "",
-				"eyebrow": "",
+				"eyebrow": "Vista previa del flujo de comandos",
 				"title": ""
 			},
 			"cta": {
-				"ask_in_support": "",
-				"eyebrow": "",
-				"invite": "",
-				"subtitle": "",
+				"ask_in_support": "Preguntar en soporte",
+				"eyebrow": "Staryl para Discord",
+				"invite": "Invitar a Staryl",
+				"subtitle": "Invita a Staryl ahora o únete al servidor de soporte si primero quieres hacer una pregunta.",
 				"title": ""
 			},
 			"features": {
-				"command_hint": "",
+				"command_hint": "Con {command}",
 				"description": "",
-				"eyebrow": "",
+				"eyebrow": "Lo que llega al canal",
 				"feed_body": "",
 				"feed_title": "",
-				"live_body": "",
-				"live_title": "",
-				"next": "",
+				"live_body": "El título del stream enlaza al canal, junto al juego y su portada, encima de una vista previa del stream y un botón para verlo.",
+				"live_title": "Transmitir en vivo",
+				"next": "Siguiente notificación",
 				"notifications_description": "",
 				"notifications_title": "",
-				"offline_body": "",
-				"offline_message": "",
-				"offline_title": "",
-				"ping_body": "",
-				"ping_role": "",
-				"ping_title": "",
+				"offline_body": "Una suscripción sin conexión publica el mensaje que escribiste para ella, junto con la hora a la que terminó la transmisión. Las suscripciones sin conexión necesitan ese mensaje.",
+				"offline_message": "¡La transmisión de Stella terminó, gracias por verla!",
+				"offline_title": "Transmite sin conexión",
+				"ping_body": "Agrega un mensaje a la suscripción y aparecerá encima de la notificación. Menciona un rol en él y Staryl notificará a ese rol, siempre que se pueda mencionar.",
+				"ping_role": "Pings de transmisiones",
+				"ping_title": "Menciona un rol",
 				"post_body": "",
 				"post_title": "",
-				"previous": "",
-				"test_body": "",
-				"test_notice": "",
-				"test_notice_label": "",
-				"test_title": "",
+				"previous": "Notificación anterior",
+				"test_body": "Una prueba sigue la misma ruta que una notificación real, por lo que cualquier permiso faltante aparece ahora y no en la próxima transmisión. Indica que es una prueba.",
+				"test_notice": "esta es una vista previa solicitada por un administrador del servidor, no una actualización real de la transmisión.",
+				"test_notice_label": "Probar notificación",
+				"test_title": "Pruébalo",
 				"title": ""
 			},
 			"hero": {
-				"brief_aria": "",
-				"brief_label": "",
-				"invite": "",
-				"kicker": "",
-				"release": "",
-				"routing_term": "",
+				"brief_aria": "Resumen de capacidades de Staryl",
+				"brief_label": "Lo que obtiene tu servidor",
+				"invite": "Invitar a Staryl",
+				"kicker": "Notificaciones sociales de código abierto",
+				"release": "Versión v{version}",
+				"routing_term": "Enrutamiento",
 				"routing_value": "",
-				"see_work": "",
-				"setup_term": "",
-				"setup_value": "",
-				"sources_term": "",
+				"see_work": "Mira cómo funciona Staryl",
+				"setup_term": "Configuración",
+				"setup_value": "Se ejecuta con {command}, sin necesidad de un panel",
+				"sources_term": "Fuentes",
 				"sources_value": "",
 				"subtitle": "",
-				"title": "",
-				"view_source": ""
+				"title": "Actualizaciones sociales, donde ya está tu servidor.",
+				"view_source": "Ver código fuente"
 			},
 			"notification": {
 				"box_art_alt": "",
@@ -109,47 +109,47 @@
 				"feed_footer": "",
 				"feed_header": "",
 				"feed_read": "",
-				"footer": "",
-				"game": "",
-				"game_label": "",
-				"live_header": "",
-				"message": "",
+				"footer": "Notificaciones de Twitch de Staryl",
+				"game": "Desarrollo de software y videojuegos",
+				"game_label": "Juego",
+				"live_header": "¡{name} está en vivo en Twitch!",
+				"message": "¡Stella está en vivo, ven a saludarla!",
 				"post_body": "",
 				"post_footer": "",
 				"post_header": "",
 				"post_view": "",
-				"preview_alt": "",
-				"stream_title": "",
-				"test_title": "",
-				"timestamp": "",
-				"watch": ""
+				"preview_alt": "Vista previa de la transmisión: un editor de código y la cámara web del streamer.",
+				"stream_title": "Corrigiendo errores en vivo, ven a pasar el rato",
+				"test_title": "Probar notificación",
+				"timestamp": "Hoy a las 17:48",
+				"watch": "Ver transmisión"
 			},
 			"proof": {
-				"eyebrow": "",
+				"eyebrow": "Lo que hace Staryl",
 				"step_1_body": "",
-				"step_1_title": "",
+				"step_1_title": "Elige la fuente",
 				"step_2_body": "",
-				"step_2_title": "",
+				"step_2_title": "Dirige la actualización",
 				"step_3_body": "",
-				"step_3_title": "",
-				"title": ""
+				"step_3_title": "Gestiónenlo juntos",
+				"title": "Del código fuente al servidor, en un solo salto."
 			},
 			"seo": {
 				"description": "",
-				"title": ""
+				"title": "Staryl"
 			},
 			"setup": {
-				"eyebrow": "",
+				"eyebrow": "Sin necesidad de un panel",
 				"general_body": "",
 				"general_title": "",
 				"index_label": "",
-				"see_commands": "",
+				"see_commands": "Ver los comandos",
 				"sources_body": "",
 				"sources_title": "",
 				"status_body": "",
 				"status_title": "",
 				"subtitle": "",
-				"title": "",
+				"title": "Configúralo desde Discord.",
 				"twitch_body": "",
 				"twitch_title": ""
 			},
@@ -158,11 +158,11 @@
 				"add_response": "",
 				"bluesky_add_response": "",
 				"channel_topic": "",
-				"composer_placeholder": "",
+				"composer_placeholder": "Mensaje #{channel}",
 				"remove_description": "",
 				"remove_response": "",
 				"reset_description": "",
-				"reset_response": "",
+				"reset_response": "✅ ¡Listo! Se eliminaron 3 suscripciones de este servidor.",
 				"rss_add_response": "",
 				"search_placeholder": "",
 				"settings_count": "",
@@ -174,837 +174,837 @@
 				"show_description": "",
 				"show_embed_offline": "",
 				"show_embed_online": "",
-				"show_embed_title": "",
+				"show_embed_title": "Suscripciones de Twitch",
 				"social_add_description": "",
 				"test_description": "",
-				"test_response": "",
-				"timestamp": ""
+				"test_response": "✅ ¡Enviado! Revisa #staryl-notifications — así es exactamente como se verá la notificación.",
+				"timestamp": "Hoy a las 15:49"
 			}
 		},
 		"wolfstar": {
 			"commands": {
-				"description": "",
-				"eyebrow": "",
-				"title": ""
+				"description": "Escribe un comando con barra diagonal, navega por las opciones de autocompletado con el teclado y envíalo para ver la respuesta de WolfStar.",
+				"eyebrow": "Prueba el flujo de comandos",
+				"title": "La demostración de abajo funciona como Discord."
 			},
 			"commands_showcase": {
-				"channel_topic": "",
-				"composer_placeholder": "",
-				"mock_catbot_cat": "",
-				"mock_dyno_modlogs": "",
-				"mock_fmbot_addfriend": "",
-				"mock_fmbot_fm": "",
-				"mock_ring_info": "",
-				"mock_utilsbot_poll": "",
+				"channel_topic": "Comandos de moderación de WolfStar — prueba un comando de barra diagonal a continuación.",
+				"composer_placeholder": "Mensaje #{channel}",
+				"mock_catbot_cat": "Envía una imagen aleatoria de un gato.",
+				"mock_dyno_modlogs": "Ver registros de moderación de un miembro.",
+				"mock_fmbot_addfriend": "Agrega un amigo a tus amigos de .fmbot",
+				"mock_fmbot_fm": "Muestra lo que estás escuchando ahora mismo.",
+				"mock_ring_info": "Obtén información sobre el bot.",
+				"mock_utilsbot_poll": "Iniciar una encuesta en este canal.",
 				"search_placeholder": "",
-				"select_aria": "",
-				"timestamp": ""
+				"select_aria": "Categoría de configuración del servidor",
+				"timestamp": "Hoy a las 15:49"
 			},
 			"cta": {
-				"ask_in_support": "",
-				"eyebrow": "",
-				"invite": "",
-				"subtitle": "",
-				"title": ""
+				"ask_in_support": "Preguntar en soporte",
+				"eyebrow": "WolfStar para Discord",
+				"invite": "Invita a WolfStar",
+				"subtitle": "Invita a WolfStar ahora o únete al servidor de soporte si primero quieres hacer una pregunta.",
+				"title": "Pon las reglas y el historial en un solo lugar."
 			},
 			"dashboard": {
-				"browse_commands": "",
-				"eyebrow": "",
-				"index_label": "",
-				"row_1_body": "",
-				"row_1_title": "",
-				"row_2_body": "",
-				"row_2_title": "",
-				"row_3_body": "",
-				"row_3_title": "",
-				"row_4_body": "",
-				"row_4_title": "",
-				"sign_in": "",
-				"subtitle": "",
-				"title": "",
-				"views_count": ""
+				"browse_commands": "Explorar comandos",
+				"eyebrow": "Panel",
+				"index_label": "Dentro del panel",
+				"row_1_body": "Comportamiento general, canales, roles, eventos y acceso a comandos.",
+				"row_1_title": "Configuración del servidor",
+				"row_2_body": "Filtra por miembro, moderador, acción, fecha o texto de búsqueda.",
+				"row_2_title": "Historial de moderación",
+				"row_3_body": "Revisa los nombres de los comandos, los resultados, los miembros, las fechas y las coincidencias de búsqueda.",
+				"row_3_title": "Historial de comandos",
+				"row_4_body": "Consulta quién cambió la configuración administrada desde el panel y qué cambió.",
+				"row_4_title": "Actividad de configuración",
+				"sign_in": "Iniciar sesión en el panel",
+				"subtitle": "Inicia sesión con Discord, elige un servidor que administres y configura WolfStar sin editar archivos ni memorizar comandos de configuración.",
+				"title": "La sala de control es parte del producto.",
+				"views_count": "04 vistas"
 			},
 			"fixtures": {
-				"action_ban": "",
-				"action_kick": "",
-				"action_mute": "",
-				"action_softban": "",
-				"action_timeout": "",
-				"action_voice_kick": "",
-				"action_voice_mute": "",
-				"action_warning": "",
-				"button_reset": "",
-				"channel_create_action": "",
-				"channel_create_title": "",
-				"channel_create_tooltip": "",
-				"channel_delete_action": "",
-				"channel_delete_title": "",
-				"channel_delete_tooltip": "",
-				"channel_update_action": "",
-				"channel_update_title": "",
-				"channel_update_tooltip": "",
+				"action_ban": "Suspender",
+				"action_kick": "Expulsar",
+				"action_mute": "Silenciar",
+				"action_softban": "Expulsión temporal",
+				"action_timeout": "Tiempo de espera agotado",
+				"action_voice_kick": "Expulsión de voz",
+				"action_voice_mute": "Silenciamiento de voz",
+				"action_warning": "Advertencia",
+				"button_reset": "Restablecer",
+				"channel_create_action": "Canal creado",
+				"channel_create_title": "creación de canal",
+				"channel_create_tooltip": "Creación de canal",
+				"channel_delete_action": "Canal eliminado",
+				"channel_delete_title": "eliminación de canal",
+				"channel_delete_tooltip": "Eliminar canal",
+				"channel_update_action": "Canal actualizado",
+				"channel_update_title": "actualizaciones del canal",
+				"channel_update_tooltip": "Actualización del canal",
 				"cmd_ban_description": "",
-				"cmd_ban_tooltip": "",
-				"cmd_case_archive_description": "",
-				"cmd_case_archive_tooltip": "",
-				"cmd_case_delete_description": "",
-				"cmd_case_delete_tooltip": "",
-				"cmd_case_edit_description": "",
-				"cmd_case_edit_tooltip": "",
-				"cmd_case_list_description": "",
-				"cmd_case_list_tooltip": "",
-				"cmd_case_view_description": "",
-				"cmd_case_view_tooltip": "",
+				"cmd_ban_tooltip": "Suspender",
+				"cmd_case_archive_description": "Archivar un caso de moderación.",
+				"cmd_case_archive_tooltip": "Archivar caso",
+				"cmd_case_delete_description": "Eliminar un caso de moderación.",
+				"cmd_case_delete_tooltip": "Eliminar caso",
+				"cmd_case_edit_description": "Editar un caso de moderación.",
+				"cmd_case_edit_tooltip": "Editar caso",
+				"cmd_case_list_description": "Lista los casos de moderación.",
+				"cmd_case_list_tooltip": "Listar casos",
+				"cmd_case_view_description": "Recupera la información de un caso de moderación.",
+				"cmd_case_view_tooltip": "Ver caso",
 				"cmd_kick_description": "",
-				"cmd_kick_tooltip": "",
+				"cmd_kick_tooltip": "Expulsar",
 				"cmd_mute_description": "",
-				"cmd_mute_tooltip": "",
-				"cmd_settings_export_description": "",
-				"cmd_settings_export_tooltip": "",
-				"cmd_settings_menu_description": "",
-				"cmd_settings_menu_tooltip": "",
-				"cmd_slowmode_description": "",
-				"cmd_slowmode_tooltip": "",
-				"cmd_timeout_description": "",
-				"cmd_timeout_tooltip": "",
+				"cmd_mute_tooltip": "Silenciar",
+				"cmd_settings_export_description": "Exporta la configuración y las reglas de moderación automática del servidor a un archivo.",
+				"cmd_settings_export_tooltip": "Exportar configuración",
+				"cmd_settings_menu_description": "Abre el menú de configuración del servidor.",
+				"cmd_settings_menu_tooltip": "Menú de configuración",
+				"cmd_slowmode_description": "Establece el valor del modo lento del canal en segundos.",
+				"cmd_slowmode_tooltip": "Modo lento",
+				"cmd_timeout_description": "Aplicar tiempo de espera a un usuario.",
+				"cmd_timeout_tooltip": "Tiempo de espera agotado",
 				"cmd_warn_description": "",
-				"cmd_warn_tooltip": "",
-				"embed_case": "",
-				"label_account_created": "",
-				"label_after": "",
-				"label_before": "",
-				"label_changes": "",
-				"label_channel": "",
-				"label_color": "",
-				"label_content": "",
-				"label_created_by": "",
-				"label_deleted_by": "",
-				"label_joined_at": "",
-				"label_moderator": "",
-				"label_reason": "",
-				"label_role": "",
-				"label_roles": "",
-				"label_type": "",
-				"label_updated_by": "",
-				"label_user": "",
-				"member_join_action": "",
-				"member_join_title": "",
-				"member_join_tooltip": "",
-				"member_leave_action": "",
-				"member_leave_title": "",
-				"member_leave_tooltip": "",
-				"menu_expires": "",
-				"menu_heading": "",
-				"menu_intro": "",
-				"menu_language": "",
-				"menu_reset_description": "",
-				"menu_reset_title": "",
-				"menu_time_zone": "",
-				"menu_updates_channel": "",
-				"message_delete_action": "",
-				"message_delete_title": "",
-				"message_delete_tooltip": "",
-				"message_edit_action": "",
-				"message_edit_title": "",
-				"message_edit_tooltip": "",
-				"reason_excessive_noise": "",
-				"reason_flooding": "",
-				"reason_ignoring_warnings": "",
-				"reason_repeated_infractions": "",
-				"reply_case_archived": "",
-				"reply_case_deleted": "",
-				"reply_case_edited": "",
-				"reply_moderation": "",
-				"reply_moderation_reason": "",
-				"reply_no_cases": "",
-				"reply_settings_exported": "",
-				"reply_slowmode_set": "",
-				"role_create_action": "",
-				"role_create_title": "",
-				"role_create_tooltip": "",
-				"role_delete_action": "",
-				"role_delete_title": "",
-				"role_delete_tooltip": "",
-				"role_update_action": "",
-				"role_update_title": "",
-				"role_update_tooltip": "",
+				"cmd_warn_tooltip": "Advertir",
+				"embed_case": "Caso {id}",
+				"label_account_created": "Cuenta creada",
+				"label_after": "Después de",
+				"label_before": "Antes",
+				"label_changes": "Cambios",
+				"label_channel": "Canal",
+				"label_color": "Color",
+				"label_content": "Contenido",
+				"label_created_by": "Creado por",
+				"label_deleted_by": "Eliminado por",
+				"label_joined_at": "Fecha de ingreso",
+				"label_moderator": "Moderador",
+				"label_reason": "Motivo",
+				"label_role": "Rol",
+				"label_roles": "Roles",
+				"label_type": "Tipo",
+				"label_updated_by": "Actualizado por",
+				"label_user": "Usuario",
+				"member_join_action": "Usuario se unió",
+				"member_join_title": "incorporaciones de miembros",
+				"member_join_tooltip": "Incorporación de miembros",
+				"member_leave_action": "Usuario abandonó",
+				"member_leave_title": "miembro se va",
+				"member_leave_tooltip": "Salida de miembro",
+				"menu_expires": "Este menú se cierra en {time} si no se usa.",
+				"menu_heading": "Configuraciones principales",
+				"menu_intro": "Selecciona un módulo para configurar los ajustes de {guild}.",
+				"menu_language": "Idioma",
+				"menu_reset_description": "Restablece la configuración de este módulo a sus valores predeterminados.",
+				"menu_reset_title": "Restablecer configuraciones",
+				"menu_time_zone": "Zona horaria",
+				"menu_updates_channel": "Canal de actualizaciones",
+				"message_delete_action": "Mensaje eliminado",
+				"message_delete_title": "eliminaciones de mensajes",
+				"message_delete_tooltip": "Eliminar mensaje",
+				"message_edit_action": "Mensaje editado",
+				"message_edit_title": "ediciones de mensajes",
+				"message_edit_tooltip": "Edición de mensaje",
+				"reason_excessive_noise": "ruido excesivo",
+				"reason_flooding": "inundar el chat",
+				"reason_ignoring_warnings": "ignorar advertencias",
+				"reason_repeated_infractions": "infracciones reiteradas",
+				"reply_case_archived": "Se archivó correctamente el caso {id}.",
+				"reply_case_deleted": "Se eliminó correctamente el caso {id}.",
+				"reply_case_edited": "Se editó correctamente el caso {id}.",
+				"reply_moderation": "Caso {id} creado | {user}.",
+				"reply_moderation_reason": "Con el motivo: {reason}",
+				"reply_no_cases": "No hay casos de moderación con los filtros seleccionados.",
+				"reply_settings_exported": "Aquí está la configuración del servidor: {settings} ajustes y {rules} reglas de moderación automática. No incluye roles, canales ni usuarios, tampoco los roles y canales exentos de las reglas.",
+				"reply_slowmode_set": "El tiempo de espera de este canal se estableció en {duration}.",
+				"role_create_action": "Rol creado",
+				"role_create_title": "creación de rol",
+				"role_create_tooltip": "Creación de rol",
+				"role_delete_action": "Rol eliminado",
+				"role_delete_title": "eliminación de rol",
+				"role_delete_tooltip": "Eliminar rol",
+				"role_update_action": "Rol actualizado",
+				"role_update_title": "actualizaciones de roles",
+				"role_update_tooltip": "Actualización de rol",
 				"select_placeholder": "",
-				"text_edited_message": "",
-				"text_message_deleted": "",
-				"text_name_changed": "",
-				"text_original_message": "",
-				"text_permissions_updated": "",
-				"text_spam": "",
-				"text_text_channel": "",
-				"text_warning": "",
-				"value_in_fifteen_minutes": "",
-				"value_not_set": "",
-				"value_ten_seconds": ""
+				"text_edited_message": "Mensaje editado",
+				"text_message_deleted": "Este mensaje ha sido eliminado",
+				"text_name_changed": "Nombre cambiado de #old-general a #general",
+				"text_original_message": "Mensaje original",
+				"text_permissions_updated": "Permisos actualizados",
+				"text_spam": "spam",
+				"text_text_channel": "Canal de texto",
+				"text_warning": "Advertencia",
+				"value_in_fifteen_minutes": "en 15 minutos",
+				"value_not_set": "Sin configurar",
+				"value_ten_seconds": "10 segundos"
 			},
 			"hero": {
-				"automod_term": "",
-				"automod_value": "",
-				"brief_aria": "",
-				"brief_label": "",
-				"dashboard_term": "",
-				"dashboard_value": "",
-				"history_term": "",
-				"history_value": "",
-				"invite": "",
-				"kicker": "",
-				"release": "",
-				"see_work": "",
-				"subtitle": "",
-				"title": "",
-				"view_source": ""
+				"automod_term": "Automod",
+				"automod_value": "Filtros de mensajes configurables y reglas de escalamiento",
+				"brief_aria": "Resumen de capacidades de WolfStar",
+				"brief_label": "Lo que obtiene tu equipo",
+				"dashboard_term": "Panel",
+				"dashboard_value": "Roles, canales, eventos, comandos y filtros",
+				"history_term": "Historial",
+				"history_value": "Actividad de moderación, comandos y configuración",
+				"invite": "Invita a WolfStar",
+				"kicker": "Moderación de Discord de código abierto",
+				"release": "Versión v{version}",
+				"see_work": "Mira cómo funciona WolfStar",
+				"subtitle": "WolfStar filtra los mensajes problemáticos, registra el historial de moderación y comandos, y ofrece a tu equipo un solo lugar para administrar la configuración del servidor.",
+				"title": "Moderación, con registro documental.",
+				"view_source": "Ver código fuente"
 			},
 			"proof": {
-				"eyebrow": "",
-				"step_1_body": "",
-				"step_1_cta": "",
-				"step_1_title": "",
-				"step_2_body": "",
-				"step_2_cta": "",
-				"step_2_title": "",
-				"step_3_body": "",
-				"step_3_cta": "",
-				"step_3_title": "",
-				"title": ""
+				"eyebrow": "Lo que hace WolfStar",
+				"step_1_body": "Elige qué mensajes debe detectar WolfStar, qué sucede con el mensaje y cuándo las infracciones reiteradas se convierten en una advertencia, una suspensión temporal, una expulsión o un bloqueo.",
+				"step_1_cta": "Prueba una regla de AutoMod",
+				"step_1_title": "Configura la regla",
+				"step_2_body": "Envía eventos en vivo a Discord y revisa después en el panel la actividad de moderación, advertencias, comandos y configuración.",
+				"step_2_cta": "Inspecciona el flujo de registro",
+				"step_2_title": "Conserva el registro",
+				"step_3_body": "Administra canales, roles, eventos, acceso a comandos y filtros de moderación desde el mismo panel autenticado.",
+				"step_3_cta": "Ver el alcance del dashboard",
+				"step_3_title": "Revísenlo juntos",
+				"title": "Un sistema desde la primera alerta hasta la revisión final."
 			},
 			"seo": {
-				"description": "",
-				"title": ""
+				"description": "WolfStar ofrece a los equipos de moderación de Discord un AutoMod configurable, historiales de moderación y comandos con búsqueda y un panel único para la configuración del servidor.",
+				"title": "Inicio"
 			},
 			"showcase": {
-				"act_on": "",
-				"action_alert_body": "",
-				"action_alert_label": "",
-				"action_delete_body": "",
-				"action_delete_label": "",
-				"action_log_body": "",
-				"action_log_label": "",
-				"alert": "",
-				"automod_actions_intro": "",
-				"automod_attachments_alert": "",
-				"automod_attachments_title": "",
-				"automod_attachments_tooltip": "",
-				"automod_capitals_alert": "",
-				"automod_capitals_title": "",
-				"automod_capitals_tooltip": "",
-				"automod_intro": "",
-				"automod_invites_alert": "",
-				"automod_invites_title": "",
-				"automod_invites_tooltip": "",
-				"automod_links_alert": "",
-				"automod_links_title": "",
-				"automod_links_tooltip": "",
-				"automod_mentions_alert": "",
-				"automod_mentions_title": "",
-				"automod_mentions_tooltip": "",
-				"automod_newlines_alert": "",
-				"automod_newlines_title": "",
-				"automod_newlines_tooltip": "",
-				"automod_reactions_alert": "",
-				"automod_reactions_title": "",
-				"automod_reactions_tooltip": "",
-				"automod_spam_alert": "",
-				"automod_spam_title": "",
-				"automod_spam_tooltip": "",
-				"automod_words_alert": "",
-				"automod_words_title": "",
-				"automod_words_tooltip": "",
-				"btn_temporary": "",
-				"btn_undo": "",
-				"channel_automod": "",
-				"channel_logs": "",
-				"channel_modlog": "",
-				"embed_action": "",
-				"embed_case": "",
-				"embed_log": "",
-				"embed_reason": "",
-				"embed_reason_value": "",
-				"embed_type": "",
-				"embed_user": "",
-				"escalation_action_body": "",
-				"escalation_action_label": "",
-				"escalation_intro": "",
-				"escalation_threshold_body": "",
-				"escalation_threshold_label": "",
-				"feature_automod_description": "",
-				"feature_automod_title": "",
-				"feature_logging_description": "",
-				"feature_logging_title": "",
-				"feature_moderation_description": "",
-				"feature_moderation_title": "",
-				"header_description": "",
-				"header_eyebrow": "",
-				"header_title": "",
-				"keep_track_of": "",
-				"logging_dashboard_intro": "",
-				"logging_intro": "",
-				"logging_item_filter": "",
-				"logging_item_views": "",
-				"mod_copy_audit": "",
-				"mod_copy_search": "",
-				"msg_attachments": "",
-				"msg_capitals": "",
-				"msg_capitals_strong": "",
-				"msg_invites": "",
-				"msg_links": "",
-				"msg_mentions": "",
-				"msg_newlines": "",
-				"msg_newlines_end": "",
-				"msg_reactions": "",
-				"msg_spam": "",
-				"msg_words": "",
-				"msg_words_strong": "",
-				"next_automod": "",
-				"next_logging": "",
-				"next_moderation": "",
-				"prev_automod": "",
-				"prev_logging": "",
-				"prev_moderation": "",
-				"server_suffix": "",
-				"suite_for": "",
-				"suite_subject": ""
+				"act_on": "WolfStar puede actuar sobre {subject}",
+				"action_alert_body": "enviar un mensaje notificando al usuario sobre su infracción.",
+				"action_alert_label": "Alertar al usuario:",
+				"action_delete_body": "elimina el mensaje que provocó la infracción y mantén tus canales limpios.",
+				"action_delete_label": "Eliminar el mensaje:",
+				"action_log_body": "enviar un mensaje al canal del registro de moderación para que los moderadores lo vean.",
+				"action_log_label": "Registro de moderación de publicaciones:",
+				"alert": "Estimado/a {user}, {reason}",
+				"automod_actions_intro": "Por cada infracción, WolfStar puede:",
+				"automod_attachments_alert": "no se permiten archivos adjuntos en este canal.",
+				"automod_attachments_title": "archivos adjuntos",
+				"automod_attachments_tooltip": "Archivos adjuntos",
+				"automod_capitals_alert": "por favor, reduce el uso de mayúsculas.",
+				"automod_capitals_title": "mayúsculas",
+				"automod_capitals_tooltip": "Capitales",
+				"automod_intro": "Elige qué mensajes activan una regla y luego decide cómo responde WolfStar.",
+				"automod_invites_alert": "no se permiten enlaces de invitación en este canal.",
+				"automod_invites_title": "invitaciones",
+				"automod_invites_tooltip": "Invitaciones",
+				"automod_links_alert": "enviaste enlaces que no están permitidos aquí.",
+				"automod_links_title": "enlaces maliciosos",
+				"automod_links_tooltip": "Enlaces",
+				"automod_mentions_alert": "mencionaste a demasiadas personas.",
+				"automod_mentions_title": "menciones excesivas",
+				"automod_mentions_tooltip": "Menciones",
+				"automod_newlines_alert": "tu mensaje contiene demasiadas líneas.",
+				"automod_newlines_title": "líneas excesivas",
+				"automod_newlines_tooltip": "Líneas",
+				"automod_reactions_alert": "no puedes reaccionar con ese emoji.",
+				"automod_reactions_title": "malas reacciones",
+				"automod_reactions_tooltip": "Reacciones",
+				"automod_spam_alert": "evita volver a publicar el mismo mensaje varias veces.",
+				"automod_spam_title": "spam",
+				"automod_spam_tooltip": "Spam",
+				"automod_words_alert": "dijiste algo que no está permitido en este servidor.",
+				"automod_words_title": "malas palabras",
+				"automod_words_tooltip": "Palabras",
+				"btn_temporary": "Temporal",
+				"btn_undo": "Deshacer",
+				"channel_automod": "demo-de-automod",
+				"channel_logs": "registros-del-servidor",
+				"channel_modlog": "registro de moderación",
+				"embed_action": "Acción",
+				"embed_case": "Caso {id}",
+				"embed_log": "Registro #{id}",
+				"embed_reason": "Motivo",
+				"embed_reason_value": "spam",
+				"embed_type": "Tipo",
+				"embed_user": "Usuario",
+				"escalation_action_body": "advertir, silenciar temporalmente, expulsar o banear, con una duración temporal o permanente cuando sea compatible.",
+				"escalation_action_label": "Establece la acción:",
+				"escalation_intro": "Las infracciones reiteradas pueden activar una regla de escalamiento independiente:",
+				"escalation_threshold_body": "elige cuántas infracciones dentro de un período activan la acción.",
+				"escalation_threshold_label": "Establecer el umbral:",
+				"feature_automod_description": "Explora ejemplos reales de filtros y consulta en conjunto los controles de mensajes, respuestas y escalamiento.",
+				"feature_automod_title": "Configura la regla antes de que se active",
+				"feature_logging_description": "Elige qué eventos del servidor llegan a Discord y luego busca el historial de moderación, comandos y configuración en el panel.",
+				"feature_logging_title": "Conserva los eventos en vivo y el historial consultable",
+				"feature_moderation_description": "Cada acción de moderación conserva los detalles que tu equipo necesita para revisarla.",
+				"feature_moderation_title": "Cada acción conserva su contexto.",
+				"header_description": "Usa los controles para examinar el mismo flujo de moderación que tu equipo configura y revisa.",
+				"header_eyebrow": "Recorrido por el producto",
+				"header_title": "Sigue una regla desde el activador hasta la revisión.",
+				"keep_track_of": "Haz seguimiento de {subject}",
+				"logging_dashboard_intro": "En el panel, puedes:",
+				"logging_intro": "Envía eventos de miembros, canales, roles, mensajes y moderación a los canales de Discord que tu equipo ya monitorea.",
+				"logging_item_filter": "Filtra el historial de moderación por miembro, moderador, acción, fecha o texto de búsqueda.",
+				"logging_item_views": "Mantén los resultados de los comandos y la actividad de configuración del panel en sus propias vistas revisables.",
+				"mod_copy_audit": "WolfStar también puede registrar las acciones de moderación compatibles realizadas directamente en Discord, incluido el motivo indicado en el registro de auditoría.",
+				"mod_copy_search": "Busca en el historial de moderación por miembro, moderador, acción, fecha o texto. Cada entrada mantiene juntos la acción y el motivo.",
+				"msg_attachments": "¿Has visto esto????",
+				"msg_capitals": "PUEDO HABLAR TODO EN MAYÚSCULAS,",
+				"msg_capitals_strong": "¡Y WOLFSTAR NO ME DETENDRÁ!",
+				"msg_invites": "¡Todos únanse a mi servidor!",
+				"msg_links": "¡Todos revisen esos enlaces!",
+				"msg_mentions": "¡Que todos me noten!",
+				"msg_newlines": "Jejejeje",
+				"msg_newlines_end": "¡Tantas líneas!",
+				"msg_reactions": "¡Hola, gente! ¡Tengo excelentes noticias para compartir!",
+				"msg_spam": "¡Chicos, mírenme!",
+				"msg_words": "Me gustaría decir que eres una persona {word}.",
+				"msg_words_strong": "repugnante",
+				"next_automod": "Próxima función de automoderación",
+				"next_logging": "Próximo evento de registro",
+				"next_moderation": "Próxima acción de moderación",
+				"prev_automod": "Función de automoderación anterior",
+				"prev_logging": "Evento de registro anterior",
+				"prev_moderation": "Acción de moderación anterior",
+				"server_suffix": "— Sede de WolfStar",
+				"suite_for": "Una suite completa para {subject}",
+				"suite_subject": "registros de moderación"
 			},
 			"commands_catalogue": {
 				"archive_create": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Crear archivo",
+					"description": "Guarda los mensajes que un miembro envió en los últimos 14 días.",
+					"reply": "Historial `a1b2c3` de <@baddie> guardado, con 42 mensajes."
 				},
 				"archive_list": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Archivar lista",
+					"description": "Enumera los historiales de mensajes más recientes.",
+					"reply": "- `a1b2c3`: <@baddie>, 42 mensajes, hoy por <@stella>"
 				},
 				"archive_show": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Archivar show",
+					"description": "Obtén el archivo del historial de mensajes.",
+					"reply": "📎 `history-a1b2c3.txt`"
 				},
 				"autodelete_disable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Deshabilitar eliminación automática",
+					"description": "Dejar de eliminar los mensajes de un canal.",
+					"reply": "Los mensajes de <#selfies> ya no se eliminan."
 				},
 				"autodelete_enable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Habilitar eliminación automática",
+					"description": "Elimina los mensajes enviados en un canal, de inmediato o después de un tiempo.",
+					"reply": "Los mensajes enviados en <#selfies> se eliminan después de 1 hora, excepto los que se fijen mientras tanto.\n**Se conservan:** Mensajes con imágenes"
 				},
 				"autodelete_list": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
+					"tooltip": "Lista de eliminación automática",
+					"description": "Lista de canales cuyos mensajes se eliminan.",
+					"title": "Canales cuyos mensajes se eliminan (1)",
+					"reply": "<#selfies> · 1 hora\n-# Conservados: Mensajes con imágenes"
 				},
 				"automessage_disable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Desactivar mensaje automático",
+					"description": "Dejar de enviar el mensaje de un canal.",
+					"reply": "Ya no envío mensajes en <#general>."
 				},
 				"automessage_enable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Activar mensaje automático",
+					"description": "Envía un mensaje en un canal en cada intervalo. Escribe el mensaje después de esto.",
+					"reply": "Envío el mensaje en <#general> cada 6 horas, la primera vez dentro de 6 horas. Cuando el último mensaje del canal sigue siendo mío, lo omito."
 				},
 				"automessage_list": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
+					"tooltip": "Lista de mensajes automáticos",
+					"description": "Lista los canales que reciben un mensaje.",
+					"title": "Mensajes automáticos (1)",
+					"reply": "<#general> · cada 6 horas · próxima en 2 horas\n-# `¡Lee las reglas en #rules antes de publicar!`"
 				},
 				"autopurge_disable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Desactivar purga automática",
+					"description": "Dejar de purgar un canal.",
+					"reply": "<#memes> ya no se purga."
 				},
 				"autopurge_enable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Activar purga automática",
+					"description": "Purga un canal en cada intervalo, ya sea de todos los mensajes o de aquellos que busca un filtro.",
+					"reply": "<#memes> se purga cada 1 día, la primera vez dentro de 1 día.\n**Elimina:** Todos los mensajes"
 				},
 				"autopurge_list": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
+					"tooltip": "Lista de purga automática",
+					"description": "Lista los canales que se purgan.",
+					"title": "Canales purgados (1)",
+					"reply": "<#memes> · cada 1 día · siguiente en 5 horas\n-# Cada mensaje"
 				},
 				"automod_add": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
+					"tooltip": "Agregar automod",
+					"description": "Agregar una entrada a la lista de una regla: una palabra, un enlace permitido o una invitación permitida",
+					"title": "Malas palabras",
+					"reply": "**ID:** `r2` · **Tipo:** `Palabras`\n**Estado**\n✅ Habilitado\n-# Se agregó `free nitro` a **Palabras prohibidas**.",
+					"select": "Panel de configuración"
 				},
 				"automod_create": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
+					"tooltip": "Crear Automod",
+					"description": "Crear una regla de moderación automática",
+					"title": "Sin invitaciones",
+					"reply": "**ID:** `r1` · **Tipo:** `Invitaciones`\n**Estado**\n✅ Habilitada\n-# Se creó la regla. Por ahora solo cuenta las infracciones: configura qué hace en la respuesta de moderación.",
+					"select": "Panel de configuración"
 				},
 				"automod_delete": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Eliminación automática",
+					"description": "Eliminar una regla de moderación automática",
+					"reply": "Se eliminó la regla **Sin invitaciones**."
 				},
 				"automod_edit": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
+					"tooltip": "Editar automod",
+					"description": "Editar una regla de moderación automática",
+					"title": "Sin invitaciones",
+					"reply": "**ID:** `r1` · **Tipo:** `Invitaciones`\n**Estado**\n✅ Habilitada\n-# Se editó correctamente la regla **Sin invitaciones**.",
+					"select": "Panel de configuración"
 				},
 				"automod_ignore": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
+					"tooltip": "Ignorar en automod",
+					"description": "Eximir un rol o un canal de una regla, o dejar de eximirlo",
+					"title": "Sin invitaciones",
+					"reply": "**ID:** `r1` · **Tipo:** `Invitaciones`\n**Estado**\n✅ Habilitado\n-# **Sin invitaciones** ya no se aplica a <#partners>.",
+					"select": "Panel de configuración"
 				},
 				"automod_list": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
+					"tooltip": "Lista de Automod",
+					"description": "Abrir el panel de reglas de moderación automática de este servidor",
+					"title": "Reglas de moderación automática [3/25]",
+					"reply": "Elige una regla para configurarla o crea una.\n- ✅ **Sin invitaciones** · Invitaciones\n- ✅ **Palabras ofensivas** · Palabras\n- **Bloqueo de mayúsculas** · Mayúsculas",
+					"select": "Selecciona una regla"
 				},
 				"automod_remove": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
+					"tooltip": "Eliminar Automod",
+					"description": "Eliminar una entrada de la lista de una regla",
+					"title": "Malas palabras",
+					"reply": "**ID:** `r2` · **Tipo:** `Palabras`\n**Estado**\n✅ Habilitado\n-# Se eliminó `free nitro` de **Palabras prohibidas**.",
+					"select": "Panel de configuración"
 				},
 				"automod_show": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
+					"tooltip": "Mostrar automod",
+					"description": "Abrir el panel de configuración de una regla de moderación automática",
+					"title": "Sin invitaciones",
+					"reply": "**ID:** `r1` · **Tipo:** `Invitaciones`\n**Estado**\n✅ Habilitado",
+					"select": "Panel de configuración"
 				},
 				"ban_remove": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Eliminar bloqueo",
+					"description": "Quitarle el veto a alguien de este servidor.",
+					"reason": "Apelación aceptada"
 				},
 				"softban": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Expulsión temporal",
+					"description": "Golpea a alguien con el martillo de baneo, elimina todos sus mensajes de los últimos días y luego desbanéalo.",
+					"reason": "Cuenta comprometida publicando enlaces fraudulentos"
 				},
 				"note": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Nota",
+					"description": "Agrega una nota sobre un miembro, de la cual nunca se le informa.",
+					"reason": "Preguntó sobre el raid por MD"
 				},
 				"setnickname": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Establecer apodo",
+					"description": "Cambiar el apodo de un usuario.",
+					"reason": "Elevación con símbolos"
 				},
 				"voicekick": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Expulsión de voz",
+					"description": "Dale a alguien con la 👢 por cantar tan mal y fuerte.",
+					"reason": "Ruido ensordecedor en el canal de voz"
 				},
 				"role_add": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Agregar rol",
+					"description": "Agrega un rol a un usuario.",
+					"reason": "Ganador del evento"
 				},
 				"role_remove": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Eliminar rol",
+					"description": "Quita un rol de un usuario",
+					"reason": "El evento terminó"
 				},
 				"warn_remove": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Eliminar advertencia",
+					"description": "Eliminar la última advertencia de alguien.",
+					"reason": "Advertido por error"
 				},
 				"mute_remove": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Quitar silencio",
+					"description": "Quitar la cinta adhesiva de un usuario.",
+					"reason": "Cumplió el silenciamiento"
 				},
 				"timeout_remove": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Eliminar tiempo de espera agotado",
+					"description": "Quitar el tiempo de espera de un usuario.",
+					"reason": "Se calmó"
 				},
 				"vmute_add": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Agregar Vmute",
+					"description": "Arroja el micrófono de alguien por la ventana.",
+					"reason": "Spam de micrófono"
 				},
 				"vmute_remove": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Quitar Vmute",
+					"description": "Devuelve el micrófono a alguien para que pueda hablar.",
+					"reason": "Arregló su micrófono"
 				},
 				"restrict_attachment": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Restringir archivo adjunto",
+					"description": "Impide que un usuario envíe archivos adjuntos en todos los canales.",
+					"reason": "Publicar imágenes sangrientas"
 				},
 				"restrict_embed": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Restringir contenido insertado",
+					"description": "Impide que un usuario adjunte contenido incrustado en todos los canales.",
+					"reason": "Inserción de enlaces fraudulentos"
 				},
 				"restrict_emoji": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Restringir emoji",
+					"description": "Impide que un usuario use emojis externos en todos los canales.",
+					"reason": "Inundación con emojis externos"
 				},
 				"restrict_reaction": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Restringir reacción",
+					"description": "Impide que un usuario reaccione a mensajes en todos los canales.",
+					"reason": "Reaccionar con insultos discriminatorios"
 				},
 				"restrict_voice": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Restringir voz",
+					"description": "Impide que un usuario se una a cualquier canal de voz.",
+					"reason": "Ruido ensordecedor en los canales de voz"
 				},
 				"unrestrict_attachment": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Quitar restricción de archivos adjuntos",
+					"description": "Elimina la restricción de archivos adjuntos de uno o más usuarios.",
+					"reason": "Restricción eliminada"
 				},
 				"unrestrict_embed": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Dejar de restringir contenido insertado",
+					"description": "Elimina la restricción de contenido insertado de uno o más usuarios.",
+					"reason": "Restricción eliminada"
 				},
 				"unrestrict_emoji": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Dejar de restringir emoji",
+					"description": "Elimina la restricción de emojis externos de uno o más usuarios.",
+					"reason": "Restricción eliminada"
 				},
 				"unrestrict_reaction": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Quitar restricción de reacción",
+					"description": "Elimina la restricción de reacciones de uno o más usuarios.",
+					"reason": "Restricción eliminada"
 				},
 				"unrestrict_voice": {
-					"tooltip": "",
-					"description": "",
-					"reason": ""
+					"tooltip": "Quitar restricción de voz",
+					"description": "Elimina la restricción de voz de uno o más usuarios.",
+					"reason": "Restricción eliminada"
 				},
 				"commands": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"select": ""
+					"tooltip": "Comandos",
+					"description": "Explora y busca lo que puedo hacer.",
+					"title": "Todos los comandos",
+					"reply": "Selecciona una categoría para ver los comandos.",
+					"select": "Selecciona una categoría"
 				},
 				"dehoist": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
+					"tooltip": "Quitar prioridad",
+					"description": "Dispárales a todos con el Deslevitador 3000",
+					"title": "Se terminó de deselevar a 412 miembros",
+					"reply": "Se eliminaron los caracteres iniciales de 3 miembros"
 				},
 				"honeypot_disable": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Desactivar señuelo",
+					"description": "Dejar de detectar a quienes escriben en el canal señuelo.",
+					"reply": "✅ <#honeypot> ya no es un canal trampa, nadie será atrapado por escribir allí. No lo eliminé."
 				},
 				"honeypot_edit": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
+					"tooltip": "Editar señuelo",
+					"description": "Cambia lo que hace el canal señuelo.",
+					"title": "Señuelo",
+					"reply": "✅ El señuelo fue actualizado.\n**Canal señuelo**: <#honeypot>\n**Acción del señuelo**: Bloqueo\n**Canal de registros del señuelo**: <#mod-logs>\n**Avisar quién fue atrapado**: Activado"
 				},
 				"honeypot_setup": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
+					"tooltip": "Configurar señuelo",
+					"description": "Convierte un canal en el señuelo: quien escriba ahí será atrapado. Creo el canal si no se especifica ninguno.",
+					"title": "Señuelo",
+					"reply": "✅ <#honeypot> ahora es el canal trampa: actúo contra cualquiera que escriba allí, excepto los moderadores.\n**Acción del canal trampa**: Expulsión temporal\n**Canal de registros del canal trampa**: <#mod-logs>"
 				},
 				"honeypot_show": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
+					"tooltip": "Mostrar señuelo",
+					"description": "Mostrar cómo está configurado el señuelo.",
+					"title": "Señuelo",
+					"reply": "**Canal señuelo**: <#honeypot>\n**Acción del señuelo**: Expulsión temporal\n**Canal de registros del señuelo**: <#mod-logs>\n**Avisar quién fue atrapado**: Activado\n**Advertencia en el canal**: Activada\n**Nombre aleatorio del canal**: Desactivado"
 				},
 				"lockdown": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Confinamiento",
+					"description": "Gestiona el bloqueo de un canal, un hilo o todo el servidor.",
+					"reply": "Se actualizó el confinamiento del canal <#general> para <@everyone>."
 				},
 				"mute_create": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Silenciar Crear",
+					"description": "Prepara el sistema de silenciamiento.",
+					"reply": "El comando se ejecutó correctamente."
 				},
 				"permission_nodes_add": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Agregar nodos de permisos",
+					"description": "Agregar un comando a un nodo de permisos.",
+					"reply": "✅ Se agregó correctamente el comando al nodo de permisos."
 				},
 				"permission_nodes_remove": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Eliminar nodos de permisos",
+					"description": "Eliminar un comando de un nodo de permisos.",
+					"reply": "✅ Se eliminó correctamente el comando del nodo de permisos."
 				},
 				"permission_nodes_reset": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Restablecer nodos de permisos",
+					"description": "Eliminar todos los comandos de un nodo de permisos.",
+					"reply": "✅ Se eliminaron correctamente todos los comandos del nodo de permisos."
 				},
 				"permission_nodes_show": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Mostrar nodos de permisos",
+					"description": "Mostrar los nodos de permisos.",
+					"reply": "Permisos para: **Moderadores**\n**Permitir**: `ban` y `kick`\n**Denegar**: Ninguno"
 				},
 				"permissions": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
+					"tooltip": "Permisos",
+					"description": "Obtener los permisos del usuario",
+					"title": "Permisos para stella (266624760782258186)",
+					"reply": "**Expulsar miembros**, **Bloquear miembros**, **Administrar mensajes**, Ver canales y Enviar mensajes"
 				},
 				"prune_age": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Podar por edad",
+					"description": "Eliminar los mensajes más recientes que una duración, hasta 14 días.",
+					"reply": "Se eliminaron correctamente 25 mensajes de 50."
 				},
 				"prune_any": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Podar cualquiera",
+					"description": "Elimina los mensajes más recientes, hasta 1000, o los que coincidan con varios filtros.",
+					"reply": "Se eliminaron correctamente 25 mensajes de 50."
 				},
 				"prune_attachments": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Depurar archivos adjuntos",
+					"description": "Eliminar los mensajes que tienen archivos adjuntos.",
+					"reply": "Se eliminaron correctamente 25 mensajes de 50."
 				},
 				"prune_author": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Depurar autor",
+					"description": "Elimina los mensajes de un usuario, o los tuyos si no se especifica ninguno.",
+					"reply": "Se eliminaron correctamente 25 mensajes de 50."
 				},
 				"prune_bots": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Depurar bots",
+					"description": "Elimina los mensajes enviados por bots.",
+					"reply": "Se eliminaron correctamente 25 mensajes de 50."
 				},
 				"prune_embeds": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Depurar contenido incrustado",
+					"description": "Eliminar los mensajes que tienen contenido insertado.",
+					"reply": "Se eliminaron correctamente 25 mensajes de 50."
 				},
 				"prune_endswith": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Recortar terminaciones",
+					"description": "Eliminar los mensajes que terminan con un texto.",
+					"reply": "Se eliminaron correctamente 25 mensajes de 50."
 				},
 				"prune_humans": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Eliminar humanos",
+					"description": "Elimina los mensajes enviados por humanos.",
+					"reply": "Se eliminaron correctamente 25 mensajes de 50."
 				},
 				"prune_images": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Depurar imágenes",
+					"description": "Eliminar los mensajes que tienen imágenes.",
+					"reply": "Se eliminaron correctamente 25 mensajes de 50."
 				},
 				"prune_includes": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Depurar inclusiones",
+					"description": "Elimina los mensajes que contienen un texto.",
+					"reply": "Se eliminaron correctamente 25 mensajes de 50."
 				},
 				"prune_invites": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Depurar invitaciones",
+					"description": "Elimina los mensajes que contienen enlaces de invitación.",
+					"reply": "Se eliminaron correctamente 25 mensajes de 50."
 				},
 				"prune_links": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Depurar enlaces",
+					"description": "Elimina los mensajes que contienen cualquier enlace.",
+					"reply": "Se eliminaron correctamente 25 mensajes de 50."
 				},
 				"prune_match": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Depurar coincidencia",
+					"description": "Eliminar los mensajes que coincidan con una expresión regular.",
+					"reply": "Se eliminaron correctamente 25 mensajes de 50."
 				},
 				"prune_mentions": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Depurar menciones",
+					"description": "Elimina los mensajes que mencionan a un usuario, un rol o un canal.",
+					"reply": "Se eliminaron correctamente 25 mensajes de 50."
 				},
 				"prune_pins": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Depurar pines",
+					"description": "Elimina los mensajes fijados que todos los demás subcomandos conservan.",
+					"reply": "Se eliminaron correctamente 25 mensajes de 50."
 				},
 				"prune_startswith": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Depurar por inicio",
+					"description": "Eliminar los mensajes que comienzan con un texto.",
+					"reply": "Se eliminaron correctamente 25 mensajes de 50."
 				},
 				"prune_you": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Podarte",
+					"description": "Eliminar mis mensajes.",
+					"reply": "Se eliminaron correctamente 25 mensajes de 50."
 				},
 				"reasons_add": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Agregar razones",
+					"description": "Define una razón, escrita en la opción de razón de un comando de moderación mediante su alias.",
+					"reply": "Se definió la razón `spam`. Escríbela en la opción de razón de un comando de moderación."
 				},
 				"reasons_list": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Lista de motivos",
+					"description": "Lista de motivos predefinidos del servidor",
+					"reply": "Razones predefinidas (2/50):\n- `spam`: Enviar mensajes o enlaces no deseados\n- `nsfw`: Publicar contenido NSFW fuera de los canales NSFW"
 				},
 				"reasons_remove": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Eliminar motivos",
+					"description": "Eliminar un motivo predefinido.",
+					"reply": "Se eliminó la razón `spam`."
 				},
 				"report": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Reportar",
+					"description": "Reporta a un miembro a los moderadores de este servidor.",
+					"reply": "Gracias, tu reporte fue enviado a los moderadores. Solo ellos pueden verlo."
 				},
 				"reports_block": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Bloquear reportes",
+					"description": "Impide que un miembro envíe reportes.",
+					"reply": "<@baddie> ya no puede enviar reportes."
 				},
 				"reports_history": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
+					"tooltip": "Historial de reportes",
+					"description": "Lista los informes más recientes, de todos o sobre un usuario.",
+					"title": "Últimos reportes",
+					"reply": "`#12` hace 5 minutos · <@baddie> · **Abierto**\n-# Por <@louduser>: Enviar enlaces fraudulentos por MD"
 				},
 				"reports_unblock": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Desbloquear reportes",
+					"description": "Permitir que un miembro vuelva a enviar reportes.",
+					"reply": "<@baddie> puede enviar reportes de nuevo."
 				},
 				"role_rules_add": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Agregar reglas de roles",
+					"description": "Establece los roles que un miembro necesita para obtener un rol.",
+					"reply": "Listo: <@Verified Gamer> ← tiene <@Verified>, no <@Muted>. Los miembros obtienen o pierden el rol la próxima vez que cambien sus roles."
 				},
 				"role_rules_list": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Lista de reglas de roles",
+					"description": "Enumera las reglas de roles del servidor.",
+					"reply": "Reglas de roles (1/25):\n- <@Verified Gamer> ← tiene <@Verified>, no <@Muted>"
 				},
 				"role_rules_remove": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Eliminar reglas de roles",
+					"description": "Eliminar la regla de un rol; los miembros la conservan.",
+					"reply": "Se eliminó la regla de <@Verified Gamer>; los miembros conservan el rol."
 				},
 				"roles_browse": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"button": ""
+					"tooltip": "Explorar roles",
+					"description": "Explora los roles de este servidor y elige uno para verlo.",
+					"title": "🏷️ Roles",
+					"reply": "WolfStar HQ · 6 roles\n-# Página 1 de 1 • 6 roles",
+					"button": "Elige un rol"
 				},
 				"roles_claim": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Reclamar roles",
+					"description": "Reclama un rol público.",
+					"reply": "Los siguientes roles se agregaron a tu perfil: `Anuncios`"
 				},
 				"roles_list": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
+					"tooltip": "Lista de roles",
+					"description": "Enumera los roles públicos de este servidor.",
+					"title": "Lista de roles públicos",
+					"reply": "Anuncios\nEventos\nSorteos"
 				},
 				"roles_unclaim": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Liberar roles",
+					"description": "Renuncia a un rol público.",
+					"reply": "Los siguientes roles se eliminaron de tu perfil: `Anuncios`"
 				},
 				"settings_user": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"button": ""
+					"tooltip": "Configuración de usuario",
+					"description": "Abre tu propia configuración.",
+					"title": "Tu configuración",
+					"reply": "Estos ajustes son tuyos, son los mismos en todos los servidores.\n**Mensajes directos de moderación**\n✅ Activados\n-# Si te envío un mensaje directo cuando un moderador toma una medida contra ti o la moderación automática lo hace.",
+					"button": "Desactivar"
 				},
 				"sticky_nickname": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Apodo fijo",
+					"description": "Mostrar el apodo persistente de un usuario.",
+					"reply": "Apodo fijo de **baddie**: Por favor, cámbiame el nombre"
 				},
 				"sticky_roles_add": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Agregar rol persistente",
+					"description": "Agregar un rol persistente a un usuario.",
+					"reply": "Se agregó correctamente el rol especificado como persistente a baddie."
 				},
 				"sticky_roles_remove": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Eliminar roles persistentes",
+					"description": "Eliminar un rol persistente de un usuario.",
+					"reply": "Se eliminó correctamente el rol especificado de baddie."
 				},
 				"sticky_roles_reset": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Restablecer roles persistentes",
+					"description": "Eliminar todos los roles persistentes de un usuario.",
+					"reply": "Se eliminaron correctamente todos los roles persistentes de baddie."
 				},
 				"sticky_roles_show": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Mostrar roles persistentes",
+					"description": "Mostrar los roles persistentes de un usuario.",
+					"reply": "Rol(es) persistente(s) de **baddie**: `Muted` y `Restricted`."
 				},
 				"warn_thresholds_add": {
-					"tooltip": "",
-					"description": "",
+					"tooltip": "Agregar umbral de advertencia",
+					"description": "Establecer la acción que se toma cuando un miembro alcanza una cantidad de advertencias.",
 					"reply": ""
 				},
 				"warn_thresholds_list": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Lista de umbrales de advertencia",
+					"description": "Listar los umbrales de advertencia del servidor.",
+					"reply": "Umbrales de advertencias (2/10):\n- 3 advertencias en un plazo de 7 días → Suspensión por 1 hora\n- 5 advertencias → Bloqueo"
 				},
 				"warn_thresholds_remove": {
-					"tooltip": "",
-					"description": "",
-					"reply": ""
+					"tooltip": "Eliminar umbral de advertencia",
+					"description": "Eliminar la acción de una cantidad de advertencias.",
+					"reply": "Se eliminó la acción de 3 advertencias."
 				},
 				"whois_channel": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"footer": ""
+					"tooltip": "Canal Whois",
+					"description": "Obtén información sobre un canal.",
+					"title": "general",
+					"reply": "<#general>\n**Tipo:** Texto\n**Creado:** hace 2 años\n**Categoría:** Comunidad\n**Posición:** 3",
+					"footer": "ID: 1012345678901234567"
 				},
 				"whois_emoji": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
+					"tooltip": "Quién es Emoji",
+					"description": "Obtén información sobre un emoji.",
+					"title": ":wolfwave:",
+					"reply": "**Tipo:** Emoji personalizado estático\n**ID:** 1043562833905987685\n**Creado:** hace 1 año\n**Pertenece a este servidor**\n**Agregado por:** <@stella>"
 				},
 				"whois_role": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
+					"tooltip": "Rol de Whois",
+					"description": "Obtén información sobre un rol.",
+					"title": "Moderadores [1012345678901234500]",
+					"reply": "Nombre: **Moderadores**\nColor: **#5865f2**\nDestacado: **Sí**\nPosición: **12**\nMencionable: **No**\n**Permisos**\n+ Expulsar miembros\n+ Banear miembros\n+ Administrar mensajes"
 				},
 				"whois_server": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": ""
+					"tooltip": "Servidor Whois",
+					"description": "Obtén información sobre este servidor.",
+					"title": "Sede de WolfStar [1012345678901234000]",
+					"reply": "**Miembros**\n• **1,284** miembro(s)\n• Propietaria: **stella**\n**Canales**\n• **24** de texto, **4** de voz, **6** categorías.\n**Otros**\n• Roles: **15**\n• Nivel de verificación: **Medio**"
 				},
 				"whois_user": {
-					"tooltip": "",
-					"description": "",
-					"title": "",
-					"reply": "",
-					"footer": ""
+					"tooltip": "Usuario Whois",
+					"description": "Obtén información sobre un usuario.",
+					"title": "malote",
+					"reply": "**baddie** - <@baddie>\n**Se unió**\nHoy a las 13:40 (hace 12 minutos)\n**Creado el**\nHace 2 días\n**Roles [1]**\n<@Member>",
+					"footer": "ID: 773291045528043520"
 				}
 			}
 		}

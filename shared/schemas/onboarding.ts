@@ -128,3 +128,14 @@ export const OnboardingRevisionQuerySchema = object({
 
 /** The ID of a stage in a path. */
 export const OnboardingStageIdSchema = RowIdSchema;
+
+/**
+ * The body of `POST /api/verify/:guild/onboarding`: the row of the `Captcha`
+ * stage the page showed, and the Turnstile token of the captcha.
+ */
+export const OnboardingCaptchaBodySchema = object({
+	verificationId: pipe(string(), regex(/^\d{1,18}$/u)),
+	// Turnstile's tokens are 2048 characters at most.
+	turnstileToken: pipe(string(), maxLength(2048)),
+});
+export type OnboardingCaptchaBody = InferOutput<typeof OnboardingCaptchaBodySchema>;

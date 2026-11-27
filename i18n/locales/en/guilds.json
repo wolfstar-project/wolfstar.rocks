@@ -1450,7 +1450,7 @@
 		"onboarding": {
 			"blockers": {
 				"captcha_fix": "Pick another challenge for it, or turn it off.",
-				"captcha_title": "{stages} uses the captcha challenge, which is in development. | {stages} uses the captcha challenge, which is in development. | {stages} use the captcha challenge, which is in development.",
+				"captcha_title": "{stages} uses the captcha challenge, and this site can't check a captcha. | {stages} uses the captcha challenge, and this site can't check a captcha. | {stages} use the captcha challenge, and this site can't check a captcha.",
 				"community_fix": "In Discord, open Server Settings, then Enable Community. Then turn on Onboarding there.",
 				"community_title": "{stages} waits for Discord's onboarding, and this server has no Community. | {stages} waits for Discord's onboarding, and this server has no Community. | {stages} wait for Discord's onboarding, and this server has no Community.",
 				"log_missing_fix": "Pick another log channel, or none.",
@@ -1507,7 +1507,7 @@
 				"cancel": "Cancel",
 				"challenge": "Challenge",
 				"challenge_button_help": "The member presses one button.",
-				"challenge_captcha_help": "In development.",
+				"challenge_captcha_help": "The member signs in on the WolfStar website and solves a captcha there.",
 				"challenge_emoji_help": "The member picks the emoji WolfStar names among several.",
 				"challenge_question_help": "The member answers a question you write.",
 				"create": "Create stage",
@@ -1580,7 +1580,7 @@
 			"problems": {
 				"answers": "Add 1 to 5 accepted answers, 100 characters each at most.",
 				"attempts": "The attempts are a whole number from 1 to 5.",
-				"captcha": "The captcha challenge is in development. Pick another challenge.",
+				"captcha": "This site can't check a captcha. Pick another challenge.",
 				"failureTimeout": "The timeout lasts 1 minute to 28 days.",
 				"name": "Give the stage a name, 32 characters at most.",
 				"question": "Write the question, 200 characters at most.",
@@ -2344,6 +2344,23 @@
 		"load_failed_body": "Check your connection and try again.",
 		"load_failed_title": "Couldn't load this page",
 		"loading": "Loading the verification page",
+		"onboarding": {
+			"body": "{server} asks new members to solve a captcha. Solve it, then verify.",
+			"deadline": "Solve it before",
+			"done_body": "Head back to {server}. If it has another stage, press the button of the verification message again.",
+			"done_title": "You passed {stage}",
+			"failures": {
+				"expired": "Your time for this stage ran out.",
+				"failed": "Something went wrong. Try again in a minute.",
+				"not_member": "You're not a member of this server.",
+				"off": "The onboarding of this server is off now.",
+				"role_refused": "WolfStar couldn't give you the role of this stage. Tell the moderators, then try again.",
+				"stale": "This stage changed. In Discord, press the button of the verification message again."
+			},
+			"not_waiting": "You no longer wait at this stage. In Discord, press the button of the verification message again.",
+			"timeout": "WolfStar hasn't answered yet. Check Discord in a minute.",
+			"title": "Pass the stage {stage}"
+		},
 		"open_discord": "Open Discord",
 		"reads": "WolfStar reads your Discord account: its age, avatar and badges, and the accounts linked to it when the server asks. Nothing here looks at IPs or cookies.",
 		"result": {

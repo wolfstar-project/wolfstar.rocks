@@ -10,6 +10,7 @@
  * requests; this file holds what the dashboard, its routes and the
  * verification page share, and nothing here touches the database.
  */
+import type { OnboardingCaptchaPrompt } from "#shared/utils/onboarding";
 import type { Snowflake } from "discord-api-types/v10";
 
 /** The most rules a guild has, the bot's `MaximumJoinGuardRules`. */
@@ -248,6 +249,11 @@ export interface JoinGuardVerifyPage {
 	needsConnections: boolean;
 	/** The public Turnstile site key when the guild asks for a captcha; `null` when the site has none. */
 	captchaSiteKey: string | null;
+	/**
+	 * The `Captcha` stage of the onboarding the member waits at, which the page
+	 * serves once the checkpoint does not hold them; `null` when there is none.
+	 */
+	onboarding: OnboardingCaptchaPrompt | null;
 	/** Always `true` here; tells this answer from a {@link JoinGuardVerifyGuestPage}. */
 	signedIn?: true;
 }

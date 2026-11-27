@@ -29,6 +29,7 @@ export function createMockOnboardingState(
 ): OnboardingState {
 	return {
 		blockers: [],
+		captchaAvailable: false,
 		enabled: true,
 		logChannelId: null,
 		messageChannelId: null,

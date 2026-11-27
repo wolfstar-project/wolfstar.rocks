@@ -118,7 +118,10 @@ function makeRecord(overrides: Partial<OnboardingRecord> = {}): OnboardingRecord
 
 /** The blockers of a stored onboarding in a server, as the route answers them. */
 function blockers(record: OnboardingRecord, discord: OnboardingDiscordFacts) {
-	return onboardingReadiness(onboardingReadinessInput(record, discord));
+	return onboardingReadiness({
+		...onboardingReadinessInput(record, discord),
+		captchaAvailable: true,
+	});
 }
 
 describe("fetchOnboardingDiscordFacts", () => {

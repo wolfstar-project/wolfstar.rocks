@@ -232,6 +232,15 @@
 					</p>
 				</section>
 
+				<!-- Once the checkpoint does not hold them, the member passes a Captcha stage of the onboarding here. -->
+				<VerifyOnboardingCaptcha
+					v-else-if="page.onboarding"
+					:key="page.onboarding.verificationId"
+					:guild-id="guildId"
+					:guild-name="page.guild.name"
+					:prompt="page.onboarding"
+				/>
+
 				<section v-else class="verify-card" :aria-labelledby="stateHeadingId">
 					<h2 :id="stateHeadingId" class="text-base font-bold">
 						{{ ts(STATE_COPY[page.state].title) }}

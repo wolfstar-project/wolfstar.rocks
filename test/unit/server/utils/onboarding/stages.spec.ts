@@ -168,6 +168,35 @@ describe("updateOnboardingStage", () => {
 		expect(taken).toStrictEqual({ error: { code: "nameTaken" }, ok: false });
 	});
 
+	it("checks only a role the change sets", async () => {
+		const { store, record } = createMemoryOnboardingStore({
+			stages: [{ ...makeStage("1", "Server rules", 0), roleId: "111" }],
+		});
+		const cannotGive = () => false;
+
+		const renamed = await updateOnboardingStage(
+			store,
+			GUILD_ID,
+			0,
+			"1",
+			{ name: "Rules", roleId: "111" },
+			cannotGive,
+		);
+		const moved = await updateOnboardingStage(
+			store,
+			GUILD_ID,
+			1,
+			"1",
+			{ roleId: "222" },
+			cannotGive,
+		);
+
+		expect(renamed.ok).toBe(true);
+		expect(moved).toStrictEqual({ error: { code: "role" }, ok: false });
+		expect(record().stages[0]).toMatchObject({ name: "Rules", roleId: "111" });
+		expect(record().revision).toBe(1);
+	});
+
 	it("switches off a stage the bot's panel gave the captcha", async () => {
 		const { store, record } = createMemoryOnboardingStore({
 			stages: [{ ...makeStage("4", "Captcha check", 0), challenge: "Captcha" }],

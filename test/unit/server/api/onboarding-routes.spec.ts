@@ -324,6 +324,28 @@ describe("PATCH …/onboarding/stages/:stage", () => {
 		expect(state.stages[0]).toMatchObject({ enabled: false, roleId: OWNER_ROLE });
 	});
 
+	it("saves the whole draft of a stage whose role WolfStar can no longer give", async () => {
+		open({ revision: 1, stages: [makeStage({ roleId: OWNER_ROLE })] });
+		const { handler } = await load(ROUTES.edit);
+		mocks.body = { revision: 1, stage: { name: "Rules", roleId: OWNER_ROLE } };
+
+		const state = await handler(eventWith({ stage: "1" }));
+
+		expect(state.stages[0]).toMatchObject({ name: "Rules", roleId: OWNER_ROLE });
+	});
+
+	it("refuses to set a role WolfStar cannot give with 422", async () => {
+		open({ revision: 1, stages: [makeStage({ roleId: MEMBER_ROLE })] });
+		const { handler } = await load(ROUTES.edit);
+		mocks.body = { revision: 1, stage: { roleId: OWNER_ROLE } };
+
+		await expect(handler(eventWith({ stage: "1" }))).rejects.toMatchObject({
+			data: { code: "role" },
+			statusCode: 422,
+		});
+		expect(memory.record()).toMatchObject({ revision: 1, stages: [{ roleId: MEMBER_ROLE }] });
+	});
+
 	it("answers 404 for a stage that is gone, and 400 for an ID that is none", async () => {
 		const { handler } = await load(ROUTES.edit);
 		mocks.body = { revision: 0, stage: { enabled: false } };

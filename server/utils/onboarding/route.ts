@@ -15,6 +15,7 @@ import type { H3Event } from "nitro/h3";
 import type { GenericSchema, InferOutput } from "valibot";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
 import { authorizeGuildManager, useManagedGuild } from "#server/utils/guilds/manager";
+import { isOnboardingCaptchaAvailable } from "#server/utils/onboarding/captcha";
 import {
 	fetchOnboardingDiscordFacts,
 	onboardingReadinessInput,
@@ -110,8 +111,13 @@ function buildOnboardingState(
 	week: OnboardingWeek,
 	facts: OnboardingDiscordFacts,
 ): OnboardingState {
+	const captchaAvailable = isOnboardingCaptchaAvailable();
 	return {
-		blockers: onboardingReadiness(onboardingReadinessInput(record, facts)),
+		blockers: onboardingReadiness({
+			...onboardingReadinessInput(record, facts),
+			captchaAvailable,
+		}),
+		captchaAvailable,
 		enabled: record.enabled,
 		logChannelId: record.logChannelId,
 		messageChannelId: record.messageChannelId,

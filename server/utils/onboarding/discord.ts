@@ -130,7 +130,7 @@ function logChannelReadiness(
 export function onboardingReadinessInput(
 	record: OnboardingRecord,
 	facts: OnboardingDiscordFacts,
-): OnboardingReadinessInput {
+): Omit<OnboardingReadinessInput, "captchaAvailable"> {
 	const permissions = memberPermissions(facts.guild, facts.bot);
 	const isAdministrator = (permissions & PermissionFlagsBits.Administrator) !== 0n;
 	const holds = (flag: bigint) => isAdministrator || (permissions & flag) === flag;

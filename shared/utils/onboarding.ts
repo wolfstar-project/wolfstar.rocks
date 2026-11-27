@@ -43,10 +43,10 @@ export const OnboardingChallenges = ["Button", "Emoji", "Question", "Captcha"] a
 export type OnboardingChallenge = (typeof OnboardingChallenges)[number];
 
 /**
- * The challenges an administrator can pick today. `Captcha` is in the contract
- * and waits for the verification page to serve it.
+ * The challenges an administrator picks from when the site cannot check a
+ * captcha (no Turnstile keys): `Captcha` is passed on the verification page.
  */
-export const OfferedOnboardingChallenges = [
+export const OnboardingChallengesWithoutCaptcha = [
 	"Button",
 	"Emoji",
 	"Question",
@@ -146,19 +146,19 @@ function parseQuestion(input: OnboardingStageInput): QuestionParse {
  * failure action does not use are emptied, so a stored stage never carries
  * the question of a challenge it no longer has.
  *
- * The dashboard never gives a stage the captcha, which no page serves yet.
- * `keepsCaptcha` reads a stage that already has it, from the bot's panel, so
- * it can still be edited and switched off.
+ * The captcha is given only while the site can check it (`captchaAvailable`,
+ * the Turnstile keys are set). `keepsCaptcha` reads a stage that already has
+ * it, so it can still be edited and switched off when the keys are gone.
  */
 export function parseOnboardingStage(
 	input: OnboardingStageInput,
-	options: { keepsCaptcha?: boolean } = {},
+	options: { captchaAvailable?: boolean; keepsCaptcha?: boolean } = {},
 ): OnboardingStageParse {
 	const name = input.name.trim();
 	if (name.length === 0 || name.length > OnboardingLimits.stageName) {
 		return { ok: false, problem: "name" };
 	}
-	if (input.challenge === "Captcha" && options.keepsCaptcha !== true) {
+	if (input.challenge === "Captcha" && !options.captchaAvailable && !options.keepsCaptcha) {
 		return { ok: false, problem: "captcha" };
 	}
 
@@ -222,6 +222,8 @@ type ReadinessStage = Pick<
 
 export interface OnboardingReadinessInput {
 	stages: readonly ReadinessStage[];
+	/** Whether the site checks a captcha: its Turnstile keys are set. */
+	captchaAvailable: boolean;
 	/** Whether the bot's verification message is in a channel of the guild. */
 	messagePosted: boolean;
 	/** Whether the guild has Discord's Community. */
@@ -314,7 +316,9 @@ function logBlockers(logChannel: OnboardingReadinessInput["logChannel"]): Onboar
  */
 export function onboardingReadiness(input: OnboardingReadinessInput): OnboardingBlocker[] {
 	const stages = input.stages.filter((stage) => stage.enabled);
-	const captcha = idsOf(stages.filter((stage) => stage.challenge === "Captcha"));
+	const captcha = input.captchaAvailable
+		? []
+		: idsOf(stages.filter((stage) => stage.challenge === "Captcha"));
 
 	return [
 		...(stages.length > 0 && !input.messagePosted
@@ -404,4 +408,123 @@ export interface OnboardingState {
 	/** The last seven days of each stage, by its ID. */
 	weekByStage: Record<string, OnboardingCounts>;
 	blockers: OnboardingBlocker[];
+	/** Whether the site checks a captcha, so the editor offers the `Captcha` challenge. */
+	captchaAvailable: boolean;
+}
+
+/**
+ * The `Captcha` stage a member waits at, which the verification page serves:
+ * its row (`OnboardingVerification`), its name, and when its time runs out
+ * (`null` with no time limit).
+ */
+export interface OnboardingCaptchaWait {
+	verificationId: string;
+	stageName: string;
+	/** An ISO date. */
+	expiresAt: string | null;
+}
+
+/** What the page reads of a row of `OnboardingVerification`. */
+export interface OnboardingVerificationRow {
+	id: string;
+	stageId: string | null;
+	status: "Waiting" | "Passed" | "Failed" | "Left";
+	/** Milliseconds since the epoch. */
+	createdAt: number;
+}
+
+/**
+ * How far before the member's join a row may have been written and still be
+ * of this stay, as the bot's `OnboardingStayTolerance`: the clock of the
+ * database and the one of Discord are not the same.
+ */
+const ONBOARDING_STAY_TOLERANCE = 2000;
+
+/**
+ * Finds the `Captcha` stage a member waits at, as the bot reads it: the
+ * newest `Waiting` row of the member's current stay (written after they last
+ * joined, `joinedAt`; every row when Discord cannot say), of an enabled
+ * `Captcha` stage of an enabled onboarding, whose time limit has not run out.
+ * A captcha refused is no attempt, so only the time counts.
+ */
+export function findOnboardingCaptchaWait(input: {
+	enabled: boolean;
+	/** When the member last joined the guild, in milliseconds; `null` when Discord cannot say. */
+	joinedAt: number | null;
+	stages: readonly Pick<OnboardingStage, "id" | "name" | "enabled" | "challenge" | "timeLimit">[];
+	rows: readonly OnboardingVerificationRow[];
+	now: number;
+}): OnboardingCaptchaWait | null {
+	if (!input.enabled) return null;
+
+	const { joinedAt } = input;
+	const current = input.rows
+		.filter((row) => joinedAt === null || row.createdAt >= joinedAt - ONBOARDING_STAY_TOLERANCE)
+		.toSorted((a, b) => b.createdAt - a.createdAt);
+	// The member's stage now is their newest row that waits: an older one is no stage to serve.
+	const row = current.find((entry) => entry.status === "Waiting");
+	const stage = input.stages.find((entry) => entry.id === row?.stageId);
+	if (!row || !stage?.enabled || stage.challenge !== "Captcha") return null;
+
+	const deadline = stage.timeLimit === 0 ? null : row.createdAt + stage.timeLimit * 1000;
+	if (deadline !== null && input.now >= deadline) return null;
+	return {
+		expiresAt: deadline === null ? null : new Date(deadline).toISOString(),
+		stageName: stage.name,
+		verificationId: row.id,
+	};
+}
+
+/**
+ * The `Captcha` stage the verification page shows a signed-in member, with
+ * the Turnstile site key it renders the captcha with. `GET /api/verify/:guild`
+ * answers it as `onboarding`, `null` when the member waits at none or the site
+ * cannot check a captcha.
+ */
+export interface OnboardingCaptchaPrompt extends OnboardingCaptchaWait {
+	siteKey: string;
+}
+
+/**
+ * Why the bot could not pass a member who solved the captcha, as it writes in
+ * the request (`<code>: <detail>`): a contract with the bot's
+ * `lib/onboarding/requests.ts`.
+ */
+export const OnboardingRequestFailureCodes = [
+	"off",
+	"notMember",
+	"stale",
+	"expired",
+	"roleRefused",
+	"failed",
+] as const;
+export type OnboardingRequestFailureCode = (typeof OnboardingRequestFailureCodes)[number];
+
+export interface OnboardingRequestError {
+	/** `unknown` for a code this site does not know yet. */
+	code: OnboardingRequestFailureCode | "unknown";
+	detail: string;
+}
+
+/**
+ * `GET /api/verify/:guild/onboarding/requests/:request`: whether the bot has
+ * passed the member yet, and why it could not when it could not.
+ */
+export interface OnboardingRequestState {
+	id: string;
+	processed: boolean;
+	error: OnboardingRequestError | null;
+}
+
+/** Reads the `error` the bot wrote in a request, `<code>: <detail>`. */
+export function parseOnboardingRequestError(error: string): OnboardingRequestError {
+	const separator = error.indexOf(": ");
+	const code = separator === -1 ? error : error.slice(0, separator);
+	if ((OnboardingRequestFailureCodes as readonly string[]).includes(code)) {
+		return {
+			code: code as OnboardingRequestFailureCode,
+			detail: separator === -1 ? "" : error.slice(separator + 2),
+		};
+	}
+	return { code: "unknown", detail: error };
 }

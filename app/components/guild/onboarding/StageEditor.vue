@@ -229,8 +229,9 @@
 import type { OnboardingStage, OnboardingStageInput } from "#shared/utils/onboarding";
 import type { DeepReadonly } from "@sapphire/utilities";
 import {
-	OfferedOnboardingChallenges,
 	OnboardingAttempts,
+	OnboardingChallenges,
+	OnboardingChallengesWithoutCaptcha,
 	OnboardingLimits,
 	parseOnboardingStage,
 } from "#shared/utils/onboarding";
@@ -243,6 +244,7 @@ const {
 	saving = false,
 	locked = false,
 	errorMessage = null,
+	captchaAvailable = false,
 } = defineProps<{
 	/** The stage to edit, or `null` to create one. */
 	stage?: OnboardingStage | null;
@@ -255,6 +257,8 @@ const {
 	locked?: boolean;
 	/** Why the server refused the last save, if it did. */
 	errorMessage?: string | null;
+	/** Whether the site checks a captcha, so the `Captcha` challenge can be picked. */
+	captchaAvailable?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -322,15 +326,18 @@ const CHALLENGE_COPY = {
 	},
 } as const;
 
-// A stage the bot's panel gave the captcha keeps showing it, so the editor
-// does not change the challenge by opening.
+// Without the Turnstile keys the captcha is not offered, but a stage that has
+// it keeps showing it, so the editor does not change the challenge by opening.
 const challengeItems = computed(() =>
-	[
-		...OfferedOnboardingChallenges,
-		...(stage?.challenge === "Captcha" ? ["Captcha" as const] : []),
-	].map((value) => ({
+	(captchaAvailable
+		? OnboardingChallenges
+		: [
+				...OnboardingChallengesWithoutCaptcha,
+				...(stage?.challenge === "Captcha" ? ["Captcha" as const] : []),
+			]
+	).map((value) => ({
 		description: ts(CHALLENGE_COPY[value].description),
-		disabled: value === "Captcha",
+		disabled: value === "Captcha" && !captchaAvailable,
 		label: ts(CHALLENGE_COPY[value].label),
 		value,
 	})),
@@ -356,6 +363,7 @@ const failureItems = computed(() => [
 
 const parsed = computed(() =>
 	parseOnboardingStage(onboardingDraftToInput(draft.value), {
+		captchaAvailable,
 		keepsCaptcha: stage?.challenge === "Captcha",
 	}),
 );

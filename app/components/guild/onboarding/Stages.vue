@@ -64,6 +64,7 @@
 			:saving="saving"
 			:locked="locked"
 			:error-message="editorError"
+			:captcha-available="state.captchaAvailable"
 			@save="saveStage"
 			@delete="askDeleteFromEditor"
 		/>

@@ -52,8 +52,9 @@ export function createOnboardingStage(
 	guildId: Snowflake,
 	revision: number,
 	input: OnboardingStageInput,
+	rules: { captchaAvailable?: boolean } = {},
 ): StageChange<OnboardingStage> {
-	const parsed = parseOnboardingStage(input);
+	const parsed = parseOnboardingStage(input, { captchaAvailable: rules.captchaAvailable });
 	if (!parsed.ok) {
 		return Promise.resolve(refuse({ code: "stage", problem: parsed.problem }));
 	}
@@ -72,7 +73,9 @@ export function createOnboardingStage(
  * so a change that leaves the stage one the bot could not run is refused: a
  * `Question` challenge set on a stage with no question, for one.
  *
- * Only a role the change sets is checked with `canGiveRole`: the editor sends
+ * The captcha is given only while the site checks one (`captchaAvailable`); a
+ * stage that has it keeps it. Only a role the change sets is checked with
+ * `canGiveRole`: the editor sends
  * the whole draft, so a stage whose role WolfStar can no longer give can still
  * be renamed or switched off, and the readiness keeps telling to fix the role.
  *
@@ -84,7 +87,7 @@ export function updateOnboardingStage(
 	revision: number,
 	stageId: string,
 	patch: Partial<OnboardingStageInput>,
-	canGiveRole: (roleId: Snowflake) => boolean = () => true,
+	rules: { canGiveRole?: (roleId: Snowflake) => boolean; captchaAvailable?: boolean } = {},
 ): StageChange<{ before: OnboardingStage; after: OnboardingStage }> {
 	return store.change(guildId, revision, async (writes, current) => {
 		const before = current.stages.find((stage) => stage.id === stageId);
@@ -92,11 +95,15 @@ export function updateOnboardingStage(
 
 		const parsed = parseOnboardingStage(
 			{ ...inputOf(before), ...patch },
-			{ keepsCaptcha: before.challenge === "Captcha" },
+			{
+				captchaAvailable: rules.captchaAvailable,
+				keepsCaptcha: before.challenge === "Captcha",
+			},
 		);
 		if (!parsed.ok) return refuse({ code: "stage", problem: parsed.problem });
 		if (nameTaken(current, parsed.value.name, stageId)) return refuse({ code: "nameTaken" });
 		const { roleId } = parsed.value;
+		const canGiveRole = rules.canGiveRole ?? (() => true);
 		if (roleId !== null && roleId !== before.roleId && !canGiveRole(roleId)) {
 			return refuse({ code: "role" });
 		}

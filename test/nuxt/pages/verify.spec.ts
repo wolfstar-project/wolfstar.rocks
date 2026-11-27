@@ -50,6 +50,7 @@ function page(overrides: Partial<JoinGuardVerifyPage> = {}): JoinGuardVerifyPage
 		guild: { iconUrl: null, id: GUILD_ID, name: "WolfStar HQ" },
 		minimumTrust: 2,
 		needsConnections: false,
+		onboarding: null,
 		state: "waiting",
 		trust: { level: 2, linkedAccounts: 1, missing: [] },
 		...overrides,
@@ -88,6 +89,37 @@ describe("verification page", () => {
 		mockPass.value = { state: "idle" };
 		mockStatus.value = "success";
 		mockError.value = null;
+	});
+
+	describe("a Captcha stage of the onboarding", () => {
+		const prompt = {
+			expiresAt: "2026-11-27T12:10:00.000Z",
+			siteKey: "site-key",
+			stageName: "Human check",
+			verificationId: "40",
+		};
+
+		it("is served once the checkpoint does not hold the member", async () => {
+			mockPage.value = page({ onboarding: prompt, state: "unavailable", trust: null });
+			const wrapper = await mountPage();
+
+			expect(wrapper.find("h2").text()).toBe("Pass the stage Human check");
+		});
+
+		it("follows the checkpoint once the member passed it", async () => {
+			mockPass.value = { state: "done" };
+			mockPage.value = page({ onboarding: prompt, state: "verified", trust: null });
+			const wrapper = await mountPage();
+
+			expect(wrapper.find("h2").text()).toBe("Pass the stage Human check");
+		});
+
+		it("waits for the checkpoint first", async () => {
+			mockPage.value = page({ onboarding: prompt });
+			const wrapper = await mountPage();
+
+			expect(wrapper.find("h2").text()).toBe("Show the guard your account");
+		});
 	});
 
 	it("asks a visitor to sign in with Discord, and comes back here", async () => {

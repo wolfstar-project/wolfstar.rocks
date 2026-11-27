@@ -51,7 +51,12 @@ const NAME = 'input[placeholder="Are you human?"]';
 const QUESTION = 'input[placeholder="Did you read the rules?"]';
 
 async function mountEditor(
-	props: { stage?: OnboardingStage | null; errorMessage?: string | null; locked?: boolean } = {},
+	props: {
+		stage?: OnboardingStage | null;
+		errorMessage?: string | null;
+		locked?: boolean;
+		captchaAvailable?: boolean;
+	} = {},
 ) {
 	const wrapper = await mountSuspended(StageEditor, {
 		attachTo: document.body,
@@ -171,7 +176,17 @@ describe("GuildOnboardingStageEditor", () => {
 		});
 	});
 
-	it("offers no captcha for a new stage", async () => {
+	it("offers the captcha when the site checks one", async () => {
+		await mountEditor({ captchaAvailable: true });
+
+		const captcha = Array.from(dialog().querySelectorAll('[role="radio"]')).find((element) =>
+			element.closest("label")?.textContent?.trim().startsWith("Captcha"),
+		);
+		expect(captcha).toBeDefined();
+		expect(captcha?.matches("[disabled], [data-disabled]")).toBe(false);
+	});
+
+	it("offers no captcha for a new stage when the site cannot check one", async () => {
 		await mountEditor();
 
 		const choices = Array.from(dialog().querySelectorAll('[role="radio"]'), (element) =>

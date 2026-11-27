@@ -1,6 +1,7 @@
 import type { OnboardingState } from "#shared/utils/onboarding";
 import { onboardingStore } from "#server/database/settings/onboarding/store";
 import { useManagedGuild } from "#server/utils/guilds/manager";
+import { isOnboardingCaptchaAvailable } from "#server/utils/onboarding/captcha";
 import {
 	canGiveOnboardingRole,
 	fetchOnboardingDiscordFacts,
@@ -40,7 +41,9 @@ export default defineWrappedResponseHandler(
 		}
 
 		const stage = unwrapOnboardingChange(
-			await createOnboardingStage(onboardingStore, guild.id, body.revision, body.stage),
+			await createOnboardingStage(onboardingStore, guild.id, body.revision, body.stage, {
+				captchaAvailable: isOnboardingCaptchaAvailable(),
+			}),
 		);
 
 		auditOnboardingStageChange(event, null, stage, stage.name);

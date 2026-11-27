@@ -1,6 +1,7 @@
 import type { OnboardingStage, OnboardingState } from "#shared/utils/onboarding";
 import { onboardingStore } from "#server/database/settings/onboarding/store";
 import { useManagedGuild } from "#server/utils/guilds/manager";
+import { isOnboardingCaptchaAvailable } from "#server/utils/onboarding/captcha";
 import {
 	canGiveOnboardingRole,
 	fetchOnboardingDiscordFacts,
@@ -56,7 +57,10 @@ export default defineWrappedResponseHandler(
 				body.revision,
 				stageId,
 				body.stage,
-				(roleId) => canGiveOnboardingRole(facts, roleId),
+				{
+					canGiveRole: (roleId) => canGiveOnboardingRole(facts, roleId),
+					captchaAvailable: isOnboardingCaptchaAvailable(),
+				},
 			),
 		);
 

@@ -6,6 +6,7 @@ import type {
 } from "#shared/utils/onboarding";
 import {
 	blockedOnboardingStageIds,
+	findOnboardingCaptchaWait,
 	onboardingReadiness,
 	onboardingVerdict,
 	parseOnboardingStage,
@@ -43,6 +44,7 @@ function makeReadiness(
 			manageRoles: true,
 			moderateMembers: true,
 		},
+		captchaAvailable: true,
 		community: true,
 		logChannel: null,
 		messagePosted: true,
@@ -63,11 +65,7 @@ describe("parseOnboardingStage", () => {
 	it.each<[string, Partial<OnboardingStageInput>, OnboardingStageProblem]>([
 		["an empty name", { name: "   " }, "name"],
 		["a name past 32 characters", { name: "x".repeat(33) }, "name"],
-		[
-			"the captcha, which the verification page does not serve yet",
-			{ challenge: "Captcha" },
-			"captcha",
-		],
+		["the captcha, when the site cannot check one", { challenge: "Captcha" }, "captcha"],
 		["a question with no text", { challenge: "Question", answers: ["yes"] }, "question"],
 		[
 			"a question past 200 characters",
@@ -109,6 +107,15 @@ describe("parseOnboardingStage", () => {
 		const stage = makeInput({ challenge: "Captcha", enabled: false });
 
 		expect(parseOnboardingStage(stage, { keepsCaptcha: true })).toStrictEqual({
+			ok: true,
+			value: stage,
+		});
+	});
+
+	it("gives a stage the captcha when the site checks one", () => {
+		const stage = makeInput({ challenge: "Captcha" });
+
+		expect(parseOnboardingStage(stage, { captchaAvailable: true })).toStrictEqual({
 			ok: true,
 			value: stage,
 		});
@@ -250,12 +257,13 @@ describe("onboardingReadiness", () => {
 		]);
 	});
 
-	it("names a stage with the captcha, which no page serves yet", () => {
-		const blockers = onboardingReadiness(
-			makeReadiness({ stages: [makeStage({ challenge: "Captcha", id: "4" })] }),
-		);
+	it("names a stage with the captcha when the site cannot check one", () => {
+		const stages = [makeStage({ challenge: "Captcha", id: "4" })];
 
-		expect(blockers).toStrictEqual([{ code: "captchaUnavailable", stageIds: ["4"] }]);
+		expect(
+			onboardingReadiness(makeReadiness({ captchaAvailable: false, stages })),
+		).toStrictEqual([{ code: "captchaUnavailable", stageIds: ["4"] }]);
+		expect(onboardingReadiness(makeReadiness({ stages }))).toStrictEqual([]);
 	});
 
 	it("reports the log channel even when no stage is on", () => {
@@ -352,5 +360,61 @@ describe("onboardingVerdict", () => {
 		});
 
 		expect(verdict).toStrictEqual({ kind: "ready" });
+	});
+});
+
+describe("findOnboardingCaptchaWait", () => {
+	const captcha = makeStage({ challenge: "Captcha", id: "7", name: "Captcha", timeLimit: 600 });
+	const row = { createdAt: 1_000_000, id: "40", stageId: "7", status: "Waiting" as const };
+	const now = row.createdAt + 60_000;
+	const base = {
+		enabled: true,
+		joinedAt: row.createdAt - 1000,
+		now,
+		rows: [row],
+		stages: [captcha],
+	};
+
+	it("finds the Captcha stage the member waits at, with when its time runs out", () => {
+		expect(findOnboardingCaptchaWait(base)).toStrictEqual({
+			expiresAt: new Date(row.createdAt + 600_000).toISOString(),
+			stageName: "Captcha",
+			verificationId: "40",
+		});
+	});
+
+	it("has no end for a stage with no time limit", () => {
+		const stages = [{ ...captcha, timeLimit: 0 }];
+
+		expect(findOnboardingCaptchaWait({ ...base, stages })?.expiresAt).toBe(null);
+	});
+
+	it("picks the newest row when Discord cannot say when the member joined", () => {
+		const older = { ...row, createdAt: row.createdAt - 86_400_000, id: "39" };
+		const stages = [{ ...captcha, timeLimit: 0 }];
+
+		const wait = findOnboardingCaptchaWait({
+			...base,
+			joinedAt: null,
+			rows: [older, row],
+			stages,
+		});
+
+		expect(wait?.verificationId).toBe("40");
+	});
+
+	it.each([
+		["the onboarding is off", { enabled: false }],
+		["the row does not wait", { rows: [{ ...row, status: "Passed" as const }] }],
+		[
+			"the stage is another challenge",
+			{ stages: [{ ...captcha, challenge: "Button" as const }] },
+		],
+		["the stage is off", { stages: [{ ...captcha, enabled: false }] }],
+		["the stage is gone", { rows: [{ ...row, stageId: null }] }],
+		["the time ran out", { now: row.createdAt + 600_000 }],
+		["the row is of a stay before the member joined again", { joinedAt: row.createdAt + 5000 }],
+	])("finds nothing when %s", (_label, overrides) => {
+		expect(findOnboardingCaptchaWait({ ...base, ...overrides })).toBe(null);
 	});
 });

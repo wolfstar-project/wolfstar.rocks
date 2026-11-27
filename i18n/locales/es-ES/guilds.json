@@ -2344,6 +2344,23 @@
 		"load_failed_body": "",
 		"load_failed_title": "",
 		"loading": "",
+		"onboarding": {
+			"body": "",
+			"deadline": "",
+			"done_body": "",
+			"done_title": "",
+			"failures": {
+				"expired": "",
+				"failed": "",
+				"not_member": "",
+				"off": "",
+				"role_refused": "",
+				"stale": ""
+			},
+			"not_waiting": "",
+			"timeout": "",
+			"title": ""
+		},
 		"open_discord": "",
 		"reads": "",
 		"result": {

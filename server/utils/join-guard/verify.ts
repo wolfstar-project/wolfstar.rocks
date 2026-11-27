@@ -25,6 +25,7 @@ import { errors } from "#server/utils/errors";
 import { measureJoinGuardTrust, type JoinGuardTrustResult } from "#server/utils/join-guard/trust";
 import { verifyTurnstileToken } from "#server/utils/join-guard/turnstile";
 import { refreshSessionTokens } from "#server/utils/oauth-tokens";
+import { readOnboardingCaptchaPrompt } from "#server/utils/onboarding/verify";
 import { useApi } from "#server/utils/shared";
 import { guildIconURL } from "#shared/utils/discord";
 import { JoinGuardConnectionsScope, JoinGuardMinimumTrustLevels } from "#shared/utils/join-guard";
@@ -304,7 +305,8 @@ async function measureWaitingMember(input: {
 /**
  * What the verification page of a guild shows the signed-in member: the
  * guild, where the member stands, what the page checks, and when they wait,
- * the trust their account has now with what keeps it below the minimum.
+ * the trust their account has now with what keeps it below the minimum. With
+ * it, the `Captcha` stage of the onboarding the member waits at.
  *
  * `needsConnections` is only `true` for a member who waits, of a guild that
  * reads linked accounts, whose sign-in did not grant `connections`: it is the
@@ -331,6 +333,10 @@ export async function readJoinGuardVerifyPage(
 		trust: null,
 		needsConnections: false,
 		captchaSiteKey: checks.captcha ? useRuntimeConfig().public.turnstileSiteKey || null : null,
+		// The onboarding runs whether the checkpoint is on or not.
+		onboarding: botPresent
+			? await readOnboardingCaptchaPrompt(guildId, account.user.id, now)
+			: null,
 	};
 	if (!botPresent || !isCheckpointOn(settings)) return page;
 

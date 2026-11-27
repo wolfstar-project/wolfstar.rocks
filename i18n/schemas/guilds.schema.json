@@ -7036,6 +7036,57 @@
 				"loading": {
 					"type": "string"
 				},
+				"onboarding": {
+					"type": "object",
+					"properties": {
+						"body": {
+							"type": "string"
+						},
+						"deadline": {
+							"type": "string"
+						},
+						"done_body": {
+							"type": "string"
+						},
+						"done_title": {
+							"type": "string"
+						},
+						"failures": {
+							"type": "object",
+							"properties": {
+								"expired": {
+									"type": "string"
+								},
+								"failed": {
+									"type": "string"
+								},
+								"not_member": {
+									"type": "string"
+								},
+								"off": {
+									"type": "string"
+								},
+								"role_refused": {
+									"type": "string"
+								},
+								"stale": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"not_waiting": {
+							"type": "string"
+						},
+						"timeout": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
 				"open_discord": {
 					"type": "string"
 				},

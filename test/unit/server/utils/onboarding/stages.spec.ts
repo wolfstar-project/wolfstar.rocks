@@ -112,6 +112,22 @@ describe("createOnboardingStage", () => {
 	});
 });
 
+describe("createOnboardingStage with the captcha", () => {
+	it("creates a Captcha stage only when the site checks one", async () => {
+		const { store, record } = createMemoryOnboardingStore();
+		const input = makeInput({ challenge: "Captcha" });
+
+		const refused = await createOnboardingStage(store, GUILD_ID, 0, input);
+		const created = await createOnboardingStage(store, GUILD_ID, 0, input, {
+			captchaAvailable: true,
+		});
+
+		expect(refused).toStrictEqual({ error: { code: "stage", problem: "captcha" }, ok: false });
+		expect(created.ok).toBe(true);
+		expect(record().stages.map((stage) => stage.challenge)).toStrictEqual(["Captcha"]);
+	});
+});
+
 describe("updateOnboardingStage", () => {
 	it("changes the fields that are given and answers the stage before and after", async () => {
 		const { store, record } = threeStages();
@@ -180,7 +196,7 @@ describe("updateOnboardingStage", () => {
 			0,
 			"1",
 			{ name: "Rules", roleId: "111" },
-			cannotGive,
+			{ canGiveRole: cannotGive },
 		);
 		const moved = await updateOnboardingStage(
 			store,
@@ -188,7 +204,7 @@ describe("updateOnboardingStage", () => {
 			1,
 			"1",
 			{ roleId: "222" },
-			cannotGive,
+			{ canGiveRole: cannotGive },
 		);
 
 		expect(renamed.ok).toBe(true);
@@ -208,7 +224,23 @@ describe("updateOnboardingStage", () => {
 		expect(record().stages[0]).toMatchObject({ challenge: "Captcha", enabled: false });
 	});
 
-	it("refuses to give a stage the captcha", async () => {
+	it("gives a stage the captcha when the site checks one", async () => {
+		const { store, record } = threeStages();
+
+		const result = await updateOnboardingStage(
+			store,
+			GUILD_ID,
+			7,
+			"1",
+			{ challenge: "Captcha" },
+			{ captchaAvailable: true },
+		);
+
+		expect(result.ok).toBe(true);
+		expect(record().stages[0]?.challenge).toBe("Captcha");
+	});
+
+	it("refuses to give a stage the captcha when the site cannot check one", async () => {
 		const { store, record } = threeStages();
 
 		const result = await updateOnboardingStage(store, GUILD_ID, 7, "1", {

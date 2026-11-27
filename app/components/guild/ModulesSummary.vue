@@ -20,7 +20,7 @@
 			<li v-for="module in modules" :key="module.key">
 				<button type="button" class="module-row" @click="goToSection(module.section)">
 					<span
-						class="size-2 shrink-0 rounded-full"
+						class="size-2 shrink-0 rounded-full transition-colors duration-(--motion-base) ease-console"
 						:class="module.enabled ? 'bg-success' : 'bg-base-content/40'"
 						aria-hidden="true"
 					></span>
@@ -154,6 +154,7 @@ const modules = computed(() => {
 .module-row {
 	@apply flex min-h-9 w-full cursor-pointer items-center gap-2.5 border-0 bg-transparent py-2 text-left;
 	border-top: 1px solid var(--home-border-subtle);
+	transition: background-color var(--motion-fast) var(--ease-console);
 }
 
 .module-row:hover {

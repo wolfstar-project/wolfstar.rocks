@@ -38,7 +38,7 @@
 					>
 						<UIcon
 							name="ic:round-expand-more"
-							class="size-4 shrink-0 transition-transform"
+							class="size-4 shrink-0 transition-transform duration-(--motion-base) ease-console"
 							:class="isGroupOpen(group.id) ? undefined : '-rotate-90'"
 							aria-hidden="true"
 						/>
@@ -106,7 +106,7 @@
 								>
 									<UIcon
 										:name="item.icon"
-										class="size-4.5 shrink-0"
+										class="size-4.5 shrink-0 transition-colors duration-(--motion-fast) ease-console"
 										:class="item.current ? 'text-primary' : 'text-muted'"
 										aria-hidden="true"
 									/>
@@ -305,6 +305,7 @@ const groups = computed(() =>
 
 .dashboard-nav-label--toggle {
 	@apply mt-2 min-h-8 w-full cursor-pointer rounded-[5px] border-0 bg-transparent py-0 pr-2 pl-1.5;
+	transition: background-color var(--motion-fast) var(--ease-console);
 }
 
 .dashboard-nav-label--toggle:hover {
@@ -321,14 +322,34 @@ const groups = computed(() =>
 	border: 1px solid var(--home-border-subtle);
 	background-color: var(--console-input);
 	color: var(--ui-text-toned);
+	transition:
+		background-color var(--motion-fast) var(--ease-console),
+		scale var(--motion-fast) var(--ease-console);
 }
 
 .dashboard-nav-chip:hover {
 	background-color: var(--console-active);
 }
 
+.dashboard-nav-chip:active {
+	scale: 0.96;
+}
+
+/* The row answers the pointer at once and lets go a little slower; a press
+   pulls it in by a hair. */
 .dashboard-nav-row {
 	@apply flex min-h-9 w-full items-center rounded-[5px];
+	transition:
+		background-color var(--motion-base) var(--ease-console),
+		scale var(--motion-fast) var(--ease-console);
+}
+
+.dashboard-nav-row:hover {
+	transition-duration: 60ms, var(--motion-fast);
+}
+
+.dashboard-nav-row:has(.dashboard-nav-button:active) {
+	scale: 0.985;
 }
 
 .dashboard-nav-row:hover,
@@ -339,6 +360,7 @@ const groups = computed(() =>
 .dashboard-nav-button {
 	@apply flex min-h-9 min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded-[5px] border-0 bg-transparent px-2.5 text-left text-sm font-medium;
 	color: var(--ui-text-toned);
+	transition: color var(--motion-fast) var(--ease-console);
 }
 
 .dashboard-nav-button--current {
@@ -352,13 +374,21 @@ const groups = computed(() =>
 }
 
 .dashboard-nav-count {
-	@apply shrink-0 font-mono text-[0.6875rem];
+	@apply shrink-0 font-mono text-[0.6875rem] tabular-nums;
 	color: var(--ui-text-muted);
 }
 
 .dashboard-nav-pin {
 	@apply mr-0.75 flex size-7.5 shrink-0 cursor-pointer items-center justify-center rounded-[5px] border-0 bg-transparent opacity-0;
 	color: var(--ui-text-muted);
+	transition:
+		opacity var(--motion-fast) var(--ease-console),
+		color var(--motion-fast) var(--ease-console),
+		scale var(--motion-fast) var(--ease-console);
+}
+
+.dashboard-nav-pin:active {
+	scale: 0.9;
 }
 
 /* The row is the only thing that lights up on hover. Its two buttons stay

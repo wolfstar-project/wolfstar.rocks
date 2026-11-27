@@ -50,23 +50,28 @@
 		</UButton>
 	</div>
 
-	<dl
-		class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5 2xl:grid-cols-7"
-		:aria-label="ts('guild_settings.general.server_stats_aria')"
-	>
-		<div
-			v-for="stat in serverStats"
-			:key="stat.label"
-			class="stat-card"
-			:class="{ 'stat-card--placeholder': stat.placeholder }"
+	<!-- Seven stats fill every row: the members lead and take the cells the
+	     others leave, until all seven fit side by side. The page's own width
+	     decides, not the window's, since the sidebar takes its share. -->
+	<div class="@container">
+		<dl
+			class="grid grid-cols-2 gap-3 @xl:grid-cols-3 @3xl:grid-cols-4 @5xl:grid-cols-7"
+			:aria-label="ts('guild_settings.general.server_stats_aria')"
 		>
-			<dt class="truncate text-xs font-semibold text-toned">{{ stat.label }}</dt>
-			<dd class="mt-1 font-mono text-xl font-bold">{{ stat.value }}</dd>
-			<dd class="mt-0.5 min-h-4 text-xs" :class="stat.noteClass ?? 'text-muted'">
-				{{ stat.note }}
-			</dd>
-		</div>
-	</dl>
+			<div
+				v-for="stat in serverStats"
+				:key="stat.label"
+				class="stat-card"
+				:class="{ 'stat-card--placeholder': stat.placeholder }"
+			>
+				<dt class="truncate text-xs font-semibold text-toned">{{ stat.label }}</dt>
+				<dd class="mt-1 font-mono text-xl font-bold tabular-nums">{{ stat.value }}</dd>
+				<dd class="mt-0.5 min-h-4 text-xs" :class="stat.noteClass ?? 'text-muted'">
+					{{ stat.note }}
+				</dd>
+			</div>
+		</dl>
+	</div>
 
 	<div class="grid gap-4 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
 		<section class="console-card flex flex-col" :aria-labelledby="chartHeadingId">
@@ -74,7 +79,7 @@
 				<h3 :id="chartHeadingId" class="text-base font-semibold">
 					{{ ts("guild_settings.general.mod_actions_title") }}
 				</h3>
-				<span class="font-mono text-xs text-muted">
+				<span class="font-mono text-xs text-muted tabular-nums">
 					{{ ts("guild_settings.general.mod_actions_total", { count: moderationTotal }) }}
 				</span>
 			</div>
@@ -525,6 +530,11 @@ async function onError(event: FormErrorEvent) {
 	@apply min-w-0 rounded-[8px] px-3.5 py-3;
 	background-color: var(--console-surface);
 	border: 1px solid var(--home-border-subtle);
+}
+
+/* The lead stat: two cells of two or four columns, the whole row of three. */
+.stat-card:first-child {
+	@apply col-span-2 @xl:col-span-3 @3xl:col-span-2 @5xl:col-span-1;
 }
 
 /* Radii are spelled in pixels: this app's `rounded-lg` is 16px, twice the

@@ -31,12 +31,12 @@
 				v-for="module in moduleCards"
 				:key="module.section"
 				:name="module.key"
-				class="console-card flex flex-col transition-opacity"
+				class="console-card flex flex-col"
 				:ui="{ container: 'flex h-full flex-1 flex-col' }"
 			>
 				<div class="flex items-start justify-between gap-3">
 					<span
-						class="flex size-11 shrink-0 items-center justify-center rounded-lg"
+						class="flex size-11 shrink-0 items-center justify-center rounded-lg transition-colors duration-(--motion-base) ease-console"
 						:class="
 							isOn(module)
 								? 'bg-primary/15 text-primary'
@@ -66,7 +66,10 @@
 						/>
 					</div>
 				</div>
-				<div class="mt-3 min-w-0 flex-1" :class="{ 'opacity-60': !state[module.key] }">
+				<div
+					class="mt-3 min-w-0 flex-1 transition-opacity duration-(--motion-base) ease-console"
+					:class="{ 'opacity-60': !state[module.key] }"
+				>
 					<p class="text-base font-bold">{{ ts(module.labelKey) }}</p>
 					<p class="mt-1 text-[0.8125rem] leading-snug text-muted">
 						{{ ts(module.descriptionKey) }}

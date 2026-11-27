@@ -250,6 +250,25 @@ Depth is conveyed through tonal layering and soft, multi-layered shadows rather 
 
 Glass utilities (`card-glass`, `nav-panel-glass`) add frosted translucency for navigation and overlay surfaces. Hero overlay cards use `rgba(222, 226, 222, 0.16)` for minimal visual intrusion over imagery.
 
+## Motion
+
+The dashboard console moves on one curve and three tempos, declared in `app/assets/css/main.css`.
+
+| Token            | Value                            | Use                                             |
+| ---------------- | -------------------------------- | ----------------------------------------------- |
+| `--ease-console` | `cubic-bezier(0.22, 1, 0.36, 1)` | Every transition and entrance. Class `ease-console` |
+| `--motion-fast`  | `120ms`                          | Hover, press, pin, chip                         |
+| `--motion-base`  | `180ms`                          | A state that changes in place: a module turning on, a row releasing |
+| `--motion-enter` | `260ms`                          | A section entering                              |
+
+- A control eases its color, background, border and opacity. The base layer sets this for every control inside `.console`.
+- A button gives under the pointer: `scale: 0.97`. `scale` is its own property, so name it in the transition list.
+- A section rises 6px as it fades in. Its first four blocks start 30ms apart. The skeleton does not animate.
+- Animate `transform`, `scale` and `opacity`. Never animate a size or a position.
+- Name the properties. Never write `transition: all`.
+- Do not add a looping animation to an element that is not live.
+- Reduced motion needs no rule of its own: `utilities.css` shortens every transition and animation and drops their delays.
+
 ## Shapes
 
 Nuxt UI base radius is `0.5rem` (8px). The app applies a slightly larger card radius for hierarchy:

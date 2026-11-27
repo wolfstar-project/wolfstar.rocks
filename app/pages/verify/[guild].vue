@@ -90,7 +90,7 @@
 				</section>
 
 				<section
-					v-else-if="pass.state === 'done'"
+					v-else-if="pass.state === 'done' && !page.onboarding"
 					class="verify-card verify-card--success"
 					:aria-labelledby="stateHeadingId"
 				>
@@ -232,7 +232,7 @@
 					</p>
 				</section>
 
-				<!-- Once the checkpoint does not hold them, the member passes a Captcha stage of the onboarding here. -->
+				<!-- Once the checkpoint does not hold them, or they just passed it, the member passes a Captcha stage of the onboarding here. -->
 				<VerifyOnboardingCaptcha
 					v-else-if="page.onboarding"
 					:key="page.onboarding.verificationId"

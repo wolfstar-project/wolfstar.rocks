@@ -106,6 +106,14 @@ describe("verification page", () => {
 			expect(wrapper.find("h2").text()).toBe("Pass the stage Human check");
 		});
 
+		it("follows the checkpoint once the member passed it", async () => {
+			mockPass.value = { state: "done" };
+			mockPage.value = page({ onboarding: prompt, state: "verified", trust: null });
+			const wrapper = await mountPage();
+
+			expect(wrapper.find("h2").text()).toBe("Pass the stage Human check");
+		});
+
 		it("waits for the checkpoint first", async () => {
 			mockPage.value = page({ onboarding: prompt });
 			const wrapper = await mountPage();

@@ -13,6 +13,7 @@ const mocks = vi.hoisted(() => ({
 	submitOnboardingRequest: vi.fn(),
 	fetchOnboardingRequestRow: vi.fn(),
 	verifyTurnstileToken: vi.fn(),
+	getMember: vi.fn(),
 }));
 
 vi.mock("#server/database/settings/onboarding/store", () => ({
@@ -22,6 +23,9 @@ vi.mock("#server/database/settings/onboarding/requests", () => ({
 	fetchOnboardingRequestRow: mocks.fetchOnboardingRequestRow,
 	fetchWaitingOnboardingRows: mocks.fetchWaitingOnboardingRows,
 	submitOnboardingRequest: mocks.submitOnboardingRequest,
+}));
+vi.mock("#server/utils/shared", () => ({
+	useApi: () => ({ guilds: { getMember: mocks.getMember } }),
 }));
 vi.mock("#server/utils/join-guard/turnstile", () => ({
 	verifyTurnstileToken: mocks.verifyTurnstileToken,
@@ -78,6 +82,7 @@ beforeEach(() => {
 	mocks.fetchWaitingOnboardingRows.mockResolvedValue([row]);
 	mocks.verifyTurnstileToken.mockResolvedValue({ ok: true });
 	mocks.submitOnboardingRequest.mockResolvedValue("12");
+	mocks.getMember.mockResolvedValue({ joined_at: new Date(row.createdAt - 1000).toISOString() });
 });
 
 describe("readOnboardingCaptchaPrompt", () => {
@@ -88,6 +93,20 @@ describe("readOnboardingCaptchaPrompt", () => {
 			stageName: "Captcha",
 			verificationId: "40",
 		});
+	});
+
+	it("shows nothing for a row of a stay before the member joined again", async () => {
+		mocks.getMember.mockResolvedValue({
+			joined_at: new Date(row.createdAt + 5000).toISOString(),
+		});
+
+		expect(await readOnboardingCaptchaPrompt(GUILD, MEMBER, NOW)).toBe(null);
+	});
+
+	it("reads every row when Discord cannot say when the member joined", async () => {
+		mocks.getMember.mockRejectedValue(new Error("Unknown Member"));
+
+		expect((await readOnboardingCaptchaPrompt(GUILD, MEMBER, NOW))?.verificationId).toBe("40");
 	});
 
 	it("shows nothing when the site cannot check a captcha", async () => {

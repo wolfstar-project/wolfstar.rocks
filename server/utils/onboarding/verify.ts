@@ -13,6 +13,7 @@ import {
 import { onboardingStore } from "#server/database/settings/onboarding/store";
 import { verifyTurnstileToken } from "#server/utils/join-guard/turnstile";
 import { isOnboardingCaptchaAvailable } from "#server/utils/onboarding/captcha";
+import { useApi } from "#server/utils/shared";
 import { findOnboardingCaptchaWait, parseOnboardingRequestError } from "#shared/utils/onboarding";
 import { createError as createH3Error, useRuntimeConfig } from "nuxt/server";
 
@@ -53,17 +54,40 @@ export function throwOnboardingCaptchaError(error: unknown): never {
 	});
 }
 
+/**
+ * When the member last joined the guild, which Discord is asked for fresh:
+ * a row written before it is of a stay that ended. `null` when Discord cannot
+ * say, or the member is not in the guild (the bot refuses them then).
+ */
+async function readJoinedAt(guildId: Snowflake, userId: Snowflake): Promise<number | null> {
+	try {
+		const member = await useApi().guilds.getMember(guildId, userId);
+		const joinedAt = Date.parse(member.joined_at ?? "");
+		return Number.isFinite(joinedAt) ? joinedAt : null;
+	} catch {
+		// Not a member (Unknown Member), or Discord could not say: every row is read, as the bot does.
+		return null;
+	}
+}
+
 /** The `Captcha` stage a member waits at in a guild, read fresh from the database. */
 async function readCaptchaWait(
 	guildId: Snowflake,
 	userId: Snowflake,
 	now: number,
 ): Promise<OnboardingCaptchaWait | null> {
-	const [record, rows] = await Promise.all([
+	const [record, rows, joinedAt] = await Promise.all([
 		onboardingStore.read(guildId),
 		fetchWaitingOnboardingRows(db.orm, guildId, userId),
+		readJoinedAt(guildId, userId),
 	]);
-	return findOnboardingCaptchaWait({ enabled: record.enabled, now, rows, stages: record.stages });
+	return findOnboardingCaptchaWait({
+		enabled: record.enabled,
+		joinedAt,
+		now,
+		rows,
+		stages: record.stages,
+	});
 }
 
 /**

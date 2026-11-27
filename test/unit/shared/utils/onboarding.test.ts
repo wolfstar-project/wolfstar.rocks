@@ -367,11 +367,16 @@ describe("findOnboardingCaptchaWait", () => {
 	const captcha = makeStage({ challenge: "Captcha", id: "7", name: "Captcha", timeLimit: 600 });
 	const row = { createdAt: 1_000_000, id: "40", stageId: "7", status: "Waiting" as const };
 	const now = row.createdAt + 60_000;
+	const base = {
+		enabled: true,
+		joinedAt: row.createdAt - 1000,
+		now,
+		rows: [row],
+		stages: [captcha],
+	};
 
 	it("finds the Captcha stage the member waits at, with when its time runs out", () => {
-		expect(
-			findOnboardingCaptchaWait({ enabled: true, now, rows: [row], stages: [captcha] }),
-		).toStrictEqual({
+		expect(findOnboardingCaptchaWait(base)).toStrictEqual({
 			expiresAt: new Date(row.createdAt + 600_000).toISOString(),
 			stageName: "Captcha",
 			verificationId: "40",
@@ -381,9 +386,21 @@ describe("findOnboardingCaptchaWait", () => {
 	it("has no end for a stage with no time limit", () => {
 		const stages = [{ ...captcha, timeLimit: 0 }];
 
-		expect(
-			findOnboardingCaptchaWait({ enabled: true, now, rows: [row], stages })?.expiresAt,
-		).toBe(null);
+		expect(findOnboardingCaptchaWait({ ...base, stages })?.expiresAt).toBe(null);
+	});
+
+	it("picks the newest row when Discord cannot say when the member joined", () => {
+		const older = { ...row, createdAt: row.createdAt - 86_400_000, id: "39" };
+		const stages = [{ ...captcha, timeLimit: 0 }];
+
+		const wait = findOnboardingCaptchaWait({
+			...base,
+			joinedAt: null,
+			rows: [older, row],
+			stages,
+		});
+
+		expect(wait?.verificationId).toBe("40");
 	});
 
 	it.each([
@@ -396,9 +413,8 @@ describe("findOnboardingCaptchaWait", () => {
 		["the stage is off", { stages: [{ ...captcha, enabled: false }] }],
 		["the stage is gone", { rows: [{ ...row, stageId: null }] }],
 		["the time ran out", { now: row.createdAt + 600_000 }],
+		["the row is of a stay before the member joined again", { joinedAt: row.createdAt + 5000 }],
 	])("finds nothing when %s", (_label, overrides) => {
-		const input = { enabled: true, now, rows: [row], stages: [captcha], ...overrides };
-
-		expect(findOnboardingCaptchaWait(input)).toBe(null);
+		expect(findOnboardingCaptchaWait({ ...base, ...overrides })).toBe(null);
 	});
 });

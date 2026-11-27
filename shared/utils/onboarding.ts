@@ -434,33 +434,45 @@ export interface OnboardingVerificationRow {
 }
 
 /**
- * Finds the `Captcha` stage a member waits at, as the bot reads it: a
- * `Waiting` row of an enabled `Captcha` stage of an enabled onboarding, whose
- * time limit has not run out. A captcha refused is no attempt, so only the
- * time counts.
+ * How far before the member's join a row may have been written and still be
+ * of this stay, as the bot's `OnboardingStayTolerance`: the clock of the
+ * database and the one of Discord are not the same.
+ */
+const ONBOARDING_STAY_TOLERANCE = 2000;
+
+/**
+ * Finds the `Captcha` stage a member waits at, as the bot reads it: the
+ * newest `Waiting` row of the member's current stay (written after they last
+ * joined, `joinedAt`; every row when Discord cannot say), of an enabled
+ * `Captcha` stage of an enabled onboarding, whose time limit has not run out.
+ * A captcha refused is no attempt, so only the time counts.
  */
 export function findOnboardingCaptchaWait(input: {
 	enabled: boolean;
+	/** When the member last joined the guild, in milliseconds; `null` when Discord cannot say. */
+	joinedAt: number | null;
 	stages: readonly Pick<OnboardingStage, "id" | "name" | "enabled" | "challenge" | "timeLimit">[];
 	rows: readonly OnboardingVerificationRow[];
 	now: number;
 }): OnboardingCaptchaWait | null {
 	if (!input.enabled) return null;
 
-	for (const row of input.rows) {
-		if (row.status !== "Waiting") continue;
-		const stage = input.stages.find((entry) => entry.id === row.stageId);
-		if (!stage?.enabled || stage.challenge !== "Captcha") continue;
+	const { joinedAt } = input;
+	const current = input.rows
+		.filter((row) => joinedAt === null || row.createdAt >= joinedAt - ONBOARDING_STAY_TOLERANCE)
+		.toSorted((a, b) => b.createdAt - a.createdAt);
+	// The member's stage now is their newest row that waits: an older one is no stage to serve.
+	const row = current.find((entry) => entry.status === "Waiting");
+	const stage = input.stages.find((entry) => entry.id === row?.stageId);
+	if (!row || !stage?.enabled || stage.challenge !== "Captcha") return null;
 
-		const deadline = stage.timeLimit === 0 ? null : row.createdAt + stage.timeLimit * 1000;
-		if (deadline !== null && input.now >= deadline) continue;
-		return {
-			expiresAt: deadline === null ? null : new Date(deadline).toISOString(),
-			stageName: stage.name,
-			verificationId: row.id,
-		};
-	}
-	return null;
+	const deadline = stage.timeLimit === 0 ? null : row.createdAt + stage.timeLimit * 1000;
+	if (deadline !== null && input.now >= deadline) return null;
+	return {
+		expiresAt: deadline === null ? null : new Date(deadline).toISOString(),
+		stageName: stage.name,
+		verificationId: row.id,
+	};
 }
 
 /**

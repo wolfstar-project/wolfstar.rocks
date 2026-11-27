@@ -94,6 +94,9 @@ import {
 	GuildSettingsLogsSelectionBar,
 	GuildSettingsModeration,
 	GuildModerationWarnThresholds,
+	GuildOnboardingConflict,
+	GuildOnboardingStageEditor,
+	GuildSettingsOnboarding,
 	GuildSettingsSection,
 	GuildSettingsSocial,
 	GuildSetupWizard,
@@ -130,6 +133,7 @@ import {
 import { MOCK_AUDIT_ENTRY, MOCK_MODERATION_ENTRY } from "~~/test/mocks/auditLogs";
 import { createMockOauthFlattenedGuild, createMockRole } from "~~/test/mocks/discord";
 import { createMockGuildData } from "~~/test/mocks/guildData";
+import { createMockOnboardingStage, createMockOnboardingState } from "~~/test/mocks/onboarding";
 import { runAxe } from "./utils/axe";
 
 const inviteUrl =
@@ -1492,6 +1496,95 @@ describe("component accessibility audits", () => {
 			});
 			const component = await mountSuspended(VerifyPage, { route: `/verify/${GUILD_ID}` });
 			await vi.waitFor(() => expect(component.text()).toContain("Sign in with Discord"));
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("Onboarding", () => {
+		const GUILD_ID = "123456789012345671";
+		const ROLE_ID = "300000000000000002";
+		const stage = createMockOnboardingStage({
+			answers: ["yes"],
+			challenge: "Question",
+			failureAction: "Timeout",
+			failureTimeout: 600,
+			id: "2",
+			name: "Server rules",
+			position: 1,
+			question: "Did you read the rules?",
+			roleId: ROLE_ID,
+			trigger: "NativeOnboarding",
+		});
+
+		function openGuild() {
+			registerEndpoint(`/api/guilds/${GUILD_ID}/onboarding`, {
+				method: "GET",
+				handler: () =>
+					createMockOnboardingState({
+						blockers: [
+							{ code: "communityOff", stageIds: ["2"] },
+							{ code: "logPermissions", missing: ["SendMessages"] },
+						],
+						stages: [
+							createMockOnboardingStage({ failureAction: "Kick", id: "1" }),
+							stage,
+							createMockOnboardingStage({
+								enabled: false,
+								id: "3",
+								name: "Quick check",
+								position: 2,
+							}),
+						],
+						week: { failed: 11, passed: 148, waiting: 3 },
+						weekByStage: { "1": { failed: 9, passed: 131, waiting: 3 } },
+					}),
+			});
+			useActiveGuild().selectGuild(GUILD_ID);
+			useGuildData().setGuildData(
+				createMockOauthFlattenedGuild({
+					id: GUILD_ID,
+					roles: [createMockRole({ id: ROLE_ID, name: "Member" })],
+				}),
+			);
+			useGuildSettings().setGuildSettings(
+				createMockGuildData(GUILD_ID, { onboardingEnabled: true }),
+			);
+		}
+
+		it("GuildSettingsOnboarding has no accessibility violations with stages and blockers", async () => {
+			openGuild();
+			const component = await mountSuspended(GuildSettingsOnboarding);
+			await vi.waitFor(() => expect(component.text()).toContain("Server rules"));
+			expect(component.text()).toContain("What is blocked");
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("GuildOnboardingStageEditor has no accessibility violations while open", async () => {
+			openGuild();
+			const component = await mountSuspended(GuildOnboardingStageEditor, {
+				attachTo: document.body,
+				props: {
+					errorMessage:
+						"Another stage has that name, whatever its case. Pick another name.",
+					guild: createMockOauthFlattenedGuild({ id: GUILD_ID }),
+					open: true,
+					stage,
+				},
+			});
+			await vi.waitFor(() =>
+				expect(document.querySelector('[role="dialog"] form')).not.toBeNull(),
+			);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+			component.unmount();
+		});
+
+		it("GuildOnboardingConflict has no accessibility violations", async () => {
+			const component = await mountSuspended(GuildOnboardingConflict, {
+				props: { onboarding: { reload: () => Promise.resolve() } },
+			});
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
 		});

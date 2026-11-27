@@ -48,6 +48,7 @@ describe("DASHBOARD_NAV", () => {
 			"channels",
 			"honeypot",
 			"joinguard",
+			"onboarding",
 			"appeals",
 			"autodelete",
 			"autopurge",
@@ -65,6 +66,7 @@ describe("DASHBOARD_NAV", () => {
 		expect(findDashboardNavItem("channels")?.moduleKey).toBe("modulesLogs");
 		expect(findDashboardNavItem("appeals")?.moduleKey).toBe("appealsEnabled");
 		expect(findDashboardNavItem("joinguard")?.moduleKey).toBe("joinGuardEnabled");
+		expect(findDashboardNavItem("onboarding")?.moduleKey).toBe("onboardingEnabled");
 		expect(findDashboardNavItem("honeypot")?.requiredKey).toBe("honeypotChannel");
 	});
 

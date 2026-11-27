@@ -1415,6 +1415,7 @@
 				"honeypot": "",
 				"joinguard": "",
 				"moderation": "",
+				"onboarding": "",
 				"roles": "",
 				"social": ""
 			},
@@ -1445,6 +1446,190 @@
 		"mute": {
 			"as_role": "",
 			"as_timeout": ""
+		},
+		"onboarding": {
+			"blockers": {
+				"captcha_fix": "",
+				"captcha_title": "",
+				"community_fix": "",
+				"community_title": "",
+				"log_missing_fix": "",
+				"log_missing_title": "",
+				"log_permissions_fix": "",
+				"log_permissions_title": "",
+				"message_fix": "",
+				"message_title": "",
+				"native_fix": "",
+				"native_title": "",
+				"permission_fix": "",
+				"permission_title": "",
+				"role_missing_fix": "",
+				"role_missing_title": "",
+				"role_unmanageable_fix": "",
+				"role_unmanageable_title": "",
+				"stage": "",
+				"title": ""
+			},
+			"chips": {
+				"challenge": {
+					"Button": "",
+					"Captcha": "",
+					"Emoji": "",
+					"Question": ""
+				},
+				"failure_kick": "",
+				"failure_none": "",
+				"failure_timeout": "",
+				"role": "",
+				"trigger": {
+					"Join": "",
+					"NativeOnboarding": ""
+				}
+			},
+			"conflict": {
+				"body": "",
+				"reload": "",
+				"title": ""
+			},
+			"duration": {
+				"days": "",
+				"hours": "",
+				"minutes": ""
+			},
+			"editor": {
+				"add_answer": "",
+				"answer_aria": "",
+				"answer_placeholder": "",
+				"answers": "",
+				"answers_help": "",
+				"attempts": "",
+				"attempts_help": "",
+				"cancel": "",
+				"challenge": "",
+				"challenge_button_help": "",
+				"challenge_captcha_help": "",
+				"challenge_emoji_help": "",
+				"challenge_question_help": "",
+				"create": "",
+				"delete": "",
+				"description": "",
+				"edit_title": "",
+				"enabled": "",
+				"failure": "",
+				"failure_kick": "",
+				"failure_kick_help": "",
+				"failure_none": "",
+				"failure_none_help": "",
+				"failure_timeout": "",
+				"failure_timeout_help": "",
+				"failure_timeout_length": "",
+				"name": "",
+				"name_placeholder": "",
+				"new_title": "",
+				"pick_role": "",
+				"question": "",
+				"question_placeholder": "",
+				"remove_answer_aria": "",
+				"role": "",
+				"role_help": "",
+				"save": "",
+				"time_limit": "",
+				"time_limit_help": "",
+				"trigger": "",
+				"trigger_join_help": "",
+				"trigger_native_help": ""
+			},
+			"errors": {
+				"conflict": "",
+				"generic": "",
+				"invalid": "",
+				"limit": "",
+				"logChannel": "",
+				"logPermissions": "",
+				"nameTaken": "",
+				"role": "",
+				"unknown": ""
+			},
+			"form_aria": "",
+			"load_failed": "",
+			"loading_aria": "",
+			"log": {
+				"channel": "",
+				"help": "",
+				"none": "",
+				"removed_description": "",
+				"save": "",
+				"saved_description": "",
+				"saved_title": "",
+				"title": ""
+			},
+			"message": {
+				"missing": "",
+				"posted": "",
+				"title": ""
+			},
+			"passed_badge": "",
+			"permissions": {
+				"EmbedLinks": "",
+				"KickMembers": "",
+				"ManageRoles": "",
+				"ModerateMembers": "",
+				"SendMessages": "",
+				"ViewChannel": ""
+			},
+			"problems": {
+				"answers": "",
+				"attempts": "",
+				"captcha": "",
+				"failureTimeout": "",
+				"name": "",
+				"question": "",
+				"timeLimit": ""
+			},
+			"retry": "",
+			"stages": {
+				"cancel": "",
+				"count": "",
+				"delete_confirm": "",
+				"delete_description": "",
+				"delete_title": "",
+				"edit": "",
+				"edit_aria": "",
+				"empty_description": "",
+				"empty_title": "",
+				"help": "",
+				"move_down_aria": "",
+				"move_up_aria": "",
+				"new": "",
+				"stats": "",
+				"stats_waiting": "",
+				"status": {
+					"blocked": "",
+					"off": "",
+					"ready": ""
+				},
+				"title": "",
+				"toasts": {
+					"applies": "",
+					"created": "",
+					"deleted": "",
+					"moved": "",
+					"saved": ""
+				},
+				"toggle_aria": ""
+			},
+			"stages_badge": "",
+			"subtitle": "",
+			"switch_aria": "",
+			"title": "",
+			"unknown_channel": "",
+			"unknown_role": "",
+			"verdict": {
+				"blocked": "",
+				"empty": "",
+				"off": "",
+				"ready": ""
+			}
 		},
 		"please_try_again": "Please try again.",
 		"reports": {

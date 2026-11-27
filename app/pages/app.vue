@@ -153,6 +153,10 @@ const asyncComponentMap: Record<string, ReturnType<typeof defineAsyncComponent>>
 	honeypot: sectionComponent(() => import("~/components/guild/settings/Honeypot.vue"), "form"),
 	joinguard: sectionComponent(() => import("~/components/guild/settings/JoinGuard.vue"), "form"),
 	modules: sectionComponent(() => import("~/components/guild/settings/Modules.vue"), "modules"),
+	onboarding: sectionComponent(
+		() => import("~/components/guild/settings/Onboarding.vue"),
+		"form",
+	),
 	roles: sectionComponent(() => import("~/components/guild/settings/Roles.vue"), "form"),
 	social: sectionComponent(() => import("~/components/guild/settings/Social.vue"), "table"),
 };

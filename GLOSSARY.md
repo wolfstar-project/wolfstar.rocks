@@ -27,6 +27,8 @@ identifiers" at the end.
 | case                | the bot's moderation record        | server 1—N case                | "case"                |
 | appeal              | the bot's `Appeal`                 | case 1—1 appeal (unique index) | "appeal"              |
 | honeypot            | the bot's `GuildHoneypot`          | server 1—1 honeypot channel    | "Honeypot"            |
+| Onboarding          | the bot's `GuildOnboarding`        | server 1—N stage (max 5)       | "Onboarding"          |
+| stage               | the bot's `GuildOnboardingStage`   | stage 1—1 challenge            | "stage"               |
 | Auto-Delete         | the bot's `GuildAutoDelete`        | channel 1—1 (unique index)     | "Auto-Delete"         |
 | Auto-Purge          | the bot's `GuildAutoPurge`         | channel 1—1 (unique index)     | "Auto-Purge"          |
 | Auto-Message        | the bot's `GuildAutoMessage`       | channel 1—1 (unique index)     | "Auto-Message"        |
@@ -56,6 +58,10 @@ Collisions
   is an Auto Moderation rule with soft and hard actions.
 - An appeal is about a case and is not one. Accepting it makes a new case (an unban, an unmute, a timeout
   end) that undoes the first.
+- "Onboarding" is WolfStar's module. Discord has a feature of the same name in Server Settings: always
+  write that one as "Discord's onboarding", never as "Onboarding" alone.
+- A "challenge" is what an Onboarding stage asks of a member. The Join Guard's "checkpoint" is a place a
+  stopped member waits at. One is a question, the other a queue.
 - "Language" names the dashboard's own language. A bot's server language is a separate setting. Always say
   which one.
 
@@ -178,6 +184,45 @@ sentence; it is not its name.
 **Never:** trap channel, bait channel, spam trap.
 
 **Casing:** `Honeypot` as the section and module name, `honeypot` in prose.
+
+### Onboarding
+
+**Is:** the sequence of stages a new member must pass before they are in. WolfStar runs the stages in
+Discord. The dashboard and WolfStar's panel in Discord edit the same configuration.
+
+**Use for:** the "Onboarding" section and module, "the onboarding" of a server.
+
+**Never:** welcome flow, member gate, verification flow, entry flow. Never "Onboarding" alone for Discord's
+own feature: that one is "Discord's onboarding".
+
+**Casing:** `Onboarding` as the section and module name, `onboarding` in prose.
+
+### stage
+
+**Is:** one step of the Onboarding: when it starts, the challenge it asks, the role it gives on a pass, and
+what WolfStar does when the member fails. A server has 5 stages at most, and they run in order.
+
+**Use for:** "New stage", "Stage 2", "the stages run in order".
+
+**Never:** step, phase, level, gate.
+
+### challenge
+
+**Is:** what a stage asks of the member: a button to press, an emoji to pick, a question to answer, or a
+captcha on WolfStar.rocks.
+
+**Use for:** "Challenge" in the stage editor, "the captcha challenge".
+
+**Never:** test, puzzle, quiz, check. "Check" belongs to the Join Guard, which checks accounts.
+
+### verification message
+
+**Is:** the message WolfStar posts in a channel, with the button a member presses to start a stage. WolfStar
+owns it: only its panel in Discord, `/settings onboarding`, posts or moves it.
+
+**Use for:** "Verification message" in the Onboarding section.
+
+**Never:** panel, verify button, gate message. "Panel" is WolfStar's own configuration panel in Discord.
 
 ### Auto-Delete
 

@@ -89,6 +89,7 @@ const modules = computed(() => {
 	const honeypotSetUp = Boolean(settings?.honeypotChannel);
 	const honeypot = settings?.modulesHoneypot === true && honeypotSetUp;
 	const joinGuard = settings?.joinGuardEnabled === true;
+	const onboarding = settings?.onboardingEnabled === true;
 	const appeals = settings?.appealsEnabled === true;
 	const onOff = (enabled: boolean) =>
 		enabled ? ts("guild_settings.modules.on") : ts("guild_settings.modules.off");
@@ -118,6 +119,13 @@ const modules = computed(() => {
 			labelKey: "dashboard.nav.joinguard",
 			section: "joinguard",
 			state: onOff(joinGuard),
+		},
+		{
+			enabled: onboarding,
+			key: "onboarding",
+			labelKey: "dashboard.nav.onboarding",
+			section: "onboarding",
+			state: onOff(onboarding),
 		},
 		{
 			enabled: appeals,

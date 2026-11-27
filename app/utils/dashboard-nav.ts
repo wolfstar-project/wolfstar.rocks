@@ -87,6 +87,13 @@ export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
 	},
 	{
 		group: "modules",
+		icon: "ic:round-checklist",
+		labelKey: "dashboard.nav.onboarding",
+		moduleKey: "onboardingEnabled",
+		slug: "onboarding",
+	},
+	{
+		group: "modules",
 		icon: "ic:round-rate-review",
 		labelKey: "dashboard.nav.appeals",
 		moduleKey: "appealsEnabled",

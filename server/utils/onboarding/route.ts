@@ -72,6 +72,7 @@ const REFUSAL_RESPONSES = {
 	invalid: [400, "Invalid request"],
 	limit: [400, "Too many stages"],
 	nameTaken: [409, "Stage name taken"],
+	role: [422, "WolfStar cannot give this role"],
 	stage: [400, "Invalid stage"],
 	unknown: [404, "Stage not found"],
 } as const satisfies Record<OnboardingRefusal["code"], readonly [number, string]>;

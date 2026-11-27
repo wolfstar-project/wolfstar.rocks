@@ -11,7 +11,6 @@ import {
 	parseOnboardingInput,
 	readOnboardingStageParam,
 	readOnboardingState,
-	throwOnboardingRoleFailure,
 	unwrapOnboardingChange,
 } from "#server/utils/onboarding/route";
 import { updateOnboardingStage } from "#server/utils/onboarding/stages";
@@ -38,9 +37,9 @@ const AUDITED_FIELDS = [
  * `PATCH /api/guilds/:guild/onboarding/stages/:stage`: edits a stage. The
  * body has the fields that change and the revision the page read; the stage
  * they make with the others is checked whole. Answers the whole onboarding;
- * 404 `{ code: "unknown" }`, and the refusals of `POST`. Only a role the
- * change sets is checked, so a role that WolfStar can no longer give does not
- * keep the stage from being switched off.
+ * 404 `{ code: "unknown" }`, and the refusals of `POST`. Only a role that
+ * differs from the stored one is checked, so a role that WolfStar can no
+ * longer give does not keep the stage from being renamed or switched off.
  */
 export default defineWrappedResponseHandler(
 	async (event): Promise<OnboardingState> => {
@@ -49,8 +48,6 @@ export default defineWrappedResponseHandler(
 		const body = parseOnboardingInput(OnboardingStagePatchBodySchema, await readBody(event));
 
 		const facts = await fetchOnboardingDiscordFacts(guild);
-		const roleId = body.stage.roleId ?? null;
-		if (roleId !== null && !canGiveOnboardingRole(facts, roleId)) throwOnboardingRoleFailure();
 
 		const { before, after } = unwrapOnboardingChange(
 			await updateOnboardingStage(
@@ -59,6 +56,7 @@ export default defineWrappedResponseHandler(
 				body.revision,
 				stageId,
 				body.stage,
+				(roleId) => canGiveOnboardingRole(facts, roleId),
 			),
 		);
 

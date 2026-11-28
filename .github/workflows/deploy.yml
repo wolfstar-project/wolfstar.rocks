@@ -68,6 +68,9 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
           SKEW_PROTECTION_BUNDLE_ASSETS: true
 
+      - name: 🔍 Check the Worker bundle has no Node-only module
+        run: node scripts/check-worker-bundle.ts
+
       - name: 🧹 Drop the client source maps
         run: find .output/public -name '*.map' -delete
 

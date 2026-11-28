@@ -520,8 +520,17 @@ export default defineNuxtConfig({
 	vue: { runtimeCompiler: isStorybook },
 
 	nitroLegacy: false,
-	// YAML's default Node entry is CommonJS. Its ESM build also works in the server runner.
-	alias: { yaml: resolve("./node_modules/yaml/browser/index.js") },
+	alias: {
+		// YAML's default Node entry is CommonJS. Its ESM build also works in the server runner.
+		yaml: resolve("./node_modules/yaml/browser/index.js"),
+		// Nitro v3 resolves `@discordjs/rest` to its Node entry on a Workers build. That
+		// entry sends requests through undici, whose TLS socket workerd does not
+		// implement, so every call to Discord fails. The web entry uses `fetch`.
+		// `scripts/check-worker-bundle.ts` fails the build in CI if the Node entry returns.
+		...(isCloudflareBuild
+			? { "@discordjs/rest": resolve("./node_modules/@discordjs/rest/dist/web.mjs") }
+			: {}),
+	},
 
 	nitro: {
 		...(isCloudflareBuild

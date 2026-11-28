@@ -1,3 +1,4 @@
+import { definePlugin as defineNitroPlugin } from "nitro";
 export default defineNitroPlugin((nitroApp) => {
 	if (import.meta.prerender) {
 		nitroApp.hooks.hook("render:html", (html, { event }) => {

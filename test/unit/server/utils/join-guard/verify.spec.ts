@@ -50,7 +50,13 @@ vi.mock("#server/utils/join-guard/turnstile", () => ({
 	verifyTurnstileToken: mocks.verifyTurnstileToken,
 }));
 vi.mock("#server/utils/oauth-tokens", () => ({ refreshSessionTokens: mocks.refreshSessionTokens }));
-vi.mock("#server/utils/runtimeConfig", () => ({ runtimeConfig: mocks.runtimeConfig }));
+vi.mock("#server/utils/onboarding/verify", () => ({
+	readOnboardingCaptchaPrompt: async () => null,
+}));
+vi.mock("nuxt/server", async (importOriginal) => ({
+	...(await importOriginal<typeof import("nuxt/server")>()),
+	useRuntimeConfig: () => mocks.runtimeConfig,
+}));
 vi.mock("#server/utils/shared", () => ({
 	// With a REST client the API is the member's own; without one, the bot's.
 	useApi: (rest?: unknown) =>
@@ -136,6 +142,7 @@ describe("readJoinGuardVerifyPage", () => {
 			trust: { level: 2, linkedAccounts: 1, missing: [] },
 			needsConnections: false,
 			captchaSiteKey: "site-key",
+			onboarding: null,
 		});
 		expect(mocks.fetchJoinGuardRuleRow).toHaveBeenCalledWith({ root: true }, GUILD, "2");
 		expect(mocks.fetchLatestJoinGuardCheckpoint).toHaveBeenCalledWith(

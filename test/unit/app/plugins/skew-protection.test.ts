@@ -130,4 +130,21 @@ describe("skew-protection.client plugin", () => {
 		expect(cookieRefs.size).toBe(0);
 		expect(globalThis.fetch).toBe(nativeFetch);
 	});
+
+	it("does nothing past the manifest when the module is turned off, as in Storybook", () => {
+		vi.stubGlobal("useRuntimeConfig", () => ({ app: { buildId }, public: {} }));
+		vi.stubGlobal("useSkewProtection", undefined);
+
+		expect(() => setupPlugin(mockNuxtApp)).not.toThrow();
+		expect(capturedHooks["app:manifest:update"]).toBeTypeOf("function");
+		expect(cookieRefs.size).toBe(0);
+		expect(globalThis.fetch).toBe(nativeFetch);
+	});
 });
+
+// Mock the explicit server imports at the same boundaries as the former globals.
+vi.mock("nuxt/server", async (importOriginal) => ({
+	...(await importOriginal<Record<string, unknown>>()),
+	useRuntimeConfig: (...args: unknown[]) =>
+		(Reflect.get(globalThis, "useRuntimeConfig") as (...args: unknown[]) => unknown)(...args),
+}));

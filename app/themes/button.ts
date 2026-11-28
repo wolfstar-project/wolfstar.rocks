@@ -21,9 +21,9 @@ export default {
 			variant: "dash",
 		},
 		{
-			// Discord's quiet button: a tinted rounded square on hover, a little
-			// smaller under the pointer, never a frame or a shadow.
-			class: `disabled:btn-disabled aria-disabled:btn-disabled hover:bg-base-content/10 active:bg-base-content/15 active:scale-[0.97] transition-[background-color,color,transform] duration-150`,
+			// Discord's quiet button: a tinted rounded square on hover, never a
+			// frame or a shadow.
+			class: `disabled:btn-disabled aria-disabled:btn-disabled hover:bg-base-content/10 active:bg-base-content/15`,
 			color: "neutral",
 			variant: "ghost",
 		},
@@ -84,6 +84,9 @@ export default {
 	slots: {
 		base: [
 			"btn", // DaisyUI button base class
+			// Every button gives a little under the pointer. `scale` is its own
+			// property, so it is named: a list with `transform` alone misses it.
+			"transition-[color,background-color,border-color,box-shadow,scale] duration-(--motion-fast) ease-console not-disabled:not-aria-disabled:active:scale-[0.97]",
 			//	'inline-flex items-center',
 			//	'disabled:cursor-not-allowed aria-disabled:cursor-not-allowed',
 			//	'disabled:opacity-75 aria-disabled:opacity-75'

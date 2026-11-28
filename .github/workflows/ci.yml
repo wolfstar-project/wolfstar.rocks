@@ -322,6 +322,9 @@ jobs:
           NUXT_BETTER_AUTH_SECRET: only-for-the-prerender-of-this-check
           NUXT_OAUTH_DISCORD_CLIENT_ID: "0"
 
+      - name: 🔍 Check the Worker bundle has no Node-only module
+        run: node scripts/check-worker-bundle.ts
+
       - name: ☁️ Check the Worker can be deployed
         run: npx --yes wrangler@4.156.0 deploy --dry-run -c .output/server/wrangler.json --autoconfig=false
 

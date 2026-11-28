@@ -178,6 +178,7 @@
 			"logs": "",
 			"moderation": "",
 			"modules": "",
+			"onboarding": "",
 			"overview": "",
 			"roles": "",
 			"social": "",
@@ -186,8 +187,10 @@
 		"nav_aria": "",
 		"nav_current_group": "",
 		"nav_groups": {
-			"modules": "",
-			"resources": ""
+			"engagement": "",
+			"moderation": "",
+			"resources": "",
+			"utility": ""
 		},
 		"nav_module_off": "",
 		"nav_pin": "",

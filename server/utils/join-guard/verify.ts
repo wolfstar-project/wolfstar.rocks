@@ -8,7 +8,7 @@ import type {
 	JoinGuardVerifyState,
 } from "#shared/utils/join-guard";
 import type { APIConnection, APIUser, Snowflake } from "discord-api-types/v10";
-import type { H3Event } from "h3";
+import type { H3Event } from "nitro/h3";
 import { db } from "#server/database/prisma";
 import { readFreshSettings } from "#server/database/settings/functions";
 import {
@@ -25,12 +25,12 @@ import { errors } from "#server/utils/errors";
 import { measureJoinGuardTrust, type JoinGuardTrustResult } from "#server/utils/join-guard/trust";
 import { verifyTurnstileToken } from "#server/utils/join-guard/turnstile";
 import { refreshSessionTokens } from "#server/utils/oauth-tokens";
-import { runtimeConfig } from "#server/utils/runtimeConfig";
+import { readOnboardingCaptchaPrompt } from "#server/utils/onboarding/verify";
 import { useApi } from "#server/utils/shared";
 import { guildIconURL } from "#shared/utils/discord";
 import { JoinGuardConnectionsScope, JoinGuardMinimumTrustLevels } from "#shared/utils/join-guard";
 import { REST } from "@discordjs/rest";
-import { createError as createH3Error } from "h3";
+import { createError as createH3Error, useRuntimeConfig } from "nuxt/server";
 
 /** Why the verification page refuses to let a member pass, to answer with. */
 export type JoinGuardVerifyErrorCode =
@@ -305,7 +305,8 @@ async function measureWaitingMember(input: {
 /**
  * What the verification page of a guild shows the signed-in member: the
  * guild, where the member stands, what the page checks, and when they wait,
- * the trust their account has now with what keeps it below the minimum.
+ * the trust their account has now with what keeps it below the minimum. With
+ * it, the `Captcha` stage of the onboarding the member waits at.
  *
  * `needsConnections` is only `true` for a member who waits, of a guild that
  * reads linked accounts, whose sign-in did not grant `connections`: it is the
@@ -331,7 +332,11 @@ export async function readJoinGuardVerifyPage(
 		minimumTrust: minimumTrustOf(settings),
 		trust: null,
 		needsConnections: false,
-		captchaSiteKey: checks.captcha ? runtimeConfig.public.turnstileSiteKey || null : null,
+		captchaSiteKey: checks.captcha ? useRuntimeConfig().public.turnstileSiteKey || null : null,
+		// The onboarding runs whether the checkpoint is on or not.
+		onboarding: botPresent
+			? await readOnboardingCaptchaPrompt(guildId, account.user.id, now)
+			: null,
 	};
 	if (!botPresent || !isCheckpointOn(settings)) return page;
 
@@ -356,7 +361,7 @@ export async function readJoinGuardVerifyPage(
  * no Turnstile secret refuses rather than skipping the check.
  */
 async function assertCaptcha(token: string | undefined): Promise<void> {
-	const secret = runtimeConfig.turnstileSecretKey;
+	const secret = useRuntimeConfig().turnstileSecretKey;
 	if (!secret) throw new JoinGuardVerifyError("captchaUnavailable");
 
 	const result = await verifyTurnstileToken(secret, token);

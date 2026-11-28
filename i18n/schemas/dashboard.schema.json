@@ -538,6 +538,9 @@
 						"modules": {
 							"type": "string"
 						},
+						"onboarding": {
+							"type": "string"
+						},
 						"overview": {
 							"type": "string"
 						},
@@ -562,10 +565,16 @@
 				"nav_groups": {
 					"type": "object",
 					"properties": {
-						"modules": {
+						"engagement": {
+							"type": "string"
+						},
+						"moderation": {
 							"type": "string"
 						},
 						"resources": {
+							"type": "string"
+						},
+						"utility": {
 							"type": "string"
 						}
 					},

@@ -1,11 +1,12 @@
-import type { H3Event } from "h3";
+import type { H3Event } from "nitro/h3";
 import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
 import { AutoChannelError, type AutoChannelKind } from "#server/utils/auto-channels/write";
 import { authorizeGuildManager, useManagedGuild } from "#server/utils/guilds/manager";
 import { guildSettingsUpdate } from "#shared/audit/actions";
 import { isSnowflake } from "#shared/utils/snowflake";
 import { useLogger, withAuditMethods } from "evlog";
-import { createError as createH3Error } from "h3";
+import { getRouterParam } from "nuxt/server";
+import { createError as createH3Error } from "nuxt/server";
 
 /**
  * `authorize` hook of the Auto-Delete, Auto-Purge and Auto-Message routes:

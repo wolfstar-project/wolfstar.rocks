@@ -178,6 +178,7 @@
 			"logs": "Log",
 			"moderation": "Moderazione",
 			"modules": "Moduli",
+			"onboarding": "",
 			"overview": "Panoramica",
 			"roles": "Ruoli",
 			"social": "",
@@ -186,8 +187,10 @@
 		"nav_aria": "Impostazioni del server",
 		"nav_current_group": "La pagina aperta è in questo gruppo",
 		"nav_groups": {
-			"modules": "Moduli",
-			"resources": "Risorse"
+			"engagement": "",
+			"moderation": "",
+			"resources": "Risorse",
+			"utility": ""
 		},
 		"nav_module_off": "Il modulo è disattivato",
 		"nav_pin": "Fissa {name}",

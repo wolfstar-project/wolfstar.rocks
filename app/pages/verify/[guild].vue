@@ -90,7 +90,7 @@
 				</section>
 
 				<section
-					v-else-if="pass.state === 'done'"
+					v-else-if="pass.state === 'done' && !page.onboarding"
 					class="verify-card verify-card--success"
 					:aria-labelledby="stateHeadingId"
 				>
@@ -231,6 +231,15 @@
 						<span>{{ ts("verify.reads") }}</span>
 					</p>
 				</section>
+
+				<!-- Once the checkpoint does not hold them, or they just passed it, the member passes a Captcha stage of the onboarding here. -->
+				<VerifyOnboardingCaptcha
+					v-else-if="page.onboarding"
+					:key="page.onboarding.verificationId"
+					:guild-id="guildId"
+					:guild-name="page.guild.name"
+					:prompt="page.onboarding"
+				/>
 
 				<section v-else class="verify-card" :aria-labelledby="stateHeadingId">
 					<h2 :id="stateHeadingId" class="text-base font-bold">

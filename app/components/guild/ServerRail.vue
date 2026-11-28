@@ -156,7 +156,18 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 .guild-rail-add {
 	/* Discord's rounded squares: a 40px tile with a 12px corner. */
 	@apply flex size-10 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-[12px] border-0 p-0 text-[0.9375rem] font-semibold;
-	transition: background-color 170ms;
+	transition:
+		background-color var(--motion-base) var(--ease-console),
+		color var(--motion-base) var(--ease-console),
+		scale var(--motion-fast) var(--ease-console);
+}
+
+/* A tile gives a little under the pointer, as a key does. */
+.guild-rail-home:active,
+.guild-rail-item:active,
+.guild-rail-add:active,
+.guild-rail-invite:active .guild-rail-item {
+	scale: 0.94;
 }
 
 /* The mark sits on a fixed dark tile in both themes, like the wordmark does. */
@@ -168,21 +179,23 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 	@apply relative flex shrink-0;
 }
 
-/* Discord's pill on the rail's edge: a dot on hover, a bar while open. */
+/* Discord's pill on the rail's edge: a dot on hover, a bar while open. It is
+   always as tall as the tile and scaled down, so it grows without a layout. */
 .guild-rail-pill {
 	/* On the rail's edge, 16px left of the icon. */
-	@apply absolute top-1/2 -left-4 h-0 w-1 -translate-y-1/2 rounded-r-[4px];
+	@apply absolute top-1/2 -left-4 h-10 w-1 -translate-y-1/2 rounded-r-[4px];
 	background-color: var(--ui-text-highlighted);
-	transition: height 170ms cubic-bezier(0.3, 0, 0.2, 1);
+	scale: 1 0;
+	transition: scale var(--motion-base) var(--ease-console);
 }
 
 .guild-rail-slot:hover .guild-rail-pill {
-	@apply h-5;
+	scale: 1 0.5;
 }
 
 .guild-rail-pill--on,
 .guild-rail-slot:hover .guild-rail-pill--on {
-	@apply h-10;
+	scale: 1;
 }
 
 .guild-rail-unread {
@@ -203,6 +216,10 @@ const servers = computed(() => selectDashboardRailGuilds(guilds));
 .guild-rail-item--active {
 	outline: 2px solid var(--color-primary);
 	outline-offset: 2px;
+}
+
+.guild-rail-add:hover {
+	@apply bg-success text-success-content;
 }
 
 .guild-rail-item:has(img),

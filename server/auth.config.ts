@@ -7,9 +7,9 @@ import { createAuthSecondaryStorage } from "#server/utils/auth-rate-limit-storag
 import { invalidateCurrentUserCache } from "#server/utils/discord/cache.ts";
 import { createDiscordProviderOptions } from "#server/utils/discord/provider.ts";
 import { resolveDiscordRedirectURI } from "#server/utils/oauth-callback.ts";
-import { runtimeConfig } from "#server/utils/runtimeConfig.ts";
 import { defineServerAuth } from "@nuxtjs/better-auth/config";
 import { createAuthMiddleware } from "better-auth/api";
+import { useKV as useStorage } from "nitro/kv";
 import { isDevelopment } from "std-env";
 
 // Adapts the Nitro/unstorage mount to better-auth's SecondaryStorage shape so
@@ -22,11 +22,18 @@ const authSecondaryStorage = createAuthSecondaryStorage(useStorage("wolfstar:aut
 // anything set here — so declaring them only creates config that looks live.
 export default defineServerAuth((ctx) => {
 	const cookieDomain = resolveAuthCookieDomain(ctx.runtimeConfig.public.siteUrl);
+	// The Discord credentials are required by the runtime config schema, and a
+	// prerender throws when it reads a required value its build has no variable
+	// for (`NUXT_E8015`). A prerendered page never signs anyone in, and the
+	// builds that prerender do not hold the Worker's secrets, so it reads none.
+	const discord = import.meta.prerender
+		? { clientId: "", clientSecret: "" }
+		: ctx.runtimeConfig.discord;
 	return {
 		socialProviders: {
 			discord: createDiscordProviderOptions({
-				clientId: runtimeConfig.discord.clientId,
-				clientSecret: runtimeConfig.discord.clientSecret,
+				clientId: discord.clientId,
+				clientSecret: discord.clientSecret,
 				// Same origin the module resolves `baseURL` from, so the redirect URI
 				// sent to Discord and the one replayed during the token exchange can
 				// never disagree. `requestOrigin` is only reached when no explicit
@@ -41,7 +48,7 @@ export default defineServerAuth((ctx) => {
 		// requests, so preview-deploy origins have to be resolved per request.
 		trustedOrigins: (request) => resolveTrustedOrigins(request),
 		advanced: {
-			cookiePrefix: runtimeConfig.session.name,
+			cookiePrefix: ctx.runtimeConfig.session.cookieName,
 			// Production's subdomains share the sign-in: see `resolveAuthCookieDomain()`.
 			...(cookieDomain && { crossSubDomainCookies: { enabled: true, domain: cookieDomain } }),
 			ipAddress: {
@@ -69,10 +76,10 @@ export default defineServerAuth((ctx) => {
 		// `expiresIn` and the cookie cache must describe the same lifetime — the
 		// cookie is the session, there is no server-side record to outlive it.
 		session: {
-			expiresIn: runtimeConfig.session.maxAge,
+			expiresIn: ctx.runtimeConfig.session.maxAge,
 			cookieCache: {
 				enabled: true,
-				maxAge: runtimeConfig.session.maxAge,
+				maxAge: ctx.runtimeConfig.session.maxAge,
 				strategy: "jwe",
 			},
 		},

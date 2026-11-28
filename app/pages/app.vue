@@ -50,7 +50,12 @@
 		</ClientOnly>
 		<div v-else class="console-content">
 			<ClientOnly>
-				<div class="flex flex-col gap-5">
+				<!-- Keyed, so each section that opens rises in; its skeleton does not. -->
+				<div
+					:key="sectionKey"
+					class="flex flex-col gap-5"
+					:class="{ 'console-section': isGuildLoaded }"
+				>
 					<DashboardSkeleton v-if="!isGuildLoaded" :kind="skeletonKind" />
 					<GuildLogsPanel v-else-if="isLogsSection" />
 					<component
@@ -118,6 +123,9 @@ const isGuildLoaded = computed(
 		Object.keys(guildSettings.value).length > 0,
 );
 const skeletonKind = computed(() => dashboardSkeletonKind(section.value));
+const sectionKey = computed(
+	() => `${activeGuildId.value}:${section.value}:${isGuildLoaded.value ? "ready" : "loading"}`,
+);
 
 // A section's code is loaded on its first opening; the skeleton stands in for
 // it when that takes a moment.
@@ -153,6 +161,10 @@ const asyncComponentMap: Record<string, ReturnType<typeof defineAsyncComponent>>
 	honeypot: sectionComponent(() => import("~/components/guild/settings/Honeypot.vue"), "form"),
 	joinguard: sectionComponent(() => import("~/components/guild/settings/JoinGuard.vue"), "form"),
 	modules: sectionComponent(() => import("~/components/guild/settings/Modules.vue"), "modules"),
+	onboarding: sectionComponent(
+		() => import("~/components/guild/settings/Onboarding.vue"),
+		"form",
+	),
 	roles: sectionComponent(() => import("~/components/guild/settings/Roles.vue"), "form"),
 	social: sectionComponent(() => import("~/components/guild/settings/Social.vue"), "table"),
 };
@@ -314,7 +326,27 @@ useSeoMeta({
 	@apply min-h-0 flex-1 overflow-y-auto p-3.5 pb-24 sm:p-5.5;
 }
 
+/* A section's blocks rise in one after the other, the first four apart and the
+   rest together: the page is readable before the last one lands. A skeleton
+   that stands in while a section's code loads stays still. */
+.console-section > :deep(:not([aria-busy="true"])) {
+	animation: console-section-in var(--motion-enter) var(--ease-console) backwards;
+}
+
+.console-section > :deep(:nth-child(2)) {
+	animation-delay: 30ms;
+}
+
+.console-section > :deep(:nth-child(3)) {
+	animation-delay: 60ms;
+}
+
+.console-section > :deep(:nth-child(n + 4)) {
+	animation-delay: 90ms;
+}
+
 .console-unsaved {
 	@apply inline-flex h-6 shrink-0 items-center gap-1.5 rounded-full bg-warning px-2.5 text-xs font-bold whitespace-nowrap text-warning-content;
+	animation: console-pop-in var(--motion-base) var(--ease-console) backwards;
 }
 </style>

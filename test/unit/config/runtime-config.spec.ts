@@ -1,103 +1,71 @@
-/* oxlint-disable no-console --- assertions spy on the parser's console.warn fallback */
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
+import {
+	optionalInteger,
+	optionalNumber,
+	optionalString,
+	requiredString,
+	requiredStringWithBuildDefault,
+} from "../../../config/runtime-config";
 
-/**
- * Sentry trace-sample-rate configuration (plan 007).
- *
- * One environment variable — NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE — is
- * checked AND read; the value must be a finite number in [0, 1]. Zero is a
- * valid explicit "no tracing" choice, so truthiness-based parsing must never
- * come back.
- */
+type Schema =
+	| ReturnType<typeof requiredString>
+	| ReturnType<typeof optionalInteger>
+	| ReturnType<typeof optionalNumber>;
 
-describe("parseTracesSampleRate", () => {
-	beforeEach(() => {
-		vi.resetModules();
-		vi.spyOn(console, "warn").mockImplementation(() => undefined);
+// Nuxt reads a runtime config schema the same two ways: its JSON Schema for the
+// type and the default, and a validation of `undefined` to tell required keys.
+function describeSchema(schema: Schema) {
+	const standard = schema["~standard"];
+	const result = standard.validate(undefined);
+	if (result instanceof Promise) throw new TypeError("expected a synchronous schema");
+	return {
+		json: standard.jsonSchema.output({ target: "draft-2020-12" }),
+		required: Boolean(result.issues),
+	};
+}
+
+describe("runtime config schemas", () => {
+	it("marks a required string as a string with no default", () => {
+		const { json, required } = describeSchema(requiredString());
+
+		expect(required).toBe(true);
+		expect(json).toMatchObject({ type: "string" });
+		expect(json).not.toHaveProperty("default");
 	});
 
-	afterEach(() => {
-		vi.unstubAllEnvs();
-		vi.restoreAllMocks();
+	it("keeps a value read at build time as the default", () => {
+		const { json, required } = describeSchema(requiredStringWithBuildDefault("1234"));
+
+		expect(required).toBe(false);
+		expect(json).toMatchObject({ default: "1234", type: "string" });
 	});
 
-	async function loadParser() {
-		const { parseTracesSampleRate } = await import("#server/utils/runtimeConfig");
-		return parseTracesSampleRate;
-	}
-
-	it("defaults to 0.2 when the variable is absent", async () => {
-		const parse = await loadParser();
-		expect(parse(undefined)).toBe(0.2);
-		expect(parse("")).toBe(0.2);
-		expect(console.warn).not.toHaveBeenCalled();
+	it("is required when the build had no value", () => {
+		expect(describeSchema(requiredStringWithBuildDefault(undefined)).required).toBe(true);
+		expect(describeSchema(requiredStringWithBuildDefault("")).required).toBe(true);
 	});
 
-	it("accepts 0 as an explicit no-tracing value", async () => {
-		const parse = await loadParser();
-		expect(parse("0")).toBe(0);
-		expect(console.warn).not.toHaveBeenCalled();
+	it("describes a whole number with its default", () => {
+		const { json, required } = describeSchema(optionalInteger(60));
+
+		expect(required).toBe(false);
+		expect(json).toMatchObject({ default: 60, type: "integer" });
 	});
 
-	it("accepts 1 and fractional rates", async () => {
-		const parse = await loadParser();
-		expect(parse("1")).toBe(1);
-		expect(parse("0.35")).toBe(0.35);
+	it("describes an optional string with its default, empty when none is given", () => {
+		expect(describeSchema(optionalString())).toMatchObject({
+			json: { default: "", type: "string" },
+			required: false,
+		});
+		expect(describeSchema(optionalString("WOLFSTAR_AUTH")).json).toMatchObject({
+			default: "WOLFSTAR_AUTH",
+		});
 	});
 
-	it("falls back with a warning for non-numeric input", async () => {
-		const parse = await loadParser();
-		expect(parse("not-a-number")).toBe(0.2);
-		expect(console.warn).toHaveBeenCalledWith(
-			expect.stringContaining("NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE"),
-		);
-	});
-
-	it("falls back with a warning for negative values", async () => {
-		const parse = await loadParser();
-		expect(parse("-0.1")).toBe(0.2);
-		expect(console.warn).toHaveBeenCalled();
-	});
-
-	it("falls back with a warning for values above 1", async () => {
-		const parse = await loadParser();
-		expect(parse("1.5")).toBe(0.2);
-		expect(console.warn).toHaveBeenCalled();
-	});
-
-	it("falls back with a warning for non-finite values", async () => {
-		const parse = await loadParser();
-		expect(parse("Infinity")).toBe(0.2);
-		expect(console.warn).toHaveBeenCalled();
-	});
-});
-
-describe("generateRuntimeConfig sentry sampling", () => {
-	beforeEach(() => {
-		vi.resetModules();
-		vi.spyOn(console, "warn").mockImplementation(() => undefined);
-	});
-
-	afterEach(() => {
-		vi.unstubAllEnvs();
-		vi.restoreAllMocks();
-	});
-
-	it("reads the documented variable into public.sentry.tracesSampleRate", async () => {
-		vi.stubEnv("NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE", "0.5");
-		const { generateRuntimeConfig } = await import("#server/utils/runtimeConfig");
-		expect(generateRuntimeConfig().public.sentry.tracesSampleRate).toBe(0.5);
-	});
-
-	it("honors an explicit zero rate", async () => {
-		vi.stubEnv("NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE", "0");
-		const { generateRuntimeConfig } = await import("#server/utils/runtimeConfig");
-		expect(generateRuntimeConfig().public.sentry.tracesSampleRate).toBe(0);
-	});
-
-	it("uses the default when the variable is unset", async () => {
-		vi.stubEnv("NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE", undefined);
-		const { generateRuntimeConfig } = await import("#server/utils/runtimeConfig");
-		expect(generateRuntimeConfig().public.sentry.tracesSampleRate).toBe(0.2);
+	it("describes a number with its default", () => {
+		expect(describeSchema(optionalNumber(0.2))).toMatchObject({
+			json: { default: 0.2, type: "number" },
+			required: false,
+		});
 	});
 });

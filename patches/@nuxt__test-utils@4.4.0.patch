@@ -1,0 +1,25 @@
+diff --git a/dist/utils-CCklE0VI.mjs b/dist/utils-CCklE0VI.mjs
+index 786c277c24450b15c53ecaf75e81997b8a4969c1..68586c7fe53d22b414817c663d2e285172421f4d 100644
+--- a/dist/utils-CCklE0VI.mjs
++++ b/dist/utils-CCklE0VI.mjs
+@@ -177,15 +177,11 @@ function getPackageInfo(name, dirs = process.cwd()) {
+ 	}
+ }
+ function resolveH3Package(rootDir, appDir, modulesDir) {
+-	const nuxtServerIntegration = getPackageInfo("@nuxt/nitro-server", appDir);
+-	let nitroPath;
+-	for (const nitroCandidate of [...nuxtServerIntegration?.packageJson.dependencies?.nitro ? ["nitro", "nitro-nightly"] : ["nitropack", "nitropack-nightly"]]) {
+-		nitroPath = resolveModulePath(nitroCandidate, {
+-			from: nuxtServerIntegration?.rootPath || appDir,
+-			try: true
+-		});
+-		if (nitroPath) break;
+-	}
++	// The app builds with Nitro v3 (`nitro`), so its h3 is the one next to `nitro`.
++	const nitroPath = resolveModulePath("nitro", {
++		from: `${rootDir}/`,
++		try: true
++	});
+ 	const h3Info = getPackageInfo("h3", nitroPath ? dirname(nitroPath) : modulesDir) || getPackageInfo("h3", rootDir);
+ 	if (!h3Info) return;
+ 	return {

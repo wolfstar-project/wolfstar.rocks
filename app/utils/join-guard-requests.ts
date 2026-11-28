@@ -39,13 +39,14 @@ function sleep(milliseconds: number) {
  * looks, and says how it ended. A look that fails is tried again once.
  */
 export async function settleJoinGuardRequest(
-	read: () => Promise<JoinGuardRequestState>,
+	// Any request of the bot the website reads the same way: the join guard's, the onboarding's.
+	read: () => Promise<Pick<JoinGuardRequestState, "processed" | "error">>,
 	{ delays = JOIN_GUARD_POLL_DELAYS, wait = sleep }: JoinGuardPolling = {},
 ): Promise<JoinGuardRequestOutcome> {
 	let failures = 0;
 	for (const delay of delays) {
 		await wait(delay);
-		let state: JoinGuardRequestState;
+		let state: Pick<JoinGuardRequestState, "processed" | "error">;
 		try {
 			state = await read();
 		} catch {

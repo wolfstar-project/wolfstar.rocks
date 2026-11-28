@@ -1,10 +1,14 @@
 import type { APIGuildMember } from "discord-api-types/v10";
+import { flattenMember } from "#server/utils/ApiTransformers";
 import { authorizeGuildManager, useManagedGuild } from "#server/utils/guilds/manager";
 import { mapWithConcurrency } from "#server/utils/mapWithConcurrency";
+import { useApi } from "#server/utils/shared";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { MEMBER_SEARCH_LIMIT, MemberSearchQuerySchema } from "#shared/schemas/member-search";
 import { isSnowflake } from "#shared/utils/snowflake";
 import { DiscordAPIError } from "@discordjs/rest";
 import { RESTJSONErrorCodes } from "discord-api-types/v10";
+import { getValidatedQuery } from "nuxt/server";
 import { parse } from "valibot";
 
 /**

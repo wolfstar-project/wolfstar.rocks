@@ -5,6 +5,8 @@ import {
 	throwAppealFormError,
 } from "#server/utils/appeals/route";
 import { useManagedGuild } from "#server/utils/guilds/manager";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
+import { getRouterParam, setResponseStatus } from "nuxt/server";
 
 /** `DELETE /api/guilds/:guild/appeals/forms/:form`: deletes a form. */
 export default defineWrappedResponseHandler(

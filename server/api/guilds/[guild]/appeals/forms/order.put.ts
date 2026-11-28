@@ -6,6 +6,8 @@ import {
 	throwInvalidFormBody,
 } from "#server/utils/appeals/route";
 import { useManagedGuild } from "#server/utils/guilds/manager";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
+import { readBody } from "nuxt/server";
 
 function isStringArray(value: unknown): value is string[] {
 	return Array.isArray(value) && value.every((entry: unknown) => typeof entry === "string");

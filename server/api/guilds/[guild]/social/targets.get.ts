@@ -6,7 +6,9 @@ import {
 	unwrapSocialResult,
 } from "#server/utils/social/route";
 import { searchSocialTargets } from "#server/utils/social/staryl";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { SocialTargetQuerySchema } from "#shared/utils/social";
+import { getQuery } from "nuxt/server";
 import { safeParse } from "valibot";
 
 /**

@@ -132,7 +132,7 @@ not available. Nothing else in the dashboard depends on them.
 
 1. In the service, add routes behind a secret. Answer an error as `{ "error": "<code>" }`. Hold the
    module's switch in the service, and answer a write with the value before it.
-2. Add the URL and the secret to `generateRuntimeConfig()` and to `.env.example`.
+2. Declare the URL and the secret, empty, in `runtimeConfig` in `nuxt.config.ts`, and add their `NUXT_*` variables to `.env.example`.
 3. Add `shared/utils/<module>.ts` with the schemas and the error codes.
 4. Add `server/utils/<module>/<service>.ts` with one function per call, each through
    `callExternalService()`.

@@ -1,5 +1,11 @@
+import type { DashboardNavGroup } from "~/utils/dashboard-nav";
 import { describe, expect, it } from "vitest";
-import { DASHBOARD_NAV, dashboardSkeletonKind, findDashboardNavItem } from "~/utils/dashboard-nav";
+import {
+	DASHBOARD_NAV,
+	dashboardSkeletonKind,
+	findDashboardNavItem,
+	isModuleGroup,
+} from "~/utils/dashboard-nav";
 import enDashboard from "../../../../i18n/locales/en/dashboard.json" with { type: "json" };
 
 function resolve(path: string): unknown {
@@ -33,28 +39,23 @@ describe("DASHBOARD_NAV", () => {
 		expect(missing).toStrictEqual([]);
 	});
 
-	it("lists the events among the modules and keeps Commands and Logs out of them", () => {
-		const modules = DASHBOARD_NAV.filter((item) => item.group === "modules").map(
-			(item) => item.slug,
-		);
-		const tools = DASHBOARD_NAV.filter((item) => item.group === "tools").map(
-			(item) => item.slug,
-		);
+	it("sorts the modules into the categories, the events among them, and keeps Commands and Logs out", () => {
+		const slugsOf = (group: DashboardNavGroup) =>
+			DASHBOARD_NAV.filter((item) => item.group === group).map((item) => item.slug);
 
-		expect(modules).toStrictEqual([
+		expect(slugsOf("moderation")).toStrictEqual([
 			"automod",
 			"moderation",
-			"roles",
-			"channels",
-			"honeypot",
 			"joinguard",
+			"honeypot",
 			"appeals",
 			"autodelete",
 			"autopurge",
-			"automessage",
-			"social",
+			"channels",
 		]);
-		expect(tools).toStrictEqual(["commands", "access", "logs"]);
+		expect(slugsOf("utility")).toStrictEqual(["roles", "automessage"]);
+		expect(slugsOf("engagement")).toStrictEqual(["onboarding", "social"]);
+		expect(slugsOf("tools")).toStrictEqual(["commands", "access", "logs"]);
 		expect(findDashboardNavItem("commands")?.moduleKey).toBeUndefined();
 	});
 
@@ -65,17 +66,28 @@ describe("DASHBOARD_NAV", () => {
 		expect(findDashboardNavItem("channels")?.moduleKey).toBe("modulesLogs");
 		expect(findDashboardNavItem("appeals")?.moduleKey).toBe("appealsEnabled");
 		expect(findDashboardNavItem("joinguard")?.moduleKey).toBe("joinGuardEnabled");
+		expect(findDashboardNavItem("onboarding")?.moduleKey).toBe("onboardingEnabled");
 		expect(findDashboardNavItem("honeypot")?.requiredKey).toBe("honeypotChannel");
 	});
 
 	// Staryl holds its switch: the dashboard has no setting to read it from.
-	it("lists Staryl's Social after the modules of WolfStar, without a switch of the settings", () => {
-		expect(findDashboardNavItem("social")?.group).toBe("modules");
+	it("lists Staryl's Social with the engagement modules, without a switch of the settings", () => {
+		expect(findDashboardNavItem("social")?.group).toBe("engagement");
 		expect(findDashboardNavItem("social")?.moduleKey).toBeUndefined();
 	});
 
 	it("opens a page for every section, none of them announced only", () => {
 		expect(DASHBOARD_NAV.filter((item) => item.comingSoon)).toStrictEqual([]);
+	});
+
+	it("tells the module categories from the overview and the tools", () => {
+		expect(
+			["moderation", "utility", "engagement"].every((id) =>
+				isModuleGroup(id as DashboardNavGroup),
+			),
+		).toBe(true);
+		expect(isModuleGroup("overview")).toBe(false);
+		expect(isModuleGroup("tools")).toBe(false);
 	});
 
 	it("finds a section by its slug", () => {

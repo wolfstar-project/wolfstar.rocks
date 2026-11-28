@@ -1,14 +1,19 @@
 import type { AppSession } from "#nuxt-better-auth";
-import type { EventHandler, EventHandlerRequest, H3Error, H3Event } from "h3";
-import type { CacheOptions } from "nitropack/types";
+import type { CachedHandlerOptions } from "nitro/types";
 import { createHash } from "node:crypto";
 import { createKeyedLock } from "#server/utils/keyed-lock";
+import { omit } from "#server/utils/shared";
 import { type PartialRateLimit, type RateLimit, RateLimitSchema } from "#shared/schemas";
 import { CLIENT_OUTDATED_HEADER } from "#shared/utils/skew-protection";
 import { cast, isObject } from "@sapphire/utilities";
 import * as Sentry from "@sentry/nuxt";
 import { useLogger, createError } from "evlog";
-import { type SkewProtectionEvent, isClientOutdated } from "nuxt-skew-protection/server";
+import { defineCachedHandler as cachedEventHandler } from "nitro/cache";
+import { setResponseHeader, defineEventHandler } from "nitro/h3";
+import { type H3Error, type H3Event, type HTTPEvent, isEvent } from "nitro/h3";
+import { useKV as useStorage } from "nitro/kv";
+import { isClientOutdated } from "nuxt-skew-protection/server";
+import { getRequestIP, getRequestURL } from "nuxt/server";
 import { isDevelopment } from "std-env";
 import { ValiError, parse } from "valibot";
 import { instrumentCacheGet, instrumentCachePut, withApiMetrics } from "./sentry/metrics";
@@ -38,7 +43,19 @@ interface DefinedWrappedResponseHandlerOptions {
 }
 
 interface DefinedWrappedCachedResponseHandlerOptions
-	extends DefinedWrappedResponseHandlerOptions, CacheOptions {}
+	extends DefinedWrappedResponseHandlerOptions, Omit<CachedHandlerOptions, "onError" | "getKey"> {
+	/** The cache key, read from the route's event (its params, its query). */
+	getKey?: (event: H3Event) => string | Promise<string>;
+}
+
+/**
+ * Nitro v3 types the event a cached handler keys on as a bare `HTTPEvent`, but
+ * hands it the route's own event, which carries the router params.
+ */
+function requireRouteEvent(event: HTTPEvent): H3Event {
+	if (isEvent(event)) return event;
+	throw new TypeError("A cached handler was keyed on an event without its route");
+}
 
 /**
  * Extracts a unique identifier for rate limiting purposes
@@ -63,7 +80,7 @@ function getIdentifier(event: H3Event, session: AppSession | null, ipHeader?: st
 	// Fallback to standard IP detection
 	return (
 		getRequestIP(event, { xForwardedFor: true }) ??
-		event.node.req.socket.remoteAddress ??
+		getRequestIP(event) ??
 		event.headers.get("X-Real-IP") ??
 		event.headers.get("X-Cluster-Client-IP") ??
 		"unknown"
@@ -299,10 +316,10 @@ function throwRateLimited(
 		windowType: meta.windowType,
 		resetIn: details.msUntilReset,
 	});
-	setResponseHeader(event, "x-ratelimit-limit", meta.limit);
-	setResponseHeader(event, "x-ratelimit-remaining", 0);
-	setResponseHeader(event, "x-ratelimit-reset", Math.floor(details.resetAt / 1000));
-	setResponseHeader(event, "retry-after", Math.ceil(details.msUntilReset / 1000));
+	setResponseHeader(event, "x-ratelimit-limit", String(meta.limit));
+	setResponseHeader(event, "x-ratelimit-remaining", "0");
+	setResponseHeader(event, "x-ratelimit-reset", String(Math.floor(details.resetAt / 1000)));
+	setResponseHeader(event, "retry-after", String(Math.ceil(details.msUntilReset / 1000)));
 
 	Sentry.metrics.count("rate_limit.hit", 1, {
 		attributes: { route: meta.scopeKey, window_type: meta.windowType },
@@ -335,19 +352,16 @@ function throwClientOutdated(event: H3Event, log: WrappedLogger): never {
 	});
 }
 
-async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
-	event: H3Event<T>,
-	handler: EventHandler<T, D>,
+async function applyWrappedHandlerLogic<D>(
+	event: H3Event,
+	handler: (event: H3Event) => D | Promise<D>,
 	options: DefinedWrappedResponseHandlerOptions,
 ) {
 	const log = useLogger(event, "wrappedHandler");
 
 	// Reject outdated browser sessions before auth, rate limiting, or cached
 	// resolution so stale clients never consume quota or receive new-server data.
-	// The module types its event as `nuxt/server`'s portable one, but on this
-	// nitropack 2 build `nuxt/server` is backed by h3 v1's own helpers, which read
-	// the cookie straight off this event.
-	if (!isDevelopment && isClientOutdated(cast<SkewProtectionEvent>(event))) {
+	if (!isDevelopment && isClientOutdated(event)) {
 		throwClientOutdated(event, log);
 	}
 
@@ -385,15 +399,14 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 	}
 
 	// Build storage key: method:path:user by default (one counter per route), or one per user for all routes when scope === "global"
-	const { req } = event.node;
-	const { method } = req;
+	const { method } = event.req;
 	// The route's pattern (`/api/guilds/:guild/settings`), not the URL: with the
 	// URL each guild or row would get a counter of its own, so the limit would
 	// not be the route's and the storage would grow with every ID a member opens
 	const { pathname } = getRequestURL(event);
 	const normalizedPath =
 		pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
-	const scopeKey = `${method}:${event.context.matchedRoute?.path ?? normalizedPath}`;
+	const scopeKey = `${method}:${event.context.matchedRoute?.route ?? normalizedPath}`;
 	const storageKey =
 		scope === "route" ? `rate-limiter-state:${scopeKey}:${id}` : `rate-limiter-state:${id}`;
 
@@ -411,9 +424,9 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 		throwRateLimited(event, reservation, { id, limit, windowType, scopeKey }, log);
 	}
 
-	setResponseHeader(event, "x-ratelimit-limit", limit);
-	setResponseHeader(event, "x-ratelimit-remaining", reservation.remaining);
-	setResponseHeader(event, "x-ratelimit-reset", Math.floor(reservation.resetAt / 1000));
+	setResponseHeader(event, "x-ratelimit-limit", String(limit));
+	setResponseHeader(event, "x-ratelimit-remaining", String(reservation.remaining));
+	setResponseHeader(event, "x-ratelimit-reset", String(Math.floor(reservation.resetAt / 1000)));
 	setResponseHeader(event, "date", new Date().toUTCString());
 
 	try {
@@ -431,14 +444,14 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 	}
 }
 
-export function defineWrappedResponseHandler<T extends EventHandlerRequest, D>(
-	handler: EventHandler<T, D>,
+export function defineWrappedResponseHandler<D>(
+	handler: (event: H3Event) => D | Promise<D>,
 	options: DefinedWrappedResponseHandlerOptions = {
 		auth: false,
 		rateLimit: { enabled: true, limit: 5, type: "fixed", window: 10_000 },
 	},
-): EventHandler<T, D> {
-	return defineEventHandler<T>(async (event) => {
+) {
+	return defineEventHandler(async (event) => {
 		const log = useLogger(event);
 		return withApiMetrics(event, async () => {
 			try {
@@ -453,27 +466,45 @@ export function defineWrappedResponseHandler<T extends EventHandlerRequest, D>(
 	});
 }
 
-export function defineWrappedCachedResponseHandler<T extends EventHandlerRequest, D>(
-	handler: EventHandler<T, D>,
+export function defineWrappedCachedResponseHandler<D>(
+	handler: (event: H3Event) => D | Promise<D>,
 	options: DefinedWrappedCachedResponseHandlerOptions = {
 		auth: false,
 		maxAge: 60 * 60,
 		rateLimit: { enabled: true, limit: 5, type: "fixed", window: 10_000 },
 		swr: true,
 	},
-): EventHandler<T, D> {
-	const opts = omit(["rateLimit", "auth", "onError", "authorize"], options);
+) {
+	const { getKey, ...rest } = omit(["rateLimit", "auth", "onError", "authorize"], options);
+	const opts: CachedHandlerOptions = {
+		...rest,
+		swr: rest.swr ?? true,
+		...((options.auth || options.authorize) && { sendCacheControl: false }),
+		...(getKey && { getKey: (event: HTTPEvent) => getKey(requireRouteEvent(event)) }),
+	};
 
 	// Only the DATA RESOLUTION is cached. Authentication, rate limiting, and
 	// the `authorize` hook run in the outer handler on every request — a warm
 	// cache hit must never bypass request-specific security checks.
-	const cached = cachedEventHandler<T>((event) => handler(event), opts);
+	// Nitro returns a serialized Response. Keep the resolver body type for route inference.
+	const cached = cachedEventHandler((event) => handler(event), opts) as unknown as (
+		event: H3Event,
+	) => D | Promise<D>;
 
-	return defineEventHandler<T>(async (event) => {
+	return defineEventHandler(async (event) => {
 		const log = useLogger(event);
 		return withApiMetrics(event, async () => {
 			try {
-				return await applyWrappedHandlerLogic(event, cached, options);
+				const response = await applyWrappedHandlerLogic(event, cached, options);
+				// Set browser policy after internal caching, or no-store disables that cache too.
+				// h3 stages the cache's `public, s-maxage` on `event.res` and merges it
+				// into the response, so both get the private policy.
+				if (options.auth || options.authorize) {
+					event.res.headers.set("cache-control", "private, no-store");
+					if (response instanceof Response)
+						response.headers.set("cache-control", "private, no-store");
+				}
+				return response;
 			} catch (error) {
 				if (options.onError && typeof options.onError === "function") {
 					options.onError(log, error);

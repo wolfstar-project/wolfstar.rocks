@@ -3,6 +3,8 @@ import { AppealQueueError } from "#server/utils/appeals/queue-error";
 import { throwAppealQueueError } from "#server/utils/appeals/queue-route";
 import { authorizeAppealFormManager } from "#server/utils/appeals/route";
 import { useManagedGuild } from "#server/utils/guilds/manager";
+import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
+import { getRouterParam } from "nuxt/server";
 
 /**
  * `GET /api/guilds/:guild/appeals/requests/:request`: where a request to decide

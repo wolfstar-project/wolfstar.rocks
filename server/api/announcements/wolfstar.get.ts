@@ -8,8 +8,10 @@ import {
 	toAnnouncements,
 	type ApplicationProfile,
 } from "#server/utils/announcements";
-import { runtimeConfig } from "#server/utils/runtimeConfig";
+import { useApi } from "#server/utils/shared";
+import { defineWrappedCachedResponseHandler } from "#server/utils/wrappedEventHandler";
 import { useLogger } from "evlog";
+import { useRuntimeConfig } from "nuxt/server";
 
 /**
  * An app's public profile, with its bot user's banner for the card's cover
@@ -35,7 +37,7 @@ async function readAppProfile(api: API, id: string): Promise<ApplicationProfile 
  */
 export default defineWrappedCachedResponseHandler(
 	async (event): Promise<Announcement[]> => {
-		const channelId = runtimeConfig.discord.announcementsChannelId;
+		const channelId = useRuntimeConfig().discord.announcementsChannelId;
 		useLogger(event).set({ channel: { id: channelId } });
 		const api = useApi();
 

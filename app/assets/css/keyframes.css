@@ -146,3 +146,19 @@
 		opacity: 1;
 	}
 }
+
+/* A dashboard section entering. Neither has an end state: nothing stays on the
+   element once it is in, so a `position: fixed` child keeps the viewport. */
+@keyframes console-section-in {
+	from {
+		opacity: 0;
+		transform: translateY(6px);
+	}
+}
+
+@keyframes console-pop-in {
+	from {
+		opacity: 0;
+		scale: 0.94;
+	}
+}

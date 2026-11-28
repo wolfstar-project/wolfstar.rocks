@@ -152,16 +152,17 @@ describe("DashboardSidebar", () => {
 		expect(chips).toStrictEqual(["Honeypot"]);
 	});
 
-	it("folds the modules away and leaves Commands and Logs", async () => {
+	it("folds a category away and leaves the others, Commands and Logs", async () => {
 		const wrapper = await mountSidebar();
 
 		const toggle = wrapper
 			.findAll(".dashboard-nav-label--toggle")
-			.find((button) => button.text().includes("Modules"));
+			.find((button) => button.text().includes("Moderation"));
 		await toggle!.trigger("click");
 
 		expect(toggle!.attributes("aria-expanded")).toBe("false");
 		expect(wrapper.text()).not.toContain("Auto Moderation");
+		expect(rowFor(wrapper, "Roles").exists()).toBe(true);
 		expect(rowFor(wrapper, "Commands").exists()).toBe(true);
 		expect(rowFor(wrapper, "Logs").exists()).toBe(true);
 	});
@@ -195,11 +196,14 @@ describe("DashboardSidebar", () => {
 		expect(rowFor(wrapper, "Events").find('[title="Module is off"]').exists()).toBe(true);
 	});
 
-	it("lists the events with the modules, and Commands and Logs in a group of their own", async () => {
+	it("sorts the modules under Moderation, Utility and Engagement, and Commands and Logs in a group of their own", async () => {
 		const wrapper = await mountSidebar();
 
-		// Only the modules have a title and fold; the tools sit below a divider.
-		expect(wrapper.findAll(".dashboard-nav-label--toggle")).toHaveLength(1);
+		// Only the categories have a title and fold; the tools sit below a divider.
+		const titles = wrapper
+			.findAll(".dashboard-nav-label--toggle")
+			.map((toggle) => toggle.text());
+		expect(titles).toStrictEqual(["Moderation", "Utility", "Engagement"]);
 		expect(wrapper.findAll(".dashboard-nav-divider").length).toBeGreaterThan(0);
 
 		// The events are a module, so they can be pinned.

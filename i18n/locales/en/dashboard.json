@@ -187,8 +187,10 @@
 		"nav_aria": "Server settings",
 		"nav_current_group": "The open page is in this group",
 		"nav_groups": {
-			"modules": "Modules",
-			"resources": "Resources"
+			"engagement": "Engagement",
+			"moderation": "Moderation",
+			"resources": "Resources",
+			"utility": "Utility"
 		},
 		"nav_module_off": "Module is off",
 		"nav_pin": "Pin {name}",

@@ -2,11 +2,23 @@ import type { SingleSettingKey } from "#shared/types";
 import type { ModuleSwitchKey } from "#shared/utils/guild-modules";
 
 /**
- * `overview` and `tools` have no title: the overview holds the two pages about
- * the server, `modules` the feature modules, and `tools` what is not a module:
- * the commands and the logs.
+ * The categories the feature modules sit in, in sidebar order: what keeps the
+ * server safe, what runs it, and what brings members in.
  */
-export type DashboardNavGroup = "overview" | "modules" | "tools";
+export const DASHBOARD_MODULE_GROUPS = ["moderation", "utility", "engagement"] as const;
+
+export type DashboardModuleGroup = (typeof DASHBOARD_MODULE_GROUPS)[number];
+
+/**
+ * `overview` and `tools` have no title: the overview holds the two pages about
+ * the server, each module group the feature modules of one category, and
+ * `tools` what is not a module: the commands, the access and the logs.
+ */
+export type DashboardNavGroup = "overview" | DashboardModuleGroup | "tools";
+
+export function isModuleGroup(group: DashboardNavGroup): group is DashboardModuleGroup {
+	return (DASHBOARD_MODULE_GROUPS as readonly string[]).includes(group);
+}
 
 export interface DashboardNavItem {
 	/** Section slug the item opens; `""` is the overview. */
@@ -43,35 +55,28 @@ export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
 		slug: "modules",
 	},
 	{
-		group: "modules",
+		group: "moderation",
 		icon: "ic:round-shield",
 		labelKey: "dashboard.nav.automod",
 		moduleKey: "modulesAutomod",
 		slug: "automod",
 	},
 	{
-		group: "modules",
+		group: "moderation",
 		icon: "ic:round-gavel",
 		labelKey: "dashboard.nav.moderation",
 		moduleKey: "modulesModeration",
 		slug: "moderation",
 	},
 	{
-		group: "modules",
-		icon: "ic:round-people",
-		labelKey: "dashboard.nav.roles",
-		moduleKey: "modulesRoles",
-		slug: "roles",
+		group: "moderation",
+		icon: "ic:round-verified-user",
+		labelKey: "dashboard.nav.joinguard",
+		moduleKey: "joinGuardEnabled",
+		slug: "joinguard",
 	},
 	{
-		group: "modules",
-		icon: "ic:round-notifications",
-		labelKey: "dashboard.nav.channels",
-		moduleKey: "modulesLogs",
-		slug: "channels",
-	},
-	{
-		group: "modules",
+		group: "moderation",
 		icon: "ic:round-hive",
 		labelKey: "dashboard.nav.honeypot",
 		moduleKey: "modulesHoneypot",
@@ -79,50 +84,57 @@ export const DASHBOARD_NAV: readonly DashboardNavItem[] = [
 		slug: "honeypot",
 	},
 	{
-		group: "modules",
-		icon: "ic:round-verified-user",
-		labelKey: "dashboard.nav.joinguard",
-		moduleKey: "joinGuardEnabled",
-		slug: "joinguard",
-	},
-	{
-		group: "modules",
-		icon: "ic:round-checklist",
-		labelKey: "dashboard.nav.onboarding",
-		moduleKey: "onboardingEnabled",
-		slug: "onboarding",
-	},
-	{
-		group: "modules",
+		group: "moderation",
 		icon: "ic:round-rate-review",
 		labelKey: "dashboard.nav.appeals",
 		moduleKey: "appealsEnabled",
 		slug: "appeals",
 	},
 	{
-		group: "modules",
+		group: "moderation",
 		icon: "ic:round-timer",
 		labelKey: "dashboard.nav.autodelete",
 		moduleKey: "modulesAutodelete",
 		slug: "autodelete",
 	},
 	{
-		group: "modules",
+		group: "moderation",
 		icon: "ic:round-cleaning-services",
 		labelKey: "dashboard.nav.autopurge",
 		moduleKey: "modulesAutopurge",
 		slug: "autopurge",
 	},
 	{
-		group: "modules",
+		group: "moderation",
+		icon: "ic:round-notifications",
+		labelKey: "dashboard.nav.channels",
+		moduleKey: "modulesLogs",
+		slug: "channels",
+	},
+	{
+		group: "utility",
+		icon: "ic:round-people",
+		labelKey: "dashboard.nav.roles",
+		moduleKey: "modulesRoles",
+		slug: "roles",
+	},
+	{
+		group: "utility",
 		icon: "ic:round-schedule-send",
 		labelKey: "dashboard.nav.automessage",
 		moduleKey: "modulesAutomessage",
 		slug: "automessage",
 	},
+	{
+		group: "engagement",
+		icon: "ic:round-checklist",
+		labelKey: "dashboard.nav.onboarding",
+		moduleKey: "onboardingEnabled",
+		slug: "onboarding",
+	},
 	// Staryl's module, after WolfStar's: its switch is Staryl's own, so it has no `moduleKey`.
 	{
-		group: "modules",
+		group: "engagement",
 		icon: "ic:round-rss-feed",
 		labelKey: "dashboard.nav.social",
 		slug: "social",

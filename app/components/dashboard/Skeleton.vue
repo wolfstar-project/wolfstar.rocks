@@ -194,8 +194,8 @@ const { ts } = useI18n();
 
 const BAR_HEIGHTS = ["62%", "88%", "48%", "100%", "70%", "84%", "44%"];
 // The modules that can be switched, then the ones announced as coming soon.
-// One card per section of the Modules group, built or announced.
-const MODULE_CARDS = DASHBOARD_NAV.filter((item) => item.group === "modules").length;
+// One card per section of the module groups, built or announced.
+const MODULE_CARDS = DASHBOARD_NAV.filter((item) => isModuleGroup(item.group)).length;
 </script>
 
 <style scoped>

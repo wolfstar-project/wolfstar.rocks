@@ -452,8 +452,8 @@ importers:
         specifier: 1.2.4
         version: 1.2.4
       '@sapphire/snowflake':
-        specifier: 3.5.5
-        version: 3.5.5
+        specifier: 4.0.0
+        version: 4.0.0
       '@sapphire/time-utilities':
         specifier: 2.0.0
         version: 2.0.0
@@ -5738,6 +5738,10 @@ packages:
   '@sapphire/snowflake@3.5.5':
     resolution: {integrity: sha512-xzvBr1Q1c4lCe7i6sRnrofxeO1QTP/LKQ6A6qy0iB4x5yfiSfARMEQEghojzTNALDTcv8En04qYNIco9/K9eZQ==}
     engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
+
+  '@sapphire/snowflake@4.0.0':
+    resolution: {integrity: sha512-R/oVZIaTYqv3a2Y2GTHOKDLXSZuWyLKSFUQ+WGGIpTNv4Yz45iPOz6fSUtgFMKwVC3uK3NRBtCS4K5cmyVTMnA==}
+    engines: {node: '>=v24.0.0', npm: '>=11.0.0'}
 
   '@sapphire/time-utilities@2.0.0':
     resolution: {integrity: sha512-ZTtOs1OMMmXJ3eKOQ42laD5PuewqkKwk3T9dqXL2SOPuUx74xF+MYXHBnIAOBZMmvhLzMW423V7cVCwAXwFYTQ==}
@@ -19811,6 +19815,8 @@ snapshots:
   '@sapphire/duration@2.0.0': {}
 
   '@sapphire/snowflake@3.5.5': {}
+
+  '@sapphire/snowflake@4.0.0': {}
 
   '@sapphire/time-utilities@2.0.0':
     dependencies:

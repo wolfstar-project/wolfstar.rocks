@@ -2,20 +2,7 @@
 	<DashboardPageHeader
 		:title="ts(`dashboard.nav.${slug}`)"
 		:description="ts(`guild_settings.${slug}.subtitle`)"
-	>
-		<UBadge color="primary" variant="soft" size="lg" class="font-semibold">
-			{{ ts("guild_settings.auto.count", { count: rows.length, maximum }) }}
-		</UBadge>
-		<UButton
-			v-if="rows.length < maximum"
-			color="primary"
-			size="sm"
-			icon="ic:round-add"
-			@click="openNew"
-		>
-			{{ ts(`guild_settings.${slug}.add`) }}
-		</UButton>
-	</DashboardPageHeader>
+	/>
 
 	<GuildSettingsForm
 		:schema="schema"
@@ -43,37 +30,69 @@
 
 	<slot name="notice"></slot>
 
-	<DashboardSkeleton v-if="isLoading" kind="table" bare />
+	<!-- One card holds the list in every state, so the page keeps its shape
+	     while it loads, fails or has nothing yet. -->
+	<section class="console-card flex flex-col" :aria-labelledby="listHeadingId">
+		<header class="flex min-h-8 items-center gap-2.5">
+			<h2 :id="listHeadingId" class="text-base font-semibold text-balance">
+				{{ ts(LIST_TITLE_KEYS[slug]) }}
+			</h2>
+			<span v-if="!isLoading && !error" class="font-mono text-xs text-muted tabular-nums">
+				{{ ts("guild_settings.auto.count", { count: rows.length, maximum }) }}
+			</span>
+			<span class="flex-1"></span>
+			<UButton
+				v-if="rows.length > 0 && rows.length < maximum"
+				color="primary"
+				size="sm"
+				icon="ic:round-add"
+				@click="openNew"
+			>
+				{{ ts(`guild_settings.${slug}.add`) }}
+			</UButton>
+		</header>
 
-	<UAlert
-		v-else-if="error"
-		color="error"
-		variant="subtle"
-		icon="ic:round-error-outline"
-		:title="ts('guild_settings.auto.load_failed')"
-		:actions="[{ label: ts('guild_settings.auto.retry'), onClick: () => refresh() }]"
-	/>
+		<DashboardSkeleton v-if="isLoading" kind="table" bare class="mt-3" />
 
-	<section
-		v-else-if="rows.length === 0"
-		class="console-card flex flex-col items-center gap-2 px-4 py-12 text-center"
-		:aria-labelledby="emptyHeadingId"
-	>
-		<h2 :id="emptyHeadingId" class="text-base font-semibold">
-			{{ ts(`guild_settings.${slug}.empty_title`) }}
-		</h2>
-		<p class="max-w-lg text-[0.8125rem] leading-normal text-muted">
-			{{ ts(`guild_settings.${slug}.empty_body`) }}
+		<UAlert
+			v-else-if="error"
+			class="mt-3"
+			color="error"
+			variant="subtle"
+			icon="ic:round-error-outline"
+			:title="ts('guild_settings.auto.load_failed')"
+			:actions="[{ label: ts('guild_settings.auto.retry'), onClick: () => refresh() }]"
+		/>
+
+		<div v-else-if="rows.length === 0" class="auto-empty">
+			<UIcon :name="MODULE_ICONS[slug]" class="size-6 text-muted" aria-hidden="true" />
+			<h3 class="mt-1 text-sm font-semibold text-balance text-highlighted">
+				{{ ts(`guild_settings.${slug}.empty_title`) }}
+			</h3>
+			<p class="max-w-md text-[0.8125rem] leading-normal text-pretty text-muted">
+				{{ ts(`guild_settings.${slug}.empty_body`) }}
+			</p>
+			<UButton class="mt-3" color="primary" size="sm" icon="ic:round-add" @click="openNew">
+				{{ ts(`guild_settings.${slug}.add`) }}
+			</UButton>
+		</div>
+
+		<div v-else class="mt-3">
+			<slot
+				:rows="rows"
+				:edit="openEdit"
+				:remove="askRemove"
+				:channel-name="channelName"
+			></slot>
+		</div>
+
+		<p
+			v-if="$slots.footnote && rows.length > 0"
+			class="mt-3 text-[0.8125rem] leading-normal text-pretty text-muted"
+		>
+			<slot name="footnote"></slot>
 		</p>
 	</section>
-
-	<slot
-		v-else
-		:rows="rows"
-		:edit="openEdit"
-		:remove="askRemove"
-		:channel-name="channelName"
-	></slot>
 
 	<GuildAutoEditor
 		v-model:open="editorOpen"
@@ -137,6 +156,7 @@ defineSlots<{
 		channelName: (channelId: string) => string;
 	}): unknown;
 	notice(): unknown;
+	footnote(): unknown;
 }>();
 
 const { ts } = useI18n();
@@ -161,7 +181,13 @@ const { mapToGuildData, onError, schema, state } = useSettingsForm({
 	toggles: Object.values(MODULE_KEYS),
 });
 
-const emptyHeadingId = useId();
+const listHeadingId = useId();
+
+const LIST_TITLE_KEYS: Record<AutoChannelSlug, string> = {
+	autodelete: "guild_settings.autodelete.channels_title",
+	automessage: "guild_settings.automessage.messages_title",
+	autopurge: "guild_settings.autopurge.schedules_title",
+};
 const maximum = AUTO_CHANNEL_MAXIMUMS[slug];
 const isLoading = computed(() => status.value === "pending" && rows.value.length === 0);
 
@@ -252,3 +278,12 @@ async function confirmRemove() {
 	);
 }
 </script>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+.auto-empty {
+	@apply mt-3 flex flex-col items-center gap-1 rounded-md px-4 py-8 text-center;
+	border: 1px dashed var(--home-border-subtle);
+}
+</style>

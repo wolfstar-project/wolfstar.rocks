@@ -1381,6 +1381,9 @@
 						"mentions_saved_on": {
 							"type": "string"
 						},
+						"messages_title": {
+							"type": "string"
+						},
 						"next": {
 							"type": "string"
 						},

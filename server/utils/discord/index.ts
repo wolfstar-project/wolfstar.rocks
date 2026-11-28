@@ -27,7 +27,8 @@ import {
 	buildGuildProbeKey,
 	CURRENT_USER_CACHE_NAME,
 	GUILD_CACHE_NAME,
-	GUILD_PROBE_TTL_MS,
+	ABSENT_GUILD_PROBE_TTL_MS,
+	guildProbeTtl,
 	invalidateGuildCache,
 	isGuildProbeInvalidated,
 	rememberGuildProbe,
@@ -475,7 +476,7 @@ function probeBotGuildMembership(guildId: string): Promise<GuildProbe> {
 				writeSharedCache(
 					buildGuildProbeKey(guildId),
 					{ at, value: guild },
-					GUILD_PROBE_TTL_MS,
+					guildProbeTtl(guild === null),
 				);
 			}
 			return { at, confirmedAbsent: guild === null, guild, live: true };
@@ -497,9 +498,11 @@ async function readSharedGuildProbe(guildId: string): Promise<GuildProbe | null>
 	if (!usesSharedCache()) return null;
 	const entry = await readSharedCache<APIGuild | null>(
 		buildGuildProbeKey(guildId),
-		GUILD_PROBE_TTL_MS,
+		ABSENT_GUILD_PROBE_TTL_MS,
 	);
 	if (entry === null || isGuildProbeInvalidated(guildId, entry.at)) return null;
+	// The read allows the longest answer; one that found the bot has a shorter window.
+	if (Date.now() - entry.at >= guildProbeTtl(entry.value === null)) return null;
 	return { at: entry.at, confirmedAbsent: entry.value === null, guild: entry.value, live: true };
 }
 

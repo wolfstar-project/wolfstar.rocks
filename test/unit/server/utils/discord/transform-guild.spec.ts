@@ -204,6 +204,7 @@ describe("the bot's membership probe on Cloudflare Workers", () => {
 		vi.stubGlobal("navigator", { userAgent: "Cloudflare-Workers" });
 		vi.stubGlobal("useStorage", () => ({
 			getItem: async (key: string) => stored.get(key) ?? null,
+			hasItem: async (key: string) => stored.has(key),
 			setItem: async (key: string, value: unknown) => {
 				stored.set(key, value);
 			},
@@ -235,8 +236,42 @@ describe("the bot's membership probe on Cloudflare Workers", () => {
 		expect(result.wolfstarIsIn).toBe(false);
 	});
 
-	it("asks Discord once the shared probe is older than its window, and shares the answer", async () => {
-		stored.set(probeKey, { at: Date.now() - 61_000, value: null });
+	it("answers that the bot is absent from a shared probe five minutes old", async () => {
+		stored.set(probeKey, { at: Date.now() - 5 * 60_000, value: null });
+
+		const result = await transformGuild(userId, oauthGuild, { includeChannels: false });
+
+		expect(mockGuildsGet).not.toHaveBeenCalled();
+		expect(result.wolfstarIsIn).toBe(false);
+	});
+
+	it("asks Discord once a shared probe that found the bot absent is ten minutes old", async () => {
+		stored.set(probeKey, { at: Date.now() - 10 * 60_000 - 1_000, value: null });
+		mockGuildsGet.mockResolvedValue(mockApiGuild);
+
+		const result = await transformGuild(userId, oauthGuild, { includeChannels: false });
+
+		expect(mockGuildsGet).toHaveBeenCalledOnce();
+		expect(result.wolfstarIsIn).toBe(true);
+	});
+
+	it("asks Discord after an invalidation here older than a minute", async () => {
+		vi.useFakeTimers({ toFake: ["Date"] });
+		const before = Date.now() - 1_000;
+		await invalidateGuildCache("guild-456");
+		stored.set(probeKey, { at: before, value: null });
+		vi.setSystemTime(Date.now() + 2 * 60_000);
+		mockGuildsGet.mockResolvedValue(mockApiGuild);
+
+		const result = await transformGuild(userId, oauthGuild, { includeChannels: false });
+		vi.useRealTimers();
+
+		expect(mockGuildsGet).toHaveBeenCalledOnce();
+		expect(result.wolfstarIsIn).toBe(true);
+	});
+
+	it("asks Discord once the shared probe of a guild with the bot is older than its window, and shares the answer", async () => {
+		stored.set(probeKey, { at: Date.now() - 61_000, value: mockApiGuild });
 		mockGuildsGet.mockResolvedValue(mockApiGuild);
 
 		const result = await transformGuild(userId, oauthGuild, { includeChannels: false });

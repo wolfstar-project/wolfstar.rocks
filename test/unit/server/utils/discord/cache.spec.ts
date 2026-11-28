@@ -1,12 +1,14 @@
 import { createMemoryStorage, defineCachedFunction } from "ocache";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const { mockRemoveItem } = vi.hoisted(() => {
+const { mockHasItem, mockRemoveItem } = vi.hoisted(() => {
+	const mockHasItem = vi.fn(() => Promise.resolve(true));
 	const mockRemoveItem = vi.fn(() => Promise.resolve());
 	(globalThis as Record<string, unknown>).useStorage = () => ({
+		hasItem: mockHasItem,
 		removeItem: mockRemoveItem,
 	});
-	return { mockRemoveItem };
+	return { mockHasItem, mockRemoveItem };
 });
 
 import type { GuildProbe } from "#server/utils/discord/cache";
@@ -14,6 +16,7 @@ import {
 	invalidateCurrentUserCache,
 	invalidateGuildCache,
 	rememberGuildProbe,
+	removePersistedGuild,
 } from "#server/utils/discord/cache";
 
 /**
@@ -76,8 +79,23 @@ describe("invalidateGuildCache", () => {
 	});
 });
 
+describe("removePersistedGuild", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
+
+	it("does not remove a getGuild entry that is not stored", async () => {
+		mockHasItem.mockResolvedValueOnce(false);
+
+		await removePersistedGuild("123456789012345678");
+
+		expect(mockRemoveItem).not.toHaveBeenCalled();
+	});
+});
+
 describe("rememberGuildProbe", () => {
 	const absent: GuildProbe = { confirmedAbsent: true, guild: null, live: true };
+	const present = { confirmedAbsent: false, guild: { id: "guild" }, live: true } as GuildProbe;
 	const fallback: GuildProbe = { confirmedAbsent: false, guild: null, live: false };
 
 	beforeEach(() => {
@@ -98,14 +116,29 @@ describe("rememberGuildProbe", () => {
 		expect(first).toBe(second);
 	});
 
-	it("probes again once the window has passed", async () => {
+	it("probes a guild with the bot again once the window has passed", async () => {
 		vi.useFakeTimers();
-		const run = vi.fn().mockResolvedValue(absent);
+		const run = vi.fn().mockResolvedValue(present);
 
 		await rememberGuildProbe("100000000000000002", run);
 		vi.advanceTimersByTime(61_000);
 		await rememberGuildProbe("100000000000000002", run);
 
+		expect(run).toHaveBeenCalledTimes(2);
+		vi.useRealTimers();
+	});
+
+	it("keeps an answer that the bot is absent for ten minutes", async () => {
+		vi.useFakeTimers();
+		const run = vi.fn().mockResolvedValue(absent);
+
+		await rememberGuildProbe("100000000000000005", run);
+		vi.advanceTimersByTime(5 * 60_000);
+		await rememberGuildProbe("100000000000000005", run);
+		expect(run).toHaveBeenCalledOnce();
+
+		vi.advanceTimersByTime(5 * 60_000 + 1_000);
+		await rememberGuildProbe("100000000000000005", run);
 		expect(run).toHaveBeenCalledTimes(2);
 		vi.useRealTimers();
 	});

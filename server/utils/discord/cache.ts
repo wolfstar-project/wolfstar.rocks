@@ -87,7 +87,7 @@ export interface GuildProbe {
  * window they share one request to Discord instead of making three. It is
  * also how long the bot's leaving a guild takes to show.
  */
-export const GUILD_PROBE_TTL_MS = 60_000;
+const GUILD_PROBE_TTL_MS = 60_000;
 /**
  * How long a live probe that found the bot absent answers for its guild. The
  * server list probes every guild of the user, and the bot is absent from most

@@ -320,6 +320,20 @@ describe("the bot's membership probe on Cloudflare Workers", () => {
 		expect(stored.has(probeKey)).toBe(false);
 	});
 
+	it("does not share that the bot is absent when Discord took a second to answer", async () => {
+		vi.useFakeTimers({ toFake: ["Date"] });
+		mockGuildsGet.mockImplementation(async () => {
+			vi.setSystemTime(Date.now() + 1_000);
+			throw Object.assign(new Error("Unknown Guild"), { status: 404 });
+		});
+
+		const result = await transformGuild(userId, oauthGuild, { includeChannels: false });
+		vi.useRealTimers();
+
+		expect(result.wolfstarIsIn).toBe(false);
+		expect(stored.has(probeKey)).toBe(false);
+	});
+
 	it("shares nothing when Discord fails", async () => {
 		mockGuildsGet.mockRejectedValue(Object.assign(new Error("Bad Gateway"), { status: 502 }));
 

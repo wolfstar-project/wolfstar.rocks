@@ -27,6 +27,7 @@ import {
 	buildGuildProbeKey,
 	CURRENT_USER_CACHE_NAME,
 	GUILD_CACHE_NAME,
+	ABSENT_GUILD_PROBE_SHARE_MAX_MS,
 	ABSENT_GUILD_PROBE_TTL_MS,
 	guildProbeTtl,
 	invalidateGuildCache,
@@ -455,9 +456,10 @@ export const getGuild = defineCachedFunction(
  * Live-probes bot guild membership. Returns `confirmedAbsent: true` only when
  * Discord responds 404 (bot not in guild), and then drops the stored
  * `getGuild` entry. On transient probe failures, falls back to that entry so
- * a valid cache is not discarded. A live answer is shared for a minute
- * (`rememberGuildProbe()`), and on Workers, where each isolate's memory is
- * shared by few requests, through the `cache` storage too.
+ * a valid cache is not discarded. A live answer is shared for a minute, or
+ * ten when the bot is absent (`guildProbeTtl()`, `rememberGuildProbe()`), and
+ * on Workers, where each isolate's memory is shared by few requests, through
+ * the `cache` storage too.
  */
 function probeBotGuildMembership(guildId: string): Promise<GuildProbe> {
 	return rememberGuildProbe(guildId, async () => {
@@ -469,10 +471,12 @@ function probeBotGuildMembership(guildId: string): Promise<GuildProbe> {
 			// the request was out counts as newer than it.
 			const at = Date.now();
 			const guild = await fetchBotGuildFromDiscord(guildId);
+			const tookMs = Date.now() - at;
 			if (guild === null) {
 				await removePersistedGuild(guildId);
 			}
-			if (usesSharedCache() && !isGuildProbeInvalidated(guildId, at)) {
+			const shareable = guild !== null || tookMs < ABSENT_GUILD_PROBE_SHARE_MAX_MS;
+			if (usesSharedCache() && shareable && !isGuildProbeInvalidated(guildId, at)) {
 				writeSharedCache(
 					buildGuildProbeKey(guildId),
 					{ at, value: guild },

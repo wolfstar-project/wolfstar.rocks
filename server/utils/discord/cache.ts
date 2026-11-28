@@ -98,6 +98,17 @@ const GUILD_PROBE_TTL_MS = 60_000;
  */
 export const ABSENT_GUILD_PROBE_TTL_MS = 10 * 60_000;
 
+/**
+ * The longest a Discord request may take for its "bot absent" answer to be
+ * shared with the other isolates. A request asked before the bot joined can
+ * finish after the invite's refresh dropped the shared answer, and would
+ * write the old answer back for {@linkcode ABSENT_GUILD_PROBE_TTL_MS}; the
+ * isolate that writes it never saw the refresh. The invite page waits 1.5 s
+ * between the bot's joining and that refresh (`app/pages/oauth/guild.vue`),
+ * so an answer that came back faster was written before it.
+ */
+export const ABSENT_GUILD_PROBE_SHARE_MAX_MS = 1_000;
+
 /** How long a live probe answers for its guild, by what it found. */
 export function guildProbeTtl(confirmedAbsent: boolean): number {
 	return confirmedAbsent ? ABSENT_GUILD_PROBE_TTL_MS : GUILD_PROBE_TTL_MS;

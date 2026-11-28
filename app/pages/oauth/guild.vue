@@ -80,6 +80,8 @@ async function navigateToGuild() {
 		throw createError({ status: 400, statusText: ts("auth.oauth.guild_id_required") });
 	}
 
+	// The bot's "absent" probe answers are shared only when shorter than this
+	// wait (`ABSENT_GUILD_PROBE_SHARE_MAX_MS`); keep it longer.
 	await promiseTimeout(1500);
 
 	selectGuild(guildId.value);

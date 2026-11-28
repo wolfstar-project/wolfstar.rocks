@@ -56,9 +56,18 @@ export async function invalidateGuildCache(guildId: string): Promise<void> {
 	]);
 }
 
-/** Drops only the stored `getGuild` entry; a remembered probe stays. */
+/**
+ * Drops only the stored `getGuild` entry; a remembered probe stays. A key that
+ * holds nothing is not removed: on a Worker a removal is a Workers KV write,
+ * and every probe that finds the bot absent asks for one.
+ */
 export async function removePersistedGuild(guildId: string): Promise<void> {
-	await removeKeys(await guildCacheKeys(guildId));
+	const storage = useStorage();
+	await Promise.all(
+		(await guildCacheKeys(guildId)).map(async (key) => {
+			if (await storage.hasItem(key)) await storage.removeItem(key);
+		}),
+	);
 }
 
 export interface GuildProbe {
@@ -78,7 +87,32 @@ export interface GuildProbe {
  * window they share one request to Discord instead of making three. It is
  * also how long the bot's leaving a guild takes to show.
  */
-export const GUILD_PROBE_TTL_MS = 60_000;
+const GUILD_PROBE_TTL_MS = 60_000;
+/**
+ * How long a live probe that found the bot absent answers for its guild. The
+ * server list probes every guild of the user, and the bot is absent from most
+ * of them: kept for a minute, those answers cost one Discord request per
+ * guild on nearly every visit. The bot joins through the dashboard's invite,
+ * whose `?refresh=true` drops the answer (`invalidateGuildCache()`). A bot
+ * invited from Discord itself shows within this time, or on a refresh.
+ */
+export const ABSENT_GUILD_PROBE_TTL_MS = 10 * 60_000;
+
+/**
+ * The longest a Discord request may take for its "bot absent" answer to be
+ * shared with the other isolates. A request asked before the bot joined can
+ * finish after the invite's refresh dropped the shared answer, and would
+ * write the old answer back for {@linkcode ABSENT_GUILD_PROBE_TTL_MS}; the
+ * isolate that writes it never saw the refresh. The invite page waits 1.5 s
+ * between the bot's joining and that refresh (`app/pages/oauth/guild.vue`),
+ * so an answer that came back faster was written before it.
+ */
+export const ABSENT_GUILD_PROBE_SHARE_MAX_MS = 1_000;
+
+/** How long a live probe answers for its guild, by what it found. */
+export function guildProbeTtl(confirmedAbsent: boolean): number {
+	return confirmedAbsent ? ABSENT_GUILD_PROBE_TTL_MS : GUILD_PROBE_TTL_MS;
+}
 const GUILD_PROBE_SWEEP_SIZE = 1000;
 const recentGuildProbes = new Map<string, { expires: number; probe: Promise<GuildProbe> }>();
 /**
@@ -103,13 +137,14 @@ const guildProbeInvalidations = new Map<string, { expires: number; at: number }>
 function rememberInvalidation(guildId: string) {
 	const now = Date.now();
 	sweep(guildProbeInvalidations, now);
-	guildProbeInvalidations.set(guildId, { at: now, expires: now + GUILD_PROBE_TTL_MS });
+	// Kept as long as the longest answer, so no shared answer from before it is read back.
+	guildProbeInvalidations.set(guildId, { at: now, expires: now + ABSENT_GUILD_PROBE_TTL_MS });
 }
 
 /** Whether a probe made at `at` predates this isolate's last invalidation of its guild. */
 export function isGuildProbeInvalidated(guildId: string, at: number): boolean {
 	const invalidation = guildProbeInvalidations.get(guildId);
-	return invalidation !== undefined && at < invalidation.at;
+	return invalidation !== undefined && invalidation.expires > Date.now() && at < invalidation.at;
 }
 
 function sweep<V extends { expires: number }>(entries: Map<string, V>, now: number) {
@@ -136,7 +171,7 @@ export function rememberGuildProbe(
 			if (probe.live && !isGuildProbeInvalidated(guildId, probe.at ?? now)) {
 				sweep(settledGuildProbes, now);
 				const expires = Math.min(
-					(probe.at ?? now) + GUILD_PROBE_TTL_MS,
+					(probe.at ?? now) + guildProbeTtl(probe.confirmedAbsent),
 					now + SETTLED_GUILD_PROBE_TTL_MS,
 				);
 				settledGuildProbes.set(guildId, { expires, probe });
@@ -159,7 +194,14 @@ export function rememberGuildProbe(
 		if (recentGuildProbes.get(guildId)?.probe === probe) recentGuildProbes.delete(guildId);
 	};
 	void probe.then((result) => {
-		if (!result.live) forget();
+		if (!result.live) {
+			forget();
+			return;
+		}
+		const entry = recentGuildProbes.get(guildId);
+		if (result.confirmedAbsent && entry?.probe === probe) {
+			entry.expires = now + ABSENT_GUILD_PROBE_TTL_MS;
+		}
 	}, forget);
 	return probe;
 }

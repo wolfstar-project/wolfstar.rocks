@@ -11,20 +11,20 @@
 				{{
 					ts("guild_settings.modules.enabled_count", {
 						enabled: enabledCount,
-						total: MODULE_SWITCH_KEYS.length,
+						total: modules.length,
 					})
 				}}
 			</UBadge>
 		</div>
 		<ul>
-			<li v-for="module in modules" :key="module.key">
-				<button type="button" class="module-row" @click="goToSection(module.section)">
+			<li v-for="module in modules" :key="module.item.slug">
+				<button type="button" class="module-row" @click="goToSection(module.item.slug)">
 					<span
 						class="size-2 shrink-0 rounded-full transition-colors duration-(--motion-base) ease-console"
 						:class="module.enabled ? 'bg-success' : 'bg-base-content/40'"
 						aria-hidden="true"
 					></span>
-					<span class="flex-1 text-sm text-toned">{{ ts(module.labelKey) }}</span>
+					<span class="flex-1 text-sm text-toned">{{ ts(module.item.labelKey) }}</span>
 					<span class="text-xs text-muted">
 						{{ module.state }}
 					</span>
@@ -45,107 +45,48 @@
 </template>
 
 <script setup lang="ts">
-const { tc, ts } = useI18n();
+const { ts } = useI18n();
 const { guildSettings } = useGuildSettings();
 const { goToSection } = useDashboardNavigation();
+const { activeGuildId } = useActiveGuild();
 
 const announcedModules = DASHBOARD_NAV.filter((item) => item.comingSoon);
 
-const enabledCount = computed(() => countEnabledModules(guildSettings.value));
-
-// The lists of channels are read for their counts; their sections share the cache.
-const { activeGuildId } = useActiveGuild();
-const lists = {
-	autodelete: useAutoChannels("autodelete", activeGuildId),
-	autopurge: useAutoChannels("autopurge", activeGuildId),
-	automessage: useAutoChannels("automessage", activeGuildId),
-};
-
-// Staryl's module: its state is read from Staryl, so it has one more to show than on and off.
+// Staryl's module: its switch is read from Staryl, and it can be missing from the server.
 const social = useSocialModule(activeGuildId);
-const socialRow = computed(() => {
-	const status = social.status.value;
-	const enabled = status.kind === "ready" && status.state.enabled;
-	const states = {
-		"loading": "",
-		"not-installed": ts("guild_settings.modules.not_set_up"),
-		"ready": enabled ? ts("guild_settings.modules.on") : ts("guild_settings.modules.off"),
-		"unavailable": ts("guild_settings.modules.unavailable"),
-	} satisfies Record<typeof status.kind, string>;
-	return {
-		enabled,
-		key: "social",
-		labelKey: "dashboard.nav.social",
-		section: "social",
-		state: states[status.kind],
-	};
-});
 
-// The `Modules` flags, then the modules that live in a table of their own:
-// the honeypot is on with its switch and a channel, the join guard and the
-// appeals with their switch, and the lists of channels while they have one.
+function stateOf(enabled: boolean): string {
+	return enabled ? ts("guild_settings.modules.on") : ts("guild_settings.modules.off");
+}
+
+// Every module, in sidebar order, with the sidebar's rule: a module is on when
+// its switch is on and the setting it needs is set.
 const modules = computed(() => {
 	const settings = guildSettings.value;
-	const honeypotSetUp = Boolean(settings?.honeypotChannel);
-	const honeypot = settings?.modulesHoneypot === true && honeypotSetUp;
-	const joinGuard = settings?.joinGuardEnabled === true;
-	const onboarding = settings?.onboardingEnabled === true;
-	const appeals = settings?.appealsEnabled === true;
-	const onOff = (enabled: boolean) =>
-		enabled ? ts("guild_settings.modules.on") : ts("guild_settings.modules.off");
-	return [
-		...GUILD_MODULES.map((module) => {
-			const enabled = settings?.[module.key] === true;
-			return {
-				enabled,
-				key: module.key,
-				labelKey: module.labelKey,
-				section: module.section,
-				state: onOff(enabled),
-			};
-		}),
-		{
-			enabled: honeypot,
-			key: "honeypot",
-			labelKey: "dashboard.nav.honeypot",
-			section: "honeypot",
-			state: honeypotSetUp
-				? ts("guild_settings.modules.set_up")
-				: ts("guild_settings.modules.not_set_up"),
+	return DASHBOARD_NAV.filter((item) => isModuleGroup(item.group) && !item.comingSoon).map(
+		(item) => {
+			if (item.slug === "social") {
+				const status = social.status.value;
+				const enabled = status.kind === "ready" && status.state.enabled;
+				const states = {
+					"loading": "",
+					"not-installed": ts("guild_settings.modules.not_set_up"),
+					"ready": stateOf(enabled),
+					"unavailable": ts("guild_settings.modules.unavailable"),
+				} satisfies Record<typeof status.kind, string>;
+				return { enabled, item, state: states[status.kind] };
+			}
+			const switchedOn = item.moduleKey !== undefined && settings?.[item.moduleKey] === true;
+			const enabled =
+				switchedOn &&
+				(item.requiredKey === undefined || Boolean(settings?.[item.requiredKey]));
+			return { enabled, item, state: stateOf(enabled) };
 		},
-		{
-			enabled: joinGuard,
-			key: "joinguard",
-			labelKey: "dashboard.nav.joinguard",
-			section: "joinguard",
-			state: onOff(joinGuard),
-		},
-		{
-			enabled: onboarding,
-			key: "onboarding",
-			labelKey: "dashboard.nav.onboarding",
-			section: "onboarding",
-			state: onOff(onboarding),
-		},
-		{
-			enabled: appeals,
-			key: "appeals",
-			labelKey: "dashboard.nav.appeals",
-			section: "appeals",
-			state: onOff(appeals),
-		},
-		...(
-			Object.entries(lists) as [keyof typeof lists, (typeof lists)[keyof typeof lists]][]
-		).map(([slug, list]) => ({
-			enabled: list.rows.value.length > 0,
-			key: slug,
-			labelKey: `dashboard.nav.${slug}`,
-			section: slug,
-			state: tc("guild_settings.modules.channel_count", list.rows.value.length),
-		})),
-		socialRow.value,
-	];
+	);
 });
+
+// Counted from the rows, so the badge agrees with the dots below it.
+const enabledCount = computed(() => modules.value.filter((module) => module.enabled).length);
 </script>
 
 <style scoped>

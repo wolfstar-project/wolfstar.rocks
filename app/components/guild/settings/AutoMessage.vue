@@ -1,13 +1,12 @@
 <template>
 	<GuildAutoSection slug="automessage">
 		<template #default="{ rows, edit, remove, channelName }">
-			<ul
-				class="flex flex-col gap-3"
-				:aria-label="ts('guild_settings.automessage.list_aria')"
-			>
-				<li v-for="row in rows" :key="row.id" class="console-card">
+			<ul :aria-label="ts('guild_settings.automessage.list_aria')">
+				<li v-for="row in rows" :key="row.id" class="auto-message-row">
 					<div class="flex flex-wrap items-center gap-x-3 gap-y-1">
-						<h2 class="text-[0.9375rem] font-bold">{{ channelName(row.channelId) }}</h2>
+						<h3 class="text-sm font-semibold text-highlighted">
+							{{ channelName(row.channelId) }}
+						</h3>
 						<UBadge color="neutral" variant="subtle" class="font-mono">
 							{{
 								ts("guild_settings.automessage.every", {
@@ -136,9 +135,16 @@ async function toggleMentions(row: AutoMessage, mentions: boolean, channel: stri
 <style scoped>
 @reference "@/assets/css/main.css";
 
+.auto-message-row {
+	@apply py-4 first:pt-0 last:pb-0;
+}
+
+.auto-message-row + .auto-message-row {
+	border-top: 1px solid var(--home-border-subtle);
+}
+
 .auto-message-content {
-	@apply mt-3 rounded-md px-3 py-2.5 text-sm break-words whitespace-pre-wrap;
+	@apply mt-2.5 rounded-md px-3 py-2.5 text-sm text-pretty break-words whitespace-pre-wrap;
 	background-color: var(--field-surface);
-	border-left: 4px solid var(--color-primary);
 }
 </style>

@@ -16,7 +16,7 @@ describe("DashboardComingSoon", () => {
 				item: {
 					comingSoon: true,
 					descriptionKey: "guild_settings.modules.descriptions.automessage",
-					group: "modules",
+					group: "utility",
 					icon: "ic:round-schedule-send",
 					labelKey: "dashboard.nav.automessage",
 					slug: "announced",

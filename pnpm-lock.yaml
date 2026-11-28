@@ -449,8 +449,8 @@ importers:
         specifier: 4.4.0
         version: 4.4.0(patch_hash=5c6e9381cfd89a37ff12c6ba5ac9e1c765a744791492fba99fe52730e86b06cc)(@nuxt/schema@4.7.0)(@oxc-project/types@0.158.0)(@playwright/test@1.65.0)(@vitest/ui@4.1.11)(@voidzero-dev/vite-plus-core@0.3.3)(@vue/test-utils@2.5.1)(confbox@0.3.2)(dotenv@17.4.2)(esbuild@0.28.2)(giget@3.3.0)(h3@2.0.8)(jiti@2.7.0)(jsdom@31.0.1)(mlly@1.8.2)(nuxt@4.7.0)(oxc-parser@0.154.0)(playwright-core@1.65.0)(rolldown@1.3.2)(rollup@4.68.8)(vitest@4.1.11)(vue@3.5.46)(webpack@5.112.2)
       '@sapphire/bitfield':
-        specifier: 1.2.4
-        version: 1.2.4
+        specifier: 2.0.0
+        version: 2.0.0
       '@sapphire/snowflake':
         specifier: 3.5.5
         version: 3.5.5
@@ -5723,9 +5723,9 @@ packages:
     resolution: {integrity: sha512-cvGzxbba6sav2zZkH8GPf2oGk9yYoD5qrNWdu9fRehifgnFZJMV+nuy2nON2roRO4yQQ+v7MK/Pktl/HgfsUXg==}
     engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
 
-  '@sapphire/bitfield@1.2.4':
-    resolution: {integrity: sha512-x0Zvb5jbn8A9fOdWksvxPuXdHGzk6v0Z5ogcYKKg06Az/Ih2WupKZ88CIX1/pZWk6vBWqH5LAU0lOVtEaw7D/A==}
-    engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
+  '@sapphire/bitfield@2.0.0':
+    resolution: {integrity: sha512-0P7S6NuIZ2KQYdXzzE6oJMeumdGc2e/LrbdiUblEMPnjrpKaDAM4vdaiWlyM4Xg20MoNzE8YiNhBKSnoDcyE4g==}
+    engines: {node: '>=v24.0.0', npm: '>=11.0.0'}
 
   '@sapphire/cron@2.0.0':
     resolution: {integrity: sha512-XlCq1XKKB3o53JA6AOaGtMyY7N7ZByZyQmSloz+y4rbD79qKN9AzZlZoV3A01Orbh6ghguXBWARNcango0PRBA==}
@@ -19802,7 +19802,7 @@ snapshots:
 
   '@sapphire/async-queue@1.5.5': {}
 
-  '@sapphire/bitfield@1.2.4': {}
+  '@sapphire/bitfield@2.0.0': {}
 
   '@sapphire/cron@2.0.0':
     dependencies:

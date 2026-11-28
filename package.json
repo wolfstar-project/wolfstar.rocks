@@ -124,7 +124,7 @@
 		"@nuxt/hints": "1.1.5",
 		"@nuxt/test-utils": "4.4.0",
 		"@sapphire/bitfield": "1.2.4",
-		"@sapphire/snowflake": "3.5.5",
+		"@sapphire/snowflake": "4.0.0",
 		"@sapphire/time-utilities": "2.0.0",
 		"@sapphire/utilities": "4.0.0",
 		"@shelve/cli": "5.3.0",

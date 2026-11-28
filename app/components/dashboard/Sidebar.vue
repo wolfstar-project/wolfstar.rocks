@@ -76,81 +76,63 @@
 							</button>
 						</div>
 
-						<template v-for="(part, partIndex) of group.parts" :key="part.id">
-							<div
-								v-if="partIndex > 0"
-								class="dashboard-nav-divider"
+						<p v-if="group.pinnedHeading" class="dashboard-nav-label">
+							<UIcon
+								name="ic:round-push-pin"
+								class="size-3 shrink-0"
 								aria-hidden="true"
-							></div>
-							<p v-if="part.titleKey" class="dashboard-nav-label">
+							/>
+							<span>{{ ts("dashboard.nav_pinned") }}</span>
+						</p>
+
+						<div
+							v-for="item of group.items"
+							:key="item.slug"
+							class="dashboard-nav-row"
+							:class="{ 'dashboard-nav-row--current': item.current }"
+						>
+							<button
+								type="button"
+								class="dashboard-nav-button"
+								:class="{ 'dashboard-nav-button--current': item.current }"
+								:aria-current="item.current ? 'page' : undefined"
+								@click="open(item.slug)"
+							>
 								<UIcon
-									name="ic:round-push-pin"
-									class="size-3 shrink-0"
+									:name="item.icon"
+									class="size-4.5 shrink-0 transition-colors duration-(--motion-fast) ease-console"
+									:class="item.current ? 'text-primary' : 'text-muted'"
 									aria-hidden="true"
 								/>
-								<span>{{ ts(part.titleKey) }}</span>
-							</p>
-
-							<div
-								v-for="item of part.items"
-								:key="item.slug"
-								class="dashboard-nav-row"
-								:class="{ 'dashboard-nav-row--current': item.current }"
+								<span class="min-w-0 flex-1 truncate">{{ ts(item.labelKey) }}</span>
+								<span v-if="item.comingSoon" class="dashboard-nav-soon">
+									{{ ts("dashboard.coming_soon.badge") }}
+								</span>
+								<span v-if="item.count !== null" class="dashboard-nav-count">
+									{{ item.count }}
+								</span>
+								<span
+									v-if="item.off"
+									class="size-1.5 shrink-0 rounded-full bg-muted"
+									:title="ts('dashboard.nav_module_off')"
+								></span>
+							</button>
+							<button
+								v-if="item.pinnable"
+								type="button"
+								class="dashboard-nav-pin"
+								:class="{ 'dashboard-nav-pin--on': item.pinned }"
+								:aria-pressed="item.pinned"
+								:aria-label="
+									ts(item.pinned ? 'dashboard.nav_unpin' : 'dashboard.nav_pin', {
+										name: ts(item.labelKey),
+									})
+								"
+								@click="togglePin(item.slug)"
 							>
-								<button
-									type="button"
-									class="dashboard-nav-button"
-									:class="{ 'dashboard-nav-button--current': item.current }"
-									:aria-current="item.current ? 'page' : undefined"
-									@click="open(item.slug)"
-								>
-									<UIcon
-										:name="item.icon"
-										class="size-4.5 shrink-0 transition-colors duration-(--motion-fast) ease-console"
-										:class="item.current ? 'text-primary' : 'text-muted'"
-										aria-hidden="true"
-									/>
-									<span class="min-w-0 flex-1 truncate">{{
-										ts(item.labelKey)
-									}}</span>
-									<span v-if="item.comingSoon" class="dashboard-nav-soon">
-										{{ ts("dashboard.coming_soon.badge") }}
-									</span>
-									<span v-if="item.count !== null" class="dashboard-nav-count">
-										{{ item.count }}
-									</span>
-									<span
-										v-if="item.off"
-										class="size-1.5 shrink-0 rounded-full bg-muted"
-										:title="ts('dashboard.nav_module_off')"
-									></span>
-								</button>
-								<button
-									v-if="item.pinnable"
-									type="button"
-									class="dashboard-nav-pin"
-									:class="{ 'dashboard-nav-pin--on': item.pinned }"
-									:aria-pressed="item.pinned"
-									:aria-label="
-										ts(
-											item.pinned
-												? 'dashboard.nav_unpin'
-												: 'dashboard.nav_pin',
-											{
-												name: ts(item.labelKey),
-											},
-										)
-									"
-									@click="togglePin(item.slug)"
-								>
-									<UIcon
-										name="ic:round-push-pin"
-										class="size-4"
-										aria-hidden="true"
-									/>
-								</button>
-							</div>
-						</template>
+								<UIcon name="ic:round-push-pin" class="size-4" aria-hidden="true" />
+							</button>
+						</div>
 					</template>
 				</template>
 			</nav>
@@ -185,9 +167,11 @@ const { isGroupOpen, isPinned, recent, recordVisit, toggleGroup, togglePin } =
 
 const guildIconSrc = computed(() => resolveGuildIconSrc(guildData.value, { size: 64 }));
 
-// Only the modules have a title, and fold away under it.
+// Only the categories of the modules have a title, and fold away under it.
 const GROUP_LABEL_KEYS: Partial<Record<DashboardNavGroup, string>> = {
-	modules: "dashboard.nav_groups.modules",
+	engagement: "dashboard.nav_groups.engagement",
+	moderation: "dashboard.nav_groups.moderation",
+	utility: "dashboard.nav_groups.utility",
 };
 
 function open(slug: string) {
@@ -222,42 +206,57 @@ function toRow(item: DashboardNavItem) {
 				: null,
 		current: section.value === item.slug,
 		off: isOff(item),
-		pinnable: item.group === "modules" && !item.comingSoon,
+		pinnable: isModuleGroup(item.group) && !item.comingSoon,
 		pinned: isPinned(item.slug),
 	};
 }
 
-const groups = computed(() =>
-	(["overview", "modules", "tools"] as const).map((id) => {
-		const items = DASHBOARD_NAV.filter((item) => item.group === id).map(toRow);
-		const pinned = items.filter((item) => item.pinnable && item.pinned);
-		const rest = items.filter((item) => !(item.pinnable && item.pinned));
-		const parts = [
-			...(pinned.length > 0
-				? [{ id: "pinned", items: pinned, titleKey: "dashboard.nav_pinned" }]
-				: []),
-			{ id: "rest", items: rest, titleKey: undefined },
-		].filter((part) => part.items.length > 0);
+// The pinned sections and the ones opened last sit above the categories, whichever
+// category they belong to.
+const rows = computed(() => DASHBOARD_NAV.map(toRow));
+
+const groups = computed(() => {
+	const all = rows.value;
+	const pinned = all.filter((item) => item.pinnable && item.pinned);
+	// Chips repeat sections the list already shows, so only unpinned,
+	// non-current ones are offered.
+	const chips = recent.value
+		.map((slug) => all.find((item) => item.slug === slug))
+		.filter((item): item is (typeof all)[number] => item !== undefined)
+		.filter((item) => item.pinnable && !item.current && !item.pinned)
+		.slice(0, 3);
+
+	const sectionGroups = (["overview", ...DASHBOARD_MODULE_GROUPS, "tools"] as const).map((id) => {
+		const members = all.filter((item) => item.group === id);
 
 		return {
-			hasCurrent: items.some((item) => item.current),
+			hasCurrent: members.some((item) => item.current),
 			id,
+			items: members.filter((item) => !(item.pinnable && item.pinned)),
 			labelKey: GROUP_LABEL_KEYS[id],
-			parts,
+			pinnedHeading: false,
+			recent: [],
 			titled: GROUP_LABEL_KEYS[id] !== undefined,
-			// Chips repeat sections the list already shows, so only unpinned,
-			// non-current ones are offered.
-			recent:
-				id === "modules"
-					? recent.value
-							.map((slug) => items.find((item) => item.slug === slug))
-							.filter((item): item is (typeof items)[number] => item !== undefined)
-							.filter((item) => !item.current && !item.pinned)
-							.slice(0, 3)
-					: [],
 		};
-	}),
-);
+	});
+
+	const [overview, ...categories] = sectionGroups;
+	const shortcuts = {
+		hasCurrent: false,
+		id: "shortcuts",
+		items: pinned,
+		labelKey: undefined,
+		pinnedHeading: pinned.length > 0,
+		recent: chips,
+		titled: false,
+	};
+
+	return [
+		overview!,
+		...(pinned.length > 0 || chips.length > 0 ? [shortcuts] : []),
+		...categories,
+	].filter((group) => group.items.length > 0 || group.recent.length > 0);
+});
 </script>
 
 <style scoped>
